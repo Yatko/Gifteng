@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RootView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lblAdExpired"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="7dip"
+            android:text="@string/this_ad_expired"
+            android:textColor="#ffff0000"
+            android:textSize="18.0sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:gravity="center"
+            android:padding="5dip" >
+
+            <Button
+                android:id="@+id/btnBookmark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/add_bookmark"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+
+            <Button
+                android:id="@+id/btnEditAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/edit_ad"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+
+            <Button
+                android:id="@+id/btnSpam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/mark_spam"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutOtherButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dip"
+            android:gravity="center"
+            android:padding="5dip" >
+
+            <Button
+                android:id="@+id/btnRelist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/relist_ad"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+
+            <Button
+                android:id="@+id/btnEndAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/end"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+
+            <Button
+                android:id="@+id/btnDeleteAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dip"
+                android:layout_marginRight="4dip"
+                android:layout_weight="1"
+                android:background="@drawable/button_green_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="2.7dip"
+                android:shadowColor="#88000000"
+                android:shadowDx="0.0"
+                android:shadowDy="-1.5"
+                android:shadowRadius="1.0"
+                android:text="@string/delete"
+                android:textColor="#ffffffff"
+                android:textSize="13.0dip" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnOwner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dip"
+            android:layout_marginRight="9dip"
+            android:background="@drawable/button_green_bg_selector"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="2.7dip"
+            android:shadowColor="#88000000"
+            android:shadowDx="0.0"
+            android:shadowDy="-1.5"
+            android:shadowRadius="1.0"
+            android:text="@string/owner"
+            android:textColor="#ffffffff"
+            android:textSize="13.0dip" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dip"
+            android:layout_marginRight="7dip"
+            android:layout_marginTop="7dip" >
+
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/share_button" />
+
+            <Button
+                android:id="@+id/btnRating"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/arrow_rating" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dip" >
+
+            <LinearLayout
+                android:id="@+id/layoutTotalViews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dip"
+                    android:text="@string/total_views"
+                    android:textColor="#ff000000"
+                    android:textSize="14.0sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lblTotalViews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/temp_dig"
+                    android:textColor="#ff000000"
+                    android:textSize="14.0sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="7dip"
+                    android:text="@string/rating_"
+                    android:textColor="#ff000000"
+                    android:textSize="14.0sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lblRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dip"
+                    android:text="@string/temp_dig"
+                    android:textColor="#ff000000"
+                    android:textSize="14.0sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/post_preview_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Gallery
+                android:id="@+id/galleryImage"
+                android:layout_width="match_parent"
+                android:layout_height="300.0dip"
+                android:layout_marginBottom="30dip"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="10.0dip" />
+
+            <TextView
+                android:id="@+id/lblTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/galleryImage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="5.0dip"
+                android:gravity="center_horizontal"
+                android:text="@string/title"
+                android:textColor="#ff000000"
+                android:textSize="14.0sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lblPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblTitle"
+                android:layout_centerHorizontal="true"
+                android:text="@string/price"
+                android:textColor="#ff888888"
+                android:textSize="10.0sp" />
+
+            <TextView
+                android:id="@+id/lblMiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblPrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginTop="5.0dip"
+                android:text="@string/temp_dig"
+                android:textColor="#ffa1a1a1"
+                android:textSize="10.0sp" />
+
+            <TextView
+                android:id="@+id/lblStaticMiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/lblMiles"
+                android:layout_marginLeft="9.0dip"
+                android:layout_toRightOf="@+id/lblMiles"
+                android:text="@string/miles"
+                android:textColor="#ffa1a1a1"
+                android:textSize="10.0sp" />
+
+            <ImageView
+                android:id="@+id/post_preview_mile_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblPrice"
+                android:layout_marginTop="5.0dip"
+                android:layout_toLeftOf="@+id/lblMiles"
+                android:contentDescription="@string/temp_string"
+                android:src="@drawable/mile_icon_s" />
+
+            <TextView
+                android:id="@+id/lblDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/post_preview_mile_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20.0dip"
+                android:layout_marginRight="10.0dip"
+                android:layout_marginTop="5.0dip"
+                android:gravity="center_horizontal"
+                android:text="@string/temp_string"
+                android:textColor="#ff000000"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>
