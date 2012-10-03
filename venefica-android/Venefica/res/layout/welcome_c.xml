@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/relativeLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/tab_bg_cut" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/corners"
+        android:paddingBottom="6.0dip" >
+
+        <TextView
+            android:id="@+id/textView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btnSearch"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginTop="15.0dip"
+            android:gravity="left"
+            android:text="@string/welcome"
+            android:textColor="#ff000000"
+            android:textSize="20.0sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView01"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.0dip"
+            android:background="@drawable/searchbar_left"
+            android:clickable="true"
+            android:contentDescription="@string/temp_string" />
+
+        <Button
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView01"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dip"
+            android:background="@drawable/searchbar_right_x"
+            android:clickable="true"
+            android:contentDescription="@string/temp_string" />
+
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView01"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/right"
+            android:layout_toRightOf="@+id/btnSearch"
+            android:background="@drawable/chatbar_center"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textSize="13.0sp" />
+
+        <View
+            android:id="@+id/view02"
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:layout_below="@+id/editSearch"
+            android:layout_marginTop="10.0dip"
+            android:background="#ffbbbbbb" />
+
+        <View
+            android:id="@+id/view02_1"
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:layout_below="@+id/browse_layout"
+            android:background="#ffbbbbbb" />
+
+        <View
+            android:id="@+id/browse_post_divider"
+            android:layout_width="1.0dip"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/view02_1"
+            android:layout_below="@+id/view02"
+            android:layout_centerHorizontal="true"
+            android:background="#ffbbbbbb" />
+
+        <RelativeLayout
+            android:id="@+id/browse_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view02"
+            android:layout_toLeftOf="@+id/browse_post_divider"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="10.0dip"
+            android:paddingTop="10.0dip" >
+
+            <Button
+                android:id="@+id/btnBrowse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#00000000"
+                android:clickable="true"
+                android:drawableLeft="@drawable/browse"
+                android:drawablePadding="5.0dip"
+                android:gravity="center_vertical"
+                android:text="@string/browse"
+                android:textColor="#ff000000"
+                android:textSize="20.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/post_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view02"
+            android:layout_toRightOf="@+id/browse_post_divider"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="10.0dip"
+            android:paddingTop="10.0dip" >
+
+            <Button
+                android:id="@+id/btnPost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#00000000"
+                android:clickable="true"
+                android:drawableLeft="@drawable/post"
+                android:drawablePadding="5.0dip"
+                android:gravity="center_vertical"
+                android:text="@string/post"
+                android:textColor="#ff000000"
+                android:textSize="20.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/byers_listings_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view02_1"
+            android:paddingBottom="10.0dip"
+            android:paddingTop="10.0dip" >
+
+            <TextView
+                android:id="@+id/lblBuyers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="12dip"
+                android:layout_marginRight="7dip"
+                android:text="@string/zero_num"
+                android:textColor="#ff000000"
+                android:textSize="16.0sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dip"
+                android:layout_marginRight="12dip"
+                android:text="@string/listings"
+                android:textColor="#ff828282"
+                android:textSize="16.0sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/lblBuyers"
+                android:layout_marginLeft="7dip"
+                android:layout_marginRight="7dip"
+                android:layout_toRightOf="@+id/lblBuyers"
+                android:text="@string/buyers"
+                android:textColor="#ff828282"
+                android:textSize="16.0sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lblListings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textView2"
+                android:layout_marginLeft="7dip"
+                android:layout_marginRight="7dip"
+                android:layout_toLeftOf="@+id/textView2"
+                android:text="@string/zero_num"
+                android:textColor="#ff000000"
+                android:textSize="16.0sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view03"
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:layout_below="@+id/byers_listings_layout"
+            android:background="#ffbbbbbb" />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="fill_parent"
+            android:layout_height="46.0dip"
+            android:layout_below="@+id/view03"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:layout_marginTop="5.0dip"
+            android:background="@drawable/button_green_bg_selector"
+            android:clickable="true"
+            android:gravity="center"
+            android:shadowColor="#88000000"
+            android:shadowDx="0.0"
+            android:shadowDy="-1.5"
+            android:shadowRadius="1.0"
+            android:text="@string/sign_up"
+            android:textColor="#ffffffff"
+            android:textSize="22.0dip" />
+
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="fill_parent"
+            android:layout_height="46.0dip"
+            android:layout_below="@+id/btnSignUp"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:layout_marginTop="5.0dip"
+            android:background="@drawable/signin_button"
+            android:clickable="true"
+            android:paddingBottom="4.0dip" />
+    </RelativeLayout>
+
+</RelativeLayout>
