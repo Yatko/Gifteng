@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<context:annotation-config />
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+
+	<bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
+		<constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
+	</bean>
+
+	<bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
+	<bean id="securityContextHolder" class="com.venefica.auth.ThreadSecurityContextHolder" />
+	<bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
+
+	<bean id="baseUrl" class="java.lang.String">
+		<constructor-arg value="http://localhost:8082/" />
+	</bean>
+
+	<context:component-scan base-package="com.venefica.dao" />
+
+	<!-- import java-based configurations -->
+	<bean class="com.venefica.config.data.TestDataConfig" />
+
+	<cxf:bus>
+		<cxf:inInterceptors>
+			<ref bean="securityContextCleaner" />
+		</cxf:inInterceptors>
+	</cxf:bus>
+
+</beans>

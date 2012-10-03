@@ -1,0 +1,17 @@
+Venefica web application
+=============================
+
+REQUIREMENTS:
+
+Database
+-----------------------------
+PostgreSQL 9.1 + PostGIS extension.
+
+Web server
+-----------------------------
+Tomcat 7.0
+
+Build system
+-----------------------------
+Maven
+
