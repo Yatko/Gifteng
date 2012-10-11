@@ -825,24 +825,27 @@ public class ServicesManager
 			Log.d("RegisterUser Alert!", StatusSoap);
 			result.Set(SoapRequestResult.Fault, RegisterUserReturn.Error);
 
-			Element UserAlreadyExists = (Element)((Element)e.detail.getChild(0)).getChild(0);
-			if (UserAlreadyExists.getName().equalsIgnoreCase("UserAlreadyExists"))
+			if (e.detail != null)
 			{
-				Element duplicatedField = (Element)UserAlreadyExists.getChild(0);
-				if (duplicatedField.getName().equalsIgnoreCase("duplicatedField"))
+				Element UserAlreadyExists = (Element)((Element)e.detail.getChild(0)).getChild(0);
+				if (UserAlreadyExists.getName().equalsIgnoreCase("UserAlreadyExists"))
 				{
-					String message = (String)duplicatedField.getChild(0);
-					if (message.equalsIgnoreCase("EMAIL"))
+					Element duplicatedField = (Element)UserAlreadyExists.getChild(0);
+					if (duplicatedField.getName().equalsIgnoreCase("duplicatedField"))
 					{
-						result.Return = RegisterUserReturn.DupeEmail;
-					}
-					else if (message.equalsIgnoreCase("PHONE"))
-					{
-						result.Return = RegisterUserReturn.DupePhone;
-					}
-					else if (message.equalsIgnoreCase("NAME"))
-					{
-						result.Return = RegisterUserReturn.DupeLogin;
+						String message = (String)duplicatedField.getChild(0);
+						if (message.equalsIgnoreCase("EMAIL"))
+						{
+							result.Return = RegisterUserReturn.DupeEmail;
+						}
+						else if (message.equalsIgnoreCase("PHONE"))
+						{
+							result.Return = RegisterUserReturn.DupePhone;
+						}
+						else if (message.equalsIgnoreCase("NAME"))
+						{
+							result.Return = RegisterUserReturn.DupeLogin;
+						}
 					}
 				}
 			}

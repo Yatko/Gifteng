@@ -78,7 +78,7 @@ public class CommentListAdapter extends ArrayAdapter<CommentDto>
 			CommentDto item = Comment.get(position);
 			if (item != null)
 			{
-				if (item.publisherAvatarUrl.length() > 0 && MyApp.ImgLoader != null)
+				if (item.publisherAvatarUrl!= null && item.publisherAvatarUrl.length() > 0 && MyApp.ImgLoader != null)
 				{
 					MyApp.ImgLoader.displayImage(Constants.PHOTO_URL_PREFIX + item.publisherAvatarUrl, holder.imgAvatar, MyApp.ImgLoaderOptions);
 				}
