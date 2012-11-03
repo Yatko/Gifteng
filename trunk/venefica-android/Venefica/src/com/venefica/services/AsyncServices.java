@@ -1,9 +1,10 @@
 package com.venefica.services;
 
 import com.venefica.activity.PostStepLogic.PostData;
+import com.venefica.module.user.UserDto;
 import com.venefica.services.ServicesManager.*;
 import com.venefica.utils.ImageAd;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -11,13 +12,13 @@ import android.util.Log;
 
 import java.lang.reflect.*;
 import java.util.List;
-
+@Deprecated
 public class AsyncServices
 {
 	//- - - - - CALLBACK- - - - -//
 	public enum CallbackReturn
 	{
-		/** Callback зл */
+		/** Callback пїЅпїЅ */
 		Ok,
 		/** Callback made a mistake (while not in use) */
 		Error,
@@ -25,7 +26,7 @@ public class AsyncServices
 		RetryRequest
 	}
 
-	/** Класс реализует Callback операцию */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Callback пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 	public static interface ICallback
 	{
 		/**
@@ -529,7 +530,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetUser(MyApp.AuthToken);
+			return VeneficaApplication.services.GetUser(VeneficaApplication.authToken);
 		}
 	}
 
@@ -543,7 +544,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.UpdateUser(MyApp.AuthToken, ((UpdateUserContext)Context).user);
+			return VeneficaApplication.services.UpdateUser(VeneficaApplication.authToken, ((UpdateUserContext)Context).user);
 		}
 	}
 
@@ -557,7 +558,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.IsUserComplete(MyApp.AuthToken);
+			return VeneficaApplication.services.IsUserComplete(VeneficaApplication.authToken);
 		}
 	}
 
@@ -571,7 +572,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.RegisterUser(((RegisterUserContext)Context).pass, ((RegisterUserContext)Context).user);
+			return VeneficaApplication.services.RegisterUser(((RegisterUserContext)Context).pass, ((RegisterUserContext)Context).user);
 		}
 
 	}
@@ -586,7 +587,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.Authenticate(((AuthenticateContext)Context).user, ((AuthenticateContext)Context).pass);
+			return VeneficaApplication.services.Authenticate(((AuthenticateContext)Context).user, ((AuthenticateContext)Context).pass);
 		}
 	}
 
@@ -600,7 +601,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.PlaceAd(MyApp.AuthToken, ((PlaceAdContext)Context).post);
+			return VeneficaApplication.services.PlaceAd(VeneficaApplication.authToken, ((PlaceAdContext)Context).post);
 		}
 	}
 
@@ -614,7 +615,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetAds(MyApp.AuthToken, ((GetAdsContext)Context).lastAdId, ((GetAdsContext)Context).numberAds, ((GetAdsContext)Context).filter);
+			return VeneficaApplication.services.GetAds(VeneficaApplication.authToken, ((GetAdsContext)Context).lastAdId, ((GetAdsContext)Context).numberAds, ((GetAdsContext)Context).filter);
 		}
 	}
 
@@ -628,7 +629,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.AddImageToAd(MyApp.AuthToken, ((AddImageToAdContext)Context).adId, ((AddImageToAdContext)Context).image);
+			return VeneficaApplication.services.AddImageToAd(VeneficaApplication.authToken, ((AddImageToAdContext)Context).adId, ((AddImageToAdContext)Context).image);
 		}
 	}
 
@@ -648,7 +649,7 @@ public class AsyncServices
 			{
 				if (it.bitmap != null)
 				{
-					MyApp.Services.AddImageToAd(MyApp.AuthToken, con.adId, it.bitmap);
+					VeneficaApplication.services.AddImageToAd(VeneficaApplication.authToken, con.adId, it.bitmap);
 				}
 			}
 			return new AddImageToAdResult();
@@ -665,7 +666,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetCategories(MyApp.AuthToken);
+			return VeneficaApplication.services.GetCategories(VeneficaApplication.authToken);
 		}
 	}
 
@@ -679,7 +680,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.UpdateAd(MyApp.AuthToken, ((UpdateAdContext)Context).post);
+			return VeneficaApplication.services.UpdateAd(VeneficaApplication.authToken, ((UpdateAdContext)Context).post);
 		}
 	}
 
@@ -693,7 +694,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetAdById(MyApp.AuthToken, ((GetAdByIdContext)Context).adId);
+			return VeneficaApplication.services.GetAdById(VeneficaApplication.authToken, ((GetAdByIdContext)Context).adId);
 		}
 	}
 
@@ -707,7 +708,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.ChangePassword(MyApp.AuthToken, ((ChangePasswordContext)Context).oldPassword, ((ChangePasswordContext)Context).newPassword);
+			return VeneficaApplication.services.ChangePassword(VeneficaApplication.authToken, ((ChangePasswordContext)Context).oldPassword, ((ChangePasswordContext)Context).newPassword);
 		}
 	}
 
@@ -721,7 +722,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.BookmarkAd(MyApp.AuthToken, ((BookmarkAdContext)Context).adId);
+			return VeneficaApplication.services.BookmarkAd(VeneficaApplication.authToken, ((BookmarkAdContext)Context).adId);
 		}
 	}
 
@@ -735,7 +736,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.RemoveBookmark(MyApp.AuthToken, ((RemoveBookmarkContext)Context).adId);
+			return VeneficaApplication.services.RemoveBookmark(VeneficaApplication.authToken, ((RemoveBookmarkContext)Context).adId);
 		}
 	}
 
@@ -749,7 +750,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetBookmarkedAds(MyApp.AuthToken);
+			return VeneficaApplication.services.GetBookmarkedAds(VeneficaApplication.authToken);
 		}
 	}
 
@@ -763,7 +764,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetConnectedSocialNetworks(MyApp.AuthToken);
+			return VeneficaApplication.services.GetConnectedSocialNetworks(VeneficaApplication.authToken);
 		}
 	}
 
@@ -777,7 +778,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.DisconnectFromNetwork(MyApp.AuthToken, ((DisconnectFromNetworkContext)Context).networkName);
+			return VeneficaApplication.services.DisconnectFromNetwork(VeneficaApplication.authToken, ((DisconnectFromNetworkContext)Context).networkName);
 		}
 	}
 
@@ -791,7 +792,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.ShareOnSocialNetworks(MyApp.AuthToken, ((ShareOnSocialNetworksContext)Context).message);
+			return VeneficaApplication.services.ShareOnSocialNetworks(VeneficaApplication.authToken, ((ShareOnSocialNetworksContext)Context).message);
 		}
 	}
 
@@ -805,7 +806,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.MarkAsSpam(MyApp.AuthToken, ((MarkAsSpamContext)Context).adId);
+			return VeneficaApplication.services.MarkAsSpam(VeneficaApplication.authToken, ((MarkAsSpamContext)Context).adId);
 		}
 	}
 
@@ -819,7 +820,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.UnmarkAsSpam(MyApp.AuthToken, ((UnmarkAsSpamContext)Context).adId);
+			return VeneficaApplication.services.UnmarkAsSpam(VeneficaApplication.authToken, ((UnmarkAsSpamContext)Context).adId);
 		}
 	}
 
@@ -833,7 +834,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetUserByName(MyApp.AuthToken, ((GetUserByNameContext)Context).name);
+			return VeneficaApplication.services.GetUserByName(VeneficaApplication.authToken, ((GetUserByNameContext)Context).name);
 		}
 	}
 
@@ -847,7 +848,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.EndAd(MyApp.AuthToken, ((EndAdContext)Context).adId);
+			return VeneficaApplication.services.EndAd(VeneficaApplication.authToken, ((EndAdContext)Context).adId);
 		}
 	}
 
@@ -861,7 +862,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.DeleteAd(MyApp.AuthToken, ((DeleteAdContext)Context).adId);
+			return VeneficaApplication.services.DeleteAd(VeneficaApplication.authToken, ((DeleteAdContext)Context).adId);
 		}
 	}
 
@@ -875,7 +876,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.RelistAd(MyApp.AuthToken, ((RelistAdContext)Context).adId);
+			return VeneficaApplication.services.RelistAd(VeneficaApplication.authToken, ((RelistAdContext)Context).adId);
 		}
 	}
 
@@ -889,7 +890,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetMyAds(MyApp.AuthToken);
+			return VeneficaApplication.services.GetMyAds(VeneficaApplication.authToken);
 		}
 	}
 
@@ -903,7 +904,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.RateAd(MyApp.AuthToken, ((RateAdContext)Context).adId, ((RateAdContext)Context).ratingValue);
+			return VeneficaApplication.services.RateAd(VeneficaApplication.authToken, ((RateAdContext)Context).adId, ((RateAdContext)Context).ratingValue);
 		}
 	}
 
@@ -917,7 +918,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.DeleteMessage(MyApp.AuthToken, ((DeleteMessageContext)Context).messageId);
+			return VeneficaApplication.services.DeleteMessage(VeneficaApplication.authToken, ((DeleteMessageContext)Context).messageId);
 		}
 	}
 
@@ -931,7 +932,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.UpdateComment(MyApp.AuthToken, ((UpdateCommentContext)Context).comment);
+			return VeneficaApplication.services.UpdateComment(VeneficaApplication.authToken, ((UpdateCommentContext)Context).comment);
 		}
 	}
 
@@ -945,7 +946,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetCommentsByAd(MyApp.AuthToken, ((GetCommentsByAdContext)Context).adId, ((GetCommentsByAdContext)Context).lastCommentId, ((GetCommentsByAdContext)Context).numComments);
+			return VeneficaApplication.services.GetCommentsByAd(VeneficaApplication.authToken, ((GetCommentsByAdContext)Context).adId, ((GetCommentsByAdContext)Context).lastCommentId, ((GetCommentsByAdContext)Context).numComments);
 		}
 	}
 
@@ -959,7 +960,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.SendMessageTo(MyApp.AuthToken, ((SendMessageToContext)Context).message);
+			return VeneficaApplication.services.SendMessageTo(VeneficaApplication.authToken, ((SendMessageToContext)Context).message);
 		}
 	}
 
@@ -973,7 +974,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.AddCommentToAd(MyApp.AuthToken, ((AddCommentToAdContext)Context).adId, ((AddCommentToAdContext)Context).comment);
+			return VeneficaApplication.services.AddCommentToAd(VeneficaApplication.authToken, ((AddCommentToAdContext)Context).adId, ((AddCommentToAdContext)Context).comment);
 		}
 	}
 
@@ -987,7 +988,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.HideMessage(MyApp.AuthToken, ((HideMessageContext)Context).messageId);
+			return VeneficaApplication.services.HideMessage(VeneficaApplication.authToken, ((HideMessageContext)Context).messageId);
 		}
 	}
 
@@ -1001,7 +1002,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.GetAllMessages(MyApp.AuthToken);
+			return VeneficaApplication.services.GetAllMessages(VeneficaApplication.authToken);
 		}
 	}
 
@@ -1015,7 +1016,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.UpdateMessage(MyApp.AuthToken, ((UpdateMessageContext)Context).message);
+			return VeneficaApplication.services.UpdateMessage(VeneficaApplication.authToken, ((UpdateMessageContext)Context).message);
 		}
 	}
 
@@ -1029,7 +1030,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return MyApp.Services.DeleteImageFromAd(MyApp.AuthToken, ((DeleteImageFromAdContext)Context).adId, ((DeleteImageFromAdContext)Context).imageId);
+			return VeneficaApplication.services.DeleteImageFromAd(VeneficaApplication.authToken, ((DeleteImageFromAdContext)Context).adId, ((DeleteImageFromAdContext)Context).imageId);
 		}
 	}
 
@@ -1048,7 +1049,7 @@ public class AsyncServices
 			for (Long it : con.imagesId)
 			{
 				if (it.longValue() != 0)
-					MyApp.Services.DeleteImageFromAd(MyApp.AuthToken, con.adId, it.longValue());
+					VeneficaApplication.services.DeleteImageFromAd(VeneficaApplication.authToken, con.adId, it.longValue());
 			}
 
 			return new DeleteImageFromAdResult();

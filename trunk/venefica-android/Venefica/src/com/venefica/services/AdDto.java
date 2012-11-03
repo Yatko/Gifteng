@@ -14,6 +14,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.venefica.activity.PostStepLogic.PostData;
+import com.venefica.module.user.UserDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
 
@@ -54,7 +55,7 @@ public class AdDto implements KvmSerializable
 	{
 		if (Post == null)
 		{
-			Log.d("AdDto Alert!", "Post == null");
+			Log.d("AdDto Alert!", "post == null");
 			return;
 		}
 

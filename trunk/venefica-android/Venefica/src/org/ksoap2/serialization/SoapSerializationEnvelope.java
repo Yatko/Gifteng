@@ -71,7 +71,7 @@ public class SoapSerializationEnvelope extends SoapEnvelope
 
 	/**
 	 * Set this variable to true for compatibility with what seems to be the
-	 * default encoding for .Net-Services. This feature is an extremely ugly
+	 * default encoding for .Net-services. This feature is an extremely ugly
 	 * hack. A much better option is to change the configuration of the
 	 * .Net-Server to standard Soap Serialization!
 	 */
