@@ -9,13 +9,13 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
+import com.venefica.module.user.UserDto;
 import com.venefica.services.AdDto;
 import com.venefica.services.ImageDto;
-import com.venefica.services.UserDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
 import com.venefica.utils.ImageAd;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class Product
 {
@@ -114,7 +114,7 @@ public class Product
 
 			//are counting their own variables
 			CalcPostTime();
-			KMeters = MyApp.MyLocation.distanceTo(GeoLocation.GeoToLoc(Location)) / 1000.0f;
+			KMeters = VeneficaApplication.myLocation.distanceTo(GeoLocation.GeoToLoc(Location)) / 1000.0f;
 
 			owner = dto.owner;
 			inBookmars = dto.inBookmars;

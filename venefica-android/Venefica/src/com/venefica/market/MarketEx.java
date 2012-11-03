@@ -17,7 +17,7 @@ import com.venefica.services.ServicesManager.GetAdsResult;
 import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class MarketEx
 {
@@ -68,7 +68,7 @@ public class MarketEx
 	public void UpdateCategory()
 	{
 		Category.DeleteAllCategories();
-		MyApp.Services.GetCategories(MyApp.AuthToken);
+		VeneficaApplication.services.GetCategories(VeneficaApplication.authToken);
 	}
 
 	public void ClearCategory()
@@ -88,7 +88,7 @@ public class MarketEx
 				lastAdId = ProductsListSync.get(ProductsListSync.size() - 1).Id;
 			}
 
-			MyApp.AsyncServices.GetAds(new GetAdsContext(lastAdId, Constants.PRODUCT_LIST_CACHE_SIZE, filter, new ICallback()
+			VeneficaApplication.asyncServices.GetAds(new GetAdsContext(lastAdId, Constants.PRODUCT_LIST_CACHE_SIZE, filter, new ICallback()
 			{
 				int filterRev = filter.rev;
 
@@ -142,7 +142,7 @@ public class MarketEx
 	 */
 	public void GetProductById(final long adId, final ICallback callback)
 	{
-		MyApp.AsyncServices.GetAdById(new GetAdByIdContext(adId, callback));
+		VeneficaApplication.asyncServices.GetAdById(new GetAdByIdContext(adId, callback));
 	}
 
 	public List<Product> GetProducts()
