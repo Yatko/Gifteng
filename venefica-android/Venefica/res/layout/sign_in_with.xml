@@ -67,7 +67,7 @@
             android:layout_marginLeft="10.0px"
             android:layout_marginRight="10.0px"
             android:layout_marginTop="5.0px"
-            android:background="@drawable/venefica_button" />
+            />
     </RelativeLayout>
 
 </RelativeLayout>
