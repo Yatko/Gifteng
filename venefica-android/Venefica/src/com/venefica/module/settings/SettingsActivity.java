@@ -16,9 +16,4 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_settings, menu);
-        return true;
-    }
 }
