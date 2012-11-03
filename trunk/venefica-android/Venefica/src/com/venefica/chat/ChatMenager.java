@@ -85,7 +85,7 @@ public class ChatMenager
 			}
 
 			Context = new GetMessagesByAdContext(adId, lastId, Constants.MESSAGE_LIST_CACHE_SIZE, this);
-			MyApp.AsyncServices.GetMessagesByAd(Context);
+			VeneficaApplication.asyncServices.GetMessagesByAd(Context);
 		}
 
 		public CallbackReturn Callback(IResult<?> result)
@@ -125,14 +125,14 @@ public class ChatMenager
 	
 	public class ListUpdaterByConversationId extends IListUpdater implements ICallback
 	{
-		long ñonversationId;
+		long ï¿½onversationId;
 		GetMessagesByConversationContext Context;
 
-		public ListUpdaterByConversationId(List<Message> MessageList, long ñonversationId)
+		public ListUpdaterByConversationId(List<Message> MessageList, long ï¿½onversationId)
 		{
 			super(MessageList);
 
-			this.ñonversationId = ñonversationId;
+			this.ï¿½onversationId = ï¿½onversationId;
 		}
 
 		@Override
@@ -143,8 +143,8 @@ public class ChatMenager
 			
 			WaitUpdate = true;
 
-			Context = new GetMessagesByConversationContext(ñonversationId, this);
-			MyApp.AsyncServices.GetMessagesByConversation(Context);
+			Context = new GetMessagesByConversationContext(ï¿½onversationId, this);
+			VeneficaApplication.asyncServices.GetMessagesByConversation(Context);
 		}
 
 		public CallbackReturn Callback(IResult<?> result)
