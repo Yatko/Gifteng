@@ -1,0 +1,71 @@
+/**
+ * 
+ */
+package com.venefica.module.dashboard;
+
+import com.venefica.activity.R;
+import com.venefica.module.alert.AlertListActivity;
+import com.venefica.module.messages.MessageListActivity;
+import com.venefica.module.settings.SettingsActivity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+/**
+ * @author avinash
+ * Dashboard activity
+ */
+public class DashBoardActivity extends Activity {
+	/**
+	 * List to show dashboard items
+	 */
+	private ListView listViewDashBoard;
+	/**
+	 * List adapter
+	 */
+	private DashBoardListAdapter dashBoardAdapter;
+	/**
+	 * Dash board menu item list
+	 */
+	private String[] listItems;
+	/**
+	 * Dash board menu item icons
+	 */
+	private int[] icons;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_dash_board);
+		
+		listViewDashBoard = (ListView) findViewById(R.id.listActDashBoard);
+		listItems = getResources().getStringArray(R.array.array_dashboard_menu);
+        icons = new int[]{R.drawable.alerts, R.drawable.messages, R.drawable.browse, R.drawable.post, 
+        		R.drawable.claimed, R.drawable.offerings, R.drawable.my_listings, R.drawable.account,
+        		R.drawable.settings, R.drawable.feedback};
+        dashBoardAdapter = new DashBoardListAdapter(this, listItems, icons);
+        listViewDashBoard.setAdapter(dashBoardAdapter);
+        listViewDashBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				switch( position ){
+					case 0:  Intent alertIntent = new Intent(DashBoardActivity.this, AlertListActivity.class);     
+						startActivity(alertIntent);
+			            break;
+					case 1:  Intent messagesIntent = new Intent(DashBoardActivity.this, MessageListActivity.class);     
+	                	startActivity(messagesIntent);
+	                	break;
+					case 9:  Intent settingsIntent = new Intent(DashBoardActivity.this, SettingsActivity.class);     
+	                	startActivity(settingsIntent);
+	                	break;
+			       default:
+			    }
+			}
+		});
+	}
+
+}
