@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for LoginActivity.java -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="?ActivityBackground">
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+	    
+	    <!-- Sign up layout -->
+	  	<RelativeLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="10dp"
+	        style="?ViewGroupBackground"
+	        android:paddingBottom="6dp" >
+	        
+	  	    <TextView
+	            android:id="@+id/txtLoginActWelcome"            
+	            android:layout_alignParentTop="true"            
+	            android:gravity="left"
+	            android:text="@string/label_act_login_welcome"
+	            style="?LabelTitle" /> 
+	  	    
+	  	    <!-- Divider line --> 
+	  	    <TextView
+	  	        android:id="@+id/div_act_login_01"
+				android:layout_width="fill_parent" 
+				android:layout_height="1dp"
+				android:layout_below="@id/txtLoginActWelcome"
+				android:background="#DADADA" />
+	  	    
+	  	    <Button
+	            android:id="@+id/btnActLoginSignUp"
+	            android:layout_below="@id/div_act_login_01"
+	                        
+	            android:text="@string/label_act_login_btn_sign_up"
+	            style="?ButtonFullWidth"/>
+	  	    </RelativeLayout>
+	  	    <!-- Sign in layout -->
+	  	    <RelativeLayout
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_marginTop="10dp"
+		        style="?ViewGroupBackground"
+		        android:paddingBottom="6dp" >
+	  	    	<!-- Sign in -->
+		    	<TextView
+		            android:id="@+id/txtActLoginTitleSignIn"            
+		            android:text="@string/label_act_login_btn_sign_in"
+		            style="?LabelTitle"
+		            android:layout_alignParentTop="true"/>
+		  	     <!-- Divider line --> 
+		  	    <TextView
+		  	        android:id="@+id/div_act_login_02"
+					android:layout_width="fill_parent" 
+					android:layout_height="1dp"
+					android:layout_below="@id/txtActLoginTitleSignIn"
+					android:background="#DADADA" />
+		  	    <TextView 
+		  	        android:id="@+id/txtActLoginUserId"
+		  	        android:layout_below="@id/div_act_login_02"
+		  	        style="?LabelEditText"
+		  	        android:text="@string/label_login"/>
+		  	    
+		  	    <EditText 
+		  	        android:id="@+id/edtActLoginUserId"
+		  	        style="?EditTextSingleLine"
+		  	        android:background="@drawable/corners"
+		  	        android:layout_below="@+id/txtActLoginUserId"
+		  	        android:inputType="text"
+		  	        android:text="ddkkss"/>
+		  	    
+		  	    <TextView 
+		  	        android:id="@+id/txtActLoginPassword"
+		  	        android:layout_below="@id/edtActLoginUserId"
+		  	        style="?LabelEditText"
+		  	        android:text="@string/label_password"/>
+		  	    
+		  	    <EditText 
+		  	        android:id="@+id/edtActLoginPassword"
+		  	        style="?EditTextSingleLine"
+		  	        android:background="@drawable/corners"
+		  	        android:layout_below="@id/txtActLoginPassword"
+		  	        android:inputType="textPassword"
+		  	        android:text="81064678"/>
+		  	   
+		  	    <CheckBox
+		            android:id="@+id/chkActLoginRemember"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_below="@id/edtActLoginPassword"
+		            android:layout_alignParentRight="true"
+		            android:layout_gravity="right"
+		            android:checked="true"
+		            android:text="@string/label_remember_me"
+		            android:textColor="#ff702963" />
+		  	    
+		  	    <Button
+		            android:id="@+id/btnActLoginSignIn"
+		            android:layout_below="@id/chkActLoginRemember"
+		            android:background="@drawable/button_green_bg_selector"           
+		            android:text="@string/label_act_login_btn_sign_in"
+		            style="?ButtonFullWidth" />
+	  	    </RelativeLayout>
+	
+	  	<!-- Sign in with social network layout -->
+	  	<RelativeLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="10dp"
+	        style="?ViewGroupBackground"
+	        android:paddingBottom="6dp" >
+	  	    
+	  	    <TextView
+	            android:id="@+id/txtActLoginSocialTitle"
+	            android:text="@string/label_act_login_sign_in_with"
+             	style="?LabelTitle"
+	            android:layout_alignParentTop="true"/>
+	  	     <!-- Divider line --> 
+	  	    <TextView
+	  	        android:id="@+id/div_act_login_03"
+				android:layout_width="fill_parent" 
+				android:layout_height="1dp"
+				android:layout_below="@id/txtActLoginSocialTitle"
+				android:background="#DADADA" />
+	  	    <Button
+	            android:id="@+id/btnActLoginFacebook"
+	            android:layout_below="@id/div_act_login_03"
+	            android:background="@drawable/facebook_button" 
+	            style="?ButtonFullWidth" />
+	
+	        <Button
+	            android:id="@+id/btnActLoginTwitter"
+	            android:layout_below="@+id/btnActLoginFacebook"
+	            android:background="@drawable/twitter_button"
+	            style="?ButtonFullWidth"/>
+	
+	        <Button
+	            android:id="@+id/btnActLoginVK"
+	            android:layout_below="@+id/btnActLoginTwitter"
+	            android:background="@drawable/vk_button"
+	            style="?ButtonFullWidth"/>	  	    
+	    </RelativeLayout>
+	</LinearLayout>
+</ScrollView>
