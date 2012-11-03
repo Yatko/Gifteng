@@ -17,11 +17,15 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.venefica.utils.MyApp"
+        android:name="com.venefica.utils.VeneficaApplication"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Green" >
+        <uses-library android:name="com.google.android.maps" />
+        <!--
         <activity
             android:name=".WelcomeActivity"
             android:label="@string/app_name"
@@ -32,10 +36,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
 
-        <uses-library android:name="com.google.android.maps" >
-        </uses-library>
+        <activity
+            android:name="com.venefica.module.user.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="BrowseListActivity"
             android:launchMode="singleTop"
@@ -64,7 +76,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="WebAuthorizationActivity"
+            android:name="com.venefica.module.user.WebAuthorizationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -152,10 +164,40 @@
             android:name="UserInfoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-         <activity
+        <activity
             android:name="UserAdsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />        
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.user.RegisterUserActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.dashboard.DashBoardActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.alert.AlertListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.messages.MessageListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.messages.MessageDetailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.settings.SettingsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>
