@@ -5,7 +5,7 @@ import android.webkit.WebView;
 import android.app.Activity;
 
 import com.venefica.activity.R;
-
+@Deprecated
 public class WebAuthorizationSkinDef extends WebAuthorizationTemplate
 {
 	public WebAuthorizationSkinDef(Activity Activity)
