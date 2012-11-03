@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Labels -->
+    <string name="label_act_login_welcome">Don\'t have a Venefica ID?</string>
+    <string name="label_act_login_btn_sign_up">Sign Up</string>
+    <string name="label_act_login_btn_sign_in">Sign In</string>
+    <string name="label_act_login_sign_in_with">Sign In With</string>
+    <string name="label_act_register_user_title">Join the community!</string>
+    <string name="label_act_reg_user_btn_join">Join</string>
+    <string name="label_act_reg_user_btn_option_phone">Use phone number</string>
+    <string name="label_act_reg_user_btn_option_email">Use E-mail</string>
+    <string name="label_act_reg_user_complete_profile">Your profile is incomplete, please fill missing fields.</string>
+    <string name="label_login">Login</string>
+    <string name="label_password">Password</string>
+    <string name="label_email">E-mail</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_f_name">First Name</string>
+    <string name="label_l_name">Last Name</string>
+    <string name="label_birth">Date of Birth</string>
+    <string name="label_zip">ZIP</string>
+    <string name="label_county">County</string>
+    <string name="label_city">City</string>
+    <string name="label_area">Area</string>
+    <string name="label_business_acc">Business Account</string>
+    <string name="label_remember_me">Remember me</string>
+    <string name="label_profile_image">Profile Image</string>
+    <string name="label_dashboard_alerts">Alerts</string>
+    <string name="label_dashboard_messages">Messages</string>
+    <string name="label_dashboard_browse">Browse</string>
+    <string name="label_dashboard_post">Post</string>
+    <string name="label_dashboard_claimed">Claimed</string>
+    <string name="label_dashboard_offerings">Offerings</string>
+    <string name="label_dashboard_my_listings">My Listings</string>
+    <string name="label_dashboard_account">Account</string>
+    <string name="label_dashboard_settings">Settings</string>
+    <string name="label_dashboard_feedback">Feedback</string>
+    <string name="label_btn_ok">OK</string>
+    <string name="label_btn_yes">Yes</string>
+    <string name="label_btn_no">No</string>
+    <string name="label_btn_save">Save</string>
+    <string name="label_messages">Messages</string>
+    <string name="label_settings_themes">Themes</string>
+    <string name="label_settings_connect_with">Connect</string>
+    <string name="label_facebook">Facebook</string>
+    <string name="label_twitter">Twitter</string>
+    <string name="label_vk">VK</string>
+
+    <!-- Messages -->
+    <string name="error_network_01">Network unavailable. Please check the network.</string>
+    <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
+    <string name="error_social_auth">Unable to login using social network. Please try again later.</string>
+    <string name="error_register_user">Unable to register user.</string>
+    <string name="error_update_user">Unable to update user details.</string>
+    <string name="msg_invalid_user_password">Invalid login or password.</string>
+    <string name="msg_empty_user_password">Please enter valid login and password.</string>
+    <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
+    <string name="msg_reg_user_duplicate_phone">User with the specified phone number already exists.</string>
+    <string name="msg_reg_user_duplicate_login">User with the same login already exists.</string>
+    <string name="msg_reg_user_registration_success">User registered successfully. Please check email to complete registration.</string>
+    <string name="msg_update_user_success">User updated successfully.</string>
+    <string name="msg_progress">Loading. Please wait...</string>
+    <string name="msg_validation_fname_lname">Use letters only.</string>
+    <string name="msg_validation_county_city_area">Use letters only.</string>
+    <string name="msg_validation_zipcode">Zip must be 6 numbers.</string>
+    <string name="msg_validation_email">Use standard email.</string>
+    <string name="msg_validation_phone">Use numbers only.</string>
+
+    <!-- Hints/  tooltips -->
+    <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
+    <!-- Titles -->
+    <string name="app_name">Venefica</string>
+    <!-- Data -->
+    <!-- Dashboard menu list -->
+    <string-array name="array_dashboard_menu">
+        <item>Alerts</item>
+        <item>Messages</item>
+        <item>Browse</item>
+        <item>Post</item>
+        <item>Claimed</item>
+        <item>Offerings</item>
+        <item>My Listings</item>
+        <item>Account</item>
+        <item>Settings</item>
+        <item>Feedback</item>
+    </string-array>
+
+    <!-- Message list type -->
+    <string-array name="array_message_types">
+        <item>Inbox</item>
+        <item>Sent</item>
+        <item>Archive</item>
+    </string-array>
+
+    <!-- Theme list -->
+    <string-array name="array_themes_list">
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Orange</item>
+    </string-array>
+
+    <!-- Old strings -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="phone">Phone</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">E-mail</string>
+    <string name="temp_string">- - -</string>
+    <string name="temp_dig">0.0</string>
+    <string name="use_email">Use E-mail</string>
+    <string name="use_phone_num">Use phone number</string>
+    <string name="loading">Loading. . .</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_photo">Add photo</string>
+    <string name="select_image">Select image</string>
+    <string name="browse">Browse</string>
+    <string name="post">Post</string>
+    <string name="accaunt">Account</string>
+    <string name="list">List</string>
+    <string name="map">Map</string>
+    <string name="photo">Photo</string>
+    <string name="filter">Filter</string>
+    <string name="search">Sr</string>
+    <string name="search_hint">Search for sale or offered</string>
+    <string name="google_map_api_key">0skoFbDNDYtsm4iRrYbUCsIZSLhMPZw3Dyct4Hg</string>
+    <string name="zero_num">0</string>
+    <string name="messages">Messages</string>
+    <string name="welcome">Welcome</string>
+    <string name="buyers">Buyers</string>
+    <string name="listings">Listings</string>
+    <string name="sign_up_with">Sign Up With:</string>
+    <string name="sign_in_with">Sign In With:</string>
+    <string name="alerdy_have_accaunt">Already have an Venefica account?</string>
+    <string name="forgot_password">Forgot your username or password?</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="join_community">Join the community!</string>
+    <string name="available">Available</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="area">Area</string>
+    <string name="zip">Zip</string>
+    <string name="birth">Birth</string>
+    <string name="business_account"> Business account</string>
+    <string name="date_format">MM/dd/yyyy</string>
+    <string name="optional">optional</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="add_photo_opt">Add a photo (optional)</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="sub_category">Sub category</string>
+    <string name="post_locate_map_instructions">Move map to set location, then click Next</string>
+    <string name="preview">Preview</string>
+    <string name="small_title_message">Please enter a title for your listing!</string>
+    <string name="profile_not_complite">Profile not complite</string>
+    <string name="check_field">Check field</string>
+    <string name="update_user_error">Failed to update user information, try again later</string>
+    <string name="register_error">User register failed</string>
+    <string name="user_dupe_email">User with the specified E-Mail already exists</string>
+    <string name="user_dupe_phone">User with the specified phone number already exists</string>
+    <string name="user_dupe_login">User with the same login already exists</string>
+    <string name="unknown_address">Unknown address</string>
+    <string name="enter_valid_price">Enter valid price</string>
+    <string name="select_category">Select category</string>
+    <string name="select_subcategory">Select Subcategory</string>
+    <string name="message_date_format">EEE h:mm a</string>
+    <string name="soap_problem">Error connecting to the service, try again later</string>
+    <string name="place_ad_successful">Your ad is added. The post will appear in the list after it\'s been reviewed by administrators.</string>
+    <string name="place_ad_error">Error adding</string>
+    <string name="authenticate_error">Authenticate error, check the login and password</string>
+    <string name="get_user_error">Failed to get data about the user</string>
+    <string name="edit_ad">Edit ad</string>
+    <string name="details">Details</string>
+    <string name="show">Show</string>
+    <string name="geo_loc">GeoLoc</string>
+    <string name="send_message">Send message</string>
+    <string name="update_ad_error">Error updating</string>
+    <string name="update_ad_successful">Updating successful</string>
+    <string name="update_user_successful">Updating successful</string>
+    <string name="get_ad_error">Failed to get information about the product</string>
+    <string name="get_message_by_ad_error">Failed to get messages list</string>
+    <string name="product">Product</string>
+    <string name="product_colon">Product:</string>
+    <string name="enter_message">Enter message</string>
+    <string name="short_message">Is too short message</string>
+    <string name="add_message_successful">Your message is added</string>
+    <string name="add_message_error">Error message add</string>
+    <string name="edit_your_message">Do you want to edit your message</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="old_message">Old message</string>
+    <string name="new_message">New message</string>
+    <string name="update_message">Update message</string>
+    <string name="update_message_error">Error updating</string>
+    <string name="update_message_successful">Updating successful</string>
+    <string name="get_categories_error">Get categories fail</string>
+    <string name="edit_accaunt">Edit account</string>
+    <string name="changes_password">Changes password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="possword_and_confirm_not_equals">Possword and confirm not equals</string>
+    <string name="changes_password_error">Unable to change the password</string>
+    <string name="changes_password_successful">Changes password successful</string>
+    <string name="no_sd_no_crop_image">SD Card not found, crop image disabled</string>
+    <string name="user_pattern_hint">Use only numbers and letters, minimum 6 characters</string>
+    <string name="password_pattern_hint">Use only numbers and letters, minimum 6 characters</string>
+    <string name="email_pattern_hint">Standart E-Mail address</string>
+    <string name="phone_pattern_hint">Use only numbers</string>
+    <string name="standart_word_pattern_hint">Use only letters</string>
+    <string name="zip_pattern_hint">Use only numbers</string>
+    <string name="add_bookmark">Add to bookmarks</string>
+    <string name="remove_bookmark">Remove bookmark</string>
+    <string name="add_bookmark_successful">Add to bookmarks successful</string>
+    <string name="remove_bookmark_error">Error remove bookmark</string>
+    <string name="remove_bookmark_successful">Remove bookmark successful</string>
+    <string name="add_bookmark_error">Error add to bookmark</string>
+    <string name="authorization_error">Authorization error</string>
+    <string name="get_messages_error">Get messages fail</string>
+    <string name="what_are_you_looking_for">What are you looking for?</string>
+    <string name="select_categories">Select categories</string>
+    <string name="must_have_photo">Must have photo</string>
+    <string name="_0_miles">0 miles</string>
+    <string name="_50_miles">50 miles</string>
+    <string name="_100_miles">100 miles</string>
+    <string name="apply">Apply</string>
+    <string name="_default">Default</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="price_range">Price range:</string>
+    <string name="edit_ad_locate_map_instructions">Move map to set location</string>
+    <string name="update">Update</string>
+    <string name="settings">Settings</string>
+    <string name="use_miles">Use miles</string>
+    <string name="accaunt_settings">Account settings</string>
+    <string name="miles">Miles</string>
+    <string name="km">Km</string>
+    <string name="incorrectly_filled_fields">Incorrectly filled fields:</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="get_bookmarks_error">Failed to get bookmarks list</string>
+    <string name="date_expires">Date expires</string>
+    <string name="expires_date_error">Expiration date is too short</string>
+    <string name="connect_facebook">Connect facebook</string>
+    <string name="connect_twitter">Connect twitter</string>
+    <string name="connect_vk">Connect vk</string>
+    <string name="disconnect_facebook">Disconnect facebook</string>
+    <string name="disconnect_twitter">Disconnect twitter</string>
+    <string name="disconnect_vk">Disconnect vk</string>
+    <string name="get_social_networks_error">Failed to get information about the social networks</string>
+    <string name="disconnect_social_networks_error">Error disconnect social network</string>
+    <string name="disconnect_social_networks_successful">Disconnect social networks successful</string>
+    <string name="connect_social_networks_successful">Connect social network successful</string>
+    <string name="connect_social_networks_error">Connect social network error</string>
+    <string name="share_ad_successful">Share ad successful</string>
+    <string name="share_ad_error">Share ad error</string>
+    <string name="share">Share</string>
+    <string name="social_networks">Social networks</string>
+    <string name="sms">SMS</string>
+    <string name="e_mail_subject">I\'m interested in your classified listing on Venefica.</string>
+    <string name="other">Other</string>
+    <string name="exit_toast_message">Press again to exit</string>
+    <string name="total_views">Total views:</string>
+    <string name="mark_spam">Mark spam</string>
+    <string name="marked_spam_successful">Marked successful</string>
+    <string name="marked_spam_error">Marked error</string>
+    <string name="marked_spam_question">Are you sure that this ad spam?</string>
+    <string name="add_additional_images">Add additional images</string>
+    <string name="delete">Delete</string>
+    <string name="end">End</string>
+    <string name="end_this_ad">End this ad?</string>
+    <string name="delete_this_ad">Are you sure you want to delete?</string>
+    <string name="end_ad_error">Error end ad</string>
+    <string name="end_ad_successful">End ad successful</string>
+    <string name="delete_ad_error">Error delete ad</string>
+    <string name="delete_ad_successful">Delete ad successful</string>
+    <string name="owner">Owner:</string>
+    <string name="login_">Login:</string>
+    <string name="name_">Name:</string>
+    <string name="country_">Country:</string>
+    <string name="first_name_">First name:</string>
+    <string name="last_name_">Last name:</string>
+    <string name="relist_ad">Relist ad</string>
+    <string name="relist_this_ad_question">Relist this ad?</string>
+    <string name="relist_ad_successful">Relist ad successful</string>
+    <string name="relist_ad_error">Relist ad error</string>
+    <string name="this_ad_expired">THIS AD EXPIRED</string>
+    <string name="unmarked_spam_successful">UnMarked successful</string>
+    <string name="unmarked_spam_error">UnMarked error</string>
+    <string name="unmarked_spam_question">Are you sure that this ad no spam?</string>
+    <string name="unmark_spam">Unmark spam</string>
+    <string name="active">Active</string>
+    <string name="expired">Expired</string>
+    <string name="get_my_ads_error">Get ads fail</string>
+    <string name="my_ads">My listings</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="rating_">Rating:</string>
+    <string name="rating_change_error">Error rating change ad</string>
+    <string name="custom_date">Custom date</string>
+    <string name="inbox">Inbox</string>
+    <string name="sent">Sent</string>
+    <string name="select_action">Select action</string>
+    <string name="hide">Hide</string>
+    <string name="edit">Edit</string>
+    <string name="send_to">Send To</string>
+    <string name="add_comment">Add comment</string>
+    <string name="get_comment_error">Error get comment</string>
+    <string name="add_comment_error">Error add comment</string>
+    <string name="update_comment_error">Error update comment</string>
+    <string name="hide_message_error">Error hide message</string>
+    <string name="hide_message_successful">Hide message successful</string>
+    <string name="delete_message_error">Error delete message</string>
+    <string name="delete_message_successful">Delete message successful</string>
+    <string name="send_message_error">Error send message</string>
+    <string name="send_message_successful">Send message successful</string>
+    <string name="delete_this_image">Delete this image?</string>
+    <string name="comments">Comments</string>
+    <string name="expires_in_2_months">Listing expires in 2 months</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_register_user">Venefica</string>
+    <string name="title_activity_dash_board">DashBoardActivity</string>
+    <string name="title_activity_message_detail">Venefica</string>
+    <string name="title_activity_settings">Settings</string>
+
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableMessageListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical" >
+
+    <TableRow
+        android:id="@+id/tableRowMessageListItemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip"
+        android:weightSum="100" >
+
+        <!-- Sender -->
+
+        <TextView
+            android:id="@+id/txtMessageLItemSender"
+            style="?LabelEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:ellipsize="end"
+            android:maxLines="1" />
+        <!-- Time -->
+
+        <TextView
+            android:id="@+id/txtMessageLItemTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20" />
+    </TableRow>
+    <!-- Description span 2 column -->
+
+    <TableRow
+        android:id="@+id/tableRowMessageLItemDetails"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+
+        <TextView
+            android:id="@+id/txtMessageLItemDetails"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2" />
+    </TableRow>
+
+</TableLayout>

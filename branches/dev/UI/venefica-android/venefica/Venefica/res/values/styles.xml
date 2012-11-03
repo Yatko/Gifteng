@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- ################################################################### -->
+    <!-- Green Theme -->
+    <!-- ################################################################### -->
+    <style name="LabelTitleGreen" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+    <style name="LabelGroupTitleGreen" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+    
+    <style name="LabelEditTextGreen"  parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ff702963</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="EditTextSingleLineGreen" parent="@android:style/Widget.EditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+    
+    <style name="ButtonFullWidthGreen">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">#88000000</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">-1.5</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:background">@drawable/button_green_bg_selector</item>  
+    </style>
+    <style name="ActivityBackgroundGreen">
+        <item name="android:background">@drawable/tab_bg_cut</item>
+    </style>
+    <style name="ViewGroupBackgroundGreen">
+        <item name="android:background">@drawable/corners</item>
+    </style>
+    <!-- ################################################################### -->
+    <!-- Blue Theme -->
+    <!-- ################################################################### -->
+</resources>

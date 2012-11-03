@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dip"
+        android:text="@string/accaunt_settings"
+        android:textColor="#ff000000"
+        android:textSize="20.0sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffffff" >
+
+        <TextView
+            android:id="@+id/lblLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="7dip"
+            android:text="@string/use_miles"
+            android:textColor="#ff000000"
+            android:textSize="20.0sp"
+            android:textStyle="bold" />
+
+        <ToggleButton
+            android:id="@+id/toggleUseMiles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="7.0dip"
+        android:background="@drawable/button_green_bg_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="3dip"
+        android:shadowColor="#88000000"
+        android:shadowDx="0.0"
+        android:shadowDy="-1.5"
+        android:shadowRadius="1.0"
+        android:text="@string/connect_facebook"
+        android:textColor="#ffffffff"
+        android:textSize="22.0dip" />
+
+    <Button
+        android:id="@+id/btnTwitter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="7.0dip"
+        android:background="@drawable/button_green_bg_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="3dip"
+        android:shadowColor="#88000000"
+        android:shadowDx="0.0"
+        android:shadowDy="-1.5"
+        android:shadowRadius="1.0"
+        android:text="@string/connect_twitter"
+        android:textColor="#ffffffff"
+        android:textSize="22.0dip" />
+
+    <Button
+        android:id="@+id/btnVk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="7.0dip"
+        android:background="@drawable/button_green_bg_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="3dip"
+        android:shadowColor="#88000000"
+        android:shadowDx="0.0"
+        android:shadowDy="-1.5"
+        android:shadowRadius="1.0"
+        android:text="@string/connect_vk"
+        android:textColor="#ffffffff"
+        android:textSize="22.0dip" />
+
+</LinearLayout>

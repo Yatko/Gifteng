@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableAlertListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical">
+    
+    <TableRow
+        android:id="@+id/tableRowAlertListItemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip" 
+        android:weightSum="100">
+ 		<!-- Title -->
+        <TextView 
+	        android:id="@+id/txtAlertLItemTitle"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="80"
+	        android:ellipsize="end"
+	        android:maxLines="1"
+	        style="?LabelEditText"/>
+ 		<!-- Time -->
+        <TextView 
+	        android:id="@+id/txtAlertLItemTime"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="20"/>
+    </TableRow>
+    <!-- Description span 2 column -->
+    <TableRow
+        android:id="@+id/tableRowAlertLItemDesc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+ 
+        <TextView
+            android:id="@+id/txtAlertLItemDesc"
+            android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"/>
+    </TableRow>
+
+</TableLayout>

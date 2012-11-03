@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="?ActivityBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    style="?ActivityBackground" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="10dp"
+	        style="?ViewGroupBackground"
+	        android:paddingBottom="6dp" 
+	        android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/txtActRegUserHeader"
+                style="?LabelTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="@string/label_act_register_user_title" />
+
+            <!-- Divider line -->
+			
+            <TextView
+                android:id="@+id/divRegUser01"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/txtActRegUserHeader"
+                android:background="#DADADA" />
+            <!-- Profile Img -->
+            <ImageView
+                android:id="@+id/imgActRegUserProfileImg"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:contentDescription="@string/temp_string"
+                android:src="@drawable/venefica_marker" 
+                android:layout_below="@id/divRegUser01"/>
+            
+            <TextView
+                android:id="@+id/txtActRegUserProfileImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/imgActRegUserProfileImg"
+                android:layout_toRightOf="@id/imgActRegUserProfileImg"
+                android:text="@string/label_profile_image"
+				style="?LabelGroupTitle" />
+            
+            <Button
+                android:id="@+id/btnActRegUserSelProfileImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/arro3232"
+                android:layout_alignTop="@id/imgActRegUserProfileImg"
+                android:layout_toRightOf="@id/txtActRegUserProfileImg"
+                android:clickable="true" />
+            <!-- Login -->
+
+            <TextView
+                android:id="@+id/txtActRegUserLogin"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imgActRegUserProfileImg"
+                android:text="@string/label_login" />
+
+            <EditText
+                android:id="@+id/edtActRegUserLogin"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserLogin"
+                android:background="@drawable/corners"
+                android:inputType="text" />
+
+            <!-- Password -->
+
+            <!-- <TextView
+                android:id="@+id/txtActRegUserPassword"
+                style="@style/LabelEditText"
+                android:layout_below="@+id/edtActRegUserLogin"
+                android:text="@string/label_password" />
+
+            <EditText
+                android:id="@+id/edtActRegUserPassword"
+                style="@style/EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserPassword"
+                android:background="@drawable/corners"
+                android:inputType="textPassword"
+                android:text="123456" /> -->
+
+            <!-- Email -->
+
+            <TextView
+                android:id="@+id/txtActRegUserEmail"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserLogin"
+                android:text="@string/label_email" />
+
+            <EditText
+                android:id="@+id/edtActRegUserEmail"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserEmail"
+                android:background="@drawable/corners"
+                android:inputType="textEmailAddress" />
+			
+            <!-- Phone -->
+
+            <TextView
+                android:id="@+id/txtActRegUserPhone"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserEmail"
+                android:text="@string/label_phone" />
+
+            <EditText
+                android:id="@+id/edtActRegUserPhone"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserPhone"
+                android:background="@drawable/corners"
+                android:inputType="phone" />
+			
+            <Button
+                android:id="@+id/btnActRegUserOption"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@id/edtActRegUserPhone"
+			    android:layout_alignParentRight="true"
+			    android:gravity="right"
+			    android:layout_marginRight="10dp"
+			    android:clickable="true"
+			    android:background="@android:color/transparent"
+			    android:text="@string/label_act_reg_user_btn_option_email"
+			    />
+            <!-- F NAME -->
+
+            <TextView
+                android:id="@+id/txtActRegUserFName"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnActRegUserOption"
+                android:text="@string/label_f_name" />
+
+            <EditText
+                android:id="@+id/edtActRegUserFName"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserFName"
+                android:background="@drawable/corners"
+                android:inputType="textPersonName"/>
+
+            <!-- L NAME -->
+
+            <TextView
+                android:id="@+id/txtActRegUserLName"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserFName"
+                android:text="@string/label_l_name" />
+
+            <EditText
+                android:id="@+id/edtActRegUserLName"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserLName"
+                android:background="@drawable/corners"
+                android:inputType="textPersonName"/>
+
+            <!-- DOB -->
+
+            <TextView
+                android:id="@+id/txtActRegUserBirthDate"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserLName"
+                android:text="@string/label_birth" />
+
+            <EditText
+                android:id="@+id/edtActRegUserBirthDate"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserBirthDate"
+                android:background="@drawable/corners"
+                android:inputType="date" />
+
+            <!-- ZIP -->
+
+            <TextView
+                android:id="@+id/txtActRegUserZip"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserBirthDate"
+                android:text="@string/label_zip" />
+
+            <EditText
+                android:id="@+id/edtActRegUserZip"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserZip"
+                android:background="@drawable/corners"
+                android:inputType="number" 
+                android:maxLength="6"/>
+
+            <!-- County -->
+
+            <TextView
+                android:id="@+id/txtActRegUserCounty"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserZip"
+                android:text="@string/label_county" />
+
+            <EditText
+                android:id="@+id/edtActRegUserCounty"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserCounty"
+                android:background="@drawable/corners"
+                android:inputType="text"/>
+
+            <!-- City -->
+
+            <TextView
+                android:id="@+id/txtActRegUserCity"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserCounty"
+                android:text="@string/label_city" />
+
+            <EditText
+                android:id="@+id/edtActRegUserCity"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserCity"
+                android:background="@drawable/corners"
+                android:inputType="text"/>
+
+            <!-- Area -->
+
+            <TextView
+                android:id="@+id/txtActRegUserArea"
+                style="?LabelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtActRegUserCity"
+                android:text="@string/label_area" />
+
+            <EditText
+                android:id="@+id/edtActRegUserArea"
+                style="?EditTextSingleLine"
+                android:layout_below="@id/txtActRegUserArea"
+                android:background="@drawable/corners"
+                android:inputType="text"/>
+
+            <!-- Business ACC -->
+
+            <CheckBox
+                android:id="@+id/chkActRegUserBusinessAcc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/edtActRegUserArea"
+                android:layout_gravity="left"
+                android:checked="false"
+                android:text="@string/label_business_acc"
+                android:textColor="#ff702963"
+                android:textStyle="bold" />
+            
+            <!-- Divider line -->
+
+            <TextView
+                android:id="@+id/divRegUser02"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/chkActRegUserBusinessAcc"
+                android:background="#DADADA" />
+
+            <Button
+                android:id="@+id/btnActRegUserSignUp"
+                style="?ButtonFullWidth"
+                android:layout_below="@+id/divRegUser02"
+                android:background="@drawable/button_green_bg_selector"
+                android:text="@string/label_act_reg_user_btn_join" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>
