@@ -80,10 +80,10 @@ public class MessageListAdapter extends ArrayAdapter<MessageDto>
 			MessageDto item = Messages.get(position);
 			if (item != null)
 			{
-				if (item.fromAvatarUrl.length() > 0 && MyApp.ImgLoader != null)
+				/*if (item.fromAvatarUrl.length() > 0 && VeneficaApplication.ImgLoader != null)
 				{
-					MyApp.ImgLoader.displayImage(Constants.PHOTO_URL_PREFIX + item.fromAvatarUrl, holder.imgAvatar, MyApp.ImgLoaderOptions);
-				}
+					VeneficaApplication.ImgLoader.displayImage(Constants.PHOTO_URL_PREFIX + item.fromAvatarUrl, holder.imgAvatar, VeneficaApplication.ImgLoaderOptions);
+				}*/
 
 				holder.lblUserName.setText(item.fromFullName);
 				holder.lblMessage.setText(item.text);

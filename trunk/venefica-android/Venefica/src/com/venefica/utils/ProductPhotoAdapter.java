@@ -115,7 +115,7 @@ public class ProductPhotoAdapter extends ArrayAdapter<Product>
 			{
 				if (item.image != null && item.image.url != null)
 				{
-					MyApp.ImgLoader.displayImage(item.image.url, holder.imgProduct, MyApp.ImgLoaderOptions);
+//					VeneficaApplication.ImgLoader.displayImage(item.image.url, holder.imgProduct, VeneficaApplication.ImgLoaderOptions);
 				}
 				else
 				{

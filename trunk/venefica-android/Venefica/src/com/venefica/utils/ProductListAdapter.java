@@ -218,7 +218,7 @@ public class ProductListAdapter extends ArrayAdapter<Product>
 				
 				if (item.imageThumbnail != null && item.imageThumbnail.url != null)
 				{
-					MyApp.ImgLoader.displayImage(item.imageThumbnail.url, holder.imgProduct, MyApp.ImgLoaderOptions);
+//					VeneficaApplication.ImgLoader.displayImage(item.imageThumbnail.url, holder.imgProduct, VeneficaApplication.ImgLoaderOptions);
 				}
 				else
 				{
@@ -230,7 +230,7 @@ public class ProductListAdapter extends ArrayAdapter<Product>
 				holder.lblPrice.setText(item.Price);
 
 				float dist = item.KMeters;
-				if (MyApp.user.useMiles)
+				if (VeneficaApplication.user.isUseMiles())
 				{
 					dist = dist * 0.621371192f;
 					holder.lblUnitDistance.setText(R.string.miles);
