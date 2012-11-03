@@ -144,7 +144,7 @@ public class BookmarkListAdapter extends ArrayAdapter<Product>
 
 				if (item.imageThumbnail != null && item.imageThumbnail.url != null)
 				{
-					MyApp.ImgLoader.displayImage(item.imageThumbnail.url, holder.imgProduct, MyApp.ImgLoaderOptions);
+//					VeneficaApplication.ImgLoader.displayImage(item.imageThumbnail.url, holder.imgProduct, VeneficaApplication.ImgLoaderOptions);
 				}
 				else
 				{
@@ -155,11 +155,11 @@ public class BookmarkListAdapter extends ArrayAdapter<Product>
 				holder.lblCategory.setText(Category.GetCategoryById(item.Category).Desc);
 				holder.lblPrice.setText(item.Price);
 
-				//получаем км
+				//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 				float dist = item.KMeters;
-				if (MyApp.user.useMiles)
+				if (VeneficaApplication.user.isUseMiles())
 				{
-					dist = dist * 0.621371192f; //мили
+					dist = dist * 0.621371192f; //пїЅпїЅпїЅпїЅ
 					holder.lblUnitDistance.setText(R.string.miles);
 				}
 				else
