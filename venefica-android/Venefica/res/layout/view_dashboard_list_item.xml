@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" 
+    android:weightSum="100">
+    
+    <ImageView 
+        android:id="@+id/imgDashBListItemIcon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="left"
+        android:layout_weight="20"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_launcher"/>
+
+    <TextView 
+        android:id="@+id/txtDashBListItemTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="80"
+        android:layout_margin="10dp"
+        style="?LabelGroupTitle"
+        />
+</LinearLayout>
