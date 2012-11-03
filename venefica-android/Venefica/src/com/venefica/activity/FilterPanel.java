@@ -7,7 +7,7 @@ import java.util.List;
 import com.venefica.activity.R;
 import com.venefica.market.Category;
 import com.venefica.services.FilterDto;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.Utils;
 
 import android.app.AlertDialog;
@@ -186,7 +186,7 @@ public class FilterPanel extends RelativeLayout
 		}
 	}
 
-	/** Установка дефолтного фильтра и обновление UI */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UI */
 	private void setDefaultFilter()
 	{
 		setSaleWantedButton(true);
@@ -236,8 +236,8 @@ public class FilterPanel extends RelativeLayout
 		}
 
 		filter.distance = seekBarDistance.getProgress();
-		filter.latitude = MyApp.MyLocation.getLatitude();
-		filter.longitude = MyApp.MyLocation.getLongitude();
+		filter.latitude = VeneficaApplication.myLocation.getLatitude();
+		filter.longitude = VeneficaApplication.myLocation.getLongitude();
 
 		String minPrice = editMinPrice.getText().toString();
 		if (minPrice.length() > 0)

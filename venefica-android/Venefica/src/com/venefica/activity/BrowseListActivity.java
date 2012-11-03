@@ -11,7 +11,7 @@ import com.venefica.market.MarketEx;
 import com.venefica.market.Product;
 import com.venefica.skining.*;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.ProductListAdapter;
 
 public class BrowseListActivity extends ActivityEx
@@ -101,8 +101,8 @@ public class BrowseListActivity extends ActivityEx
 
 		T.HeaderTap.SetSearch(MarketEx.getInstance().getFilter().searchString);
 
-		MarketEx.getInstance().getFilter().latitude = MyApp.MyLocation.getLatitude();
-		MarketEx.getInstance().getFilter().longitude = MyApp.MyLocation.getLongitude();
+		MarketEx.getInstance().getFilter().latitude = VeneficaApplication.myLocation.getLatitude();
+		MarketEx.getInstance().getFilter().longitude = VeneficaApplication.myLocation.getLongitude();
 
 		/*if (MarketEx.getInstance().GetNumProduct() == 0)
 		{

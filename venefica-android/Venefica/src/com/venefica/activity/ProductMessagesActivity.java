@@ -29,7 +29,7 @@ import com.venefica.skining.ProductMessagesSkinDef;
 import com.venefica.skining.ProductMessagesTemplate;
 import com.venefica.utils.CommentListAdapter;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class ProductMessagesActivity extends ActivityEx implements ICallback
 {
@@ -157,7 +157,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 						comment.text = message;
 
 						ShowLoadingDialog();
-						MyApp.AsyncServices.AddCommentToAd(new AddCommentToAdContext(item.Id, comment, new ICallback()
+						VeneficaApplication.asyncServices.AddCommentToAd(new AddCommentToAdContext(item.Id, comment, new ICallback()
 						{
 							public CallbackReturn Callback(IResult<?> result)
 							{
@@ -169,7 +169,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 										ChangeAddMessageView(false);
 										T.editMessage.setText("");
 										ShowLoadingDialog();
-										MyApp.AsyncServices.GetCommentsByAd(new GetCommentsByAdContext(item.Id, -1, -1, getComment));
+										VeneficaApplication.asyncServices.GetCommentsByAd(new GetCommentsByAdContext(item.Id, -1, -1, getComment));
 										break;
 
 									case Fault:
@@ -274,7 +274,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 		//header
 		if (item.imageThumbnail != null && item.imageThumbnail.url != null)
 		{
-			MyApp.ImgLoader.displayImage(item.imageThumbnail.url, T.imgProduct, MyApp.ImgLoaderOptions);
+//			VeneficaApplication.ImgLoader.displayImage(item.imageThumbnail.url, T.imgProduct, VeneficaApplication.ImgLoaderOptions);
 		}
 
 		T.lblTitle.setText(item.Title);
@@ -283,9 +283,9 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 
 		float dist = item.KMeters;
 		String unit;
-		if (MyApp.user.useMiles)
+		if (VeneficaApplication.user.isUseMiles())
 		{
-			dist = dist * 0.621371192f; //мили
+			dist = dist * 0.621371192f; //пїЅпїЅпїЅпїЅ
 			unit = GetStringResource(R.string.miles);
 		}
 		else
@@ -297,7 +297,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 		T.lblUnitDistance.setText(unit);
 	}
 
-	/** Изменяет видимость текстовой панельки для добавления сообщения */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 	protected void ChangeAddMessageView(boolean visible)
 	{
 		ViewMyMessage = visible;
@@ -318,7 +318,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 		}
 	}
 
-	/** Переход к активити для редактирования сообщения */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 	protected void GoToEditComment(long messageId, String Message)
 	{
 		msgEditId = messageId;
@@ -336,7 +336,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 		{
 			return;
 		}
-		/** Смотрим что вернул активити для редактирования сообщения */
+		/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 		long id = data.getLongExtra("id", -1);
 		if (id == msgEditId)
 		{
@@ -355,7 +355,7 @@ public class ProductMessagesActivity extends ActivityEx implements ICallback
 				case Ok:
 				{
 					item = ret.Return;
-					MyApp.AsyncServices.GetCommentsByAd(new GetCommentsByAdContext(item.Id, -1, -1, getComment));
+					VeneficaApplication.asyncServices.GetCommentsByAd(new GetCommentsByAdContext(item.Id, -1, -1, getComment));
 					break;
 				}
 

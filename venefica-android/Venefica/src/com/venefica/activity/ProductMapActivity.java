@@ -18,7 +18,7 @@ import com.venefica.skining.*;
 import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
 import com.venefica.utils.GoogleMapManager;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class ProductMapActivity extends MapActivityEx implements ICallback
 {
@@ -104,7 +104,7 @@ public class ProductMapActivity extends MapActivityEx implements ICallback
 		UpdateMyLocation();
 
 		OfferMyLocation = new OfferPinPoint(getResources().getDrawable(R.drawable.iam));
-		OfferMyLocation.addOverlay(new OverlayItem(GeoLocation.LocToGeo(MyApp.MyLocation), "My", "Snipet"));
+		OfferMyLocation.addOverlay(new OverlayItem(GeoLocation.LocToGeo(VeneficaApplication.myLocation), "My", "Snipet"));
 		MapManager.AddOverlay(OfferMyLocation);
 
 		ShowLoadingDialog();

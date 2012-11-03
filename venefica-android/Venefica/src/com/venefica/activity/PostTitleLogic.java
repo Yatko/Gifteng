@@ -140,7 +140,7 @@ public class PostTitleLogic implements PostStepLogic
 	{
 		if (Post == null)
 		{
-			Log.d("PostLocateLogic.UpdateUI", "Post==null");
+			Log.d("PostLocateLogic.UpdateUI", "post==null");
 			return;
 		}
 

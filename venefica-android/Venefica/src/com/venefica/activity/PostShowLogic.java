@@ -39,7 +39,7 @@ public class PostShowLogic implements PostStepLogic
 		lblNoCrop = (TextView)mActivity.findViewById(R.id.lblNoCrop);
 		//Let there be hidden because CROP dumb
 		lblNoCrop.setVisibility(View.GONE);
-		//lblNoCrop.setVisibility(MyApp.UseSdCard ? View.GONE : View.VISIBLE);
+		//lblNoCrop.setVisibility(VeneficaApplication.useSdCard ? View.GONE : View.VISIBLE);
 		
 		btnDeleteShow.setOnClickListener(new View.OnClickListener()
 		{
@@ -71,7 +71,7 @@ public class PostShowLogic implements PostStepLogic
 	{
 		if (Post == null)
 		{
-			Log.d("PostShowLogic.UpdateUI", "Post==null");
+			Log.d("PostShowLogic.UpdateUI", "post==null");
 			return;
 		}
 

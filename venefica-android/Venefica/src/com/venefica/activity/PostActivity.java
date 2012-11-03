@@ -188,17 +188,17 @@ public class PostActivity extends MapActivityEx
 		}
 	}
 
-	/** Шаблон формы */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
 	PostTemplate T;
 
-	/** Данные о продукте */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 	PostData Post;
 
-	/** Логика шагов получения данных о товаре */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 	Step step = new Step();
 	PostStepLogic CurrentLogic;
 
-	/** менеджер метода ввода */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ */
 	private InputMethodManager cachedImm;
 
 	View.OnClickListener ButtonBarClick = new View.OnClickListener()
@@ -247,9 +247,9 @@ public class PostActivity extends MapActivityEx
 		T.PostStepContainer.postInvalidateDelayed(500);
 		T.RootView.postInvalidateDelayed(500);
 
-		if (App.Post == null)
+		if (App.post == null)
 		{
-			App.Post = Post = new PostData();
+			App.post = Post = new PostData();
 			SetStep(Step.Title);
 			CurrentLogic = step.GetCurrentLogic();
 			CurrentLogic.OnDisplay(this);
@@ -258,7 +258,7 @@ public class PostActivity extends MapActivityEx
 		}
 		else
 		{
-			Post = App.Post;
+			Post = App.post;
 		}
 	}
 

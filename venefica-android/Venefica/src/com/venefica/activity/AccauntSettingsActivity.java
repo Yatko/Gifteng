@@ -22,7 +22,7 @@ import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.services.ServicesManager.eSocialNetworks;
 import com.venefica.skining.AccauntSettingsSkinDef;
 import com.venefica.skining.AccauntSettingsTemplate;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class AccauntSettingsActivity extends ActivityEx
 {
@@ -44,7 +44,7 @@ public class AccauntSettingsActivity extends ActivityEx
 
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.GetConnectedSocialNetworks(new GetConnectedSocialNetworksContext(new ICallback()
+		VeneficaApplication.asyncServices.GetConnectedSocialNetworks(new GetConnectedSocialNetworksContext(new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -68,12 +68,12 @@ public class AccauntSettingsActivity extends ActivityEx
 						updateButton(it, true);
 					}
 
-					T.toggleUseMiles.setChecked(MyApp.user.useMiles);
+					T.toggleUseMiles.setChecked(VeneficaApplication.user.isUseMiles());
 					T.toggleUseMiles.setOnCheckedChangeListener(new OnCheckedChangeListener()
 					{
 						public void onCheckedChanged(CompoundButton paramCompoundButton, boolean checked)
 						{
-							MyApp.user.useMiles = checked;
+							VeneficaApplication.user.setUseMiles(checked);
 						}
 					});
 
@@ -136,7 +136,7 @@ public class AccauntSettingsActivity extends ActivityEx
 	{
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.DisconnectFromNetwork(new DisconnectFromNetworkContext(network, new ICallback()
+		VeneficaApplication.asyncServices.DisconnectFromNetwork(new DisconnectFromNetworkContext(network, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{

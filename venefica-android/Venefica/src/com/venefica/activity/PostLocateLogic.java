@@ -22,7 +22,7 @@ import com.google.android.maps.MapView;
 import com.venefica.activity.R;
 import com.venefica.activity.PostActivity.Step;
 import com.venefica.utils.GeoLocation;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class PostLocateLogic implements PostStepLogic
 {
@@ -104,9 +104,9 @@ public class PostLocateLogic implements PostStepLogic
 		{
 			public void onClick(View paramView)
 			{
-				if (MyApp.MyLocation != null)
+				if (VeneficaApplication.myLocation != null)
 				{
-					loc = GeoLocation.LocToGeo(MyApp.MyLocation);
+					loc = GeoLocation.LocToGeo(VeneficaApplication.myLocation);
 					UpdateMapLocation();
 				}
 			}
@@ -130,15 +130,15 @@ public class PostLocateLogic implements PostStepLogic
 	{
 		if (Post == null)
 		{
-			Log.d("PostLocateLogic.UpdateUI", "Post==null");
+			Log.d("PostLocateLogic.UpdateUI", "post==null");
 			return;
 		}
 
 		if (Post.GeoLocation == null)
 		{
-			if (MyApp.MyLocation != null)
+			if (VeneficaApplication.myLocation != null)
 			{
-				loc = GeoLocation.LocToGeo(MyApp.MyLocation);
+				loc = GeoLocation.LocToGeo(VeneficaApplication.myLocation);
 			}
 		}
 		else

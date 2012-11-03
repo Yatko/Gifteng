@@ -4,7 +4,7 @@ import com.google.android.maps.MapActivity;
 import com.venefica.utils.Constants;
 import com.venefica.utils.CustomLoadingDialog;
 import com.venefica.utils.GeoLocation;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,7 +22,7 @@ public class MapActivityEx extends MapActivity
 	protected Handler MainHandler = null;
 
 	/** global application */
-	protected MyApp App;
+	protected VeneficaApplication App;
 
 	/** download dialog */
 	protected CustomLoadingDialog LoadingDialog;
@@ -47,11 +47,11 @@ public class MapActivityEx extends MapActivity
 
 		MainHandler = new Handler();
 
-		App = (MyApp)getApplication();
+		App = (VeneficaApplication)getApplication();
 
 		LoadingDialog = new CustomLoadingDialog(this);
 
-		if (MyApp.MyLocation == null || System.currentTimeMillis() - MyApp.MyLocation.getTime() > Constants.GEOLOCATION_UPDATE_TIME_MS)
+		if (VeneficaApplication.myLocation == null || System.currentTimeMillis() - VeneficaApplication.myLocation.getTime() > Constants.GEOLOCATION_UPDATE_TIME_MS)
 		{
 			UpdateMyLocation();
 		}
@@ -134,7 +134,7 @@ public class MapActivityEx extends MapActivity
 			@Override
 			public void ChangeLocation(Location location)
 			{
-				MyApp.MyLocation = location;
+				VeneficaApplication.myLocation = location;
 			}
 		});
 	}

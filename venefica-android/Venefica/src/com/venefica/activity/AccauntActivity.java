@@ -23,7 +23,7 @@ import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.skining.AccauntSkinDef;
 import com.venefica.skining.AccauntTemplate;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class AccauntActivity extends ActivityEx
 {
@@ -45,7 +45,7 @@ public class AccauntActivity extends ActivityEx
 			else
 			{
 				GetUserResult ret = (GetUserResult)result;
-				MyApp.user = ret.Return;
+				VeneficaApplication.user = ret.Return;
 
 				UpdateUserInfo();
 			}
@@ -149,7 +149,7 @@ public class AccauntActivity extends ActivityEx
 					dialog.dismiss();
 					ShowLoadingDialog();
 
-					MyApp.AsyncServices.ChangePassword(new ChangePasswordContext(oldPass, newPass, new ICallback()
+					VeneficaApplication.asyncServices.ChangePassword(new ChangePasswordContext(oldPass, newPass, new ICallback()
 					{
 						public CallbackReturn Callback(IResult<?> result)
 						{
@@ -194,19 +194,19 @@ public class AccauntActivity extends ActivityEx
 	/** Get data about the user and update View  */
 	protected void UpdateUserInfo()
 	{
-		if (MyApp.user == null)
+		if (VeneficaApplication.user == null)
 		{
 			ShowLoadingDialog();
-			MyApp.AsyncServices.GetUser(new GetUserContext(GetUserCallback));
+			VeneficaApplication.asyncServices.GetUser(new GetUserContext(GetUserCallback));
 		}
 		else
 		{
-			T.lblLogin.setText(MyApp.user.name);
-			T.lblEmail.setText(MyApp.user.email);
+			T.lblLogin.setText(VeneficaApplication.user.getName());
+			T.lblEmail.setText(VeneficaApplication.user.getEmail());
 
-			if (MyApp.user.avatarUrl != null && MyApp.user.avatarUrl.length() > 0)
+			if (VeneficaApplication.user.getAvatarUrl() != null && VeneficaApplication.user.getAvatarUrl().length() > 0)
 			{
-				MyApp.ImgLoader.displayImage(MyApp.user.avatarUrl, T.imgAvatar, MyApp.ImgLoaderOptions);
+//				VeneficaApplication.ImgLoader.displayImage(VeneficaApplication.user.avatarUrl, T.imgAvatar, VeneficaApplication.ImgLoaderOptions);
 			}
 		}
 	}

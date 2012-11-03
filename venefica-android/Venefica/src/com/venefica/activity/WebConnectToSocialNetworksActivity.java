@@ -21,7 +21,7 @@ import com.venefica.services.ServicesManager.eSocialNetworks;
 import com.venefica.skining.WebConnectToSocialNetworksSkinDef;
 import com.venefica.skining.WebConnectToSocialNetworksTemplate;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class WebConnectToSocialNetworksActivity extends ActivityEx
 {
@@ -44,7 +44,7 @@ public class WebConnectToSocialNetworksActivity extends ActivityEx
 		{
 			String url = null;
 
-			//String auth = URLEncoder.encode(MyApp.AuthToken);
+			//String auth = URLEncoder.encode(VeneficaApplication.authToken);
 			switch (network)
 			{				
 				case facebook:
@@ -71,7 +71,7 @@ public class WebConnectToSocialNetworksActivity extends ActivityEx
 			T.Browser.setWebChromeClient(new WebChromeClient());
 			T.Browser.setWebViewClient(new MyWebViewClient());
 
-			headers.put("AuthToken", MyApp.AuthToken);
+			headers.put("authToken", ((VeneficaApplication)getApplication()).getAuthToken());
 
 			T.Browser.loadUrl(url, headers);
 		}
@@ -82,7 +82,7 @@ public class WebConnectToSocialNetworksActivity extends ActivityEx
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String urlStr)
 		{
-			headers.put("AuthToken", MyApp.AuthToken);
+			headers.put("authToken", ((VeneficaApplication)getApplication()).getAuthToken());
 			view.loadUrl(urlStr, headers);
 			
 			try

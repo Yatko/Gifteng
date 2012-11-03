@@ -42,7 +42,7 @@ import com.venefica.skining.*;
 import com.venefica.utils.Constants;
 import com.venefica.utils.ImageAd;
 import com.venefica.utils.ImageAdapter;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class ProductViewActivity extends ActivityEx implements ICallback
 {
@@ -61,7 +61,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 		{
 			ShowLoadingDialog();
 
-			MyApp.AsyncServices.BookmarkAd(new BookmarkAdContext(item.Id, new ICallback()
+			VeneficaApplication.asyncServices.BookmarkAd(new BookmarkAdContext(item.Id, new ICallback()
 			{
 				public CallbackReturn Callback(IResult<?> result)
 				{
@@ -99,7 +99,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 		{
 			ShowLoadingDialog();
 
-			MyApp.AsyncServices.RemoveBookmark(new RemoveBookmarkContext(item.Id, new ICallback()
+			VeneficaApplication.asyncServices.RemoveBookmark(new RemoveBookmarkContext(item.Id, new ICallback()
 			{
 				public CallbackReturn Callback(IResult<?> result)
 				{
@@ -357,12 +357,14 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 			if (item.creator != null)
 			{
 				T.btnOwner.setVisibility(View.VISIBLE);
-				T.btnOwner.setText(GetStringResource(R.string.owner) + " " + item.creator.firstName + " " + item.creator.lastName);
+//				T.btnOwner.setText(GetStringResource(R.string.owner) + " " + item.creator.firstName + " " + item.creator.lastName);
+				T.btnOwner.setText(GetStringResource(R.string.owner) + " " + item.creator.getFirstName() + " " + item.creator.getLastName());
 				T.btnOwner.setOnClickListener(new OnClickListener()
 				{
 					public void onClick(View v)
 					{
-						goToUserInfo(item.creator.name);
+//						goToUserInfo(item.creator.name);
+						goToUserInfo(item.creator.getName());
 					}
 				});
 			}
@@ -380,7 +382,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 
 		float dist = item.KMeters;
 		String unit;
-		if (MyApp.user.useMiles)
+		if (VeneficaApplication.user.isUseMiles())
 		{
 			dist = dist * 0.621371192f;
 			unit = GetStringResource(R.string.miles);
@@ -491,7 +493,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 
 		String message = item.Title + " " + item.Desc + " Price: " + item.Price;
 
-		MyApp.AsyncServices.ShareOnSocialNetworks(new ShareOnSocialNetworksContext(message, new ICallback()
+		VeneficaApplication.asyncServices.ShareOnSocialNetworks(new ShareOnSocialNetworksContext(message, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -572,7 +574,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 	private void markSpam()
 	{
 		ShowLoadingDialog();
-		MyApp.AsyncServices.MarkAsSpam(new MarkAsSpamContext(productId, new ICallback()
+		VeneficaApplication.asyncServices.MarkAsSpam(new MarkAsSpamContext(productId, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -594,7 +596,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 	private void unMarkSpam()
 	{
 		ShowLoadingDialog();
-		MyApp.AsyncServices.UnmarkAsSpam(new UnmarkAsSpamContext(productId, new ICallback()
+		VeneficaApplication.asyncServices.UnmarkAsSpam(new UnmarkAsSpamContext(productId, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -617,7 +619,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 	{
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.EndAd(new EndAdContext(productId, new ICallback()
+		VeneficaApplication.asyncServices.EndAd(new EndAdContext(productId, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -642,7 +644,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 	{
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.DeleteAd(new DeleteAdContext(productId, new ICallback()
+		VeneficaApplication.asyncServices.DeleteAd(new DeleteAdContext(productId, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -674,7 +676,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 	{
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.RelistAd(new RelistAdContext(productId, new ICallback()
+		VeneficaApplication.asyncServices.RelistAd(new RelistAdContext(productId, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -726,7 +728,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 				dialog.dismiss();
 
 				ShowLoadingDialog();
-				MyApp.AsyncServices.RateAd(new RateAdContext(item.Id, 1, new ICallback()
+				VeneficaApplication.asyncServices.RateAd(new RateAdContext(item.Id, 1, new ICallback()
 				{
 					public CallbackReturn Callback(IResult<?> result)
 					{
@@ -758,7 +760,7 @@ public class ProductViewActivity extends ActivityEx implements ICallback
 				dialog.dismiss();
 
 				ShowLoadingDialog();
-				MyApp.AsyncServices.RateAd(new RateAdContext(item.Id, -1, new ICallback()
+				VeneficaApplication.asyncServices.RateAd(new RateAdContext(item.Id, -1, new ICallback()
 				{
 					public CallbackReturn Callback(IResult<?> result)
 					{

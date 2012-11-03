@@ -32,7 +32,7 @@ import com.venefica.skining.*;
 import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
 import com.venefica.utils.GoogleMapManager;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class BrowseMapActivity extends MapActivityEx
 {
@@ -107,7 +107,7 @@ public class BrowseMapActivity extends MapActivityEx
 				if (item.imageThumbnail != null && item.imageThumbnail.url != null)
 				{
 					ImageView imgProduct = (ImageView)view.findViewById(R.id.imgProduct);
-					MyApp.ImgLoader.displayImage(item.imageThumbnail.url, imgProduct, MyApp.ImgLoaderOptions);
+//					VeneficaApplication.ImgLoader.displayImage(item.imageThumbnail.url, imgProduct, VeneficaApplication.ImgLoaderOptions);
 				}
 
 				((RelativeLayout)view.findViewById(R.id.relativelayout)).setBackgroundResource(item.wanted ? R.drawable.popup_wanted_bg : R.drawable.popup_bg);
@@ -219,7 +219,7 @@ public class BrowseMapActivity extends MapActivityEx
 		});
 
 		MapMng = new GoogleMapManager(T.Map);
-		MapMng.GoToLocation(MyApp.MyLocation, 17);
+		MapMng.GoToLocation(VeneficaApplication.myLocation, 17);
 
 		Popup = new PopupDialog();
 
@@ -252,8 +252,8 @@ public class BrowseMapActivity extends MapActivityEx
 		TabMainActivity.ShowTabs();
 		T.HeaderTap.SetSearch(MarketEx.getInstance().getFilter().searchString);
 
-		MarketEx.getInstance().getFilter().latitude = MyApp.MyLocation.getLatitude();
-		MarketEx.getInstance().getFilter().longitude = MyApp.MyLocation.getLongitude();
+		MarketEx.getInstance().getFilter().latitude = VeneficaApplication.myLocation.getLatitude();
+		MarketEx.getInstance().getFilter().longitude = VeneficaApplication.myLocation.getLongitude();
 		
 		if (MarketEx.getInstance().getFilter().wanted)
 			OfferLocation = new OfferPinPoint(getResources().getDrawable(R.drawable.marker_wanted));
@@ -263,7 +263,7 @@ public class BrowseMapActivity extends MapActivityEx
 		UpdateMyLocation();
 
 		OfferMyLocation = new OfferPinPoint(getResources().getDrawable(R.drawable.iam));
-		OfferMyLocation.addOverlay(new OverlayItem(GeoLocation.LocToGeo(MyApp.MyLocation), "My", "Snipet"));
+		OfferMyLocation.addOverlay(new OverlayItem(GeoLocation.LocToGeo(VeneficaApplication.myLocation), "My", "Snipet"));
 		MapMng.AddOverlay(OfferMyLocation);
 
 		if (MarketEx.getInstance().GetNumProduct() == 0)
