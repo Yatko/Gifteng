@@ -28,7 +28,7 @@ import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.skining.*;
 import com.venefica.utils.MessageListAdapter;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class MessagesActivity extends ActivityEx
 {
@@ -53,7 +53,7 @@ public class MessagesActivity extends ActivityEx
 		{
 			ShowLoadingDialog();
 
-			MyApp.AsyncServices.HideMessage(new HideMessageContext(selectedMessage.id, new ICallback()
+			VeneficaApplication.asyncServices.HideMessage(new HideMessageContext(selectedMessage.id, new ICallback()
 			{
 				public CallbackReturn Callback(IResult<?> result)
 				{
@@ -111,7 +111,7 @@ public class MessagesActivity extends ActivityEx
 						msg.text = sendMessageStr;
 						msg.toName = selectedMessage.fromName;
 
-						MyApp.AsyncServices.SendMessageTo(new SendMessageToContext(msg, new ICallback()
+						VeneficaApplication.asyncServices.SendMessageTo(new SendMessageToContext(msg, new ICallback()
 						{
 							public CallbackReturn Callback(IResult<?> result)
 							{
@@ -143,7 +143,7 @@ public class MessagesActivity extends ActivityEx
 		{
 			ShowLoadingDialog();
 
-			MyApp.AsyncServices.HideMessage(new HideMessageContext(selectedMessage.id, new ICallback()
+			VeneficaApplication.asyncServices.HideMessage(new HideMessageContext(selectedMessage.id, new ICallback()
 			{
 				public CallbackReturn Callback(IResult<?> result)
 				{
@@ -229,7 +229,7 @@ public class MessagesActivity extends ActivityEx
 	private void updateList()
 	{
 		ShowLoadingDialog();
-		MyApp.AsyncServices.GetAllMessages(new GetAllMessagesContext(new ICallback()
+		VeneficaApplication.asyncServices.GetAllMessages(new GetAllMessagesContext(new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{

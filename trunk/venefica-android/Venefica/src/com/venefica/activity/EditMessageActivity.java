@@ -17,7 +17,7 @@ import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.UpdateCommentResult;
 import com.venefica.services.ServicesManager.UpdateMessageResult;
 import com.venefica.skining.*;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class EditMessageActivity extends ActivityEx
 {
@@ -54,7 +54,7 @@ public class EditMessageActivity extends ActivityEx
 				comment.text = T.editNewMessage.getText().toString();
 
 				ShowLoadingDialog();
-				MyApp.AsyncServices.UpdateComment(new UpdateCommentContext(comment, new ICallback()
+				VeneficaApplication.asyncServices.UpdateComment(new UpdateCommentContext(comment, new ICallback()
 				{
 					public CallbackReturn Callback(IResult<?> result)
 					{
@@ -110,7 +110,7 @@ public class EditMessageActivity extends ActivityEx
 				message.text = T.editNewMessage.getText().toString();
 
 				ShowLoadingDialog();
-				MyApp.AsyncServices.UpdateMessage(new UpdateMessageContext(message, new ICallback()
+				VeneficaApplication.asyncServices.UpdateMessage(new UpdateMessageContext(message, new ICallback()
 				{
 					public CallbackReturn Callback(IResult<?> result)
 					{

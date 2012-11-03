@@ -12,7 +12,7 @@ import com.venefica.market.MarketEx;
 import com.venefica.market.Product;
 import com.venefica.skining.*;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.ProductPhotoAdapter;
 
 public class BrowsePhotoActivity extends ActivityEx
@@ -139,8 +139,8 @@ public class BrowsePhotoActivity extends ActivityEx
 		itemAdapter.notifyDataSetChanged();
 		T.HeaderTap.SetSearch(MarketEx.getInstance().getFilter().searchString);
 
-		MarketEx.getInstance().getFilter().latitude = MyApp.MyLocation.getLatitude();
-		MarketEx.getInstance().getFilter().longitude = MyApp.MyLocation.getLongitude();
+		MarketEx.getInstance().getFilter().latitude = VeneficaApplication.myLocation.getLatitude();
+		MarketEx.getInstance().getFilter().longitude = VeneficaApplication.myLocation.getLongitude();
 		
 		/*if (MarketEx.getInstance().GetNumProduct() == 0)
 		{
@@ -185,9 +185,9 @@ public class BrowsePhotoActivity extends ActivityEx
 
 		float dist = product.KMeters;
 		String unit;
-		if (MyApp.user.useMiles)
+		if (VeneficaApplication.user.isUseMiles())
 		{
-			dist = dist * 0.621371192f; //мили
+			dist = dist * 0.621371192f; //пїЅпїЅпїЅпїЅ
 			unit = GetStringResource(R.string.miles);
 		}
 		else

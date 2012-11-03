@@ -1,7 +1,7 @@
 package com.venefica.activity;
 
 import android.content.Intent;
-
+@Deprecated
 public class ActivityLogOut extends ActivityEx
 {
 	public static final String LOGOUT_PARAMETR_NAME = "LogOut";

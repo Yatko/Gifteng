@@ -21,7 +21,7 @@ import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.skining.UserAdsSkinDef;
 import com.venefica.skining.UserAdsTemplate;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.ProductListAdapter;
 
 public class UserAdsActivity extends ActivityEx
@@ -105,7 +105,7 @@ public class UserAdsActivity extends ActivityEx
 
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.GetMyAds(new GetMyAdsContext(getMyAdsCallback));
+		VeneficaApplication.asyncServices.GetMyAds(new GetMyAdsContext(getMyAdsCallback));
 	}
 
 	private void updateUi()

@@ -48,7 +48,7 @@ public class PostDetailLogic implements PostStepLogic
 	{
 		if (Post == null)
 		{
-			Log.d("PostDetailLogic.UpdateUI", "Post==null");
+			Log.d("PostDetailLogic.UpdateUI", "post==null");
 			return;
 		}
 	}

@@ -17,7 +17,7 @@ import com.venefica.skining.BookmarksSkinDef;
 import com.venefica.skining.BookmarksTemplate;
 import com.venefica.utils.BookmarkListAdapter;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class BookmarksActivity extends ActivityEx
 {
@@ -37,7 +37,7 @@ public class BookmarksActivity extends ActivityEx
 		super.onResume();
 		
 		ShowLoadingDialog();
-		MyApp.AsyncServices.GetBookmarkedAds(new GetBookmarkedAdsContext(new ICallback()
+		VeneficaApplication.asyncServices.GetBookmarkedAds(new GetBookmarkedAdsContext(new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{

@@ -22,7 +22,7 @@ import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.skining.UserInfoSkinDef;
 import com.venefica.skining.UserInfoTemplate;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class UserInfoActivity extends ActivityEx
 {
@@ -66,9 +66,9 @@ public class UserInfoActivity extends ActivityEx
 
 						MessageDto msg = new MessageDto();
 						msg.text = sendMessageStr;
-						msg.toName = user.name;
+						msg.toName = user.getName();
 
-						MyApp.AsyncServices.SendMessageTo(new SendMessageToContext(msg, new ICallback()
+						VeneficaApplication.asyncServices.SendMessageTo(new SendMessageToContext(msg, new ICallback()
 						{
 							public CallbackReturn Callback(IResult<?> result)
 							{
@@ -103,7 +103,7 @@ public class UserInfoActivity extends ActivityEx
 		final String name = getIntent().getStringExtra(Constants.USER_NAME_PARAM_NAME);
 		if (name != null)
 		{
-			MyApp.AsyncServices.GetUserByName(new GetUserByNameContext(name, new ICallback()
+			VeneficaApplication.asyncServices.GetUserByName(new GetUserByNameContext(name, new ICallback()
 			{
 				public CallbackReturn Callback(IResult<?> result)
 				{
@@ -150,18 +150,18 @@ public class UserInfoActivity extends ActivityEx
 		if (user == null)
 			return;
 
-		T.lblLogin.setText(user.name);
-		T.lblFName.setText(user.firstName);
-		T.lblLName.setText(user.lastName);
-		T.lblCountry.setText(user.country);
+		T.lblLogin.setText(user.getName());
+		T.lblFName.setText(user.getFirstName());
+		T.lblLName.setText(user.getLastName());
+		T.lblCountry.setText(user.getCounty());
 
-		if (user.avatarUrl != null && user.avatarUrl.length() > 0 && MyApp.ImgLoader != null)
+		/*if (user.avatarUrl != null && user.avatarUrl.length() > 0 && VeneficaApplication.ImgLoader != null)
 		{
-			MyApp.ImgLoader.displayImage(user.avatarUrl, T.imgAvatar, MyApp.ImgLoaderOptions);
+			VeneficaApplication.ImgLoader.displayImage(user.avatarUrl, T.imgAvatar, VeneficaApplication.ImgLoaderOptions);
 		}
 		else
-		{
+		{*/
 			T.imgAvatar.setImageResource(R.drawable.default_photo);
-		}
+//		}
 	}
 }

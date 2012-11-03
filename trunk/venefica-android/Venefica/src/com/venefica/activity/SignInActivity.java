@@ -17,8 +17,8 @@ import com.venefica.services.AsyncServices.ICallback;
 import com.venefica.services.ServicesManager.AuthenticateResult;
 import com.venefica.services.ServicesManager.IResult;
 import com.venefica.skining.*;
-import com.venefica.utils.MyApp;
-
+import com.venefica.utils.VeneficaApplication;
+@Deprecated
 public class SignInActivity extends ActivityLogOut
 {
 	SignInTemplate T;
@@ -122,7 +122,7 @@ public class SignInActivity extends ActivityLogOut
 				if (ValidateAllField())
 				{
 					ShowLoadingDialog();
-					MyApp.AsyncServices.Authenticate(new AuthenticateContext(T.editLogin.getText().toString(), T.editPass.getText().toString(), new ICallback()
+					VeneficaApplication.asyncServices.Authenticate(new AuthenticateContext(T.editLogin.getText().toString(), T.editPass.getText().toString(), new ICallback()
 					{
 						public CallbackReturn Callback(IResult<?> result)
 						{
@@ -134,7 +134,8 @@ public class SignInActivity extends ActivityLogOut
 								switch (res.SoapResult)
 								{
 									case Ok:
-										MyApp.AuthToken = res.Return.toString();
+//										VeneficaApplication.authToken = res.Return.toString();
+										((VeneficaApplication)getApplication()).setAuthToken(res.Return.toString());
 										GoToBrowseList();
 										break;
 
@@ -168,7 +169,7 @@ public class SignInActivity extends ActivityLogOut
 
 	void GoToBrowseList()
 	{
-		MyApp.RememberMe = T.cbRemember.isChecked();
+		VeneficaApplication.rememberMe = T.cbRemember.isChecked();
 		
 		Intent intent = new Intent(SignInActivity.this, TabMainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | 32768);

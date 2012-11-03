@@ -32,9 +32,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.venefica.activity.R;
+import com.venefica.module.user.UserDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
-import com.venefica.services.UserDto;
 import com.venefica.services.AsyncServices.CallbackReturn;
 import com.venefica.services.AsyncServices.GetUserContext;
 import com.venefica.services.AsyncServices.ICallback;
@@ -45,9 +45,9 @@ import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.RegisterUserResult;
 import com.venefica.services.ServicesManager.UpdateUserResult;
 import com.venefica.skining.*;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.Utils;
-
+@Deprecated
 public class SignUpActivity extends ActivityLogOut
 {
 	public static final int DATE_DIALOG_ID = 1;
@@ -264,28 +264,28 @@ public class SignUpActivity extends ActivityLogOut
 			public void onClick(View arg0)
 			{
 				if (ValidateAllField())
-				{//ок
+				{//пїЅпїЅ
 					ShowLoadingDialog();
 
 					UserDto user = new UserDto();
 
-					user.businessAcc = T.cbBusinessAccount.isChecked();
-					user.dateOfBirth = date;//T.btnBirth.getText().toString();
-					user.email = T.editEmail.getText().toString();
-					user.firstName = T.editFirstName.getText().toString();
-					user.lastName = T.editLastName.getText().toString();
-					user.name = T.editLogin.getText().toString();
-					user.phoneNumber = T.editPhone.getText().toString();
-					user.zipCode = T.editZip.getText().toString();
-					user.country = T.editCountry.getText().toString();
-					user.city = T.editCity.getText().toString();
-					user.area = T.editArea.getText().toString();
+					user.setBusinessAcc(T.cbBusinessAccount.isChecked());
+					user.setDateOfBirth(date);//T.btnBirth.getText().toString();
+					user.setEmail(T.editEmail.getText().toString());
+					user.setName(T.editFirstName.getText().toString());
+					user.setLastName(T.editLastName.getText().toString());
+					user.setName(T.editLogin.getText().toString());
+					user.setPhoneNumber(T.editPhone.getText().toString());
+					user.setZipCode(T.editZip.getText().toString());
+					user.setCounty(T.editCountry.getText().toString());
+					user.setCity(T.editCity.getText().toString());
+					user.setArea(T.editArea.getText().toString());
 					if (AvatarImage != null)
-						user.avatar = new ImageDto(AvatarImage);
+						user.setAvatar(new ImageDto(AvatarImage));
 
 					if (UserCompliteMode || EditUserMode)
 					{
-						MyApp.AsyncServices.UpdateUser(new UpdateUserContext(user, new ICallback()
+						VeneficaApplication.asyncServices.UpdateUser(new UpdateUserContext(user, new ICallback()
 						{
 							public CallbackReturn Callback(IResult<?> result)
 							{
@@ -310,7 +310,7 @@ public class SignUpActivity extends ActivityLogOut
 													}
 													else
 													{
-														MyApp.user = null;
+														VeneficaApplication.user = null;
 													}
 
 													logOutAction();
@@ -353,7 +353,7 @@ public class SignUpActivity extends ActivityLogOut
 					}
 					else
 					{
-						MyApp.AsyncServices.RegisterUser(new RegisterUserContext(user, T.editPass.getText().toString(), new ICallback()
+						VeneficaApplication.asyncServices.RegisterUser(new RegisterUserContext(user, T.editPass.getText().toString(), new ICallback()
 						{
 							public CallbackReturn Callback(IResult<?> result)
 							{
@@ -464,7 +464,7 @@ public class SignUpActivity extends ActivityLogOut
 				else
 					T.lblTitle.setText(GetStringResource(R.string.edit_accaunt));
 
-				MyApp.AsyncServices.GetUser(new GetUserContext(new ICallback()
+				VeneficaApplication.asyncServices.GetUser(new GetUserContext(new ICallback()
 				{
 					public CallbackReturn Callback(IResult<?> result)
 					{
@@ -481,28 +481,28 @@ public class SignUpActivity extends ActivityLogOut
 									{
 										User user = res.Return;
 
-										if (user.avatarUrl != null && user.avatarUrl.length() > 0)
+										if (user.getAvatarUrl() != null && user.getAvatarUrl().length() > 0)
 										{
-											MyApp.ImgLoader.displayImage(user.avatarUrl, T.imgAvatar, MyApp.ImgLoaderOptions);
+//											VeneficaApplication.ImgLoader.displayImage(user.avatarUrl, T.imgAvatar, VeneficaApplication.ImgLoaderOptions);
 										}
 
-										T.editLogin.setText(user.name);
+										T.editLogin.setText(user.getName());
 
-										T.editEmail.setText(user.email);
+										T.editEmail.setText(user.getEmail());
 
-										T.editPhone.setText(user.phoneNumber);
+										T.editPhone.setText(user.getPhoneNumber());
 
-										T.editFirstName.setText(user.firstName);
-										T.editLastName.setText(user.lastName);
-										T.editZip.setText(user.zipCode);
-										T.editCountry.setText(user.country);
-										T.editCity.setText(user.city);
-										T.editArea.setText(user.area);
+										T.editFirstName.setText(user.getFirstName());
+										T.editLastName.setText(user.getLastName());
+										T.editZip.setText(user.getZipCode());
+										T.editCountry.setText(user.getCounty());
+										T.editCity.setText(user.getCity());
+										T.editArea.setText(user.getArea());
 
-										if (user.dateOfBirth != null)
-											date = user.dateOfBirth;
+										if (user.getDateOfBirth() != null)
+											date = user.getDateOfBirth();
 										UpdateDateBirth();
-										T.cbBusinessAccount.setChecked(user.businessAcc);
+										T.cbBusinessAccount.setChecked(user.isBusinessAcc());
 									}
 									else
 									{
@@ -533,13 +533,13 @@ public class SignUpActivity extends ActivityLogOut
 			}
 			else
 			{
-				new GetAdressTask().execute(MyApp.MyLocation);
+				new GetAdressTask().execute(VeneficaApplication.myLocation);
 				HideLoadingDialog();
 			}
 		}
 		else
 		{
-			new GetAdressTask().execute(MyApp.MyLocation);
+			new GetAdressTask().execute(VeneficaApplication.myLocation);
 			HideLoadingDialog();
 		}
 	}

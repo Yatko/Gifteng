@@ -12,7 +12,7 @@ import com.venefica.services.ServicesManager.GetUserResult;
 import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.PreferencesManager;
 
 import android.app.Activity;
@@ -51,7 +51,7 @@ public class TabMainActivity extends TabActivityEx
 			else
 			{
 				GetUserResult ret = (GetUserResult)result;
-				MyApp.user = ret.Return;
+				VeneficaApplication.user = ret.Return;
 
 				Init();
 			}
@@ -71,7 +71,7 @@ public class TabMainActivity extends TabActivityEx
 			}
 			else
 			{
-				MyApp.AsyncServices.GetUser(new GetUserContext(GetUserCallback));
+				VeneficaApplication.asyncServices.GetUser(new GetUserContext(GetUserCallback));
 			}
 
 			return CallbackReturn.Ok;
@@ -202,12 +202,12 @@ public class TabMainActivity extends TabActivityEx
 		setContentView(R.layout.tab_main_layout);
 		sTab = this;
 
-		/*Bitmap bb = BitmapUtil.DecodeFile(MyApp.TEMP_FILE, 320);
+		/*Bitmap bb = BitmapUtil.DecodeFile(VeneficaApplication.TEMP_FILE, 320);
 		ServicesManager sv = new ServicesManager();
-		AddImageToAdResult res = sv.AddImageToAd(MyApp.AuthToken, 51, bb);*/
+		AddImageToAdResult res = sv.AddImageToAd(VeneficaApplication.authToken, 51, bb);*/
 		
 		ShowLoadingDialog();
-		MyApp.AsyncServices.GetCategories(new GetCategoriesContext(GetCategoryCallback));
+		VeneficaApplication.asyncServices.GetCategories(new GetCategoriesContext(GetCategoryCallback));
 	}
 
 	protected void Init()
@@ -332,17 +332,17 @@ public class TabMainActivity extends TabActivityEx
 		}
 		else
 		{
-			PreferencesManager pref = new PreferencesManager(this, Constants.PREFERENCES_STORAGE_NAME);
-			if (MyApp.RememberMe)
+			PreferencesManager pref = new PreferencesManager(this, Constants.VENEFICA_PREFERENCES);
+			if (VeneficaApplication.rememberMe)
 			{
 
-				pref.Put(Constants.PREFERENCES_TOKEN_NAME, MyApp.AuthToken);
-				pref.Put(Constants.PREFERENCES_TOKEN_SAVE_TIME_NAME, System.currentTimeMillis());
+				pref.Put(Constants.PREFERENCES_AUTH_TOKEN, ((VeneficaApplication)getApplication()).getAuthToken());
+				pref.Put(Constants.PREFERENCES_SESSION_IN_TIME, System.currentTimeMillis());
 			}
 			else
 			{
-				pref.Put(Constants.PREFERENCES_TOKEN_NAME, "");
-				pref.Put(Constants.PREFERENCES_TOKEN_SAVE_TIME_NAME, (long)0);
+				pref.Put(Constants.PREFERENCES_AUTH_TOKEN, "");
+				pref.Put(Constants.PREFERENCES_SESSION_IN_TIME, (long)0);
 			}
 			pref.Commit();
 			

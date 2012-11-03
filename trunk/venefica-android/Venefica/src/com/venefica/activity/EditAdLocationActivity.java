@@ -20,7 +20,7 @@ import com.venefica.activity.R;
 import com.venefica.skining.EditAdLocationSkinDef;
 import com.venefica.skining.EditAdLocationTemplate;
 import com.venefica.utils.GeoLocation;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class EditAdLocationActivity extends MapActivityEx
 {
@@ -83,9 +83,9 @@ public class EditAdLocationActivity extends MapActivityEx
 		{
 			public void onClick(View paramView)
 			{
-				if (MyApp.MyLocation != null)
+				if (VeneficaApplication.myLocation != null)
 				{
-					TabAdEditActivity.Item.Location = GeoLocation.LocToGeo(MyApp.MyLocation);
+					TabAdEditActivity.Item.Location = GeoLocation.LocToGeo(VeneficaApplication.myLocation);
 					UpdateMapLocation();
 				}
 			}

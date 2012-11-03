@@ -28,7 +28,7 @@ import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
 import com.venefica.utils.ImageAd;
 import com.venefica.utils.ImageAdapter;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class EditAdPreviewActivity extends ActivityEx
 {
@@ -59,7 +59,7 @@ public class EditAdPreviewActivity extends ActivityEx
 	{
 		public CallbackReturn Callback(IResult<?> result)
 		{
-			MyApp.AsyncServices.DeleteImagesFromAd(new DeleteImagesFromAdContext(item.Id, TabAdEditActivity.imagesForDelete, deleteImagesCallback));
+			VeneficaApplication.asyncServices.DeleteImagesFromAd(new DeleteImagesFromAdContext(item.Id, TabAdEditActivity.imagesForDelete, deleteImagesCallback));
 			return CallbackReturn.Ok;
 		}
 	};
@@ -89,16 +89,16 @@ public class EditAdPreviewActivity extends ActivityEx
 			T.lblTitle.setText(Post.Title);
 			T.lblPrice.setText(Post.Price);
 
-			float dist = GeoLocation.GeoToLoc(Post.Location).distanceTo(MyApp.MyLocation);
+			float dist = GeoLocation.GeoToLoc(Post.Location).distanceTo(VeneficaApplication.myLocation);
 			String unit;
-			if (MyApp.user.useMiles)
+			if (VeneficaApplication.user.isUseMiles())
 			{
-				dist = dist * 0.000621371192f; //мили
+				dist = dist * 0.000621371192f; //пїЅпїЅпїЅпїЅ
 				unit = GetStringResource(R.string.miles);
 			}
 			else
 			{
-				dist = dist / 1000.0f; //км
+				dist = dist / 1000.0f; //пїЅпїЅ
 				unit = GetStringResource(R.string.km);
 			}
 
@@ -149,7 +149,7 @@ public class EditAdPreviewActivity extends ActivityEx
 			TabAdEditActivity.images.remove(0);
 		}
 
-		MyApp.AsyncServices.UpdateAd(new UpdateAdContext(Post, new ICallback()
+		VeneficaApplication.asyncServices.UpdateAd(new UpdateAdContext(Post, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -163,7 +163,7 @@ public class EditAdPreviewActivity extends ActivityEx
 							TabAdEditActivity.IsUpdate = true;
 							MarketEx.getInstance().ClearProductsList();
 
-							MyApp.AsyncServices.AddImagesToAd(new AddImagesToAdContext(item.Id, TabAdEditActivity.images, addImagesCallback));
+							VeneficaApplication.asyncServices.AddImagesToAd(new AddImagesToAdContext(item.Id, TabAdEditActivity.images, addImagesCallback));
 							break;
 						case SoapProblem:
 							ShowInfoDialog(GetStringResource(R.string.soap_problem));

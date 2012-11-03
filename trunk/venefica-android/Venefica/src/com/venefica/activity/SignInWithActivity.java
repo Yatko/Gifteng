@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.venefica.module.user.WebAuthorizationActivity;
 import com.venefica.skining.*;
 import com.venefica.utils.Constants;
-
+@Deprecated
 public class SignInWithActivity extends ActivityLogOut
 {
 	SignInWithTemplate T;
@@ -29,7 +30,7 @@ public class SignInWithActivity extends ActivityLogOut
 		{
 			public void onClick(View arg0)
 			{
-				GoToWebAuthorization(Constants.SIGN_IN_TWITER_URL);
+				GoToWebAuthorization(Constants.SIGN_IN_TWITTER_URL);
 			}
 		});
 
@@ -59,7 +60,7 @@ public class SignInWithActivity extends ActivityLogOut
 	void GoToWebAuthorization(String url)
 	{
 		Intent intent = new Intent(this, WebAuthorizationActivity.class);
-		intent.putExtra(WebAuthorizationActivity.URL_INTENT_NAME, url);
+		intent.putExtra(WebAuthorizationActivity.AUTH_URL, url);
 		startActivityForResult(intent, 0);
 	}
 }

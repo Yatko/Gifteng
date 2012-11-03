@@ -15,7 +15,7 @@ import com.venefica.services.ServicesManager.IResult;
 import com.venefica.services.ServicesManager.PlaceAdResult;
 import com.venefica.skining.*;
 import com.venefica.utils.GeoLocation;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 
 public class PostPreviewActivity extends ActivityEx
 {
@@ -27,7 +27,7 @@ public class PostPreviewActivity extends ActivityEx
 		super.onCreate(savedInstanceState);
 		T = new PostPreviewSkinDef(this);
 
-		PostData Post = App.Post;
+		PostData Post = App.post;
 		if (Post != null)
 		{
 			T.btnPost.setOnClickListener(new View.OnClickListener()
@@ -44,17 +44,17 @@ public class PostPreviewActivity extends ActivityEx
 			T.lblTitle.setText(Post.Title);
 			T.lblPrice.setText(Post.Price);
 
-			//получаем метры
-			float dist = GeoLocation.GeoToLoc(Post.GeoLocation).distanceTo(MyApp.MyLocation);
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+			float dist = GeoLocation.GeoToLoc(Post.GeoLocation).distanceTo(VeneficaApplication.myLocation);
 			String unit;
-			if (MyApp.user.useMiles)
+			if (VeneficaApplication.user.isUseMiles())
 			{
-				dist = dist * 0.000621371192f; //мили
+				dist = dist * 0.000621371192f; //пїЅпїЅпїЅпїЅ
 				unit = GetStringResource(R.string.miles);
 			}
 			else
 			{
-				dist = dist / 1000.0f; //км
+				dist = dist / 1000.0f; //пїЅпїЅ
 				unit = GetStringResource(R.string.km);
 			}
 
@@ -75,7 +75,7 @@ public class PostPreviewActivity extends ActivityEx
 	{
 		ShowLoadingDialog();
 
-		MyApp.AsyncServices.PlaceAd(new PlaceAdContext(App.Post, new ICallback()
+		VeneficaApplication.asyncServices.PlaceAd(new PlaceAdContext(App.post, new ICallback()
 		{
 			public CallbackReturn Callback(IResult<?> result)
 			{
@@ -87,8 +87,8 @@ public class PostPreviewActivity extends ActivityEx
 
 					if (res.Return != ServicesManager.BAD_AD_ID)
 					{
-						//If all ok bunches then scrape Post
-						App.Post = null;
+						//If all ok bunches then scrape post
+						App.post = null;
 						//and along with the list of products to re progruzitsya
 						MarketEx.getInstance().ClearProductsList();
 

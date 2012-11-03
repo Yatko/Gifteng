@@ -7,9 +7,9 @@ import android.view.View;
 import com.venefica.skining.WelcomeSkinDef;
 import com.venefica.skining.WelcomeTemplate;
 import com.venefica.utils.Constants;
-import com.venefica.utils.MyApp;
+import com.venefica.utils.VeneficaApplication;
 import com.venefica.utils.PreferencesManager;
-
+@Deprecated
 public class WelcomeActivity extends ActivityLogOut
 {
 	WelcomeTemplate T;
@@ -54,16 +54,16 @@ public class WelcomeActivity extends ActivityLogOut
 		
 		ShowLoadingDialog();
 		
-		PreferencesManager pref = new PreferencesManager(this, Constants.PREFERENCES_STORAGE_NAME);
-		String token = pref.GetString(Constants.PREFERENCES_TOKEN_NAME, "");
-		long saveTime = pref.GetLong(Constants.PREFERENCES_TOKEN_SAVE_TIME_NAME, 0);
+		PreferencesManager pref = new PreferencesManager(this, Constants.VENEFICA_PREFERENCES);
+		String token = pref.GetString(Constants.PREFERENCES_AUTH_TOKEN, "");
+		long saveTime = pref.GetLong(Constants.PREFERENCES_SESSION_IN_TIME, 0);
 		
-		if(System.currentTimeMillis() - saveTime < Constants.TOKEN_VALID_TIME && token.equals("") == false)
+		if(System.currentTimeMillis() - saveTime < Constants.SESSION_TIME_OUT && token.equals("") == false)
 		{			
 			HideLoadingDialog();
 			
-			MyApp.AuthToken  = token;
-			pref.Put(Constants.PREFERENCES_TOKEN_SAVE_TIME_NAME, System.currentTimeMillis());
+//			VeneficaApplication.authToken  = data;
+			pref.Put(Constants.PREFERENCES_SESSION_IN_TIME, System.currentTimeMillis());
 			pref.Commit();
 			
 			Intent intent = new Intent(this, TabMainActivity.class);
