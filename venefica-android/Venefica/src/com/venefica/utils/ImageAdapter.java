@@ -61,7 +61,7 @@ public class ImageAdapter extends ArrayAdapter<ImageAd>
 		{
 			if(item.url != null)
 			{
-				MyApp.ImgLoader.displayImage(item.url, holder.imgProduct, MyApp.ImgLoaderOptions);
+//				VeneficaApplication.ImgLoader.displayImage(item.url, holder.imgProduct, VeneficaApplication.ImgLoaderOptions);
 			}
 			else if(item.bitmap != null)
 			{

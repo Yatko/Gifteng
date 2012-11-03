@@ -24,10 +24,10 @@ public class Utils
 	public static void StartActivityForResultGetCamera(Activity activity)
 	{
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-		if (MyApp.UseSdCard)
+		if (VeneficaApplication.useSdCard)
 		{
 			//intent.putExtra("crop", "true");
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(MyApp.TEMP_FILE));
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(VeneficaApplication.TEMP_FILE));
 		}
 		activity.startActivityForResult(intent, 0);
 	}
@@ -36,10 +36,10 @@ public class Utils
 	{
 		Intent intent = new Intent("android.intent.action.GET_CONTENT");
 		intent.setType("image/*");
-		if (MyApp.UseSdCard)
+		if (VeneficaApplication.useSdCard)
 		{
 			//intent.putExtra("crop", "true");
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(MyApp.TEMP_FILE));
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(VeneficaApplication.TEMP_FILE));
 		}
 		activity.startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.select_image)), 1);
 	}
@@ -52,10 +52,10 @@ public class Utils
 		{
 			try
 			{
-				if (MyApp.UseSdCard)
+				if (VeneficaApplication.useSdCard)
 				{
-					//result = BitmapUtil.DecodeFile(MyApp.TEMP_FILE, 320);
-					result = BitmapUtil.DecodeImagef(BitmapFactory.decodeStream(new FileInputStream(MyApp.TEMP_FILE)), Constants.IMAGE_MAX_SIZE);
+					//result = BitmapUtil.DecodeFile(VeneficaApplication.TEMP_FILE, 320);
+					result = BitmapUtil.DecodeImagef(BitmapFactory.decodeStream(new FileInputStream(VeneficaApplication.TEMP_FILE)), Constants.IMAGE_MAX_SIZE);
 				}
 				else
 				{
@@ -89,7 +89,7 @@ public class Utils
 		return result;
 	}
 
-	public static HttpTransportSE GetServicesTransport(String url)
+	public static HttpTransportSE getServicesTransport(String url)
 	{
 		if (Constants.USE_SSL_SERVICES_TRANSPORT)
 			return new HttpsTransportSE(url);
