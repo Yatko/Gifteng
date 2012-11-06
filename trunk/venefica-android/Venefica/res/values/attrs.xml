@@ -8,4 +8,6 @@
 	<attr name="EditTextSingleLine" format="reference" />
 	<attr name="ActivityBackground" format="reference" />
 	<attr name="ViewGroupBackground" format="reference" />
+	<attr name="LabelSmall" format="reference" />
+	<attr name="LabelBig" format="reference" />
 </resources>

@@ -12,5 +12,7 @@
 		<item name="EditTextSingleLine">@style/EditTextSingleLineGreen</item>
 		<item name="ActivityBackground">@style/ActivityBackgroundGreen</item>
 		<item name="ViewGroupBackground">@style/ViewGroupBackgroundGreen</item>
+		<item name="LabelSmall">@style/LabelSmallGreen</item>
+		<item name="LabelBig">@style/LabelBigGreen</item>
 	</style>
 </resources>
