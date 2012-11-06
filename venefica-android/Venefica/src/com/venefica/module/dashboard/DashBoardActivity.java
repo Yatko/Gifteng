@@ -5,8 +5,10 @@ package com.venefica.module.dashboard;
 
 import com.venefica.activity.R;
 import com.venefica.module.alert.AlertListActivity;
+import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.messages.MessageListActivity;
 import com.venefica.module.settings.SettingsActivity;
+import com.venefica.module.user.RegisterUserActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -59,7 +61,14 @@ public class DashBoardActivity extends Activity {
 					case 1:  Intent messagesIntent = new Intent(DashBoardActivity.this, MessageListActivity.class);     
 	                	startActivity(messagesIntent);
 	                	break;
-					case 9:  Intent settingsIntent = new Intent(DashBoardActivity.this, SettingsActivity.class);     
+					case 3:  Intent postIntent = new Intent(DashBoardActivity.this, PostListingActivity.class);     
+	                	startActivity(postIntent);
+	                	break;
+					case 7:  Intent accountIntent = new Intent(DashBoardActivity.this, RegisterUserActivity.class);
+						accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
+	                	startActivity(accountIntent);
+	                	break;
+					case 8:  Intent settingsIntent = new Intent(DashBoardActivity.this, SettingsActivity.class);     
 	                	startActivity(settingsIntent);
 	                	break;
 			       default:
