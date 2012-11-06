@@ -40,12 +40,32 @@
     <string name="label_btn_no">No</string>
     <string name="label_btn_save">Save</string>
     <string name="label_messages">Messages</string>
-    <string name="label_settings_themes">Themes</string>
-    <string name="label_settings_connect_with">Connect</string>
+    <string name="label_settings_themes">Theme</string>
+    <string name="label_settings_connect_with">Connect With</string>
+    <string name="label_settings_services">Services</string>
+    <string name="label_settings_sms">SMS</string>
+    <string name="label_settings_email">Email</string>
+    <string name="label_settings_calls">Calls</string>
+    <string name="label_settings_logged_in">Stay logged in</string>
     <string name="label_facebook">Facebook</string>
     <string name="label_twitter">Twitter</string>
     <string name="label_vk">VK</string>
-
+    <string name="label_address">Address</string>
+    <string name="label_postlisting_title">Enter details below</string>
+    <string name="label_postlisting_listing_title">Title</string>
+    <string name="label_postlisting_subtitle">Subtitle</string>
+    <string name="label_postlisting_category">Category</string>
+    <string name="label_postlisting_sel_category">Select a category</string>
+    <string name="label_postlisting_photos">Photos</string>
+    <string name="label_postlisting_description">Description</string>
+    <string name="label_postlisting_condition">Condition</string>
+    <string name="label_postlisting_price">Price</string>
+    <string name="label_postlisting_currency">Currency</string>
+    <string name="label_postlisting_add_photos">Add photos</string>
+    <string name="label_postlisting_location">Location</string>
+    <string name="label_postlisting_post">Post</string>
+	<string name="label_listing_image">Listing photo</string>
+    
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -65,6 +85,7 @@
     <string name="msg_validation_zipcode">Zip must be 6 numbers.</string>
     <string name="msg_validation_email">Use standard email.</string>
     <string name="msg_validation_phone">Use numbers only.</string>
+    <string name="msg_postlisting_locate">Locate on map</string>
 
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
@@ -99,6 +120,13 @@
         <item>Orange</item>
     </string-array>
 
+    <!-- Currency types (temp) -->
+    <string-array name="array_currency_list">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>EUR</item>
+    </string-array>
+    
     <!-- Old strings -->
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
@@ -326,5 +354,6 @@
     <string name="title_activity_dash_board">DashBoardActivity</string>
     <string name="title_activity_message_detail">Venefica</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_post_listing">Post Listing</string>
 
 </resources>
