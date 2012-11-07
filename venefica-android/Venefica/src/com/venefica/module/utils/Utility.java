@@ -2,6 +2,9 @@ package com.venefica.module.utils;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Date;
+
+import com.venefica.utils.Constants;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -114,5 +117,13 @@ public class Utility {
 			e.printStackTrace();
 		}
 		return bitmap;
+	}
+	/**
+	 * Convert date to string 
+	 * @param date
+	 * @return
+	 */
+	public static String converDateToString(Date date){
+		return Constants.dateTimeFormat.format(date);
 	}
 }
