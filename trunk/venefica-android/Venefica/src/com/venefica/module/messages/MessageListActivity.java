@@ -17,7 +17,7 @@ import android.widget.ListView;
  */
 public class MessageListActivity extends Activity {
 	/**
-	 * List to show alerts
+	 * List to show messages
 	 */
 	private ListView listViewMessages;
 	/**
@@ -25,7 +25,7 @@ public class MessageListActivity extends Activity {
 	 */
 	private MessageListAdapter messageListAdapter;
 	/**
-	 * Dash board menu item list
+	 * Message list
 	 */
 	private ArrayList<MessageData> messages;
 	@Override
