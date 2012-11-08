@@ -43,8 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="70"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:text="title" />
+                android:maxLines="1"/>
             <!-- Price -->
 
             <TextView
@@ -55,8 +54,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="2dp"
                 android:layout_weight="30"
-                android:maxLines="1"
-                android:text="price" />
+                android:textSize="12sp"
+                android:maxLines="2"/>
         </TableRow>
 
         <TableRow
@@ -75,8 +74,7 @@
                 android:layout_margin="2dp"
                 android:layout_weight="70"
                 android:ellipsize="end"
-                android:lines="2"
-                android:text="description" />
+                android:lines="2" />
             <!-- Days to expiary -->
 
             <TextView
@@ -86,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 android:layout_weight="30"
-                android:lines="2"
-                android:text="3 days" />
+                android:textSize="12sp"
+                android:lines="2"/>
         </TableRow>
     </TableLayout>
 
