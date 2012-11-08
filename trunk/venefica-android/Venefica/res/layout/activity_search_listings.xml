@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?ActivityBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="?ViewGroupBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:paddingBottom="2dp"
+        android:orientation="vertical" >
+
+        <!-- <TextView
+            android:id="@+id/txtActBrowseCatSearch"
+            style="?LabelTitle"
+            android:gravity="left"
+            android:text="@string/label_browse_cat_search_listing" />
+
+        Divider line
+
+        <TextView
+            android:id="@+id/div_act_browse_01"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#DADADA" /> -->
+
+        <EditText
+            android:id="@+id/edtActSearchListing"
+            style="?EditTextSingleLine"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/corners"
+            android:hint="@string/label_browse_cat_search_listing"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnActSearchListing"
+            style="?ButtonFullWidth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/label_search_listing_search" />
+        <TextView
+            android:id="@+id/txtActSearchListingTitle"
+            style="?LabelGroupTitle" 
+            android:visibility="gone"           
+            android:gravity="left" />
+        
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/div_act_search_listing_02"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#DADADA" />
+        
+        <ListView
+            android:id="@+id/listActSearchListings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:dividerHeight="2sp"
+            android:choiceMode="multipleChoice"/>
+    </LinearLayout>
+
+</LinearLayout>

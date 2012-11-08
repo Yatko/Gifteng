@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?ActivityBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        style="?ViewGroupBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:paddingBottom="2dp" >
+
+        <TextView
+            android:id="@+id/txtActBookmarkListingsTitle"
+            style="?LabelTitle"
+            android:layout_alignParentTop="true"
+            android:gravity="left"
+            android:text="@string/label_bookmark_listing_title" />
+
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/div_act_bookmark_listing_01"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/txtActBookmarkListingsTitle"
+            android:background="#DADADA" />
+        <ListView
+            android:id="@+id/listActBookmarkListings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/div_act_bookmark_listing_01"
+            android:layout_margin="5dp"
+            android:dividerHeight="2sp" />
+    </RelativeLayout>
+    
+
+</LinearLayout>
