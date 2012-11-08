@@ -3,10 +3,16 @@ package com.venefica.module.listings.browse;
 import java.util.ArrayList;
 
 import com.venefica.activity.R;
+import com.venefica.module.dashboard.DashBoardActivity;
+import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 /**
@@ -28,12 +34,43 @@ public class BrowseCategoriesActivity extends Activity {
 	 * Categories list
 	 */
 	private ArrayList<CategoryData> categories;
-	
+	/**
+	 * Bookmark and search buttons
+	 */
+	private Button btnBookmarks, btnSearch;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_categories);
+        btnBookmarks = (Button) findViewById(R.id.btnActBrowseCatBookmarks);
+        btnBookmarks.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent bookmarkIntent = new Intent(BrowseCategoriesActivity.this, BookmarkListingsActivity.class);     
+		    	startActivity(bookmarkIntent);
+			}
+		});
+        btnSearch = (Button) findViewById(R.id.btnActBrowseCatSearchListings);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent searchIntent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);     
+		    	startActivity(searchIntent);
+			}
+		});
+        
         listViewCategories = (ListView) findViewById(R.id.listActBrowseCatCategories);
+		listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int index,
+					long arg3) {
+				Intent intent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);
+				intent.putExtra("hide_searchbar", true);
+				intent.putExtra("category_name", categories.get(index).getCategoryName());
+		    	startActivity(intent);
+				
+			}
+		});
         categories = getCategories();
         categoriesListAdapter = new CategoryListAdapter(this, categories);
         listViewCategories.setAdapter(categoriesListAdapter);
@@ -78,9 +115,9 @@ public class BrowseCategoriesActivity extends Activity {
 		return categories;
 	}
 
-	@Override
+	/*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_browse_categories, menu);
         return true;
-    }
+    }*/
 }
