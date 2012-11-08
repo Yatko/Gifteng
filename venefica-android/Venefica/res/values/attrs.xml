@@ -10,4 +10,5 @@
 	<attr name="ViewGroupBackground" format="reference" />
 	<attr name="LabelSmall" format="reference" />
 	<attr name="LabelBig" format="reference" />
+	<attr name="ViewBackground" format="reference" />
 </resources>
