@@ -6,6 +6,7 @@ package com.venefica.module.dashboard;
 import com.venefica.activity.R;
 import com.venefica.module.alert.AlertListActivity;
 import com.venefica.module.listings.browse.BrowseCategoriesActivity;
+import com.venefica.module.listings.mylistings.MyListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.messages.MessageListActivity;
 import com.venefica.module.settings.SettingsActivity;
@@ -67,6 +68,9 @@ public class DashBoardActivity extends Activity {
 	                	break;
 					case 3:  Intent postIntent = new Intent(DashBoardActivity.this, PostListingActivity.class);     
 	                	startActivity(postIntent);
+	                	break;
+					case 6:  Intent myListingIntent = new Intent(DashBoardActivity.this, MyListingsActivity.class);     
+	                	startActivity(myListingIntent);
 	                	break;
 					case 7:  Intent accountIntent = new Intent(DashBoardActivity.this, RegisterUserActivity.class);
 						accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
