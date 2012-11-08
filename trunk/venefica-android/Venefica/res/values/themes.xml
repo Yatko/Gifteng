@@ -14,5 +14,6 @@
 		<item name="ViewGroupBackground">@style/ViewGroupBackgroundGreen</item>
 		<item name="LabelSmall">@style/LabelSmallGreen</item>
 		<item name="LabelBig">@style/LabelBigGreen</item>
+		<item name="ViewBackground">@style/ViewBackgroundGreen</item>
 	</style>
 </resources>

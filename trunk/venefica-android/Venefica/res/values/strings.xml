@@ -66,9 +66,11 @@
     <string name="label_postlisting_post">Post</string>
     <string name="label_listing_image">Listing photo</string>
     <string name="label_browse_cat_search_listing">Search listings</string>
-    <string name="label_browse_cat_search">Search</string>
+    <string name="label_search_listing_search">Search</string>
     <string name="label_browse_cat_bookmarks">View bookmarks</string>
     <string name="label_browse_cat_browse">Search by category</string>
+    <string name="label_my_listing_title">My listings</string>
+    <string name="label_bookmark_listing_title">Bookmarks</string>
 
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
@@ -360,5 +362,8 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_post_listing">Post Listing</string>
     <string name="title_activity_browse_categories">Categories</string>
+    <string name="title_activity_my_listings">My Listings</string>
+    <string name="title_activity_bookmark_listings">Bookmarks</string>
+    <string name="title_activity_search_listings">Search</string>
 
 </resources>
