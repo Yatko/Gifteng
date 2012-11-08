@@ -46,6 +46,8 @@ public class ListingListItemView extends LinearLayout {
 		txtTitle.setText(listing.getTitle());
 		txtDesc.setText(listing.getDescription());
 		txtPrice.setText(listing.getPrice().toString());
+		txtPrice.append(" ");
+		txtPrice.append(listing.getCurrencyCode());
 		txtDaysToExp.setText(Utility.converDateToString(listing.getExpiresAt()));
 //		imgListingPhoto.setImageBitmap(listing.getImageThumbnail());
 	}
