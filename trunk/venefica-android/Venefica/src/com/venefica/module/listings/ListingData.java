@@ -96,6 +96,10 @@ public class ListingData {
 	 */
 	private List<ImageDto> images;
 	/**
+	 * Currency code
+	 */
+	private String currencyCode;
+	/**
 	 * @return the listingId
 	 */
 	public long getListingId() {
@@ -346,6 +350,18 @@ public class ListingData {
 	 */
 	public void setImages(List<ImageDto> images) {
 		this.images = images;
+	}
+	/**
+	 * @return the currencyCode
+	 */
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+	/**
+	 * @param currencyCode the currencyCode to set
+	 */
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
 	}
 	
 
