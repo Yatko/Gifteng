@@ -114,7 +114,7 @@ public class WSAction {
 			}
 		} catch (SoapFault e){
 			String message = e.getMessage();
-			if (message.equalsIgnoreCase("AUTH FAILED")){
+			if (message.contains("Wrong user name or password!")){
 				wrapper.result = Constants.ERROR_USER_UNAUTHORISED;
 			}
 		}
