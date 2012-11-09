@@ -5,12 +5,12 @@
     android:orientation="horizontal"
     android:weightSum="100" >
 
-    <CheckBox
+    <!-- <CheckBox
         android:id="@+id/chkListingSelect"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="13" />
+        android:layout_weight="13" /> -->
 
     <ImageView
         android:id="@+id/imgListingImage"
@@ -26,7 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="65" >
+        android:layout_weight="78" >
 
         <TableRow
             android:id="@+id/tableRowListingListItemTitle"
