@@ -33,7 +33,7 @@ public class ListingListItemView extends LinearLayout {
 		txtPrice = (TextView) view.findViewById(R.id.txtListingPrice);
 		txtDaysToExp = (TextView) view.findViewById(R.id.txtListingExpDays);
 		imgListingPhoto = (ImageView) view.findViewById(R.id.imgListingImage);
-		chkSelListing = (CheckBox) view.findViewById(R.id.chkListingSelect);
+//		chkSelListing = (CheckBox) view.findViewById(R.id.chkListingSelect);
 		setListing(listing);
 		this.addView(view);
 	}
@@ -54,15 +54,15 @@ public class ListingListItemView extends LinearLayout {
 	
 	/**
 	 * Select listing
-	 */
+	 *//*
 	public void setSelected(boolean selected){
 		chkSelListing.setChecked(selected);
 	}
 	
-	/**
+	*//**
 	 * Get listing selection
-	 */
+	 *//*
 	public boolean isSelected(){
 		return chkSelListing.isChecked();
-	}
+	}*/
 }

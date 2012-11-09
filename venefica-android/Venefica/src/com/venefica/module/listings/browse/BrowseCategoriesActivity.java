@@ -11,9 +11,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 /**
  * 
@@ -38,6 +40,13 @@ public class BrowseCategoriesActivity extends Activity {
 	 * Bookmark and search buttons
 	 */
 	private Button btnBookmarks, btnSearch;
+	/**
+	 * Activity modes
+	 */
+	public static final int ACT_MODE_GET_CATEGORY = 1001;
+	public static final int ACT_MODE_BROWSE_CATEGORY = 1002;
+	private int CURRENT_MODE = ACT_MODE_BROWSE_CATEGORY;
+	private ViewGroup laySearchOptions;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +83,17 @@ public class BrowseCategoriesActivity extends Activity {
         categories = getCategories();
         categoriesListAdapter = new CategoryListAdapter(this, categories);
         listViewCategories.setAdapter(categoriesListAdapter);
+        CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_BROWSE_CATEGORY);
+        if (CURRENT_MODE == ACT_MODE_GET_CATEGORY) {
+        	hideSearchOptions();
+		}
     }
 
-    private ArrayList<CategoryData> getCategories() {
+    private void hideSearchOptions() {
+    	laySearchOptions.setVisibility(ViewGroup.GONE);
+	}
+
+	private ArrayList<CategoryData> getCategories() {
     	ArrayList<CategoryData> categories = new ArrayList<CategoryData>();
     	CategoryData category = new CategoryData();
     	category.setCatId(1);

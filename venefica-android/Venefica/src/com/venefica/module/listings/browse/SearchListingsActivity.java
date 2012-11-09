@@ -8,10 +8,12 @@ import com.venefica.activity.R;
 import com.venefica.activity.R.layout;
 import com.venefica.activity.R.menu;
 import com.venefica.module.listings.ListingData;
+import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,14 +66,15 @@ public class SearchListingsActivity extends Activity {
         
 		listingsListAdapter = new ListingListAdapter(this, listings);
 		listViewListings.setAdapter(listingsListAdapter);
-		listViewListings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		listViewListings.setOnItemClickListener(new ListView.OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-//				Intent intent = new Intent(MyListingsActivity.this, ListingDetailActivity.class);
-//				startActivity(intent);
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Intent intent = new Intent(SearchListingsActivity.this, ListingDetailsActivity.class);
+				startActivity(intent);
 			}
 		});
+		
 		//Hide searchbar and load listings for selected category
 		if(getIntent().getBooleanExtra("hide_searchbar", false)){
 			hideSearchBar();

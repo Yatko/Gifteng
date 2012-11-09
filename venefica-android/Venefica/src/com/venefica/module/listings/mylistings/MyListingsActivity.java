@@ -8,7 +8,9 @@ import com.venefica.activity.R;
 import com.venefica.activity.R.layout;
 import com.venefica.activity.R.menu;
 import com.venefica.module.listings.ListingData;
+import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
+import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.messages.MessageData;
 import com.venefica.module.messages.MessageDetailActivity;
 import com.venefica.module.messages.MessageListActivity;
@@ -49,8 +51,8 @@ public class MyListingsActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-//				Intent intent = new Intent(MyListingsActivity.this, ListingDetailActivity.class);
-//				startActivity(intent);
+				Intent intent = new Intent(MyListingsActivity.this, ListingDetailsActivity.class);
+				startActivity(intent);
 			}
 		});
     }

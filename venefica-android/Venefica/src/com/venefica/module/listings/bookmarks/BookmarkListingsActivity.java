@@ -6,10 +6,13 @@ import java.util.Date;
 
 import com.venefica.activity.R;
 import com.venefica.module.listings.ListingData;
+import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,8 +45,8 @@ public class BookmarkListingsActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-//				Intent intent = new Intent(MyListingsActivity.this, ListingDetailActivity.class);
-//				startActivity(intent);
+				Intent intent = new Intent(BookmarkListingsActivity.this, ListingDetailsActivity.class);
+				startActivity(intent);
 			}
 		});
     }
