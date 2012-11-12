@@ -71,20 +71,19 @@
     <string name="label_browse_cat_browse">Search by category</string>
     <string name="label_my_listing_title">My listings</string>
     <string name="label_bookmark_listing_title">Bookmarks</string>
-	<string name="label_detail_listing_price">Price</string>
-	<string name="label_detail_listing_category">Category</string>
-	<string name="label_detail_listing_photos">Photos</string>
-	<string name="label_detail_listing_address">Address</string>
-	<string name="label_detail_listing_description">Description</string>
-	<string name="label_detail_listing_condition">Condition</string>
-	<string name="label_detail_listing_specification">specification</string>
-	<string name="label_detail_listing_listed_on">Listed on</string>
-	<string name="label_detail_listing_expires_on">Expires on</string>
-	<string name="label_detail_listing_seller">Seller</string>
-	<string name="label_detail_listing_make_vote">Vote Item</string>
-	<string name="label_detail_listing_make_offer">Make offer</string>
-	
-	
+    <string name="label_detail_listing_price">Price</string>
+    <string name="label_detail_listing_category">Category</string>
+    <string name="label_detail_listing_photos">Photos</string>
+    <string name="label_detail_listing_address">Address</string>
+    <string name="label_detail_listing_description">Description</string>
+    <string name="label_detail_listing_condition">Condition</string>
+    <string name="label_detail_listing_specification">specification</string>
+    <string name="label_detail_listing_listed_on">Listed on</string>
+    <string name="label_detail_listing_expires_on">Expires on</string>
+    <string name="label_detail_listing_seller">Seller</string>
+    <string name="label_detail_listing_make_vote">Vote Item</string>
+    <string name="label_detail_listing_make_offer">Make offer</string>
+
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -380,5 +379,6 @@
     <string name="title_activity_bookmark_listings">Bookmarks</string>
     <string name="title_activity_search_listings">Search</string>
     <string name="title_activity_listing_details">Details</string>
+    <string name="title_activity_gallery">Gallery</string>
 
 </resources>
