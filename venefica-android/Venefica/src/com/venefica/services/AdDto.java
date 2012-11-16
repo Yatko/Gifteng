@@ -20,31 +20,31 @@ import com.venefica.utils.GeoLocation;
 
 public class AdDto implements KvmSerializable
 {
-	public long id;
-	public long categoryId;
-	public String category = "";
-	public String title = "";
-	public String description = "";
-	public BigDecimal price = new BigDecimal(0.0f);
-	public double latitude;
-	public double longitude;
-	public ImageDto image;
+	private long id;
+	private long categoryId;
+	private String category = "";
+	private String title = "";
+	private String description = "";
+	private BigDecimal price = new BigDecimal(0.0f);
+	private double latitude;
+	private double longitude;
+	private ImageDto image;
 	/** takes milliseconds */
-	public String createdAt = "";
+	private String createdAt = "";
 	/** true - the current user is the owner of ad*/
-	public boolean owner;
-	public ImageDto imageThumbnail;
-	public boolean inBookmars;
-	public Date expiresAt;
-	public boolean wanted;
-	public long numViews;
-	public UserDto creator;
-	public boolean expired;
-	public int numAvailProlongations;
-	public boolean canMarkAsSpam;
-	public float rating;
-	public boolean canRate;
-	public List<ImageDto> images;
+	private boolean owner;
+	private ImageDto imageThumbnail;
+	private boolean inBookmars;
+	private Date expiresAt;
+	private boolean wanted;
+	private long numViews;
+	private UserDto creator;
+	private boolean expired;
+	private int numAvailProlongations;
+	private boolean canMarkAsSpam;
+	private float rating;
+	private boolean canRate;
+	private List<ImageDto> images;
 
 	public AdDto()
 	{
@@ -374,5 +374,327 @@ public class AdDto implements KvmSerializable
 		envelope.addMapping(null, "AdDto", this.getClass());
 		new ImageDto().registerRead(envelope);
 		new UserDto().registerRead(envelope);
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the categoryId
+	 */
+	public long getCategoryId() {
+		return categoryId;
+	}
+
+	/**
+	 * @param categoryId the categoryId to set
+	 */
+	public void setCategoryId(long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	/**
+	 * @return the category
+	 */
+	public String getCategory() {
+		return category;
+	}
+
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	/**
+	 * @return the latitude
+	 */
+	public double getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * @return the longitude
+	 */
+	public double getLongitude() {
+		return longitude;
+	}
+
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public ImageDto getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(ImageDto image) {
+		this.image = image;
+	}
+
+	/**
+	 * @return the createdAt
+	 */
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt the createdAt to set
+	 */
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public boolean isOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(boolean owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * @return the imageThumbnail
+	 */
+	public ImageDto getImageThumbnail() {
+		return imageThumbnail;
+	}
+
+	/**
+	 * @param imageThumbnail the imageThumbnail to set
+	 */
+	public void setImageThumbnail(ImageDto imageThumbnail) {
+		this.imageThumbnail = imageThumbnail;
+	}
+
+	/**
+	 * @return the inBookmars
+	 */
+	public boolean isInBookmars() {
+		return inBookmars;
+	}
+
+	/**
+	 * @param inBookmars the inBookmars to set
+	 */
+	public void setInBookmars(boolean inBookmars) {
+		this.inBookmars = inBookmars;
+	}
+
+	/**
+	 * @return the expiresAt
+	 */
+	public Date getExpiresAt() {
+		return expiresAt;
+	}
+
+	/**
+	 * @param expiresAt the expiresAt to set
+	 */
+	public void setExpiresAt(Date expiresAt) {
+		this.expiresAt = expiresAt;
+	}
+
+	/**
+	 * @return the wanted
+	 */
+	public boolean isWanted() {
+		return wanted;
+	}
+
+	/**
+	 * @param wanted the wanted to set
+	 */
+	public void setWanted(boolean wanted) {
+		this.wanted = wanted;
+	}
+
+	/**
+	 * @return the numViews
+	 */
+	public long getNumViews() {
+		return numViews;
+	}
+
+	/**
+	 * @param numViews the numViews to set
+	 */
+	public void setNumViews(long numViews) {
+		this.numViews = numViews;
+	}
+
+	/**
+	 * @return the creator
+	 */
+	public UserDto getCreator() {
+		return creator;
+	}
+
+	/**
+	 * @param creator the creator to set
+	 */
+	public void setCreator(UserDto creator) {
+		this.creator = creator;
+	}
+
+	/**
+	 * @return the expired
+	 */
+	public boolean isExpired() {
+		return expired;
+	}
+
+	/**
+	 * @param expired the expired to set
+	 */
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	/**
+	 * @return the numAvailProlongations
+	 */
+	public int getNumAvailProlongations() {
+		return numAvailProlongations;
+	}
+
+	/**
+	 * @param numAvailProlongations the numAvailProlongations to set
+	 */
+	public void setNumAvailProlongations(int numAvailProlongations) {
+		this.numAvailProlongations = numAvailProlongations;
+	}
+
+	/**
+	 * @return the canMarkAsSpam
+	 */
+	public boolean isCanMarkAsSpam() {
+		return canMarkAsSpam;
+	}
+
+	/**
+	 * @param canMarkAsSpam the canMarkAsSpam to set
+	 */
+	public void setCanMarkAsSpam(boolean canMarkAsSpam) {
+		this.canMarkAsSpam = canMarkAsSpam;
+	}
+
+	/**
+	 * @return the rating
+	 */
+	public float getRating() {
+		return rating;
+	}
+
+	/**
+	 * @param rating the rating to set
+	 */
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+
+	/**
+	 * @return the canRate
+	 */
+	public boolean isCanRate() {
+		return canRate;
+	}
+
+	/**
+	 * @param canRate the canRate to set
+	 */
+	public void setCanRate(boolean canRate) {
+		this.canRate = canRate;
+	}
+
+	/**
+	 * @return the images
+	 */
+	public List<ImageDto> getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(List<ImageDto> images) {
+		this.images = images;
 	}
 }
