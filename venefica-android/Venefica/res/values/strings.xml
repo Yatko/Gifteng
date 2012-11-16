@@ -22,6 +22,7 @@
     <string name="label_county">County</string>
     <string name="label_city">City</string>
     <string name="label_area">Area</string>
+    <string name="label_state">State</string>
     <string name="label_business_acc">Business Account</string>
     <string name="label_remember_me">Remember me</string>
     <string name="label_profile_image">Profile Image</string>
@@ -63,6 +64,9 @@
     <string name="label_postlisting_currency">Currency</string>
     <string name="label_postlisting_add_photos">Add photos</string>
     <string name="label_postlisting_location">Location</string>
+    <string name="label_postlisting_latitude">Latitude</string>
+    <string name="label_postlisting_longitude">Longitude</string>
+    <string name="label_postlisting_expireson">Expiray</string>
     <string name="label_postlisting_post">Post</string>
     <string name="label_listing_image">Listing photo</string>
     <string name="label_browse_cat_search_listing">Search listings</string>
@@ -90,6 +94,8 @@
     <string name="error_social_auth">Unable to login using social network. Please try again later.</string>
     <string name="error_register_user">Unable to register user.</string>
     <string name="error_update_user">Unable to update user details.</string>
+    <string name="error_postlisting">Unable to post new listing.</string>
+    <string name="error_postlisting_get_location">Unable to get location. Please try again later.</string>
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
@@ -103,11 +109,19 @@
     <string name="msg_validation_zipcode">Zip must be 6 numbers.</string>
     <string name="msg_validation_email">Use standard email.</string>
     <string name="msg_validation_phone">Use numbers only.</string>
+    <string name="msg_validation_date_higher">Please select date higher than current date.</string>
+    <string name="msg_validation_date_lower">Please select date less than current date.</string>
+    <string name="msg_validation_category">Please select category.</string>
     <string name="msg_postlisting_locate">Locate on map</string>
     <string name="msg_detail_listing_add_fav_success">Stored to bookmarks.</string>
-
+	<string name="msg_postlisting_success">Listing created successfully. You can view posted listings in MyListings section.</string>
+	<string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
+	<string name="msg_postlisting_provider_disabled"> has been disabled.</string>
+	<string name="msg_postlisting_enable_provider">GPS is not active. Please enable GPS to get location.</string>
+	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
+    <string name="hint_post_listing_location_unavailable">Location not available</string>
     <!-- Titles -->
     <string name="app_name">Venefica</string>
     <!-- Data -->
@@ -145,7 +159,9 @@
         <item>GBP</item>
         <item>EUR</item>
     </string-array>
-
+	<!-- codes -->
+	<string name="code_category_other">other</string>
+	
     <!-- Old strings -->
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
