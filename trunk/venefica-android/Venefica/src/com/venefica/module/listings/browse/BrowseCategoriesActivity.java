@@ -45,12 +45,17 @@ public class BrowseCategoriesActivity extends Activity {
 	 */
 	public static final int ACT_MODE_GET_CATEGORY = 1001;
 	public static final int ACT_MODE_BROWSE_CATEGORY = 1002;
+	
 	private int CURRENT_MODE = ACT_MODE_BROWSE_CATEGORY;
+	/**
+	 * viewgroup to hold search box and button
+	 */
 	private ViewGroup laySearchOptions;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_categories);
+        laySearchOptions = (ViewGroup) findViewById(R.id.layActBrowseCatSearchOptions);
         btnBookmarks = (Button) findViewById(R.id.btnActBrowseCatBookmarks);
         btnBookmarks.setOnClickListener(new View.OnClickListener() {
 			
@@ -73,11 +78,27 @@ public class BrowseCategoriesActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int index,
 					long arg3) {
-				Intent intent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);
-				intent.putExtra("hide_searchbar", true);
-				intent.putExtra("category_name", categories.get(index).getCategoryName());
-		    	startActivity(intent);
 				
+				CategoryData cat = categories.get(index);  
+				if(cat.getSubCategories() != null && cat.getSubCategories().size() > 0){
+					categories.clear();
+					categories.addAll(cat.getSubCategories());
+					categoriesListAdapter.notifyDataSetChanged();
+				}else{
+					if (CURRENT_MODE == ACT_MODE_GET_CATEGORY) {
+						Intent resIntent = new Intent();
+						resIntent.putExtra("category_name", categories.get(index).getCategoryName());
+						resIntent.putExtra("cat_id", categories.get(index).getCatId());
+						setResult(Activity.RESULT_OK, resIntent);
+						finish();
+					}else {
+						Intent intent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);
+						intent.putExtra("hide_searchbar", true);
+						intent.putExtra("category_name", categories.get(index).getCategoryName());
+				    	startActivity(intent);					
+					}	
+				}
+							
 			}
 		});
         categories = getCategories();
@@ -128,7 +149,16 @@ public class BrowseCategoriesActivity extends Activity {
     	category = new CategoryData();
     	category.setCatId(7);
     	category.setCategoryName("rentals");
+    	CategoryData subcategory = new CategoryData();
+    	subcategory.setCatId(8);
+    	subcategory.setCategoryName("rentals home");
+    	ArrayList subCat = new ArrayList<CategoryData>();
+    	subCat.add(subcategory);
+    	category.setSubCategories(subCat);
+    	
     	categories.add(category);
+    	
+    	
 		return categories;
 	}
 
