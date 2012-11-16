@@ -41,7 +41,8 @@
             android:id="@+id/edtActPostListingListTitle"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text" />
+            android:inputType="text"
+            android:text="test" />
 
         <!-- Subtitle -->
 
@@ -56,7 +57,8 @@
             android:id="@+id/edtActPostListingSubTitle"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text" />
+            android:inputType="text" 
+            android:text="test"/>
 
         <!-- Category -->
 
@@ -85,7 +87,8 @@
             android:id="@+id/edtActPostListingDescription"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:text="test" />
 
         <!-- Condition -->
 
@@ -100,7 +103,8 @@
             android:id="@+id/edtActPostListingCondition"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:text="test" />
         <!-- Price -->
 
         <TextView
@@ -122,7 +126,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="40"
                 android:background="@drawable/corners"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal" 
+                android:text="1234"/>
 
             <Spinner
                 android:id="@+id/spinActPostListingCurrency"
@@ -133,6 +138,20 @@
                 android:entries="@array/array_currency_list"
                 android:inputType="textMultiLine" />
         </LinearLayout>
+         <!-- Expiary -->
+
+        <TextView
+            android:id="@+id/txtActPostListingExpiary"
+            style="?LabelEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_postlisting_expireson" />
+
+        <Button
+            android:id="@+id/btnActPostListingAddExpiary"
+            style="?ButtonFullWidth"
+            android:layout_marginBottom="10dp" />
+        
         <!-- Photos -->
 
         <TextView
@@ -183,6 +202,46 @@
                 android:gravity="right"
                 android:src="@drawable/locate" />
         </LinearLayout>
+         <!-- Map -->
+
+        <com.google.android.maps.MapView
+            android:id="@+id/mapviewActPostListingMapLocate"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:apiKey="@string/google_map_api_key"
+            android:clickable="true"
+            android:visibility="gone" />
+        <!-- Latitude -->
+
+        <TextView
+            android:id="@+id/txtActPostListingLatitude"
+            style="?LabelEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_postlisting_latitude" />
+
+        <EditText
+            android:id="@+id/edtActPostListingLatitude"
+            style="?EditTextSingleLine"
+            android:background="@drawable/corners"
+            android:inputType="numberDecimal"
+            android:text="36"/>
+        <!-- Longitude -->
+
+        <TextView
+            android:id="@+id/txtActPostListingLongitude"
+            style="?LabelEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_postlisting_longitude" />
+
+        <EditText
+            android:id="@+id/edtActPostListingLongitude"
+            style="?EditTextSingleLine"
+            android:background="@drawable/corners"
+            android:inputType="numberDecimal"
+            android:text="75"/>
+       
         <!-- Zip -->
 
         <TextView
@@ -198,7 +257,20 @@
             android:background="@drawable/corners"
             android:inputType="number"
             android:maxLength="6" />
+		<!-- State -->
 
+        <TextView
+            android:id="@+id/txtActPostListingState"
+            style="?LabelEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_state" />
+
+        <EditText
+            android:id="@+id/edtActPostListingState"
+            style="?EditTextSingleLine"
+            android:background="@drawable/corners"
+            android:inputType="text"/>
         <!-- County -->
 
         <TextView
@@ -212,8 +284,7 @@
             android:id="@+id/edtActPostListingCounty"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="number"
-            android:maxLength="6" />
+            android:inputType="text"/>
 
         <!-- City -->
 
@@ -228,7 +299,7 @@
             android:id="@+id/edtActPostListingCity"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="number" />
+            android:inputType="text" />
 
         <!-- Area -->
 
@@ -243,7 +314,7 @@
             android:id="@+id/edtActPostListingArea"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="number" />
+            android:inputType="text" />
 
         <Button
             android:id="@+id/btnActPostListingPost"
