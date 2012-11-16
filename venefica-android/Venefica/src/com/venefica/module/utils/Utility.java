@@ -126,4 +126,12 @@ public class Utility {
 	public static String converDateToString(Date date){
 		return Constants.dateTimeFormat.format(date);
 	}
+	/**
+	 * Convert short date to string
+	 * @param date
+	 * @return
+	 */
+	public static String convertShortDateToString(Date date){
+		return Constants.dateFormat.format(date);
+	}
 }
