@@ -20,9 +20,13 @@ public class Constants
 	public static final int RESULT_REGISTER_USER_SUCCESS= 1012;
 	public static final int RESULT_UPDATE_USER_SUCCESS= 1013;
 	public static final int RESULT_IS_USER_EXISTS_SUCCESS= 1014;
+	public static final int ERROR_RESULT_POST_LISTING = 1015;
+	public static final int ERROR_RESULT_GET_LOCATION = 1016;
+	public static final int RESULT_POST_LISTING_SUCCESS = 1017;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	
 	public static final String MAIN_FOLDER = "Venefica";
 	public static final String TEMP_FOLDER = "Temp";
@@ -37,7 +41,8 @@ public class Constants
 	public static final boolean USE_SSL_SERVICES_TRANSPORT = false;
 	public static final String SERVER_PORT = USE_SSL_SERVICES_TRANSPORT ? "8843" : "8080";
 //	public static final String SERVER_URL = "h2.yatko.com";
-	public static final String SERVER_URL = "192.168.1.100";
+//	public static final String SERVER_URL = "192.168.0.100";
+	public static final String SERVER_URL = "s1.veneficalabs.com";
 	public static final String SERVICES_PROTOCOL = USE_SSL_SERVICES_TRANSPORT ? "https://" : "http://";
 	public static final String SERVICES_BASE_URL = SERVICES_PROTOCOL + SERVER_URL + ":" + SERVER_PORT;
 
@@ -96,4 +101,5 @@ public class Constants
 	
 
 	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
+		
 }
