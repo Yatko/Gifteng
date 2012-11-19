@@ -3,6 +3,7 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -15,14 +16,18 @@ import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.venefica.activity.PostStepLogic.PostData;
+import com.venefica.market.Category;
 import com.venefica.module.listings.ListingData;
+import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
 import com.venefica.services.AdDto;
+import com.venefica.services.CategoryDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.services.ServicesManager.AuthenticateResult;
+import com.venefica.services.ServicesManager.GetCategoriesResult;
 import com.venefica.services.ServicesManager.GetUserResult;
 import com.venefica.services.ServicesManager.IsUserCompleteResult;
 import com.venefica.services.ServicesManager.PlaceAdResult;
@@ -51,10 +56,10 @@ public class WSAction {
 	private static final String WS_METHOD_IS_USER_REGISTERED = "IsUserComplete";
 	private static final String WS_METHOD_GET_USER = "GetUser";
 	private static final String WS_METHOD_UPDATE_USER = "UpdateUser";
-	// private static final String IS_USER_COMPLETE_METHOD = "IsUserComplete";
+	private static final String WS_METHOD_GET_ALL_CATEGORIES = "GetAllCategories";
 	private static final String WS_METHOD_REGISTER_USER = "RegisterUser";
-	private static final String PLACE_AD_METHOD = "PlaceAd";
-	
+	private static final String WS_METHOD_PLACE_AD = "PlaceAd";
+
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -347,29 +352,29 @@ public class WSAction {
 		return user;
 	}
 
-	
-	
 	/**
 	 * Method to post new listing
+	 * 
 	 * @param token
 	 * @param listing
 	 * @return PostListingResultWrapper
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public PostListingResultWrapper postListing(String token, AdDto listing) throws IOException, XmlPullParserException {
-		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + PLACE_AD_METHOD;
+	public PostListingResultWrapper postListing(String token, AdDto listing)
+			throws IOException, XmlPullParserException {
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_PLACE_AD;
 		PostListingResultWrapper result = new PostListingResultWrapper();
-		String StatusSoap = "Ok";
 
 		try {
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,
-					PLACE_AD_METHOD);
+					WS_METHOD_PLACE_AD);
 
-//			AdDto ad = new AdDto(Post);
+			// AdDto ad = new AdDto(Post);
 			request.addProperty("ad", listing);
 
-			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+					SoapEnvelope.VER11);
 			envelope.dotNet = true;
 			envelope.setOutputSoapObject(request);
 			listing.register(envelope);
@@ -383,18 +388,51 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object obj = envelope.getResponse();
 
-			result.data = getStringFromProperty(obj, ""+ BAD_AD_ID);
+			result.data = getStringFromProperty(obj, "" + BAD_AD_ID);
 
-			if (result.data.equalsIgnoreCase(BAD_AD_ID+"")) {
+			if (result.data.equalsIgnoreCase(BAD_AD_ID + "")) {
 				result.result = Constants.ERROR_RESULT_POST_LISTING;
 				Log.d("PlaceAd Info!", "Bad AD id");
 			} else {
 				result.result = Constants.RESULT_POST_LISTING_SUCCESS;
 			}
 		} catch (SoapFault e) {
-//			StatusSoap = "SoapFault Error! " + e.getMessage();
-//			Log.d("PlaceAd Alert!", StatusSoap);
 			result.result = Constants.ERROR_RESULT_POST_LISTING;
+		}
+		return result;
+	}
+
+	/**
+	 * Method to get all categories
+	 * @param token String
+	 * @return result BrowseCatResultWrapper
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 */
+	@SuppressWarnings("unchecked")
+	public BrowseCatResultWrapper getCategories(String token) throws IOException, XmlPullParserException {
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE
+				+ WS_METHOD_GET_ALL_CATEGORIES;
+		BrowseCatResultWrapper result = new BrowseCatResultWrapper();
+		HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+		try {
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,WS_METHOD_GET_ALL_CATEGORIES);
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new CategoryDto().registerRead(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			List<CategoryDto> categories = (List<CategoryDto>) envelope.getResponse();
+
+			result.categories = categories;
+			result.result = Constants.RESULT_GET_CATEGORIES_SUCCESS;
+		} catch (SoapFault e) {
+			result.result = Constants.ERROR_RESULT_GET_CATEGORIES;
 		}
 		return result;
 	}
