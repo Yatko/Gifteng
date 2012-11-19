@@ -168,7 +168,8 @@
             android:background="@color/gray"
             android:gravity="bottom"
             android:minHeight="90dp"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:spacing="5dp"  />
 
         <Button
             android:id="@+id/btnActPostListingAddPhotos"
