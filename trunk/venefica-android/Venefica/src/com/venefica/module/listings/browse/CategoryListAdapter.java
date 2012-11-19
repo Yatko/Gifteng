@@ -1,8 +1,9 @@
 package com.venefica.module.listings.browse;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.venefica.activity.R;
+import com.venefica.services.CategoryDto;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,11 +20,12 @@ import android.widget.TextView;
 public class CategoryListAdapter extends BaseAdapter {
 	
 	private Context context;
-	private ArrayList<CategoryData> categories;
+	private List<CategoryDto> categories;
 	private TextView txtCatName;
 	private ImageView nextImg;
+	private static ViewHolder holder;
 	
-	public CategoryListAdapter(Context context, ArrayList<CategoryData> categories) {
+	public CategoryListAdapter(Context context, List<CategoryDto> categories) {
 		this.context = context;
 		this.categories = categories;
 	}
@@ -55,18 +57,30 @@ public class CategoryListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		if(convertView == null){
+			holder = new ViewHolder();
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.view_category_list_item, parent, false);
 			txtCatName = (TextView) convertView.findViewById(R.id.txtCatListItemName);
 			nextImg = (ImageView) convertView.findViewById(R.id.imgCatListItemMore);
+			
+			holder.txtCatName = txtCatName;
+			holder.nextImg = nextImg;
+			convertView.setTag(holder);
+		} else {
+
+			holder = (ViewHolder) convertView.getTag();
 		}
-		txtCatName.setText(categories.get(position).getCategoryName());
-		if(categories.get(position).getSubCategories() == null || categories.get(position).getSubCategories().size() == 0){
-			nextImg.setVisibility(View.INVISIBLE);
+		holder.txtCatName.setText(categories.get(position).getName());
+		if(categories.get(position).getSubcategories() == null || categories.get(position).getSubcategories().size() == 0){
+			holder.nextImg.setVisibility(View.INVISIBLE);
 		}else {
-			nextImg.setVisibility(View.VISIBLE);
+			holder.nextImg.setVisibility(View.VISIBLE);
 		}
 		return convertView;
 	}
 
+	private static class ViewHolder {
+		TextView txtCatName;
+		ImageView nextImg;
+	}
 }
