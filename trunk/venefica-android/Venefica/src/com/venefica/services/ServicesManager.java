@@ -1147,6 +1147,7 @@ public class ServicesManager
 		return result;
 	}
 
+	@Deprecated
 	@SuppressWarnings ("unchecked")
 	public GetCategoriesResult GetCategories(String token)
 	{
@@ -1170,7 +1171,7 @@ public class ServicesManager
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Vector<CategoryDto> Arr = (Vector<CategoryDto>)envelope.getResponse();
 
-			if (Arr != null)
+			/*if (Arr != null)
 			{
 				for (CategoryDto cat : Arr)
 				{
@@ -1178,11 +1179,11 @@ public class ServicesManager
 					{
 						Category rootCat = Category.AddRootCategory((int)cat.id, cat.name);
 						loadSubCategory(rootCat, cat.subcategories);
-						/*for (CategoryDto subCat : cat.subcategories)
+						for (CategoryDto subCat : cat.subcategories)
 						{
 							if (subCat != null)
 								rootCat.AddSubCategory((int)subCat.id, subCat.name);
-						}*/
+						}
 					}
 				}
 
@@ -1191,7 +1192,7 @@ public class ServicesManager
 			else
 			{
 				Log.d("GetCategories Warning!", "Arr == null");
-			}
+			}*/
 
 			result.Return = true;
 		}
@@ -1227,11 +1228,11 @@ public class ServicesManager
 	{
 		if (sub != null)
 		{
-			for (CategoryDto it : sub)
+			/*for (CategoryDto it : sub)
 			{
 				Category cat = parentCat.AddSubCategory((int)it.id, it.name);
 				loadSubCategory(cat, it.subcategories);
-			}
+			}*/
 		}
 	}
 
