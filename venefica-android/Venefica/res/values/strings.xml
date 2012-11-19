@@ -96,6 +96,8 @@
     <string name="error_update_user">Unable to update user details.</string>
     <string name="error_postlisting">Unable to post new listing.</string>
     <string name="error_postlisting_get_location">Unable to get location. Please try again later.</string>
+    <string name="error_get_categories">Error occurred while getting categories.</string>
+    
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
