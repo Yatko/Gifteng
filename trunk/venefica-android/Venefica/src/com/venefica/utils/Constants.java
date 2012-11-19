@@ -23,6 +23,8 @@ public class Constants
 	public static final int ERROR_RESULT_POST_LISTING = 1015;
 	public static final int ERROR_RESULT_GET_LOCATION = 1016;
 	public static final int RESULT_POST_LISTING_SUCCESS = 1017;
+	public static final int ERROR_RESULT_GET_CATEGORIES = 1018;
+	public static final int RESULT_GET_CATEGORIES_SUCCESS = 1019;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
