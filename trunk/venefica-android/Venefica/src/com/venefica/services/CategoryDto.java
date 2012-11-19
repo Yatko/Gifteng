@@ -13,10 +13,10 @@ import com.venefica.utils.Constants;
 
 public class CategoryDto implements KvmSerializable
 {
-	long id;
-	long parentId;
-	Vector<CategoryDto> subcategories;
-	String name;
+	private long id;
+	private long parentId;
+	private Vector<CategoryDto> subcategories;
+	private String name;
 
 	public CategoryDto()
 	{
@@ -114,5 +114,61 @@ public class CategoryDto implements KvmSerializable
 	public void registerRead(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(null, "CategoryDto", new CategoryDto().getClass());
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the parentId
+	 */
+	public long getParentId() {
+		return parentId;
+	}
+
+	/**
+	 * @param parentId the parentId to set
+	 */
+	public void setParentId(long parentId) {
+		this.parentId = parentId;
+	}
+
+	/**
+	 * @return the subcategories
+	 */
+	public Vector<CategoryDto> getSubcategories() {
+		return subcategories;
+	}
+
+	/**
+	 * @param subcategories the subcategories to set
+	 */
+	public void setSubcategories(Vector<CategoryDto> subcategories) {
+		this.subcategories = subcategories;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 }
