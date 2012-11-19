@@ -86,7 +86,7 @@ public class Product
 
 	public Product(AdDto dto)
 	{
-		try
+		/*try
 		{
 			Id = (int)dto.id;
 			Title = dto.title;
@@ -141,7 +141,7 @@ public class Product
 		{
 			Log.d("Product(adDto dto) Exception:", e.getLocalizedMessage());
 		}
-
+*/
 	}
 
 	public void CalcPostTime()
