@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_listing_update"
+        android:title="@string/label_menu_update"
+        android:orderInCategory="96" />
+    <item android:id="@+id/menu_listing_end"
+        android:title="@string/label_menu_end"
+        android:orderInCategory="97" />
+    <item android:id="@+id/menu_listing_relist"
+        android:title="@string/label_menu_relist"
+        android:orderInCategory="98" />
+    <item android:id="@+id/menu_listing_delete"
+        android:title="@string/label_menu_delete"
+        android:orderInCategory="99" />
+    <item android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        android:orderInCategory="100" />
+</menu>
