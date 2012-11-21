@@ -25,6 +25,10 @@ public class Constants
 	public static final int RESULT_POST_LISTING_SUCCESS = 1017;
 	public static final int ERROR_RESULT_GET_CATEGORIES = 1018;
 	public static final int RESULT_GET_CATEGORIES_SUCCESS = 1019;
+	public static final int ERROR_RESULT_GET_MY_LISTINGS = 1020;
+	public static final int RESULT_GET_MY_LISTINGS_SUCCESS = 1021;
+	public static final int RESULT_GET_LISTING_DETAILS_SUCCESS = 1022;
+	public static final int ERROR_RESULT_GET_LISTING_DETAILS = 1023;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -104,4 +108,5 @@ public class Constants
 
 	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
 		
+			
 }
