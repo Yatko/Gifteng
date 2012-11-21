@@ -3,6 +3,7 @@ package com.venefica.module.listings.browse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.venefica.activity.R;
 import com.venefica.activity.R.layout;
@@ -10,6 +11,7 @@ import com.venefica.activity.R.menu;
 import com.venefica.module.listings.ListingData;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
+import com.venefica.services.AdDto;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -34,7 +36,7 @@ public class SearchListingsActivity extends Activity {
 	/**
 	 * Listings list
 	 */
-	private ArrayList<ListingData> listings;
+	private List<AdDto> listings;
 	/**
 	 * Search edit box
 	 */
@@ -62,7 +64,7 @@ public class SearchListingsActivity extends Activity {
 			}
 		});
         listViewListings = (ListView) findViewById(R.id.listActSearchListings);
-        listings = new ArrayList<ListingData>();
+        listings = new ArrayList<AdDto>();
         
 		listingsListAdapter = new ListingListAdapter(this, listings);
 		listViewListings.setAdapter(listingsListAdapter);
@@ -88,63 +90,63 @@ public class SearchListingsActivity extends Activity {
 		btnSearch.setVisibility(View.GONE);
 		txtTitle.setVisibility(View.VISIBLE);
 	}
-	private ArrayList<ListingData> getDemoListings() {
-		ArrayList<ListingData> listings = new ArrayList<ListingData>();
-		ListingData listing = new ListingData();
-		listing.setListingId(1);
+	private List<AdDto> getDemoListings() {
+		List<AdDto> listings = new ArrayList<AdDto>();
+		AdDto listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
 		return listings;
 	}
