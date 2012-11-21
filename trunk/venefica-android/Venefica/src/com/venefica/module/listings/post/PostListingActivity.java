@@ -1,7 +1,10 @@
 package com.venefica.module.listings.post;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +54,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 /**
@@ -65,6 +71,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	 * Constants
 	 */
 	public static final int REQ_SELECT_CATEGORY = 1001;
+	private static final int REQ_GET_IMAGE = 1002;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -79,6 +86,8 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	public static final int MODE_POST_LISTING = 3001;
 	private static final int ERROR_ENABLE_LOCATION_PROVIDER = 21;
 	protected static final int ERROR_DATE_VALIDATION = 22;
+	public static final int MODE_UPDATE_LISTING = 3002;
+	
 	/**
 	 * Edit fields to collect listing data
 	 */
@@ -142,8 +151,9 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Gallery
 		gallery = (Gallery) findViewById(R.id.galleryActPostListingPhotos);
-//		galImageAdapter = new GalleryImageAdapter(this, drawables);
-//		gallery.setAdapter(galImageAdapter);
+		drawables = new ArrayList<Drawable>();
+		galImageAdapter = new GalleryImageAdapter(this, drawables);
+		gallery.setAdapter(galImageAdapter);
 
 		// Map
 		mapView = (MapView) findViewById(R.id.mapviewActPostListingMapLocate);
@@ -166,7 +176,14 @@ public class PostListingActivity extends MapActivity implements LocationListener
 
 			}
 		});
+		// Add photos
 		btnAddPhotos = (Button) findViewById(R.id.btnActPostListingAddPhotos);
+		btnAddPhotos.setOnClickListener(new View.OnClickListener() {			
+			public void onClick(View v) {
+				pickImage();
+			}
+		});
+		
 		btnPost = (Button) findViewById(R.id.btnActPostListingPost);
 		btnPost.setOnClickListener(new View.OnClickListener() {
 			
@@ -270,16 +287,27 @@ public class PostListingActivity extends MapActivity implements LocationListener
 			if (resultCode == Activity.RESULT_OK) {
 				 categoryId = data.getLongExtra("cat_id", -1);
 				 categoryName = data.getStringExtra("category_name").trim().
-						 equalsIgnoreCase("")?getResources().getString(R.string.code_category_other): data.getStringExtra("cat_name");
+						 equalsIgnoreCase("")?getResources().getString(R.string.code_category_other): data.getStringExtra("category_name");
 				if (categoryName != null) {
 					btnSelCategory.setText(categoryName);
 				}
 			} else {
 
 			}
-		} else {
-
-		}
+		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
+            /*try {               
+                InputStream stream = getContentResolver().openInputStream(
+                        data.getData());
+                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                drawables.add(new BitmapDrawable(getResources(), bitmap));
+                galImageAdapter.notifyDataSetChanged();
+                stream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+        }
 	}
 	
 	@Override
@@ -355,7 +383,11 @@ public class PostListingActivity extends MapActivity implements LocationListener
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
-	
+	/**
+	 * 
+	 * @author avinash
+	 * Class to handle post listing server communication
+	 */
 	class PostListingTask extends AsyncTask<Integer, Integer, PostListingResultWrapper>{
 		@Override
 		protected void onPreExecute() {
@@ -556,5 +588,15 @@ public class PostListingActivity extends MapActivity implements LocationListener
 			getListingDetails();
 		}*/
 		return result;    	
+    }
+    /**
+     * Get image
+     */
+    private void pickImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, REQ_GET_IMAGE);
     }
 }
