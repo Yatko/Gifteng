@@ -87,6 +87,11 @@
     <string name="label_detail_listing_seller">Seller</string>
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
+    <string name="label_menu_relist">Relist</string>
+    <string name="label_menu_update">Update</string>
+    <string name="label_menu_end">End Ad</string>
+    <string name="label_menu_delete">Delete</string>
+    <string name="label_menu_bookmark">Bookmark</string>
 
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
@@ -97,6 +102,8 @@
     <string name="error_postlisting">Unable to post new listing.</string>
     <string name="error_postlisting_get_location">Unable to get location. Please try again later.</string>
     <string name="error_get_categories">Error occurred while getting categories.</string>
+    <string name="error_get_my_listings">Unable to get listings.</string>
+    <string name="error_get_listing_details">Unable to get listing details.</string>
     
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
