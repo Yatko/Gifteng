@@ -9,6 +9,7 @@ import com.venefica.module.listings.ListingData;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
 import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.services.AdDto;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,7 +31,7 @@ public class BookmarkListingsActivity extends Activity {
 	/**
 	 * Listings list
 	 */
-	private ArrayList<ListingData> listings;
+	private ArrayList<AdDto> listings;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,63 +52,63 @@ public class BookmarkListingsActivity extends Activity {
 		});
     }
 
-	private ArrayList<ListingData> getBookmarkListings() {
-		ArrayList<ListingData> listings = new ArrayList<ListingData>();
-		ListingData listing = new ListingData();
-		listing.setListingId(1);
+	private ArrayList<AdDto> getBookmarkListings() {
+		ArrayList<AdDto> listings = new ArrayList<AdDto>();
+		AdDto listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
-		listing = new ListingData();
-		listing.setListingId(1);
+		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Apartment");
 		listing.setDescription("3 bed, kitchen, Living room");
 		listing.setPrice(new BigDecimal(75000.00));
 		listing.setExpiresAt(new Date());
-		listing.setCurrencyCode("USD");
+//		listing.setCurrencyCode("USD");
 		listings.add(listing);
 		return listings;
 	}
