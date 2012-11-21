@@ -3,7 +3,9 @@
  */
 package com.venefica.module.listings;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import com.venefica.services.AdDto;
 
 import android.content.Context;
 import android.view.View;
@@ -15,9 +17,9 @@ import android.widget.BaseAdapter;
  * Adapter class for Listing List Adapter
  */
 public class ListingListAdapter extends BaseAdapter {
-	private ArrayList<ListingData> listings;
+	private List<AdDto> listings;
 	private Context context;
-	public ListingListAdapter(Context context, ArrayList<ListingData> listings) {
+	public ListingListAdapter(Context context, List<AdDto> listings) {
 		this.context = context;
 		this.listings = listings;
 	}
