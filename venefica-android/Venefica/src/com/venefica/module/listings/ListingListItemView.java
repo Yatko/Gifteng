@@ -2,6 +2,7 @@ package com.venefica.module.listings;
 
 import com.venefica.activity.R;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.AdDto;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,11 +20,11 @@ public class ListingListItemView extends LinearLayout {
 	private TextView txtTitle, txtDesc, txtPrice, txtDaysToExp;
 	private CheckBox chkSelListing;
 	private ImageView imgListingPhoto;
-	private ListingData listing;
+	private AdDto listing;
 	/**
 	 * @param context
 	 */
-	public ListingListItemView(Context context, ListingData listing) {
+	public ListingListItemView(Context context, AdDto listing) {
 		super(context);
 		this.listing = listing;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -38,16 +39,16 @@ public class ListingListItemView extends LinearLayout {
 		this.addView(view);
 	}
 
-	public ListingData getListing(){
+	public AdDto getListing(){
 		return listing;
 	}
 	
-	public void setListing(ListingData listing){
+	public void setListing(AdDto listing){
 		txtTitle.setText(listing.getTitle());
 		txtDesc.setText(listing.getDescription());
 		txtPrice.setText(listing.getPrice().toString());
 		txtPrice.append(" ");
-		txtPrice.append(listing.getCurrencyCode());
+//		txtPrice.append(listing.getCurrencyCode());
 		txtDaysToExp.setText(Utility.converDateToString(listing.getExpiresAt()));
 //		imgListingPhoto.setImageBitmap(listing.getImageThumbnail());
 	}
