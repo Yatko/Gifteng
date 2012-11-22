@@ -50,6 +50,7 @@ public class ListingDetailsActivity extends MapActivity {
 
     private int selectedImagePosition = 0;
     private long selectedListingId = 0;
+    private AdDto listing;
     /**
      * Images
      */
@@ -74,6 +75,9 @@ public class ListingDetailsActivity extends MapActivity {
     public static final int ACT_MODE_MY_LISTINGS_DETAILS = 4001;
     public static final int ACT_MODE_SEARCH_LISTINGS_DETAILS = 4002;
     public static final int ACT_MODE_DOWNLOAD_LISTINGS_DETAILS = 4003;
+    public static final int ACT_MODE_END_LISTINGS = 4004;
+    public static final int ACT_MODE_RELIST_LISTINGS = 4005;
+    public static final int ACT_MODE_DELETE_LISTINGS = 4006;
     /**
      * Current mode
      */
@@ -185,6 +189,12 @@ public class ListingDetailsActivity extends MapActivity {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
+					if (ERROR_CODE == Constants.RESULT_END_LISTING_SUCCESS 
+							|| ERROR_CODE == Constants.RESULT_DELETE_LISTING_SUCCESS) {
+						finish();
+					}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS) {
+						new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+					}
 				}
 			});			
 			AlertDialog aDialog = builder.create();
@@ -204,6 +214,18 @@ public class ListingDetailsActivity extends MapActivity {
 				message = (String) getResources().getText(R.string.error_network_02);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_MY_LISTINGS){
 				message = (String) getResources().getText(R.string.error_get_listing_details);
+			}else if (ERROR_CODE == Constants.RESULT_END_LISTING_SUCCESS) {
+				message = (String) getResources().getText(R.string.msg_end_listing_success);
+			}else if (ERROR_CODE == Constants.ERROR_RESULT_END_LISTING) {
+				message = (String) getResources().getText(R.string.error_end_listing);
+			}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS) {
+				message = (String) getResources().getText(R.string.msg_relist_listing_success);
+			}else if (ERROR_CODE == Constants.ERROR_RESULT_RELIST_LISTING) {
+				message = (String) getResources().getText(R.string.error_relist_listing);
+			}else if (ERROR_CODE == Constants.RESULT_DELETE_LISTING_SUCCESS) {
+				message = (String) getResources().getText(R.string.msg_delete_listing_success);
+			}else if (ERROR_CODE == Constants.ERROR_RESULT_DELETE_LISTING) {
+				message = (String) getResources().getText(R.string.error_delete_listing);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -246,9 +268,15 @@ public class ListingDetailsActivity extends MapActivity {
     	switch (CURRENT_MODE) {
 		case ACT_MODE_MY_LISTINGS_DETAILS:
 			menu.findItem(R.id.menu_listing_delete).setVisible(true);
-			menu.findItem(R.id.menu_listing_end).setVisible(true);
-			menu.findItem(R.id.menu_listing_relist).setVisible(true);
-			menu.findItem(R.id.menu_listing_update).setVisible(true);
+			if (listing.isExpired()) {
+				menu.findItem(R.id.menu_listing_end).setVisible(false);
+				menu.findItem(R.id.menu_listing_relist).setVisible(true);
+				menu.findItem(R.id.menu_listing_update).setVisible(false);
+			} else {
+				menu.findItem(R.id.menu_listing_end).setVisible(true);
+				menu.findItem(R.id.menu_listing_relist).setVisible(false);
+				menu.findItem(R.id.menu_listing_update).setVisible(true);
+			}			
 			break;
 
 		default:
@@ -269,7 +297,15 @@ public class ListingDetailsActivity extends MapActivity {
 			intent.putExtra("mode",PostListingActivity.MODE_UPDATE_LISTING);
 			startActivityForResult(intent, PostListingActivity.MODE_UPDATE_LISTING);
 			break;
-
+		case R.id.menu_listing_end:
+			new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
+			break;
+		case R.id.menu_listing_relist:
+			new ListingDetailsTask().execute(ACT_MODE_RELIST_LISTINGS);
+			break;
+		case R.id.menu_listing_delete:
+			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
+			break;
 		default:
 			break;
 		}
@@ -295,6 +331,12 @@ public class ListingDetailsActivity extends MapActivity {
 				}
 				if (params[0].equals(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS)) {
 					wrapper = wsAction.getListingById(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+				}else if (params[0].equals(ACT_MODE_END_LISTINGS)) {
+					wrapper = wsAction.endListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+				}else if (params[0].equals(ACT_MODE_RELIST_LISTINGS)) {
+					wrapper = wsAction.relistListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+				}else if (params[0].equals(ACT_MODE_DELETE_LISTINGS)) {
+					wrapper = wsAction.deleteListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -313,6 +355,10 @@ public class ListingDetailsActivity extends MapActivity {
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
 				setDetails(result.listing);
+				listing = result.listing;
+			}else {
+				ERROR_CODE = result.result;
+				showDialog(D_ERROR);
 			}
     	}
     }
