@@ -30,6 +30,8 @@ import com.venefica.services.CategoryDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.services.ServicesManager.AuthenticateResult;
+import com.venefica.services.ServicesManager.DeleteAdResult;
+import com.venefica.services.ServicesManager.EndAdResult;
 import com.venefica.services.ServicesManager.GetAdByIdResult;
 import com.venefica.services.ServicesManager.GetCategoriesResult;
 import com.venefica.services.ServicesManager.GetMyAdsResult;
@@ -38,6 +40,7 @@ import com.venefica.services.ServicesManager.IsUserCompleteResult;
 import com.venefica.services.ServicesManager.PlaceAdResult;
 import com.venefica.services.ServicesManager.RegisterUserResult;
 import com.venefica.services.ServicesManager.RegisterUserReturn;
+import com.venefica.services.ServicesManager.RelistAdResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.services.ServicesManager.UpdateUserResult;
 import com.venefica.services.ServicesManager.UpdateUserReturn;
@@ -66,10 +69,14 @@ public class WSAction {
 	private static final String WS_METHOD_PLACE_AD = "PlaceAd";
 	private static final String WS_METHOD_GET_MY_ADS = "GetMyAds";
 	private static final String WS_METHOD_GET_AD_BY_ID = "GetAdById";
+	private static final String WS_METHOD_END_AD = "EndAd";
+	private static final String WS_METHOD_RELIST_AD = "RelistAd";
+	private static final String WS_METHOD_DELETE_AD = "DeleteAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
-	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
+	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;	
+	
 	
 	
 	/**
@@ -524,4 +531,118 @@ public class WSAction {
 		}
 		return result;
 	}
+	
+	/**
+	 * Method to end listing
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper endListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_END_AD;
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if(response == null)
+				result.result = Constants.RESULT_END_LISTING_SUCCESS;
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_END_LISTING;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to relist listing
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper relistListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_RELIST_AD;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if(response == null)
+				result.result = Constants.RESULT_RELIST_LISTING_SUCCESS;
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_RELIST_LISTING;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to delete listing
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper deleteListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_DELETE_AD;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if(response == null)
+				result.result = Constants.RESULT_DELETE_LISTING_SUCCESS;
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_DELETE_LISTING;
+		}
+		return result;
+	}
+
 }
