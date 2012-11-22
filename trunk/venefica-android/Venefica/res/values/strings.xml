@@ -104,6 +104,9 @@
     <string name="error_get_categories">Error occurred while getting categories.</string>
     <string name="error_get_my_listings">Unable to get listings.</string>
     <string name="error_get_listing_details">Unable to get listing details.</string>
+    <string name="error_end_listing">Unable to end listing. Please try again later.</string>
+    <string name="error_relist_listing">Unable to relist listing. Please try again later.</string>
+    <string name="error_delete_listing">Unable to delete listing. Please try again later.</string>
     
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
@@ -127,6 +130,9 @@
 	<string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
 	<string name="msg_postlisting_provider_disabled"> has been disabled.</string>
 	<string name="msg_postlisting_enable_provider">GPS is not active. Please enable GPS to get location.</string>
+	<string name="msg_end_listing_success">Listing ended successfully.</string>
+	<string name="msg_relist_listing_success">Listing relisted successfully.</string>
+	<string name="msg_delete_listing_success">Listing deleted successfully.</string>
 	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
