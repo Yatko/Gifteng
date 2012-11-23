@@ -35,6 +35,10 @@ public class Constants
 	public static final int ERROR_RESULT_RELIST_LISTING = 1027;
 	public static final int RESULT_DELETE_LISTING_SUCCESS = 1028;
 	public static final int ERROR_RESULT_DELETE_LISTING = 1029;
+	public static final int RESULT_GET_BOOKMARKS_SUCCESS = 1030;
+	public static final int ERROR_RESULT_GET_BOOKMARKS = 1031;
+	public static final int RESULT_REMOVE_BOOKMARKS_SUCCESS = 1032;
+	public static final int ERROR_RESULT_REMOVE_BOOKMARKS = 1033;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -112,9 +116,6 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
-	
-	
-		
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;			
 			
 }
