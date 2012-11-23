@@ -195,60 +195,12 @@ public class BrowseCategoriesActivity extends Activity {
 				message = (String) getResources().getText(R.string.error_network_02);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_CATEGORIES){
 				message = (String) getResources().getText(R.string.error_get_categories);
-			}/*else if(ERROR_CODE == Constants.RESULT_GET_CATEGORIES_SUCCESS){
-				message = (String) getResources().getText(R.string.msg_postlisting_success);
-			}*/
+			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
     
-	private ArrayList<CategoryData> getCategories() {
-    	ArrayList<CategoryData> categories = new ArrayList<CategoryData>();
-    	CategoryData category = new CategoryData();
-    	category.setCatId(1);
-    	category.setCategoryName("local places");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(2);
-    	category.setCategoryName("automotive");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(3);
-    	category.setCategoryName("musician");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(4);
-    	category.setCategoryName("real estate");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(5);
-    	category.setCategoryName("restaurants");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(6);
-    	category.setCategoryName("events");
-    	categories.add(category);
-    	
-    	category = new CategoryData();
-    	category.setCatId(7);
-    	category.setCategoryName("rentals");
-    	CategoryData subcategory = new CategoryData();
-    	subcategory.setCatId(8);
-    	subcategory.setCategoryName("rentals home");
-    	ArrayList<CategoryData> subCat = new ArrayList<CategoryData>();
-    	subCat.add(subcategory);
-    	category.setSubCategories(subCat);
-    	
-    	categories.add(category);
-    	
-    	
-		return categories;
-	}
+	
 
 	/**
 	 * 
