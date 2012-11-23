@@ -107,6 +107,9 @@
     <string name="error_end_listing">Unable to end listing. Please try again later.</string>
     <string name="error_relist_listing">Unable to relist listing. Please try again later.</string>
     <string name="error_delete_listing">Unable to delete listing. Please try again later.</string>
+    <string name="error_get_bookmarks">Unable to get bookmarks. Please try again later.</string>
+    <string name="error_no_bookmarks">No bookmarks found.</string>
+    <string name="error_remove_bookmarks">Unable to remove bookmark. Please try again later.</string>
     
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
@@ -133,6 +136,9 @@
 	<string name="msg_end_listing_success">Listing ended successfully.</string>
 	<string name="msg_relist_listing_success">Listing relisted successfully.</string>
 	<string name="msg_delete_listing_success">Listing deleted successfully.</string>
+	<string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
+	<string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
+	
 	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
