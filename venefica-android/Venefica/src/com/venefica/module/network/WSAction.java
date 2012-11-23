@@ -20,6 +20,7 @@ import com.venefica.market.Category;
 import com.venefica.market.Product;
 import com.venefica.module.listings.ListingData;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
+import com.venefica.module.listings.bookmarks.BookmarksResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.mylistings.MyListingsResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
@@ -27,12 +28,14 @@ import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
 import com.venefica.services.AdDto;
 import com.venefica.services.CategoryDto;
+import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.services.ServicesManager.AuthenticateResult;
 import com.venefica.services.ServicesManager.DeleteAdResult;
 import com.venefica.services.ServicesManager.EndAdResult;
 import com.venefica.services.ServicesManager.GetAdByIdResult;
+import com.venefica.services.ServicesManager.GetBookmarkedAdsResult;
 import com.venefica.services.ServicesManager.GetCategoriesResult;
 import com.venefica.services.ServicesManager.GetMyAdsResult;
 import com.venefica.services.ServicesManager.GetUserResult;
@@ -41,6 +44,7 @@ import com.venefica.services.ServicesManager.PlaceAdResult;
 import com.venefica.services.ServicesManager.RegisterUserResult;
 import com.venefica.services.ServicesManager.RegisterUserReturn;
 import com.venefica.services.ServicesManager.RelistAdResult;
+import com.venefica.services.ServicesManager.RemoveBookmarkResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.services.ServicesManager.UpdateUserResult;
 import com.venefica.services.ServicesManager.UpdateUserReturn;
@@ -72,10 +76,14 @@ public class WSAction {
 	private static final String WS_METHOD_END_AD = "EndAd";
 	private static final String WS_METHOD_RELIST_AD = "RelistAd";
 	private static final String WS_METHOD_DELETE_AD = "DeleteAd";
+	private static final String WS_METHOD_GET_BOOKMARKED_ADS = "GetBookmarkedAds";
+	private static final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
-	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;	
+	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
+	
+		
 	
 	
 	
@@ -644,5 +652,79 @@ public class WSAction {
 		}
 		return result;
 	}
+	/**
+	 * Method to get bookmaked listings
+	 * @param token
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public BookmarksResultWrapper getBookmarkedListings(String token) throws IOException, XmlPullParserException{
+		String SOAP_METHOD = WS_METHOD_GET_BOOKMARKED_ADS;
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		BookmarksResultWrapper result = new BookmarksResultWrapper();
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new AdDto().registerRead(envelope);
+			new FilterDto().register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+
+			Object response = envelope.getResponse();
+			result.bookmarks = (List<AdDto>)response;
+			result.result = Constants.RESULT_GET_BOOKMARKS_SUCCESS;
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_BOOKMARKS;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to remove bookmarked listing
+	 * @param token
+	 * @param adId
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public BookmarksResultWrapper removeBookmarkedListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_REMOVE_BOOKMARK;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		BookmarksResultWrapper result = new BookmarksResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+
+			if (response == null) {
+				result.result = Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_REMOVE_BOOKMARKS;
+		}
+		return result;
+	}
 }
