@@ -164,9 +164,15 @@ public class ListingDetailsActivity extends MapActivity {
 			btnViewSeller.setClickable(false);
 			btnMakeOffer.setVisibility(View.GONE);
 		}
-        new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+        
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	//Get listing details
+    	new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+    }
     @Override
     protected Dialog onCreateDialog(int id) {
     	//Create progress dialog
@@ -294,8 +300,8 @@ public class ListingDetailsActivity extends MapActivity {
 		case R.id.menu_listing_update:
 			Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
 			intent.putExtra("ad_id", selectedListingId);
-			intent.putExtra("mode",PostListingActivity.MODE_UPDATE_LISTING);
-			startActivityForResult(intent, PostListingActivity.MODE_UPDATE_LISTING);
+			intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
+			startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
 			break;
 		case R.id.menu_listing_end:
 			new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
