@@ -123,8 +123,9 @@ public class BrowseCategoriesActivity extends Activity {
 						finish();
 					}else {
 						Intent intent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);
-						intent.putExtra("hide_searchbar", true);
+						intent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
 						intent.putExtra("category_name", categories.get(index).getName());
+						intent.putExtra("category_id", categories.get(index).getId());
 				    	startActivity(intent);					
 					}	
 				}
