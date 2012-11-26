@@ -49,7 +49,7 @@ public class ListingListItemView extends LinearLayout {
 		txtPrice.setText(listing.getPrice().toString());
 		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
-		txtDaysToExp.setText(Utility.converDateToString(listing.getExpiresAt()));
+		txtDaysToExp.setText(Utility.convertShortDateToString(listing.getExpiresAt()));
 //		imgListingPhoto.setImageBitmap(listing.getImageThumbnail());
 	}
 	
