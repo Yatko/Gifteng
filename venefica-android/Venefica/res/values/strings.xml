@@ -89,9 +89,10 @@
     <string name="label_detail_listing_make_offer">Make offer</string>
     <string name="label_menu_relist">Relist</string>
     <string name="label_menu_update">Update</string>
-    <string name="label_menu_end">End Ad</string>
+    <string name="label_menu_end">End</string>
     <string name="label_menu_delete">Delete</string>
     <string name="label_menu_bookmark">Bookmark</string>
+    <string name="label_update">Update</string>
 
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
@@ -110,6 +111,8 @@
     <string name="error_get_bookmarks">Unable to get bookmarks. Please try again later.</string>
     <string name="error_no_bookmarks">No bookmarks found.</string>
     <string name="error_remove_bookmarks">Unable to remove bookmark. Please try again later.</string>
+    <string name="error_search_listings">Unable to get listings. Please try again later.</string>
+    <string name="error_update_listing">Unable to update listing. Please try again later.</string>
     
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
@@ -138,7 +141,7 @@
 	<string name="msg_delete_listing_success">Listing deleted successfully.</string>
 	<string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
 	<string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
-	
+	<string name="msg_postlisting_update_success">Listing updated successfully.</string>
 	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
