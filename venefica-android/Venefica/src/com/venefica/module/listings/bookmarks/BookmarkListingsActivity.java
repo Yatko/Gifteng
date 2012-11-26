@@ -50,7 +50,7 @@ public class BookmarkListingsActivity extends Activity {
 	 */
 	private int ERROR_CODE;
 	public static final int ACT_MODE_DOWNLOAD_BOOKMARKS = 3001;
-	protected static final Integer ACT_MODE_REMOVE_BOOKMARK = 3002;
+	public static final int ACT_MODE_REMOVE_BOOKMARK = 3002;
 	public static final int ERROR_NO_BOOKMARKS = 4001;
 	public static final int ERROR_CONFIRM_REMOVE_BOOKMARKS = 4002;
 	
