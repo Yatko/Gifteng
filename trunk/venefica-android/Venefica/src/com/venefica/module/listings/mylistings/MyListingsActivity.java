@@ -70,11 +70,15 @@ public class MyListingsActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		registerForContextMenu(listViewListings);
-		//Download my listings
-		new MyListingsTask().execute(ACT_MODE_DOWNLOAD_MY_LISTINGS);
+		registerForContextMenu(listViewListings);		
     }
 
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	//Download my listings
+		new MyListingsTask().execute(ACT_MODE_DOWNLOAD_MY_LISTINGS);
+    }
    	
 	@Override
     protected Dialog onCreateDialog(int id) {
