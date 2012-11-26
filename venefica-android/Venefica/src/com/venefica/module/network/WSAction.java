@@ -22,6 +22,7 @@ import com.venefica.module.listings.ListingData;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.bookmarks.BookmarksResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
+import com.venefica.module.listings.browse.SearchListingResultWrapper;
 import com.venefica.module.listings.mylistings.MyListingsResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
 import com.venefica.module.user.UserDto;
@@ -35,6 +36,7 @@ import com.venefica.services.ServicesManager.AuthenticateResult;
 import com.venefica.services.ServicesManager.DeleteAdResult;
 import com.venefica.services.ServicesManager.EndAdResult;
 import com.venefica.services.ServicesManager.GetAdByIdResult;
+import com.venefica.services.ServicesManager.GetAdsResult;
 import com.venefica.services.ServicesManager.GetBookmarkedAdsResult;
 import com.venefica.services.ServicesManager.GetCategoriesResult;
 import com.venefica.services.ServicesManager.GetMyAdsResult;
@@ -46,6 +48,7 @@ import com.venefica.services.ServicesManager.RegisterUserReturn;
 import com.venefica.services.ServicesManager.RelistAdResult;
 import com.venefica.services.ServicesManager.RemoveBookmarkResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
+import com.venefica.services.ServicesManager.UpdateAdResult;
 import com.venefica.services.ServicesManager.UpdateUserResult;
 import com.venefica.services.ServicesManager.UpdateUserReturn;
 import com.venefica.utils.Constants;
@@ -78,14 +81,14 @@ public class WSAction {
 	private static final String WS_METHOD_DELETE_AD = "DeleteAd";
 	private static final String WS_METHOD_GET_BOOKMARKED_ADS = "GetBookmarkedAds";
 	private static final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
+	private static final String WS_METHOD_GET_ADS = "GetAdsEx";
+	private static final String WS_METHOD_UPDATE_AD = "UpdateAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
 	
 		
-	
-	
 	
 	/**
 	 * TO hold soap action
@@ -488,7 +491,12 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
 			Object response = envelope.getResponse();
-			result.myListings = (List<AdDto>)response;
+			if (response instanceof AdDto){
+				result.myListings = new ArrayList<AdDto>();
+				result.myListings.add((AdDto)response);
+			}else{
+				result.myListings = (List<AdDto>)response;
+			}
 			result.result = Constants.RESULT_GET_MY_LISTINGS_SUCCESS;
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_MY_LISTINGS;
@@ -724,6 +732,86 @@ public class WSAction {
 			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_REMOVE_BOOKMARKS;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to get listings by filter criteria
+	 * @param token
+	 * @param lastAdId
+	 * @param numberAds
+	 * @param filter
+	 * @return result SearchListingResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public SearchListingResultWrapper searchListings(String token, long lastAdId, long numberAds, FilterDto filter) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_ADS;
+		SearchListingResultWrapper result = new SearchListingResultWrapper();
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_ADS);
+
+			request.addProperty("lastAdId", lastAdId);
+			request.addProperty("numberAds", numberAds);
+			request.addProperty("filter", filter);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new AdDto().registerRead(envelope);
+			new FilterDto().register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+
+			Object response = envelope.getResponse();
+			result.listings = (List<AdDto>)response;
+			result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_LISTINGS;
+		}
+		return result;
+	}
+	/**
+	 * Method to update listing
+	 * @param token
+	 * @param Post
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public PostListingResultWrapper updateListing(String token, AdDto listing) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_UPDATE_AD;
+		PostListingResultWrapper result = new PostListingResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_UPDATE_AD);
+			
+			request.addProperty("ad", listing);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			listing.register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+
+			if (response == null) {
+				result.result = Constants.RESULT_UPDATE_LISTING_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_UPDATE_LISTING;
 		}
 		return result;
 	}
