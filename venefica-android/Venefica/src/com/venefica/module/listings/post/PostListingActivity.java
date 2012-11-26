@@ -19,6 +19,8 @@ import com.google.android.maps.Overlay;
 import com.venefica.activity.R;
 import com.venefica.module.listings.GalleryImageAdapter;
 import com.venefica.module.listings.ListingData;
+import com.venefica.module.listings.ListingDetailsActivity;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCategoriesActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.user.RegisterUserActivity;
@@ -83,10 +85,14 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	/**
 	 * Activity MODE
 	 */
-	public static final int MODE_POST_LISTING = 3001;
+	
+	public static final int ACT_MODE_POST_LISTING = 3001;
+	public static final int ACT_MODE_UPDATE_LISTING = 3002;
+	public static final int ACT_MODE_GET_LISTING = 3003;
+	private static int CURRENT_MODE = ACT_MODE_POST_LISTING;
 	private static final int ERROR_ENABLE_LOCATION_PROVIDER = 21;
 	protected static final int ERROR_DATE_VALIDATION = 22;
-	public static final int MODE_UPDATE_LISTING = 3002;
+	
 	
 	/**
 	 * Edit fields to collect listing data
@@ -140,13 +146,18 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	 */
 	private long categoryId;
 	private String categoryName;
-	
-	
+	/**
+	 * Selected listing
+	 */
+	private long selectedListingId;
 	private WSAction wsAction;
+	private AdDto selectedListing;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_post_listing);
+		//set mode
+		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
 		//location manager 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Gallery
@@ -189,7 +200,11 @@ public class PostListingActivity extends MapActivity implements LocationListener
 			
 			public void onClick(View v) {
 				if (validateFields()) {
-					new PostListingTask().execute(MODE_POST_LISTING);
+					if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
+						new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
+					}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+						new PostListingTask().execute(ACT_MODE_POST_LISTING);
+					}
 				}
 			}
 		});
@@ -236,6 +251,12 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		txtArea = (TextView) findViewById(R.id.txtActPostListingArea);
 		txtLatitude = (TextView) findViewById(R.id.txtActPostListingLatitude);
 		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);
+		
+		if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
+			selectedListingId = getIntent().getLongExtra("ad_id", 0);
+			btnPost.setText(getResources().getString(R.string.label_update));
+			new PostListingTask().execute(ACT_MODE_GET_LISTING);
+		}
 	}
 
 	@Override
@@ -332,7 +353,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
-					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS){
+					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS || ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS){
 						finish();
 					}else if (ERROR_CODE == ERROR_ENABLE_LOCATION_PROVIDER) {
 						enableLocationSettings();
@@ -346,8 +367,10 @@ public class PostListingActivity extends MapActivity implements LocationListener
     		DatePickerDialog dateDg = new DatePickerDialog(PostListingActivity.this, new OnDateSetListener() {
 				
 				public void onDateSet(DatePicker arg0, int year, int month, int date) {
-					if (year >= calendar.get(Calendar.YEAR) && month >= calendar.get(Calendar.MONTH)
-							&& date > calendar.get(Calendar.DAY_OF_MONTH)) {
+					if (year >= calendar.get(Calendar.YEAR) 
+							&& (year > calendar.get(Calendar.YEAR) || month >= calendar.get(Calendar.MONTH))
+							&& (year > calendar.get(Calendar.YEAR) || month > calendar.get(Calendar.MONTH) 
+							|| date > calendar.get(Calendar.DAY_OF_MONTH))) {
 						btnExpiary.setText((month>9? (month+1): "0"+(month+1))+"/"+(date>9? date: "0"+date)+"/"+year);
 					} else {
 						ERROR_CODE = ERROR_DATE_VALIDATION;
@@ -379,6 +402,10 @@ public class PostListingActivity extends MapActivity implements LocationListener
 				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
 			}else if(ERROR_CODE == ERROR_DATE_VALIDATION){
 				message = (String) getResources().getText(R.string.msg_validation_date_higher);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_UPDATE_LISTING){
+				message = (String) getResources().getText(R.string.error_update_listing);
+			}else if(ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS){
+				message = (String) getResources().getText(R.string.msg_postlisting_update_success);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -402,8 +429,15 @@ public class PostListingActivity extends MapActivity implements LocationListener
 				if(wsAction == null ){
 					wsAction = new WSAction();
 				}
-				if (params[0].equals(MODE_POST_LISTING)) {
-					wrapper = wsAction.postListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails());
+				if (params[0].equals(ACT_MODE_POST_LISTING)) {
+					wrapper = wsAction.postListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(null));
+				}else if (params[0].equals(ACT_MODE_GET_LISTING)) {
+					ListingDetailsResultWrapper detailsWrapper = wsAction.getListingById(((VeneficaApplication)getApplication()).getAuthToken()
+							, selectedListingId);
+					wrapper.listing = detailsWrapper.listing;
+					wrapper.result = detailsWrapper.result;
+				}else if (params[0].equals(ACT_MODE_UPDATE_LISTING)) {
+					wrapper = wsAction.updateListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(selectedListing));
 				}
 			}catch (IOException e) {
 				Log.e("PostListingTask::doInBackground :", e.toString());
@@ -418,9 +452,11 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		protected void onPostExecute(PostListingResultWrapper result) {
 			super.onPostExecute(result);
 			dismissDialog(D_PROGRESS);
-			if(result.data == null && result.result == -1){
+			if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
+			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
+				setListingDetails(result.listing);
 			}else if (result.result != -1) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);				
@@ -432,8 +468,10 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	 * Method to get listing data from edit fields 
 	 * @return AdDto
 	 */
-	private AdDto getListingDetails() {
-		AdDto listing = new AdDto();
+	private AdDto getListingDetails(AdDto listing) {
+		if (listing == null) {
+			listing = new AdDto();
+		}		
 		listing.setTitle(edtTitle.getText().toString());
 		listing.setCategory(categoryName);
 		listing.setDescription(edtDescription.getText().toString());
@@ -599,4 +637,16 @@ public class PostListingActivity extends MapActivity implements LocationListener
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, REQ_GET_IMAGE);
     }
+    private void setListingDetails(AdDto listing) {
+    	selectedListing = listing;
+		edtTitle.setText(listing.getTitle());
+		btnSelCategory.setText(listing.getCategory());
+		edtDescription.setText(listing.getDescription());
+		edtPrice.setText(listing.getPrice().toString());
+		edtLatitude.setText(listing.getLatitude()+"");
+		edtLongitude.setText(listing.getLongitude()+"");
+		btnExpiary.setText(Utility.convertShortDateToString(listing.getExpiresAt()));
+		categoryName = listing.getCategory();
+		categoryId = listing.getCategoryId();
+	}
 }
