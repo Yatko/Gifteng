@@ -41,8 +41,7 @@
             android:id="@+id/edtActPostListingListTitle"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text"
-            android:text="test" />
+            android:inputType="text" />
 
         <!-- Subtitle -->
 
@@ -57,8 +56,7 @@
             android:id="@+id/edtActPostListingSubTitle"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text" 
-            android:text="test"/>
+            android:inputType="text"/>
 
         <!-- Category -->
 
@@ -87,8 +85,7 @@
             android:id="@+id/edtActPostListingDescription"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="textMultiLine"
-            android:text="test" />
+            android:inputType="textMultiLine"/>
 
         <!-- Condition -->
 
@@ -103,8 +100,7 @@
             android:id="@+id/edtActPostListingCondition"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="textMultiLine"
-            android:text="test" />
+            android:inputType="textMultiLine"/>
         <!-- Price -->
 
         <TextView
@@ -126,8 +122,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="40"
                 android:background="@drawable/corners"
-                android:inputType="numberDecimal" 
-                android:text="1234"/>
+                android:inputType="numberDecimal"/>
 
             <Spinner
                 android:id="@+id/spinActPostListingCurrency"
@@ -135,8 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="60"
-                android:entries="@array/array_currency_list"
-                android:inputType="textMultiLine" />
+                android:entries="@array/array_currency_list" />
         </LinearLayout>
          <!-- Expiary -->
 
@@ -225,8 +219,7 @@
             android:id="@+id/edtActPostListingLatitude"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="numberDecimal"
-            android:text="36"/>
+            android:inputType="numberDecimal"/>
         <!-- Longitude -->
 
         <TextView
@@ -240,8 +233,7 @@
             android:id="@+id/edtActPostListingLongitude"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="numberDecimal"
-            android:text="75"/>
+            android:inputType="numberDecimal"/>
        
         <!-- Zip -->
 
