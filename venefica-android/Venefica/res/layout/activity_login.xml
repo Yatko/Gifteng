@@ -75,7 +75,7 @@
 		  	        android:background="@drawable/corners"
 		  	        android:layout_below="@+id/txtActLoginUserId"
 		  	        android:inputType="text"
-		  	        android:text="ddkkss"/>
+		  	        android:text="111111"/>
 		  	    
 		  	    <TextView 
 		  	        android:id="@+id/txtActLoginPassword"
