@@ -88,7 +88,7 @@ public class MarketEx
 				lastAdId = ProductsListSync.get(ProductsListSync.size() - 1).Id;
 			}
 
-			VeneficaApplication.asyncServices.GetAds(new GetAdsContext(lastAdId, Constants.PRODUCT_LIST_CACHE_SIZE, filter, new ICallback()
+			/*VeneficaApplication.asyncServices.GetAds(new GetAdsContext(lastAdId, Constants.PRODUCT_LIST_CACHE_SIZE, filter, new ICallback()
 			{
 				int filterRev = filter.rev;
 
@@ -114,7 +114,7 @@ public class MarketEx
 					WaitNewProduct = false;
 					return CallbackReturn.Ok;
 				}
-			}));
+			}));*/
 		}
 	}
 
@@ -131,7 +131,7 @@ public class MarketEx
 
 	public void setFilterSearchString(String search)
 	{
-		getFilter().searchString = search;
+		/*getFilter().searchString = search;*/
 		setFilter(getFilter());
 	}
 
@@ -171,7 +171,7 @@ public class MarketEx
 
 	private void GetAdsOk(GetAdsResult ret, int filterRev)
 	{
-		if (filterRev == getFilter().rev)
+		/*if (filterRev == getFilter().rev)
 		{
 			if (ret.Return == null)
 			{
@@ -204,6 +204,6 @@ public class MarketEx
 		else
 		{
 			Log.d("GetAdsCallback Alert!", "filterRev != getFilter().rev");
-		}
+		}*/
 	}
 }
