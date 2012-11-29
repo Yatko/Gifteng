@@ -85,19 +85,19 @@
 
             <!-- Password -->
 
-            <!-- <TextView
+            <TextView
                 android:id="@+id/txtActRegUserPassword"
-                style="@style/LabelEditText"
+                style="?LabelEditText"
                 android:layout_below="@+id/edtActRegUserLogin"
                 android:text="@string/label_password" />
 
             <EditText
                 android:id="@+id/edtActRegUserPassword"
-                style="@style/EditTextSingleLine"
+                style="?EditTextSingleLine"
                 android:layout_below="@id/txtActRegUserPassword"
                 android:background="@drawable/corners"
                 android:inputType="textPassword"
-                android:text="123456" /> -->
+                android:text="123456" />
 
             <!-- Email -->
 
@@ -106,7 +106,7 @@
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/edtActRegUserLogin"
+                android:layout_below="@id/edtActRegUserPassword"
                 android:text="@string/label_email" />
 
             <EditText
