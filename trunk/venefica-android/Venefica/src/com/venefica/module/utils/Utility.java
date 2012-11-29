@@ -123,7 +123,7 @@ public class Utility {
 	 * @param date
 	 * @return
 	 */
-	public static String converDateToString(Date date){
+	public static String convertDateToString(Date date){
 		return Constants.dateTimeFormat.format(date);
 	}
 	/**
