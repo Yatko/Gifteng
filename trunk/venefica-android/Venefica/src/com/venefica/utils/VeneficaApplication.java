@@ -8,7 +8,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.venefica.activity.R;
-import com.venefica.activity.PostStepLogic.PostData;
+//import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.services.AsyncServices;
 import com.venefica.services.ServicesManager;
 import com.venefica.services.User;
@@ -37,7 +37,7 @@ public class VeneficaApplication extends Application
 	/** my Location */
 	public static Location myLocation = new Location(LocationManager.GPS_PROVIDER);
 
-	public PostData post;
+//	public PostData post;
 	
 	/** The data about the user */
 	public static User user;
