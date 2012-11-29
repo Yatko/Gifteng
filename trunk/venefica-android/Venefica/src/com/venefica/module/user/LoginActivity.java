@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.venefica.activity.R;
-import com.venefica.activity.SignUpActivity;
-import com.venefica.activity.TabMainActivity;
 import com.venefica.module.dashboard.DashBoardActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.InputFieldValidator;
@@ -85,7 +83,9 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getApplication().setTheme(R.style.Theme_Blue);
 		setContentView(R.layout.activity_login);
+		
 		//Sign up button
 		btnSignUp = (Button) findViewById(R.id.btnActLoginSignUp);
 		btnSignUp.setOnClickListener(this);
@@ -134,16 +134,14 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 	 */
 	public void onClick(View v) {
 		int id = v.getId();
-		switch (id) {
-		case R.id.btnActLoginSignUp:
+		if (id == R.id.btnActLoginSignUp) {
 			AUTH_TYPE = AUTH_VENEFICA;
 			//Go to user registration
 			Intent intent = new Intent(LoginActivity.this, RegisterUserActivity.class);
 			//			Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
 			intent.putExtra("activity_mode",RegisterUserActivity.MODE_REGISTER_USR);
 			startActivityForResult(intent, 0);
-			break;
-		case R.id.btnActLoginSignIn:
+		} else if (id == R.id.btnActLoginSignIn) {
 			AUTH_TYPE = AUTH_VENEFICA;
 			if(validator == null){
 				validator = new InputFieldValidator();
@@ -166,19 +164,13 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 					showDialog(D_ERROR);
 				}
 			}
-			break;
-		case R.id.btnActLoginFacebook:
-			
+		} else if (id == R.id.btnActLoginFacebook) {
 			loginWithSocialNetwork(Constants.SIGN_IN_FACEBOOK_URL, AUTH_FACEBOOK);
-			break;
-		case R.id.btnActLoginTwitter:
+		} else if (id == R.id.btnActLoginTwitter) {
 			loginWithSocialNetwork(Constants.SIGN_IN_TWITTER_URL, AUTH_TWITTER);
-			break;
-		case R.id.btnActLoginVK:
+		} else if (id == R.id.btnActLoginVK) {
 			loginWithSocialNetwork(Constants.SIGN_IN_VK_URL, AUTH_VK);
-			break;
-		default:
-			break;
+		} else {
 		}
 
 	}
