@@ -1,7 +1,7 @@
 package com.venefica.skining;
 
-import com.venefica.activity.DummyStepLogic;
-import com.venefica.activity.PostStepLogic;
+//import com.venefica.activity.DummyStepLogic;
+//import com.venefica.activity.PostStepLogic;
 
 import android.app.Activity;
 import android.widget.Button;
@@ -19,10 +19,10 @@ public abstract class PostTemplate extends ActivityTemplate
 
 	public ViewFlipper PostStepContainer;
 
-	public PostStepLogic TitleLogic;
+	/*public PostStepLogic TitleLogic;
 	public PostStepLogic ShowLogic;
 	public PostStepLogic DetailLogic;
-	public PostStepLogic LocateLogic;
+	public PostStepLogic LocateLogic;*/
 
 	public PostTemplate(Activity Activity)
 	{
@@ -53,7 +53,7 @@ public abstract class PostTemplate extends ActivityTemplate
 		if (PostStepContainer == null)
 			PostStepContainer = new ViewFlipper(mActivity);
 
-		if (TitleLogic == null)
+		/*if (TitleLogic == null)
 			TitleLogic = new DummyStepLogic();
 
 		if (ShowLogic == null)
@@ -63,6 +63,6 @@ public abstract class PostTemplate extends ActivityTemplate
 			DetailLogic = new DummyStepLogic();
 
 		if (LocateLogic == null)
-			LocateLogic = new DummyStepLogic();
+			LocateLogic = new DummyStepLogic();*/
 	}
 }

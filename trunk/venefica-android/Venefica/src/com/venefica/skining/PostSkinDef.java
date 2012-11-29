@@ -6,10 +6,10 @@ import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 import android.app.Activity;
 
-import com.venefica.activity.PostDetailLogic;
-import com.venefica.activity.PostLocateLogic;
-import com.venefica.activity.PostShowLogic;
-import com.venefica.activity.PostTitleLogic;
+//import com.venefica.activity.PostDetailLogic;
+//import com.venefica.activity.PostLocateLogic;
+//import com.venefica.activity.PostShowLogic;
+//import com.venefica.activity.PostTitleLogic;
 import com.venefica.activity.R;
 
 public class PostSkinDef extends PostTemplate
@@ -36,10 +36,10 @@ public class PostSkinDef extends PostTemplate
 
 			PostStepContainer = (ViewFlipper)mActivity.findViewById(R.id.PostStepContainer);
 
-			TitleLogic = new PostTitleLogic();
+			/*TitleLogic = new PostTitleLogic();
 			ShowLogic = new PostShowLogic();
 			DetailLogic = new PostDetailLogic();
-			LocateLogic = new PostLocateLogic();
+			LocateLogic = new PostLocateLogic();*/
 
 		}
 		catch (Exception e)
