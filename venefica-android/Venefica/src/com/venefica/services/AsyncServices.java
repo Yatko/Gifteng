@@ -1,6 +1,6 @@
 package com.venefica.services;
 
-import com.venefica.activity.PostStepLogic.PostData;
+//import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.module.user.UserDto;
 import com.venefica.services.ServicesManager.*;
 import com.venefica.utils.ImageAd;
@@ -102,13 +102,13 @@ public class AsyncServices
 
 	public static class PlaceAdContext extends IContext
 	{
-		PostData post;
+		/*PostData post;
 
 		public PlaceAdContext(PostData post, ICallback Callback)
 		{
 			this.Callback = Callback;
 			this.post = post;
-		}
+		}*/
 	}
 
 	public static class GetAdsContext extends IContext
@@ -167,13 +167,13 @@ public class AsyncServices
 
 	public static class UpdateAdContext extends IContext
 	{
-		PostData post;
+		/*PostData post;
 
 		public UpdateAdContext(PostData post, ICallback Callback)
 		{
 			this.Callback = Callback;
 			this.post = post;
-		}
+		}*/
 	}
 
 	public static class GetAdByIdContext extends IContext
@@ -601,7 +601,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return VeneficaApplication.services.PlaceAd(VeneficaApplication.authToken, ((PlaceAdContext)Context).post);
+			return null;//VeneficaApplication.services.PlaceAd(VeneficaApplication.authToken, ((PlaceAdContext)Context).post);
 		}
 	}
 
@@ -680,7 +680,7 @@ public class AsyncServices
 		@Override
 		protected IResult<?> doInBackground(Void... param)
 		{
-			return VeneficaApplication.services.UpdateAd(VeneficaApplication.authToken, ((UpdateAdContext)Context).post);
+			return null;//VeneficaApplication.services.UpdateAd(VeneficaApplication.authToken, ((UpdateAdContext)Context).post);
 		}
 	}
 

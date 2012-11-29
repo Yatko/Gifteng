@@ -18,7 +18,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.venefica.activity.PostStepLogic.PostData;
+//import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.market.Category;
 import com.venefica.market.Product;
 import com.venefica.module.user.UserDto;
@@ -942,6 +942,7 @@ public class ServicesManager
 	/**
 	 * @return BAD_AD_ID - To declare, not a ride
 	 */
+	/*@Deprecated
 	public PlaceAdResult PlaceAd(String token, PostData Post)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + PLACE_AD_METHOD;
@@ -1005,8 +1006,8 @@ public class ServicesManager
 		}
 
 		return result;
-	}
-
+	}*/
+	@Deprecated
 	public GetAdsResult GetAds(String token, long lastAdId, long numberAds, FilterDto filter)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + GET_ADS_METHOD;
@@ -1235,7 +1236,7 @@ public class ServicesManager
 			}*/
 		}
 	}
-
+	/*@Deprecated
 	public UpdateAdResult UpdateAd(String token, PostData Post)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + UPDATE_AD_METHOD;
@@ -1290,8 +1291,8 @@ public class ServicesManager
 		}
 
 		return result;
-	}
-
+	}*/
+	@Deprecated
 	public GetAdByIdResult GetAdById(String token, long adId)
 	{
 		final String SOAP_METHOD = GET_AD_BY_ID_METHOD;
