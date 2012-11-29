@@ -296,24 +296,19 @@ public class ListingDetailsActivity extends MapActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	switch (item.getItemId()) {
-		case R.id.menu_listing_update:
+    	int itemId = item.getItemId();
+		if (itemId == R.id.menu_listing_update) {
 			Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
 			intent.putExtra("ad_id", selectedListingId);
 			intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
 			startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
-			break;
-		case R.id.menu_listing_end:
+		} else if (itemId == R.id.menu_listing_end) {
 			new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
-			break;
-		case R.id.menu_listing_relist:
+		} else if (itemId == R.id.menu_listing_relist) {
 			new ListingDetailsTask().execute(ACT_MODE_RELIST_LISTINGS);
-			break;
-		case R.id.menu_listing_delete:
+		} else if (itemId == R.id.menu_listing_delete) {
 			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
-			break;
-		default:
-			break;
+		} else {
 		}
     	return true;
     }
