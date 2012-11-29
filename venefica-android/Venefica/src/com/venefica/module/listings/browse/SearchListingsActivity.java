@@ -3,36 +3,33 @@ package com.venefica.module.listings.browse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.venefica.activity.R;
-import com.venefica.activity.R.layout;
-import com.venefica.activity.R.menu;
-import com.venefica.module.listings.ListingData;
+import com.venefica.module.dashboard.ISlideMenuCallback;
+import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
-import com.venefica.module.listings.bookmarks.BookmarksResultWrapper;
-import com.venefica.module.listings.mylistings.MyListingsActivity;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.services.AdDto;
-import com.venefica.services.CategoryDto;
 import com.venefica.services.FilterDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,7 +37,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SearchListingsActivity extends Activity {
+public class SearchListingsActivity extends VeneficaActivity implements
+ISlideMenuCallback{
 	/**
 	 * List to show listings
 	 */
@@ -85,10 +83,25 @@ public class SearchListingsActivity extends Activity {
 	private long selectedCategoryId;
 	private String selectedCategory;
 	private WSAction wsAction;
+	private SlideMenuView slideMenuView;
+	private SearchView searchView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_listings);
+        //slide menu
+        slideMenuView = (SlideMenuView) findViewById(R.id.sideNavigationViewActSearchListing);
+		slideMenuView.setMenuItems(R.menu.slide_menu);
+		slideMenuView.setMenuClickCallback(this);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		slideMenuView.showMenu();
+        super.setSlideMenuView(slideMenuView);
+        
+		//Create the search view
+        searchView = new SearchView(getSupportActionBar().getThemedContext());
+        searchView.setQueryHint(getResources().getString(R.string.hint_search_listing));
+        
         edtSearch = (EditText) findViewById(R.id.edtActSearchListing);
         txtTitle = (TextView) findViewById(R.id.txtActSearchListingTitle);
         btnSearch = (Button) findViewById(R.id.btnActSearchListing);
@@ -195,7 +208,7 @@ public class SearchListingsActivity extends Activity {
 				}
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
-							, 0, 5, getFilterOptions());
+							, 1, 5, getFilterOptions());
 				}
 			}catch (IOException e) {
 				Log.e("SearchListingTask::doInBackground :", e.toString());
@@ -242,9 +255,14 @@ public class SearchListingsActivity extends Activity {
 		filter.setCategories(cats);
 		return filter;		
 	}
-    /*@Override
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_search_listings, menu);
-        return true;
-    }*/
+        menu.add(getResources().getString(R.string.label_filter))
+            .setIcon(R.drawable.browse_dark)
+            .setActionView(searchView)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
+        return super.onCreateOptionsMenu(menu);
+    }		
+	
 }
