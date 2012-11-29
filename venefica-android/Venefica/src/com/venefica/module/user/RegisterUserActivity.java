@@ -58,12 +58,12 @@ public class RegisterUserActivity extends Activity {
 	/**
 	 * Input fields for user data.
 	 */
-	private EditText edtLogin, /*edtPassword,*/ edtEmail, edtPhone, 
+	private EditText edtLogin, edtPassword, edtEmail, edtPhone, 
 		edtFirstName, edtLastName, edtDateOfBirth, edtZipCode, edtCounty, edtCity, edtArea;
 	/**
 	 * Text labels for user data input fields.
 	 */
-	private TextView txtTitle,txtLogin, /*txtPassword,*/ txtEmail, txtPhone, 
+	private TextView txtTitle,txtLogin, txtPassword, txtEmail, txtPhone, 
 	txtFirstName, txtLastName, txtDateOfBirth, txtZipCode, txtCounty, txtCity, txtArea, txtProfileImage;
 	/**
 	 * Check box for business account type.
@@ -89,7 +89,7 @@ public class RegisterUserActivity extends Activity {
 	/**
 	 * Activity request code
 	 */
-	private final int IMAGE_REQUEST_CODE = 1001;
+	private final int REQ_GET_IMAGE = 1001;
 	/**
 	 * Activity MODE
 	 */
@@ -149,7 +149,7 @@ public class RegisterUserActivity extends Activity {
         //TextViews
         txtTitle = (TextView) findViewById(R.id.txtActRegUserHeader);
         txtLogin = (TextView) findViewById(R.id.txtActRegUserLogin);
-//        txtPassword = (TextView) findViewById(R.id.txtActRegUserPassword);
+        txtPassword = (TextView) findViewById(R.id.txtActRegUserPassword);
         txtEmail = (TextView) findViewById(R.id.txtActRegUserEmail);
         txtPhone = (TextView) findViewById(R.id.txtActRegUserPhone); 
     	txtFirstName = (TextView) findViewById(R.id.txtActRegUserFName);
@@ -168,7 +168,7 @@ public class RegisterUserActivity extends Activity {
 
         //Input fields
         edtLogin = (EditText) findViewById(R.id.edtActRegUserLogin);
-//        edtPassword = (EditText) findViewById(R.id.edtActRegUserPassword);
+        edtPassword = (EditText) findViewById(R.id.edtActRegUserPassword);
         edtEmail = (EditText) findViewById(R.id.edtActRegUserEmail);
         edtEmail.setText(Utility.getEmail(this));
         edtPhone = (EditText) findViewById(R.id.edtActRegUserPhone);
@@ -312,7 +312,7 @@ public class RegisterUserActivity extends Activity {
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
 					if(ERROR_CODE == Constants.RESULT_REGISTER_USER_SUCCESS){
-						RegisterUserActivity.this.finish();
+//						RegisterUserActivity.this.finish();
 					}
 				}
 			});			
@@ -341,7 +341,7 @@ public class RegisterUserActivity extends Activity {
 		btnRegOption.setVisibility(visibility== View.VISIBLE ? View.GONE :View.VISIBLE);
 		
     	edtLogin.setVisibility(visibility);
-//    	edtPassword.setVisibility(visibility);
+    	edtPassword.setVisibility(visibility);
     	edtEmail.setVisibility(visibility);
     	edtPhone.setVisibility(visibility); 
 		edtFirstName.setVisibility(visibility);
@@ -354,7 +354,7 @@ public class RegisterUserActivity extends Activity {
 		
 		txtProfileImage.setVisibility(visibility);
 		txtLogin.setVisibility(visibility);
-//		txtPassword.setVisibility(visibility);
+		txtPassword.setVisibility(visibility);
 		txtEmail.setVisibility(visibility);
 		txtPhone.setVisibility(visibility); 
 		txtFirstName.setVisibility(visibility);
@@ -418,13 +418,13 @@ public class RegisterUserActivity extends Activity {
     		message.append(getResources().getString(R.string.msg_validation_email));
     		message.append("\n");
     	}
-    	/*if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+    	if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
     		result = false;
     		message.append(txtPassword.getText().toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.hint_user_password_pattern));
     		message.append("\n");
-    	}*/
+    	}
     	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
     		result = false;
     		message.append(txtEmail.getText().toString());
@@ -497,12 +497,12 @@ public class RegisterUserActivity extends Activity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, IMAGE_REQUEST_CODE);
+        startActivityForResult(intent, REQ_GET_IMAGE);
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK)
+        if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
             try {               
                 InputStream stream = getContentResolver().openInputStream(
                         data.getData());
@@ -514,6 +514,7 @@ public class RegisterUserActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void registerByPhone(){
@@ -584,7 +585,7 @@ public class RegisterUserActivity extends Activity {
 					wsAction = new WSAction();
 				}
 				if (params[0].equalsIgnoreCase(MODE_REGISTER_USR+"")) {					
-					wrapper.result = wsAction.registerUser(/*edtPassword.getText().toString()*/"123456", user);					
+					wrapper.result = wsAction.registerUser(/*edtPassword.getText().toString()*/"81064678", user);					
 				}else if (params[0].equalsIgnoreCase(MODE_UPDATE_PROF+"")) {
 					wrapper.result = wsAction.updateUser(((VeneficaApplication)getApplication()).getAuthToken(), user);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
