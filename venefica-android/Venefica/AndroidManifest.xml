@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
+        android:minSdkVersion="7"
+        android:targetSdkVersion="14" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -222,6 +222,7 @@
         <activity
             android:name="com.venefica.module.listings.browse.SearchListingsActivity"
             android:label="@string/app_name"
+            android:icon="@drawable/offerings_dark"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
