@@ -93,6 +93,7 @@
     <string name="label_menu_delete">Delete</string>
     <string name="label_menu_bookmark">Bookmark</string>
     <string name="label_update">Update</string>
+    <string name="label_filter">Filter</string>
 
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
@@ -146,6 +147,7 @@
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
+    <string name="hint_search_listing">Search Listings...</string>
     <!-- Titles -->
     <string name="app_name">Venefica</string>
     <!-- Data -->

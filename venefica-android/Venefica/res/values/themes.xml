@@ -16,4 +16,16 @@
 		<item name="LabelBig">@style/LabelBigGreen</item>
 		<item name="ViewBackground">@style/ViewBackgroundGreen</item>
 	</style>
+	<style name="Theme.Blue">
+		<item name="LabelTitle">@style/LabelTitleBlue</item>
+		<item name="LabelGroupTitle">@style/LabelGroupTitleBlue</item>		
+		<item name="ButtonFullWidth">@style/ButtonFullWidthBlue</item>
+		<item name="LabelEditText">@style/LabelEditTextBlue</item>
+		<item name="EditTextSingleLine">@style/EditTextSingleLineBlue</item>
+		<item name="ActivityBackground">@style/ActivityBackgroundBlue</item>
+		<item name="ViewGroupBackground">@style/ViewGroupBackgroundBlue</item>
+		<item name="LabelSmall">@style/LabelSmallBlue</item>
+		<item name="LabelBig">@style/LabelBigBlue</item>
+		<item name="ViewBackground">@style/ViewBackgroundBlue</item>
+	</style>
 </resources>

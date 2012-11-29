@@ -22,4 +22,9 @@
     <color name="very_dark_gray">#ff191919</color>
     <color name="light_green">#92BE70</color>
 
+    <color name="side_navigation_background">#303030</color>
+    <color name="side_navigation_outside_background">#7000</color>
+    <color name="side_navigation_list_divider_color">#4f4f4f</color>
+    
+    <color name="side_navigation_item_text_color">#f3f3f3</color>
 </resources>
