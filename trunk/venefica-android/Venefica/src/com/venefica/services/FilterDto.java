@@ -18,19 +18,19 @@ public class FilterDto implements KvmSerializable
 {
 	private static int staticRev = 0;
 	
-	public int rev;
-	public List<Long> categories;
+	private int rev;
+	private List<Long> categories;
 
-	public long distance = 50 * 1609;
-	public double latitude;
-	public double longitude;
+	private long distance = 50 * 1609;
+	private double latitude;
+	private double longitude;
 
-	public BigDecimal minPrice;
-	public BigDecimal maxPrice;
-	public boolean hasPhoto;
+	private BigDecimal minPrice;
+	private BigDecimal maxPrice;
+	private boolean hasPhoto;
 
-	public boolean wanted = false;
-	public String searchString;
+	private boolean wanted = false;
+	private String searchString;
 
 	public FilterDto()
 	{
@@ -173,5 +173,131 @@ public class FilterDto implements KvmSerializable
 	public void registerRead(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(null, "FilterDto", this.getClass());
+	}
+
+	/**
+	 * @return the categories
+	 */
+	public List<Long> getCategories() {
+		return categories;
+	}
+
+	/**
+	 * @param categories the categories to set
+	 */
+	public void setCategories(List<Long> categories) {
+		this.categories = categories;
+	}
+
+	/**
+	 * @return the distance
+	 */
+	public long getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(long distance) {
+		this.distance = distance;
+	}
+
+	/**
+	 * @return the latitude
+	 */
+	public double getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * @return the longitude
+	 */
+	public double getLongitude() {
+		return longitude;
+	}
+
+	/**
+	 * @param longitude the longitude to set
+	 */
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	/**
+	 * @return the minPrice
+	 */
+	public BigDecimal getMinPrice() {
+		return minPrice;
+	}
+
+	/**
+	 * @param minPrice the minPrice to set
+	 */
+	public void setMinPrice(BigDecimal minPrice) {
+		this.minPrice = minPrice;
+	}
+
+	/**
+	 * @return the maxPrice
+	 */
+	public BigDecimal getMaxPrice() {
+		return maxPrice;
+	}
+
+	/**
+	 * @param maxPrice the maxPrice to set
+	 */
+	public void setMaxPrice(BigDecimal maxPrice) {
+		this.maxPrice = maxPrice;
+	}
+
+	/**
+	 * @return the hasPhoto
+	 */
+	public boolean isHasPhoto() {
+		return hasPhoto;
+	}
+
+	/**
+	 * @param hasPhoto the hasPhoto to set
+	 */
+	public void setHasPhoto(boolean hasPhoto) {
+		this.hasPhoto = hasPhoto;
+	}
+
+	/**
+	 * @return the wanted
+	 */
+	public boolean isWanted() {
+		return wanted;
+	}
+
+	/**
+	 * @param wanted the wanted to set
+	 */
+	public void setWanted(boolean wanted) {
+		this.wanted = wanted;
+	}
+
+	/**
+	 * @return the searchString
+	 */
+	public String getSearchString() {
+		return searchString;
+	}
+
+	/**
+	 * @param searchString the searchString to set
+	 */
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
 	}
 }

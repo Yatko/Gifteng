@@ -13,7 +13,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import android.location.Location;
 import android.util.Log;
 
-import com.venefica.activity.PostStepLogic.PostData;
+//import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.module.user.UserDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.GeoLocation;
@@ -51,7 +51,7 @@ public class AdDto implements KvmSerializable
 
 	}
 
-	public AdDto(PostData Post)
+	/*public AdDto(PostData Post)
 	{
 		if (Post == null)
 		{
@@ -87,7 +87,7 @@ public class AdDto implements KvmSerializable
 
 		expiresAt = Post.useExpires ? Post.expirate : null;
 		wanted = Post.wanted;
-	}
+	}*/
 
 	public Object getProperty(int index)
 	{
