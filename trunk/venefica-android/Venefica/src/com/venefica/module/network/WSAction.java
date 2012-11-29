@@ -15,7 +15,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.market.Category;
 import com.venefica.market.Product;
 import com.venefica.module.listings.ListingData;
