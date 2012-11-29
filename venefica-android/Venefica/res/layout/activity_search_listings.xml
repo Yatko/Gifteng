@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+	<com.venefica.module.dashboard.SlideMenuView
+	    android:id="@+id/sideNavigationViewActSearchListing"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" />
     <LinearLayout
         style="?ViewGroupBackground"
         android:layout_width="match_parent"
