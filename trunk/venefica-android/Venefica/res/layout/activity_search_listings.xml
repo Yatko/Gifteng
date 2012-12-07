@@ -6,15 +6,31 @@
     android:orientation="vertical" >
 	<com.venefica.module.dashboard.SlideMenuView
 	    android:id="@+id/sideNavigationViewActSearchListing"
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content" />
-    <LinearLayout
-        style="?ViewGroupBackground"
+	<RelativeLayout 
+	    android:id="@+id/layActSearchListingsMap"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:visibility="gone">
+	    <com.google.android.maps.MapView
+	        android:id="@+id/mapviewActSearchListings"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:apiKey="@string/google_map_api_key"
+	        android:clickable="true"
+	        />
+	    <LinearLayout android:id="@+id/layActSearchListingsToggle" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:layout_alignParentRight="true" 
+	        android:layout_alignParentBottom="true"/> 
+	</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/layActSearchListingsTile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:paddingBottom="2dp"
-        android:orientation="vertical" >
+        android:background="@color/black">
 
         <!-- <TextView
             android:id="@+id/txtActBrowseCatSearch"
@@ -30,7 +46,7 @@
             android:layout_height="1dp"
             android:background="#DADADA" /> -->
 
-        <EditText
+        <!-- <EditText
             android:id="@+id/edtActSearchListing"
             style="?EditTextSingleLine"
             android:layout_marginTop="10dp"
@@ -53,20 +69,26 @@
             android:visibility="gone"           
             android:gravity="left" />
         
-        <!-- Divider line -->
+        Divider line
 
         <TextView
             android:id="@+id/div_act_search_listing_02"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="#DADADA" />
+            android:background="#DADADA" /> -->
         
-        <ListView
+        <GridView
             android:id="@+id/listActSearchListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:numColumns="2"
             android:layout_margin="5dp"
             android:dividerHeight="2sp"/>
-    </LinearLayout>
+        <LinearLayout android:id="@+id/layActSearchListingsToggleMap" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" 
+	        android:layout_alignParentRight="true" 
+	        android:layout_alignParentBottom="true"/> 
+    </RelativeLayout>
 
 </LinearLayout>

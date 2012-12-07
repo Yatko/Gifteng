@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp" >
+
+    <ImageView
+        android:id="@+id/imgListingTileBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_launcher" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom" >
+
+        <!-- Share -->
+
+        <TableRow
+            android:id="@+id/tableRowListingTileOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="right" 
+            android:weightSum="100">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:layout_weight="80"/>
+
+            <ImageButton
+                android:id="@+id/imgBtnListingTileShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:contentDescription="@string/label_share"
+                android:gravity="right"
+                android:src="@drawable/social_share"
+                android:layout_weight="20"/>
+        </TableRow>
+        <!-- Title -->
+
+        <TableRow
+            android:id="@+id/tableRowListingTileTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/txtListingTileTitle"
+                style="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:maxLines="1"
+                android:textColor="@color/white" />
+        </TableRow>
+        <!-- Price -->
+
+        <TableRow
+            android:id="@+id/tableRowListingTileThree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="right" >
+
+            <TextView
+                android:id="@+id/txtListingTilePrice"
+                style="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/white" />
+        </TableRow>
+        <!-- Description -->
+
+        <TableRow
+            android:id="@+id/tableRowListingTileFour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="left" >
+
+            <TextView
+                android:id="@+id/txtListingTileDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:maxLines="2"
+                android:textColor="@color/white" />
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>
