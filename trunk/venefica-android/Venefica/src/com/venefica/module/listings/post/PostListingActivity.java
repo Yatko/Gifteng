@@ -90,7 +90,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	public static final int ACT_MODE_UPDATE_LISTING = 3002;
 	public static final int ACT_MODE_GET_LISTING = 3003;
 	private static int CURRENT_MODE = ACT_MODE_POST_LISTING;
-	private static final int ERROR_ENABLE_LOCATION_PROVIDER = 21;
+	
 	protected static final int ERROR_DATE_VALIDATION = 22;
 	
 	
@@ -269,7 +269,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
 
 	    if (!locProviderEnabled) {
-	    	ERROR_CODE = ERROR_ENABLE_LOCATION_PROVIDER;
+	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
 	    	showDialog(D_ERROR);	        
 	    }
 	    Location location = locationManager.getLastKnownLocation(locProvider);
@@ -355,7 +355,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 					dismissDialog(D_ERROR);
 					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS || ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS){
 						finish();
-					}else if (ERROR_CODE == ERROR_ENABLE_LOCATION_PROVIDER) {
+					}else if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
 						enableLocationSettings();
 					}
 				}
@@ -398,7 +398,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 				message = (String) getResources().getText(R.string.msg_postlisting_success);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_LOCATION){
 				message = (String) getResources().getText(R.string.error_postlisting_get_location);
-			}else if(ERROR_CODE == ERROR_ENABLE_LOCATION_PROVIDER){
+			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
 				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
 			}else if(ERROR_CODE == ERROR_DATE_VALIDATION){
 				message = (String) getResources().getText(R.string.msg_validation_date_higher);

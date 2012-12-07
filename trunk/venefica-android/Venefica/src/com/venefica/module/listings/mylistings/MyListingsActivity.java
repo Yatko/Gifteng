@@ -58,7 +58,7 @@ public class MyListingsActivity extends Activity {
         listViewListings = (ListView) findViewById(R.id.listActMyListings);
 //        listings = getDemoListings();
         listings = new ArrayList<AdDto>();
-		listingsListAdapter = new ListingListAdapter(this, listings);
+		listingsListAdapter = new ListingListAdapter(this, listings, false);
 		listViewListings.setAdapter(listingsListAdapter);
 		listViewListings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
