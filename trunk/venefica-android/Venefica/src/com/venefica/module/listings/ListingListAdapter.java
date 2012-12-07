@@ -19,9 +19,11 @@ import android.widget.BaseAdapter;
 public class ListingListAdapter extends BaseAdapter {
 	private List<AdDto> listings;
 	private Context context;
-	public ListingListAdapter(Context context, List<AdDto> listings) {
+	private boolean isGridView;
+	public ListingListAdapter(Context context, List<AdDto> listings, boolean isGridView) {
 		this.context = context;
 		this.listings = listings;
+		this.isGridView = isGridView;
 	}
 
 	/* (non-Javadoc)
@@ -50,9 +52,18 @@ public class ListingListAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = new ListingListItemView(context, listings.get(position));
+			if (isGridView) {
+				convertView = new ListingTileView(context);
+			} else {
+				convertView = new ListingListItemView(context, listings.get(position));
+			}			
 		}
-		((ListingListItemView)convertView).setListing(listings.get(position));
+		if (isGridView) {
+			((ListingTileView)convertView).setListing(listings.get(position));
+		} else {
+			((ListingListItemView)convertView).setListing(listings.get(position));
+		}
+		
 		return convertView;
 	}
 
