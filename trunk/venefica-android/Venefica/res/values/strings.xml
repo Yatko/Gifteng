@@ -94,7 +94,8 @@
     <string name="label_menu_bookmark">Bookmark</string>
     <string name="label_update">Update</string>
     <string name="label_filter">Filter</string>
-
+	<string name="label_share">Share</string>
+	<string name="label_filter_setting">Filter Settings</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -114,6 +115,7 @@
     <string name="error_remove_bookmarks">Unable to remove bookmark. Please try again later.</string>
     <string name="error_search_listings">Unable to get listings. Please try again later.</string>
     <string name="error_update_listing">Unable to update listing. Please try again later.</string>
+    <string name="error_search_listings_no_data">No listings found.</string>
     
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
@@ -187,6 +189,8 @@
     </string-array>
 	<!-- codes -->
 	<string name="code_category_other">other</string>
+	<string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+	
 	
     <!-- Old strings -->
     <string name="sign_in">Sign In</string>
@@ -214,7 +218,7 @@
     <string name="filter">Filter</string>
     <string name="search">Sr</string>
     <string name="search_hint">Search for sale or offered</string>
-    <string name="google_map_api_key">0skoFbDNDYtsm4iRrYbUCsIZSLhMPZw3Dyct4Hg</string>
+    
     <string name="zero_num">0</string>
     <string name="messages">Messages</string>
     <string name="welcome">Welcome</string>
