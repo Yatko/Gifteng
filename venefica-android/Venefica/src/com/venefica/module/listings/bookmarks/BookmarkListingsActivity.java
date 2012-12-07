@@ -65,7 +65,7 @@ public class BookmarkListingsActivity extends Activity {
         setContentView(R.layout.activity_bookmark_listings);
         listViewListings = (ListView) findViewById(R.id.listActBookmarkListings);
         listings = new ArrayList<AdDto>();
-		listingsListAdapter = new ListingListAdapter(this, listings);
+		listingsListAdapter = new ListingListAdapter(this, listings, false);
 		listViewListings.setAdapter(listingsListAdapter);
 		listViewListings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
