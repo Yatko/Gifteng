@@ -229,7 +229,8 @@
             android:name="com.venefica.module.listings.ListingDetailsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:uiOptions="splitActionBarWhenNarrow"/>
         <activity
             android:name="com.venefica.module.listings.GalleryActivity"
             android:label="@string/app_name"
