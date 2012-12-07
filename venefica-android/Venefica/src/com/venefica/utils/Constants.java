@@ -43,10 +43,14 @@ public class Constants
 	public static final int ERROR_RESULT_GET_LISTINGS = 1035;
 	public static final int RESULT_UPDATE_LISTING_SUCCESS = 1036;
 	public static final int ERROR_RESULT_UPDATE_LISTING = 1037;	
+	public static final int ERROR_ENABLE_LOCATION_PROVIDER = 1038;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	
+	//Location settings
+	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
 	
 	public static final String MAIN_FOLDER = "Venefica";
 	public static final String TEMP_FOLDER = "Temp";
