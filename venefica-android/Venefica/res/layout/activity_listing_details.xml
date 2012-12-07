@@ -400,7 +400,8 @@
                 android:layout_height="fill_parent"
                 android:apiKey="@string/google_map_api_key"
                 android:clickable="true"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                />
         </TableRow>
         <!-- Offer Button -->
 
