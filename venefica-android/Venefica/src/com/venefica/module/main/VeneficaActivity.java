@@ -7,7 +7,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.venefica.activity.R;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
-import com.venefica.module.listings.browse.BrowseCategoriesActivity;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.mylistings.MyListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.settings.SettingsActivity;
@@ -38,40 +38,53 @@ ISlideMenuCallback {
 	@Override
 	public void onSideNavigationItemClick(int itemId) {
 		switch (itemId) {
-		case R.id.slideMenuBrowse:  
-			Intent browseIntent = new Intent(getApplicationContext(), BrowseCategoriesActivity.class);
-			browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    	startActivity(browseIntent);
+		case R.id.slideMenuBrowse: 
+			if(!(getApplicationContext() instanceof SearchListingsActivity)){
+				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(browseIntent);
+			}
 	    	break;
-		case R.id.slideMenuPost:  
-			Intent postIntent = new Intent(getApplicationContext(), PostListingActivity.class);
-			postIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    	startActivity(postIntent);
+		case R.id.slideMenuPost:
+			if(!(getApplicationContext() instanceof PostListingActivity)){
+				Intent postIntent = new Intent(getApplicationContext(), PostListingActivity.class);
+				postIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(postIntent);
+			}
 	    	break;
 		case R.id.slideMenuOfferings:
     		break;
 		case R.id.slideMenuClaimed:
     		break;
-		case R.id.slideMenuMyListings:  
-			Intent myListingIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
-			myListingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    	startActivity(myListingIntent);
+		case R.id.slideMenuMyListings:
+			if(!(getApplicationContext() instanceof MyListingsActivity)){
+				Intent myListingIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
+				myListingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(myListingIntent);
+			}
 	    	break;
 		case R.id.slideMenuAccount:  
-			Intent accountIntent = new Intent(getApplicationContext(), RegisterUserActivity.class);
-			accountIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
-	    	startActivity(accountIntent);
+			if(!(getApplicationContext() instanceof RegisterUserActivity)){
+				Intent accountIntent = new Intent(getApplicationContext(), RegisterUserActivity.class);
+				accountIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
+		    	startActivity(accountIntent);
+			}
 	    	break;
 		case R.id.slideMenuSettings:  
-			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-			settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	    	startActivity(settingsIntent);
+			if(!(getApplicationContext() instanceof SettingsActivity)){
+				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+				settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(settingsIntent);
+			}
 	    	break;
     	case R.id.slideMenuFeedback:
     		break;
 		}
-		finish();
+		if(!(getApplicationContext() instanceof SearchListingsActivity)){
+			finish();
+		}
+			
 	}
 	/**
 	 * @return the slideMenuView
@@ -87,4 +100,5 @@ ISlideMenuCallback {
 		this.slideMenuView = slideMenuView;
 	}
 
+	
 }
