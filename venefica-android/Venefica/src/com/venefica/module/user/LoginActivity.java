@@ -7,6 +7,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.venefica.activity.R;
 import com.venefica.module.dashboard.DashBoardActivity;
+import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
@@ -32,7 +34,7 @@ import android.widget.EditText;
  * @author avinash
  * Class for startup activity 
  */
-public class LoginActivity extends Activity implements View.OnClickListener{
+public class LoginActivity extends VeneficaActivity implements View.OnClickListener{
 	/**
 	 * SignIn and SignUp buttons
 	 */
@@ -359,9 +361,9 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 	 * Start home screen of application
 	 */
 	private void startHomeScreen(){
-//		Intent intent = new Intent(this, TabMainActivity.class);
-		Intent intent = new Intent(this, DashBoardActivity.class);
+		Intent intent = new Intent(this, SearchListingsActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	/**
 	 * Method to store authToken
