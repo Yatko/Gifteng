@@ -146,4 +146,60 @@ public class ImageDto implements KvmSerializable
 	{
 		envelope.addMapping(null, "ImageDto", this.getClass());
 	}
+
+	/**
+	 * @return the data
+	 */
+	public String getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	/**
+	 * @return the imgType
+	 */
+	public imageType getImgType() {
+		return imgType;
+	}
+
+	/**
+	 * @param imgType the imgType to set
+	 */
+	public void setImgType(imageType imgType) {
+		this.imgType = imgType;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 }
