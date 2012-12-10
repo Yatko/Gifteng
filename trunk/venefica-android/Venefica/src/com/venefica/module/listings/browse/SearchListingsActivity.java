@@ -26,6 +26,7 @@ import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
@@ -44,7 +45,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -100,6 +103,7 @@ ISlideMenuCallback, LocationListener{
 	 * Search view in actionbar
 	 */
 	private SearchView searchView;
+//	private View searchView;
 	/**
 	 * Groups to show hide
 	 */
@@ -119,6 +123,10 @@ ISlideMenuCallback, LocationListener{
 	private String locProvider;
 	private Location location;
 	private MapItemizedOverlay overlayItems;
+	/**
+	 * exit flag
+	 */
+	private boolean isExit;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,7 +143,9 @@ ISlideMenuCallback, LocationListener{
 		//Create the search view
         searchView = new SearchView(getSupportActionBar().getThemedContext());
         searchView.setQueryHint(getResources().getString(R.string.hint_search_listing));
-        
+//        edtSearch = new EditText(this,new LinearLayout.LayoutParams(
+//                LayoutParams.WRAP_CONTENT, 
+//                LayoutParams.WRAP_CONTENT));
         //Map 
         mapLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsMap);
         mapView = (MapView) findViewById(R.id.mapviewActSearchListings);
@@ -373,7 +383,7 @@ ISlideMenuCallback, LocationListener{
 		filter.setLongitude(new Double(location.getLongitude()));
 		filter.setMaxPrice(new BigDecimal(5000000.00));
 		filter.setMinPrice(new BigDecimal(0));
-		filter.setWanted(true);
+		filter.setWanted(false);
 		filter.setSearchString("benz");
 		filter.setHasPhoto(false);
 		List<Long> cats = new ArrayList<Long>();
@@ -386,6 +396,7 @@ ISlideMenuCallback, LocationListener{
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getResources().getString(R.string.label_filter))
             .setIcon(R.drawable.browse_dark)
+//            .setActionView(searchView)
             .setActionView(searchView)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         
@@ -401,6 +412,15 @@ ISlideMenuCallback, LocationListener{
 	}
 	
 	
+	@Override
+	public void onBackPressed() {
+		if (isExit) {
+			super.onBackPressed();
+		} else {
+			isExit = true;
+			Utility.showLongToast(this, getResources().getString(R.string.msg_app_exit));
+		}		
+	}
 	private List<AdDto> getDemoListings(){
 		List<AdDto> listings= new ArrayList<AdDto>();
 		AdDto listing = new AdDto();
