@@ -13,6 +13,40 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:background">@android:color/transparent</item>  
     </style>
+    <style name="ButtonFullWidthLightBlue">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">#88000000</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">-1.5</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:background">@drawable/button_blue_bg</item>
+    </style>
+    <style name="ButtonFullWidthLightGray">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">#88000000</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">-1.5</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:background">@drawable/button_gray_bg</item>
+    </style>
     <!-- ################################################################### -->
     <!-- Green Theme -->
     <!-- ################################################################### -->

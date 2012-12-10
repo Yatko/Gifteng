@@ -3,15 +3,25 @@
 
     <!-- Labels -->
     <string name="label_act_login_welcome">Don\'t have a Venefica ID?</string>
-    <string name="label_act_login_btn_sign_up">Sign Up</string>
-    <string name="label_act_login_btn_sign_in">Sign In</string>
+    <string name="label_act_login_btn_sign_up">Register</string>
+    <string name="label_act_login_btn_sign_in">Login</string>
     <string name="label_act_login_sign_in_with">Sign In With</string>
     <string name="label_act_register_user_title">Join the community!</string>
     <string name="label_act_reg_user_btn_join">Join</string>
     <string name="label_act_reg_user_btn_option_phone">Use phone number</string>
     <string name="label_act_reg_user_btn_option_email">Use E-mail</string>
+    <string name="label_act_reg_user_inv_code">invitation code</string>
+    <string name="label_act_reg_user_verify">Verify</string>
+    <string name="label_act_reg_user_req_inv_code">Request invitation</string>
+    <string name="label_act_reg_user_inv_title">I have an invitation</string>
+    <string name="label_act_reg_user_req_inv_title">Request an invitation</string>
     <string name="label_act_reg_user_complete_profile">Your profile is incomplete, please fill missing fields.</string>
-    <string name="label_login">Login</string>
+    <string name="label_act_login_or">or</string>
+    <string name="label_act_login_forgot_pass">Forgot password</string>
+    <string name="label_act_login_forgot_inv_code">Lost Invitation</string>
+    <string name="label_act_login_req_pass">Request password</string>
+    <string name="label_login">Email / Phone</string>
+    <string name="label_connect_with">Connect with</string>
     <string name="label_password">Password</string>
     <string name="label_email">E-mail</string>
     <string name="label_phone">Phone</string>
@@ -87,6 +97,7 @@
     <string name="label_detail_listing_seller">Seller</string>
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
+    <string name="label_detail_listing_get_it">Get it</string>
     <string name="label_menu_relist">Relist</string>
     <string name="label_menu_update">Update</string>
     <string name="label_menu_end">End</string>
@@ -145,6 +156,9 @@
 	<string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
 	<string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
 	<string name="msg_postlisting_update_success">Listing updated successfully.</string>
+	<string name="msg_app_exit">Press again to exit.</string>
+	<string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
+	<string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
 	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
