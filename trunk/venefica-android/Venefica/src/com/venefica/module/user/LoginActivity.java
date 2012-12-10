@@ -24,11 +24,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 /**
  * @author avinash
@@ -38,7 +42,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	/**
 	 * SignIn and SignUp buttons
 	 */
-	private Button btnSignUp, btnSignIn;
+	private Button btnSignUp, btnSignIn, btnWelComeLogin, btnForgotPass, btnRequestPass;
 	/**
 	 * Input fields for login id and password
 	 */
@@ -79,15 +83,29 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 * To call web service
 	 */
 	private WSAction wsAction;
+	/**
+	 * view groups 
+	 */
+	private RelativeLayout layWelcome, layForgetPass;
+	private ScrollView layLogin;
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
 		getApplication().setTheme(R.style.Theme_Blue);
 		setContentView(R.layout.activity_login);
-		
+		//view groups
+		layWelcome = (RelativeLayout) findViewById(R.id.layLoginActWelcome);
+		layLogin = (ScrollView) findViewById(R.id.layActLoginSignIn);
+		layForgetPass = (RelativeLayout) findViewById(R.id.layLoginActForgetPassword);
+		//Welcome 
+		//Login
+		btnWelComeLogin = (Button) findViewById(R.id.btnActLoginWelcomeSignIn);
+		btnWelComeLogin.setOnClickListener(this);
 		//Sign up button
 		btnSignUp = (Button) findViewById(R.id.btnActLoginSignUp);
 		btnSignUp.setOnClickListener(this);
@@ -103,7 +121,13 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		//VK
 		btnVk = (Button) findViewById(R.id.btnActLoginVK);
 		btnVk.setOnClickListener(this);
-
+		//Forget pass
+		btnForgotPass = (Button) findViewById(R.id.btnActLoginForgotPass);
+		btnForgotPass.setOnClickListener(this);
+		//Request pass
+		btnRequestPass = (Button) findViewById(R.id.btnActLoginRequestPass);
+		btnRequestPass.setOnClickListener(this);
+		
 		edtLogin = (EditText) findViewById(R.id.edtActLoginUserId);
 		edtPassword = (EditText) findViewById(R.id.edtActLoginPassword);
 
@@ -125,6 +149,10 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 			edtLogin.setText(prefs.getString(Constants.PREF_KEY_LOGIN, ""));
 			edtPassword.setText(prefs.getString(Constants.PREF_KEY_PASSWORD, ""));
 		}
+		//Show welcome layout on startup
+		layWelcome.setVisibility(ViewGroup.VISIBLE);
+		layLogin.setVisibility(ViewGroup.GONE);
+		layForgetPass.setVisibility(ViewGroup.GONE);
 		if(!WSAction.isNetworkConnected(this)){
 			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
 			showDialog(D_ERROR);
@@ -167,12 +195,43 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 				}
 			}
 		} else if (id == R.id.btnActLoginFacebook) {
-			loginWithSocialNetwork(Constants.SIGN_IN_FACEBOOK_URL, AUTH_FACEBOOK);
+			if(WSAction.isNetworkConnected(this)){
+				loginWithSocialNetwork(Constants.SIGN_IN_FACEBOOK_URL, AUTH_FACEBOOK);
+			}else{
+				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+				showDialog(D_ERROR);
+			}
 		} else if (id == R.id.btnActLoginTwitter) {
-			loginWithSocialNetwork(Constants.SIGN_IN_TWITTER_URL, AUTH_TWITTER);
+			if(WSAction.isNetworkConnected(this)){
+				loginWithSocialNetwork(Constants.SIGN_IN_TWITTER_URL, AUTH_TWITTER);
+			}else{
+				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+				showDialog(D_ERROR);
+			}
 		} else if (id == R.id.btnActLoginVK) {
-			loginWithSocialNetwork(Constants.SIGN_IN_VK_URL, AUTH_VK);
-		} else {
+			if(WSAction.isNetworkConnected(this)){
+				loginWithSocialNetwork(Constants.SIGN_IN_VK_URL, AUTH_VK);
+			}else{
+				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+				showDialog(D_ERROR);
+			}
+		} else if(id == R.id.btnActLoginWelcomeSignIn){
+			//Show login layout
+			layWelcome.setVisibility(ViewGroup.GONE);
+			layLogin.setVisibility(ViewGroup.VISIBLE);
+			layForgetPass.setVisibility(ViewGroup.GONE);
+		} else if (id == R.id.btnActLoginForgotPass) {
+			//Show requset password layout
+			layWelcome.setVisibility(ViewGroup.GONE);
+			layLogin.setVisibility(ViewGroup.GONE);
+			layForgetPass.setVisibility(ViewGroup.VISIBLE);			
+		} else if (id == R.id.btnActLoginRequestPass) {
+			if(WSAction.isNetworkConnected(this)){
+				
+			}else{
+				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+				showDialog(D_ERROR);
+			}
 		}
 
 	}
@@ -372,5 +431,21 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Constants.PREFERENCES_AUTH_TOKEN, authToken);
 		editor.commit();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		if (layForgetPass.getVisibility() == ViewGroup.VISIBLE) {
+			layWelcome.setVisibility(ViewGroup.GONE);
+			layLogin.setVisibility(ViewGroup.VISIBLE);
+			layForgetPass.setVisibility(ViewGroup.GONE);
+		} else if (layWelcome.getVisibility() == ViewGroup.VISIBLE) {
+			super.onBackPressed();
+		} else if (layLogin.getVisibility() == ViewGroup.VISIBLE) {
+			layWelcome.setVisibility(ViewGroup.VISIBLE);
+			layLogin.setVisibility(ViewGroup.GONE);
+			layForgetPass.setVisibility(ViewGroup.GONE);
+		}
 	}
 }

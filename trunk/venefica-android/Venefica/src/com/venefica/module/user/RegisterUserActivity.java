@@ -43,18 +43,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * @author avinash
  * Class for user registration activity.
  */
-public class RegisterUserActivity extends Activity {
+public class RegisterUserActivity extends Activity implements OnClickListener{
 	/**
 	 * Input fields for user data.
 	 */
@@ -93,7 +96,8 @@ public class RegisterUserActivity extends Activity {
 	/**
 	 * Activity MODE
 	 */
-	public static final int MODE_REGISTER_USR = 3001, MODE_UPDATE_PROF = 3002, MODE_GET_USER = 3003;
+	public static final int MODE_REGISTER_USR = 3001, MODE_UPDATE_PROF = 3002,
+			MODE_GET_USER = 3003, MODE_VERIFY_CODE = 3004;
 	/**
 	 * Current MODE
 	 */
@@ -138,14 +142,40 @@ public class RegisterUserActivity extends Activity {
 	 * flag true if email as userid false if phone
 	 */
 	private boolean byEmail = false;
+	/**
+	 * View groups
+	 */
+	private RelativeLayout layVerify, layJoin;
+	/**
+	 * Buttons new layout
+	 */
+	private Button btnVerify, btnReqInvitation, btnFacebook, btnTwitter, btnJoin, btnLostInv;
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
         user = new UserDto();
         //Get mode
         CURRENT_MODE = getIntent().getIntExtra("activity_mode", MODE_REGISTER_USR);
         AUTH_TYPE = getIntent().getIntExtra("auth_type", ACT_REGISTER_BY_VENEFICA);
+        //view groups
+        layVerify = (RelativeLayout) findViewById(R.id.layActRegUserVerify);
+        layJoin = (RelativeLayout) findViewById(R.id.layActRegUserJoin);
+        //Buttons new design
+        btnVerify = (Button) findViewById(R.id.btnActRegUserVerify);
+        btnVerify.setOnClickListener(this);
+        btnReqInvitation = (Button) findViewById(R.id.btnActRegUserReqInv);
+        btnReqInvitation.setOnClickListener(this);
+        btnFacebook = (Button) findViewById(R.id.btnActRegUserFacebook);
+        btnFacebook.setOnClickListener(this);
+        btnTwitter = (Button) findViewById(R.id.btnActRegUserTwitter);
+        btnTwitter.setOnClickListener(this);
+        btnJoin = (Button) findViewById(R.id.btnActRegUserJoin);
+        btnJoin.setOnClickListener(this);
+        btnLostInv = (Button) findViewById(R.id.btnActRegUserForgotInvCode);
+        btnLostInv.setOnClickListener(this);
+        
         //TextViews
         txtTitle = (TextView) findViewById(R.id.txtActRegUserHeader);
         txtLogin = (TextView) findViewById(R.id.txtActRegUserLogin);
@@ -199,9 +229,9 @@ public class RegisterUserActivity extends Activity {
 		});
         btnSignup = (Button) findViewById(R.id.btnActRegUserSignUp);
         
-        /*if(AUTH_TYPE != ACT_REGISTER_BY_VENEFICA){
+        if(AUTH_TYPE != ACT_REGISTER_BY_VENEFICA){
         	btnSignup.setText(getResources().getString(R.string.label_btn_save));
-        }*/
+        }
         btnSignup.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -243,8 +273,10 @@ public class RegisterUserActivity extends Activity {
 				}
 			}
 		});
-        
-        if(CURRENT_MODE == MODE_REGISTER_USR){
+        if (CURRENT_MODE == MODE_VERIFY_CODE) {
+			layJoin.setVisibility(ViewGroup.GONE);
+			layVerify.setVisibility(ViewGroup.VISIBLE);
+		} else if(CURRENT_MODE == MODE_REGISTER_USR){
         	//New user registration fields
 	        setProflieFieldsVisibility(View.GONE);
 	        showPhone();
@@ -369,6 +401,7 @@ public class RegisterUserActivity extends Activity {
     /**
      * Method to show Ui for register using phone no.
      */
+    @Deprecated
     private void showPhone(){
     	//show phone
     	txtPhone.setVisibility(View.VISIBLE);
@@ -647,5 +680,38 @@ public class RegisterUserActivity extends Activity {
 		edtCounty.setText(userData.getCounty());
 		edtCity.setText(userData.getCity());
 		edtArea.setText(userData.getArea());		
+	}
+	@Override
+	public void onClick(View v) {
+		if(WSAction.isNetworkConnected(RegisterUserActivity.this)){
+			if (v.getId() == R.id.btnActRegUserVerify) {
+				layVerify.setVisibility(ViewGroup.GONE);
+				layJoin.setVisibility(ViewGroup.VISIBLE);
+			} else if (v.getId() == R.id.btnActRegUserReqInv) {
+				getUserData();
+				new RegisterUserTask().execute(MODE_REGISTER_USR+"");
+			} else if (v.getId() == R.id.btnActRegUserFacebook) {
+				
+			} else if (v.getId() == R.id.btnActRegUserTwitter) {
+				
+			} else if (v.getId() == R.id.btnActRegUserJoin) {
+				
+			} else if (v.getId() == R.id.btnActRegUserForgotInvCode) {
+				
+			}
+		}else{
+			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+			showDialog(D_ERROR);
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (layJoin.getVisibility() == ViewGroup.VISIBLE) {
+			layVerify.setVisibility(ViewGroup.VISIBLE);
+			layJoin.setVisibility(ViewGroup.GONE);
+		} else {
+			super.onBackPressed();
+		}
 	}
 }
