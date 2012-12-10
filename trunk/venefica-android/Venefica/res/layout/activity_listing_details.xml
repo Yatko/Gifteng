@@ -6,20 +6,142 @@
 
     <TableLayout
         android:id="@+id/tableActListingDetails"
-        style="?ViewGroupBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp" >
+		<!-- User Info -->
+        <TableRow
+            android:id="@+id/tableRowActListingDetailsUserDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip" 
+            android:weightSum="100">
+
+            <include
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"
+                layout="@layout/view_user_details" />
+        </TableRow>
 
         <TableRow
-            android:id="@+id/tableRowActListingDetailsTitle"
+            android:id="@+id/tableRowActListingDetailsPhotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
             android:weightSum="100" >
 
-            <!-- Title -->
+            <Gallery
+                android:id="@+id/galleryActListingDetailsPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="100"
+                android:background="@color/gray"
+                android:gravity="bottom"
+                android:minHeight="90dp"
+                android:padding="5dp"
+                android:spacing="5dp" />
+        </TableRow>
+        <!-- Buttons -->
+		<TableRow
+            android:id="@+id/tableRowActListingDetailsFlag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:weightSum="100" >
+
+            <!-- Flag -->
+
+            <ImageButton
+                android:id="@+id/btnActListingDetailsBookmark"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="20"
+                android:background="#1E90FF"
+                android:src="@drawable/favorite" />
+            
+            <Button 
+                android:id="@+id/btnActListingDetailsGetIt"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="60"
+                android:background="#1E90FF" 
+                android:text="@string/label_detail_listing_get_it"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+            <!-- Send Message -->
+
+            <ImageButton
+                android:id="@+id/btnActListingDetailsSendMsg"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_weight="20"
+                android:background="#1E90FF"
+                android:src="@drawable/important" />
+        </TableRow>
+        <!-- Description -->
+
+        <TableRow
+            android:id="@+id/tableRowActListingDetailsDesc"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="2dip"
+            android:weightSum="100" >
+
+            <!-- <TextView
+                android:id="@+id/txtActListingLblDesc"
+                style="?LabelEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="2dp"
+                android:layout_weight="30"
+                android:maxLines="1"
+                android:text="@string/label_detail_listing_description"
+                android:textSize="12sp" /> -->
+
+            <TextView
+                android:id="@+id/txtActListingDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="2dp"
+                android:layout_weight="100"
+                android:minLines="5"
+                android:maxLines="5"
+                android:textSize="12sp" />
+        </TableRow>
+		<!-- Map view -->
+		<TableRow
+            android:id="@+id/tableRowActListingDetailsMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip" 
+            android:weightSum="100">
+
+            <com.google.android.maps.MapView
+                android:id="@+id/mapviewActListingDetails"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="100"
+                android:apiKey="@string/google_map_api_key"
+                android:clickable="true" />
+        </TableRow>
+        
+		<!-- Old -->
+        <TableRow
+            android:id="@+id/tableRowActListingDetailsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:weightSum="100" 
+            android:visibility="gone">
+
+            Title
 
             <TextView
                 android:id="@+id/txtActListingDetailsTitle"
@@ -30,7 +152,7 @@
                 android:layout_weight="80"
                 android:ellipsize="end"
                 android:maxLines="2" />
-            <!-- Bookmark Button -->
+            Bookmark Button
 
             <ImageButton
                 android:id="@+id/btnActListingDetailsBookmark"
@@ -39,7 +161,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="20"
                 android:src="@drawable/favorite" />
-        </TableRow>
+        </TableRow> -->
         <!-- Divider line -->
 
         <TableRow
@@ -47,7 +169,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/divActListingDetails01"
@@ -55,7 +178,7 @@
                 android:layout_height="1dp"
                 android:layout_weight="100"
                 android:background="#DADADA" />
-        </TableRow>
+        </TableRow> -->
         <!-- Price -->
 
         <TableRow
@@ -63,7 +186,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/txtActListingLblPrice"
@@ -94,7 +218,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/divActListingDetails02"
@@ -103,37 +228,7 @@
                 android:layout_weight="100"
                 android:background="#DADADA" />
         </TableRow>
-        <!-- Description -->
-
-        <TableRow
-            android:id="@+id/tableRowActListingDetailsDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:weightSum="100" >
-
-            <TextView
-                android:id="@+id/txtActListingLblDesc"
-                style="?LabelEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="2dp"
-                android:layout_weight="30"
-                android:maxLines="1"
-                android:text="@string/label_detail_listing_description"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/txtActListingDesc"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="2dp"
-                android:layout_weight="70"
-                android:maxLines="1"
-                android:textSize="12sp" />
-        </TableRow>
+        
 
         <!-- Divider line -->
 
@@ -142,7 +237,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/divActListingDetails03"
@@ -158,7 +254,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/txtActListingLblPhotos"
@@ -173,25 +270,6 @@
                 android:textSize="12sp" />
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRowActListingDetailsPhotos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:weightSum="100" >
-
-            <Gallery
-                android:id="@+id/galleryActListingDetailsPhotos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
-                android:background="@color/gray"
-                android:gravity="bottom"
-                android:minHeight="90dp"
-                android:padding="5dp"
-                android:spacing="5dp" />
-        </TableRow>
-
         <!-- Listied date -->
 
         <TableRow
@@ -199,7 +277,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtActListingLblListedOn"
@@ -230,7 +309,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/divActListingDetails05"
@@ -246,7 +326,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/txtActListingLblExpiresOn"
@@ -277,7 +358,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/divActListingDetails06"
@@ -293,7 +375,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtActListingLblSeller"
@@ -323,7 +406,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/divActListingDetails07"
@@ -339,7 +423,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtActListingLblAddress"
@@ -377,7 +462,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/divActListingDetails04"
@@ -387,22 +473,7 @@
                 android:background="#DADADA" />
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRowActListingDetailsMap"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:weightSum="100" >
-
-            <com.google.android.maps.MapView
-                android:id="@+id/mapviewActListingDetails"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:apiKey="@string/google_map_api_key"
-                android:clickable="true"
-                android:visibility="gone"
-                />
-        </TableRow>
+        
         <!-- Offer Button -->
 
         <TableRow
@@ -410,7 +481,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dip"
-            android:weightSum="100" >
+            android:weightSum="100" 
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btnActListingDetailsMakeOffer"

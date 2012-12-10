@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layUserView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100" >
+
+    <ImageView
+        android:id="@+id/imgUserViewProfileImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="40" 
+        android:src="@drawable/ic_launcher"/>
+
+    <TableLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="60" >
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/txtUserViewUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Thea Angle"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/txtUserViewMemberInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+				android:text="member since October 2012"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/txtUserViewScore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" 
+                android:layout_weight="60"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1E90FF"
+                android:text="Score 45"/>
+            <ImageButton 
+                android:id="@+id/imgBtnUserViewWatch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" 
+                android:layout_weight="20"
+                android:background="#1E90FF"
+                android:src="@drawable/messages"/>
+            <ImageButton 
+                android:id="@+id/imgBtnUserViewSendMsg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" 
+                android:layout_weight="20"
+                android:background="#1E90FF"
+                android:src="@drawable/messages_dark"/>
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
