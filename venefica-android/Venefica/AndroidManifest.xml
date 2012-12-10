@@ -228,6 +228,7 @@
         <activity
             android:name="com.venefica.module.listings.ListingDetailsActivity"
             android:label="@string/app_name"
+            android:icon="@drawable/offerings_dark"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             android:uiOptions="splitActionBarWhenNarrow"/>
