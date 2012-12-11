@@ -6,43 +6,43 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.google.android.maps.Overlay;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.venefica.activity.R;
-import com.venefica.module.listings.post.PostListingActivity;
-import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.Utility;
-import com.venefica.services.AdDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
+import com.venefica.activity.R;
+import com.venefica.module.listings.post.PostListingActivity;
+import com.venefica.module.main.VeneficaMapActivity;
+import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.AdDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 /**
  * 
  * @author avinash
  * Activity to show detail Listing  
  */
-public class ListingDetailsActivity extends MapActivity {
+public class ListingDetailsActivity extends VeneficaMapActivity{
 	/**
 	 * Gallery to images
 	 */
@@ -62,13 +62,16 @@ public class ListingDetailsActivity extends MapActivity {
     /**
      * Text view to show details
      */
-    private TextView txtTitle, txtPrice, txtDescription, txtAddress, txtListingDate, 
-    			txtExpiaryDate;
+    private TextView txtDescription;
+    
+    /**
+     * Text view to show user details
+     */
+    private TextView txtUserName, txtMemberInfo, txtScore;
     /**
      * Buttons
      */
-    private Button btnMakeOffer, btnViewSeller;
-    private ImageButton btnBookmark, btnShowOnMap;
+    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch;
     /**
      * Modes
      */
@@ -78,6 +81,7 @@ public class ListingDetailsActivity extends MapActivity {
     public static final int ACT_MODE_END_LISTINGS = 4004;
     public static final int ACT_MODE_RELIST_LISTINGS = 4005;
     public static final int ACT_MODE_DELETE_LISTINGS = 4006;
+    public static final int ACT_MODE_BOOKMARK_LISTINGS = 4007;
     /**
      * Current mode
      */
@@ -95,58 +99,48 @@ public class ListingDetailsActivity extends MapActivity {
      */
     private MapController mapController;
 	private MapView mapView;
-	private LocationManager locationManager;
-	private Overlay itemizedoverlay;
-	private boolean showMap = true;
-
 	private WSAction wsAction;
+	private boolean isMapShown = true;
+	private MapItemizedOverlay overlayItems;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listing_details);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //set activity mode
         CURRENT_MODE = getIntent().getExtras().getInt("mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
+        //user details
+        txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
+        txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
+        txtScore = (TextView) findViewById(R.id.txtUserViewScore);
         //Details
-        txtTitle = (TextView) findViewById(R.id.txtActListingDetailsTitle);
-        txtPrice = (TextView) findViewById(R.id.txtActListingPrice);
         txtDescription = (TextView) findViewById(R.id.txtActListingDesc);
-        txtAddress = (TextView) findViewById(R.id.txtActListingAddress);
-        txtListingDate = (TextView) findViewById(R.id.txtActListingListedOn);
-		txtExpiaryDate = (TextView) findViewById(R.id.txtActListingExpiresOn);
-        //Seller
-		btnViewSeller = (Button) findViewById(R.id.btnActListingDetailsSeller);
-		//Bookmark
+        //Bookmark
 		btnBookmark = (ImageButton) findViewById(R.id.btnActListingDetailsBookmark);
 		btnBookmark.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				Utility.showShortToast(ListingDetailsActivity.this, getResources().getString(R.string.msg_detail_listing_add_fav_success));
+//				Utility.showShortToast(ListingDetailsActivity.this, getResources().getString(R.string.msg_detail_listing_add_fav_success));
+				if (listing.isOwner()&& !listing.isInBookmars()) {
+					new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
+				}				
 			}
 		});
-		btnMakeOffer = (Button) findViewById(R.id.btnActListingDetailsMakeOffer);
 		//Map
 		mapView = (MapView) findViewById(R.id.mapviewActListingDetails);
-		mapView.setBuiltInZoomControls(true);
+//		mapView.setBuiltInZoomControls(true);
 		// satellite or 2d mode
-		mapView.setSatellite(true);
+		mapView.setSatellite(false);
+		mapView.setTraffic(true);
+        mapView.setSatellite(false);        
 		mapController = mapView.getController();
-		mapController.setZoom(14); // Zoom 1 is world view
-		btnShowOnMap = (ImageButton) findViewById(R.id.btnActListingDetailsLocateOnMap);
-		btnShowOnMap.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				if (showMap) {
-					mapView.setVisibility(MapView.VISIBLE);
-					showMap = false;
-				} else {
-					mapView.setVisibility(MapView.GONE);
-					showMap = true;
-				}
-				
-			}
-		});
-        //Gallery
+		mapController.setZoom(8); // Zoom 1 is world view
+		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.locate_place), this);
+		
+		//Gallery
         gallery = (Gallery) findViewById(R.id.galleryActListingDetailsPhotos);
         gallery.setOnItemClickListener(new OnItemClickListener() {
 
@@ -160,9 +154,7 @@ public class ListingDetailsActivity extends MapActivity {
         galImageAdapter = new GalleryImageAdapter(this, drawables);
         gallery.setAdapter(galImageAdapter);
         if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
-			btnBookmark.setVisibility(View.GONE);
-			btnViewSeller.setClickable(false);
-			btnMakeOffer.setVisibility(View.GONE);
+			btnBookmark.setVisibility(View.GONE);			
 		}
         
     }
@@ -232,18 +224,53 @@ public class ListingDetailsActivity extends MapActivity {
 				message = (String) getResources().getText(R.string.msg_delete_listing_success);
 			}else if (ERROR_CODE == Constants.ERROR_RESULT_DELETE_LISTING) {
 				message = (String) getResources().getText(R.string.error_delete_listing);
-			}
+			}else if (ERROR_CODE == Constants.RESULT_BOOKMARKS_LISTING_SUCCESS) {
+				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_success);
+				listing.setInBookmars(true);
+			}else if (ERROR_CODE == Constants.ERROR_RESULT_BOOKMARKS_LISTING) {
+				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_failed);
+			}    		
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
+    /**
+     * Set details on screen
+     * @param listing
+     */
 	private void setDetails(AdDto listing) {
-		txtTitle.setText(listing.getTitle());
-		txtPrice.setText(listing.getPrice()+"");
-		txtDescription.setText(listing.getDescription());
-//		txtAddress.setText(listing.get);
-		txtListingDate.setText(listing.getCreatedAt());
-		txtExpiaryDate.setText(Utility.convertShortDateToString(listing.getExpiresAt()));
-		btnViewSeller.setText(listing.getCreator().getName());
+		//Show on map
+		updateMap(listing.getLatitude(), listing.getLongitude(), listing.getTitle(), "");
+		//set user info
+		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
+		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
+		txtScore.setText(getResources().getText(R.string.label_detail_listing_score).toString()/*listing.getCreator()*/);
+		
+		//set listing details
+		StringBuffer text = new StringBuffer();
+		text.append("<b>"+listing.getTitle()+" </b>");
+		text.append("<b>"+listing.getPrice().toString()+"</b>");
+		text.append("<br>");
+		text.append(listing.getDescription());
+		txtDescription.setText(Html.fromHtml(text.toString()));
+	}
+	/**
+	 * method to show listing location on map
+	 * @param latitude
+	 * @param longitude
+	 * @param title
+	 * @param description
+	 */
+	private void updateMap(double latitude, double longitude, String title, String description){
+		if (isMapShown ) {
+			GeoPoint currLoc = new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
+			mapController.animateTo(currLoc);
+			OverlayItem overlayItem = new OverlayItem(currLoc, title, description);
+			overlayItems.clear();
+			overlayItems.addOverlay(overlayItem);
+			mapView.getOverlays().add(overlayItems);
+			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
+			mapView.invalidate();
+		}	
 	}
 	private List<Drawable> getImages() {
 		drawables = new ArrayList<Drawable>();
@@ -264,9 +291,9 @@ public class ListingDetailsActivity extends MapActivity {
 		return false;
 	}
 
-    @Override
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_listing_details, menu);
+    	getSupportMenuInflater().inflate(R.menu.activity_listing_details, menu);
         return true;
     }
     @Override
@@ -308,7 +335,8 @@ public class ListingDetailsActivity extends MapActivity {
 			new ListingDetailsTask().execute(ACT_MODE_RELIST_LISTINGS);
 		} else if (itemId == R.id.menu_listing_delete) {
 			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
-		} else {
+		} else if (itemId == android.R.id.home) {
+			finish();
 		}
     	return true;
     }
@@ -338,6 +366,8 @@ public class ListingDetailsActivity extends MapActivity {
 					wrapper = wsAction.relistListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
 				}else if (params[0].equals(ACT_MODE_DELETE_LISTINGS)) {
 					wrapper = wsAction.deleteListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+				}else if (params[0].equals(ACT_MODE_BOOKMARK_LISTINGS)) {
+					wrapper = wsAction.bookmarkListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
