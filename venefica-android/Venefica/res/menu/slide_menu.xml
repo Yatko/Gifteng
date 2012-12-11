@@ -2,34 +2,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
      <item
         android:id="@+id/slideMenuBrowse"
-        android:icon="@drawable/browse_dark"
+        android:icon="@drawable/icon_search"
         android:title="@string/label_dashboard_browse"/>
     <item
         android:id="@+id/slideMenuPost"
-        android:icon="@drawable/post_dark"
+        android:icon="@drawable/icon_send"
         android:title="@string/label_dashboard_post"/>
     <item
         android:id="@+id/slideMenuClaimed"
-        android:icon="@drawable/claimed_dark"
+        android:icon="@drawable/icon_document"
         android:title="@string/label_dashboard_claimed"/>
     <item
         android:id="@+id/slideMenuOfferings"
-        android:icon="@drawable/offerings_dark"
+        android:icon="@drawable/icon_database"
         android:title="@string/label_dashboard_offerings"/>
     <item
         android:id="@+id/slideMenuMyListings"
-        android:icon="@drawable/my_listings_dark"
+        android:icon="@drawable/icon_tiles_large"
         android:title="@string/label_dashboard_my_listings"/>
 	<item
         android:id="@+id/slideMenuAccount"
-        android:icon="@drawable/account_dark"
+        android:icon="@drawable/icon_key"
         android:title="@string/label_dashboard_account"/>
 	<item
         android:id="@+id/slideMenuSettings"
-        android:icon="@drawable/settings_dark"
+        android:icon="@drawable/icon_settings"
         android:title="@string/label_dashboard_settings"/>
 	<item
         android:id="@+id/slideMenuFeedback"
-        android:icon="@drawable/feedback_dark"
+        android:icon="@drawable/icon_like"
         android:title="@string/label_dashboard_feedback"/>
 </menu>

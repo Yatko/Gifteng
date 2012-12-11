@@ -1,4 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_listing_share"
+        android:title="@string/label_share"
+        android:icon="@drawable/icon_share"
+        android:showAsAction="always"
+        android:orderInCategory="95" />
     <item android:id="@+id/menu_listing_update"
         android:title="@string/label_menu_update"
         android:orderInCategory="96" />
