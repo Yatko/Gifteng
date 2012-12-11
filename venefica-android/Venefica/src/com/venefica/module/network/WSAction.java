@@ -32,6 +32,7 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.services.ServicesManager.AuthenticateResult;
+import com.venefica.services.ServicesManager.BookmarkAdResult;
 import com.venefica.services.ServicesManager.DeleteAdResult;
 import com.venefica.services.ServicesManager.EndAdResult;
 import com.venefica.services.ServicesManager.GetAdByIdResult;
@@ -82,6 +83,7 @@ public class WSAction {
 	private static final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
 	private static final String WS_METHOD_GET_ADS = "GetAdsEx";
 	private static final String WS_METHOD_UPDATE_AD = "UpdateAd";
+	private static final String WS_METHOD_BOOKMARK = "BookmarkAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -814,4 +816,47 @@ public class WSAction {
 		}
 		return result;
 	}
+	
+	/**
+	 * Method to bookmark listing
+	 * @param token
+	 * @param adId
+	 * @return ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper bookmarkListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_BOOKMARK;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			long id = Long.parseLong(envelope.getResponse().toString());
+			if (id > 0) {
+				result.result = Constants.RESULT_BOOKMARKS_LISTING_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_BOOKMARKS_LISTING;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_BOOKMARKS_LISTING;
+		}
+		return result;
+	}
+
 }
