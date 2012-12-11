@@ -1,10 +1,12 @@
 package com.venefica.module.listings;
 
 import com.venefica.activity.R;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,6 +38,7 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 		imgBtnShare = (ImageButton) view.findViewById(R.id.imgBtnListingTileShare);
 		imgBtnShare.setOnClickListener(this);
 		imgView = (ImageView) view.findViewById(R.id.imgListingTileBg);
+		imgView.setOnClickListener(this);
 		this.addView(view);
 	}
 	
@@ -72,6 +75,11 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 	public void onClick(View v) {
 		if (v.getId() == R.id.imgBtnListingTileShare) {			
 			
+		}else{
+			Intent intent = new Intent(getContext(), ListingDetailsActivity.class);
+			intent.putExtra("ad_id", this.listing.getId());
+			intent.putExtra("mode", ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+			getContext().startActivity(intent);
 		}
 	}
 }
