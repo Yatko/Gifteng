@@ -98,6 +98,8 @@
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
     <string name="label_detail_listing_get_it">Get it</string>
+    <string name="label_detail_listing_member_since">member since </string>
+    <string name="label_detail_listing_score">Score</string>
     <string name="label_menu_relist">Relist</string>
     <string name="label_menu_update">Update</string>
     <string name="label_menu_end">End</string>
@@ -145,7 +147,8 @@
     <string name="msg_validation_date_lower">Please select date less than current date.</string>
     <string name="msg_validation_category">Please select category.</string>
     <string name="msg_postlisting_locate">Locate on map</string>
-    <string name="msg_detail_listing_add_fav_success">Stored to bookmarks.</string>
+    <string name="msg_detail_listing_add_fav_success">Bookmarks added successfully.</string>
+    <string name="msg_detail_listing_add_fav_failed">Unable to add bookmark. Please try again later.</string>
 	<string name="msg_postlisting_success">Listing created successfully. You can view posted listings in MyListings section.</string>
 	<string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
 	<string name="msg_postlisting_provider_disabled"> has been disabled.</string>
