@@ -44,6 +44,8 @@ public class Constants
 	public static final int RESULT_UPDATE_LISTING_SUCCESS = 1036;
 	public static final int ERROR_RESULT_UPDATE_LISTING = 1037;	
 	public static final int ERROR_ENABLE_LOCATION_PROVIDER = 1038;
+	public static final int RESULT_BOOKMARKS_LISTING_SUCCESS = 1039;
+	public static final int ERROR_RESULT_BOOKMARKS_LISTING = 1040;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -124,6 +126,7 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;		
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
+			
 			
 }
