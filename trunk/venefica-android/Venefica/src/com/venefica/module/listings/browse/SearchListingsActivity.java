@@ -158,7 +158,7 @@ ISlideMenuCallback, LocationListener{
         //Toggle Button to view Tiles
         toggleButtonTile = new ImageButton(this);
         toggleButtonTile.setClickable(true);
-        toggleButtonTile.setImageResource(R.drawable.picture_view);
+        toggleButtonTile.setImageResource(R.drawable.icon_picture);
         toggleLayout = (LinearLayout) findViewById(R.id.layActSearchListingsToggle);
         toggleLayout.addView(toggleButtonTile,  new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
@@ -181,7 +181,7 @@ ISlideMenuCallback, LocationListener{
       //Toggle Button to view Map
         toggleButtonMap = new ImageButton(this);
         toggleButtonMap.setClickable(true);
-        toggleButtonMap.setImageResource(R.drawable.map_view);
+        toggleButtonMap.setImageResource(R.drawable.icon_globe);
         toggleLayoutMap = (LinearLayout) findViewById(R.id.layActSearchListingsToggleMap);
         toggleLayoutMap.addView(toggleButtonMap,  new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, 
@@ -266,8 +266,9 @@ ISlideMenuCallback, LocationListener{
     }
     
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+        //Stop image loading thread
         locationManager.removeUpdates(this);
         ImageDownloadManager.getImageDownloadManagerInstance().reset();
     }
@@ -395,7 +396,7 @@ ISlideMenuCallback, LocationListener{
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getResources().getString(R.string.label_filter))
-            .setIcon(R.drawable.browse_dark)
+            .setIcon(R.drawable.icon_search)
 //            .setActionView(searchView)
             .setActionView(searchView)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -424,6 +425,7 @@ ISlideMenuCallback, LocationListener{
 	private List<AdDto> getDemoListings(){
 		List<AdDto> listings= new ArrayList<AdDto>();
 		AdDto listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -433,6 +435,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(2);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -442,6 +445,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(3);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -451,6 +455,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(4);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -460,6 +465,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(5);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -469,6 +475,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(6);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -478,6 +485,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -496,6 +504,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -505,6 +514,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -514,6 +524,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -523,6 +534,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -532,6 +544,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -541,6 +554,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -550,6 +564,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
@@ -559,6 +574,7 @@ ISlideMenuCallback, LocationListener{
 		listings.add(listing);
 		
 		listing = new AdDto();
+		listing.setId(1);
 		listing.setTitle("Demo Listing");
 		listing.setPrice(new BigDecimal(1234));
 		listing.setDescription("Demo description");
