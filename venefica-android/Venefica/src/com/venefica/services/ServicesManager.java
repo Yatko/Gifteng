@@ -1417,7 +1417,7 @@ public class ServicesManager
 
 		return result;
 	}
-
+	@Deprecated
 	public BookmarkAdResult BookmarkAd(String token, long adId)
 	{
 		final String SOAP_METHOD = BOOKMARK_AD_METHOD;
