@@ -38,7 +38,8 @@
                 android:layout_gravity="right"
                 android:contentDescription="@string/label_share"
                 android:gravity="right"
-                android:src="@drawable/social_share"
+                android:src="@drawable/icon_share"
+                android:background="@color/transparent"
                 android:layout_weight="20"/>
         </TableRow>
         <!-- Title -->
