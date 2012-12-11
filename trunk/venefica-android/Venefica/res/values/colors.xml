@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="light_blue">#33b6e6</color>
     <color name="orange">#ff5500</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
@@ -26,5 +27,5 @@
     <color name="side_navigation_outside_background">#7000</color>
     <color name="side_navigation_list_divider_color">#4f4f4f</color>
     
-    <color name="side_navigation_item_text_color">#f3f3f3</color>
+    <color name="side_navigation_item_text_color">#33b6e6</color>
 </resources>
