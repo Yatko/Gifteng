@@ -41,6 +41,7 @@ ISlideMenuCallback {
 		case R.id.slideMenuBrowse: 
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
 				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    	startActivity(browseIntent);
 			}
@@ -56,12 +57,26 @@ ISlideMenuCallback {
     		break;
 		case R.id.slideMenuClaimed:
     		break;
+		case R.id.slideMenuBookmarks:
+			if(!(getApplicationContext() instanceof SearchListingsActivity)){
+				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_BOOKMARKS);
+				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(browseIntent);
+			}
+    		break;
 		case R.id.slideMenuMyListings:
-			if(!(getApplicationContext() instanceof MyListingsActivity)){
+			if(!(getApplicationContext() instanceof SearchListingsActivity)){
+				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS);
+				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(browseIntent);
+			}
+			/*if(!(getApplicationContext() instanceof MyListingsActivity)){
 				Intent myListingIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
 				myListingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    	startActivity(myListingIntent);
-			}
+			}*/
 	    	break;
 		case R.id.slideMenuAccount:  
 			if(!(getApplicationContext() instanceof RegisterUserActivity)){
