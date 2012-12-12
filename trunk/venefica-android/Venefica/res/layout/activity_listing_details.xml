@@ -30,14 +30,14 @@
         <TableRow
             android:id="@+id/tableRowActListingDetailsPhotos"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_margin="2dip"
             android:weightSum="100" >
 
             <Gallery
                 android:id="@+id/galleryActListingDetailsPhotos"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_weight="100"
                 android:background="@color/gray"
                 android:gravity="bottom"
@@ -103,7 +103,7 @@
                 android:layout_margin="2dp"
                 android:layout_weight="100"
                 android:maxLines="5"
-                android:minLines="5"
+                android:minLines="1"
                 android:textSize="12sp" />
         </TableRow>
         <!-- Map view -->
@@ -118,7 +118,7 @@
             <com.google.android.maps.MapView
                 android:id="@+id/mapviewActListingDetails"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="150dp"
                 android:layout_weight="100"
                 android:apiKey="@string/google_map_api_key"
                 android:clickable="true" />
