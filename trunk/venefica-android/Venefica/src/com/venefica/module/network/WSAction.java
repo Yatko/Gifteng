@@ -472,9 +472,9 @@ public class WSAction {
 	 * @throws XmlPullParserException
 	 */
 	@SuppressWarnings("unchecked")
-	public MyListingsResultWrapper getMyListings(String token) throws IOException, XmlPullParserException{
+	public SearchListingResultWrapper getMyListings(String token) throws IOException, XmlPullParserException{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_MY_ADS;
-		MyListingsResultWrapper result = new MyListingsResultWrapper();
+		SearchListingResultWrapper result = new SearchListingResultWrapper();
 
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_MY_ADS);
@@ -492,13 +492,16 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
 			Object response = envelope.getResponse();
-			if (response instanceof AdDto){
-				result.myListings = new ArrayList<AdDto>();
-				result.myListings.add((AdDto)response);
+			if (response == null) {
+				result.result = Constants.ERROR_NO_DATA;
+			} else if (response instanceof AdDto){
+				result.listings = new ArrayList<AdDto>();
+				result.listings.add((AdDto)response);
+				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
 			}else{
-				result.myListings = (List<AdDto>)response;
-			}
-			result.result = Constants.RESULT_GET_MY_LISTINGS_SUCCESS;
+				result.listings = (List<AdDto>)response;
+				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_MY_LISTINGS;
 		}
@@ -668,10 +671,10 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public BookmarksResultWrapper getBookmarkedListings(String token) throws IOException, XmlPullParserException{
+	public SearchListingResultWrapper getBookmarkedListings(String token) throws IOException, XmlPullParserException{
 		String SOAP_METHOD = WS_METHOD_GET_BOOKMARKED_ADS;
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
-		BookmarksResultWrapper result = new BookmarksResultWrapper();
+		SearchListingResultWrapper result = new SearchListingResultWrapper();
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
@@ -689,8 +692,12 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
 			Object response = envelope.getResponse();
-			result.bookmarks = (List<AdDto>)response;
-			result.result = Constants.RESULT_GET_BOOKMARKS_SUCCESS;
+			result.listings = (List<AdDto>)response;
+			if (result.listings == null || result.listings.size() == 0) {
+				result.result = Constants.ERROR_NO_BOOKMARKS;
+			} else {
+				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_BOOKMARKS;
 		}
@@ -705,11 +712,11 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public BookmarksResultWrapper removeBookmarkedListing(String token, long adId) throws IOException, XmlPullParserException{
+	public SearchListingResultWrapper removeBookmarkedListing(String token, long adId) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_REMOVE_BOOKMARK;
 
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
-		BookmarksResultWrapper result = new BookmarksResultWrapper();
+		SearchListingResultWrapper result = new SearchListingResultWrapper();
 
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
@@ -772,7 +779,11 @@ public class WSAction {
 
 			Object response = envelope.getResponse();
 			result.listings = (List<AdDto>)response;
-			result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+			if (result.listings == null || result.listings.size() == 0) {
+				result.result = Constants.ERROR_NO_DATA;
+			} else {
+				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_LISTINGS;
 		}
