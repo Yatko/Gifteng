@@ -46,6 +46,8 @@ public class Constants
 	public static final int ERROR_ENABLE_LOCATION_PROVIDER = 1038;
 	public static final int RESULT_BOOKMARKS_LISTING_SUCCESS = 1039;
 	public static final int ERROR_RESULT_BOOKMARKS_LISTING = 1040;
+	public static final int ERROR_NO_BOOKMARKS = 1041;
+	public static final int ERROR_CONFIRM_REMOVE_BOOKMARKS = 1042;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -127,6 +129,6 @@ public class Constants
 	
 
 	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
-			
+				
 			
 }
