@@ -4,91 +4,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<com.venefica.module.dashboard.SlideMenuView
-	    android:id="@+id/sideNavigationViewActSearchListing"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content" />
-	<RelativeLayout 
-	    android:id="@+id/layActSearchListingsMap"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:visibility="gone">
-	    <com.google.android.maps.MapView
-	        android:id="@+id/mapviewActSearchListings"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:apiKey="@string/google_map_api_key"
-	        android:clickable="true"
-	        />
-	    <LinearLayout android:id="@+id/layActSearchListingsToggle" 
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content" 
-	        android:layout_alignParentRight="true" 
-	        android:layout_alignParentBottom="true"/> 
-	</RelativeLayout>
+
+    <com.venefica.module.dashboard.SlideMenuView
+        android:id="@+id/sideNavigationViewActSearchListing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/layActSearchListingsMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <com.google.android.maps.MapView
+            android:id="@+id/mapviewActSearchListings"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:apiKey="@string/google_map_api_key"
+            android:clickable="true" />
+
+        <LinearLayout
+            android:id="@+id/layActSearchListingsToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:weightSum="100" >
+
+            <TextView
+                android:id="@+id/txtActSearchListingsTitleMap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="70"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/light_blue"
+                android:background="@color/transparent"
+                android:textSize="18sp"
+                android:text="@string/label_dashboard_browse"/>
+            <ImageButton 
+                android:id="@+id/btnActSearchListingsTile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:src="@drawable/icon_picture"/>
+        </LinearLayout>
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/layActSearchListingsTile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/black" >
 
-        <!-- <TextView
-            android:id="@+id/txtActBrowseCatSearch"
-            style="?LabelTitle"
-            android:gravity="left"
-            android:text="@string/label_browse_cat_search_listing" />
-
-        Divider line
-
-        <TextView
-            android:id="@+id/div_act_browse_01"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="#DADADA" /> -->
-
-        <!-- <EditText
-            android:id="@+id/edtActSearchListing"
-            style="?EditTextSingleLine"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/corners"
-            android:hint="@string/label_browse_cat_search_listing"
-            android:inputType="text" />
-
-        <Button
-            android:id="@+id/btnActSearchListing"
-            style="?ButtonFullWidth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="@string/label_search_listing_search" />
-        <TextView
-            android:id="@+id/txtActSearchListingTitle"
-            style="?LabelGroupTitle" 
-            android:visibility="gone"           
-            android:gravity="left" />
-        
-        Divider line
-
-        <TextView
-            android:id="@+id/div_act_search_listing_02"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="#DADADA" /> -->
-        
         <GridView
             android:id="@+id/listActSearchListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="2"
             android:layout_margin="5dp"
-            android:dividerHeight="2sp"/>
-        <LinearLayout android:id="@+id/layActSearchListingsToggleMap" 
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content" 
-	        android:layout_alignParentRight="true" 
-	        android:layout_alignParentBottom="true"/> 
+            android:dividerHeight="2sp"
+            android:numColumns="2" />
+
+        <LinearLayout
+            android:id="@+id/layActSearchListingsToggleMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/txtActSearchListingsTitleTile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="70"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/light_blue"
+                android:background="@color/transparent"
+                android:textSize="18sp"
+                android:text="@string/label_dashboard_browse" />
+            <ImageButton 
+                android:id="@+id/btnActSearchListingsMap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:src="@drawable/icon_globe"/>
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>
