@@ -190,7 +190,7 @@ public class BookmarkListingsActivity extends Activity {
 		@Override
 		protected BookmarksResultWrapper doInBackground(Integer... params) {
 			BookmarksResultWrapper wrapper = new BookmarksResultWrapper();
-			try{
+			/*try{
 				if(wsAction == null ){
 					wsAction = new WSAction();
 				}
@@ -205,7 +205,7 @@ public class BookmarkListingsActivity extends Activity {
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
 				Log.e("BookmarkTask::doInBackground :", e.toString());
-			}
+			}*/
 			return wrapper;
 		}
 		@Override
