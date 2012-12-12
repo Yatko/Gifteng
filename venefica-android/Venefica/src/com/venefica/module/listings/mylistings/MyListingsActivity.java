@@ -140,7 +140,7 @@ public class MyListingsActivity extends Activity {
 		@Override
 		protected MyListingsResultWrapper doInBackground(Integer... params) {
 			MyListingsResultWrapper wrapper = new MyListingsResultWrapper();
-			try{
+			/*try{
 				if(wsAction == null ){
 					wsAction = new WSAction();
 				}
@@ -152,7 +152,7 @@ public class MyListingsActivity extends Activity {
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
 				Log.e("MyListingsTask::doInBackground :", e.toString());
-			}
+			}*/
 			return wrapper;
 		}
     	
