@@ -8,13 +8,11 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.android.maps.MapView.LayoutParams;
 import com.google.android.maps.OverlayItem;
 import com.venefica.activity.R;
 import com.venefica.module.dashboard.ISlideMenuCallback;
@@ -22,7 +20,6 @@ import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingListAdapter;
 import com.venefica.module.listings.MapItemizedOverlay;
-import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
@@ -45,20 +42,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.AttributeSet;
+import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 public class SearchListingsActivity extends VeneficaMapActivity implements
 ISlideMenuCallback, LocationListener{
@@ -78,17 +73,21 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Constants to identify dialogs
 	 */
-	private final int D_PROGRESS = 1, D_ERROR = 2;
+	private final int D_PROGRESS = 1, D_ERROR = 2, D_CONFIRM = 3;
 	/**
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
-	private static final int ERROR_NO_RESULTS = 4001;
 	/**
 	 * Activity modes
 	 */
 	public static final int ACT_MODE_SEARCH = 3001;
 	public static final int ACT_MODE_SEARCH_BY_CATEGORY = 3002;
+	public static final int ACT_MODE_DOWNLOAD_BOOKMARKS = 3003;
+	public static final int ACT_MODE_REMOVE_BOOKMARK = 3004;
+	public static final int ERROR_CONFIRM_REMOVE_BOOKMARKS = 3005;
+	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3006;
+	private static int CURRENT_MODE;
 	/**
 	 * Selected category
 	 */
@@ -113,6 +112,7 @@ ISlideMenuCallback, LocationListener{
 	private ImageButton toggleButtonTile;
 	private LinearLayout toggleLayoutMap;
 	private ImageButton toggleButtonMap;
+	private TextView txtTitleTile, txtTitleMap;
 	private boolean isMapShown;
 	/**
 	 * Map 
@@ -127,12 +127,18 @@ ISlideMenuCallback, LocationListener{
 	 * exit flag
 	 */
 	private boolean isExit;
+	/**
+	 * selected listing
+	 */
+	private AdDto selectedListing;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_listings);
+        //set mode 
+        CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         //slide menu
         slideMenuView = (SlideMenuView) findViewById(R.id.sideNavigationViewActSearchListing);
 		slideMenuView.setMenuItems(R.menu.slide_menu);
@@ -156,13 +162,9 @@ ISlideMenuCallback, LocationListener{
         mapController.setZoom(12);
         
         //Toggle Button to view Tiles
-        toggleButtonTile = new ImageButton(this);
-        toggleButtonTile.setClickable(true);
-        toggleButtonTile.setImageResource(R.drawable.icon_picture);
-        toggleLayout = (LinearLayout) findViewById(R.id.layActSearchListingsToggle);
-        toggleLayout.addView(toggleButtonTile,  new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT));
+        txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
+        txtTitleTile.setText(getResources().getString(R.string.label_dashboard_browse));
+        toggleButtonTile = (ImageButton) findViewById(R.id.btnActSearchListingsTile);
         toggleButtonTile.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -179,13 +181,9 @@ ISlideMenuCallback, LocationListener{
 			}
 		});
       //Toggle Button to view Map
-        toggleButtonMap = new ImageButton(this);
-        toggleButtonMap.setClickable(true);
-        toggleButtonMap.setImageResource(R.drawable.icon_globe);
-        toggleLayoutMap = (LinearLayout) findViewById(R.id.layActSearchListingsToggleMap);
-        toggleLayoutMap.addView(toggleButtonMap,  new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, 
-                LayoutParams.WRAP_CONTENT));
+        txtTitleMap = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
+        txtTitleMap.setText(getResources().getString(R.string.label_dashboard_browse));
+        toggleButtonMap = (ImageButton) findViewById(R.id.btnActSearchListingsMap);
         toggleButtonMap.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -217,7 +215,17 @@ ISlideMenuCallback, LocationListener{
 				startActivity(intent);
 			}
 		});
-		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.locate_place), this);     				
+		gridViewListings.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				selectedListing = listings.get(position);
+				ERROR_CODE = ERROR_CONFIRM_REMOVE_BOOKMARKS;
+				showDialog(D_CONFIRM);
+				return false;
+			}
+		});
+		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.icon_location), this);     				
 		toggleMapView(false);
 		
     }
@@ -255,6 +263,14 @@ ISlideMenuCallback, LocationListener{
 	    location = locationManager.getLastKnownLocation(locProvider);
 	    updateMap(location);
 //	    new SearchListingTask().execute(ACT_MODE_SEARCH_BY_CATEGORY);
+	    new SearchListingTask().execute(CURRENT_MODE);
+	    if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS) {
+	    	txtTitleMap.setText(getResources().getText(R.string.label_bookmark_listing_title));
+	    	txtTitleTile.setText(getResources().getText(R.string.label_bookmark_listing_title));
+		}else if (CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
+			txtTitleMap.setText(getResources().getText(R.string.label_my_listing_title));
+	    	txtTitleTile.setText(getResources().getText(R.string.label_my_listing_title));
+		}
     }
     
     @Override
@@ -299,6 +315,33 @@ ISlideMenuCallback, LocationListener{
 			AlertDialog aDialog = builder.create();
 			return aDialog;
 		}
+    	if(id == D_CONFIRM){
+    		AlertDialog.Builder builder = new AlertDialog.Builder(SearchListingsActivity.this);
+			builder.setTitle(R.string.app_name);
+			builder.setIcon(R.drawable.ic_launcher);
+			builder.setMessage("");
+			builder.setCancelable(true);
+			
+			builder.setPositiveButton(R.string.label_btn_yes, new OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					//Delete when code id confirm to delete
+					if (ERROR_CODE == ERROR_CONFIRM_REMOVE_BOOKMARKS /*&& selectedListing != null*/) {
+						new SearchListingTask().execute(ACT_MODE_REMOVE_BOOKMARK);
+					}						
+					dismissDialog(D_CONFIRM);					
+				}
+			});
+			
+			builder.setNegativeButton(R.string.label_btn_no, new OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					dismissDialog(D_CONFIRM);
+				}
+			});
+			AlertDialog aDialog = builder.create();
+			return aDialog;
+		}
     	return null;
     }
     
@@ -313,10 +356,23 @@ ISlideMenuCallback, LocationListener{
 				message = (String) getResources().getText(R.string.error_network_02);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_LISTINGS){
 				message = (String) getResources().getText(R.string.error_search_listings);
-			}else if(ERROR_CODE == ERROR_NO_RESULTS){
+			}else if(ERROR_CODE ==Constants.ERROR_NO_DATA){
 				message = (String) getResources().getText(R.string.error_search_listings_no_data);
 			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
 				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_BOOKMARKS){
+				message = (String) getResources().getText(R.string.error_get_bookmarks);
+			}else if(ERROR_CODE == Constants.ERROR_NO_BOOKMARKS){
+				message = (String) getResources().getText(R.string.error_no_bookmarks);
+			}else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
+				message = (String) getResources().getText(R.string.msg_bookmark_confirm_delete)
+						/*+" " +selectedListing.getTitle() +" ?"*/;
+			}else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
+				message = (String) getResources().getText(R.string.msg_bookmark_delete_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_REMOVE_BOOKMARKS){
+				message = (String) getResources().getText(R.string.error_remove_bookmarks);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_MY_LISTINGS){
+				message = (String) getResources().getText(R.string.error_get_my_listings);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -342,6 +398,13 @@ ISlideMenuCallback, LocationListener{
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
 							, 1, 5, getFilterOptions());
+				}else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
+					wrapper = wsAction.getBookmarkedListings(((VeneficaApplication)getApplication()).getAuthToken());
+				}else if (params[0].equals(ACT_MODE_REMOVE_BOOKMARK)) {
+					/*wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, selectedListing.getId());*/
+				}else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
+					wrapper = wsAction.getMyListings(((VeneficaApplication)getApplication()).getAuthToken());
 				}
 			}catch (IOException e) {
 				Log.e("SearchListingTask::doInBackground :", e.toString());
@@ -360,14 +423,12 @@ ISlideMenuCallback, LocationListener{
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS && result.listings != null
 					&& result.listings.size() > 0) {
-//				listings.clear();
-				listings.addAll(result.listings);
+				ImageDownloadManager.getImageDownloadManagerInstance().reset();
+				listings.clear();
+				listings.addAll(result.listings);				
 				listingsListAdapter.notifyDataSetChanged();
-			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS 
-					&& (result.listings == null || result.listings.size() == 0)) {
-				ERROR_CODE = ERROR_NO_RESULTS;
-				showDialog(D_ERROR);
-			}else if (result.result == Constants.ERROR_RESULT_GET_LISTINGS) {
+				gridViewListings.invalidateViews();
+			}else {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
 			}
@@ -376,7 +437,7 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Method to set Filter for search listings
 	 * @return
-	 */
+	 */;
 	private FilterDto getFilterOptions(){
 		FilterDto filter = new FilterDto();
 		filter.setDistance(150);
@@ -617,5 +678,12 @@ ISlideMenuCallback, LocationListener{
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	/**
+	 * @return the cURRENT_MODE
+	 */
+	public static int getCURRENT_MODE() {
+		return CURRENT_MODE;
 	}
 }
