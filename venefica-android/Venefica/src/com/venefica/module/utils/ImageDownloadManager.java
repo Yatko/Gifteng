@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 /**
  * @author avinash
@@ -57,17 +58,18 @@ public class ImageDownloadManager {
 	    imageViews.clear();
 	}  
 
-	public void loadDrawable(final String url, final ImageView imageView,Drawable placeholder) {  
-	    imageViews.put(imageView, url);  
+	public void loadDrawable(final String url, final ImageView imageView,Drawable placeholder) {
+	    imageViews.put(imageView, url);
 	    Drawable drawable = getDrawableFromCache(url);  
 
 	    // check in UI thread, so no concurrency issues  
 	    if (drawable != null) {  
-	        //Log.d(null, "Item loaded from imgCache: " + url);  
 	        imageView.setImageDrawable(drawable);  
 	    } else {  
-	        imageView.setImageDrawable(placeholder);  
-	        queueJob(url, imageView, placeholder);  
+	        imageView.setImageDrawable(placeholder);
+	        if (url != null && URLUtil .isValidUrl(url)) {
+	        	queueJob(url, imageView, placeholder);
+	        }
 	    }  
 	} 
 
@@ -102,7 +104,6 @@ public class ImageDownloadManager {
 	                        imageView.setImageDrawable((Drawable) msg.obj);  
 	                    } else {  
 	                        imageView.setImageDrawable(placeholder);  
-	                        //Log.d(null, "fail " + url);  
 	                    } 
 	            }  
 	        }  
@@ -117,8 +118,6 @@ public class ImageDownloadManager {
 	            {
 	                Message message = Message.obtain();  
 	                message.obj = bmp;
-	                //Log.d(null, "Item downloaded: " + url);  
-
 	                handler.sendMessage(message);
 	            }
 	        }  
