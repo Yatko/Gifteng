@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,7 +20,7 @@ import android.widget.TextView;
  * @author avinash
  * Class to represent tile
  */
-public class ListingTileView extends LinearLayout implements View.OnClickListener{
+public class ListingTileView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener{
 	private TextView txtTitle, txtDesc, txtPrice;
 	private ImageButton imgBtnShare;
 	private ImageView imgView;
@@ -61,25 +63,55 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 		txtPrice.append(listing.getPrice().toString());
 //		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
-		ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
-				, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+		if (this.listing.getImage() != null) {
+			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
+					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+		}else {
+			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
+					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+		}	
 	}
 	/**
 	 * load image from url
 	 */
-	public void loadImage(){		
-		ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
+	public void loadImage(){
+		if (this.listing.getImage() != null) {
+			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
 				, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+		}else {
+			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
+					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+		}
 	}
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imgBtnListingTileShare) {			
-			
+			Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, this.listing.getTitle()+ " "+ this.listing.getDescription());
+			sendIntent.setType("text/plain");
+			getContext().startActivity(sendIntent);
 		}else{
 			Intent intent = new Intent(getContext(), ListingDetailsActivity.class);
 			intent.putExtra("ad_id", this.listing.getId());
-			intent.putExtra("mode", ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+			int mode = SearchListingsActivity.getCURRENT_MODE();
+			if (mode == SearchListingsActivity.ACT_MODE_DOWNLOAD_BOOKMARKS) {
+				mode = ListingDetailsActivity.ACT_MODE_BOOKMARK_LISTINGS;
+			} else if (mode == SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS) {
+				mode = ListingDetailsActivity.ACT_MODE_MY_LISTINGS_DETAILS;
+			}else if (mode == SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY) {
+				mode = ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS;
+			}
+			intent.putExtra("act_mode", mode);
 			getContext().startActivity(intent);
 		}
 	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
 }

@@ -110,7 +110,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         setContentView(R.layout.activity_listing_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //set activity mode
-        CURRENT_MODE = getIntent().getExtras().getInt("mode");
+        CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
         //user details
         txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
@@ -124,7 +124,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			
 			public void onClick(View v) {
 //				Utility.showShortToast(ListingDetailsActivity.this, getResources().getString(R.string.msg_detail_listing_add_fav_success));
-				if (listing.isOwner()&& !listing.isInBookmars()) {
+				if (!listing.isOwner()&& !listing.isInBookmars()) {
 					new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
 				}				
 			}
@@ -135,10 +135,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		// satellite or 2d mode
 		mapView.setSatellite(false);
 		mapView.setTraffic(true);
-        mapView.setSatellite(false);        
-		mapController = mapView.getController();
+        mapController = mapView.getController();
 		mapController.setZoom(8); // Zoom 1 is world view
-		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.locate_place), this);
+		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.icon_location), this);
 		
 		//Gallery
         gallery = (Gallery) findViewById(R.id.galleryActListingDetailsPhotos);
@@ -154,7 +153,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         galImageAdapter = new GalleryImageAdapter(this, drawables);
         gallery.setAdapter(galImageAdapter);
         if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
-			btnBookmark.setVisibility(View.GONE);			
+			btnBookmark.setClickable(false);			
 		}
         
     }
@@ -268,7 +267,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
-			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
+//			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
 			mapView.invalidate();
 		}	
 	}
@@ -301,7 +300,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     	switch (CURRENT_MODE) {
 		case ACT_MODE_MY_LISTINGS_DETAILS:
 			menu.findItem(R.id.menu_listing_delete).setVisible(true);
-			if (listing.isExpired()) {
+			if (listing != null && listing.isExpired()) {
 				menu.findItem(R.id.menu_listing_end).setVisible(false);
 				menu.findItem(R.id.menu_listing_relist).setVisible(true);
 				menu.findItem(R.id.menu_listing_update).setVisible(false);
@@ -337,6 +336,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
 		} else if (itemId == android.R.id.home) {
 			finish();
+		}else if (itemId == R.id.menu_listing_share) {
+			Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+			sendIntent.setType("text/plain");
+			startActivity(sendIntent);
 		}
     	return true;
     }
