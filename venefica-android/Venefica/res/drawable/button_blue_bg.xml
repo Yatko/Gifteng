@@ -23,8 +23,8 @@
 
             <gradient
                 android:angle="270.0"
-                android:endColor="#1E90FF"
-                android:startColor="#1E90FF" />
+                android:endColor="@color/light_blue"
+                android:startColor="@color/light_blue" />
         </shape>
     </item>
 
