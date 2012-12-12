@@ -421,6 +421,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 */
 	private void startHomeScreen(){
 		Intent intent = new Intent(this, SearchListingsActivity.class);
+		intent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
 		startActivity(intent);
 		finish();
 	}
