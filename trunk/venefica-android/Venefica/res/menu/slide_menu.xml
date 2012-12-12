@@ -17,6 +17,10 @@
         android:icon="@drawable/icon_database"
         android:title="@string/label_dashboard_offerings"/>
     <item
+        android:id="@+id/slideMenuBookmarks"
+        android:icon="@drawable/icon_star_10"
+        android:title="@string/label_bookmark_listing_title"/>
+    <item
         android:id="@+id/slideMenuMyListings"
         android:icon="@drawable/icon_tiles_large"
         android:title="@string/label_dashboard_my_listings"/>
