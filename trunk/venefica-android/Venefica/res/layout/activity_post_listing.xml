@@ -5,7 +5,6 @@
     android:layout_height="match_parent" >
 
     <LinearLayout
-        style="?ViewGroupBackground"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -16,19 +15,20 @@
         android:paddingBottom="6dp" >
 
         <TextView
-            style="?LabelTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_title"
             tools:context=".PostListingActivity" />
         <!-- Divider line -->
 
+
+        <!--
         <TextView
             android:id="@+id/divPost01"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#DADADA" />
-        <!-- Title -->
+        Title
 
         <TextView
             android:id="@+id/txtActPostListingListTitle"
@@ -36,124 +36,158 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_listing_title" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingListTitle"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/label_postlisting_listing_title"
             android:inputType="text" />
 
         <!-- Subtitle -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingSubTitle"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_subtitle" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingSubTitle"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:visibility="gone" />
 
         <!-- Category -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingCategory"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_category" />
+        -->
 
         <Button
             android:id="@+id/btnActPostListingCategory"
-            style="?ButtonFullWidth"
+            style="@style/ButtonFullWidthLightBlue"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="@string/label_postlisting_sel_category" />
 
         <!-- Description -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingDescription"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_description" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingDescription"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="textMultiLine"/>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/label_postlisting_description"
+            android:inputType="textMultiLine" />
 
         <!-- Condition -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingCondition"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_condition" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingCondition"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="textMultiLine"/>
+            android:inputType="textMultiLine"
+            android:visibility="gone" />
         <!-- Price -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingPrice"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_price" />
+        -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal"
             android:weightSum="100" >
 
             <EditText
                 android:id="@+id/edtActPostListingPrice"
-                style="?EditTextSingleLine"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="40"
-                android:background="@drawable/corners"
-                android:inputType="numberDecimal"/>
-
-            <Spinner
-                android:id="@+id/spinActPostListingCurrency"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="60"
+                android:hint="@string/label_postlisting_price"
+                android:inputType="numberDecimal" />
+
+            <Spinner
+                android:id="@+id/spinActPostListingCurrency"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="40"
                 android:entries="@array/array_currency_list" />
         </LinearLayout>
-         <!-- Expiary -->
+        <!-- Expiary -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingExpiary"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_expireson" />
+        -->
 
         <Button
             android:id="@+id/btnActPostListingAddExpiary"
-            style="?ButtonFullWidth"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            style="@style/ButtonFullWidthLightGray"
             android:layout_marginBottom="10dp" />
-        
+
         <!-- Photos -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingPhotos"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_photos" />
+        -->
 
         <Gallery
             android:id="@+id/galleryActPostListingPhotos"
@@ -163,11 +197,14 @@
             android:gravity="bottom"
             android:minHeight="90dp"
             android:padding="5dp"
-            android:spacing="5dp"  />
+            android:spacing="5dp"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/btnActPostListingAddPhotos"
-            style="?ButtonFullWidth"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            style="@style/ButtonFullWidthLightBlue"
             android:layout_marginBottom="10dp"
             android:text="@string/label_postlisting_add_photos" />
 
@@ -177,6 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="100" >
 
             <TextView
@@ -197,7 +235,7 @@
                 android:gravity="right"
                 android:src="@drawable/locate" />
         </LinearLayout>
-         <!-- Map -->
+        <!-- Map -->
 
         <com.google.android.maps.MapView
             android:id="@+id/mapviewActPostListingMapLocate"
@@ -208,110 +246,140 @@
             android:visibility="gone" />
         <!-- Latitude -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingLatitude"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_latitude" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingLatitude"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:visibility="gone" />
         <!-- Longitude -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingLongitude"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_longitude" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingLongitude"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="numberDecimal"/>
-       
+            android:inputType="numberDecimal"
+            android:visibility="gone" />
+
         <!-- Zip -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingZip"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_zip" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingZip"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
             android:inputType="number"
-            android:maxLength="6" />
-		<!-- State -->
+            android:maxLength="6"
+            android:visibility="gone" />
+        <!-- State -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingState"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_state" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingState"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:visibility="gone" />
         <!-- County -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingCounty"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_county" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingCounty"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:visibility="gone" />
 
         <!-- City -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingCity"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_city" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingCity"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text" />
+            android:inputType="text"
+            android:visibility="gone" />
 
         <!-- Area -->
 
-        <TextView
+
+        <!--
+             <TextView
             android:id="@+id/txtActPostListingArea"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_area" />
+        -->
 
         <EditText
             android:id="@+id/edtActPostListingArea"
             style="?EditTextSingleLine"
             android:background="@drawable/corners"
-            android:inputType="text" />
+            android:inputType="text"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnActPostListingPost"
-            style="?ButtonFullWidth"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            style="@style/ButtonFullWidthLightBlue"
             android:layout_marginBottom="10dp"
             android:text="@string/label_postlisting_post" />
     </LinearLayout>
