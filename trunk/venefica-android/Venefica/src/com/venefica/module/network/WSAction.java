@@ -3,7 +3,6 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -15,14 +14,14 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.venefica.market.Category;
-import com.venefica.market.Product;
-import com.venefica.module.listings.ListingData;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+
 import com.venefica.module.listings.ListingDetailsResultWrapper;
-import com.venefica.module.listings.bookmarks.BookmarksResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.browse.SearchListingResultWrapper;
-import com.venefica.module.listings.mylistings.MyListingsResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
@@ -31,33 +30,8 @@ import com.venefica.services.CategoryDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
-import com.venefica.services.ServicesManager.AuthenticateResult;
-import com.venefica.services.ServicesManager.BookmarkAdResult;
-import com.venefica.services.ServicesManager.DeleteAdResult;
-import com.venefica.services.ServicesManager.EndAdResult;
-import com.venefica.services.ServicesManager.GetAdByIdResult;
-import com.venefica.services.ServicesManager.GetAdsResult;
-import com.venefica.services.ServicesManager.GetBookmarkedAdsResult;
-import com.venefica.services.ServicesManager.GetCategoriesResult;
-import com.venefica.services.ServicesManager.GetMyAdsResult;
-import com.venefica.services.ServicesManager.GetUserResult;
-import com.venefica.services.ServicesManager.IsUserCompleteResult;
-import com.venefica.services.ServicesManager.PlaceAdResult;
-import com.venefica.services.ServicesManager.RegisterUserResult;
-import com.venefica.services.ServicesManager.RegisterUserReturn;
-import com.venefica.services.ServicesManager.RelistAdResult;
-import com.venefica.services.ServicesManager.RemoveBookmarkResult;
-import com.venefica.services.ServicesManager.SoapRequestResult;
-import com.venefica.services.ServicesManager.UpdateAdResult;
-import com.venefica.services.ServicesManager.UpdateUserResult;
-import com.venefica.services.ServicesManager.UpdateUserReturn;
 import com.venefica.utils.Constants;
 import com.venefica.utils.Utils;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
 
 /**
  * @author avinash Class to perform webservice operations.

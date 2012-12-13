@@ -5,16 +5,6 @@ import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.venefica.activity.R;
-import com.venefica.module.dashboard.DashBoardActivity;
-import com.venefica.module.listings.browse.SearchListingsActivity;
-import com.venefica.module.main.VeneficaActivity;
-import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.InputFieldValidator;
-import com.venefica.module.utils.Utility;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +22,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+
+import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
+import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash

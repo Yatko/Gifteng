@@ -1,8 +1,6 @@
 package com.venefica.module.listings.post;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,29 +10,20 @@ import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.venefica.activity.R;
-import com.venefica.module.listings.GalleryImageAdapter;
-import com.venefica.module.listings.ListingData;
-import com.venefica.module.listings.ListingDetailsActivity;
-import com.venefica.module.listings.ListingDetailsResultWrapper;
-import com.venefica.module.listings.browse.BrowseCategoriesActivity;
-import com.venefica.module.network.WSAction;
-import com.venefica.module.user.RegisterUserActivity;
-import com.venefica.module.utils.InputFieldValidator;
-import com.venefica.module.utils.Utility;
-import com.venefica.services.AdDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -47,19 +36,21 @@ import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.venefica.module.listings.GalleryImageAdapter;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
+import com.venefica.module.listings.browse.BrowseCategoriesActivity;
+import com.venefica.module.main.R;
+import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.AdDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash Activity to post listings/adds

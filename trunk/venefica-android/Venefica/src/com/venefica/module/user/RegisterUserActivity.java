@@ -11,36 +11,30 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.ksoap2.SoapFault;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.utils.Constants;
-import com.venefica.utils.Utils;
 import com.venefica.utils.VeneficaApplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;

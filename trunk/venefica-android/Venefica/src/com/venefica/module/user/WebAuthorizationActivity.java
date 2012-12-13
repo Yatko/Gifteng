@@ -15,7 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.utils.Constants;
 
 /**

@@ -3,9 +3,9 @@ package com.venefica.module.listings;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.venefica.activity.R;
-import com.venefica.activity.R.layout;
-import com.venefica.activity.R.menu;
+import com.venefica.module.main.R;
+import com.venefica.module.main.R.layout;
+import com.venefica.module.main.R.menu;
 
 import android.os.Bundle;
 import android.provider.MediaStore.Images;

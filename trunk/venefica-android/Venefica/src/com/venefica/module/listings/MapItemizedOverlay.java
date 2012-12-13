@@ -1,26 +1,19 @@
-/**
- * 
- */
 package com.venefica.module.listings;
 
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.venefica.activity.R;
 
 /**
  * @author avinash
- *
+ * Class to show overlay items on map.
  */
 public class MapItemizedOverlay extends ItemizedOverlay {
 	/**

@@ -2,7 +2,7 @@ package com.venefica.module.alert;
 
 import java.util.ArrayList;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.content.Context;
 import android.graphics.Typeface;

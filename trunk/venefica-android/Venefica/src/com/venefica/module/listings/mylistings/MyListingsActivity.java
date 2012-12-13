@@ -1,31 +1,26 @@
 package com.venefica.module.listings.mylistings;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.venefica.activity.R;
-import com.venefica.module.listings.ListingDetailsActivity;
-import com.venefica.module.listings.ListingListAdapter;
-import com.venefica.module.network.WSAction;
-import com.venefica.services.AdDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.venefica.module.listings.ListingDetailsActivity;
+import com.venefica.module.listings.ListingListAdapter;
+import com.venefica.module.main.R;
+import com.venefica.module.network.WSAction;
+import com.venefica.services.AdDto;
+import com.venefica.utils.Constants;
 
 public class MyListingsActivity extends Activity {
 	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3001;
