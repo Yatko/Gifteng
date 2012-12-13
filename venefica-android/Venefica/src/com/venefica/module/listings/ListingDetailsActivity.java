@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,6 @@ import com.venefica.module.main.R;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -82,6 +82,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     public static final int ACT_MODE_RELIST_LISTINGS = 4005;
     public static final int ACT_MODE_DELETE_LISTINGS = 4006;
     public static final int ACT_MODE_BOOKMARK_LISTINGS = 4007;
+    public static final int ACT_MODE_REMOVE_BOOKMARK = 4008;
+	
     /**
      * Current mode
      */
@@ -89,12 +91,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     /**
 	 * Constants to identify dialogs
 	 */
-	private final int D_PROGRESS = 1, D_ERROR = 2;	
+	private final int D_PROGRESS = 1, D_ERROR = 2, D_CONFIRM = 3;	
 	/**
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
-    /**
+	/**
      * Map 
      */
     private MapController mapController;
@@ -126,7 +128,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 //				Utility.showShortToast(ListingDetailsActivity.this, getResources().getString(R.string.msg_detail_listing_add_fav_success));
 				if (!listing.isOwner()&& !listing.isInBookmars()) {
 					new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
-				}				
+				} else if(!listing.isOwner()) {
+					ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
+					showDialog(D_CONFIRM);
+				}
 			}
 		});
 		//Map
@@ -152,9 +157,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         drawables = getImages();
         galImageAdapter = new GalleryImageAdapter(this, drawables);
         gallery.setAdapter(galImageAdapter);
-        if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
-			btnBookmark.setClickable(false);			
-		}
+        /*if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
+        	btnBookmark.setImageResource(R.drawable.icon_cancel);
+		}*/
         
     }
     
@@ -196,6 +201,32 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			});			
 			AlertDialog aDialog = builder.create();
 			return aDialog;
+		}if(id == D_CONFIRM){
+    		AlertDialog.Builder builder = new AlertDialog.Builder(ListingDetailsActivity.this);
+			builder.setTitle(R.string.app_name);
+			builder.setIcon(R.drawable.ic_launcher);
+			builder.setMessage("");
+			builder.setCancelable(true);
+			
+			builder.setPositiveButton(R.string.label_btn_yes, new OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					//Delete when code id confirm to delete
+					if (ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS /*&& selectedListing != null*/) {
+						new ListingDetailsTask().execute(ACT_MODE_REMOVE_BOOKMARK);
+					}						
+					dismissDialog(D_CONFIRM);					
+				}
+			});
+			
+			builder.setNegativeButton(R.string.label_btn_no, new OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					dismissDialog(D_CONFIRM);
+				}
+			});
+			AlertDialog aDialog = builder.create();
+			return aDialog;
 		}
     	return null;
     }
@@ -228,7 +259,14 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 				listing.setInBookmars(true);
 			}else if (ERROR_CODE == Constants.ERROR_RESULT_BOOKMARKS_LISTING) {
 				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_failed);
-			}    		
+			}else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
+				message = (String) getResources().getText(R.string.msg_bookmark_confirm_delete)
+						/*+" " +selectedListing.getTitle() +" ?"*/;
+			}else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
+				message = (String) getResources().getText(R.string.msg_bookmark_delete_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_REMOVE_BOOKMARKS){
+				message = (String) getResources().getText(R.string.error_remove_bookmarks);
+			}  		
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
@@ -373,6 +411,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 					wrapper = wsAction.deleteListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
 				}else if (params[0].equals(ACT_MODE_BOOKMARK_LISTINGS)) {
 					wrapper = wsAction.bookmarkListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+				}else if (params[0].equals(ACT_MODE_REMOVE_BOOKMARK)) {
+					wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, selectedListingId);
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
