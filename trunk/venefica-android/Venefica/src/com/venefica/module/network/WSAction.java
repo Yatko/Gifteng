@@ -686,11 +686,11 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public SearchListingResultWrapper removeBookmarkedListing(String token, long adId) throws IOException, XmlPullParserException{
+	public ListingDetailsResultWrapper removeBookmarkedListing(String token, long adId) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_REMOVE_BOOKMARK;
 
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
-		SearchListingResultWrapper result = new SearchListingResultWrapper();
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
 
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
@@ -728,6 +728,7 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
+	@SuppressWarnings("unchecked")
 	public SearchListingResultWrapper searchListings(String token, long lastAdId, long numberAds, FilterDto filter) throws IOException, XmlPullParserException{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_ADS;
 		SearchListingResultWrapper result = new SearchListingResultWrapper();
