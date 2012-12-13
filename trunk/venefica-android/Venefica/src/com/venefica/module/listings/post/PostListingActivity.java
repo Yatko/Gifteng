@@ -1,6 +1,8 @@
 package com.venefica.module.listings.post;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +21,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -35,9 +40,8 @@ import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.google.android.maps.MapActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -45,17 +49,20 @@ import com.venefica.module.listings.GalleryImageAdapter;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCategoriesActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 /**
- * @author avinash Activity to post listings/adds
+ * @author avinash 
+ * Activity to post listings/adds
  */
-public class PostListingActivity extends MapActivity implements LocationListener {
+public class PostListingActivity extends VeneficaMapActivity implements LocationListener {
 	/**
 	 * Field validator
 	 */
@@ -94,9 +101,9 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	/**
 	 * Text fields to collect listing data
 	 */
-	private TextView txtTitle, txtSubTitle, txtCategory, txtDescription,
+	/*private TextView txtTitle, txtSubTitle, txtCategory, txtDescription,
 			txtCondition, txtPrice, txtZip, txtState, txtCounty, txtCity, txtArea,
-			txtLatitude, txtLongitude;
+			txtLatitude, txtLongitude;*/
 	private Spinner spinCurrency;
 	/**
 	 * Gallery to images
@@ -141,12 +148,15 @@ public class PostListingActivity extends MapActivity implements LocationListener
 	 * Selected listing
 	 */
 	private long selectedListingId;
-	private WSAction wsAction;
+	private WSAction wsAction;	
 	private AdDto selectedListing;
+	private ImageDto image;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_post_listing);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		//set mode
 		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
 		//location manager 
@@ -229,7 +239,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		edtLatitude =  (EditText) findViewById(R.id.edtActPostListingLatitude);
 		edtLongitude = (EditText) findViewById(R.id.edtActPostListingLongitude);
 		
-		txtTitle = (TextView) findViewById(R.id.txtActPostListingListTitle);
+		/*txtTitle = (TextView) findViewById(R.id.txtActPostListingListTitle);
 		txtSubTitle = (TextView) findViewById(R.id.txtActPostListingSubTitle);
 		txtCategory = (TextView) findViewById(R.id.txtActPostListingCategory);
 		txtDescription = (TextView) findViewById(R.id.txtActPostListingDescription);
@@ -241,7 +251,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		txtCity = (TextView) findViewById(R.id.txtActPostListingCity);
 		txtArea = (TextView) findViewById(R.id.txtActPostListingArea);
 		txtLatitude = (TextView) findViewById(R.id.txtActPostListingLatitude);
-		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);
+		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);*/
 		
 		if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
 			selectedListingId = getIntent().getLongExtra("ad_id", 0);
@@ -291,7 +301,13 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+		}
+		return true;
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -307,10 +323,12 @@ public class PostListingActivity extends MapActivity implements LocationListener
 
 			}
 		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-            /*try {               
+            try {               
                 InputStream stream = getContentResolver().openInputStream(
                         data.getData());
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                image = new ImageDto(bitmap);
+                drawables.clear();
                 drawables.add(new BitmapDrawable(getResources(), bitmap));
                 galImageAdapter.notifyDataSetChanged();
                 stream.close();
@@ -318,7 +336,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
 	}
 	
@@ -481,6 +499,9 @@ public class PostListingActivity extends MapActivity implements LocationListener
 		listing.setWanted(false);
 		listing.setNumViews(0L);
 		listing.setRating(1.0f);
+		if (image != null) {
+			listing.setImage(image);
+		}
 		return listing;
 	}
 
@@ -522,42 +543,42 @@ public class PostListingActivity extends MapActivity implements LocationListener
     	
     	if(!vaildator.validateField(edtTitle, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
-    		message.append(txtTitle.getText().toString());
+    		message.append(getResources().getString(R.string.label_postlisting_title).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtSubTitle, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	/*if(!vaildator.validateField(edtSubTitle, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
     		message.append(txtSubTitle.getText().toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
-    	}
+    	}*/
     	if(categoryId == 0L){
     		result = false;
-    		message.append(txtCategory.getText().toString());
+    		message.append(getResources().getString(R.string.label_postlisting_category).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_category));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtDescription, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
-    		message.append(txtDescription.getText().toString());
+    		message.append(getResources().getString(R.string.label_postlisting_description).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtCondition, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	/*if(!vaildator.validateField(edtCondition, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
     		message.append(txtCondition.getText().toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
-    	}
+    	}*/
     	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.phonePatternRegx))){
     		result = false;
-    		message.append(txtPrice.getText().toString());
+    		message.append(getResources().getString(R.string.label_postlisting_price).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_phone));
     		message.append("\n");
@@ -576,7 +597,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}*/
-    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
+    	/*if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
     		result = false;
     		message.append(txtZip.getText().toString());
     		message.append("- ");
@@ -610,7 +631,7 @@ public class PostListingActivity extends MapActivity implements LocationListener
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
-    	}
+    	}*/
     	if (!result) {
 			Utility.showLongToast(this, message.toString());
 		}/*else{
