@@ -55,6 +55,7 @@ public class Constants
 	
 	//Location settings
 	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
+	public static final float LOCATION_UPDATE_MIN_DISTANCE = 1000;//meters
 	
 	public static final String MAIN_FOLDER = "Venefica";
 	public static final String TEMP_FOLDER = "Temp";
@@ -64,6 +65,7 @@ public class Constants
 	public static final int IMAGE_MAX_SIZE = 320;
 	public static final int IMAGE_THUMBNAILS_MAX_SIZE = 64;
 	public static final long GEOLOCATION_UPDATE_TIME_MS = 30 * 60 * 1000;
+	
 
 	//settings to connect to the server
 	public static final boolean USE_SSL_SERVICES_TRANSPORT = false;
@@ -129,6 +131,7 @@ public class Constants
 	
 
 	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
+	
 				
 			
 }
