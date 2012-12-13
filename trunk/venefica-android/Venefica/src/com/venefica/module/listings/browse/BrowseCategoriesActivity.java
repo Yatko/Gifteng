@@ -21,8 +21,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.services.CategoryDto;
 import com.venefica.utils.Constants;
@@ -33,7 +35,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to search by Categories
  */
-public class BrowseCategoriesActivity extends Activity {
+public class BrowseCategoriesActivity extends VeneficaActivity {
 
 	/**
 	 * List to show Categories
@@ -47,18 +49,13 @@ public class BrowseCategoriesActivity extends Activity {
 	 * Categories list
 	 */
 	private List<CategoryDto> categories;
-	/**
-	 * Bookmark and search buttons
-	 */
-	private Button btnBookmarks, btnSearch;
-	/**
+		/**
 	 * Activity modes
 	 */
 	public static final int ACT_MODE_GET_CATEGORY = 1001;
-	public static final int ACT_MODE_BROWSE_CATEGORY = 1002;
 	public static final int ACT_MODE_DOWNLOAD_CATEGORY = 1003;
 	
-	private int CURRENT_MODE = ACT_MODE_BROWSE_CATEGORY;
+	private int CURRENT_MODE = ACT_MODE_GET_CATEGORY;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -67,34 +64,15 @@ public class BrowseCategoriesActivity extends Activity {
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
-	/**
-	 * viewgroup to hold search box and button
-	 */
-	private ViewGroup laySearchOptions;
 	private WSAction wsAction;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_categories);
-        laySearchOptions = (ViewGroup) findViewById(R.id.layActBrowseCatSearchOptions);
-        btnBookmarks = (Button) findViewById(R.id.btnActBrowseCatBookmarks);
-        btnBookmarks.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				Intent bookmarkIntent = new Intent(BrowseCategoriesActivity.this, BookmarkListingsActivity.class);     
-		    	startActivity(bookmarkIntent);
-			}
-		});
-        btnSearch = (Button) findViewById(R.id.btnActBrowseCatSearchListings);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				Intent searchIntent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);     
-		    	startActivity(searchIntent);
-			}
-		});
-        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                
         listViewCategories = (ListView) findViewById(R.id.listActBrowseCatCategories);
 		listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -128,21 +106,12 @@ public class BrowseCategoriesActivity extends Activity {
 		categories = new ArrayList<CategoryDto>();
         categoriesListAdapter = new CategoryListAdapter(this, categories);
         listViewCategories.setAdapter(categoriesListAdapter);
-        CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_BROWSE_CATEGORY);
-        if (CURRENT_MODE == ACT_MODE_GET_CATEGORY) {
-        	hideSearchOptions();
-		}
+        CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_GET_CATEGORY);
         //Download categories list
         new BrowseTask().execute(ACT_MODE_DOWNLOAD_CATEGORY);
     }
 
-    /**
-     * Method to hide search and bookmark options
-     */
-    private void hideSearchOptions() {
-    	laySearchOptions.setVisibility(ViewGroup.GONE);
-	}
-
+    
     @Override
     protected Dialog onCreateDialog(int id) {
     	//Create progress dialog
@@ -193,7 +162,13 @@ public class BrowseCategoriesActivity extends Activity {
 		}    	
     }
     
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+		}
+		return true;
+	}
 
 	/**
 	 * 
