@@ -7,29 +7,16 @@ import java.net.URLDecoder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.venefica.activity.R;
-import com.venefica.activity.R.id;
-import com.venefica.activity.R.layout;
-import com.venefica.services.AsyncServices.CallbackReturn;
-import com.venefica.services.AsyncServices.ICallback;
-import com.venefica.services.AsyncServices.IsUserCompleteContext;
-import com.venefica.services.ServicesManager.IResult;
-import com.venefica.services.ServicesManager.IsUserCompleteResult;
-import com.venefica.skining.WebAuthorizationSkinDef;
-import com.venefica.skining.WebAuthorizationTemplate;
 import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash
