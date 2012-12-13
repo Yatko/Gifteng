@@ -3,7 +3,7 @@
  */
 package com.venefica.module.dashboard;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.module.alert.AlertListActivity;
 import com.venefica.module.listings.browse.BrowseCategoriesActivity;
 import com.venefica.module.listings.mylistings.MyListingsActivity;

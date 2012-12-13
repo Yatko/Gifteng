@@ -1,6 +1,6 @@
 package com.venefica.module.messages;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -2,7 +2,7 @@ package com.venefica.module.messages;
 
 import java.util.ArrayList;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.app.Activity;
 import android.content.Intent;

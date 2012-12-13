@@ -3,7 +3,7 @@
  */
 package com.venefica.module.dashboard;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

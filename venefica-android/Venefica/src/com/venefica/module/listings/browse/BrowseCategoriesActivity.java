@@ -2,39 +2,31 @@ package com.venefica.module.listings.browse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.venefica.activity.R;
-import com.venefica.module.dashboard.DashBoardActivity;
-import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
-import com.venefica.module.listings.post.PostListingActivity;
-import com.venefica.module.network.WSAction;
-import com.venefica.services.CategoryDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+
+import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
+import com.venefica.module.main.R;
+import com.venefica.module.network.WSAction;
+import com.venefica.services.CategoryDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * 

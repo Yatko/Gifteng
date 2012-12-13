@@ -4,7 +4,7 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.services.MessageDto;
 
 import android.content.Context;

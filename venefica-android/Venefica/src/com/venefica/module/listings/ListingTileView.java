@@ -1,6 +1,6 @@
 package com.venefica.module.listings;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

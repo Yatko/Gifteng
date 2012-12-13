@@ -19,8 +19,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 //import com.venefica.activity.PostStepLogic.PostData;
-import com.venefica.market.Category;
-import com.venefica.market.Product;
+
 import com.venefica.module.user.UserDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.Utils;
@@ -209,7 +208,7 @@ public class ServicesManager
 
 	}
 
-	public static class GetAdsResult extends IResult<List<Product>>
+	/*public static class GetAdsResult extends IResult<List<Product>>
 	{
 		public GetAdsResult(SoapRequestResult SoapResult, List<Product> Return)
 		{
@@ -221,7 +220,7 @@ public class ServicesManager
 
 		}
 
-	}
+	}*/
 
 	public static class AddImageToAdResult extends IResult<Long>
 	{
@@ -264,7 +263,7 @@ public class ServicesManager
 		}
 	}
 
-	public static class GetAdByIdResult extends IResult<Product>
+/*	public static class GetAdByIdResult extends IResult<Product>
 	{
 		public GetAdByIdResult(SoapRequestResult SoapResult, Product Return)
 		{
@@ -275,7 +274,7 @@ public class ServicesManager
 		{
 
 		}
-	}
+	}*/
 
 	public static class ChangePasswordResult extends IResult<Void>
 	{
@@ -316,7 +315,7 @@ public class ServicesManager
 		}
 	}
 
-	public static class GetBookmarkedAdsResult extends IResult<List<Product>>
+/*	public static class GetBookmarkedAdsResult extends IResult<List<Product>>
 	{
 		public GetBookmarkedAdsResult(SoapRequestResult SoapResult, List<Product> Return)
 		{
@@ -328,7 +327,7 @@ public class ServicesManager
 
 		}
 
-	}
+	}*/
 
 	public static class GetConnectedSocialNetworksResult extends IResult<List<eSocialNetworks>>
 	{
@@ -447,7 +446,7 @@ public class ServicesManager
 		}
 	}
 
-	public static class GetMyAdsResult extends IResult<List<Product>>
+/*	public static class GetMyAdsResult extends IResult<List<Product>>
 	{
 		public GetMyAdsResult(SoapRequestResult SoapResult, List<Product> Return)
 		{
@@ -458,7 +457,7 @@ public class ServicesManager
 		{
 
 		}
-	}
+	}*/
 
 	public static class RateAdResult extends IResult<Float>
 	{
@@ -1008,7 +1007,7 @@ public class ServicesManager
 		return result;
 	}*/
 	@Deprecated
-	public GetAdsResult GetAds(String token, long lastAdId, long numberAds, FilterDto filter)
+	/*public GetAdsResult GetAds(String token, long lastAdId, long numberAds, FilterDto filter)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + GET_ADS_METHOD;
 		GetAdsResult result = new GetAdsResult();
@@ -1083,7 +1082,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public AddImageToAdResult AddImageToAd(String token, long adId, Bitmap image)
 	{
@@ -1225,17 +1224,17 @@ public class ServicesManager
 		return result;
 	}
 
-	private void loadSubCategory(Category parentCat, Vector<CategoryDto> sub)
+	/*private void loadSubCategory(Category parentCat, Vector<CategoryDto> sub)
 	{
 		if (sub != null)
 		{
-			/*for (CategoryDto it : sub)
+			for (CategoryDto it : sub)
 			{
 				Category cat = parentCat.AddSubCategory((int)it.id, it.name);
 				loadSubCategory(cat, it.subcategories);
-			}*/
+			}
 		}
-	}
+	}*/
 	/*@Deprecated
 	public UpdateAdResult UpdateAd(String token, PostData Post)
 	{
@@ -1293,7 +1292,7 @@ public class ServicesManager
 		return result;
 	}*/
 	@Deprecated
-	public GetAdByIdResult GetAdById(String token, long adId)
+	/*public GetAdByIdResult GetAdById(String token, long adId)
 	{
 		final String SOAP_METHOD = GET_AD_BY_ID_METHOD;
 
@@ -1359,7 +1358,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public ChangePasswordResult ChangePassword(String token, String oldPassword, String newPassword)
 	{
@@ -1530,7 +1529,7 @@ public class ServicesManager
 		return result;
 	}
 
-	public GetBookmarkedAdsResult GetBookmarkedAds(String token)
+	/*public GetBookmarkedAdsResult GetBookmarkedAds(String token)
 	{
 		String SOAP_METHOD = GET_BOOKMARKED_ADS_METHOD;
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
@@ -1602,7 +1601,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public GetConnectedSocialNetworksResult GetConnectedSocialNetworks(String token)
 	{
@@ -2131,7 +2130,7 @@ public class ServicesManager
 		return result;
 	}
 
-	public GetMyAdsResult GetMyAds(String token)
+	/*public GetMyAdsResult GetMyAds(String token)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + GET_MY_ADS_METHOD;
 		GetMyAdsResult result = new GetMyAdsResult();
@@ -2201,7 +2200,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public RateAdResult RateAd(String token, long adId, int ratingValue)
 	{

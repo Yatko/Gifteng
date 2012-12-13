@@ -2,7 +2,8 @@ package com.venefica.module.alert;
 
 import java.util.ArrayList;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
+
 
 import android.app.Activity;
 import android.os.Bundle;

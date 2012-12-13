@@ -2,7 +2,7 @@ package com.venefica.utils;
 
 import java.util.List;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.content.Context;
 import android.util.Log;

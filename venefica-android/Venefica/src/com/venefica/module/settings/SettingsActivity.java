@@ -1,6 +1,6 @@
 package com.venefica.module.settings;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.os.Bundle;
 import android.app.Activity;

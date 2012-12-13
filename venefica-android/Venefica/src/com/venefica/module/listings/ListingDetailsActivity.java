@@ -29,7 +29,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;

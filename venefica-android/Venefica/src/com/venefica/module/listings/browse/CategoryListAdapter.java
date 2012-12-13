@@ -2,7 +2,7 @@ package com.venefica.module.listings.browse;
 
 import java.util.List;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.services.CategoryDto;
 
 import android.content.Context;

@@ -17,7 +17,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 public class Utils
 {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;

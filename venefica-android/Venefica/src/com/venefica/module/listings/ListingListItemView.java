@@ -1,6 +1,6 @@
 package com.venefica.module.listings;
 
-import com.venefica.activity.R;
+import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 

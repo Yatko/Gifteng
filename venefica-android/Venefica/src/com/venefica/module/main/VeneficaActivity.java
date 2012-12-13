@@ -4,11 +4,9 @@ import android.content.Intent;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.venefica.activity.R;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.browse.SearchListingsActivity;
-import com.venefica.module.listings.mylistings.MyListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.user.RegisterUserActivity;
