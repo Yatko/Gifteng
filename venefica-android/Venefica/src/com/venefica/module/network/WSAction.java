@@ -229,7 +229,7 @@ public class WSAction {
 			}
 		} catch (SoapFault e) {
 			String message = e.getMessage();
-			if (message.equalsIgnoreCase("EMAIL")) {
+			if (message.contains("User with the same email already exists!")) {
 				result = Constants.RESULT_REGISTER_USER_DUP_EMAIL;
 			} else if (message.equalsIgnoreCase("PHONE")) {
 				result = Constants.RESULT_REGISTER_USER_DUP_PHONE;
