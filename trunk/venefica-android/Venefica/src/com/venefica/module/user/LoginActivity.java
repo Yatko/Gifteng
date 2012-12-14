@@ -300,8 +300,9 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 * @return validation result
 	 */
 	private boolean validateInput(){
-		if(validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.charNumPatternRegx))
-				&& validator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+		if((validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.phonePatternRegx)) 
+				|| (validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.emailPatternRegx)))
+				&& validator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx)))){
 			return true;
 		}
 		return false;
@@ -317,6 +318,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		}
 		SharedPreferences.Editor editor = prefs.edit();
 		if (rememberUser) {
+			editor.putString(Constants.PREF_KEY_LOGIN_TYPE, Constants.PREF_VAL_LOGIN_VENEFICA);
 			editor.putString(Constants.PREF_KEY_LOGIN, edtLogin.getText().toString());
 			editor.putString(Constants.PREF_KEY_PASSWORD, edtPassword.getText().toString());
 		} else {
