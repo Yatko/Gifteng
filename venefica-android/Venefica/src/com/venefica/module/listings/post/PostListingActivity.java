@@ -201,10 +201,15 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			
 			public void onClick(View v) {
 				if (validateFields()) {
-					if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
-						new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
-					}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
-						new PostListingTask().execute(ACT_MODE_POST_LISTING);
+					if(WSAction.isNetworkConnected(PostListingActivity.this)){
+						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
+							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
+						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+							new PostListingTask().execute(ACT_MODE_POST_LISTING);
+						}
+					} else {
+						ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+						showDialog(D_ERROR);
 					}
 				}
 			}
@@ -362,7 +367,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
-					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS || ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS){
+					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS 
+							|| ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS
+							|| ERROR_CODE == Constants.ERROR_NETWORK_UNAVAILABLE){
 						finish();
 					}else if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
 						enableLocationSettings();
