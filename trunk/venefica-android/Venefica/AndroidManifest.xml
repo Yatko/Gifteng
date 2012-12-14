@@ -82,6 +82,7 @@
         <activity
             android:name="com.venefica.module.settings.SettingsActivity"
             android:label="@string/app_name"
+            android:icon="@drawable/icon_undo"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
