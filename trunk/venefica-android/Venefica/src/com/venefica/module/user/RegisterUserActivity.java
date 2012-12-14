@@ -13,8 +13,11 @@ import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
@@ -51,7 +54,7 @@ import android.widget.TextView;
  * @author avinash
  * Class for user registration activity.
  */
-public class RegisterUserActivity extends Activity implements OnClickListener{
+public class RegisterUserActivity extends VeneficaActivity implements OnClickListener{
 	/**
 	 * Input fields for user data.
 	 */
@@ -60,8 +63,7 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 	/**
 	 * Text labels for user data input fields.
 	 */
-	private TextView txtTitle,txtLogin, txtPassword, txtEmail, txtPhone, 
-	txtFirstName, txtLastName, txtDateOfBirth, txtZipCode, txtCounty, txtCity, txtArea, txtProfileImage;
+	private TextView txtTitle, txtProfileImage;
 	/**
 	 * Check box for business account type.
 	 */
@@ -139,7 +141,7 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 	/**
 	 * View groups
 	 */
-	private RelativeLayout layVerify, layJoin;
+	private RelativeLayout layVerify, layJoin, layUpdate;
 	/**
 	 * Buttons new layout
 	 */
@@ -156,6 +158,7 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
         //view groups
         layVerify = (RelativeLayout) findViewById(R.id.layActRegUserVerify);
         layJoin = (RelativeLayout) findViewById(R.id.layActRegUserJoin);
+        layUpdate = (RelativeLayout) findViewById(R.id.layActRegUserUpdate);
         //Buttons new design
         btnVerify = (Button) findViewById(R.id.btnActRegUserVerify);
         btnVerify.setOnClickListener(this);
@@ -172,17 +175,6 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
         
         //TextViews
         txtTitle = (TextView) findViewById(R.id.txtActRegUserHeader);
-        txtLogin = (TextView) findViewById(R.id.txtActRegUserLogin);
-        txtPassword = (TextView) findViewById(R.id.txtActRegUserPassword);
-        txtEmail = (TextView) findViewById(R.id.txtActRegUserEmail);
-        txtPhone = (TextView) findViewById(R.id.txtActRegUserPhone); 
-    	txtFirstName = (TextView) findViewById(R.id.txtActRegUserFName);
-    	txtLastName = (TextView) findViewById(R.id.txtActRegUserLName);
-    	txtDateOfBirth = (TextView) findViewById(R.id.txtActRegUserBirthDate);
-    	txtZipCode = (TextView) findViewById(R.id.txtActRegUserZip);
-    	txtCounty = (TextView) findViewById(R.id.txtActRegUserCounty);
-    	txtCity = (TextView) findViewById(R.id.txtActRegUserCity);
-    	txtArea = (TextView) findViewById(R.id.txtActRegUserArea);
     	txtProfileImage = (TextView) findViewById(R.id.txtActRegUserProfileImg);
     	
         //Profile image field
@@ -260,9 +252,9 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 			public void onClick(View v) {
 				if(btnRegOption.getText().toString().equals(getResources().getString(R.string.label_act_reg_user_btn_option_phone))){
 					btnRegOption.setText(getResources().getString(R.string.label_act_reg_user_btn_option_email));
-					showPhone();
+//					showPhone();
 				}else if(btnRegOption.getText().toString().equals(getResources().getString(R.string.label_act_reg_user_btn_option_email))){
-					showEmail();
+//					showEmail();
 					btnRegOption.setText(getResources().getString(R.string.label_act_reg_user_btn_option_phone));
 				}
 			}
@@ -273,10 +265,16 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 		} else if(CURRENT_MODE == MODE_REGISTER_USR){
         	//New user registration fields
 	        setProflieFieldsVisibility(View.GONE);
-	        showPhone();
+//	        showPhone();
         }else if(CURRENT_MODE == MODE_UPDATE_PROF){
+        	getSupportActionBar().setIcon(R.drawable.icon_undo);
+        	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        	layJoin.setVisibility(ViewGroup.GONE);
+			layVerify.setVisibility(ViewGroup.GONE);
+			layUpdate.setVisibility(ViewGroup.VISIBLE);
         	//update/ complete profile fields
         	setProflieFieldsVisibility(View.VISIBLE);
+        	
         	btnSignup.setText(getResources().getString(R.string.label_btn_save));
         	//get existing user details
         	new RegisterUserTask().execute(MODE_GET_USER+"");
@@ -367,7 +365,7 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 		btnRegOption.setVisibility(visibility== View.VISIBLE ? View.GONE :View.VISIBLE);
 		
     	edtLogin.setVisibility(visibility);
-    	edtPassword.setVisibility(visibility);
+//    	edtPassword.setVisibility(visibility);
     	edtEmail.setVisibility(visibility);
     	edtPhone.setVisibility(visibility); 
 		edtFirstName.setVisibility(visibility);
@@ -379,47 +377,14 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 		edtArea.setVisibility(visibility);
 		
 		txtProfileImage.setVisibility(visibility);
-		txtLogin.setVisibility(visibility);
-		txtPassword.setVisibility(visibility);
-		txtEmail.setVisibility(visibility);
-		txtPhone.setVisibility(visibility); 
-		txtFirstName.setVisibility(visibility);
-		txtLastName.setVisibility(visibility);
-		txtDateOfBirth.setVisibility(visibility);
-		txtZipCode.setVisibility(visibility);
-		txtCounty.setVisibility(visibility);
-		txtCity.setVisibility(visibility);
-		txtArea.setVisibility(visibility);
     }
     
-    /**
-     * Method to show Ui for register using phone no.
-     */
-    @Deprecated
-    private void showPhone(){
-    	//show phone
-    	txtPhone.setVisibility(View.VISIBLE);
-    	edtPhone.setVisibility(View.VISIBLE);
-    	//set login as per email/phone
-    	edtLogin.setText(edtPhone.getText().toString());
-    	byEmail = false;
-    	//Hide Email
-    	txtEmail.setVisibility(View.GONE);
-    	edtEmail.setVisibility(View.GONE);    	
-    }
-    /**
-     * Method to show Ui for register using email.
-     */
-    private void showEmail(){    	
-    	//show email
-    	txtEmail.setVisibility(View.VISIBLE);
-    	edtEmail.setVisibility(View.VISIBLE);
-    	//set login as per email/phone
-    	edtLogin.setText(edtEmail.getText().toString());
-    	byEmail = true;
-    	//hide phone
-    	txtPhone.setVisibility(View.GONE);
-    	edtPhone.setVisibility(View.GONE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == android.R.id.home) {
+			finish();
+		}
+    	return true;
     }
     
     /**
@@ -434,76 +399,76 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
     	}
     	if(!byEmail && !vaildator.validateField(edtLogin, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
     		result = false;
-    		message.append(txtLogin.getText().toString());
+    		message.append(getResources().getString(R.string.label_login).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.hint_user_password_pattern));
     		message.append("\n");
     	}else if(byEmail && !vaildator.validateField(edtLogin, Pattern.compile(InputFieldValidator.emailPatternRegx))){
     		result = false;
-    		message.append(txtLogin.getText().toString());
+    		message.append(getResources().getString(R.string.label_login).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_email));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+    	/*if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
     		result = false;
-    		message.append(txtPassword.getText().toString());
+    		message.append(getResources().getString(R.string.label_password).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.hint_user_password_pattern));
     		message.append("\n");
-    	}
+    	}*/
     	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
     		result = false;
-    		message.append(txtEmail.getText().toString());
+    		message.append(getResources().getString(R.string.label_email).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_email));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtPhone, Pattern.compile(InputFieldValidator.phonePatternRegx))){
     		result = false;
-    		message.append(txtPhone.getText().toString());
+    		message.append(getResources().getString(R.string.label_phone).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_phone));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtFirstName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
     		result = false;
-    		message.append(txtFirstName.getText().toString());
+    		message.append(getResources().getString(R.string.label_f_name).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtLastName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
     		result = false;
-    		message.append(txtLastName.getText().toString());
+    		message.append(getResources().getString(R.string.label_l_name).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtZipCode, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
     		result = false;
-    		message.append(txtZipCode.getText().toString());
+    		message.append(getResources().getString(R.string.label_zip).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_zipcode));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtCounty, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
-    		message.append(txtCounty.getText().toString());
+    		message.append(getResources().getString(R.string.label_county).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtCity, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
-    		message.append(txtCity.getText().toString());
+    		message.append(getResources().getString(R.string.label_city).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
     	if(!vaildator.validateField(edtArea, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
     		result = false;
-    		message.append(txtArea.getText().toString());
+    		message.append(getResources().getString(R.string.label_area).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
@@ -544,12 +509,7 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private void registerByPhone(){
-    	
-    }
-	private void registerByEmail(){
-		
-	}
+    
 	/**
 	 * Method to get user data from input fields
 	 */
@@ -655,7 +615,9 @@ public class RegisterUserActivity extends Activity implements OnClickListener{
 	 */
 	public void setUserData(User userData) {
 		chkBusinessAcc.setChecked(userData.isBusinessAcc());
-//		profileImage.setVisibility(visibility);
+		ImageDownloadManager.getImageDownloadManagerInstance()
+				.loadDrawable(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
+						, getResources().getDrawable(R.drawable.ic_launcher));
 		
     	edtLogin.setText(userData.getName());
 //    	edtPassword.setVisibility(visibility);
