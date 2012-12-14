@@ -7,7 +7,9 @@ import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
@@ -31,6 +33,7 @@ public class ImageDto implements KvmSerializable
 
 	}
 
+	@SuppressLint("NewApi")
 	public ImageDto(Bitmap image)
 	{
 		if (image == null)
@@ -46,6 +49,7 @@ public class ImageDto implements KvmSerializable
 		Log.i("imageDto", "data size - " + (float)data.length() / 1024.0f + " kb");
 	}
 
+	@SuppressLint("NewApi")
 	public ImageDto(Bitmap image, boolean Thumbnails)
 	{
 		if (image == null && Thumbnails == false)
@@ -202,4 +206,5 @@ public class ImageDto implements KvmSerializable
 	public void setId(long id) {
 		this.id = id;
 	}
+	
 }
