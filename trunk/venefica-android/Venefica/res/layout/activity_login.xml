@@ -70,8 +70,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/corners"
                 android:inputType="text"
-                android:hint="@string/label_login"
-                android:text="111111" />
+                android:hint="@string/label_login"/>
 
             <EditText
                 android:id="@+id/edtActLoginPassword"
@@ -81,8 +80,7 @@
                 android:layout_below="@id/edtActLoginUserId"
                 android:background="@drawable/corners"
                 android:inputType="textPassword"
-                android:hint="@string/label_password"
-                android:text="81064678" />
+                android:hint="@string/label_password" />
 
             <LinearLayout
                 android:id="@+id/layActLoginRemember"
