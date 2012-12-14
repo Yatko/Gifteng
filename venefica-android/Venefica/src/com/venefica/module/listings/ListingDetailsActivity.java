@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Gallery;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -34,6 +35,7 @@ import com.venefica.module.main.R;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -72,6 +74,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
      * Buttons
      */
     private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch;
+    private ImageView profImgView;
     /**
      * Modes
      */
@@ -118,6 +121,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
         txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
         txtScore = (TextView) findViewById(R.id.txtUserViewScore);
+        profImgView = (ImageView) findViewById(R.id.imgUserViewProfileImg);
         //Details
         txtDescription = (TextView) findViewById(R.id.txtActListingDesc);
         //Bookmark
@@ -278,6 +282,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		//Show on map
 		updateMap(listing.getLatitude(), listing.getLongitude(), listing.getTitle(), "");
 		//set user info
+		ImageDownloadManager.getImageDownloadManagerInstance()
+			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
+				, getResources().getDrawable(R.drawable.ic_launcher));
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
 		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
 		txtScore.setText(getResources().getText(R.string.label_detail_listing_score).toString()/*listing.getCreator()*/);
@@ -327,7 +334,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	@Override
+	protected void onStop() {
+		ImageDownloadManager.getImageDownloadManagerInstance().reset();
+		super.onStop();
+	}
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	getSupportMenuInflater().inflate(R.menu.activity_listing_details, menu);
