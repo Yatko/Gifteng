@@ -111,7 +111,7 @@ ISlideMenuCallback, LocationListener{
 	private ImageButton toggleButtonTile;
 	private LinearLayout toggleLayoutMap;
 	private ImageButton toggleButtonMap;
-	private TextView txtTitleTile, txtTitleMap;
+	private TextView txtTitleTile/*, txtTitleMap*/;
 	private boolean isMapShown;
 	/**
 	 * Map 
@@ -180,8 +180,8 @@ ISlideMenuCallback, LocationListener{
 			}
 		});
       //Toggle Button to view Map
-        txtTitleMap = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
-        txtTitleMap.setText(getResources().getString(R.string.label_dashboard_browse));
+//        txtTitleMap = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
+//        txtTitleMap.setText(getResources().getString(R.string.label_dashboard_browse));
         toggleButtonMap = (ImageButton) findViewById(R.id.btnActSearchListingsMap);
         toggleButtonMap.setOnClickListener(new View.OnClickListener() {
 			
@@ -202,7 +202,7 @@ ISlideMenuCallback, LocationListener{
         //List and tile view
         tileLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsTile);
         gridViewListings = (GridView) findViewById(R.id.listActSearchListings);
-        listings = getDemoListings();
+        listings = new ArrayList<AdDto>()/*getDemoListings()*/;
         
 		listingsListAdapter = new ListingListAdapter(this, listings, true);
 		gridViewListings.setAdapter(listingsListAdapter);
@@ -251,12 +251,17 @@ ISlideMenuCallback, LocationListener{
 	    //Get last location
 	    location = locationManager.getLastKnownLocation(locProvider);
 	    updateMap(location);
-	    new SearchListingTask().execute(CURRENT_MODE);
+	    if(WSAction.isNetworkConnected(this)){
+	    	new SearchListingTask().execute(CURRENT_MODE);
+	    }else{
+	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+	    	showDialog(D_ERROR);	 
+	    }
 	    if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS) {
-	    	txtTitleMap.setText(getResources().getText(R.string.label_bookmark_listing_title));
+//	    	txtTitleMap.setText(getResources().getText(R.string.label_bookmark_listing_title));
 	    	txtTitleTile.setText(getResources().getText(R.string.label_bookmark_listing_title));
 		}else if (CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
-			txtTitleMap.setText(getResources().getText(R.string.label_my_listing_title));
+//			txtTitleMap.setText(getResources().getText(R.string.label_my_listing_title));
 	    	txtTitleTile.setText(getResources().getText(R.string.label_my_listing_title));
 		}
     }

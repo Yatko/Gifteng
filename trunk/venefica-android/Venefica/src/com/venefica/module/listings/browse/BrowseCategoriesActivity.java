@@ -108,7 +108,13 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
         listViewCategories.setAdapter(categoriesListAdapter);
         CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_GET_CATEGORY);
         //Download categories list
-        new BrowseTask().execute(ACT_MODE_DOWNLOAD_CATEGORY);
+        if (WSAction.isNetworkConnected(this)) {
+        	new BrowseTask().execute(ACT_MODE_DOWNLOAD_CATEGORY);
+		} else {
+			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+			showDialog(D_ERROR);
+		}
+        
     }
 
     
@@ -134,7 +140,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
-					if(ERROR_CODE == Constants.RESULT_POST_LISTING_SUCCESS){
+					if(ERROR_CODE == Constants.ERROR_NETWORK_UNAVAILABLE){
 						finish();
 					}else {
 					}
