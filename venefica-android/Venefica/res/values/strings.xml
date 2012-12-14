@@ -107,8 +107,8 @@
     <string name="label_menu_bookmark">Bookmark</string>
     <string name="label_update">Update</string>
     <string name="label_filter">Filter</string>
-	<string name="label_share">Share</string>
-	<string name="label_filter_setting">Filter Settings</string>
+    <string name="label_share">Share</string>
+    <string name="label_filter_setting">Filter Settings</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -129,7 +129,6 @@
     <string name="error_search_listings">Unable to get listings. Please try again later.</string>
     <string name="error_update_listing">Unable to update listing. Please try again later.</string>
     <string name="error_search_listings_no_data">No listings found.</string>
-    
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
@@ -149,26 +148,52 @@
     <string name="msg_postlisting_locate">Locate on map</string>
     <string name="msg_detail_listing_add_fav_success">Bookmarks added successfully.</string>
     <string name="msg_detail_listing_add_fav_failed">Unable to add bookmark. Please try again later.</string>
-	<string name="msg_postlisting_success">Listing created successfully. You can view posted listings in MyListings section.</string>
-	<string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
-	<string name="msg_postlisting_provider_disabled"> has been disabled.</string>
-	<string name="msg_postlisting_enable_provider">GPS is not active. Please enable GPS to get location.</string>
-	<string name="msg_end_listing_success">Listing ended successfully.</string>
-	<string name="msg_relist_listing_success">Listing relisted successfully.</string>
-	<string name="msg_delete_listing_success">Listing deleted successfully.</string>
-	<string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
-	<string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
-	<string name="msg_postlisting_update_success">Listing updated successfully.</string>
-	<string name="msg_app_exit">Press again to exit.</string>
-	<string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
-	<string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
-	
+    <string name="msg_postlisting_success">Listing created successfully. You can view posted listings in MyListings section.</string>
+    <string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
+    <string name="msg_postlisting_provider_disabled"> has been disabled.</string>
+    <string name="msg_postlisting_enable_provider">GPS is not active. Please enable GPS to get location.</string>
+    <string name="msg_end_listing_success">Listing ended successfully.</string>
+    <string name="msg_relist_listing_success">Listing relisted successfully.</string>
+    <string name="msg_delete_listing_success">Listing deleted successfully.</string>
+    <string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
+    <string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
+    <string name="msg_postlisting_update_success">Listing updated successfully.</string>
+    <string name="msg_app_exit">Press again to exit.</string>
+    <string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
+    <string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
+
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
     <string name="hint_search_listing">Search Listings...</string>
     <!-- Titles -->
     <string name="app_name">Venefica</string>
+
+    <!-- Pref -->
+    <string name="pref_connect">Connect</string>
+    <string name="pref_connect_summ">We will never post anything without your permission.</string>
+    
+    <string name="pref_connect_facebook">Facebook</string>
+    <string name="pref_key_facebook">pref_key_connect_facebook</string>
+    <string name="pref_connect_twitter">Twitter</string>
+    <string name="pref_key_twitter">pref_key_connect_twitter</string>
+    
+    <string name="pref_notifications">Notifications</string>
+    <string name="pref_notifications_listing">Listing</string>
+    <string name="pref_key_notification_listing">pref_key_notification_listing</string>
+    <string name="pref_notifications_messages">Messages</string>
+    <string name="pref_key_notification_messages">pref_key_notification_messages</string>
+    <string name="pref_notifications_feedback">Feedback</string>
+    <string name="pref_key_notification_feedback">pref_key_notification_feedback</string>
+    
+    <string name="pref_privacy_settings">Privacy Settings</string>
+    <string name="pref_privacy_settings_email_alerts">Email Alerts</string>
+    <string name="pref_key_privacy_settings_email_alerts">pref_key_privacy_settings_email_alerts</string>
+    <string name="pref_privacy_settings_text_alerts">Text Message Alerts</string>
+    <string name="pref_key_privacy_settings_text_alerts">pref_key_privacy_settings_text_alerts</string>
+    <string name="pref_privacy_settings_stay_logged_in">Stay Logged In</string>
+    <string name="pref_key_privacy_settings_stay_logged_in">pref_key_privacy_settings_stay_logged_in</string>
+    
     <!-- Data -->
     <!-- Dashboard menu list -->
     <string-array name="array_dashboard_menu">
@@ -204,11 +229,10 @@
         <item>GBP</item>
         <item>EUR</item>
     </string-array>
-	<!-- codes -->
-	<string name="code_category_other">other</string>
-	<string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
-	
-	
+    <!-- codes -->
+    <string name="code_category_other">other</string>
+    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+
     <!-- Old strings -->
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
@@ -235,7 +259,6 @@
     <string name="filter">Filter</string>
     <string name="search">Sr</string>
     <string name="search_hint">Search for sale or offered</string>
-    
     <string name="zero_num">0</string>
     <string name="messages">Messages</string>
     <string name="welcome">Welcome</string>
