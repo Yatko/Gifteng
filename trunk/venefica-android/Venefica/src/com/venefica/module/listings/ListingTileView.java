@@ -4,9 +4,11 @@ import com.venefica.module.main.R;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
+import com.venefica.utils.Constants;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -62,25 +64,15 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 //		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
 		if (this.listing.getImage() != null) {
-			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
+			ImageDownloadManager.getImageDownloadManagerInstance()
+					.loadDrawable(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
 					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
 		}else {
 			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
 					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
 		}	
 	}
-	/**
-	 * load image from url
-	 */
-	public void loadImage(){
-		if (this.listing.getImage() != null) {
-			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(this.listing.getImage().getUrl()
-				, imgView, getResources().getDrawable(R.drawable.ic_launcher));
-		}else {
-			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
-					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
-		}
-	}
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imgBtnListingTileShare) {			
@@ -101,6 +93,7 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 				mode = ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS;
 			}
 			intent.putExtra("act_mode", mode);
+			ImageDownloadManager.getImageDownloadManagerInstance().reset();
 			getContext().startActivity(intent);
 		}
 	}
