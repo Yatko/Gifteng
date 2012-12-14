@@ -23,7 +23,7 @@ public class User {
 	private String area = "";
 	private String avatarUrl;
 	private boolean useMiles = true;
-
+	private ImageDto avatar;
 	public User() {
 
 	}
@@ -44,6 +44,7 @@ public class User {
 		if (dto.getAvatar() != null && dto.getAvatar().url != null
 				&& dto.getAvatar().url.equals("") == false) {
 			avatarUrl = Constants.PHOTO_URL_PREFIX + dto.getAvatar().url;
+			setAvatar(dto.getAvatar());
 		} else {
 			avatarUrl = "";
 		}
@@ -244,5 +245,19 @@ public class User {
 	 */
 	public void setUseMiles(boolean useMiles) {
 		this.useMiles = useMiles;
+	}
+
+	/**
+	 * @return the avatar
+	 */
+	public ImageDto getAvatar() {
+		return avatar;
+	}
+
+	/**
+	 * @param avatar the avatar to set
+	 */
+	public void setAvatar(ImageDto avatar) {
+		this.avatar = avatar;
 	}
 }
