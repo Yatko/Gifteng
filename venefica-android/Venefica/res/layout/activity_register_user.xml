@@ -278,9 +278,9 @@
                 android:gravity="center"
                 android:text="@string/msg_reguser_terms" />
         </RelativeLayout>
-
+		<!-- Update user profile -->
         <RelativeLayout
-            style="?ViewGroupBackground"
+            android:id="@+id/layActRegUserUpdate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -292,7 +292,6 @@
 
             <TextView
                 android:id="@+id/txtActRegUserHeader"
-                style="?LabelTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -310,8 +309,8 @@
 
             <ImageView
                 android:id="@+id/imgActRegUserProfileImg"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
                 android:layout_below="@id/divRegUser01"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
@@ -322,9 +321,9 @@
 
             <TextView
                 android:id="@+id/txtActRegUserProfileImg"
-                style="?LabelGroupTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_alignTop="@id/imgActRegUserProfileImg"
                 android:layout_toRightOf="@id/imgActRegUserProfileImg"
                 android:text="@string/label_profile_image" />
@@ -339,70 +338,86 @@
                 android:clickable="true" />
             <!-- Login -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserLogin"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgActRegUserProfileImg"
-                android:text="@string/label_login" />
+                android:text="@string/label_login" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserLogin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserLogin"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/imgActRegUserProfileImg"
                 android:background="@drawable/corners"
-                android:inputType="text" />
+                android:inputType="text" 
+                android:hint="@string/label_login"/>
 
             <!-- Password -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserPassword"
                 style="?LabelEditText"
                 android:layout_below="@+id/edtActRegUserLogin"
-                android:text="@string/label_password" />
+                android:text="@string/label_password" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserPassword"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserLogin"
                 android:background="@drawable/corners"
                 android:inputType="textPassword"
-                android:text="123456" />
+                android:hint="@string/label_password"
+                android:visibility="gone" />
 
             <!-- Email -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserEmail"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserPassword"
-                android:text="@string/label_email" />
+                android:text="@string/label_email" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserEmail"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserPassword"
                 android:background="@drawable/corners"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:hint="@string/label_email" />
 
             <!-- Phone -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserPhone"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserEmail"
-                android:text="@string/label_phone" />
+                android:text="@string/label_phone" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserPhone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserPhone"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserEmail"
                 android:background="@drawable/corners"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:hint="@string/label_phone" />
 
             <Button
                 android:id="@+id/btnActRegUserOption"
@@ -417,123 +432,151 @@
                 android:text="@string/label_act_reg_user_btn_option_email" />
             <!-- F NAME -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserFName"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btnActRegUserOption"
-                android:text="@string/label_f_name" />
+                android:text="@string/label_f_name" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserFName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserFName"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/btnActRegUserOption"
                 android:background="@drawable/corners"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:hint="@string/label_f_name" />
 
             <!-- L NAME -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserLName"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserFName"
-                android:text="@string/label_l_name" />
+                android:text="@string/label_l_name" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserLName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserLName"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserFName"
                 android:background="@drawable/corners"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:hint="@string/label_l_name" />
 
             <!-- DOB -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserBirthDate"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserLName"
-                android:text="@string/label_birth" />
+                android:text="@string/label_birth" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserBirthDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserBirthDate"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserLName"
                 android:background="@drawable/corners"
-                android:inputType="date" />
+                android:inputType="date"
+                android:hint="@string/label_birth" />
 
             <!-- ZIP -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserZip"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserBirthDate"
-                android:text="@string/label_zip" />
+                android:text="@string/label_zip" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserZip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserZip"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserBirthDate"
                 android:background="@drawable/corners"
                 android:inputType="number"
-                android:maxLength="6" />
+                android:maxLength="6"
+                android:hint="@string/label_zip" />
 
             <!-- County -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserCounty"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserZip"
-                android:text="@string/label_county" />
+                android:text="@string/label_county" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserCounty"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserCounty"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserZip"
                 android:background="@drawable/corners"
-                android:inputType="text" />
+                android:inputType="text"
+                android:hint="@string/label_county" />
 
             <!-- City -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserCity"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserCounty"
-                android:text="@string/label_city" />
+                android:text="@string/label_city" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserCity"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserCity"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserCounty"
                 android:background="@drawable/corners"
-                android:inputType="text" />
+                android:inputType="text"
+                android:hint="@string/label_city" />
 
             <!-- Area -->
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtActRegUserArea"
                 style="?LabelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/edtActRegUserCity"
-                android:text="@string/label_area" />
+                android:text="@string/label_area" /> -->
 
             <EditText
                 android:id="@+id/edtActRegUserArea"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_text_height"
                 style="?EditTextSingleLine"
-                android:layout_below="@id/txtActRegUserArea"
+                android:layout_marginBottom="7dp"
+                android:layout_below="@id/edtActRegUserCity"
                 android:background="@drawable/corners"
-                android:inputType="text" />
+                android:inputType="text"
+                android:hint="@string/label_area" />
 
             <!-- Business ACC -->
 
@@ -546,7 +589,6 @@
                 android:layout_gravity="left"
                 android:checked="false"
                 android:text="@string/label_business_acc"
-                android:textColor="#ff702963"
                 android:textStyle="bold" />
 
             <!-- Divider line -->
@@ -560,9 +602,10 @@
 
             <Button
                 android:id="@+id/btnActRegUserSignUp"
-                style="?ButtonFullWidth"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                style="@style/ButtonFullWidthLightBlue"
                 android:layout_below="@+id/divRegUser02"
-                android:background="@drawable/button_green_bg_selector"
                 android:text="@string/label_act_reg_user_btn_join" />
         </RelativeLayout>
     </LinearLayout>
