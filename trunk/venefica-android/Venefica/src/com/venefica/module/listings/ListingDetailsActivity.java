@@ -336,7 +336,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 	}
 	@Override
 	protected void onStop() {
-		ImageDownloadManager.getImageDownloadManagerInstance().reset();
+//		ImageDownloadManager.getImageDownloadManagerInstance().reset();
 		super.onStop();
 	}
 	@Override
