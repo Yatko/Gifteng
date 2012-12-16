@@ -216,7 +216,14 @@ ISlideMenuCallback, LocationListener{
 		});		
 		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.icon_location), this);     				
 		toggleMapView(false);
-		
+		if(WSAction.isNetworkConnected(this)){
+			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+				new SearchListingTask().execute(CURRENT_MODE);
+			}	    	
+	    }else{
+	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+	    	showDialog(D_ERROR);	 
+	    }
     }
         
     /**
@@ -252,7 +259,9 @@ ISlideMenuCallback, LocationListener{
 	    location = locationManager.getLastKnownLocation(locProvider);
 	    updateMap(location);
 	    if(WSAction.isNetworkConnected(this)){
-	    	new SearchListingTask().execute(CURRENT_MODE);
+	    	if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
+	    		new SearchListingTask().execute(CURRENT_MODE);
+			}	    	
 	    }else{
 	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
 	    	showDialog(D_ERROR);	 
@@ -277,9 +286,14 @@ ISlideMenuCallback, LocationListener{
     @Override
     protected void onStop() {
         super.onStop();
-        //Stop image loading thread
+        //Stop location updates
         locationManager.removeUpdates(this);
-        ImageDownloadManager.getImageDownloadManagerInstance().reset();
+    }
+    @Override
+    protected void onDestroy() {
+    	//stop image loading thread
+    	ImageDownloadManager.getImageDownloadManagerInstance().reset();
+    	super.onDestroy();
     }
 	@Override
     protected Dialog onCreateDialog(int id) {
@@ -381,11 +395,9 @@ ISlideMenuCallback, LocationListener{
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS && result.listings != null
 					&& result.listings.size() > 0) {
-				ImageDownloadManager.getImageDownloadManagerInstance().reset();
 				listings.clear();
 				listings.addAll(result.listings);				
 				listingsListAdapter.notifyDataSetChanged();
-				gridViewListings.invalidateViews();
 			}else {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
@@ -652,6 +664,5 @@ ISlideMenuCallback, LocationListener{
 	private void clearUIWhenNoData(){
 		listings.clear();			
 		listingsListAdapter.notifyDataSetChanged();
-		gridViewListings.invalidateViews();
 	}
 }
