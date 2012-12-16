@@ -1,9 +1,7 @@
 package com.venefica.module.user;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,7 +34,6 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -485,27 +482,23 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
      * Get image
      */
     private void pickImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+    	intent.setType("image/*");
+    	intent.putExtra("crop", "true");
+    	intent.putExtra("aspectX", 1);
+    	intent.putExtra("aspectY", 1);
+    	intent.putExtra("outputX", 360);
+    	intent.putExtra("outputY", 360);
+    	intent.putExtra("scale", true);
+    	intent.putExtra("return-data", true);
         startActivityForResult(intent, REQ_GET_IMAGE);
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-            try {               
-                InputStream stream = getContentResolver().openInputStream(
-                        data.getData());
-                profileBitmap = BitmapFactory.decodeStream(stream);
-                profileImage.setImageBitmap(profileBitmap);
-                stream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            profileBitmap = (Bitmap)data.getExtras().getParcelable("data");
+            profileImage.setImageBitmap(profileBitmap);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
