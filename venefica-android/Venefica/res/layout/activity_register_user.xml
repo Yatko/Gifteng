@@ -311,6 +311,7 @@
                 android:id="@+id/imgActRegUserProfileImg"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
+                android:scaleType="centerCrop"
                 android:layout_below="@id/divRegUser01"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
