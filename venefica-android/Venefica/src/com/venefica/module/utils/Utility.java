@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 
+import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
+
 import com.venefica.utils.Constants;
 
 import android.accounts.Account;
@@ -133,5 +136,17 @@ public class Utility {
 	 */
 	public static String convertShortDateToString(Date date){
 		return Constants.dateFormat.format(date);
+	}
+	
+	/**
+	 * Get service transport type
+	 * @param url
+	 * @return
+	 */
+	public static HttpTransportSE getServicesTransport(String url){
+		if (Constants.USE_SSL_SERVICES_TRANSPORT)
+			return new HttpsTransportSE(url);
+		else
+			return new HttpTransportSE(url);
 	}
 }
