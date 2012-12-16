@@ -15,4 +15,7 @@
 
     <dimen name="edit_text_height">60dp</dimen>
     <dimen name="button_height">60dp</dimen>
+    
+    <dimen name="image_thumbnail_size">100dp</dimen>
+    <dimen name="image_thumbnail_spacing">1dp</dimen>
 </resources>
