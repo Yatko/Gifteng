@@ -328,20 +328,11 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 
 			}
 		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-            try {               
-                InputStream stream = getContentResolver().openInputStream(
-                        data.getData());
-                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data")/*BitmapFactory.decodeStream(stream)*/;
                 image = new ImageDto(bitmap);
                 drawables.clear();
                 drawables.add(new BitmapDrawable(getResources(), bitmap));
                 galImageAdapter.notifyDataSetChanged();
-                stream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 	}
 	
@@ -650,10 +641,15 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
      * Get image
      */
     private void pickImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+    	intent.setType("image/*");
+    	intent.putExtra("crop", "true");
+    	intent.putExtra("aspectX", 1);
+    	intent.putExtra("aspectY", 1);
+    	intent.putExtra("outputX", 360);
+    	intent.putExtra("outputY", 360);
+    	intent.putExtra("scale", true);
+    	intent.putExtra("return-data", true);
         startActivityForResult(intent, REQ_GET_IMAGE);
     }
     private void setListingDetails(AdDto listing) {
