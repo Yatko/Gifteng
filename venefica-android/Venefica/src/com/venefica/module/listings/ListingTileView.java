@@ -93,7 +93,7 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 				mode = ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS;
 			}
 			intent.putExtra("act_mode", mode);
-			ImageDownloadManager.getImageDownloadManagerInstance().reset();
+//			ImageDownloadManager.getImageDownloadManagerInstance().reset();
 			getContext().startActivity(intent);
 		}
 	}
