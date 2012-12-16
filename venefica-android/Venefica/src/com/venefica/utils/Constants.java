@@ -62,7 +62,8 @@ public class Constants
 	public static final String CAMERA_FOLDER = "CameraPicture";
 	public static final String CACHE_FOLDER = "Cache";
 	public static final boolean USE_PNG_COMPRESS = false;
-	public static final int IMAGE_MAX_SIZE = 320;
+	public static final int IMAGE_MAX_SIZE_X= 320;
+	public static final int IMAGE_MAX_SIZE_Y= 360;
 	public static final int IMAGE_THUMBNAILS_MAX_SIZE = 64;
 	public static final long GEOLOCATION_UPDATE_TIME_MS = 30 * 60 * 1000;
 	
