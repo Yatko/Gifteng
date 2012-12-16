@@ -11,12 +11,14 @@
         android:id="@+id/imgUserViewProfileImg"
         android:layout_width="0dp"
         android:layout_height="100dp"
+        android:scaleType="centerCrop"
         android:layout_weight="40" 
         android:src="@drawable/ic_launcher"/>
 
     <TableLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
         android:layout_weight="60" >
 
         <TableRow

@@ -61,6 +61,8 @@
             android:id="@+id/listActSearchListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:horizontalSpacing="@dimen/image_thumbnail_spacing"
+            android:verticalSpacing="@dimen/image_thumbnail_spacing"
             android:layout_margin="5dp"
             android:dividerHeight="2sp"
             android:numColumns="2" />
