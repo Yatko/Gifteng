@@ -31,7 +31,7 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
 import com.venefica.utils.Constants;
-import com.venefica.utils.Utils;
+import com.venefica.module.utils.Utility;;
 
 /**
  * @author avinash Class to perform webservice operations.
@@ -125,7 +125,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", ""));
 
-			HttpTransportSE androidHttpTransport = Utils
+			HttpTransportSE androidHttpTransport = Utility
 					.getServicesTransport(Constants.SERVICES_AUTH_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(soapAction, envelope, headerList);
@@ -168,7 +168,7 @@ public class WSAction {
 				SoapEnvelope.VER11);
 		envelope.dotNet = true;
 		envelope.setOutputSoapObject(request);
-		HttpTransportSE androidHttpTransport = Utils
+		HttpTransportSE androidHttpTransport = Utility
 				.getServicesTransport(Constants.SERVICES_USER_URL);
 
 		List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
@@ -213,7 +213,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils
+			HttpTransportSE androidHttpTransport = Utility
 					.getServicesTransport(Constants.SERVICES_USER_URL);
 			androidHttpTransport.debug = true;
 
@@ -273,7 +273,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", ""));
 
-			HttpTransportSE androidHttpTransport = Utils
+			HttpTransportSE androidHttpTransport = Utility
 					.getServicesTransport(Constants.SERVICES_USER_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
@@ -336,7 +336,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils
+			HttpTransportSE androidHttpTransport = Utility
 					.getServicesTransport(Constants.SERVICES_USER_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
@@ -384,7 +384,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils
+			HttpTransportSE androidHttpTransport = Utility
 					.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
@@ -416,7 +416,7 @@ public class WSAction {
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE
 				+ WS_METHOD_GET_ALL_CATEGORIES;
 		BrowseCatResultWrapper result = new BrowseCatResultWrapper();
-		HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 		try {
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,WS_METHOD_GET_ALL_CATEGORIES);
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -461,7 +461,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
@@ -495,7 +495,7 @@ public class WSAction {
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
 		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
 
-		HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
@@ -551,7 +551,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object response = envelope.getResponse();
@@ -589,7 +589,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object response = envelope.getResponse();
@@ -627,7 +627,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object response = envelope.getResponse();
@@ -661,7 +661,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
@@ -704,7 +704,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object response = envelope.getResponse();
@@ -748,7 +748,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
@@ -789,7 +789,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object response = envelope.getResponse();
@@ -829,7 +829,7 @@ public class WSAction {
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
-			HttpTransportSE androidHttpTransport = Utils.getServicesTransport(Constants.SERVICES_AD_URL);
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			long id = Long.parseLong(envelope.getResponse().toString());
