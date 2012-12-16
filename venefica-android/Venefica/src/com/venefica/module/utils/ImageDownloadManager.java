@@ -3,6 +3,7 @@ package com.venefica.module.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -14,6 +15,14 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.venefica.utils.Constants;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +39,7 @@ public class ImageDownloadManager {
 	private final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());  
 
 	public static int MAX_CACHE_SIZE = 80; 
-	public int THREAD_POOL_SIZE = 3;
+	public int THREAD_POOL_SIZE = 5;
 	private static ImageDownloadManager instance;
 	/**
 	 * Constructor
@@ -127,9 +136,9 @@ public class ImageDownloadManager {
 	
 	private Drawable downloadDrawable(String url) {  
 	    try {  
-	        InputStream is = getInputStream(url);
-
-	        Drawable drawable = Drawable.createFromStream(is, url);
+//	        InputStream is = getInputStream(url);
+	        Drawable drawable = new BitmapDrawable( getScaledDownBitmap(url));
+//	        Drawable drawable = Drawable.createFromStream(is, url);
 	        putDrawableInCache(url,drawable);  
 	        return drawable;  
 
@@ -137,7 +146,7 @@ public class ImageDownloadManager {
 	        e.printStackTrace();  
 	    } catch (IOException e) {  
 	        e.printStackTrace();  
-	    }  
+	    }
 
 	    return null;  
 	}  
@@ -158,5 +167,34 @@ public class ImageDownloadManager {
 	    InputStream response = connection.getInputStream();
 
 	    return response;
+	}
+	
+	private Bitmap getScaledDownBitmap(String urlString) throws MalformedURLException, IOException{
+		URL url = new URL(urlString);
+		HttpURLConnection connection;
+	    connection = (HttpURLConnection)url.openConnection();
+	    connection.setUseCaches(true); 
+	    connection.connect();
+	    InputStream is = connection.getInputStream();
+	    Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
+	    BitmapFactory.Options opts = new BitmapFactory.Options();
+	    opts.inInputShareable = false;
+	    opts.inSampleSize = 2;
+	    Bitmap bm = BitmapFactory.decodeStream(is, rect, opts);
+	    int width = bm.getWidth();
+	    int height = bm.getHeight();
+	    float scaleWidth = ((float) Constants.IMAGE_MAX_SIZE_X) / width;
+	    float scaleHeight = ((float) Constants.IMAGE_MAX_SIZE_Y) / height;
+
+	    // create a matrix for the manipulation
+	    Matrix matrix = new Matrix();
+
+	    // resize the bit map
+	    matrix.postScale(scaleWidth, scaleHeight);
+
+	    // recreate the new Bitmap
+	    Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+	    return resizedBitmap;		
 	}
 }
