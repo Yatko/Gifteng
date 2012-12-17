@@ -36,14 +36,12 @@
 
             <Gallery
                 android:id="@+id/galleryActListingDetailsPhotos"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_weight="100"
                 android:background="@color/gray"
                 android:gravity="bottom"
-                android:minHeight="90dp"
-                android:padding="5dp"
-                android:spacing="5dp" />
+                android:minHeight="90dp"/>
         </TableRow>
         <!-- actionbar Buttons -->
 
