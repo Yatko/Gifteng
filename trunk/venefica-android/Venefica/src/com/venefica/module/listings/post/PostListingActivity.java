@@ -164,7 +164,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		// Gallery
 		gallery = (Gallery) findViewById(R.id.galleryActPostListingPhotos);
 		drawables = new ArrayList<Drawable>();
-		galImageAdapter = new GalleryImageAdapter(this, drawables);
+		galImageAdapter = new GalleryImageAdapter(this, null, drawables, true);
 		gallery.setAdapter(galImageAdapter);
 
 		// Map
@@ -644,10 +644,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     	Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
     	intent.setType("image/*");
     	intent.putExtra("crop", "true");
-    	intent.putExtra("aspectX", 1);
-    	intent.putExtra("aspectY", 1);
-    	intent.putExtra("outputX", 360);
-    	intent.putExtra("outputY", 360);
+    	intent.putExtra("aspectX", Constants.IMAGE_ASPECT_X);
+    	intent.putExtra("aspectY", Constants.IMAGE_ASPECT_Y);
+    	intent.putExtra("outputX", Constants.IMAGE_MAX_SIZE_X);
+    	intent.putExtra("outputY", Constants.IMAGE_MAX_SIZE_Y);
     	intent.putExtra("scale", true);
     	intent.putExtra("return-data", true);
         startActivityForResult(intent, REQ_GET_IMAGE);
