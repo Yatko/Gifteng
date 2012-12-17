@@ -2,6 +2,12 @@ package com.venefica.module.listings;
 
 import java.util.List;
 
+import com.google.android.maps.MapView.LayoutParams;
+import com.venefica.module.main.R;
+import com.venefica.module.utils.ImageDownloadManager;
+import com.venefica.services.ImageDto;
+import com.venefica.utils.Constants;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -9,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * @author avinash Adapter class for image gallery
@@ -18,15 +25,17 @@ public class GalleryImageAdapter extends BaseAdapter {
 
 	private static ImageView imageView;
 
-	private List<Drawable> plotsImages;
-
+	private List<ImageDto> plotsImages;
+	private List<Drawable> images;
+	private boolean useDrawables;
 	private static ViewHolder holder;
 
-	public GalleryImageAdapter(Context context, List<Drawable> plotsImages) {
+	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Drawable> images, boolean useDrawables) {
 
 		this.context = context;
 		this.plotsImages = plotsImages;
-
+		this.images = images;
+		this.useDrawables = useDrawables;
 	}
 
 	/*
@@ -35,7 +44,12 @@ public class GalleryImageAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getCount()
 	 */
 	public int getCount() {
-		return plotsImages.size();
+		if (useDrawables) {
+			return this.images.size();
+		} else {
+			return this.plotsImages.size();
+		}
+		
 	}
 
 	/*
@@ -81,10 +95,17 @@ public class GalleryImageAdapter extends BaseAdapter {
 
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		holder.imageView.setImageDrawable(plotsImages.get(position));
-		holder.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-		holder.imageView.setLayoutParams(new Gallery.LayoutParams(150, 120));
+		if (useDrawables) {
+			holder.imageView.setImageDrawable(images.get(position));
+		} else {
+			ImageDownloadManager.getImageDownloadManagerInstance()
+			.loadDrawable(plotsImages.get(position) != null 
+				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
+					holder.imageView, this.context.getResources().getDrawable(R.drawable.ic_launcher));
+		}	
+		
+		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		return imageView;
 	}
 
