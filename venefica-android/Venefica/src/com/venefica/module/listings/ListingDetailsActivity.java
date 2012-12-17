@@ -37,6 +37,7 @@ import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
+import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 /**
@@ -56,7 +57,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     /**
      * Images
      */
-    private List<Drawable> drawables;
+    private List<ImageDto> images;
     /**
      * Adapter for gallery
      */
@@ -150,16 +151,16 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		
 		//Gallery
         gallery = (Gallery) findViewById(R.id.galleryActListingDetailsPhotos);
-        gallery.setOnItemClickListener(new OnItemClickListener() {
+        /*gallery.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				Intent galleryIntent = new Intent(ListingDetailsActivity.this, GalleryActivity.class);
 				startActivity(galleryIntent);
 			}
-		});
-        drawables = getImages();
-        galImageAdapter = new GalleryImageAdapter(this, drawables);
+		});*/
+        images = new ArrayList<ImageDto>();
+        galImageAdapter = new GalleryImageAdapter(this, images, null, false);
         gallery.setAdapter(galImageAdapter);
         /*if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
         	btnBookmark.setImageResource(R.drawable.icon_cancel);
@@ -285,6 +286,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
 				, getResources().getDrawable(R.drawable.ic_launcher));
+		images.add(listing.getImage());
+		galImageAdapter.notifyDataSetChanged();
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
 		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
 		txtScore.setText(getResources().getText(R.string.label_detail_listing_score).toString()/*listing.getCreator()*/);
@@ -316,19 +319,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			mapView.invalidate();
 		}	
 	}
-	private List<Drawable> getImages() {
-		drawables = new ArrayList<Drawable>();
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-        drawables.add(getResources().getDrawable(R.drawable.ic_launcher));
-		return drawables;
-	}
+	
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
