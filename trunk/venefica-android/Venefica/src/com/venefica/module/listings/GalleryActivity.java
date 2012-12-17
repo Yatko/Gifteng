@@ -60,7 +60,7 @@ public class GalleryActivity extends Activity implements ViewFactory {
 			}
 		});
         drawables = getImages();
-        galImageAdapter = new GalleryImageAdapter(this, drawables);
+//        galImageAdapter = new GalleryImageAdapter(this, drawables);
         gallery.setAdapter(galImageAdapter);
         
         imgSwitcher = (ImageSwitcher) findViewById(R.id.switcherActGallery);
