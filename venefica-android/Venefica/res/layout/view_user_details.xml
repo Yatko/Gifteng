@@ -4,15 +4,16 @@
     android:id="@+id/layUserView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
     android:orientation="horizontal"
     android:weightSum="100" >
 
     <ImageView
         android:id="@+id/imgUserViewProfileImg"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:scaleType="centerCrop"
-        android:layout_weight="40" 
+        android:layout_weight="30" 
         android:src="@drawable/ic_launcher"/>
 
     <TableLayout
