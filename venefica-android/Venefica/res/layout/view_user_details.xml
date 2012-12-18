@@ -16,10 +16,16 @@
         android:layout_weight="30" 
         android:src="@drawable/ic_launcher"/>
 
+    <TextView 
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"/>
     <TableLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="7dp"
+        android:layout_gravity="right"
+        android:gravity="right"
         android:layout_weight="60" >
 
         <TableRow
