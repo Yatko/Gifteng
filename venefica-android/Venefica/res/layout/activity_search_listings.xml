@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" >
 
-        <com.google.android.maps.MapView
+        <com.venefica.module.map.TapControlledMapView
             android:id="@+id/mapviewActSearchListings"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:horizontalSpacing="@dimen/image_thumbnail_spacing"
             android:verticalSpacing="@dimen/image_thumbnail_spacing"
-            android:layout_margin="5dp"
+            android:layout_margin="1dp"
             android:dividerHeight="2sp"
             android:numColumns="2" />
 
