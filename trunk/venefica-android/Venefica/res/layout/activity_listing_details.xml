@@ -113,7 +113,7 @@
             android:layout_margin="2dip"
             android:weightSum="100" >
 
-            <com.google.android.maps.MapView
+            <com.venefica.module.map.TapControlledMapView
                 android:id="@+id/mapviewActListingDetails"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
