@@ -12,7 +12,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
@@ -21,10 +20,12 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -34,11 +35,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.ListingDetailsActivity;
@@ -46,6 +44,9 @@ import com.venefica.module.listings.ListingListAdapter;
 import com.venefica.module.listings.MapItemizedOverlay;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
+import com.venefica.module.map.ListingOverlayItem;
+import com.venefica.module.map.OnSingleTapListener;
+import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.Utility;
@@ -100,8 +101,8 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Search view in actionbar
 	 */
-	private SearchView searchView;
-//	private View searchView;
+//	private SearchView searchView;
+	private EditText searchView;
 	/**
 	 * Groups to show hide
 	 */
@@ -116,12 +117,12 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Map 
 	 */
-	private MapView mapView;
+	private TapControlledMapView mapView;
 	private MapController mapController;
 	private LocationManager locationManager;
 	private String locProvider;
 	private Location location;
-	private MapItemizedOverlay overlayItems;
+	private MapItemizedOverlay<?> overlayItems;
 	/**
 	 * exit flag
 	 */
@@ -146,14 +147,24 @@ ISlideMenuCallback, LocationListener{
         super.setSlideMenuView(slideMenuView);
         
 		//Create the search view
-        searchView = new SearchView(getSupportActionBar().getThemedContext());
-        searchView.setQueryHint(getResources().getString(R.string.hint_search_listing));
-//        edtSearch = new EditText(this,new LinearLayout.LayoutParams(
-//                LayoutParams.WRAP_CONTENT, 
-//                LayoutParams.WRAP_CONTENT));
+//        searchView = new SearchView(getSupportActionBar().getThemedContext());
+//        searchView.setQueryHint(getResources().getString(R.string.hint_search_listing));
+        searchView = (EditText) getLayoutInflater().inflate(R.layout.view_searchbar, null);
+        searchView.setLayoutParams(new LinearLayout.LayoutParams(
+                LayoutParams.FILL_PARENT, 
+                LayoutParams.FILL_PARENT));
+        searchView.requestFocusFromTouch();
         //Map 
         mapLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsMap);
-        mapView = (MapView) findViewById(R.id.mapviewActSearchListings);
+        mapView = (TapControlledMapView) findViewById(R.id.mapviewActSearchListings);
+		// dismiss balloon upon single tap of MapView (iOS behavior)
+		mapView.setOnSingleTapListener(new OnSingleTapListener() {
+			@Override
+			public boolean onSingleTap(MotionEvent e) {
+				overlayItems.hideAllBalloons();
+				return true;
+			}
+		});
         mapView.setBuiltInZoomControls(true);
         mapView.setTraffic(true);
         mapView.setSatellite(false);
@@ -214,7 +225,10 @@ ISlideMenuCallback, LocationListener{
 				startActivity(intent);
 			}
 		});		
-		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.icon_location), this);     				
+		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView); 
+		overlayItems.setShowClose(false);
+		overlayItems.setShowDisclosure(false);
+		overlayItems.setSnapToCenter(true);
 		toggleMapView(false);
 		if(WSAction.isNetworkConnected(this)){
 			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
@@ -626,7 +640,7 @@ ISlideMenuCallback, LocationListener{
 		if (isMapShown) {
 			GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
 			mapController.animateTo(currLoc);
-			OverlayItem overlayItem = new OverlayItem(currLoc, "My Location", "");
+			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, "My Location", "", 0, "");
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
