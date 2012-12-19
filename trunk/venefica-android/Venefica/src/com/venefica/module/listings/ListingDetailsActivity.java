@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,6 +35,9 @@ import com.google.android.maps.OverlayItem;
 import com.venefica.module.main.R;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
+import com.venefica.module.map.ListingOverlayItem;
+import com.venefica.module.map.OnSingleTapListener;
+import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
@@ -104,10 +108,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
      * Map 
      */
     private MapController mapController;
-	private MapView mapView;
+	private TapControlledMapView mapView;
 	private WSAction wsAction;
 	private boolean isMapShown = true;
-	private MapItemizedOverlay overlayItems;
+	private MapItemizedOverlay<ListingOverlayItem> overlayItems;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,15 +144,26 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			}
 		});
 		//Map
-		mapView = (MapView) findViewById(R.id.mapviewActListingDetails);
-//		mapView.setBuiltInZoomControls(true);
+		mapView = (TapControlledMapView) findViewById(R.id.mapviewActListingDetails);
+		
+		// dismiss balloon upon single tap of MapView (iOS behavior) 
+		mapView.setOnSingleTapListener(new OnSingleTapListener() {		
+			@Override
+			public boolean onSingleTap(MotionEvent e) {
+				overlayItems.hideAllBalloons();
+				return true;
+			}
+		});
 		// satellite or 2d mode
 		mapView.setSatellite(false);
 		mapView.setTraffic(true);
+		
         mapController = mapView.getController();
 		mapController.setZoom(8); // Zoom 1 is world view
-		overlayItems = new MapItemizedOverlay(getResources().getDrawable(R.drawable.icon_location), this);
-		
+		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
+		overlayItems.setShowClose(false);
+		overlayItems.setShowDisclosure(false);
+		overlayItems.setSnapToCenter(true);
 		//Gallery
         gallery = (Gallery) findViewById(R.id.galleryActListingDetailsPhotos);
         /*gallery.setOnItemClickListener(new OnItemClickListener() {
@@ -281,7 +296,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
      */
 	private void setDetails(AdDto listing) {
 		//Show on map
-		updateMap(listing.getLatitude(), listing.getLongitude(), listing.getTitle(), "");
+		updateMap(listing.getLatitude(), listing.getLongitude()
+				, listing.getTitle(), listing.getDescription(), listing.getId()
+				, listing.getImage()!= null? listing.getImage().getUrl(): "");
 		//set user info
 		ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
@@ -307,15 +324,16 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 	 * @param title
 	 * @param description
 	 */
-	private void updateMap(double latitude, double longitude, String title, String description){
+	private void updateMap(double latitude, double longitude, String title, String description, long listingId, String imgURL){
 		if (isMapShown ) {
 			GeoPoint currLoc = new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
 			mapController.animateTo(currLoc);
-			OverlayItem overlayItem = new OverlayItem(currLoc, title, description);
+			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, title, description
+					, listingId, Constants.PHOTO_URL_PREFIX + imgURL);
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
-//			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
+			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
 			mapView.invalidate();
 		}	
 	}
