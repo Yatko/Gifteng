@@ -4,87 +4,87 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.MotionEvent;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
+import com.venefica.module.map.BalloonItemizedOverlay;
+import com.venefica.module.map.BalloonOverlayView;
+import com.venefica.module.map.ListingOverlayItem;
+import com.venefica.module.map.ListingOverlayView;
 
 /**
- * @author avinash
+ * @author avinash 
  * Class to show overlay items on map.
  */
-public class MapItemizedOverlay extends ItemizedOverlay {
+public class MapItemizedOverlay<Item extends OverlayItem> extends
+		BalloonItemizedOverlay<ListingOverlayItem> {
 	/**
 	 * Overlay Items
 	 */
-	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	private ArrayList<ListingOverlayItem> mOverlays = new ArrayList<ListingOverlayItem>();
 	private Context context;
+
 	/**
 	 * @param defaultMarker
 	 */
-	public MapItemizedOverlay(Drawable defaultMarker, Context context) {
-        super(boundCenterBottom(defaultMarker));
-        this.context = context;
-    }
+	public MapItemizedOverlay(Drawable defaultMarker, MapView mapView) {
+		super(boundCenterBottom(defaultMarker), mapView);
+		this.context = mapView.getContext();
+	}
+
 	/**
 	 * Add overlay item
+	 * 
 	 * @param overlay
 	 */
-	public void addOverlay(OverlayItem overlay) {
-        mOverlays.add(overlay);
-        populate();
-    }
+	public void addOverlay(ListingOverlayItem overlay) {
+		mOverlays.add(overlay);
+		populate();
+	}
 
 	/**
 	 * Clear all items
 	 */
-    public void clear() {
+	public void clear() {
 
-        mOverlays.clear();
-        populate();
-    }
-	/* (non-Javadoc)
+		mOverlays.clear();
+		populate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.android.maps.ItemizedOverlay#createItem(int)
 	 */
 	@Override
-	protected OverlayItem createItem(int i) {
+	protected ListingOverlayItem createItem(int i) {
 		return mOverlays.get(i);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.android.maps.ItemizedOverlay#size()
 	 */
 	@Override
 	public int size() {
 		return mOverlays.size();
 	}
+
 	
 	/* (non-Javadoc)
-	 * @see com.google.android.maps.ItemizedOverlay#onTap(int)
+	 * @see com.venefica.module.map.BalloonItemizedOverlay#onBalloonTap(int, com.google.android.maps.OverlayItem)
 	 */
 	@Override
-    public boolean onTap(GeoPoint p, MapView mapView) {
-		/*mapView.removeAllViews();
-		LayoutInflater inflater = (LayoutInflater) mapView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View popUp = inflater.inflate(R.layout.view_map_overlay_detail, mapView, false);
-		MapView.LayoutParams mapParams = new MapView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                p,
-                0,
-                0,
-                MapView.LayoutParams.BOTTOM_CENTER);
-		mapView.addView(popUp, mapParams);*/
-		return true;		
-	};
+	protected boolean onBalloonTap(int index, ListingOverlayItem item) {
+		return true;
+	}
 
-    /* (non-Javadoc)
-     * @see com.google.android.maps.ItemizedOverlay#onTouchEvent(android.view.MotionEvent, com.google.android.maps.MapView)
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent event, MapView mapView){
-
-        return false;
-    }
+	/* (non-Javadoc)
+	 * @see com.venefica.module.map.BalloonItemizedOverlay#createBalloonOverlayView()
+	 */
+	@Override
+	protected BalloonOverlayView<ListingOverlayItem> createBalloonOverlayView() {
+		return new ListingOverlayView<OverlayItem>(getMapView().getContext(), getBalloonBottomOffset());
+	}
 }
