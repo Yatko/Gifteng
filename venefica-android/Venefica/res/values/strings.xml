@@ -194,6 +194,11 @@
     <string name="pref_privacy_settings_stay_logged_in">Stay Logged In</string>
     <string name="pref_key_privacy_settings_stay_logged_in">pref_key_privacy_settings_stay_logged_in</string>
     
+    <!-- Pref Filter-->
+    <string name="pref_filter_title">Filter Settings</string>
+    <string name="pref_key_use_miles">pref_key_use_miles</string>
+    <string name="pref_use_miles_title">Distance</string>
+    <string name="pref_use_miles_summ">Set distance in miles</string>
     <!-- Data -->
     <!-- Dashboard menu list -->
     <string-array name="array_dashboard_menu">
