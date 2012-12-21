@@ -199,6 +199,30 @@
     <string name="pref_key_use_miles">pref_key_use_miles</string>
     <string name="pref_use_miles_title">Distance</string>
     <string name="pref_use_miles_summ">Set distance in miles</string>
+   
+    <string name="pref_key_category">pref_key_category</string>
+    <string name="pref_category_title">Category</string>
+    <string name="pref_category_summ">Select category to filter results.</string>
+    
+    <string name="pref_key_use_current_location">pref_key_use_current_location</string>
+    <string name="pref_use_current_location_title">Use current loaceion</string>
+    <string name="pref_use_current_location_summ">Select to use current location to filter results.</string>
+    
+    <string name="pref_key_sort_by">pref_key_sort_by</string>
+    <string name="pref_sort_by_title">Sort By</string>
+    <string name="pref_sort_by_summ">Select sort preferance.</string>
+    <string name="pref_sort_by_default">1</string>
+    <string-array name="array_filter_entries_sort_by">
+        <item>Price</item>
+        <item>Newest First</item>
+        <item>Oldest First</item>
+    </string-array>
+    <string-array name="array_filter_entriey_val_sort_by">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
     <!-- Data -->
     <!-- Dashboard menu list -->
     <string-array name="array_dashboard_menu">
