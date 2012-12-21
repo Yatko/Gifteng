@@ -4,6 +4,27 @@
     android:key="preference_screen" >
 
     <PreferenceCategory android:title="@string/pref_filter_title" >
+        <Preference android:title="@string/pref_category_title" >
+            <intent
+                android:action="com.venefica.module.listings.browse.GET_CATEGORY"
+                android:targetClass="com.venefica.module.listings.browse.BrowseCategoriesActivity"/>
+        </Preference>
+
+        <CheckBoxPreference 
+            android:defaultValue="true"
+            android:key="@string/pref_key_use_current_location"
+            android:summary="@string/pref_use_current_location_summ"
+            android:title="@string/pref_use_current_location_title" />
+
+        <ListPreference
+            android:dialogTitle="@string/pref_sort_by_title"
+            android:summary="@string/pref_sort_by_summ"
+            android:entries="@array/array_filter_entries_sort_by"
+            android:entryValues="@array/array_filter_entriey_val_sort_by"
+            android:key="@string/pref_key_sort_by"
+            android:title="@string/pref_sort_by_title" 
+            android:defaultValue="@string/pref_sort_by_default"/>
+        
         <com.venefica.module.settings.SeekBarPreference
             android:defaultValue="50"
             android:key="@string/pref_key_use_miles"
