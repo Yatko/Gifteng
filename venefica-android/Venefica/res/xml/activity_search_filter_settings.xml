@@ -35,5 +35,15 @@
             venefica:unitsLeft=""
             venefica:unitsRight="" />
     </PreferenceCategory>
+	<PreferenceCategory android:title="@string/pref_price_title" 
+	    android:summary="@string/pref_price_summ">
+        <EditTextPreference 
+            android:key="@string/pref_key_price_min"
+            android:title="@string/pref_price_min_title"/>
+        <EditTextPreference 
+            android:key="@string/pref_key_price_max"
+            android:title="@string/pref_price_max_title"
+            android:enabled="true"/>
+	</PreferenceCategory>
 
 </PreferenceScreen>
