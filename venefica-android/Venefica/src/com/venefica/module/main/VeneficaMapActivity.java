@@ -83,11 +83,6 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    	startActivity(browseIntent);
 			}
-			/*if(!(getApplicationContext() instanceof MyListingsActivity)){
-				Intent myListingIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
-				myListingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    	startActivity(myListingIntent);
-			}*/
 	    	break;
 		case R.id.slideMenuAccount:  
 			if(!(getApplicationContext() instanceof RegisterUserActivity)){
@@ -101,6 +96,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 			if(!(getApplicationContext() instanceof SettingsActivity)){
 				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 				settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_APP_SETTINGS);
 		    	startActivity(settingsIntent);
 			}
 	    	break;
