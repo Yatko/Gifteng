@@ -69,12 +69,7 @@ ISlideMenuCallback {
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    	startActivity(browseIntent);
-			}
-			/*if(!(getApplicationContext() instanceof MyListingsActivity)){
-				Intent myListingIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
-				myListingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    	startActivity(myListingIntent);
-			}*/
+			}			
 	    	break;
 		case R.id.slideMenuAccount:  
 			if(!(getApplicationContext() instanceof RegisterUserActivity)){
@@ -88,6 +83,7 @@ ISlideMenuCallback {
 			if(!(getApplicationContext() instanceof SettingsActivity)){
 				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 				settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_APP_SETTINGS);
 		    	startActivity(settingsIntent);
 			}
 	    	break;
