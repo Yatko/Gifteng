@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -92,11 +93,12 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 						setResult(Activity.RESULT_OK, resIntent);
 						finish();
 					}else {
-						Intent intent = new Intent(BrowseCategoriesActivity.this, SearchListingsActivity.class);
-						intent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
-						intent.putExtra("category_name", categories.get(index).getName());
-						intent.putExtra("category_id", categories.get(index).getId());
-				    	startActivity(intent);					
+						//Save selected value in shared prefs to use in filter settings on SearchListings activity
+						SharedPreferences prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putString(Constants.PREF_KEY_CATEGORY, categories.get(index).getName());
+						editor.putLong(Constants.PREF_KEY_CATEGORY_ID, categories.get(index).getId());
+						editor.commit();
 					}	
 				}
 							
@@ -213,17 +215,10 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_CATEGORIES_SUCCESS && result.categories != null
 					&& result.categories.size() > 0) {
-				/*ERROR_CODE = result.result;
-				showDialog(D_ERROR);*/
 				categories.clear();
 				categories.addAll(result.categories);
 				categoriesListAdapter.notifyDataSetChanged();
 			}
 		}
 	}
-	/*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_browse_categories, menu);
-        return true;
-    }*/
 }
