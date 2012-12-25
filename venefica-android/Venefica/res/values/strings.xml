@@ -223,6 +223,13 @@
         <item>3</item>
     </string-array>
     
+    <string name="pref_price_title">Price</string>
+    <string name="pref_price_summ">Set price rage to filter search results.</string>
+    <string name="pref_key_price_min">pref_key_price_min</string>
+    <string name="pref_price_min_title">Min</string>
+    <string name="pref_key_price_max">pref_key_price_max</string>
+    <string name="pref_price_max_title">Max</string>
+    
     <!-- Data -->
     <!-- Dashboard menu list -->
     <string-array name="array_dashboard_menu">
