@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -32,11 +34,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.ListingDetailsActivity;
@@ -48,6 +52,7 @@ import com.venefica.module.map.ListingOverlayItem;
 import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
@@ -101,7 +106,6 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Search view in actionbar
 	 */
-//	private SearchView searchView;
 	private EditText searchView;
 	/**
 	 * Groups to show hide
@@ -131,12 +135,25 @@ ISlideMenuCallback, LocationListener{
 	 * selected listing
 	 */
 	private AdDto selectedListing;
-	
+	/**
+	 * Shared Preferences
+	 */
+	SharedPreferences prefs;
+	/**
+	 * Filter settings
+	 */
+	private FilterDto filter;
+	/**
+	 * flag to use location from
+	 */
+	private boolean useCurrentLocation;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_listings);
+        //get preferences
+        prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
         //set mode 
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         //slide menu
@@ -147,8 +164,6 @@ ISlideMenuCallback, LocationListener{
         super.setSlideMenuView(slideMenuView);
         
 		//Create the search view
-//        searchView = new SearchView(getSupportActionBar().getThemedContext());
-//        searchView.setQueryHint(getResources().getString(R.string.hint_search_listing));
         searchView = (EditText) getLayoutInflater().inflate(R.layout.view_searchbar, null);
         searchView.setLayoutParams(new LinearLayout.LayoutParams(
                 LayoutParams.FILL_PARENT, 
@@ -213,7 +228,7 @@ ISlideMenuCallback, LocationListener{
         //List and tile view
         tileLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsTile);
         gridViewListings = (GridView) findViewById(R.id.listActSearchListings);
-        listings = new ArrayList<AdDto>()/*getDemoListings()*/;
+        listings = new ArrayList<AdDto>();
         
 		listingsListAdapter = new ListingListAdapter(this, listings, true);
 		gridViewListings.setAdapter(listingsListAdapter);
@@ -225,11 +240,29 @@ ISlideMenuCallback, LocationListener{
 				startActivity(intent);
 			}
 		});		
-		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView); 
+		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView){
+			@Override
+			public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+				//get location when user lifts the finger
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					GeoPoint touchedPoint = mapView.getProjection().fromPixels(
+							(int) event.getX(), (int) event.getY());
+					if (location != null && !useCurrentLocation) {
+						location.setLatitude(touchedPoint.getLatitudeE6() / 1E6);
+						location.setLongitude(touchedPoint.getLongitudeE6() / 1E6);											
+					}
+				}
+				return false;
+			}
+		}; 
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
 		toggleMapView(false);
+		//start GPS
+		enableGPS();
+		//Get Filter settings
+		getFilterOptions();
 		if(WSAction.isNetworkConnected(this)){
 			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
 				new SearchListingTask().execute(CURRENT_MODE);
@@ -257,21 +290,23 @@ ISlideMenuCallback, LocationListener{
     @Override
     protected void onStart() {
     	super.onStart();
-    	//Get location provider 
-    	Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		criteria.setCostAllowed(false);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locProvider = locationManager.getBestProvider(criteria, false);
-		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
-
-	    if (!locProviderEnabled) {
-	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
-	    	showDialog(D_ERROR);	        
-	    }
+//    	//Get location provider 
+//    	Criteria criteria = new Criteria();
+//		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//		criteria.setCostAllowed(false);
+//		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//		locProvider = locationManager.getBestProvider(criteria, false);
+//		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
+//
+//	    if (!locProviderEnabled) {
+//	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
+//	    	showDialog(D_ERROR);	        
+//	    }
+    	//Get Filter settings
+		getFilterOptions();
 	    //Get last location
 	    location = locationManager.getLastKnownLocation(locProvider);
-	    updateMap(location);
+    	updateMap(location);
 	    if(WSAction.isNetworkConnected(this)){
 	    	if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
 	    		new SearchListingTask().execute(CURRENT_MODE);
@@ -292,17 +327,21 @@ ISlideMenuCallback, LocationListener{
     @Override
     protected void onResume() {
     	super.onResume();
-    	//Get current location	    
-	    locationManager.requestLocationUpdates(locProvider, Constants.LOCATION_UPDATE_PERIOD, Constants.LOCATION_UPDATE_MIN_DISTANCE, this);
+    	//Get current location	
+    	if(useCurrentLocation && !(CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS)){
+    		locationManager.requestLocationUpdates(locProvider, Constants.LOCATION_UPDATE_PERIOD, Constants.LOCATION_UPDATE_MIN_DISTANCE, this);
+    	} else {
+			
+		}
 	    updateMap(location);
     }
-    
     @Override
-    protected void onStop() {
-        super.onStop();
-        //Stop location updates
+    protected void onPause() {    	
+    	super.onPause();
+    	//Stop location updates
         locationManager.removeUpdates(this);
     }
+    
     @Override
     protected void onDestroy() {
     	//stop image loading thread
@@ -386,7 +425,7 @@ ISlideMenuCallback, LocationListener{
 				}
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
-							, 1, 5, getFilterOptions());
+							, 1, 5, filter);
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
 					wrapper = wsAction.getBookmarkedListings(((VeneficaApplication)getApplication()).getAuthToken());
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
@@ -422,9 +461,10 @@ ISlideMenuCallback, LocationListener{
 	 * Method to set Filter for search listings
 	 * @return
 	 */;
-	private FilterDto getFilterOptions(){
-		FilterDto filter = new FilterDto();
-		filter.setDistance(150);
+	private void getFilterOptions(){
+		useCurrentLocation = prefs.getBoolean("pref_key_use_current_location", false);
+		filter = new FilterDto();		
+		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), 50));
 		if (location != null) {
 			filter.setLatitude(new Double(location.getLatitude()));
 			filter.setLongitude(new Double(location.getLongitude()));
@@ -432,19 +472,17 @@ ISlideMenuCallback, LocationListener{
 		filter.setMaxPrice(new BigDecimal(5000000.00));
 		filter.setMinPrice(new BigDecimal(0));
 		filter.setWanted(false);
-		filter.setSearchString("benz");
+		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(false);
 		List<Long> cats = new ArrayList<Long>();
-		cats.add(new Long(3));
+		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, 1));
 		filter.setCategories(cats);
-		return filter;		
 	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getResources().getString(R.string.label_filter))
             .setIcon(R.drawable.icon_search)
-//            .setActionView(searchView)
             .setActionView(searchView)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         
@@ -453,6 +491,15 @@ ISlideMenuCallback, LocationListener{
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onCreateOptionsMenu(menu);
     }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getTitle().toString().equalsIgnoreCase(getResources().getString(R.string.label_filter_setting))) {
+			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+			settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_FILTER_SETTINGS);
+	    	startActivity(settingsIntent);
+		} 
+		return super.onOptionsItemSelected(item);
+	}
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
@@ -469,169 +516,7 @@ ISlideMenuCallback, LocationListener{
 			Utility.showLongToast(this, getResources().getString(R.string.msg_app_exit));
 		}		
 	}
-	private List<AdDto> getDemoListings(){
-		List<AdDto> listings= new ArrayList<AdDto>();
-		AdDto listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		ImageDto imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(2);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://shrimprg.stanford.edu/sample2.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(3);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://i.space.com/images/i/22194/iFF/mars_sample_return.jpg?1348688790");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(4);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://2.imimg.com/data2/VF/HW/MY-1206776/spectro-sample-polishers-250x250.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(5);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Apollo_15_Genesis_Rock.jpg/300px-Apollo_15_Genesis_Rock.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(6);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://samplesally.com/wp-content/uploads/2012/12/Tess-Giberson-Sample-Sale_2.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://media.purex.com/fsp/hero-both2.png");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://epswww.unm.edu/iom/sims/sample.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://www.penofin.com/img/free-penofin-samples.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://dailysavings.files.wordpress.com/2012/12/free-loreal-everpure.jpg?w=500");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://2.imimg.com/data2/BJ/JM/MY-5141725/plastic-sample-bottle-250x250.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		
-		listing = new AdDto();
-		listing.setId(1);
-		listing.setTitle("Demo Listing");
-		listing.setPrice(new BigDecimal(1234));
-		listing.setDescription("Demo description");
-		imgDto = new ImageDto();
-		imgDto.setUrl("http://gimp.open-source-solution.org/manual/images/filters/examples/color-taj-sample-colorize.jpg");
-		listing.setImage(imgDto);
-		listings.add(listing);
-		return listings;
-	}
-
+	
 	/**
 	 * Show current location on map
 	 * @param location
@@ -667,7 +552,7 @@ ISlideMenuCallback, LocationListener{
 	}
 
 	/**
-	 * @return the cURRENT_MODE
+	 * @return the CURRENT_MODE
 	 */
 	public static int getCURRENT_MODE() {
 		return CURRENT_MODE;
@@ -678,5 +563,20 @@ ISlideMenuCallback, LocationListener{
 	private void clearUIWhenNoData(){
 		listings.clear();			
 		listingsListAdapter.notifyDataSetChanged();
+	}
+	
+	private void enableGPS(){
+    	//Get location provider 
+    	Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setCostAllowed(false);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locProvider = locationManager.getBestProvider(criteria, false);
+		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
+
+	    if (!locProviderEnabled) {
+	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
+	    	showDialog(D_ERROR);	        
+	    }	    
 	}
 }
