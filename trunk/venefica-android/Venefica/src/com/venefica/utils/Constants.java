@@ -125,6 +125,8 @@ public class Constants
 	public static final String PREF_KEY_LOGIN = "login_id";
 	public static final String PREF_KEY_PASSWORD = "password";
 	public static final String PREF_KEY_LOGIN_TYPE = "login_type";
+	public static final String PREF_KEY_CATEGORY_ID = "cat_id";
+	public static final String PREF_KEY_CATEGORY = "category";
 	
 	//Shared prefs values
 	public static final String PREF_VAL_LOGIN_VENEFICA = "login_venefica";
@@ -134,6 +136,7 @@ public class Constants
 	
 
 	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
+	
 	
 				
 			
