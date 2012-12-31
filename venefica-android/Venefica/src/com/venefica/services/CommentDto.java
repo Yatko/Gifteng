@@ -131,4 +131,102 @@ public class CommentDto implements KvmSerializable
 		new ImageDto().registerRead(envelope);
 	}
 
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public boolean isOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(boolean owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * @return the publisherName
+	 */
+	public String getPublisherName() {
+		return publisherName;
+	}
+
+	/**
+	 * @param publisherName the publisherName to set
+	 */
+	public void setPublisherName(String publisherName) {
+		this.publisherName = publisherName;
+	}
+
+	/**
+	 * @return the publisherAvatarUrl
+	 */
+	public String getPublisherAvatarUrl() {
+		return publisherAvatarUrl;
+	}
+
+	/**
+	 * @param publisherAvatarUrl the publisherAvatarUrl to set
+	 */
+	public void setPublisherAvatarUrl(String publisherAvatarUrl) {
+		this.publisherAvatarUrl = publisherAvatarUrl;
+	}
+
+	/**
+	 * @return the createdAt
+	 */
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt the createdAt to set
+	 */
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	/**
+	 * @return the publisherFullName
+	 */
+	public String getPublisherFullName() {
+		return publisherFullName;
+	}
+
+	/**
+	 * @param publisherFullName the publisherFullName to set
+	 */
+	public void setPublisherFullName(String publisherFullName) {
+		this.publisherFullName = publisherFullName;
+	}
+
 }
