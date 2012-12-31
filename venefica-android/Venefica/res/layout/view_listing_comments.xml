@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100" >
+
+    <ImageView
+        android:id="@+id/imgCommentListProfileImg"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="20"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/txtCommentListComment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="70" />
+
+    <ImageButton
+        android:id="@+id/imgBtnCommentListEdit"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_weight="10"
+        android:background="@color/light_blue"
+        android:src="@drawable/icon_edit_white" />
+
+</LinearLayout>
