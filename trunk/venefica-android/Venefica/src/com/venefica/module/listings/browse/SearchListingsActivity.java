@@ -462,15 +462,17 @@ ISlideMenuCallback, LocationListener{
 	 * @return
 	 */;
 	private void getFilterOptions(){
-		useCurrentLocation = prefs.getBoolean("pref_key_use_current_location", false);
+		useCurrentLocation = prefs.getBoolean(getResources().getString(R.string.pref_key_use_current_location), false);
 		filter = new FilterDto();		
 		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), 50));
 		if (location != null) {
 			filter.setLatitude(new Double(location.getLatitude()));
 			filter.setLongitude(new Double(location.getLongitude()));
 		}		
-		filter.setMaxPrice(new BigDecimal(prefs.getInt(getResources().getString(R.string.pref_key_price_max), 50)));
-		filter.setMinPrice(new BigDecimal(prefs.getInt(getResources().getString(R.string.pref_key_price_min), 0)));
+		filter.setMaxPrice(new BigDecimal(
+				Integer.parseInt(prefs.getString(getResources().getString(R.string.pref_key_price_max), "50"))));
+		filter.setMinPrice(new BigDecimal(
+				Integer.parseInt(prefs.getString(getResources().getString(R.string.pref_key_price_min), "0"))));
 		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(false);
