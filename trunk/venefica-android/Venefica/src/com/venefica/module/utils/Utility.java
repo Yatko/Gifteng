@@ -16,7 +16,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
 import android.widget.Toast;
+import android.view.animation.Transformation;
 
 /**
  * @author avinash
@@ -148,5 +152,64 @@ public class Utility {
 			return new HttpsTransportSE(url);
 		else
 			return new HttpTransportSE(url);
+	}
+	
+	/**
+	 * Expand view vertically with animation
+	 * @param v
+	 */
+	public static void expand(final View v) {
+	    v.measure(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+	    final int targtetHeight = v.getMeasuredHeight();
+
+	    v.getLayoutParams().height = 0;
+	    v.setVisibility(View.VISIBLE);
+	    Animation a = new Animation(){
+	        @Override
+	        protected void applyTransformation(float interpolatedTime, Transformation t) {
+	            v.getLayoutParams().height = interpolatedTime == 1
+	                    ? LayoutParams.WRAP_CONTENT
+	                    : (int)(targtetHeight * interpolatedTime);
+	            v.requestLayout();
+	        }
+
+	        @Override
+	        public boolean willChangeBounds() {
+	            return true;
+	        }
+	    };
+
+	    // 1dp/ms
+	    a.setDuration((int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+	    v.startAnimation(a);
+	}
+
+	/**
+	 * Collapse view vertically with animation.
+	 * @param v
+	 */
+	public static void collapse(final View v) {
+	    final int initialHeight = v.getMeasuredHeight();
+
+	    Animation a = new Animation(){
+	        @Override
+	        protected void applyTransformation(float interpolatedTime, Transformation t) {
+	            if(interpolatedTime == 1){
+	                v.setVisibility(View.GONE);
+	            }else{
+	                v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+	                v.requestLayout();
+	            }
+	        }
+
+	        @Override
+	        public boolean willChangeBounds() {
+	            return true;
+	        }
+	    };
+
+	    // 1dp/ms
+	    a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+	    v.startAnimation(a);
 	}
 }
