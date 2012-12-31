@@ -3,6 +3,7 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -27,9 +28,12 @@ import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
 import com.venefica.services.AdDto;
 import com.venefica.services.CategoryDto;
+import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.User;
+import com.venefica.services.ServicesManager.GetCommentsByAdResult;
+import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 import com.venefica.module.utils.Utility;;
 
@@ -58,6 +62,7 @@ public class WSAction {
 	private static final String WS_METHOD_GET_ADS = "GetAdsEx";
 	private static final String WS_METHOD_UPDATE_AD = "UpdateAd";
 	private static final String WS_METHOD_BOOKMARK = "BookmarkAd";
+	private static final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -845,4 +850,52 @@ public class WSAction {
 		return result;
 	}
 
+	/**
+	 * Method to get comments by listing
+	 * @param token
+	 * @param adId
+	 * @param lastCommentId
+	 * @param numComments
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	@SuppressWarnings("unchecked")
+	public ListingDetailsResultWrapper getCommentsByListing(String token, long adId, long lastCommentId, int numComments) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_COMMENTS_BY_AD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_MESSAGE_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_COMMENTS_BY_AD);
+
+			request.addProperty("adId", adId);
+			request.addProperty("lastCommentId", lastCommentId);
+			request.addProperty("numComments", numComments);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new CommentDto().registerRead(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response instanceof CommentDto){
+				result.comments = new ArrayList<CommentDto>();
+				result.comments.add((CommentDto)response);
+				result.result = Constants.RESULT_GET_COMMENTS_SUCCESS;
+			}else{
+				result.comments = (ArrayList<CommentDto>)response;
+				result.result = Constants.RESULT_GET_COMMENTS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_COMMENTS;			
+		}
+		return result;
+	}
 }
