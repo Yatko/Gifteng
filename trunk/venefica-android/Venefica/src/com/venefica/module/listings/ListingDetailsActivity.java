@@ -12,26 +12,28 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorSet;
+import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.venefica.module.main.R;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
@@ -40,7 +42,9 @@ import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.ImageDownloadManager;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.CommentDto;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -91,6 +95,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     public static final int ACT_MODE_DELETE_LISTINGS = 4006;
     public static final int ACT_MODE_BOOKMARK_LISTINGS = 4007;
     public static final int ACT_MODE_REMOVE_BOOKMARK = 4008;
+    public static final int ACT_MODE_DOWNLOAD_COMMENTS = 4009;
 	
     /**
      * Current mode
@@ -112,6 +117,23 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 	private WSAction wsAction;
 	private boolean isMapShown = true;
 	private MapItemizedOverlay<ListingOverlayItem> overlayItems;
+	
+	/**
+	 * Comments
+	 */
+	private ListView listViewComments;
+	private List<CommentDto> comments;
+	private CommentListAdapter adapterComments;
+	/**
+	 * View group to show hide contents
+	 */
+	private TableLayout layTable;
+	private boolean isFullScreenMap = false;
+	private boolean isFullScreenComments = false;
+
+	private int tableHeight;
+	
+	private LinearLayout layActDetails;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,6 +173,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			@Override
 			public boolean onSingleTap(MotionEvent e) {
 				overlayItems.hideAllBalloons();
+				showFullScreenComments(true);
 				return true;
 			}
 		});
@@ -180,7 +203,15 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         /*if (CURRENT_MODE == ACT_MODE_MY_LISTINGS_DETAILS) {
         	btnBookmark.setImageResource(R.drawable.icon_cancel);
 		}*/
+        //Comments
+        listViewComments = (ListView) findViewById(R.id.listListingDetailsComments);
+        comments = getDemoComments();
+        adapterComments = new CommentListAdapter(this, comments);
+        listViewComments.setAdapter(adapterComments);
+        //view groups
+        layTable = (TableLayout) findViewById(R.id.tableActListingDetails);
         
+        layActDetails = (LinearLayout) findViewById(R.id.actListingDetails);
     }
     
     @Override
@@ -303,6 +334,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
 				, getResources().getDrawable(R.drawable.ic_launcher));
+		images.clear();
 		images.add(listing.getImage());
 		galImageAdapter.notifyDataSetChanged();
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
@@ -393,7 +425,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 		} else if (itemId == R.id.menu_listing_delete) {
 			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
 		} else if (itemId == android.R.id.home) {
-			finish();
+			/*if (isFullScreenMap) {
+				showFullScreenMap(false);
+			} else*/ if (isFullScreenComments) {
+				showFullScreenComments(false);
+			} else{
+				finish();
+			}			
 		}else if (itemId == R.id.menu_listing_share) {
 			Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
@@ -434,6 +472,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 				}else if (params[0].equals(ACT_MODE_REMOVE_BOOKMARK)) {
 					wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId);
+				}else if (isMapShown) {
+					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, 0, 10);
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -447,16 +487,106 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     	protected void onPostExecute(ListingDetailsResultWrapper result) {
     		super.onPostExecute(result);
     		dismissDialog(D_PROGRESS);
-    		if(result.listing == null && result.result == -1){
+    		if(result.listing == null && result.comments == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
 				setDetails(result.listing);
 				listing = result.listing;
-			}else {
+//				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
+			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS && result.comments != null){
+				comments = result.comments;
+				adapterComments.notifyDataSetChanged();
+			}else if(result.result != Constants.ERROR_RESULT_GET_COMMENTS){
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
 			}
     	}
+    }
+    /**
+     * Method to show hide full screen map
+     * @param show
+     */
+    /*private void showFullScreenMap(boolean show){
+    	isFullScreenMap = show;
+    	if (show) {
+    		Utility.collapse(layTable);   		
+		} else {
+			Utility.expand(layTable);
+		}
+    }*/
+    @Override
+    public void onBackPressed() {
+    	/*if (isFullScreenMap) {
+			showFullScreenMap(false);
+		} else*/ if (isFullScreenComments) {
+			showFullScreenComments(false);
+		} else {
+			super.onBackPressed();
+		}    	
+    }
+    
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_UP) {			
+			showFullScreenComments(true);
+		}else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			showFullScreenComments(false);
+		}
+		if (isFullScreenComments) {
+			return true;
+		} else {
+			return super.onTouchEvent(event);
+		}		
+	}
+	/**
+	 * Method to show hide 
+	 * @param show
+	 */
+	private void showFullScreenComments(boolean show){
+		isFullScreenComments = show;
+		if (show) {
+			Utility.collapse(layTable);
+//    		Utility.collapse(mapView);
+		} else {
+			Utility.expand(layTable);
+//    		Utility.expand(mapView);
+		}
+	}
+    private ArrayList<CommentDto> getDemoComments(){
+    	ArrayList<CommentDto> comments = new ArrayList<CommentDto>();
+    	CommentDto comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+    	comment = new CommentDto();
+    	comment.setText("demo");
+    	comment.setPublisherAvatarUrl("");
+    	comments.add(comment);
+		return comments;
     }
 }
