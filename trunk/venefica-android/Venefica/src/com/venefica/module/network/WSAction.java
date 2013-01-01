@@ -31,8 +31,10 @@ import com.venefica.services.CategoryDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
+import com.venefica.services.MessageDto;
 import com.venefica.services.User;
 import com.venefica.services.ServicesManager.GetCommentsByAdResult;
+import com.venefica.services.ServicesManager.SendMessageToResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 import com.venefica.module.utils.Utility;;
@@ -45,24 +47,25 @@ public class WSAction {
 	/**
 	 * Web method name constants
 	 */
-	private static final String WS_METHOD_AUTHENTICATE = "Authenticate";
-	private static final String WS_METHOD_IS_USER_REGISTERED = "IsUserComplete";
-	private static final String WS_METHOD_GET_USER = "GetUser";
-	private static final String WS_METHOD_UPDATE_USER = "UpdateUser";
-	private static final String WS_METHOD_GET_ALL_CATEGORIES = "GetAllCategories";
-	private static final String WS_METHOD_REGISTER_USER = "RegisterUser";
-	private static final String WS_METHOD_PLACE_AD = "PlaceAd";
-	private static final String WS_METHOD_GET_MY_ADS = "GetMyAds";
-	private static final String WS_METHOD_GET_AD_BY_ID = "GetAdById";
-	private static final String WS_METHOD_END_AD = "EndAd";
-	private static final String WS_METHOD_RELIST_AD = "RelistAd";
-	private static final String WS_METHOD_DELETE_AD = "DeleteAd";
-	private static final String WS_METHOD_GET_BOOKMARKED_ADS = "GetBookmarkedAds";
-	private static final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
-	private static final String WS_METHOD_GET_ADS = "GetAdsEx";
-	private static final String WS_METHOD_UPDATE_AD = "UpdateAd";
-	private static final String WS_METHOD_BOOKMARK = "BookmarkAd";
-	private static final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
+	private final String WS_METHOD_AUTHENTICATE = "Authenticate";
+	private final String WS_METHOD_IS_USER_REGISTERED = "IsUserComplete";
+	private final String WS_METHOD_GET_USER = "GetUser";
+	private final String WS_METHOD_UPDATE_USER = "UpdateUser";
+	private final String WS_METHOD_GET_ALL_CATEGORIES = "GetAllCategories";
+	private final String WS_METHOD_REGISTER_USER = "RegisterUser";
+	private final String WS_METHOD_PLACE_AD = "PlaceAd";
+	private final String WS_METHOD_GET_MY_ADS = "GetMyAds";
+	private final String WS_METHOD_GET_AD_BY_ID = "GetAdById";
+	private final String WS_METHOD_END_AD = "EndAd";
+	private final String WS_METHOD_RELIST_AD = "RelistAd";
+	private final String WS_METHOD_DELETE_AD = "DeleteAd";
+	private final String WS_METHOD_GET_BOOKMARKED_ADS = "GetBookmarkedAds";
+	private final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
+	private final String WS_METHOD_GET_ADS = "GetAdsEx";
+	private final String WS_METHOD_UPDATE_AD = "UpdateAd";
+	private final String WS_METHOD_BOOKMARK = "BookmarkAd";
+	private final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
+	private final String WS_METHOD_SEND_MESSAGE = "SendMessage";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -74,6 +77,7 @@ public class WSAction {
 	 * TO hold soap action
 	 */
 	private String soapAction;
+	
 
 	/**
 	 * Method to check network connection's availability
@@ -896,6 +900,49 @@ public class WSAction {
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_COMMENTS;			
 		}
+		return result;
+	}
+	
+	/**
+	 * Method to send message to user
+	 * @param token
+	 * @param message
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper sendMessageTo(String token, MessageDto message) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_SEND_MESSAGE ;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_MESSAGE_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("message", message);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+			message.register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			long id = Long.parseLong(envelope.getResponse().toString());
+			if (id > 0) {
+				result.result = Constants.RESULT_SEND_MESSAGE_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_SEND_MESSAGE;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_SEND_MESSAGE;
+		}
+
 		return result;
 	}
 }
