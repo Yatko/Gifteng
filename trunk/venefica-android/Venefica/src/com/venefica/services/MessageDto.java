@@ -175,4 +175,158 @@ public class MessageDto implements KvmSerializable
 		new ImageDto().registerRead(envelope);
 	}
 
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public boolean isOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(boolean owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * @return the toName
+	 */
+	public String getToName() {
+		return toName;
+	}
+
+	/**
+	 * @param toName the toName to set
+	 */
+	public void setToName(String toName) {
+		this.toName = toName;
+	}
+
+	/**
+	 * @return the toAvatarUrl
+	 */
+	public String getToAvatarUrl() {
+		return toAvatarUrl;
+	}
+
+	/**
+	 * @param toAvatarUrl the toAvatarUrl to set
+	 */
+	public void setToAvatarUrl(String toAvatarUrl) {
+		this.toAvatarUrl = toAvatarUrl;
+	}
+
+	/**
+	 * @return the createdAt
+	 */
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt the createdAt to set
+	 */
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	/**
+	 * @return the read
+	 */
+	public boolean isRead() {
+		return read;
+	}
+
+	/**
+	 * @param read the read to set
+	 */
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	/**
+	 * @return the fromName
+	 */
+	public String getFromName() {
+		return fromName;
+	}
+
+	/**
+	 * @param fromName the fromName to set
+	 */
+	public void setFromName(String fromName) {
+		this.fromName = fromName;
+	}
+
+	/**
+	 * @return the fromAvatarUrl
+	 */
+	public String getFromAvatarUrl() {
+		return fromAvatarUrl;
+	}
+
+	/**
+	 * @param fromAvatarUrl the fromAvatarUrl to set
+	 */
+	public void setFromAvatarUrl(String fromAvatarUrl) {
+		this.fromAvatarUrl = fromAvatarUrl;
+	}
+
+	/**
+	 * @return the toFullName
+	 */
+	public String getToFullName() {
+		return toFullName;
+	}
+
+	/**
+	 * @param toFullName the toFullName to set
+	 */
+	public void setToFullName(String toFullName) {
+		this.toFullName = toFullName;
+	}
+
+	/**
+	 * @return the fromFullName
+	 */
+	public String getFromFullName() {
+		return fromFullName;
+	}
+
+	/**
+	 * @param fromFullName the fromFullName to set
+	 */
+	public void setFromFullName(String fromFullName) {
+		this.fromFullName = fromFullName;
+	}
+
 }
