@@ -50,6 +50,8 @@ public class Constants
 	public static final int ERROR_CONFIRM_REMOVE_BOOKMARKS = 1042;
 	public static final int ERROR_RESULT_GET_COMMENTS = 1043;
 	public static final int RESULT_GET_COMMENTS_SUCCESS = 1044;
+	public static final int RESULT_SEND_MESSAGE_SUCCESS = 1045;
+	public static final int ERROR_RESULT_SEND_MESSAGE = 1046;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
