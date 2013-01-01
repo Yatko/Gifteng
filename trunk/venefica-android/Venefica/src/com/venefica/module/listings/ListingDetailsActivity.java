@@ -2,6 +2,7 @@ package com.venefica.module.listings;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorSet;
 import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.venefica.module.main.R;
@@ -46,6 +49,7 @@ import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.ImageDto;
+import com.venefica.services.MessageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 /**
@@ -53,7 +57,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to show detail Listing  
  */
-public class ListingDetailsActivity extends VeneficaMapActivity{
+public class ListingDetailsActivity extends VeneficaMapActivity implements android.view.View.OnClickListener{
 	/**
 	 * Gallery to images
 	 */
@@ -82,7 +86,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     /**
      * Buttons
      */
-    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch;
+    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch, btnSend;
     private ImageView profImgView;
     /**
      * Modes
@@ -96,6 +100,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     public static final int ACT_MODE_BOOKMARK_LISTINGS = 4007;
     public static final int ACT_MODE_REMOVE_BOOKMARK = 4008;
     public static final int ACT_MODE_DOWNLOAD_COMMENTS = 4009;
+    public static final int ACT_MODE_SEND_MESSAGE  = 4010;
 	
     /**
      * Current mode
@@ -135,12 +140,22 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 	
 	private LinearLayout layActDetails;
 	
+	/**
+	 * Send message/comments
+	 */
+	private ImageButton imgBtnSend;
+	private EditText edtMessage;
+	private LinearLayout laySend;
+	private boolean isSendMsg = false;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_listing_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
         //set activity mode
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
@@ -149,26 +164,17 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
         txtScore = (TextView) findViewById(R.id.txtUserViewScore);
         profImgView = (ImageView) findViewById(R.id.imgUserViewProfileImg);
+        btnSendMsg = (ImageButton) findViewById(R.id.imgBtnUserViewSendMsg);
+        btnSendMsg.setOnClickListener(this);
         //Details
         txtDescription = (TextView) findViewById(R.id.txtActListingDesc);
         //Bookmark
 		btnBookmark = (ImageButton) findViewById(R.id.btnActListingDetailsBookmark);
-		btnBookmark.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-//				Utility.showShortToast(ListingDetailsActivity.this, getResources().getString(R.string.msg_detail_listing_add_fav_success));
-				if (!listing.isOwner()&& !listing.isInBookmars()) {
-					new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
-				} else if(!listing.isOwner()) {
-					ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
-					showDialog(D_CONFIRM);
-				}
-			}
-		});
+		btnBookmark.setOnClickListener(this);
 		//Map
 		mapView = (TapControlledMapView) findViewById(R.id.mapviewActListingDetails);
 		
-		// dismiss balloon upon single tap of MapView (iOS behavior) 
+		// dismiss balloon upon single tap of MapView 
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {		
 			@Override
 			public boolean onSingleTap(MotionEvent e) {
@@ -212,6 +218,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
         layTable = (TableLayout) findViewById(R.id.tableActListingDetails);
         
         layActDetails = (LinearLayout) findViewById(R.id.actListingDetails);
+        
+        //Send Messages
+        
+        edtMessage = (EditText) findViewById(R.id.edtActListingDetailsMessage);
+        imgBtnSend = (ImageButton) findViewById(R.id.imgBtnActListingDetailsSend);
+        imgBtnSend.setOnClickListener(this);
+        laySend = (LinearLayout) findViewById(R.id.layActListingDetailsSend);
     }
     
     @Override
@@ -317,6 +330,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 				message = (String) getResources().getText(R.string.msg_bookmark_delete_success);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_REMOVE_BOOKMARKS){
 				message = (String) getResources().getText(R.string.error_remove_bookmarks);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_SEND_MESSAGE){
+				message = (String) getResources().getText(R.string.error_send_message);
+			}else if(ERROR_CODE == Constants.RESULT_SEND_MESSAGE_SUCCESS){
+				laySend.setVisibility(ViewGroup.GONE);
+				isSendMsg = false;
+				message = (String) getResources().getText(R.string.msg_send_message_success);
 			}  		
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -429,6 +448,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 				showFullScreenMap(false);
 			} else*/ if (isFullScreenComments) {
 				showFullScreenComments(false);
+			}  else if (isSendMsg) {
+				laySend.setVisibility(ViewGroup.GONE);
+				isSendMsg = false;
 			} else{
 				finish();
 			}			
@@ -450,7 +472,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
-    		showDialog(D_PROGRESS);
+//    		showDialog(D_PROGRESS);
+    		setSupportProgressBarIndeterminateVisibility(true);
     	}
 		@Override
 		protected ListingDetailsResultWrapper doInBackground(Integer... params) {
@@ -472,8 +495,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 				}else if (params[0].equals(ACT_MODE_REMOVE_BOOKMARK)) {
 					wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId);
-				}else if (isMapShown) {
+				}else if (params[0].equals(ACT_MODE_DOWNLOAD_COMMENTS)) {
 					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, 0, 10);
+				}else if (params[0].equals(ACT_MODE_SEND_MESSAGE)) {
+					wrapper = wsAction.sendMessageTo(((VeneficaApplication)getApplication()).getAuthToken()
+							, getMessage());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -486,7 +512,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     	@Override
     	protected void onPostExecute(ListingDetailsResultWrapper result) {
     		super.onPostExecute(result);
-    		dismissDialog(D_PROGRESS);
+//    		dismissDialog(D_PROGRESS);
+    		setSupportProgressBarIndeterminateVisibility(false);
     		if(result.listing == null && result.comments == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
@@ -521,11 +548,25 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
 			showFullScreenMap(false);
 		} else*/ if (isFullScreenComments) {
 			showFullScreenComments(false);
+		} else if (isSendMsg) {
+			laySend.setVisibility(ViewGroup.GONE);
+			isSendMsg = false;
 		} else {
 			super.onBackPressed();
 		}    	
     }
     
+	public MessageDto getMessage() {
+		MessageDto messageDto = new MessageDto();
+		messageDto.setCreatedAt(new Date());
+		messageDto.setOwner(true);
+		messageDto.setText(edtMessage.getText().toString());
+		messageDto.setToName(listing.getCreator().getName());
+		messageDto.setToFullName(listing.getCreator().getFirstName() +" "+listing.getCreator().getLastName());
+		messageDto.setToAvatarUrl(listing.getCreator().getAvatar().getUrl());
+		return messageDto;
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {			
@@ -589,4 +630,21 @@ public class ListingDetailsActivity extends VeneficaMapActivity{
     	comments.add(comment);
 		return comments;
     }
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.btnActListingDetailsBookmark) {
+			if (listing != null && !listing.isOwner() && !listing.isInBookmars()) {
+				new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
+			} else if(!listing.isOwner()) {
+				ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
+				showDialog(D_CONFIRM);
+			}
+		} else if (v.getId() == R.id.imgBtnUserViewSendMsg && listing != null && !listing.isOwner()) {
+			laySend.setVisibility(ViewGroup.VISIBLE);
+			isSendMsg = true;
+		} else if(v.getId() == R.id.imgBtnActListingDetailsSend){
+			new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
+		}
+	}
 }
