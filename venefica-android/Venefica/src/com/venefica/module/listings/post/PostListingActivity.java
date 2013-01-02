@@ -1,8 +1,6 @@
 package com.venefica.module.listings.post;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -42,6 +39,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -155,8 +153,11 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		setContentView(R.layout.activity_post_listing);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setProgressBarIndeterminateVisibility(false);
 		//set mode
 		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
 		//location manager 
@@ -426,7 +427,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog(D_PROGRESS);
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
@@ -458,7 +460,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		@Override
 		protected void onPostExecute(PostListingResultWrapper result) {
 			super.onPostExecute(result);
-			dismissDialog(D_PROGRESS);
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
