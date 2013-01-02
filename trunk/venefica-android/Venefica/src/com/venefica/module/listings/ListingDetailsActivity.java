@@ -101,7 +101,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     public static final int ACT_MODE_REMOVE_BOOKMARK = 4008;
     public static final int ACT_MODE_DOWNLOAD_COMMENTS = 4009;
     public static final int ACT_MODE_SEND_MESSAGE  = 4010;
-	
+	public static final int ACT_MODE_ADD_COMMENT = 4011;
     /**
      * Current mode
      */
@@ -146,7 +146,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	private ImageButton imgBtnSend;
 	private EditText edtMessage;
 	private LinearLayout laySend;
-	private boolean isSendMsg = false;
+	private boolean isSendMsgVisible = false;
+	private boolean isSendMessage = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -333,9 +334,14 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_SEND_MESSAGE){
 				message = (String) getResources().getText(R.string.error_send_message);
 			}else if(ERROR_CODE == Constants.RESULT_SEND_MESSAGE_SUCCESS){
-				laySend.setVisibility(ViewGroup.GONE);
-				isSendMsg = false;
+				setMessageLayoutVisiblity(false);
+				isSendMessage = false;
 				message = (String) getResources().getText(R.string.msg_send_message_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_ADD_COMMENT){
+				message = (String) getResources().getText(R.string.error_add_comment);
+			}else if(ERROR_CODE == Constants.RESULT_ADD_COMMENT_SUCCESS){
+				setMessageLayoutVisiblity(false);
+				message = (String) getResources().getText(R.string.msg_add_comment_success);
 			}  		
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -448,9 +454,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				showFullScreenMap(false);
 			} else*/ if (isFullScreenComments) {
 				showFullScreenComments(false);
-			}  else if (isSendMsg) {
-				laySend.setVisibility(ViewGroup.GONE);
-				isSendMsg = false;
+			}  else if (isSendMsgVisible) {
+				setMessageLayoutVisiblity(false);
+				isSendMessage = false;
 			} else{
 				finish();
 			}			
@@ -496,10 +502,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId);
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_COMMENTS)) {
-					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, 0, 10);
+					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, 1, 10);
 				}else if (params[0].equals(ACT_MODE_SEND_MESSAGE)) {
 					wrapper = wsAction.sendMessageTo(((VeneficaApplication)getApplication()).getAuthToken()
 							, getMessage());
+				}else if (params[0].equals(ACT_MODE_ADD_COMMENT)) {
+					wrapper = wsAction.addCommentToListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, selectedListingId, getComment());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -520,7 +529,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
 				setDetails(result.listing);
 				listing = result.listing;
-//				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
+				//Download comments
+				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
 			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS && result.comments != null){
 				comments = result.comments;
 				adapterComments.notifyDataSetChanged();
@@ -548,14 +558,33 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			showFullScreenMap(false);
 		} else*/ if (isFullScreenComments) {
 			showFullScreenComments(false);
-		} else if (isSendMsg) {
-			laySend.setVisibility(ViewGroup.GONE);
-			isSendMsg = false;
+		} else if (isSendMsgVisible) {
+			setMessageLayoutVisiblity(false);
+			isSendMessage = false;
 		} else {
 			super.onBackPressed();
 		}    	
     }
     
+	/**
+	 * Get comments to send
+	 * @return commentDto
+	 */
+	public CommentDto getComment() {
+		CommentDto commentDto = new CommentDto();
+		commentDto.setCreatedAt(new Date());		
+		commentDto.setOwner(listing.isOwner());
+		commentDto.setText(edtMessage.getText().toString());
+		/*commentDto.setPublisherName(publisherName);
+		commentDto.setPublisherFullName(publisherFullName);
+		commentDto.setPublisherAvatarUrl(publisherAvatarUrl);*/
+		return commentDto;
+	}
+
+	/**
+	 * Get message to send
+	 * @return messageDto
+	 */
 	public MessageDto getMessage() {
 		MessageDto messageDto = new MessageDto();
 		messageDto.setCreatedAt(new Date());
@@ -641,10 +670,27 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				showDialog(D_CONFIRM);
 			}
 		} else if (v.getId() == R.id.imgBtnUserViewSendMsg && listing != null && !listing.isOwner()) {
-			laySend.setVisibility(ViewGroup.VISIBLE);
-			isSendMsg = true;
-		} else if(v.getId() == R.id.imgBtnActListingDetailsSend){
-			new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
+			setMessageLayoutVisiblity(true);
+			isSendMessage = true;
+		} else if(v.getId() == R.id.imgBtnActListingDetailsSend && listing != null){
+			if (isSendMessage) {
+				new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
+			} else {
+				new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
+			}			
 		}
+	}
+	
+	/**
+	 * Set send message layout visibility
+	 * @param isVisible
+	 */
+	public void setMessageLayoutVisiblity(boolean isVisible){
+		if (isVisible) {
+			laySend.setVisibility(ViewGroup.VISIBLE);
+		} else {
+			laySend.setVisibility(ViewGroup.GONE);
+		}		
+		isSendMsgVisible = isVisible;
 	}
 }
