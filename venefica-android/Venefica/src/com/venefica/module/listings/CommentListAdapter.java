@@ -86,10 +86,10 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.ic_launcher));
 		if(position == 0){
 			holder.imgBtnEdit.setVisibility(View.VISIBLE);
+			holder.imgBtnEdit.setOnClickListener(this);
 		}else {
 			holder.imgBtnEdit.setVisibility(View.GONE);
 		}
-		holder.imgBtnEdit.setOnClickListener(this) ;
 		return convertView;
 	}
 
@@ -102,7 +102,7 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.imgBtnCommentListEdit) {
-			
+			((ListingDetailsActivity)this.context).setMessageLayoutVisiblity(true);
 		}
 	}
 }
