@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
@@ -147,6 +148,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_register_user);
         user = new UserDto();
         //Get mode
@@ -479,7 +481,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
     	
     }
     /**
-     * Get image
+     * Get image from gallery
      */
     private void pickImage() {
     	Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
@@ -555,7 +557,8 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog(D_PROGRESS);
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
 		protected UserRegistrationResultWrapper doInBackground(String... params) {
@@ -582,7 +585,8 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 		@Override
 		protected void onPostExecute(UserRegistrationResultWrapper result) {
 			super.onPostExecute(result);
-			dismissDialog(D_PROGRESS);
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.userData == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
