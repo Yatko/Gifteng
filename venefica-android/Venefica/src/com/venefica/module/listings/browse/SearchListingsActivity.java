@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -151,6 +152,7 @@ ISlideMenuCallback, LocationListener{
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_search_listings);
         //get preferences
         prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
@@ -414,7 +416,8 @@ ISlideMenuCallback, LocationListener{
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog(D_PROGRESS);
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
 		protected SearchListingResultWrapper doInBackground(Integer... params) {
@@ -442,7 +445,8 @@ ISlideMenuCallback, LocationListener{
 		@Override
 		protected void onPostExecute(SearchListingResultWrapper result) {
 			super.onPostExecute(result);
-			dismissDialog(D_PROGRESS);
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.listings == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
