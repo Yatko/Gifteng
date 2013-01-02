@@ -52,6 +52,8 @@ public class Constants
 	public static final int RESULT_GET_COMMENTS_SUCCESS = 1044;
 	public static final int RESULT_SEND_MESSAGE_SUCCESS = 1045;
 	public static final int ERROR_RESULT_SEND_MESSAGE = 1046;
+	public static final int ERROR_RESULT_ADD_COMMENT = 1047;
+	public static final int RESULT_ADD_COMMENT_SUCCESS = 1048;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -139,6 +141,6 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;	
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;		
 	
 }
