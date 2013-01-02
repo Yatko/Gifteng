@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
@@ -71,6 +72,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_browse_categories);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 
@@ -187,7 +189,8 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog(D_PROGRESS);
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
 		protected BrowseCatResultWrapper doInBackground(Integer... params) {
@@ -209,7 +212,8 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 		}
 		
 		protected void onPostExecute(BrowseCatResultWrapper result) {
-			dismissDialog(D_PROGRESS);
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.categories == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
