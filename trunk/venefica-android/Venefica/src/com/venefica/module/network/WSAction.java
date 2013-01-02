@@ -3,8 +3,6 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -33,9 +31,6 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
 import com.venefica.services.User;
-import com.venefica.services.ServicesManager.GetCommentsByAdResult;
-import com.venefica.services.ServicesManager.SendMessageToResult;
-import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 import com.venefica.module.utils.Utility;;
 
@@ -66,12 +61,12 @@ public class WSAction {
 	private final String WS_METHOD_BOOKMARK = "BookmarkAd";
 	private final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
 	private final String WS_METHOD_SEND_MESSAGE = "SendMessage";
+	private final String WS_METHOD_ADD_COMMENT_TO_LISTING = "AddCommentToAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
-	
-		
+			
 	
 	/**
 	 * TO hold soap action
@@ -942,7 +937,51 @@ public class WSAction {
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_SEND_MESSAGE;
 		}
-
 		return result;
 	}
+	
+	/**
+	 * Method to add comments to listing
+	 * @param token
+	 * @param adId
+	 * @param comment
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper addCommentToListing(String token, long adId, CommentDto comment) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_ADD_COMMENT_TO_LISTING;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_MESSAGE_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+			request.addProperty("comment", comment);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+			comment.register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			long id = Long.parseLong(envelope.getResponse().toString());
+			if (id > 0) {
+				result.result = Constants.RESULT_ADD_COMMENT_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_ADD_COMMENT;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_ADD_COMMENT;
+		}
+		return result;
+	}
+
 }
