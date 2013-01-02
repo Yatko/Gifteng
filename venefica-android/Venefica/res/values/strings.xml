@@ -130,6 +130,7 @@
     <string name="error_update_listing">Unable to update listing. Please try again later.</string>
     <string name="error_search_listings_no_data">No listings found.</string>
     <string name="error_send_message">Message sending failed. Please try again later.</string>
+    <string name="error_add_comment">Unable to update comments. Please try again later.</string>
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
@@ -163,6 +164,7 @@
     <string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
     <string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
 	<string name="msg_send_message_success">Message sent successfully.</string>
+	<string name="msg_add_comment_success">Comment added successfully.</string>
 	
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
