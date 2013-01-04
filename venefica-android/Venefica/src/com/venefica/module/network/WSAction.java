@@ -889,7 +889,7 @@ public class WSAction {
 				result.comments.add((CommentDto)response);
 				result.result = Constants.RESULT_GET_COMMENTS_SUCCESS;
 			}else{
-				result.comments = (ArrayList<CommentDto>)response;
+				result.comments = (List<CommentDto>)response;
 				result.result = Constants.RESULT_GET_COMMENTS_SUCCESS;
 			}
 		}catch (SoapFault e){
