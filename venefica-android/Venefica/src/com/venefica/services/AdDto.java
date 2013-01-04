@@ -10,13 +10,10 @@ import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
-import android.location.Location;
 import android.util.Log;
 
-//import com.venefica.activity.PostStepLogic.PostData;
 import com.venefica.module.user.UserDto;
 import com.venefica.utils.Constants;
-import com.venefica.utils.GeoLocation;
 
 public class AdDto implements KvmSerializable
 {
@@ -51,44 +48,7 @@ public class AdDto implements KvmSerializable
 
 	}
 
-	/*public AdDto(PostData Post)
-	{
-		if (Post == null)
-		{
-			Log.d("AdDto Alert!", "post == null");
-			return;
-		}
-
-		id = Post.id;
-		categoryId = Post.Category;
-		category = "";
-		title = Post.Title;
-		description = Post.Desc;
-
-		try
-		{
-			price = BigDecimal.valueOf(Double.valueOf(String.valueOf(Post.Price.trim().replace(",", "."))));
-		}
-		catch (Exception e)
-		{
-			price = BigDecimal.valueOf(0.0);
-			Log.d("AdDto.setProperty Exception:", e.getLocalizedMessage());
-		}
-
-		Location loc = GeoLocation.GeoToLoc(Post.GeoLocation);
-		latitude = loc.getLatitude();
-		longitude = loc.getLongitude();
-
-		if (Post.ImageShow != null)
-		{
-			image = new ImageDto(Post.ImageShow);
-			imageThumbnail = new ImageDto(Post.ImageShow, true);
-		}
-
-		expiresAt = Post.useExpires ? Post.expirate : null;
-		wanted = Post.wanted;
-	}*/
-
+	
 	public Object getProperty(int index)
 	{
 		switch (index)
