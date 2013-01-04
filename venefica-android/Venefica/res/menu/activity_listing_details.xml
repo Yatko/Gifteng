@@ -5,15 +5,20 @@
         android:showAsAction="always"
         android:orderInCategory="95" />
     <item android:id="@+id/menu_listing_update"
-        android:title="@string/label_menu_update"
+        android:title="@string/label_menu_update"        
+        android:icon="@drawable/icon_edit"
+        android:showAsAction="withText"
         android:orderInCategory="96" />
     <item android:id="@+id/menu_listing_end"
         android:title="@string/label_menu_end"
+        android:icon="@drawable/icon_cancel"
         android:orderInCategory="97" />
     <item android:id="@+id/menu_listing_relist"
         android:title="@string/label_menu_relist"
+        android:icon="@drawable/icon_redo"
         android:orderInCategory="98" />
     <item android:id="@+id/menu_listing_delete"
         android:title="@string/label_menu_delete"
+        android:icon="@drawable/icon_trash"
         android:orderInCategory="99" />
 </menu>
