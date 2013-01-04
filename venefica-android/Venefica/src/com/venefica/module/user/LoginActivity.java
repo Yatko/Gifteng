@@ -166,7 +166,6 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 			AUTH_TYPE = AUTH_VENEFICA;
 			//Go to user registration
 			Intent intent = new Intent(LoginActivity.this, RegisterUserActivity.class);
-			//			Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
 			intent.putExtra("activity_mode",RegisterUserActivity.MODE_REGISTER_USR);
 			startActivityForResult(intent, 0);
 		} else if (id == R.id.btnActLoginSignIn) {
@@ -363,7 +362,6 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 			dismissDialog(D_PROGRESS);
 			if(result != null){
 				if (result != null && result.result == Constants.RESULT_USER_AUTHORISED) {
-//					String token = result.data.substring(result.data.indexOf(':'));
 					saveAuthToken(result.data);
 					VeneficaApplication.authToken = result.data;
 					startHomeScreen();
