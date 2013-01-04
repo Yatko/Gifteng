@@ -63,7 +63,6 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 */
 	private Gallery gallery;
 
-    private int selectedImagePosition = 0;
     private long selectedListingId = 0;
     private AdDto listing;
     /**
@@ -133,13 +132,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 * View group to show hide contents
 	 */
 	private TableLayout layTable;
-	private boolean isFullScreenMap = false;
 	private boolean isFullScreenComments = false;
 
-	private int tableHeight;
-	
-	private LinearLayout layActDetails;
-	
 	/**
 	 * Send message/comments
 	 */
@@ -212,14 +206,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		}*/
         //Comments
         listViewComments = (ListView) findViewById(R.id.listListingDetailsComments);
-        comments = getDemoComments();
+        comments = getEmptyComment();
         adapterComments = new CommentListAdapter(this, comments);
         listViewComments.setAdapter(adapterComments);
         //view groups
         layTable = (TableLayout) findViewById(R.id.tableActListingDetails);
-        
-        layActDetails = (LinearLayout) findViewById(R.id.actListingDetails);
-        
+             
         //Send Messages
         
         edtMessage = (EditText) findViewById(R.id.edtActListingDetailsMessage);
@@ -342,6 +334,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}else if(ERROR_CODE == Constants.RESULT_ADD_COMMENT_SUCCESS){
 				setMessageLayoutVisiblity(false);
 				message = (String) getResources().getText(R.string.msg_add_comment_success);
+				//Download comments
+				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
 			}  		
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -502,7 +496,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					wrapper = wsAction.removeBookmarkedListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId);
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_COMMENTS)) {
-					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, 1, 10);
+					wrapper = wsAction.getCommentsByListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId, -1, 10);
 				}else if (params[0].equals(ACT_MODE_SEND_MESSAGE)) {
 					wrapper = wsAction.sendMessageTo(((VeneficaApplication)getApplication()).getAuthToken()
 							, getMessage());
@@ -531,9 +525,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				listing = result.listing;
 				//Download comments
 				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
-			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS && result.comments != null){
-				comments = result.comments;
-				adapterComments.notifyDataSetChanged();
+			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS /*&& result.comments != null*/){
+				if (result.comments != null) {
+					comments.clear();
+					comments.addAll(result.comments) ;
+					adapterComments.notifyDataSetChanged();
+				} 				
 			}else if(result.result != Constants.ERROR_RESULT_GET_COMMENTS){
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
@@ -596,7 +593,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		return messageDto;
 	}
 
-	@Override
+	/*@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {			
 			showFullScreenComments(true);
@@ -608,7 +605,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		} else {
 			return super.onTouchEvent(event);
 		}		
-	}
+	}*/
 	/**
 	 * Method to show hide 
 	 * @param show
@@ -617,48 +614,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		isFullScreenComments = show;
 		if (show) {
 			Utility.collapse(layTable);
-//    		Utility.collapse(mapView);
+//    		Utility.expand(listViewComments);
 		} else {
 			Utility.expand(layTable);
 //    		Utility.expand(mapView);
 		}
-	}
-    private ArrayList<CommentDto> getDemoComments(){
-    	ArrayList<CommentDto> comments = new ArrayList<CommentDto>();
-    	CommentDto comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-    	comment = new CommentDto();
-    	comment.setText("demo");
-    	comment.setPublisherAvatarUrl("");
-    	comments.add(comment);
-		return comments;
-    }
+	}    
 
 	@Override
 	public void onClick(View v) {
@@ -692,5 +653,15 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			laySend.setVisibility(ViewGroup.GONE);
 		}		
 		isSendMsgVisible = isVisible;
+	}
+	
+	private ArrayList<CommentDto> getEmptyComment(){
+		ArrayList<CommentDto> comments = new ArrayList<CommentDto>();
+		CommentDto comment = new CommentDto();
+		comment.setPublisherAvatarUrl("");
+		comment.setOwner(true);
+		comment.setText("");
+		comments.add(comment);
+		return comments;
 	}
 }

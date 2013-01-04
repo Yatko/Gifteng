@@ -1,6 +1,6 @@
 package com.venefica.module.listings;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.venefica.services.AdDto;
 import com.venefica.services.CommentDto;
@@ -13,5 +13,5 @@ public class ListingDetailsResultWrapper {
 	public int result = -1;
 	public String data = null;
 	public AdDto listing;
-	public ArrayList<CommentDto> comments;
+	public List<CommentDto> comments;
 }
