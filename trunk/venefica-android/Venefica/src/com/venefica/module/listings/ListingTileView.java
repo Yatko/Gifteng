@@ -21,7 +21,7 @@ import android.widget.TextView;
  * Class to represent tile
  */
 public class ListingTileView extends LinearLayout implements View.OnClickListener, View.OnLongClickListener{
-	private TextView txtTitle, txtDesc, txtPrice;
+	private TextView txtTitle, /*txtDesc,*/ txtPrice;
 	private ImageButton imgBtnShare;
 	private ImageView imgView;
 	private AdDto listing;
@@ -35,7 +35,7 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.view_listing_tile_item, this, false);
 		txtTitle = (TextView) view.findViewById(R.id.txtListingTileTitle);
-		txtDesc = (TextView) view.findViewById(R.id.txtListingTileDesc);
+//		txtDesc = (TextView) view.findViewById(R.id.txtListingTileDesc);
 		txtPrice = (TextView) view.findViewById(R.id.txtListingTilePrice);
 		imgBtnShare = (ImageButton) view.findViewById(R.id.imgBtnListingTileShare);
 		imgBtnShare.setOnClickListener(this);
@@ -58,7 +58,7 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 	public void setListing(AdDto listing){
 		this.listing = listing;
 		txtTitle.setText(listing.getTitle());
-		txtDesc.setText(listing.getDescription());
+//		txtDesc.setText(listing.getDescription());
 		txtPrice.setText("USD ");
 		txtPrice.append(listing.getPrice().toString());
 //		txtPrice.append(" ");
