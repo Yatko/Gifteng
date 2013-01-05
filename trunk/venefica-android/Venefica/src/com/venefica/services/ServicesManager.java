@@ -2445,7 +2445,7 @@ public class ServicesManager
 
 		return result;
 	}
-
+	@Deprecated
 	public SendMessageToResult SendMessageTo(String token, MessageDto message)
 	{
 		final String SOAP_METHOD = SEND_MESSAGE_METHOD;
@@ -2501,6 +2501,7 @@ public class ServicesManager
 		return result;
 	}
 
+	@Deprecated
 	public AddCommentToAdResult AddCommentToAd(String token, long adId, CommentDto comment)
 	{
 		final String SOAP_METHOD = ADD_COMMENT_TO_AD_METHOD;
