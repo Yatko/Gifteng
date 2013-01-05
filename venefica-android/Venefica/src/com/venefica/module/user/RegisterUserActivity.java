@@ -50,7 +50,7 @@ import android.widget.TextView;
 
 /**
  * @author avinash
- * Class for user registration activity.
+ * Class for user registration activity.  
  */
 public class RegisterUserActivity extends VeneficaActivity implements OnClickListener{
 	/**
