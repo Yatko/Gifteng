@@ -140,8 +140,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal"
         android:background="@color/white"
+        android:orientation="horizontal"
         android:visibility="gone"
         android:weightSum="100" >
 
@@ -160,6 +160,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="20"
-            android:src="@drawable/icon_send" />
+            android:src="@drawable/icon_send"/>
     </LinearLayout>
+
 </RelativeLayout>
