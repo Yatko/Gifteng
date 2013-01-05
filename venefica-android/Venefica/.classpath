@@ -2,9 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry exported="true" kind="lib" path="../universal-image-loader-1.4.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="../universal-image-loader-1.4.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="../kxml2-2.3.0.jar"/>
+	<classpathentry kind="lib" path="/home/avinash/Downloads/kxml2-2.3.0.jar" sourcepath="/home/avinash/.m2/repository/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="libs/actionbarsherlock-plugin-maps-4.2.0.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
