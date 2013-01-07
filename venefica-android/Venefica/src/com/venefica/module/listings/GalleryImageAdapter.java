@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ImageView.ScaleType;
 
 /**
  * @author avinash Adapter class for image gallery
@@ -84,7 +84,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 			imageView = new ImageView(this.context);
 
 			imageView.setPadding(3, 3, 3, 3);
-
+			imageView.setScaleType(ScaleType.CENTER_CROP);
 			convertView = imageView;
 
 			holder.imageView = imageView;
@@ -106,7 +106,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 		
 		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		return imageView;
+		return convertView;
 	}
 
 	private static class ViewHolder {
