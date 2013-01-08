@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
@@ -94,8 +95,9 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
-		getApplication().setTheme(R.style.Theme_Blue);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS | Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
+		setSupportProgressBarIndeterminateVisibility(false);
 		//view groups
 		layWelcome = (RelativeLayout) findViewById(R.id.layLoginActWelcome);
 		layLogin = (ScrollView) findViewById(R.id.layActLoginSignIn);
@@ -335,7 +337,8 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog(D_PROGRESS);
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
 		protected UserRegistrationResultWrapper doInBackground(String... params) {
@@ -359,7 +362,8 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		@Override
 		protected void onPostExecute(UserRegistrationResultWrapper result) {
 			super.onPostExecute(result);
-			dismissDialog(D_PROGRESS);
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
 			if(result != null){
 				if (result != null && result.result == Constants.RESULT_USER_AUTHORISED) {
 					saveAuthToken(result.data);

@@ -66,10 +66,10 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 		if (this.listing.getImage() != null) {
 			ImageDownloadManager.getImageDownloadManagerInstance()
 					.loadDrawable(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
-					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}else {
 			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
-					, imgView, getResources().getDrawable(R.drawable.ic_launcher));
+					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}	
 	}
 	

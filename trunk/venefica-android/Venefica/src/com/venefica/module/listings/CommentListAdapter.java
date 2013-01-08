@@ -83,10 +83,17 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 		holder.txtComment.setText(comments.get(position).getText());
 		ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX +comments.get(position)
-					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.ic_launcher));
+					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
 		if(position == 0){
 			holder.imgBtnEdit.setVisibility(View.VISIBLE);
-			holder.imgBtnEdit.setOnClickListener(this);			
+			holder.imgBtnEdit.setOnClickListener(this);	
+			/*if (comments.get(position).getText().trim().length() == 0) {
+				holder.imgProfile.setAlpha(0);
+				holder.imgProfile.setBackgroundColor(this.context.getResources().getColor(R.color.transparent));
+			} else {
+				holder.imgProfile.setAlpha(1);
+//				holder.imgProfile.setBackgroundColor(this.context.getResources().getColor(R.color.black));
+			}*/
 		}else {
 			holder.imgBtnEdit.setVisibility(View.GONE);			
 		}

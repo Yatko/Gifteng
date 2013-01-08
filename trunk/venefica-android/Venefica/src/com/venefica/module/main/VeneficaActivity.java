@@ -10,6 +10,7 @@ import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.user.RegisterUserActivity;
+import com.venefica.module.utils.Utility;
 
 /**
  * @author avinash
@@ -38,6 +39,7 @@ ISlideMenuCallback {
 		switch (itemId) {
 		case R.id.slideMenuBrowse: 
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -52,8 +54,10 @@ ISlideMenuCallback {
 			}
 	    	break;
 		case R.id.slideMenuOfferings:
+			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
     		break;
 		case R.id.slideMenuClaimed:
+			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
     		break;
 		case R.id.slideMenuBookmarks:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
@@ -88,6 +92,7 @@ ISlideMenuCallback {
 			}
 	    	break;
     	case R.id.slideMenuFeedback:
+    		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
     		break;
 		}
 		if(!(getApplicationContext() instanceof SearchListingsActivity)){

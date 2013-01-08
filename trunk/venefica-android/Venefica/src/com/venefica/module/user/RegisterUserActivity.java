@@ -150,6 +150,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_register_user);
+        setSupportProgressBarIndeterminateVisibility(false);
         user = new UserDto();
         //Get mode
         CURRENT_MODE = getIntent().getIntExtra("activity_mode", MODE_REGISTER_USR);
@@ -614,7 +615,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 		chkBusinessAcc.setChecked(userData.isBusinessAcc());
 		ImageDownloadManager.getImageDownloadManagerInstance()
 				.loadDrawable(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
-						, getResources().getDrawable(R.drawable.ic_launcher));
+						, getResources().getDrawable(R.drawable.icon_picture_white));
 		
     	edtLogin.setText(userData.getName());
 //    	edtPassword.setVisibility(visibility);
@@ -640,17 +641,19 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 			if (v.getId() == R.id.btnActRegUserVerify) {
 				layVerify.setVisibility(ViewGroup.GONE);
 				layJoin.setVisibility(ViewGroup.VISIBLE);
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			} else if (v.getId() == R.id.btnActRegUserReqInv) {
 				getUserData();
-				new RegisterUserTask().execute(MODE_REGISTER_USR+"");
+//				new RegisterUserTask().execute(MODE_REGISTER_USR+"");
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			} else if (v.getId() == R.id.btnActRegUserFacebook) {
-				
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			} else if (v.getId() == R.id.btnActRegUserTwitter) {
-				
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			} else if (v.getId() == R.id.btnActRegUserJoin) {
-				
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			} else if (v.getId() == R.id.btnActRegUserForgotInvCode) {
-				
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			}
 		}else{
 			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
