@@ -4,7 +4,6 @@
     android:id="@+id/layUserView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="20dp"
     android:orientation="horizontal"
     android:weightSum="100" >
 
@@ -36,7 +35,7 @@
                 android:id="@+id/txtUserViewUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:textStyle="bold"/>
         </TableRow>
         <TableRow
@@ -58,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" 
                 android:layout_weight="60"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="@color/light_blue"/>
             <ImageButton 
