@@ -317,8 +317,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:contentDescription="@string/temp_string"
-                android:src="@drawable/venefica_marker" />
+                android:src="@drawable/icon_picture_white"
+                android:background="@color/black" />
 
             <TextView
                 android:id="@+id/txtActRegUserProfileImg"
