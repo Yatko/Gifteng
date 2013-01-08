@@ -34,8 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -58,7 +56,6 @@ import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.FilterDto;
-import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -208,8 +205,6 @@ ISlideMenuCallback, LocationListener{
 			}
 		});
       //Toggle Button to view Map
-//        txtTitleMap = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
-//        txtTitleMap.setText(getResources().getString(R.string.label_dashboard_browse));
         toggleButtonMap = (ImageButton) findViewById(R.id.btnActSearchListingsMap);
         toggleButtonMap.setOnClickListener(new View.OnClickListener() {
 			

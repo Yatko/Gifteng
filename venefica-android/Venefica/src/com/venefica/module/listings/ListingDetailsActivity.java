@@ -16,27 +16,18 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.ScaleAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorSet;
-import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -170,6 +161,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         profImgView = (ImageView) findViewById(R.id.imgUserViewProfileImg);
         btnSendMsg = (ImageButton) findViewById(R.id.imgBtnUserViewSendMsg);
         btnSendMsg.setOnClickListener(this);
+        btnWatch = (ImageButton) findViewById(R.id.imgBtnUserViewWatch);
+        btnWatch.setOnClickListener(this);
         //Details
         txtDescription = (TextView) findViewById(R.id.txtActListingDesc);
         //Bookmark
@@ -361,7 +354,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		//set user info
 		ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
-				, getResources().getDrawable(R.drawable.ic_launcher));
+				, getResources().getDrawable(R.drawable.icon_picture_white));
 		images.clear();
 		images.add(listing.getImage());
 		galImageAdapter.notifyDataSetChanged();
@@ -641,7 +634,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
 				}
 			}						
-		} 
+		} else if (v.getId() == R.id.imgBtnUserViewWatch) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+		}
 	}
 	
 	/**

@@ -101,7 +101,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 			ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(plotsImages.get(position) != null 
 				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
-					holder.imageView, this.context.getResources().getDrawable(R.drawable.ic_launcher));
+					holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
 		}	
 		
 		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
