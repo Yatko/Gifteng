@@ -193,7 +193,7 @@
             android:id="@+id/galleryActPostListingPhotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray"
+            android:background="@color/black"
             android:gravity="bottom"
             android:minHeight="90dp"
             android:padding="5dp"
