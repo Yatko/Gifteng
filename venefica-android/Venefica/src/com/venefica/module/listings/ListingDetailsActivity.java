@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.ImageButton;
@@ -82,7 +83,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     /**
      * Buttons
      */
-    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch, btnSend;
+    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch;
+    private Button btnGetIt;
     private ImageView profImgView;
     /**
      * Modes
@@ -168,6 +170,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         //Bookmark
 		btnBookmark = (ImageButton) findViewById(R.id.btnActListingDetailsBookmark);
 		btnBookmark.setOnClickListener(this);
+		//Flag
+		btnFlag = (ImageButton) findViewById(R.id.btnActListingDetailsFlag);
+		btnFlag.setOnClickListener(this);
+		//Getit
+		btnGetIt = (Button) findViewById(R.id.btnActListingDetailsGetIt);
+		btnGetIt.setOnClickListener(this);
 		//Map
 		mapView = (TapControlledMapView) findViewById(R.id.mapviewActListingDetails);
 		mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 
@@ -635,7 +643,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}
 			}						
 		} else if (v.getId() == R.id.imgBtnUserViewWatch) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+		} else if (v.getId() == R.id.btnActListingDetailsFlag) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+		} else if (v.getId() == R.id.btnActListingDetailsGetIt) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 		}
 	}
 	
