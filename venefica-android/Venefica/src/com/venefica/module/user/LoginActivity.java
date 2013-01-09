@@ -194,6 +194,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 				}
 			}
 		} else if (id == R.id.btnActLoginFacebook) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(WSAction.isNetworkConnected(this)){
 				loginWithSocialNetwork(Constants.SIGN_IN_FACEBOOK_URL, AUTH_FACEBOOK);
 			}else{
@@ -201,6 +202,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 				showDialog(D_ERROR);
 			}
 		} else if (id == R.id.btnActLoginTwitter) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(WSAction.isNetworkConnected(this)){
 				loginWithSocialNetwork(Constants.SIGN_IN_TWITTER_URL, AUTH_TWITTER);
 			}else{
@@ -225,6 +227,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 			layLogin.setVisibility(ViewGroup.GONE);
 			layForgetPass.setVisibility(ViewGroup.VISIBLE);			
 		} else if (id == R.id.btnActLoginRequestPass) {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(WSAction.isNetworkConnected(this)){
 				
 			}else{
