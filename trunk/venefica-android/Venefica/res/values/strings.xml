@@ -167,7 +167,7 @@
 	<string name="msg_add_comment_success">Comment added successfully.</string>
 	<string name="msg_not_impl">This function is not yet implemented.</string>
 	<string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
-	
+	<string name="msg_postlisting_low_resolution">Selected image is too small. Please select large image.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
