@@ -329,11 +329,17 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 
 			}
 		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-                Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data")/*BitmapFactory.decodeStream(stream)*/;
-                image = new ImageDto(bitmap);
-                drawables.clear();
+            Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data")/*BitmapFactory.decodeStream(stream)*/;
+            image = new ImageDto(bitmap);
+            //Check for size to restrict small images 
+            if ((image.getData().length() / 1024.0f) > 30) {
+            	drawables.clear();
                 drawables.add(new BitmapDrawable(getResources(), bitmap));
                 galImageAdapter.notifyDataSetChanged();
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_low_resolution));
+				image = null;
+			}                
         }
 	}
 	
