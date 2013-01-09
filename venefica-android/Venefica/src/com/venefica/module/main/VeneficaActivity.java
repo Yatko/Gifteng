@@ -54,10 +54,10 @@ ISlideMenuCallback {
 			}
 	    	break;
 		case R.id.slideMenuOfferings:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
     		break;
 		case R.id.slideMenuClaimed:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
     		break;
 		case R.id.slideMenuBookmarks:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
