@@ -73,6 +73,7 @@ public class Constants
 	public static final int IMAGE_ASPECT_X= 3;
 	public static final int IMAGE_ASPECT_Y= 2;
 	public static final int IMAGE_THUMBNAILS_MAX_SIZE = 64;
+	public static final int IMAGE_THUMBNAILS_MIN_SIZE = 30;//in Kb
 	public static final long GEOLOCATION_UPDATE_TIME_MS = 30 * 60 * 1000;
 	
 
@@ -141,6 +142,6 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;		
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;	
 	
 }
