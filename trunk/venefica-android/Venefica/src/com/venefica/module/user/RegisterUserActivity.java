@@ -500,9 +500,14 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-            profileBitmap = (Bitmap)data.getExtras().getParcelable("data");
-            profileImage.setImageBitmap(profileBitmap);
-        }
+        	profileBitmap = (Bitmap)data.getExtras().getParcelable("data");
+        	ImageDto image = new ImageDto(profileBitmap);
+        	if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {	            
+	            profileImage.setImageBitmap(profileBitmap);
+        	} else {
+    			Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_low_resolution));
+    		}  
+        }        
         super.onActivityResult(requestCode, resultCode, data);
     }
     
