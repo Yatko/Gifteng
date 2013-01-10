@@ -332,7 +332,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
             Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data")/*BitmapFactory.decodeStream(stream)*/;
             image = new ImageDto(bitmap);
             //Check for size to restrict small images 
-            if ((image.getData().length() / 1024.0f) > 30) {
+            if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
             	drawables.clear();
                 drawables.add(new BitmapDrawable(getResources(), bitmap));
                 galImageAdapter.notifyDataSetChanged();
