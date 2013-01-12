@@ -3,6 +3,8 @@
  */
 package com.venefica.module.listings.post;
 
+import android.graphics.Bitmap;
+
 import com.venefica.services.AdDto;
 
 /**
@@ -13,4 +15,5 @@ public class PostListingResultWrapper {
 	public int result = -1;
 	public String data = null;
 	public AdDto listing;
+	public Bitmap image;
 }
