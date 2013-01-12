@@ -1,5 +1,7 @@
 package com.venefica.module.utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
@@ -14,6 +16,8 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -212,4 +216,42 @@ public class Utility {
 	    a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
 	    v.startAnimation(a);
 	}
+	
+	/**
+	 * Get temp bitmap Uri
+	 * @return Uri
+	 */
+	public static Uri getTempUri() {
+		return Uri.fromFile(getTempFile());
+	}
+	
+	/**
+	 * Get temp bitmap file
+	 * @return File
+	 */
+	public static File getTempFile() {
+		if (isSDCARDMounted()) {
+			
+			File f = new File(Environment.getExternalStorageDirectory(),Constants.TEMP_PHOTO_FILE);
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+			}
+			return f;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Check if SDcard is inserted
+	 * @return
+	 */
+	public static boolean isSDCARDMounted(){
+        String status = Environment.getExternalStorageState();
+       
+        if (status.equals(Environment.MEDIA_MOUNTED))
+            return true;
+        return false;
+    }
 }
