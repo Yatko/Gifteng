@@ -69,9 +69,12 @@ public class Constants
 	public static final String CACHE_FOLDER = "Cache";
 	public static final boolean USE_PNG_COMPRESS = false;
 	public static final int IMAGE_MAX_SIZE_X= 480;
-	public static final int IMAGE_MAX_SIZE_Y= 320;
-	public static final int IMAGE_ASPECT_X= 3;
-	public static final int IMAGE_ASPECT_Y= 2;
+	public static final int IMAGE_MAX_SIZE_Y= 360;
+	public static final int IMAGE_CROP_MAX_SIZE_X= 1280;
+	public static final int IMAGE_CROP_MAX_SIZE_Y= 960;
+	public static final int IMAGE_ASPECT_X= 4;//3;
+	public static final int IMAGE_ASPECT_Y= 3;//2;
+	public static final String TEMP_PHOTO_FILE = "temp.jpeg";
 	public static final int IMAGE_THUMBNAILS_MAX_SIZE = 64;
 	public static final int IMAGE_THUMBNAILS_MIN_SIZE = 30;//in Kb
 	public static final long GEOLOCATION_UPDATE_TIME_MS = 30 * 60 * 1000;
