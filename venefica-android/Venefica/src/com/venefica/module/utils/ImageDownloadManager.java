@@ -179,7 +179,7 @@ public class ImageDownloadManager {
 	    Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
 	    BitmapFactory.Options opts = new BitmapFactory.Options();
 	    opts.inInputShareable = false;
-	    opts.inSampleSize = 2;
+	    opts.inSampleSize = 1;
 	    Bitmap bm = BitmapFactory.decodeStream(is, rect, opts);
 	    int width = bm.getWidth();
 	    int height = bm.getHeight();
