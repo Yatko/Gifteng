@@ -1,6 +1,10 @@
 package com.venefica.module.listings.post;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +24,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -28,6 +35,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -85,6 +93,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	public static final int ACT_MODE_POST_LISTING = 3001;
 	public static final int ACT_MODE_UPDATE_LISTING = 3002;
 	public static final int ACT_MODE_GET_LISTING = 3003;
+	public static final int ACT_MODE_PROCESS_BITMAP = 3004;
 	private static int CURRENT_MODE = ACT_MODE_POST_LISTING;
 	
 	protected static final int ERROR_DATE_VALIDATION = 22;
@@ -329,7 +338,13 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 
 			}
 		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-            Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data")/*BitmapFactory.decodeStream(stream)*/;
+			final Bundle extras = data.getExtras();
+            if (extras != null) {            		
+            		if (data.getAction() != null) {
+            			new PostListingTask().execute(ACT_MODE_PROCESS_BITMAP);
+            		}                  
+            }
+			/*Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data");
             image = new ImageDto(bitmap);
             //Check for size to restrict small images 
             if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
@@ -339,10 +354,31 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			} else {
 				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_low_resolution));
 				image = null;
-			}                
+			}   */             
         }
 	}
 	
+	private Bitmap processCroppedBitmap() {
+			Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
+		    BitmapFactory.Options opts = new BitmapFactory.Options();
+		    opts.inInputShareable = false;
+		    opts.inSampleSize = 1;
+		    Bitmap bm = BitmapFactory.decodeFile(Utility.getTempFile().getPath(), opts);
+		    int width = bm.getWidth();
+		    int height = bm.getHeight();
+		    float scaleWidth = ((float) Constants.IMAGE_MAX_SIZE_X) / width;
+		    float scaleHeight = ((float) Constants.IMAGE_MAX_SIZE_Y) / height;
+
+		    // create a matrix for the manipulation
+		    Matrix matrix = new Matrix();
+
+		    // resize the bit map
+		    matrix.postScale(scaleWidth, scaleHeight);
+
+		    // recreate the new Bitmap
+		    return  Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+	}
+
 	@Override
     protected Dialog onCreateDialog(int id) {
     	//Create progress dialog
@@ -444,7 +480,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				if(wsAction == null ){
 					wsAction = new WSAction();
 				}
-				if (params[0].equals(ACT_MODE_POST_LISTING)) {
+				if(params[0].equals(ACT_MODE_PROCESS_BITMAP)){
+					wrapper.image = processCroppedBitmap();
+				} else if (params[0].equals(ACT_MODE_POST_LISTING)) {
 					wrapper = wsAction.postListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(null));
 				}else if (params[0].equals(ACT_MODE_GET_LISTING)) {
 					ListingDetailsResultWrapper detailsWrapper = wsAction.getListingById(((VeneficaApplication)getApplication()).getAuthToken()
@@ -468,7 +506,18 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			super.onPostExecute(result);
 //			dismissDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(false);
-			if(result.data == null && result.result == -1 && result.listing == null){
+			if(result.image != null){
+				image = new ImageDto(result.image);
+	            //Check for size to restrict small images 
+	            if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
+	            	drawables.clear();
+	                drawables.add(new BitmapDrawable(getResources(), result.image));
+	                galImageAdapter.notifyDataSetChanged();
+				} else {
+					Utility.showLongToast(PostListingActivity.this, getResources().getString(R.string.msg_postlisting_low_resolution));
+					image = null;
+				}
+			} else if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
@@ -655,10 +704,15 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     	intent.putExtra("crop", "true");
     	intent.putExtra("aspectX", Constants.IMAGE_ASPECT_X);
     	intent.putExtra("aspectY", Constants.IMAGE_ASPECT_Y);
-    	intent.putExtra("outputX", Constants.IMAGE_MAX_SIZE_X);
-    	intent.putExtra("outputY", Constants.IMAGE_MAX_SIZE_Y);
+    	intent.putExtra("outputX", Constants.IMAGE_CROP_MAX_SIZE_X);
+    	intent.putExtra("outputY", Constants.IMAGE_CROP_MAX_SIZE_Y);
     	intent.putExtra("scale", true);
-    	intent.putExtra("return-data", true);
+    	
+    	intent.putExtra("return-data", false);
+    	intent.putExtra(MediaStore.EXTRA_OUTPUT, Utility.getTempUri());
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection",true);
+        
         startActivityForResult(intent, REQ_GET_IMAGE);
     }
     private void setListingDetails(AdDto listing) {
