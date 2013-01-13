@@ -273,5 +273,8 @@
     </string-array>
     <!-- codes -->
     <string name="code_category_other">other</string>
-    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+    <!-- Debug key -->
+    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
+    <!-- Release key -->
+    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
 </resources>
