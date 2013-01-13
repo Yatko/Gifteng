@@ -263,6 +263,7 @@ ISlideMenuCallback, LocationListener{
 		if(WSAction.isNetworkConnected(this)){
 			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
 				new SearchListingTask().execute(CURRENT_MODE);
+				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			}	    	
 	    }else{
 	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
