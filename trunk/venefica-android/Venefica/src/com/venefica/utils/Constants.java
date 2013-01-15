@@ -3,6 +3,8 @@ package com.venefica.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.graphics.Bitmap.CompressFormat;
+
 public class Constants
 {
 	// Error constants
@@ -78,7 +80,13 @@ public class Constants
 	public static final int IMAGE_THUMBNAILS_MAX_SIZE = 64;
 	public static final int IMAGE_THUMBNAILS_MIN_SIZE = 30;//in Kb
 	public static final long GEOLOCATION_UPDATE_TIME_MS = 30 * 60 * 1000;
-	
+	public static final int PRODUCT_LIST_CACHE_SIZE = 10;
+	public static final int MESSAGE_LIST_CACHE_SIZE = 10;
+	public static final int JPEG_COMPRESS_QUALITY = 80;
+	public static final int IO_BUFFER_SIZE = 8 * 1024;//in Kb
+	public static final int EXTERNAL_IMAGE_CACHE_LIMIT = 10 * 1024  * 1024;// in MB
+	public static final String EXTERNAL_IMAGE_CACHE_NAME = "venefica-cache";
+	public static final CompressFormat IMAGE_COMPRESS_FORMAT = CompressFormat.JPEG;
 
 	//settings to connect to the server
 	public static final boolean USE_SSL_SERVICES_TRANSPORT = false;
@@ -121,9 +129,7 @@ public class Constants
 */
 	/*public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/venefica-webapp";*/
 	public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/venefica";
-	public static final int PRODUCT_LIST_CACHE_SIZE = 10;
-	public static final int MESSAGE_LIST_CACHE_SIZE = 10;
-	public static final int JPEG_COMPRESS_QUALITY = 85;
+	
 
 	public static final String PRODUCT_ID_PARAM_NAME = "productId";
 	public static final String USER_NAME_PARAM_NAME = "userName";
