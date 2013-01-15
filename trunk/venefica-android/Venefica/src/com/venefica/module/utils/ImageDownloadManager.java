@@ -2,58 +2,54 @@ package com.venefica.module.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.venefica.utils.Constants;
-
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.BitmapFactory.Options;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
+
+import com.venefica.utils.Constants;
 /**
  * @author avinash
  * Class to manage lazy image download for list and grids
  */
 public class ImageDownloadManager {
-	private final Map<String, SoftReference<Drawable>> imgCache = new HashMap<String, SoftReference<Drawable>>();   
-	private final LinkedList <Drawable> imgChacheController = new LinkedList <Drawable> ();
+	private Context context;
+	private static final int MESSAGE_CLEAR = 0;
+    private static final int MESSAGE_INIT_DISK_CACHE = 1;
+    private static final int MESSAGE_FLUSH = 2;
+    private static final int MESSAGE_CLOSE = 3;
+	private DiskLruImageCache imgCache ;
 	private ExecutorService downloadThreadPool;  
 	private final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());  
 
 	public static int MAX_CACHE_SIZE = 80; 
 	public int THREAD_POOL_SIZE = 5;
-	private static ImageDownloadManager instance;
 	/**
 	 * Constructor
 	 */
-	private ImageDownloadManager() {
+	public ImageDownloadManager(Context context) {
+		this.context = context;
+		imgCache = new DiskLruImageCache(context, Constants.IMAGE_COMPRESS_FORMAT, Constants.JPEG_COMPRESS_QUALITY);
+		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
 		downloadThreadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	}
-
-	public static ImageDownloadManager getImageDownloadManagerInstance(){
-		if (instance == null) {
-			instance = new ImageDownloadManager(); 
-		}		
-		return instance;		
-	}
+	
 	/**
 	 * Clears all instance data and stops running threads
 	 */
@@ -61,19 +57,25 @@ public class ImageDownloadManager {
 	    ExecutorService oldThreadPool = downloadThreadPool;
 	    downloadThreadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 	    oldThreadPool.shutdownNow();
-
-	    imgChacheController.clear();
-	    imgCache.clear();
+	    clearCache();
+	    closeCache();
 	    imageViews.clear();
+	    
 	}  
 
-	public void loadDrawable(final String url, final ImageView imageView,Drawable placeholder) {
+	/**
+	 * Download or get image from cache
+	 * @param url
+	 * @param imageView
+	 * @param placeholder
+	 */
+	public void loadImage(final String url, final ImageView imageView,Drawable placeholder) {
 	    imageViews.put(imageView, url);
-	    Drawable drawable = getDrawableFromCache(url);  
+	    Bitmap bitmap = getBitmapFromCache(url);  
 
 	    // check in UI thread, so no concurrency issues  
-	    if (drawable != null) {  
-	        imageView.setImageDrawable(drawable);  
+	    if (bitmap != null) {  
+	        imageView.setImageBitmap(bitmap);  
 	    } else {  
 	        imageView.setImageDrawable(placeholder);
 	        if (url != null && URLUtil .isValidUrl(url)) {
@@ -83,24 +85,34 @@ public class ImageDownloadManager {
 	} 
 
 
-	private Drawable getDrawableFromCache(String url) {  
+	/**
+	 * Get image from cache for given url 
+	 * @param url
+	 * @return
+	 */
+	private Bitmap getBitmapFromCache(String url) {  
 	    if (imgCache.containsKey(url)) {  
-	        return imgCache.get(url).get();  
+	        return imgCache.getBitmapFromDiskCache(url);
 	    }  
 
 	    return null;  
 	}
 
-	private synchronized void putDrawableInCache(String url,Drawable drawable) {  
-	    int chacheControllerSize = imgChacheController.size();
-	    if (chacheControllerSize > MAX_CACHE_SIZE) 
-	        imgChacheController.subList(0, MAX_CACHE_SIZE/2).clear();
-
-	    imgChacheController.addLast(drawable);
-	    imgCache.put(url, new SoftReference<Drawable>(drawable));
-
+	/**
+	 * Store image in cache
+	 * @param url
+	 * @param bitmap
+	 */
+	private synchronized void putBitmapInCache(String url,Bitmap bitmap) {  
+	    imgCache.put(url, bitmap);
 	}  
 
+	/**
+	 * Start new job in thread pool
+	 * @param url
+	 * @param imageView
+	 * @param placeholder
+	 */
 	private void queueJob(final String url, final ImageView imageView,final Drawable placeholder) {  
 	    /* Create handler in UI thread. */  
 	    final Handler handler = new Handler() {  
@@ -110,7 +122,7 @@ public class ImageDownloadManager {
 	            if (tag != null && tag.equals(url)) {
 	                if (imageView.isShown())
 	                    if (msg.obj != null) {
-	                        imageView.setImageDrawable((Drawable) msg.obj);  
+	                        imageView.setImageBitmap((Bitmap) msg.obj);  
 	                    } else {  
 	                        imageView.setImageDrawable(placeholder);  
 	                    } 
@@ -121,7 +133,7 @@ public class ImageDownloadManager {
 	    downloadThreadPool.submit(new Runnable() {  
 	        @Override  
 	        public void run() {  
-	            final Drawable bmp = downloadDrawable(url);
+	            final Bitmap bmp = downloadBitmap(url);
 	            // if the view is not visible anymore, the image will be ready for next time in cache
 	            if (imageView.isShown())
 	            {
@@ -134,13 +146,15 @@ public class ImageDownloadManager {
 	}  
 
 	
-	private Drawable downloadDrawable(String url) {  
-	    try {  
-//	        InputStream is = getInputStream(url);
-	        Drawable drawable = new BitmapDrawable( getScaledDownBitmap(url));
-//	        Drawable drawable = Drawable.createFromStream(is, url);
-	        putDrawableInCache(url,drawable);  
-	        return drawable;  
+	/**
+	 * @param url
+	 * @return
+	 */
+	private Bitmap downloadBitmap(String url) {  
+	    try {
+	    	Bitmap bitmap = getScaledDownBitmap(url);
+	    	putBitmapInCache(url,bitmap);
+	        return bitmap;  
 
 	    } catch (MalformedURLException e) {  
 	        e.printStackTrace();  
@@ -149,26 +163,15 @@ public class ImageDownloadManager {
 	    }
 
 	    return null;  
-	}  
-
+	} 
+		
 	/**
-	 * Method to download image
+	 * Download specified image from url
 	 * @param urlString
-	 * @return response InputStream
+	 * @return
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private InputStream getInputStream(String urlString) throws MalformedURLException, IOException {
-	    URL url = new URL(urlString);
-	    URLConnection connection;
-	    connection = url.openConnection();
-	    connection.setUseCaches(true); 
-	    connection.connect();
-	    InputStream response = connection.getInputStream();
-
-	    return response;
-	}
-	
 	private Bitmap getScaledDownBitmap(String urlString) throws MalformedURLException, IOException{
 		URL url = new URL(urlString);
 		HttpURLConnection connection;
@@ -197,4 +200,76 @@ public class ImageDownloadManager {
 
 	    return resizedBitmap;		
 	}
+	
+	/**
+	 * @author avinash
+	 * Task to handle cache operations in background
+	 */
+	protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            switch ((Integer)params[0]) {
+                case MESSAGE_CLEAR:
+                    clearCacheInternal();
+                    break;
+                case MESSAGE_INIT_DISK_CACHE:
+                    initDiskCacheInternal();
+                    break;
+                case MESSAGE_FLUSH:
+                    flushCacheInternal();
+                    break;
+                case MESSAGE_CLOSE:
+                    closeCacheInternal();
+                    break;
+            }
+            return null;
+        }
+    }
+	
+	protected void initDiskCacheInternal() {
+        if (imgCache != null) {
+        	imgCache.initDiskCache();
+        }
+    }
+
+    protected void clearCacheInternal() {
+        if (imgCache != null) {
+        	imgCache.clearCache();
+        }
+    }
+
+    protected void flushCacheInternal() {
+        if (imgCache != null) {
+        	imgCache.flush();
+        }
+    }
+
+    protected void closeCacheInternal() {
+        if (imgCache != null) {
+        	imgCache.close();
+        	imgCache = null;
+        }
+    }
+
+    /**
+     * Clear disk cache data
+     */
+    public void clearCache() {
+        new CacheAsyncTask().execute(MESSAGE_CLEAR);
+    }
+
+    /**
+     * Flush disk cache
+     */
+    public void flushCache() {
+        new CacheAsyncTask().execute(MESSAGE_FLUSH);
+    }
+
+    /**
+     * Close disk cache
+     */
+    public void closeCache() {
+        new CacheAsyncTask().execute(MESSAGE_CLOSE);
+    }
 }
