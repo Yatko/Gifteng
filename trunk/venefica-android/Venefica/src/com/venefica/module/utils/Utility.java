@@ -13,11 +13,15 @@ import com.venefica.utils.Constants;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.StatFs;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -30,8 +34,7 @@ import android.view.animation.Transformation;
  * @author avinash
  *	Utility class for common functionality
  */
-public class Utility {
-
+public class Utility {	
 	/**
 	 * Method to display long duration Toast
 	 * @param context
@@ -254,4 +257,65 @@ public class Utility {
             return true;
         return false;
     }
+	
+	
+	/**
+	 * Check external storage
+	 * @return status
+	 */
+	@SuppressLint("NewApi")
+	public static boolean isExternalStorageRemovable() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            return Environment.isExternalStorageRemovable();
+        }
+        return true;
+    }
+
+    /**
+     * Get the external app cache directory.
+     *
+     * @param context The context to use
+     * @return The external cache dir
+     */
+    @TargetApi(8)
+    public static File getExternalCacheDir(Context context) {
+        if (hasFroyo()) {
+            return context.getExternalCacheDir();
+        }
+
+        // Before Froyo we need to construct the external cache dir ourselves
+        final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+    }
+    /**
+     * Check how much usable space is available at a given path.
+     *
+     * @param path The path to check
+     * @return The space available in bytes
+     */
+    @TargetApi(9)
+    public static long getUsableSpace(File path) {
+        if (hasGingerbread()) {
+            return path.getUsableSpace();
+        }
+        final StatFs stats = new StatFs(path.getPath());
+        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+    }
+    public static boolean hasFroyo() {
+        // Can use static final constants like FROYO, declared in later versions
+        // of the OS since they are inlined at compile time. This is guaranteed behavior.
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+    }
+
+    public static boolean hasGingerbread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+    }
+
+    public static boolean hasHoneycomb() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    public static boolean hasHoneycombMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+    }    
 }
