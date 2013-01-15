@@ -618,9 +618,11 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 	 */
 	public void setUserData(User userData) {
 		chkBusinessAcc.setChecked(userData.isBusinessAcc());
-		ImageDownloadManager.getImageDownloadManagerInstance()
+		/*ImageDownloadManager.getImageDownloadManagerInstance()
 				.loadDrawable(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
-						, getResources().getDrawable(R.drawable.icon_picture_white));
+						, getResources().getDrawable(R.drawable.icon_picture_white));*/
+		((VeneficaApplication)getApplication()).getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
+				, getResources().getDrawable(R.drawable.icon_picture_white));
 		
     	edtLogin.setText(userData.getName());
 //    	edtPassword.setVisibility(visibility);

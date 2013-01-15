@@ -360,8 +360,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				, listing.getTitle(), listing.getDescription(), listing.getId()
 				, listing.getImage()!= null? listing.getImage().getUrl(): "");
 		//set user info
-		ImageDownloadManager.getImageDownloadManagerInstance()
+		/*ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
+				, getResources().getDrawable(R.drawable.icon_picture_white));*/
+		((VeneficaApplication)getApplication()).getImgManager()
+				.loadImage(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
 				, getResources().getDrawable(R.drawable.icon_picture_white));
 		images.clear();
 		images.add(listing.getImage());
@@ -546,6 +549,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     	}
     }
     
+    @Override
+    protected void onPause() {
+    	//Flush image cache
+    	((VeneficaApplication)getApplication()).getImgManager().flushCache();
+    	super.onPause();
+    }
     @Override
     public void onBackPressed() {
     	if (isSendMsgVisible) {

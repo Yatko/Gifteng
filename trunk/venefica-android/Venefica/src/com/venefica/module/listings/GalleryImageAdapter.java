@@ -3,10 +3,12 @@ package com.venefica.module.listings;
 import java.util.List;
 
 import com.google.android.maps.MapView.LayoutParams;
+import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -98,10 +100,21 @@ public class GalleryImageAdapter extends BaseAdapter {
 		if (useDrawables) {
 			holder.imageView.setImageDrawable(images.get(position));
 		} else {
-			ImageDownloadManager.getImageDownloadManagerInstance()
+			/*ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(plotsImages.get(position) != null 
 				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
-					holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
+					holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));*/
+			if(this.context instanceof ListingDetailsActivity){
+				((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
+				.getImgManager().loadImage(plotsImages.get(position) != null 
+				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
+						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
+			} else if (this.context instanceof PostListingActivity){
+				((VeneficaApplication) ((PostListingActivity)this.context).getApplication())
+				.getImgManager().loadImage(plotsImages.get(position) != null 
+				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
+						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
+			}			
 		}	
 		
 		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

@@ -338,12 +338,14 @@ ISlideMenuCallback, LocationListener{
     	super.onPause();
     	//Stop location updates
         locationManager.removeUpdates(this);
+        //Flush image cache
+        ((VeneficaApplication)getApplication()).getImgManager().flushCache();
     }
     
     @Override
     protected void onDestroy() {
     	//stop image loading thread
-    	ImageDownloadManager.getImageDownloadManagerInstance().reset();
+    	/*ImageDownloadManager.getImageDownloadManagerInstance().reset();*/
     	super.onDestroy();
     }
 	@Override
@@ -512,6 +514,7 @@ ISlideMenuCallback, LocationListener{
 	@Override
 	public void onBackPressed() {
 		if (isExit) {
+			((VeneficaApplication)getApplication()).getImgManager().reset();
 			super.onBackPressed();
 		} else {
 			isExit = true;

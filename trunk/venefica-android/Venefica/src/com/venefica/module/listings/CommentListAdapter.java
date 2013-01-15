@@ -6,6 +6,7 @@ import com.venefica.module.main.R;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.CommentDto;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -81,9 +82,12 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.txtComment.setText(comments.get(position).getText());
-		ImageDownloadManager.getImageDownloadManagerInstance()
+		/*ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX +comments.get(position)
-					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
+					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));*/
+		((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
+				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX +comments.get(position)
+				.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
 		if(position == 0){
 			holder.imgBtnEdit.setVisibility(View.VISIBLE);
 			holder.imgBtnEdit.setOnClickListener(this);	
