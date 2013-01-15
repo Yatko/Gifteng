@@ -6,6 +6,7 @@ import java.io.IOException;
 import android.app.Application;
 import android.os.Environment;
 
+import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.User;
 
 public class VeneficaApplication extends Application {
@@ -15,10 +16,11 @@ public class VeneficaApplication extends Application {
 
 	/** The data about the user */
 	public static User user;
-
+	
+	private ImageDownloadManager imgManager;
 	@Override
 	public void onCreate() {
-		
+		imgManager = new ImageDownloadManager(getApplicationContext());
 	}
 
 	/**
@@ -48,5 +50,19 @@ public class VeneficaApplication extends Application {
 	 */
 	public static void setUser(User user) {
 		VeneficaApplication.user = user;
+	}
+
+	/**
+	 * @return the imgManager
+	 */
+	public ImageDownloadManager getImgManager() {
+		return imgManager;
+	}
+
+	/**
+	 * @param imgManager the imgManager to set
+	 */
+	public void setImgManager(ImageDownloadManager imgManager) {
+		this.imgManager = imgManager;
 	}
 }
