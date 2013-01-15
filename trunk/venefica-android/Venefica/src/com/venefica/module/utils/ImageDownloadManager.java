@@ -91,11 +91,7 @@ public class ImageDownloadManager {
 	 * @return
 	 */
 	private Bitmap getBitmapFromCache(String url) {  
-	    if (imgCache.containsKey(url)) {  
-	        return imgCache.getBitmapFromDiskCache(url);
-	    }  
-
-	    return null;  
+        return imgCache.getBitmapFromDiskCache(url);
 	}
 
 	/**
