@@ -9,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
+import com.venefica.module.listings.ListingDetailsActivity;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash
@@ -61,8 +64,15 @@ public class ListingOverlayView <Item extends OverlayItem> extends BalloonOverla
 		// get remote image from network.
 		// bitmap results would normally be cached, but this is good enough for demo purpose.
 		image.setImageResource(R.drawable.ic_launcher);
-		ImageDownloadManager.getImageDownloadManagerInstance()
-			.loadDrawable(item.getImgURL(), image, getResources().getDrawable(R.drawable.ic_launcher));
+		/*ImageDownloadManager.getImageDownloadManagerInstance()
+			.loadDrawable(item.getImgURL(), image, getResources().getDrawable(R.drawable.ic_launcher));*/
+		if (getContext() instanceof ListingDetailsActivity) {
+			((VeneficaApplication) ((ListingDetailsActivity)getContext()).getApplication())
+			.getImgManager().loadImage(item.getImgURL(), image, getResources().getDrawable(R.drawable.ic_launcher));
+		} else if (getContext() instanceof SearchListingsActivity) {
+			((VeneficaApplication) ((SearchListingsActivity)getContext()).getApplication())
+			.getImgManager().loadImage(item.getImgURL(), image, getResources().getDrawable(R.drawable.ic_launcher));
+		}
 		
 	}	
 }

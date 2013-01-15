@@ -5,6 +5,7 @@ import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
 import android.content.Intent;
@@ -64,12 +65,17 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 //		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
 		if (this.listing.getImage() != null) {
-			ImageDownloadManager.getImageDownloadManagerInstance()
+			/*ImageDownloadManager.getImageDownloadManagerInstance()
 					.loadDrawable(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
-					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
+					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));*/
+			((VeneficaApplication) ((SearchListingsActivity)getContext()).getApplication())
+				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
+						, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}else {
-			ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
-					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
+			/*ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
+					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));*/
+			((VeneficaApplication) ((SearchListingsActivity)getContext()).getApplication())
+				.getImgManager().loadImage("", imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}	
 	}
 	
