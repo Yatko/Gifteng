@@ -84,7 +84,7 @@ public class Constants
 	public static final int MESSAGE_LIST_CACHE_SIZE = 10;
 	public static final int JPEG_COMPRESS_QUALITY = 80;
 	public static final int IO_BUFFER_SIZE = 8 * 1024;//in Kb
-	public static final int EXTERNAL_IMAGE_CACHE_LIMIT = 10 * 1024  * 1024;// in MB
+	public static final int EXTERNAL_IMAGE_CACHE_LIMIT = 20 * 1024  * 1024;// in MB
 	public static final String EXTERNAL_IMAGE_CACHE_NAME = "venefica-cache";
 	public static final CompressFormat IMAGE_COMPRESS_FORMAT = CompressFormat.JPEG;
 
