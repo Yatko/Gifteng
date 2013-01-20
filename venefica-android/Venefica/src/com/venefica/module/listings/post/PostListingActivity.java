@@ -20,9 +20,13 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -33,8 +37,10 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -78,6 +84,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	 */
 	public static final int REQ_SELECT_CATEGORY = 1001;
 	private static final int REQ_GET_IMAGE = 1002;
+	private static final int REQ_IMAGE_CROP = 1003;
+	private static final int REQ_GET_CAMERA_IMAGE = 1004;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -124,6 +132,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	 * Adapter for gallery
 	 */
 	private GalleryImageAdapter galImageAdapter;
+	
+	private Uri selectedImageUri;
 
 	/**
 	 * Buttons
@@ -290,32 +300,41 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	    }
 	    Location location = locationManager.getLastKnownLocation(locProvider);
 	    // Initialize the location fields
-	    if (location != null) {
-	      Utility.showLongToast(this, locProvider + getResources().getString(R.string.msg_postlisting_provider_selected));
-	      onLocationChanged(location);
-	    } else {
-	      edtLatitude.setHint(getResources().getString(R.string.hint_post_listing_location_unavailable));
-	      edtLongitude.setHint(getResources().getString(R.string.hint_post_listing_location_unavailable));
-	    }
+		if (location != null) {
+			Utility.showLongToast(
+					this,
+					locProvider
+							+ getResources().getString(
+									R.string.msg_postlisting_provider_selected));
+			onLocationChanged(location);
+		} else {
+			edtLatitude.setHint(getResources().getString(
+					R.string.hint_post_listing_location_unavailable));
+			edtLongitude.setHint(getResources().getString(
+					R.string.hint_post_listing_location_unavailable));
+		}
 	}
-	/* Request updates at startup */
-	  @Override
-	  protected void onResume() {
-	    super.onResume();
-	    locationManager.requestLocationUpdates(locProvider, 400, 1, this);
-	  }
 
-	  /* Remove the locationlistener updates when Activity is paused */
-	  @Override
-	  protected void onPause() {
-	    super.onPause();
-	    locationManager.removeUpdates(this);
-	  }
+	/* Request updates at startup */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+	}
+
+	/* Remove the locationlistener updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(this);
+	}
+
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
@@ -326,57 +345,53 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQ_SELECT_CATEGORY) {
-			if (resultCode == Activity.RESULT_OK) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == REQ_SELECT_CATEGORY) {
 				 categoryId = data.getLongExtra("cat_id", -1);
 				 categoryName = data.getStringExtra("category_name").trim().
 						 equalsIgnoreCase("")?getResources().getString(R.string.code_category_other): data.getStringExtra("category_name");
 				if (categoryName != null) {
 					btnSelCategory.setText(categoryName);
 				}
-			} else {
-
+				
+			} else if (requestCode == REQ_GET_IMAGE){
+				final Bundle extras = data.getExtras();
+	            if (extras != null) {            		
+	    			selectedImageUri = data.getData();
+	    			performCrop();
+	            }			           
+	        } else if (requestCode == REQ_IMAGE_CROP) {
+	        	new PostListingTask().execute(ACT_MODE_PROCESS_BITMAP);
 			}
-		} else if (requestCode == REQ_GET_IMAGE && resultCode == Activity.RESULT_OK){
-			final Bundle extras = data.getExtras();
-            if (extras != null) {            		
-            		if (data.getAction() != null) {
-            			new PostListingTask().execute(ACT_MODE_PROCESS_BITMAP);
-            		}                  
-            }
-			/*Bitmap bitmap = (Bitmap)data.getExtras().getParcelable("data");
-            image = new ImageDto(bitmap);
-            //Check for size to restrict small images 
-            if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
-            	drawables.clear();
-                drawables.add(new BitmapDrawable(getResources(), bitmap));
-                galImageAdapter.notifyDataSetChanged();
-			} else {
-				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_low_resolution));
-				image = null;
-			}   */             
-        }
+		}
 	}
 	
 	private Bitmap processCroppedBitmap() {
-			Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
-		    BitmapFactory.Options opts = new BitmapFactory.Options();
-		    opts.inInputShareable = false;
-		    opts.inSampleSize = 1;
-		    Bitmap bm = BitmapFactory.decodeFile(Utility.getTempFile().getPath(), opts);
-		    int width = bm.getWidth();
-		    int height = bm.getHeight();
-		    float scaleWidth = ((float) Constants.IMAGE_MAX_SIZE_X) / width;
-		    float scaleHeight = ((float) Constants.IMAGE_MAX_SIZE_Y) / height;
+		Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
+	    BitmapFactory.Options opts = new BitmapFactory.Options();
+	    opts.inInputShareable = false;
+	    opts.inSampleSize = 1;
+	    Bitmap bm = null;
+		try {
+			bm = BitmapFactory.decodeStream(getContentResolver().openInputStream(Utility.getTempUri()));
+			Log.d("Image Width :", bm.getWidth()+"");
+			Log.d("Image Height :", bm.getHeight()+"");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	    int width = bm.getWidth();
+	    int height = bm.getHeight();
+	    float scaleWidth = ((float) Constants.IMAGE_MAX_SIZE_X) / width;
+	    float scaleHeight = ((float) Constants.IMAGE_MAX_SIZE_Y) / height;
 
-		    // create a matrix for the manipulation
-		    Matrix matrix = new Matrix();
+	    // create a matrix for the manipulation
+	    Matrix matrix = new Matrix();
 
-		    // resize the bit map
-		    matrix.postScale(scaleWidth, scaleHeight);
+	    // resize the bit map
+	    matrix.postScale(scaleWidth, scaleHeight);
 
-		    // recreate the new Bitmap
-		    return  Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+	    // recreate the new Bitmap
+	    return  Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
 	}
 
 	@Override
@@ -508,6 +523,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.image != null){
 				image = new ImageDto(result.image);
+				Log.d("Image Width :", result.image.getWidth()+"");
+				Log.d("Image Height :", result.image.getHeight()+"");
 	            //Check for size to restrict small images 
 	            if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
 	            	drawables.clear();
@@ -699,22 +716,24 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
      * Get image
      */
     private void pickImage() {
-    	Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
-    	intent.setType("image/*");
-    	intent.putExtra("crop", "true");
-    	intent.putExtra("aspectX", Constants.IMAGE_ASPECT_X);
-    	intent.putExtra("aspectY", Constants.IMAGE_ASPECT_Y);
-    	intent.putExtra("outputX", Constants.IMAGE_CROP_MAX_SIZE_X);
-    	intent.putExtra("outputY", Constants.IMAGE_CROP_MAX_SIZE_Y);
-    	intent.putExtra("scale", true);
-    	
-    	intent.putExtra("return-data", false);
-    	intent.putExtra(MediaStore.EXTRA_OUTPUT, Utility.getTempUri());
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection",true);
-        
-        startActivityForResult(intent, REQ_GET_IMAGE);
+    	// Camera
+    	final List<Intent> cameraIntents = new ArrayList<Intent>();
+        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);        
+        cameraIntents.add(captureIntent);
+        // Gallery.
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+        // Chooser of filesystem options.
+        final Intent chooserIntent = Intent.createChooser(galleryIntent, "Select Source");
+        // Add the camera options.
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
+        startActivityForResult(chooserIntent, REQ_GET_IMAGE);
     }
+    
+    /**
+     * Set listing details for editing
+     * @param listing
+     */
     private void setListingDetails(AdDto listing) {
     	selectedListing = listing;
 		edtTitle.setText(listing.getTitle());
@@ -727,4 +746,35 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		categoryName = listing.getCategory();
 		categoryId = listing.getCategoryId();
 	}
+    
+    /**
+     * Helper method to carry out crop operation
+     */
+    private void performCrop(){
+    	//take care of exceptions
+    	try {
+    		//call the standard crop action intent (the user device may not support it)
+	    	Intent cropIntent = new Intent("com.android.camera.action.CROP"); 
+	    	//indicate image type and Uri
+	    	cropIntent.setDataAndType(selectedImageUri, "image/*");
+	    	//set crop properties
+	    	cropIntent.putExtra("crop", "true");
+	    	//indicate aspect of desired crop
+	    	cropIntent.putExtra("aspectX", Constants.IMAGE_ASPECT_X);
+	    	cropIntent.putExtra("aspectY", Constants.IMAGE_ASPECT_Y);
+	    	//indicate output X and Y
+//	    	cropIntent.putExtra("outputX", 256);
+//	    	cropIntent.putExtra("outputY", 256);
+	    	//retrieve data on return
+	    	cropIntent.putExtra("return-data", false);
+	    	cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utility.getTempUri());
+	    	cropIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+	    	cropIntent.putExtra("noFaceDetection",true);
+	    	//start the activity - we handle returning in onActivityResult
+	        startActivityForResult(cropIntent, REQ_IMAGE_CROP);  
+    	}
+    	//respond to users whose devices do not support the crop action
+    	catch(ActivityNotFoundException anfe){
+    	}
+    }
 }
