@@ -29,7 +29,6 @@ import com.venefica.utils.Constants;
  * Class to manage lazy image download for list and grids
  */
 public class ImageDownloadManager {
-	private Context context;
 	private static final int MESSAGE_CLEAR = 0;
     private static final int MESSAGE_INIT_DISK_CACHE = 1;
     private static final int MESSAGE_FLUSH = 2;
@@ -38,13 +37,11 @@ public class ImageDownloadManager {
 	private ExecutorService downloadThreadPool;  
 	private final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());  
 
-	public static int MAX_CACHE_SIZE = 80; 
 	public int THREAD_POOL_SIZE = 5;
 	/**
 	 * Constructor
 	 */
 	public ImageDownloadManager(Context context) {
-		this.context = context;
 		imgCache = new DiskLruImageCache(context, Constants.IMAGE_COMPRESS_FORMAT, Constants.JPEG_COMPRESS_QUALITY);
 		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
 		downloadThreadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
