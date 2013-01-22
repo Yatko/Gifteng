@@ -1,6 +1,7 @@
 package com.venefica.module.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +19,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -317,5 +320,36 @@ public class Utility {
 
     public static boolean hasHoneycombMR1() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }    
+    }
+    
+    /**
+     * Method to resize bitmaps
+     * @param bitmap
+     * @param reqWidth
+     * @param reqHeight
+     * @return bitmap
+     */
+    public static Bitmap resizeBitmap(Bitmap bitmap, int reqWidth, int reqHeight){
+    	Rect rect = new Rect(0, 0, reqWidth, reqHeight);
+	    BitmapFactory.Options opts = new BitmapFactory.Options();
+	    opts.inInputShareable = false;
+	    opts.inSampleSize = 1;
+	    opts.inScaled = false;
+	    opts.inDither = false;
+	    opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		
+	    int width = bitmap.getWidth();
+	    int height = bitmap.getHeight();
+	    float scaleWidth = ((float) reqWidth) / width;
+	    float scaleHeight = ((float) reqHeight) / height;
+
+	    // create a matrix for the manipulation
+	    Matrix matrix = new Matrix();
+
+	    // resize the bit map
+	    matrix.postScale(scaleWidth, scaleHeight);
+
+	    // recreate the new Bitmap
+	    return  Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+    }
 }
