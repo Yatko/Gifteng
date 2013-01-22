@@ -6,17 +6,20 @@ import com.google.android.maps.MapView.LayoutParams;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.ImageDownloadManager;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
 
 /**
@@ -28,16 +31,18 @@ public class GalleryImageAdapter extends BaseAdapter {
 	private static ImageView imageView;
 
 	private List<ImageDto> plotsImages;
-	private List<Drawable> images;
+	private List<Bitmap> images;
 	private boolean useDrawables;
 	private static ViewHolder holder;
+	private boolean showThumbnails;
 
-	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Drawable> images, boolean useDrawables) {
+	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Bitmap> images, boolean useDrawables, boolean showThumbnails) {
 
 		this.context = context;
 		this.plotsImages = plotsImages;
 		this.images = images;
 		this.useDrawables = useDrawables;
+		this.showThumbnails = showThumbnails;
 	}
 
 	/*
@@ -83,10 +88,10 @@ public class GalleryImageAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 
-			imageView = new ImageView(this.context);
+			imageView = new ImageView(this.context);			
 
 			imageView.setPadding(3, 3, 3, 3);
-			imageView.setScaleType(ScaleType.CENTER_CROP);
+			
 			convertView = imageView;
 
 			holder.imageView = imageView;
@@ -94,16 +99,12 @@ public class GalleryImageAdapter extends BaseAdapter {
 			convertView.setTag(holder);
 
 		} else {
-
 			holder = (ViewHolder) convertView.getTag();
 		}
-		if (useDrawables) {
-			holder.imageView.setImageDrawable(images.get(position));
-		} else {
-			/*ImageDownloadManager.getImageDownloadManagerInstance()
-			.loadDrawable(plotsImages.get(position) != null 
-				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
-					holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));*/
+		if (useDrawables) {			
+			holder.imageView.setImageBitmap(Utility.resizeBitmap(images.get(position)
+					, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT));			
+		} else {			
 			if(this.context instanceof ListingDetailsActivity){
 				((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
 				.getImgManager().loadImage(plotsImages.get(position) != null 
@@ -118,7 +119,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 		}	
 		
 		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		return convertView;
 	}
 
