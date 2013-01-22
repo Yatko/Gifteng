@@ -109,6 +109,7 @@
     <string name="label_filter">Filter</string>
     <string name="label_share">Share</string>
     <string name="label_filter_setting">Filter Settings</string>
+    <string name="label_chooser">Select Source</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -167,7 +168,7 @@
 	<string name="msg_add_comment_success">Comment added successfully.</string>
 	<string name="msg_not_impl">This function is not yet implemented.</string>
 	<string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
-	<string name="msg_postlisting_low_resolution">Selected image is too small. Please select large image.</string>
+	<string name="msg_postlisting_low_resolution">Cropped image is too small. Please crop with larger size or select large image.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
