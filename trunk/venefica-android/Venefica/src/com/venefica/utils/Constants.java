@@ -56,6 +56,7 @@ public class Constants
 	public static final int ERROR_RESULT_SEND_MESSAGE = 1046;
 	public static final int ERROR_RESULT_ADD_COMMENT = 1047;
 	public static final int RESULT_ADD_COMMENT_SUCCESS = 1048;
+	public static final int ERROR_LOW_RESOLUTION_CROP = 1049;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -87,6 +88,8 @@ public class Constants
 	public static final int EXTERNAL_IMAGE_CACHE_LIMIT = 20 * 1024  * 1024;// in MB
 	public static final String EXTERNAL_IMAGE_CACHE_NAME = "venefica-cache";
 	public static final CompressFormat IMAGE_COMPRESS_FORMAT = CompressFormat.JPEG;
+	public static final int IMAGE_THUMBNAILS_WIDTH = 100;
+	public static final int IMAGE_THUMBNAILS_HEIGHT = 100;
 
 	//settings to connect to the server
 	public static final boolean USE_SSL_SERVICES_TRANSPORT = false;
@@ -151,6 +154,6 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;	
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;		
 	
 }
