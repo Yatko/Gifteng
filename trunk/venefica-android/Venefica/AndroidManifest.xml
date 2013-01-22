@@ -116,7 +116,7 @@
             android:name="com.venefica.module.listings.GalleryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden" />        
     </application>
 
 </manifest>
