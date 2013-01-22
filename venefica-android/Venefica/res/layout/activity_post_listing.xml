@@ -188,18 +188,18 @@
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_photos" />
         -->
-
+		
         <Gallery
             android:id="@+id/galleryActPostListingPhotos"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:background="@color/black"
-            android:gravity="bottom"
+            android:gravity="center_vertical"
             android:minHeight="90dp"
             android:padding="5dp"
             android:spacing="5dp"
             android:visibility="visible" />
-
+		
         <Button
             android:id="@+id/btnActPostListingAddPhotos"
             android:layout_height="wrap_content"
