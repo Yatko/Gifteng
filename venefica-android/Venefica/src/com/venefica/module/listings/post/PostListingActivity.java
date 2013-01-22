@@ -1,10 +1,7 @@
 package com.venefica.module.listings.post;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,12 +18,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -127,7 +121,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	/**
 	 * Images
 	 */
-	private List<Drawable> drawables;
+	private List<Bitmap> drawables;
 	/**
 	 * Adapter for gallery
 	 */
@@ -168,6 +162,12 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private WSAction wsAction;	
 	private AdDto selectedListing;
 	private ImageDto image;
+	private List<ImageDto> images;
+	
+	/**
+	 * Low resolution flag
+	 */
+	private boolean isLowResolution = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -183,8 +183,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Gallery
 		gallery = (Gallery) findViewById(R.id.galleryActPostListingPhotos);
-		drawables = new ArrayList<Drawable>();
-		galImageAdapter = new GalleryImageAdapter(this, null, drawables, true);
+		drawables = new ArrayList<Bitmap>();
+		galImageAdapter = new GalleryImageAdapter(this, null, drawables, true, true);
 		gallery.setAdapter(galImageAdapter);
 
 		// Map
@@ -366,16 +366,28 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		}
 	}
 	
-	private Bitmap processCroppedBitmap() {
+	/**
+	 * Method to resize bitmap with specified size
+	 * @return bitmap
+	 */
+	private Bitmap resizeBitmap() {
 		Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
 	    BitmapFactory.Options opts = new BitmapFactory.Options();
 	    opts.inInputShareable = false;
 	    opts.inSampleSize = 1;
+	    opts.inScaled = false;
+	    opts.inDither = false;
+	    opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 	    Bitmap bm = null;
 		try {
 			bm = BitmapFactory.decodeStream(getContentResolver().openInputStream(Utility.getTempUri()));
-			Log.d("Image Width :", bm.getWidth()+"");
-			Log.d("Image Height :", bm.getHeight()+"");
+			if (Constants.IMAGE_MAX_SIZE_X > bm.getWidth() && Constants.IMAGE_MAX_SIZE_Y > bm.getHeight()) {
+				isLowResolution = true;				
+				bm.recycle();
+				return null;
+			}else{
+				isLowResolution = false;
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -471,6 +483,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				message = (String) getResources().getText(R.string.error_update_listing);
 			}else if(ERROR_CODE == Constants.RESULT_UPDATE_LISTING_SUCCESS){
 				message = (String) getResources().getText(R.string.msg_postlisting_update_success);
+			}else if(ERROR_CODE == Constants.ERROR_LOW_RESOLUTION_CROP){
+				message = (String) getResources().getText(R.string.msg_postlisting_low_resolution);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -496,7 +510,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 					wsAction = new WSAction();
 				}
 				if(params[0].equals(ACT_MODE_PROCESS_BITMAP)){
-					wrapper.image = processCroppedBitmap();
+					wrapper.image = resizeBitmap();
 				} else if (params[0].equals(ACT_MODE_POST_LISTING)) {
 					wrapper = wsAction.postListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(null));
 				}else if (params[0].equals(ACT_MODE_GET_LISTING)) {
@@ -521,19 +535,19 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			super.onPostExecute(result);
 //			dismissDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(false);
-			if(result.image != null){
-				image = new ImageDto(result.image);
-				Log.d("Image Width :", result.image.getWidth()+"");
-				Log.d("Image Height :", result.image.getHeight()+"");
-	            //Check for size to restrict small images 
-	            if ((image.getData().length() / 1024.0f) > Constants.IMAGE_THUMBNAILS_MIN_SIZE) {
-	            	drawables.clear();
-	                drawables.add(new BitmapDrawable(getResources(), result.image));
-	                galImageAdapter.notifyDataSetChanged();
-				} else {
-					Utility.showLongToast(PostListingActivity.this, getResources().getString(R.string.msg_postlisting_low_resolution));
-					image = null;
-				}
+			if (isLowResolution && result.image == null) {
+				ERROR_CODE = Constants.ERROR_LOW_RESOLUTION_CROP;
+				showDialog(D_ERROR);
+			} else if(result.image != null){
+				if (images == null) {
+					images = new ArrayList<ImageDto>();
+				}else{
+					image = new ImageDto(result.image);
+//					images.add(image);
+				}				
+//            	drawables.clear();
+                drawables.add(result.image);
+                galImageAdapter.notifyDataSetChanged();
 			} else if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
@@ -574,6 +588,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		listing.setRating(1.0f);
 		if (image != null) {
 			listing.setImage(image);
+		}
+		if (images != null) {
+			listing.setImages(images);
 		}
 		return listing;
 	}
@@ -718,13 +735,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     private void pickImage() {
     	// Camera
     	final List<Intent> cameraIntents = new ArrayList<Intent>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);        
+        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); 
         cameraIntents.add(captureIntent);
         // Gallery.
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
         // Chooser of filesystem options.
-        final Intent chooserIntent = Intent.createChooser(galleryIntent, "Select Source");
+        final Intent chooserIntent = Intent.createChooser(galleryIntent
+        		, getResources().getString(R.string.label_chooser));
         // Add the camera options.
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
         startActivityForResult(chooserIntent, REQ_GET_IMAGE);
@@ -754,7 +772,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     	//take care of exceptions
     	try {
     		//call the standard crop action intent (the user device may not support it)
-	    	Intent cropIntent = new Intent("com.android.camera.action.CROP"); 
+	    	Intent cropIntent = new Intent("com.android.camera.action.CROP");
 	    	//indicate image type and Uri
 	    	cropIntent.setDataAndType(selectedImageUri, "image/*");
 	    	//set crop properties
@@ -762,9 +780,6 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	    	//indicate aspect of desired crop
 	    	cropIntent.putExtra("aspectX", Constants.IMAGE_ASPECT_X);
 	    	cropIntent.putExtra("aspectY", Constants.IMAGE_ASPECT_Y);
-	    	//indicate output X and Y
-//	    	cropIntent.putExtra("outputX", 256);
-//	    	cropIntent.putExtra("outputY", 256);
 	    	//retrieve data on return
 	    	cropIntent.putExtra("return-data", false);
 	    	cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utility.getTempUri());
@@ -775,6 +790,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     	}
     	//respond to users whose devices do not support the crop action
     	catch(ActivityNotFoundException anfe){
+    		Log.d("PostListingActivity::performCrop: ", anfe.toString());
     	}
     }
 }
