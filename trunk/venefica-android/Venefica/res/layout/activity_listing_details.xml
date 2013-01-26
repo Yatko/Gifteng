@@ -1,172 +1,100 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <!-- Comment list -->
+
+    <ListView
+        android:id="@+id/listListingDetailsComments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:dividerHeight="2sp"
+        android:paddingBottom="60dp"/>
 
-        <LinearLayout
-            android:id="@+id/actListingDetails"
-            style="?ActivityBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+    <!-- Action buttons Flag, buy now and Watch -->
 
-            <TableLayout
-                android:id="@+id/tableActListingDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:weightSum="100" >
 
-                <!-- User Info -->
+        <!-- Flag -->
 
-                <TableRow
-                    android:id="@+id/tableRowActListingDetailsUserDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="100" >
+        <ImageButton
+            android:id="@+id/btnActListingDetailsFlag"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="20"
+            android:background="@drawable/button_blue_bg_sharpcorners"
+            android:src="@drawable/icon_flag_white" />
 
-                    <include
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="100"
-                        layout="@layout/view_user_details" />
-                </TableRow>
+        <Button
+            android:id="@+id/btnActListingDetailsGetIt"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="60"
+            android:background="@drawable/button_blue_bg_sharpcorners"
+            android:text="@string/label_detail_listing_get_it"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+        <!-- Bookmark -->
 
-                <TableRow
-                    android:id="@+id/tableRowActListingDetailsPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:weightSum="100" >
+        <ImageButton
+            android:id="@+id/btnActListingDetailsBookmark"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="20"
+            android:background="@drawable/button_blue_bg_sharpcorners"
+            android:src="@drawable/icon_show_white" />
+    </LinearLayout>
+    <!-- Send message (default hidden) -->
 
-                    <Gallery
-                        android:id="@+id/galleryActListingDetailsPhotos"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:layout_weight="100"
-                        android:background="@color/black"
-                        android:gravity="bottom"
-                        android:minHeight="90dp" 
-                        />
-                </TableRow>
-                <!-- actionbar Buttons -->
+    <LinearLayout
+        android:id="@+id/layActListingDetailsSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="7dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="100" >
 
-                <TableRow
-                    android:id="@+id/tableRowActListingDetailsFlag"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center" 
-                    android:weightSum="100">
-
-                    <!-- <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:weightSum="100" > -->
-
-                        <!-- Flag -->
-
-                        <ImageButton
-                            android:id="@+id/btnActListingDetailsFlag"
-                            android:layout_width="0dp"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="20"
-                            android:background="@color/light_blue"
-                            android:src="@drawable/icon_flag_white" />
-
-                        <Button
-                            android:id="@+id/btnActListingDetailsGetIt"
-                            android:layout_width="0dp"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="60"
-                            android:background="@color/light_blue"
-                            android:text="@string/label_detail_listing_get_it"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
-                        <!-- Bookmark -->
-
-                        <ImageButton
-                            android:id="@+id/btnActListingDetailsBookmark"
-                            android:layout_width="0dp"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="20"
-                            android:background="@color/light_blue"
-                            android:src="@drawable/icon_star_0_white" />
-                   <!--  </LinearLayout> -->
-                </TableRow>
-                <!-- Description -->
-
-                <TableRow
-                    android:id="@+id/tableRowActListingDetailsDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_margin="2dip"
-                    android:weightSum="100" >
-
-                    <TextView
-                        android:id="@+id/txtActListingDesc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="2dp"
-                        android:layout_weight="100"
-                        android:maxLines="5"
-                        android:minLines="1"
-                        android:textSize="12sp" />
-                </TableRow>
-            </TableLayout>
-            <!-- Map view -->
-
-            <com.venefica.module.map.TapControlledMapView
-                android:id="@+id/mapviewActListingDetails"
-                android:layout_width="fill_parent"
-                android:layout_height="150dp"
-                android:apiKey="@string/google_map_api_key"
-                android:clickable="true" />
-
-            <ListView
-                android:id="@+id/listListingDetailsComments"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:dividerHeight="2sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layActListingDetailsSend"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/edtActListingDetailsMessage"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="100" >
+            android:layout_gravity="center"
+            android:layout_weight="80"
+            android:gravity="center"
+            android:textColor="@color/light_blue"
+            android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/edtActListingDetailsMessage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="80"
-                android:gravity="center"
-                android:textColor="@color/light_blue"
-                android:textSize="18sp" />
+        <ImageButton
+            android:id="@+id/imgBtnActListingDetailsSend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:src="@drawable/icon_send" />
+    </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/imgBtnActListingDetailsSend"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/icon_send" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</ScrollView>
+</RelativeLayout>
