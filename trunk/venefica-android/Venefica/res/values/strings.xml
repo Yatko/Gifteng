@@ -97,8 +97,8 @@
     <string name="label_detail_listing_seller">Seller</string>
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
-    <string name="label_detail_listing_get_it">Get it</string>
-    <string name="label_detail_listing_member_since">member since </string>
+    <string name="label_detail_listing_get_it">buy now!</string>
+    <string name="label_detail_listing_member_since">Member since </string>
     <string name="label_detail_listing_score">Score</string>
     <string name="label_menu_relist">Relist</string>
     <string name="label_menu_update">Update</string>
@@ -110,6 +110,11 @@
     <string name="label_share">Share</string>
     <string name="label_filter_setting">Filter Settings</string>
     <string name="label_chooser">Select Source</string>
+    <string name="label_follow">Follow</string>
+    <string name="label_miles">miles</string>
+    <string name="label_remaining">remaining</string>
+    <string name="label_left">left</string>
+    
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
