@@ -116,9 +116,9 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 	public void onClick(View view) {
 		if (view.getId() == R.id.imgBtnCommentListEdit) {
 			((ListingDetailsActivity)this.context).setMessageLayoutVisiblity(true);
-		} else if (comments.size() > 1 
+		}/* else if (comments.size() > 1 
 				&& (view.getId() == R.id.txtCommentListComment || view.getId() == R.id.imgCommentListProfileImg)) {
 			((ListingDetailsActivity)this.context).expandComments();
-		}
+		}*/
 	}
 }
