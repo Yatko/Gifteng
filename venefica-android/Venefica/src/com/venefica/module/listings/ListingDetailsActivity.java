@@ -17,9 +17,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
@@ -27,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -41,14 +46,12 @@ import com.venefica.module.map.ListingOverlayItem;
 import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
 import com.venefica.utils.Constants;
-import com.venefica.utils.ResizeAnimation;
 import com.venefica.utils.VeneficaApplication;
 /**
  * 
@@ -79,12 +82,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     /**
      * Text view to show user details
      */
-    private TextView txtUserName, txtMemberInfo, txtScore;
+    private TextView txtUserName, txtMemberInfo, txtAddress;
     /**
      * Buttons
      */
-    private ImageButton btnBookmark, btnFlag, btnSendMsg, btnWatch;
-    private Button btnGetIt;
+    private ImageButton btnBookmark, btnFlag, btnSendMsg;
+    private Button btnGetIt, btnFollow;
     private ImageView profImgView;
     /**
      * Modes
@@ -140,6 +143,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	private LinearLayout laySend;
 	private boolean isSendMsgVisible = false;
 	private boolean isSendMessage = false;
+	
+	private LayoutInflater inflater;
+	private PopupWindow popupWindow;
+	private ViewGroup mapContainer;
 	/**
 	 * layout heights
 	 */
@@ -151,22 +158,24 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_listing_details);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);        
+//        getSupportActionBar().setCustomView(inflater.inflate(R.layout.view_actionbar_title, null));
+        inflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        mapContainer = (ViewGroup) inflater.inflate(R.layout.view_listing_details_map_container, null);
         //set activity mode
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
         //user details
-        txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
-        txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
-        txtScore = (TextView) findViewById(R.id.txtUserViewScore);
-        profImgView = (ImageView) findViewById(R.id.imgUserViewProfileImg);
-        btnSendMsg = (ImageButton) findViewById(R.id.imgBtnUserViewSendMsg);
+        txtUserName = (TextView) mapContainer.findViewById(R.id.txtUserViewUserName);
+        txtMemberInfo = (TextView) mapContainer.findViewById(R.id.txtUserViewMemberInfo);
+        txtAddress = (TextView) mapContainer.findViewById(R.id.txtUserViewAddress);
+        profImgView = (ImageView) mapContainer.findViewById(R.id.imgUserViewProfileImg);
+        btnSendMsg = (ImageButton) mapContainer.findViewById(R.id.imgBtnUserViewSendMsg);
         btnSendMsg.setOnClickListener(this);
-        btnWatch = (ImageButton) findViewById(R.id.imgBtnUserViewWatch);
-        btnWatch.setOnClickListener(this);
+        btnFollow = (Button) mapContainer.findViewById(R.id.imgBtnUserViewFollow);
+        btnFollow.setOnClickListener(this);
         //Details
-        txtDescription = (TextView) findViewById(R.id.txtActListingDesc);
+        txtDescription = (TextView) mapContainer.findViewById(R.id.txtActListingDesc);
         //Bookmark
 		btnBookmark = (ImageButton) findViewById(R.id.btnActListingDetailsBookmark);
 		btnBookmark.setOnClickListener(this);
@@ -176,17 +185,20 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		//Getit
 		btnGetIt = (Button) findViewById(R.id.btnActListingDetailsGetIt);
 		btnGetIt.setOnClickListener(this);
+		//Details popup		
+		View popupView = inflater.inflate(R.layout.view_listing_details_popup, null);
+		popupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT,  
+	                     LayoutParams.WRAP_CONTENT); 
 		//Map
-		mapView = (TapControlledMapView) findViewById(R.id.mapviewActListingDetails);
-		mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 
-				viewHeightMin));
+		mapView = (TapControlledMapView) mapContainer.findViewById(R.id.mapviewActListingDetails);
 		// dismiss balloon upon single tap of MapView 
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {		
 			@Override
 			public boolean onSingleTap(MotionEvent e) {
 				overlayItems.hideAllBalloons();
-				expandView(mapView);
-				collapseView(listViewComments);
+				popupWindow.dismiss();
+				/*expandView(mapView);
+				collapseView(listViewComments);*/
 				return true;
 			}
 		});
@@ -195,32 +207,32 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		mapView.setTraffic(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(8); // Zoom 1 is world view
+		mapController.setZoom(7); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
 		//Gallery
-        gallery = (Gallery) findViewById(R.id.galleryActListingDetailsPhotos);        
-        /*gallery.setOnItemClickListener(new OnItemClickListener() {
+        gallery = (Gallery) mapContainer.findViewById(R.id.galleryActListingDetailsPhotos);        
+        gallery.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Intent galleryIntent = new Intent(ListingDetailsActivity.this, GalleryActivity.class);
-				startActivity(galleryIntent);
+				/*Intent galleryIntent = new Intent(ListingDetailsActivity.this, GalleryActivity.class);
+				startActivity(galleryIntent);*/				
+				popupWindow.showAsDropDown(gallery);
 			}
-		});*/
+		});
         images = new ArrayList<ImageDto>();
         galImageAdapter = new GalleryImageAdapter(this, images, null, false, false);
         gallery.setAdapter(galImageAdapter);
         
         //Comments
         listViewComments = (ListView) findViewById(R.id.listListingDetailsComments);
-        listViewComments.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 
-        		viewHeightMin));
+        listViewComments.addHeaderView(mapContainer);
         comments = getEmptyComment();
         adapterComments = new CommentListAdapter(this, comments);
-        listViewComments.setAdapter(adapterComments);
+        listViewComments.setAdapter(adapterComments);        
              
         //Send Messages        
         edtMessage = (EditText) findViewById(R.id.edtActListingDetailsMessage);
@@ -360,9 +372,6 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				, listing.getTitle(), listing.getDescription(), listing.getId()
 				, listing.getImage()!= null? listing.getImage().getUrl(): "");
 		//set user info
-		/*ImageDownloadManager.getImageDownloadManagerInstance()
-			.loadDrawable(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
-				, getResources().getDrawable(R.drawable.icon_picture_white));*/
 		((VeneficaApplication)getApplication()).getImgManager()
 				.loadImage(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
 				, getResources().getDrawable(R.drawable.icon_picture_white));
@@ -371,7 +380,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		galImageAdapter.notifyDataSetChanged();
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
 		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
-		txtScore.setText(getResources().getText(R.string.label_detail_listing_score).toString()/*listing.getCreator()*/);
+		txtAddress.setText(listing.getCreator().getCity() +", "+listing.getCreator().getCounty());
 		
 		//set listing details
 		StringBuffer text = new StringBuffer();
@@ -461,7 +470,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				setMessageLayoutVisiblity(false);
 				isSendMessage = false;
 			}else if (isViewExpanded) {
-				collapseAllViews();
+				/*collapseAllViews();*/
 			} else{
 				finish();
 			}			
@@ -561,7 +570,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			setMessageLayoutVisiblity(false);
 			isSendMessage = false;
 		} else if (isViewExpanded) {
-			collapseAllViews();
+			/*collapseAllViews();*/
 		} else {
 			super.onBackPressed();
 		}    	
@@ -596,42 +605,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		messageDto.setToAvatarUrl(listing.getCreator().getAvatar().getUrl());
 		return messageDto;
 	}
-
-	/**
-	 * Method to expand view
-	 * @param view
-	 */
-	private void expandView(View view){
-		isViewExpanded = true;
-		ResizeAnimation animation = new ResizeAnimation(view, view.getWidth(), view.getHeight(), view.getWidth(), viewHeightMax);
-		view.startAnimation(animation);
-	}
 	
-	/**
-	 * Method to expand view
-	 * @param view
-	 */
-	private void collapseView(View view){
-		ResizeAnimation animation = new ResizeAnimation(view, view.getWidth(), view.getHeight(), view.getWidth(), viewHeightMin);
-		view.startAnimation(animation);
-	}
-	/**
-	 * Method to expand comment list
-	 */
-	public void expandComments(){
-		collapseView(mapView);
-		expandView(listViewComments);
-	}
-	/**
-	 * Collapse all map and comments
-	 */
-	private void collapseAllViews(){
-		isViewExpanded = false;
-		collapseView(mapView);
-		collapseView(listViewComments);
-	}
 	@Override
 	public void onClick(View v) {
+		popupWindow.dismiss();
 		if (v.getId() == R.id.btnActListingDetailsBookmark) {
 			if (listing != null && !listing.isOwner() && !listing.isInBookmars()) {
 				new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
@@ -651,7 +628,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
 				}
 			}						
-		} else if (v.getId() == R.id.imgBtnUserViewWatch) {
+		} else if (v.getId() == R.id.imgBtnUserViewFollow) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 		} else if (v.getId() == R.id.btnActListingDetailsFlag) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
