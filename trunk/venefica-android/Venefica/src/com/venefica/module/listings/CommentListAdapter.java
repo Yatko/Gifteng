@@ -2,12 +2,6 @@ package com.venefica.module.listings;
 
 import java.util.List;
 
-import com.venefica.module.main.R;
-import com.venefica.module.utils.ImageDownloadManager;
-import com.venefica.services.CommentDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +12,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.venefica.module.main.R;
+import com.venefica.services.CommentDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
+
 /**
  * @author avinash
  * Adapter for comment list on DetailView
@@ -26,7 +25,7 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 
 	private Context context;
 	private List<CommentDto> comments;
-	private TextView txtComment;
+	private TextView txtComment, txtName, txtTime;
 	private ImageView imgProfile;
 	private ImageButton imgBtnEdit;
 	private static ViewHolder holder;
@@ -72,9 +71,13 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.view_listing_comments, parent, false);convertView.setTag(holder);
 			txtComment = (TextView) convertView.findViewById(R.id.txtCommentListComment);
+			txtName = (TextView) convertView.findViewById(R.id.txtCommentListSender);
+			txtTime = (TextView) convertView.findViewById(R.id.txtCommentListTime);
 			imgProfile = (ImageView) convertView.findViewById(R.id.imgCommentListProfileImg);
 			imgBtnEdit = (ImageButton) convertView.findViewById(R.id.imgBtnCommentListEdit);
 			holder.txtComment = txtComment;
+			holder.txtName = txtName;
+			holder.txtTime = txtTime;
 			holder.imgProfile = imgProfile;
 			holder.imgBtnEdit = imgBtnEdit;
 			convertView.setTag(holder);
@@ -82,6 +85,8 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.txtComment.setText(comments.get(position).getText());
+		holder.txtName.setText(comments.get(position).getPublisherFullName());
+//		holder.txtTime.setText(comments.get(position).getTime());
 		/*ImageDownloadManager.getImageDownloadManagerInstance()
 			.loadDrawable(Constants.PHOTO_URL_PREFIX +comments.get(position)
 					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));*/
@@ -100,15 +105,15 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 			}*/
 		}else {
 			holder.imgBtnEdit.setVisibility(View.GONE);			
-		}
-		holder.txtComment.setOnClickListener(this);
-		holder.imgProfile.setOnClickListener(this);
+		}		
 		return convertView;
 	}
 
 	private static class ViewHolder {
 		ImageView imgProfile;
 		TextView txtComment;
+		TextView txtName;
+		TextView txtTime;
 		ImageButton imgBtnEdit;
 	}
 
