@@ -10,8 +10,7 @@
         android:id="@+id/listListingDetailsComments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="2sp"
-        android:paddingBottom="60dp"/>
+        android:dividerHeight="2sp"/>
 
     <!-- Action buttons Flag, buy now and Watch -->
 
@@ -19,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent"
+        android:background="@color/transparent_black"
         android:weightSum="100" >
 
         <!-- Flag -->
