@@ -15,7 +15,8 @@
     <color name="articlecolor">#3399FF</color>
     <color name="article_title">#3399FF</color>
     <color name="cachecolor">#8ad0e8</color>
-
+	<color name="transparent_black">#88000000</color>
+	<color name="transparent_white">#aaffffff</color>
     <!-- Old -->
     <!-- <color name="white">#ffffffff</color> -->
     <color name="purpur">#ffa06ed8</color>
