@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:alpha="0.6"
-        android:background="@color/black"
+        android:background="@drawable/background_transperent_black"
         android:weightSum="100" >
 
         <TextView
