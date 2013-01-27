@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -351,5 +352,27 @@ public class Utility {
 
 	    // recreate the new Bitmap
 	    return  Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+    }
+    
+    /**
+     * Method to convert DensityPixel to Pixel
+     * @param context
+     * @param densityPixel
+     * @return pixels
+     */
+    public static int convertDpToPixel(Context context, int densityPixel){
+    	DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    	return (int)((densityPixel * displayMetrics.density) + 0.5);
+    }
+    
+    /**
+     * Method to convert Pixel to DensityPixel
+     * @param context
+     * @param pixel
+     * @return densityPixel
+     */
+    public static int convertPxToDensityPixel(Context context, int pixel){
+    	DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    	return (int) ((pixel/displayMetrics.density)+0.5);
     }
 }
