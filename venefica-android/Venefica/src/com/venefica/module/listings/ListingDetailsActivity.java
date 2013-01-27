@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -156,12 +157,17 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS);
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
+        getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
         setContentView(R.layout.activity_listing_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);        
-//        getSupportActionBar().setCustomView(inflater.inflate(R.layout.view_actionbar_title, null));
+                
         inflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         mapContainer = (ViewGroup) inflater.inflate(R.layout.view_listing_details_map_container, null);
+        
         //set activity mode
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
@@ -230,6 +236,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         //Comments
         listViewComments = (ListView) findViewById(R.id.listListingDetailsComments);
         listViewComments.addHeaderView(mapContainer);
+        TextView textViewFooter = new TextView(this);
+        textViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.FILL_PARENT, Utility.convertDpToPixel(this, 60)));
+        listViewComments.addFooterView(textViewFooter);
         comments = getEmptyComment();
         adapterComments = new CommentListAdapter(this, comments);
         listViewComments.setAdapter(adapterComments);        
