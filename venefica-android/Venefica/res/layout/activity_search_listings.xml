@@ -1,14 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?ActivityBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <com.venefica.module.dashboard.SlideMenuView
-        android:id="@+id/sideNavigationViewActSearchListing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent" >
 
     <RelativeLayout
         android:id="@+id/layActSearchListingsMap"
@@ -36,18 +29,22 @@
                 android:id="@+id/txtActSearchListingsTitleMap"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="70"
                 android:layout_gravity="center"
+                android:layout_weight="70"
+                android:background="@color/transparent"
                 android:gravity="center"
                 android:textColor="@color/light_blue"
-                android:background="@color/transparent"
-                android:textSize="18sp"/>
-            <ImageButton 
+                android:textSize="18sp" />
+
+            <ImageButton
                 android:id="@+id/btnActSearchListingsTile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:background="@color/transparent_black"
                 android:layout_weight="30"
-                android:src="@drawable/icon_picture"/>
+                android:src="@drawable/icon_picture" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -61,40 +58,48 @@
             android:id="@+id/listActSearchListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:horizontalSpacing="@dimen/image_thumbnail_spacing"
-            android:verticalSpacing="@dimen/image_thumbnail_spacing"
             android:layout_margin="1dp"
             android:dividerHeight="2sp"
-            android:numColumns="2" />
+            android:horizontalSpacing="@dimen/image_thumbnail_spacing"
+            android:numColumns="2"
+            android:verticalSpacing="@dimen/image_thumbnail_spacing" />
 
         <LinearLayout
             android:id="@+id/layActSearchListingsToggleMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="100"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:weightSum="100" >
 
             <TextView
                 android:id="@+id/txtActSearchListingsTitleTile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="70"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/light_blue"
+                android:layout_weight="70"
                 android:background="@color/transparent"
-                android:textSize="18sp"
-                android:text="@string/label_dashboard_browse" />
-            <ImageButton 
+                android:gravity="center"
+                android:text="@string/label_dashboard_browse"
+                android:textColor="@color/light_blue"
+                android:textSize="18sp" />
+
+            <ImageButton
                 android:id="@+id/btnActSearchListingsMap"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:layout_weight="30"
-                android:src="@drawable/icon_globe"
-                android:background="@color/transparent_black"/>
+                android:background="@color/transparent_black"
+                android:src="@drawable/icon_globe" />
         </LinearLayout>
     </RelativeLayout>
 
-</LinearLayout>
+    <com.venefica.module.dashboard.SlideMenuView
+        android:id="@+id/sideNavigationViewActSearchListing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
