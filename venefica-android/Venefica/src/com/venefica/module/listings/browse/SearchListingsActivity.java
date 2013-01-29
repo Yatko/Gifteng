@@ -52,7 +52,6 @@ import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.settings.SettingsActivity;
-import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.FilterDto;
@@ -150,6 +149,11 @@ ISlideMenuCallback, LocationListener{
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
         setContentView(R.layout.activity_search_listings);
         //get preferences
         prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
@@ -159,7 +163,7 @@ ISlideMenuCallback, LocationListener{
         slideMenuView = (SlideMenuView) findViewById(R.id.sideNavigationViewActSearchListing);
 		slideMenuView.setMenuItems(R.menu.slide_menu);
 		slideMenuView.setMenuClickCallback(this);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		slideMenuView.setUserDetails(((VeneficaApplication)getApplication()).getUser());
         super.setSlideMenuView(slideMenuView);
         
 		//Create the search view
