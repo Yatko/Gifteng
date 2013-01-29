@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.user.UserDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
@@ -20,6 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -31,10 +36,15 @@ import android.widget.TextView;
 public class SlideMenuView extends LinearLayout {
 	private static final String LOG_TAG = SlideMenuView.class.getSimpleName();
 
-	private LinearLayout navigationMenu;
+	private RelativeLayout navigationMenu;
 	private ListView listView;
-	private View outsideView;
+	private ViewGroup userView;
 
+	/**
+     * Text view to show user details
+     */
+    private TextView txtUserName, txtMemberInfo, txtAddress;
+    private ImageView profImgView;
 	private ISlideMenuCallback callback;
 	private ArrayList<SlideMenuItem> menuItems;
 
@@ -72,15 +82,20 @@ public class SlideMenuView extends LinearLayout {
 	 */
 	private void initView() {
 		LayoutInflater.from(getContext()).inflate(R.layout.side_navigation, this, true);
-		navigationMenu = (LinearLayout) findViewById(R.id.side_navigation_menu);
+		userView = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.view_user_details, null, false);
+		userView.setPadding(0, (int) getResources().getDimension(R.dimen.abs__action_bar_default_height), 0, 0);
+		 //user details
+        txtUserName = (TextView) userView.findViewById(R.id.txtUserViewUserName);
+        txtMemberInfo = (TextView) userView.findViewById(R.id.txtUserViewMemberInfo);
+        txtAddress = (TextView) userView.findViewById(R.id.txtUserViewAddress);
+        profImgView = (ImageView) userView.findViewById(R.id.imgUserViewProfileImg);
+        userView.findViewById(R.id.imgBtnUserViewFollow).setVisibility(GONE);
+        userView.findViewById(R.id.imgBtnUserViewSendMsg).setVisibility(GONE);
+        
+		navigationMenu = (RelativeLayout) findViewById(R.id.side_navigation_menu);
 		listView = (ListView) findViewById(R.id.side_navigation_listview);
-		outsideView = (View) findViewById(R.id.side_navigation_outside_view);
-		outsideView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				hideMenu();
-			}
-		});
+		listView.addHeaderView(userView);
+		listView.setFastScrollEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,9 +137,6 @@ public class SlideMenuView extends LinearLayout {
 	 * Show side navigation menu.
 	 */
 	public void showMenu() {
-		outsideView.setVisibility(View.VISIBLE);
-		outsideView.startAnimation(AnimationUtils.loadAnimation(getContext(),
-				R.anim.side_navigation_fade_in));
 		navigationMenu.setVisibility(View.VISIBLE);
 		navigationMenu.startAnimation(AnimationUtils.loadAnimation(getContext(),
 				R.anim.side_navigation_in_from_left));
@@ -134,9 +146,6 @@ public class SlideMenuView extends LinearLayout {
 	 * Hide side navigation menu.
 	 */
 	public void hideMenu() {
-		outsideView.setVisibility(View.GONE);
-		outsideView.startAnimation(AnimationUtils.loadAnimation(getContext(),
-				R.anim.side_navigation_fade_out));
 		navigationMenu.setVisibility(View.GONE);
 		navigationMenu.startAnimation(AnimationUtils.loadAnimation(getContext(),
 				R.anim.side_navigation_out_to_left));
@@ -254,5 +263,20 @@ public class SlideMenuView extends LinearLayout {
 		}
 
 	}
-
+	public void setUserDetails(UserDto user){
+		if (user != null) {
+			((VeneficaApplication) ((SearchListingsActivity) getContext())
+					.getApplication()).getImgManager().loadImage(
+					Constants.PHOTO_URL_PREFIX + user.getAvatar().getUrl(),
+					profImgView,
+					getResources().getDrawable(R.drawable.icon_picture_white));
+			txtUserName.setText(user.getFirstName() + " "
+					+ (user.getLastName()));
+			txtMemberInfo
+					.setText(getResources().getText(
+							R.string.label_detail_listing_member_since)
+							.toString()/*listing.getCreator()*/);
+			txtAddress.setText(user.getCity() + ", " + user.getCounty());
+		}
+	}
 }
