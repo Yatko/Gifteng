@@ -30,7 +30,6 @@ import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
-import com.venefica.services.User;
 import com.venefica.utils.Constants;
 import com.venefica.module.utils.Utility;;
 
@@ -320,10 +319,10 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public User getUser(String token) throws IOException,
+	public UserDto getUser(String token) throws IOException,
 			XmlPullParserException {
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_USER;
-		User user = null;
+		UserDto user = null;
 
 		try {
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,
@@ -346,7 +345,7 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
 			if (envelope.getResponse() instanceof UserDto) {
-				user = new User((UserDto) envelope.getResponse());
+				user = (UserDto) envelope.getResponse();
 			} else {
 				Log.e("WSAction getUser: ", "UserDto not found.");
 				user = null;
