@@ -57,7 +57,8 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	/**
 	 * Constants to identify auth request
 	 */
-	private final int AUTH_FACEBOOK = 11, AUTH_TWITTER = 12, AUTH_VK = 13, AUTH_VENEFICA = 14, CHECK_REGRISTRATION = 15;
+	private final int AUTH_FACEBOOK = 11, AUTH_TWITTER = 12, AUTH_VK = 13
+			, AUTH_VENEFICA = 14, CHECK_REGRISTRATION = 15, MODE_GET_USER = 16;
 	/**
 	 * Auth type
 	 */
@@ -354,6 +355,12 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 					wrapper = wsAction.authenticateUser(edtLogin.getText().toString(), edtPassword.getText().toString());					
 				}else if (params[0].equalsIgnoreCase(CHECK_REGRISTRATION+"")) {
 					wrapper = wsAction.checkUserRegistration(params[1]);
+				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
+					wrapper = new UserRegistrationResultWrapper();
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					if (wrapper.userDto == null) {//change after modifying Dto
+						wrapper = null;
+					}
 				}
 			} catch (IOException e) {
 				Log.e("AuthenticationTask::doInBackground :", e.toString());
@@ -370,8 +377,9 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 			if(result != null){
 				if (result != null && result.result == Constants.RESULT_USER_AUTHORISED) {
 					saveAuthToken(result.data);
-					VeneficaApplication.authToken = result.data;
-					startHomeScreen();
+					((VeneficaApplication)getApplication()).setAuthToken(result.data);
+					//Call web service to authenticate user
+					new AuthenticationTask().execute(MODE_GET_USER+"", result.data);
 				}else if (result != null && result.result == Constants.ERROR_USER_UNAUTHORISED) {
 					ERROR_CODE = result.result;
 					showDialog(D_ERROR);
@@ -392,6 +400,9 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 					}else{
 						startHomeScreen();
 					}
+				}else if (result != null && result.userDto != null) {
+					((VeneficaApplication)getApplication()).setUser(result.userDto);
+					startHomeScreen();
 				}else{
 					ERROR_CODE  = Constants.ERROR_NETWORK_CONNECT;
 					showDialog(D_ERROR);
