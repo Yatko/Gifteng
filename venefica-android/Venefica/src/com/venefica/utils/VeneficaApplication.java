@@ -1,13 +1,8 @@
 package com.venefica.utils;
 
-import java.io.File;
-import java.io.IOException;
-
 import android.app.Application;
-import android.os.Environment;
-
+import com.venefica.module.user.UserDto;
 import com.venefica.module.utils.ImageDownloadManager;
-import com.venefica.services.User;
 
 public class VeneficaApplication extends Application {
 	/** Token authentication server */
@@ -15,7 +10,7 @@ public class VeneficaApplication extends Application {
 
 
 	/** The data about the user */
-	public static User user;
+	public static UserDto user;
 	
 	private ImageDownloadManager imgManager;
 	@Override
@@ -41,15 +36,15 @@ public class VeneficaApplication extends Application {
 	/**
 	 * @return the user
 	 */
-	public static User getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
 	/**
-	 * @param user the user to set
+	 * @param userDto the user to set
 	 */
-	public static void setUser(User user) {
-		VeneficaApplication.user = user;
+	public void setUser(UserDto userDto) {
+		VeneficaApplication.user = userDto;
 	}
 
 	/**
