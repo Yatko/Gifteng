@@ -49,7 +49,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 
 	@Override
 	public void onSideNavigationItemClick(int itemId) {
-		switch (itemId-1) {
+		switch (itemId) {
 		case R.id.slideMenuBrowse: 
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
