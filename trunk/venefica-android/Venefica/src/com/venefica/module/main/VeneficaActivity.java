@@ -36,10 +36,10 @@ ISlideMenuCallback {
 	}
 	@Override
 	public void onSideNavigationItemClick(int itemId) {
-		switch (itemId) {
+		switch (itemId-1) {
 		case R.id.slideMenuBrowse: 
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
-				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -53,13 +53,18 @@ ISlideMenuCallback {
 		    	startActivity(postIntent);
 			}
 	    	break;
-		case R.id.slideMenuOfferings:
+		case R.id.slideMenuSelling:
+			if(!(getApplicationContext() instanceof SearchListingsActivity)){
+				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS);
+				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(browseIntent);
+			}
+	    	break;
+		case R.id.slideMenuBuying:
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
     		break;
-		case R.id.slideMenuClaimed:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-    		break;
-		case R.id.slideMenuBookmarks:
+		case R.id.slideMenuWatching:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
 				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_BOOKMARKS);
@@ -67,14 +72,15 @@ ISlideMenuCallback {
 		    	startActivity(browseIntent);
 			}
     		break;
-		case R.id.slideMenuMyListings:
-			if(!(getApplicationContext() instanceof SearchListingsActivity)){
-				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
-				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS);
-				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    	startActivity(browseIntent);
-			}			
-	    	break;
+		case R.id.slideMenuMessages:
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+    		break;
+		case R.id.slideMenuReviews:
+    		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+    		break;
+		case R.id.slideMenuInviteFriends:
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+    		break;
 		case R.id.slideMenuAccount:  
 			if(!(getApplicationContext() instanceof RegisterUserActivity)){
 				Intent accountIntent = new Intent(getApplicationContext(), RegisterUserActivity.class);
@@ -91,14 +97,13 @@ ISlideMenuCallback {
 		    	startActivity(settingsIntent);
 			}
 	    	break;
-    	case R.id.slideMenuFeedback:
-    		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
+		case R.id.slideMenuSignOut:
+			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
     		break;
 		}
-		if(!(getApplicationContext() instanceof SearchListingsActivity)){
+		if((getApplicationContext() instanceof SearchListingsActivity)){
 			finish();
 		}
-			
 	}
 	/**
 	 * @return the slideMenuView
