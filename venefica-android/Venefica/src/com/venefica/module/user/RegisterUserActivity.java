@@ -16,11 +16,9 @@ import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.ImageDownloadManager;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
-import com.venefica.services.User;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -578,7 +576,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 				}else if (params[0].equalsIgnoreCase(MODE_UPDATE_PROF+"")) {
 					wrapper.result = wsAction.updateUser(((VeneficaApplication)getApplication()).getAuthToken(), user);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
-					wrapper.userData = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
 				}
 			}catch (IOException e) {
 				Log.e("AuthenticationTask::doInBackground :", e.toString());
@@ -593,11 +591,11 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 			super.onPostExecute(result);
 //			dismissDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(false);
-			if(result.userData == null && result.result == -1){
+			if(result.userDto == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
-			}else if (result.userData != null) {
-				setUserData(result.userData);
+			}else if (result.userDto != null) {
+				setUserData(result.userDto);
 			}else if (result.result != -1) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
@@ -614,33 +612,33 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 	}
 	/**
 	 * Method to set provided user data to input fields. Used in update profile.
-	 * @param userData
+	 * @param userDto
 	 */
-	public void setUserData(User userData) {
-		chkBusinessAcc.setChecked(userData.isBusinessAcc());
+	public void setUserData(UserDto userDto) {
+		chkBusinessAcc.setChecked(userDto.isBusinessAcc());
 		/*ImageDownloadManager.getImageDownloadManagerInstance()
 				.loadDrawable(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
 						, getResources().getDrawable(R.drawable.icon_picture_white));*/
-		((VeneficaApplication)getApplication()).getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
+		((VeneficaApplication)getApplication()).getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + userDto.getAvatar().getUrl(), profileImage
 				, getResources().getDrawable(R.drawable.icon_picture_white));
 		
-    	edtLogin.setText(userData.getName());
+    	edtLogin.setText(userDto.getName());
 //    	edtPassword.setVisibility(visibility);
-    	if (!userData.getEmail().equals("")) {
-    		edtEmail.setText(userData.getEmail());
+    	if (!userDto.getEmail().equals("")) {
+    		edtEmail.setText(userDto.getEmail());
 		}
-    	if (!userData.getPhoneNumber().equals("")) {
-    		edtPhone.setText(userData.getPhoneNumber());
+    	if (!userDto.getPhoneNumber().equals("")) {
+    		edtPhone.setText(userDto.getPhoneNumber());
 		}    	 
-		edtFirstName.setText(userData.getFirstName());
-		edtLastName.setText(userData.getLastName());
-		if (userData.getDateOfBirth() != null) {
-			edtDateOfBirth.setText(Constants.dateFormat.format(userData.getDateOfBirth()));
+		edtFirstName.setText(userDto.getFirstName());
+		edtLastName.setText(userDto.getLastName());
+		if (userDto.getDateOfBirth() != null) {
+			edtDateOfBirth.setText(Constants.dateFormat.format(userDto.getDateOfBirth()));
 		}	
-		edtZipCode.setText(userData.getZipCode());
-		edtCounty.setText(userData.getCounty());
-		edtCity.setText(userData.getCity());
-		edtArea.setText(userData.getArea());		
+		edtZipCode.setText(userDto.getZipCode());
+		edtCounty.setText(userDto.getCounty());
+		edtCity.setText(userDto.getCity());
+		edtArea.setText(userDto.getArea());		
 	}
 	@Override
 	public void onClick(View v) {
