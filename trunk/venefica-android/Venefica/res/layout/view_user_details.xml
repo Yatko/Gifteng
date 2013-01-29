@@ -7,8 +7,7 @@
     <LinearLayout
         android:id="@+id/layUserView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
+        android:layout_height="match_parent"        
         android:orientation="horizontal"
         android:weightSum="100"
         android:background="@color/transparent_white">
