@@ -99,8 +99,8 @@ public class SlideMenuView extends LinearLayout {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (callback != null) {
-					callback.onSideNavigationItemClick(menuItems.get(position).getId());
+				if (callback != null && position > 0) {
+					callback.onSideNavigationItemClick(menuItems.get(position-1).getId());
 				}
 				hideMenu();
 			}
