@@ -573,8 +573,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		listing.setDescription(edtDescription.getText().toString());
 		listing.setCategoryId(categoryId);
 		listing.setPrice(new BigDecimal(edtPrice.getText().toString()));
-		listing.setLatitude(Math.round(Double.parseDouble(edtLatitude.getText().toString())));
-		listing.setLongitude(Math.round(Double.parseDouble(edtLongitude.getText().toString())));
+		listing.setLatitude(Double.parseDouble(edtLatitude.getText().toString()));
+		listing.setLongitude(Double.parseDouble(edtLongitude.getText().toString()));
 		listing.setCanMarkAsSpam(true);
 		listing.setCanRate(true);
 //		listing.setCreatedAt(Utility.converDateToString(new Date()));
