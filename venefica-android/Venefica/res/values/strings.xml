@@ -175,6 +175,7 @@
 	<string name="msg_not_impl">This function is not yet implemented.</string>
 	<string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
 	<string name="msg_postlisting_low_resolution">Cropped image is too small. Please crop with larger size or select large image.</string>
+	<string name="msg_enable_location_provider">To use My location, Please turn on a Location source in Settings. Go to settings now?</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
@@ -281,7 +282,7 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
     <!-- Release key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
+    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
 </resources>
