@@ -756,7 +756,13 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 
 			Object response = envelope.getResponse();
-			result.listings = (List<AdDto>)response;
+			if (response instanceof AdDto) {
+				result.listings = new ArrayList<AdDto>();
+				result.listings.add((AdDto)response);
+			} else {
+				result.listings = (List<AdDto>)response;
+			}
+			
 			if (result.listings == null || result.listings.size() == 0) {
 				result.result = Constants.ERROR_NO_DATA;
 			} else {
