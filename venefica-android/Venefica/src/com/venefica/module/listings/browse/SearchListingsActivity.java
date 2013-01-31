@@ -21,6 +21,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -124,6 +126,7 @@ ISlideMenuCallback, LocationListener{
 	private String locProvider;
 	private Location location;
 	private MapItemizedOverlay<?> overlayItems;
+	private boolean isAllProvidersDesabled;
 	/**
 	 * exit flag
 	 */
@@ -157,6 +160,8 @@ ISlideMenuCallback, LocationListener{
         setContentView(R.layout.activity_search_listings);
         //get preferences
         prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
+        //get location service
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //set mode 
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         //slide menu
@@ -260,15 +265,20 @@ ISlideMenuCallback, LocationListener{
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
 		toggleMapView(false);
-		//start GPS
-		enableGPS();
-		//Get Filter settings
-		getFilterOptions();
+		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+			//start GPS
+			getCurrentLocation();
+			//Get Filter settings
+			getFilterOptions();
+		}
+		
 		if(WSAction.isNetworkConnected(this)){
-			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && locProvider != null) {
 				new SearchListingTask().execute(CURRENT_MODE);
 				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-			}	    	
+			}else{
+				setSupportProgressBarIndeterminateVisibility(false);
+			}
 	    }else{
 	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
 	    	showDialog(D_ERROR);	 
@@ -303,12 +313,18 @@ ISlideMenuCallback, LocationListener{
 //	    if (!locProviderEnabled) {
 //	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
 //	    	showDialog(D_ERROR);	        
-//	    }
-    	//Get Filter settings
-		getFilterOptions();
-	    //Get last location
-	    location = locationManager.getLastKnownLocation(locProvider);
-    	updateMap(location);
+//	    }    	
+	    /*//Get last location
+    	if (locProvider != null) {
+    		location = locationManager.getLastKnownLocation(locProvider);
+        	updateMap(location);
+		}*/ 
+    	if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+    		getCurrentLocation();
+        	//Get Filter settings
+    		getFilterOptions();
+		}
+    	
 	    if(WSAction.isNetworkConnected(this)){
 	    	if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
 	    		new SearchListingTask().execute(CURRENT_MODE);
@@ -330,12 +346,11 @@ ISlideMenuCallback, LocationListener{
     protected void onResume() {
     	super.onResume();
     	//Get current location	
-    	if(useCurrentLocation && !(CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS)){
+    	if(useCurrentLocation && (locProvider != null)
+    			&& !(CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS)){
     		locationManager.requestLocationUpdates(locProvider, Constants.LOCATION_UPDATE_PERIOD, Constants.LOCATION_UPDATE_MIN_DISTANCE, this);
-    	} else {
-			
-		}
-	    updateMap(location);
+    		updateMap(location);
+    	}	    
     }
     @Override
     protected void onPause() {    	
@@ -373,6 +388,9 @@ ISlideMenuCallback, LocationListener{
 			builder.setNeutralButton(R.string.label_btn_ok, new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
+					if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
+						showLocationSettings();
+					}
 					dismissDialog(D_ERROR);
 				}
 			});			
@@ -397,7 +415,8 @@ ISlideMenuCallback, LocationListener{
 				clearUIWhenNoData();
 				message = (String) getResources().getText(R.string.error_search_listings_no_data);
 			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
-				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
+				message = (String) getResources().getText(R.string.msg_enable_location_provider);
+				((AlertDialog) dialog).setButton(DialogInterface.BUTTON_NEGATIVE, "View Settings", new Message());
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_BOOKMARKS){
 				message = (String) getResources().getText(R.string.error_get_bookmarks);
 			}else if(ERROR_CODE == Constants.ERROR_NO_BOOKMARKS){
@@ -430,7 +449,7 @@ ISlideMenuCallback, LocationListener{
 				}
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
-							, 1, 5, filter);
+							, -1, 5, filter);
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
 					wrapper = wsAction.getBookmarkedListings(((VeneficaApplication)getApplication()).getAuthToken());
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
@@ -481,9 +500,9 @@ ISlideMenuCallback, LocationListener{
 				Integer.parseInt(prefs.getString(getResources().getString(R.string.pref_key_price_min), "0"))));
 		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
-		filter.setHasPhoto(false);
+		filter.setHasPhoto(true);
 		List<Long> cats = new ArrayList<Long>();
-		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, 1));
+		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, 2));
 		filter.setCategories(cats);
 	}
 	
@@ -544,8 +563,11 @@ ISlideMenuCallback, LocationListener{
 	}
 	@Override
 	public void onLocationChanged(Location location) {
-		this.location = location;
-		updateMap(location);
+		if (Utility.isBetterLocation(location, this.location)) {
+			this.location = location;
+			updateMap(location);
+		}		
+		Log.d("SearchListingActivity :", location.getLatitude()+" "+location.getLongitude());		
 	}
 
 	@Override
@@ -574,18 +596,49 @@ ISlideMenuCallback, LocationListener{
 		listingsListAdapter.notifyDataSetChanged();
 	}
 	
-	private void enableGPS(){
-    	//Get location provider 
-    	Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+	/**
+	 * Helper method to enable GPS
+	 */
+	private void getCurrentLocation() {
+		// Get location provider
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 		criteria.setCostAllowed(false);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locProvider = locationManager.getBestProvider(criteria, false);
-		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
+		locProvider = locationManager.getBestProvider(criteria, true);
 
-	    if (!locProviderEnabled) {
-	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
-	    	showDialog(D_ERROR);	        
-	    }	    
+//		boolean locProviderEnabled = false;
+		if (locProvider != null) {
+			Log.d("SearchListingActivity :", locProvider);
+//			locProviderEnabled = locationManager.isProviderEnabled(locProvider);
+			location = locationManager.getLastKnownLocation(locProvider);
+			onLocationChanged(location);
+		}
+		/*if (locProviderEnabled) {
+			// Get last location
+
+		} */else {
+			ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
+			showDialog(D_ERROR);
+		}
+	}
+	
+	/**
+	 * Method to start location settings 
+	 */
+	private void showLocationSettings(){
+		Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(intent, Constants.ERROR_ENABLE_LOCATION_PROVIDER);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {		
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
+			getCurrentLocation();
+			if (locProvider != null) {
+				getFilterOptions();
+				new SearchListingTask().execute(CURRENT_MODE);
+			}			
+		}
 	}
 }
