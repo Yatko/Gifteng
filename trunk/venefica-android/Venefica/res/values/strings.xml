@@ -107,9 +107,9 @@
     <string name="label_menu_delete">Delete</string>
     <string name="label_menu_bookmark">Bookmark</string>
     <string name="label_update">Update</string>
-    <string name="label_filter">Filter</string>
+    <string name="label_search">Search</string>
     <string name="label_share">Share</string>
-    <string name="label_filter_setting">Filter Settings</string>
+    <string name="label_search_setting">Search Settings</string>
     <string name="label_chooser">Select Source</string>
     <string name="label_follow">Follow</string>
     <string name="label_miles">miles</string>
@@ -219,12 +219,12 @@
     <string name="pref_category_summ">Select category to filter results.</string>
     
     <string name="pref_key_use_current_location">pref_key_use_current_location</string>
-    <string name="pref_use_current_location_title">Use current loaceion</string>
+    <string name="pref_use_current_location_title">Use current location</string>
     <string name="pref_use_current_location_summ">Select to use current location to filter results.</string>
     
     <string name="pref_key_sort_by">pref_key_sort_by</string>
     <string name="pref_sort_by_title">Sort By</string>
-    <string name="pref_sort_by_summ">Select sort preferance.</string>
+    <string name="pref_sort_by_summ">Select sort preference.</string>
     <string name="pref_sort_by_default">1</string>
     <string-array name="array_filter_entries_sort_by">
         <item>Price</item>
@@ -282,7 +282,7 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
+    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
     <!-- Release key -->
-    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
 </resources>
