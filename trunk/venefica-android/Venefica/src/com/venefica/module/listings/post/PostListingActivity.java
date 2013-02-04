@@ -150,6 +150,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private Overlay itemizedoverlay;
 	private boolean showMap = true;
 	private String locProvider;
+	private Location location;
 	/**
 	 * Selected category
 	 */
@@ -289,21 +290,21 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	protected void onStart() {
 		super.onStart();
 		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 		criteria.setCostAllowed(false);
-		locProvider = locationManager.getBestProvider(criteria, false);
-		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
+		locProvider = locationManager.getBestProvider(criteria, true);		
 
-	    if (!locProviderEnabled) {
+	    if (locProvider != null) {
+	    	Log.d("PostListingActivity :", locProvider);
+	    	location = locationManager.getLastKnownLocation(locProvider);
+			onLocationChanged(location);
+	    } else {
 	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
 	    	showDialog(D_ERROR);	        
-	    }
-	    Location location = locationManager.getLastKnownLocation(locProvider);
+	    }	    
 	    // Initialize the location fields
-		if (location != null) {
-			Utility.showLongToast(
-					this,
-					locProvider
+		/*if (location != null) {
+			Utility.showLongToast(this,	locProvider
 							+ getResources().getString(
 									R.string.msg_postlisting_provider_selected));
 			onLocationChanged(location);
@@ -312,7 +313,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 					R.string.hint_post_listing_location_unavailable));
 			edtLongitude.setHint(getResources().getString(
 					R.string.hint_post_listing_location_unavailable));
-		}
+		}*/
 	}
 
 	/* Request updates at startup */
@@ -541,10 +542,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			} else if(result.image != null){
 				if (images == null) {
 					images = new ArrayList<ImageDto>();
-				}else{
-					image = new ImageDto(result.image);
-//					images.add(image);
-				}				
+				}
+				image = new ImageDto(result.image);
+				images.add(image);
+								
 //            	drawables.clear();
                 drawables.add(result.image);
                 galImageAdapter.notifyDataSetChanged();
@@ -596,8 +597,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	}
 
 	public void onLocationChanged(Location location) {
-		edtLatitude.setText(location.getLatitude()+"");
-		edtLongitude.setText(location.getLongitude()+"");
+		if (location != null) {
+			edtLatitude.setText(location.getLatitude() + "");
+			edtLongitude.setText(location.getLongitude() + "");
+		}
 	}
 
 	public void onProviderDisabled(String provider) {
