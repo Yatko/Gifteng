@@ -6,15 +6,16 @@ import com.venefica.module.utils.ImageDownloadManager;
 
 public class VeneficaApplication extends Application {
 	/** Token authentication server */
-	public static String authToken;
+	private String authToken;
 
 
 	/** The data about the user */
-	public static UserDto user;
+	private UserDto user;
 	
 	private ImageDownloadManager imgManager;
 	@Override
 	public void onCreate() {
+		super.onCreate();
 		imgManager = new ImageDownloadManager(getApplicationContext());
 	}
 
@@ -44,13 +45,13 @@ public class VeneficaApplication extends Application {
 	 * @param userDto the user to set
 	 */
 	public void setUser(UserDto userDto) {
-		VeneficaApplication.user = userDto;
+		user = userDto;
 	}
 
 	/**
 	 * @return the imgManager
 	 */
-	public ImageDownloadManager getImgManager() {
+	public ImageDownloadManager getImgManager() {		
 		return imgManager;
 	}
 
