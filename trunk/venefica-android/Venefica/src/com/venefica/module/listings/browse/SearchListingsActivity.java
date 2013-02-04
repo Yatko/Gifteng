@@ -24,10 +24,12 @@ import android.os.Bundle;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -74,7 +76,14 @@ ISlideMenuCallback, LocationListener{
 	 * Listings list
 	 */
 	private List<AdDto> listings;
-	
+	/**
+	 * Used for paging
+	 */
+	private long lastAdId = -1;
+	/**
+	 * List page size
+	 */
+	private int LIST_PAGE_SIZE = 16; 
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -177,6 +186,21 @@ ISlideMenuCallback, LocationListener{
                 LayoutParams.FILL_PARENT, 
                 LayoutParams.FILL_PARENT));
         searchView.requestFocusFromTouch();
+        searchView.setImeActionLabel("Search", EditorInfo.IME_ACTION_SEARCH);
+        searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					getCurrentLocation();
+					if (locProvider != null) {
+						getFilterOptions();
+						new SearchListingTask().execute(CURRENT_MODE);
+					}					
+		            return true;
+		        }
+				return false;
+			}
+		});
         //Map 
         mapLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsMap);
         mapView = (TapControlledMapView) findViewById(R.id.mapviewActSearchListings);
@@ -192,7 +216,7 @@ ISlideMenuCallback, LocationListener{
         mapView.setTraffic(true);
         mapView.setSatellite(false);
         mapController = mapView.getController();
-        mapController.setZoom(12);
+//        mapController.setZoom(6);
         
         //Toggle Button to view Tiles
         txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
@@ -205,7 +229,7 @@ ISlideMenuCallback, LocationListener{
 				if(tileLayout.getVisibility() == ViewGroup.VISIBLE){
 					tileLayout.setVisibility(ViewGroup.GONE);
 					mapLayout.setVisibility(ViewGroup.VISIBLE);
-					isMapShown = true;
+					isMapShown = true;										
 				}else {
 					tileLayout.setVisibility(ViewGroup.VISIBLE);
 					mapLayout.setVisibility(ViewGroup.GONE);
@@ -223,6 +247,9 @@ ISlideMenuCallback, LocationListener{
 					tileLayout.setVisibility(ViewGroup.GONE);
 					mapLayout.setVisibility(ViewGroup.VISIBLE);
 					isMapShown = true;
+					if (listings != null && listings.size() > 0) {
+						updateMap(listings);
+					}
 				}else {
 					tileLayout.setVisibility(ViewGroup.VISIBLE);
 					mapLayout.setVisibility(ViewGroup.GONE);
@@ -302,23 +329,6 @@ ISlideMenuCallback, LocationListener{
     @Override
     protected void onStart() {
     	super.onStart();
-//    	//Get location provider 
-//    	Criteria criteria = new Criteria();
-//		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-//		criteria.setCostAllowed(false);
-//		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//		locProvider = locationManager.getBestProvider(criteria, false);
-//		final boolean locProviderEnabled = locationManager.isProviderEnabled(locProvider);
-//
-//	    if (!locProviderEnabled) {
-//	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
-//	    	showDialog(D_ERROR);	        
-//	    }    	
-	    /*//Get last location
-    	if (locProvider != null) {
-    		location = locationManager.getLastKnownLocation(locProvider);
-        	updateMap(location);
-		}*/ 
     	if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
     		getCurrentLocation();
         	//Get Filter settings
@@ -349,7 +359,7 @@ ISlideMenuCallback, LocationListener{
     	if(useCurrentLocation && (locProvider != null)
     			&& !(CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS)){
     		locationManager.requestLocationUpdates(locProvider, Constants.LOCATION_UPDATE_PERIOD, Constants.LOCATION_UPDATE_MIN_DISTANCE, this);
-    		updateMap(location);
+//    		updateMap(location);
     	}	    
     }
     @Override
@@ -449,7 +459,7 @@ ISlideMenuCallback, LocationListener{
 				}
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
-							, -1, 5, filter);
+							, lastAdId, LIST_PAGE_SIZE, filter);
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
 					wrapper = wsAction.getBookmarkedListings(((VeneficaApplication)getApplication()).getAuthToken());
 				}else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
@@ -474,8 +484,10 @@ ISlideMenuCallback, LocationListener{
 			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS && result.listings != null
 					&& result.listings.size() > 0) {
 				listings.clear();
-				listings.addAll(result.listings);				
+				listings.addAll(result.listings);
+				updateMap(listings);
 				listingsListAdapter.notifyDataSetChanged();
+				lastAdId = result.listings.get(result.listings.size()-1).getId();
 			}else {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
@@ -485,7 +497,7 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * Method to set Filter for search listings
 	 * @return
-	 */;
+	 */
 	private void getFilterOptions(){
 		useCurrentLocation = prefs.getBoolean(getResources().getString(R.string.pref_key_use_current_location), false);
 		filter = new FilterDto();		
@@ -495,9 +507,9 @@ ISlideMenuCallback, LocationListener{
 			filter.setLongitude(new Double(location.getLongitude()));
 		}		
 		filter.setMaxPrice(new BigDecimal(
-				Integer.parseInt(prefs.getString(getResources().getString(R.string.pref_key_price_max), "50"))));
+				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), "50"))));
 		filter.setMinPrice(new BigDecimal(
-				Integer.parseInt(prefs.getString(getResources().getString(R.string.pref_key_price_min), "0"))));
+				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_min), "0"))));
 		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
@@ -508,19 +520,19 @@ ISlideMenuCallback, LocationListener{
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(getResources().getString(R.string.label_filter))
+        menu.add(getResources().getString(R.string.label_search))
             .setIcon(R.drawable.icon_search)
             .setActionView(searchView)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         
-        menu.add(getResources().getString(R.string.label_filter_setting))
+        menu.add(getResources().getString(R.string.label_search_setting))
         .setIcon(R.drawable.settings_dark)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onCreateOptionsMenu(menu);
     }
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getTitle().toString().equalsIgnoreCase(getResources().getString(R.string.label_filter_setting))) {
+		if (item.getTitle().toString().equalsIgnoreCase(getResources().getString(R.string.label_search_setting))) {
 			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 			settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_FILTER_SETTINGS);
 	    	startActivity(settingsIntent);
@@ -539,6 +551,7 @@ ISlideMenuCallback, LocationListener{
 		if (isExit) {
 			((VeneficaApplication)getApplication()).getImgManager().reset();
 			super.onBackPressed();
+			System.exit(0);
 		} else {
 			isExit = true;
 			Utility.showLongToast(this, getResources().getString(R.string.msg_app_exit));
@@ -549,25 +562,30 @@ ISlideMenuCallback, LocationListener{
 	 * Show current location on map
 	 * @param location
 	 */
-	private void updateMap(Location location){
+	private void updateMap(List<AdDto> listings){
 		if (isMapShown) {
-			GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
+			/*GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
 			mapController.animateTo(currLoc);
-			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, "My Location", "", 0, "");
+			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, "My Location", "", 0, "");*/
 			overlayItems.clear();
-			overlayItems.addOverlay(overlayItem);
-			mapView.getOverlays().add(overlayItems);
+			for (AdDto adDto : listings) {				
+				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getLatitude() * 1E6)
+						, (int)(adDto.getLongitude() * 1E6)), adDto.getTitle()
+						, adDto.getDescription(), adDto.getId(), adDto.getImage().getUrl()));
+			}
+			mapView.getOverlays().add(overlayItems);			
 			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
+//			mapController.setCenter(currLoc);
 			mapView.invalidate();
 		}	
 	}
 	@Override
 	public void onLocationChanged(Location location) {
-		if (Utility.isBetterLocation(location, this.location)) {
+		if (location != null && Utility.isBetterLocation(location, this.location)) {
 			this.location = location;
-			updateMap(location);
+//			updateMap(location);
+			Log.d("SearchListingActivity :", location.getLatitude()+" "+location.getLongitude());		
 		}		
-		Log.d("SearchListingActivity :", location.getLatitude()+" "+location.getLongitude());		
 	}
 
 	@Override
@@ -606,17 +624,11 @@ ISlideMenuCallback, LocationListener{
 		criteria.setCostAllowed(false);
 		locProvider = locationManager.getBestProvider(criteria, true);
 
-//		boolean locProviderEnabled = false;
 		if (locProvider != null) {
 			Log.d("SearchListingActivity :", locProvider);
-//			locProviderEnabled = locationManager.isProviderEnabled(locProvider);
 			location = locationManager.getLastKnownLocation(locProvider);
 			onLocationChanged(location);
-		}
-		/*if (locProviderEnabled) {
-			// Get last location
-
-		} */else {
+		} else {
 			ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
 			showDialog(D_ERROR);
 		}
