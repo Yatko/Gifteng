@@ -51,7 +51,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 	public void onSideNavigationItemClick(int itemId) {
 		switch (itemId) {
 		case R.id.slideMenuBrowse: 
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+//			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
 				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
@@ -111,8 +111,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 			}
 	    	break;
 		case R.id.slideMenuSignOut:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-    		break;
+			break;
 		}
 		if((getApplicationContext() instanceof SearchListingsActivity)){
 			finish();
