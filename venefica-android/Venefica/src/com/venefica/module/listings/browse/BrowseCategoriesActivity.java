@@ -56,8 +56,9 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 	 */
 	public static final int ACT_MODE_GET_CATEGORY = 1001;
 	public static final int ACT_MODE_DOWNLOAD_CATEGORY = 1003;
+	public static final int ACT_MODE_SAVE_CATEGORY_PREF = 1002;
 	
-	private int CURRENT_MODE = ACT_MODE_GET_CATEGORY;
+	private int CURRENT_MODE = ACT_MODE_SAVE_CATEGORY_PREF;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -110,7 +111,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 		categories = new ArrayList<CategoryDto>();
         categoriesListAdapter = new CategoryListAdapter(this, categories);
         listViewCategories.setAdapter(categoriesListAdapter);
-        CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_GET_CATEGORY);
+        CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_SAVE_CATEGORY_PREF);
         //Download categories list
         if (WSAction.isNetworkConnected(this)) {
         	new BrowseTask().execute(ACT_MODE_DOWNLOAD_CATEGORY);
