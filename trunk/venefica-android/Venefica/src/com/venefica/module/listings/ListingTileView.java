@@ -65,15 +65,10 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 //		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
 		if (this.listing.getImage() != null) {
-			/*ImageDownloadManager.getImageDownloadManagerInstance()
-					.loadDrawable(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
-					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));*/
 			((VeneficaApplication) ((SearchListingsActivity)getContext()).getApplication())
 				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + this.listing.getImage().getUrl()
 						, imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}else {
-			/*ImageDownloadManager.getImageDownloadManagerInstance().loadDrawable(""
-					, imgView, getResources().getDrawable(R.drawable.icon_picture_white));*/
 			((VeneficaApplication) ((SearchListingsActivity)getContext()).getApplication())
 				.getImgManager().loadImage("", imgView, getResources().getDrawable(R.drawable.icon_picture_white));
 		}	
@@ -99,7 +94,6 @@ public class ListingTileView extends LinearLayout implements View.OnClickListene
 				mode = ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS;
 			}
 			intent.putExtra("act_mode", mode);
-//			ImageDownloadManager.getImageDownloadManagerInstance().reset();
 			getContext().startActivity(intent);
 		}
 	}
