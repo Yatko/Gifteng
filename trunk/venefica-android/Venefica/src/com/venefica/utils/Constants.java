@@ -57,6 +57,7 @@ public class Constants
 	public static final int ERROR_RESULT_ADD_COMMENT = 1047;
 	public static final int RESULT_ADD_COMMENT_SUCCESS = 1048;
 	public static final int ERROR_LOW_RESOLUTION_CROP = 1049;
+	public static final int ERROR_SIGN_OUT_APPLICATION = 1050;
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -154,6 +155,12 @@ public class Constants
 	public static final String PREF_VAL_LOGIN_VK = "login_vk";
 	
 
-	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;		
+	public static final long SESSION_TIME_OUT = 2 * 7 * 24 * 60 * 60 * 1000;
+	
+	//Filter values
+	public static final int PREF_DEF_VAL_MILES = 50;
+	public static final String PREF_DEF_VAL_MAX_PRICE = "50";
+	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
+	public static final int PREF_DEF_VAL_CATEGORY = -1;
 	
 }
