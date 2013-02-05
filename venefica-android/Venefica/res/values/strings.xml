@@ -51,6 +51,7 @@
     <string name="label_btn_yes">Yes</string>
     <string name="label_btn_no">No</string>
     <string name="label_btn_save">Save</string>
+    <string name="label_btn_cancel">Cancel</string>
     <string name="label_messages">Messages</string>
     <string name="label_settings_themes">Theme</string>
     <string name="label_settings_connect_with">Connect With</string>
@@ -157,7 +158,7 @@
     <string name="msg_postlisting_locate">Locate on map</string>
     <string name="msg_detail_listing_add_fav_success">Bookmarks added successfully.</string>
     <string name="msg_detail_listing_add_fav_failed">Unable to add bookmark. Please try again later.</string>
-    <string name="msg_postlisting_success">Listing created successfully. You can view posted listings in MyListings section.</string>
+    <string name="msg_postlisting_success">Listing created successfully. You can view posted listings in Selling section.</string>
     <string name="msg_postlisting_provider_selected"> has been selected as location provider.</string>
     <string name="msg_postlisting_provider_disabled"> has been disabled.</string>
     <string name="msg_postlisting_enable_provider">GPS is not active. Please enable GPS to get location.</string>
@@ -167,7 +168,7 @@
     <string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
     <string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
     <string name="msg_postlisting_update_success">Listing updated successfully.</string>
-    <string name="msg_app_exit">Press again to exit.</string>
+    <string name="msg_app_exit">Are you sure, you want to logout?</string>
     <string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
     <string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
 	<string name="msg_send_message_success">Message sent successfully.</string>
