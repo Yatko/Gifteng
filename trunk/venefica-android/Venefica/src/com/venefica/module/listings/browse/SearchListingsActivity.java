@@ -19,6 +19,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -186,7 +187,6 @@ ISlideMenuCallback, LocationListener{
                 LayoutParams.FILL_PARENT, 
                 LayoutParams.FILL_PARENT));
         searchView.requestFocusFromTouch();
-        searchView.setImeActionLabel("Search", EditorInfo.IME_ACTION_SEARCH);
         searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {			
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -216,7 +216,7 @@ ISlideMenuCallback, LocationListener{
         mapView.setTraffic(true);
         mapView.setSatellite(false);
         mapController = mapView.getController();
-//        mapController.setZoom(6);
+        mapController.setZoom(6);
         
         //Toggle Button to view Tiles
         txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
@@ -302,8 +302,8 @@ ISlideMenuCallback, LocationListener{
 		if(WSAction.isNetworkConnected(this)){
 			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && locProvider != null) {
 				new SearchListingTask().execute(CURRENT_MODE);
-				Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 			}else{
+				toggleButtonMap.setVisibility(View.GONE);
 				setSupportProgressBarIndeterminateVisibility(false);
 			}
 	    }else{
@@ -400,10 +400,18 @@ ISlideMenuCallback, LocationListener{
 				public void onClick(DialogInterface dialog, int which) {
 					if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
 						showLocationSettings();
+					} else if (ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION) {
+						System.exit(0);
 					}
 					dismissDialog(D_ERROR);
 				}
-			});			
+			});	
+			builder.setNegativeButton(R.string.label_btn_cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dismissDialog(D_ERROR);
+				}
+			});
 			AlertDialog aDialog = builder.create();
 			return aDialog;
 		}    	
@@ -414,6 +422,7 @@ ISlideMenuCallback, LocationListener{
     protected void onPrepareDialog(int id, Dialog dialog) {
     	if(id == D_ERROR) {
     		String message = "";
+    		((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.GONE);
     		//Display error message as per the error code
     		if (ERROR_CODE == Constants.ERROR_NETWORK_UNAVAILABLE) {
     			message = (String) getResources().getText(R.string.error_network_01);
@@ -425,8 +434,10 @@ ISlideMenuCallback, LocationListener{
 				clearUIWhenNoData();
 				message = (String) getResources().getText(R.string.error_search_listings_no_data);
 			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
-				message = (String) getResources().getText(R.string.msg_enable_location_provider);
-				((AlertDialog) dialog).setButton(DialogInterface.BUTTON_NEGATIVE, "View Settings", new Message());
+				((AlertDialog) dialog).getButton(Dialog.BUTTON_POSITIVE)
+					.setText(getResources().getText(R.string.label_btn_yes));
+				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.VISIBLE);
+				message = (String) getResources().getText(R.string.msg_enable_location_provider);				
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_BOOKMARKS){
 				message = (String) getResources().getText(R.string.error_get_bookmarks);
 			}else if(ERROR_CODE == Constants.ERROR_NO_BOOKMARKS){
@@ -434,6 +445,11 @@ ISlideMenuCallback, LocationListener{
 				message = (String) getResources().getText(R.string.error_no_bookmarks);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_MY_LISTINGS){
 				message = (String) getResources().getText(R.string.error_get_my_listings);
+			}else if(ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION){
+				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.VISIBLE);
+				((AlertDialog) dialog).getButton(Dialog.BUTTON_POSITIVE)
+					.setText(getResources().getText(R.string.label_btn_yes));
+				message = (String) getResources().getText(R.string.msg_app_exit);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -499,22 +515,22 @@ ISlideMenuCallback, LocationListener{
 	 * @return
 	 */
 	private void getFilterOptions(){
-		useCurrentLocation = prefs.getBoolean(getResources().getString(R.string.pref_key_use_current_location), false);
+		useCurrentLocation = prefs.getBoolean(getResources().getString(R.string.pref_key_use_current_location), true);
 		filter = new FilterDto();		
-		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), 50));
+		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), Constants.PREF_DEF_VAL_MILES));
 		if (location != null) {
 			filter.setLatitude(new Double(location.getLatitude()));
 			filter.setLongitude(new Double(location.getLongitude()));
 		}		
 		filter.setMaxPrice(new BigDecimal(
-				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), "50"))));
+				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), Constants.PREF_DEF_VAL_MAX_PRICE))));
 		filter.setMinPrice(new BigDecimal(
-				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_min), "0"))));
+				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_min), Constants.PREF_DEF_VAL_MIN_PRICE))));
 		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
 		List<Long> cats = new ArrayList<Long>();
-		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, 2));
+		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY));
 		filter.setCategories(cats);
 	}
 	
@@ -548,14 +564,14 @@ ISlideMenuCallback, LocationListener{
 	
 	@Override
 	public void onBackPressed() {
-		if (isExit) {
+		/*if (isExit) {
 			((VeneficaApplication)getApplication()).getImgManager().reset();
 			super.onBackPressed();
 			System.exit(0);
 		} else {
 			isExit = true;
 			Utility.showLongToast(this, getResources().getString(R.string.msg_app_exit));
-		}		
+		}*/		
 	}
 	
 	/**
@@ -571,7 +587,8 @@ ISlideMenuCallback, LocationListener{
 			for (AdDto adDto : listings) {				
 				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getLatitude() * 1E6)
 						, (int)(adDto.getLongitude() * 1E6)), adDto.getTitle()
-						, adDto.getDescription(), adDto.getId(), adDto.getImage().getUrl()));
+						, adDto.getDescription(), adDto.getId()
+						, Constants.PHOTO_URL_PREFIX + adDto.getImage().getUrl()));
 			}
 			mapView.getOverlays().add(overlayItems);			
 			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
@@ -651,6 +668,17 @@ ISlideMenuCallback, LocationListener{
 				getFilterOptions();
 				new SearchListingTask().execute(CURRENT_MODE);
 			}			
+		}
+	}
+	
+	@Override
+	public void onSideNavigationItemClick(int itemId) {
+		super.onSideNavigationItemClick(itemId);
+		switch (itemId) {
+		case R.id.slideMenuSignOut:
+			ERROR_CODE = Constants.ERROR_SIGN_OUT_APPLICATION;
+			showDialog(D_ERROR);
+    		break;
 		}
 	}
 }
