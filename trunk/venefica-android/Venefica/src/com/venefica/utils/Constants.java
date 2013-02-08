@@ -61,7 +61,7 @@ public class Constants
 	
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 	
 	//Location settings
 	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
