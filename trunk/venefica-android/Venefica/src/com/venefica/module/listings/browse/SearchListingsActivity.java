@@ -19,10 +19,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -39,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -84,7 +83,11 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * List page size
 	 */
-	private int LIST_PAGE_SIZE = 16; 
+	private int LIST_PAGE_SIZE = 2; 
+	/**
+	 * set true to  load items on scroll
+	 */
+	private boolean isLoadOnScroll = false;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -102,11 +105,7 @@ ISlideMenuCallback, LocationListener{
 	public static final int ACT_MODE_REMOVE_BOOKMARK = 3004;
 	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3006;
 	private static int CURRENT_MODE;
-	/**
-	 * Selected category
-	 */
-	private long selectedCategoryId;
-	private String selectedCategory;
+
 	private WSAction wsAction;
 	/**
 	 * Slide menu
@@ -121,11 +120,9 @@ ISlideMenuCallback, LocationListener{
 	 */
 	private RelativeLayout mapLayout;
 	private RelativeLayout tileLayout;
-	private LinearLayout toggleLayout;
 	private ImageButton toggleButtonTile;
-	private LinearLayout toggleLayoutMap;
 	private ImageButton toggleButtonMap;
-	private TextView txtTitleTile/*, txtTitleMap*/;
+	private TextView txtTitleTile;
 	private boolean isMapShown;
 	/**
 	 * Map 
@@ -136,15 +133,6 @@ ISlideMenuCallback, LocationListener{
 	private String locProvider;
 	private Location location;
 	private MapItemizedOverlay<?> overlayItems;
-	private boolean isAllProvidersDesabled;
-	/**
-	 * exit flag
-	 */
-	private boolean isExit;
-	/**
-	 * selected listing
-	 */
-	private AdDto selectedListing;
 	/**
 	 * Shared Preferences
 	 */
@@ -194,6 +182,8 @@ ISlideMenuCallback, LocationListener{
 					getCurrentLocation();
 					if (locProvider != null) {
 						getFilterOptions();
+						lastAdId = -1;
+						isLoadOnScroll = false;
 						new SearchListingTask().execute(CURRENT_MODE);
 					}					
 		            return true;
@@ -260,8 +250,8 @@ ISlideMenuCallback, LocationListener{
         
         //List and tile view
         tileLayout = (RelativeLayout) findViewById(R.id.layActSearchListingsTile);
-        gridViewListings = (GridView) findViewById(R.id.listActSearchListings);
         listings = new ArrayList<AdDto>();
+        gridViewListings = (GridView) findViewById(R.id.listActSearchListings);
         
 		listingsListAdapter = new ListingListAdapter(this, listings, true);
 		gridViewListings.setAdapter(listingsListAdapter);
@@ -301,6 +291,7 @@ ISlideMenuCallback, LocationListener{
 		
 		if(WSAction.isNetworkConnected(this)){
 			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && locProvider != null) {
+				isLoadOnScroll = false;
 				new SearchListingTask().execute(CURRENT_MODE);
 			}else{
 				toggleButtonMap.setVisibility(View.GONE);
@@ -337,6 +328,7 @@ ISlideMenuCallback, LocationListener{
     	
 	    if(WSAction.isNetworkConnected(this)){
 	    	if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
+	    		isLoadOnScroll = false;
 	    		new SearchListingTask().execute(CURRENT_MODE);
 			}	    	
 	    }else{
@@ -344,10 +336,8 @@ ISlideMenuCallback, LocationListener{
 	    	showDialog(D_ERROR);	 
 	    }
 	    if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS) {
-//	    	txtTitleMap.setText(getResources().getText(R.string.label_bookmark_listing_title));
 	    	txtTitleTile.setText(getResources().getText(R.string.label_bookmark_listing_title));
 		}else if (CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
-//			txtTitleMap.setText(getResources().getText(R.string.label_my_listing_title));
 	    	txtTitleTile.setText(getResources().getText(R.string.label_my_listing_title));
 		}
     }
@@ -499,11 +489,14 @@ ISlideMenuCallback, LocationListener{
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS && result.listings != null
 					&& result.listings.size() > 0) {
-				listings.clear();
+				if (!isLoadOnScroll) {
+					listings.clear();
+				}
 				listings.addAll(result.listings);
 				updateMap(listings);
 				listingsListAdapter.notifyDataSetChanged();
 				lastAdId = result.listings.get(result.listings.size()-1).getId();
+				isLoadOnScroll = false;
 			}else {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
@@ -559,20 +552,7 @@ ISlideMenuCallback, LocationListener{
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	
-	@Override
-	public void onBackPressed() {
-		/*if (isExit) {
-			((VeneficaApplication)getApplication()).getImgManager().reset();
-			super.onBackPressed();
-			System.exit(0);
-		} else {
-			isExit = true;
-			Utility.showLongToast(this, getResources().getString(R.string.msg_app_exit));
-		}*/		
-	}
+	}	
 	
 	/**
 	 * Show current location on map
@@ -580,9 +560,6 @@ ISlideMenuCallback, LocationListener{
 	 */
 	private void updateMap(List<AdDto> listings){
 		if (isMapShown) {
-			/*GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
-			mapController.animateTo(currLoc);
-			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, "My Location", "", 0, "");*/
 			overlayItems.clear();
 			for (AdDto adDto : listings) {				
 				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getLatitude() * 1E6)
@@ -600,8 +577,6 @@ ISlideMenuCallback, LocationListener{
 	public void onLocationChanged(Location location) {
 		if (location != null && Utility.isBetterLocation(location, this.location)) {
 			this.location = location;
-//			updateMap(location);
-			Log.d("SearchListingActivity :", location.getLatitude()+" "+location.getLongitude());		
 		}		
 	}
 
@@ -642,7 +617,6 @@ ISlideMenuCallback, LocationListener{
 		locProvider = locationManager.getBestProvider(criteria, true);
 
 		if (locProvider != null) {
-			Log.d("SearchListingActivity :", locProvider);
 			location = locationManager.getLastKnownLocation(locProvider);
 			onLocationChanged(location);
 		} else {
@@ -666,6 +640,7 @@ ISlideMenuCallback, LocationListener{
 			getCurrentLocation();
 			if (locProvider != null) {
 				getFilterOptions();
+				isLoadOnScroll = false;
 				new SearchListingTask().execute(CURRENT_MODE);
 			}			
 		}
@@ -680,5 +655,19 @@ ISlideMenuCallback, LocationListener{
 			showDialog(D_ERROR);
     		break;
 		}
+	}
+	
+	/**
+	 * helper method to load more items in list view 
+	 */
+	public void getMoreListings(){
+		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+			isLoadOnScroll = true;
+			getCurrentLocation();
+			if (locProvider != null) {
+				getFilterOptions();
+				new SearchListingTask().execute(CURRENT_MODE);
+			}
+		}		
 	}
 }
