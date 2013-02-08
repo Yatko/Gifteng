@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.venefica.module.main.R;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.CommentDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -86,23 +87,15 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 		}
 		holder.txtComment.setText(comments.get(position).getText());
 		holder.txtName.setText(comments.get(position).getPublisherFullName());
-//		holder.txtTime.setText(comments.get(position).getTime());
-		/*ImageDownloadManager.getImageDownloadManagerInstance()
-			.loadDrawable(Constants.PHOTO_URL_PREFIX +comments.get(position)
-					.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));*/
+		if (comments.get(position).getCreatedAt() != null) {
+			holder.txtTime.setText(Utility.convertDateToString(comments.get(position).getCreatedAt()));
+		}		
 		((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
 				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX +comments.get(position)
 				.getPublisherAvatarUrl(), holder.imgProfile, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
 		if(position == 0){
 			holder.imgBtnEdit.setVisibility(View.VISIBLE);
-			holder.imgBtnEdit.setOnClickListener(this);	
-			/*if (comments.get(position).getText().trim().length() == 0) {
-				holder.imgProfile.setAlpha(0);
-				holder.imgProfile.setBackgroundColor(this.context.getResources().getColor(R.color.transparent));
-			} else {
-				holder.imgProfile.setAlpha(1);
-//				holder.imgProfile.setBackgroundColor(this.context.getResources().getColor(R.color.black));
-			}*/
+			holder.imgBtnEdit.setOnClickListener(this);				
 		}else {
 			holder.imgBtnEdit.setVisibility(View.GONE);			
 		}		
