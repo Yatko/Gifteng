@@ -5,9 +5,11 @@ package com.venefica.module.listings;
 
 import java.util.List;
 
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.services.AdDto;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,7 +46,7 @@ public class ListingListAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getItemId(int)
 	 */
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +65,12 @@ public class ListingListAdapter extends BaseAdapter {
 		} else {
 			((ListingListItemView)convertView).setListing(listings.get(position));
 		}
-		
+		if (position == getCount()-1) {
+			Log.d("last Item", ""+position);
+			if(this.context instanceof SearchListingsActivity){
+				((SearchListingsActivity)this.context).getMoreListings();
+			}
+		}
 		return convertView;
 	}
 
