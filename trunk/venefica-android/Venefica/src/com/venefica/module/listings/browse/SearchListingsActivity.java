@@ -83,11 +83,15 @@ ISlideMenuCallback, LocationListener{
 	/**
 	 * List page size
 	 */
-	private int LIST_PAGE_SIZE = 2; 
+	private int LIST_PAGE_SIZE = 11; 
 	/**
 	 * set true to  load items on scroll
 	 */
 	private boolean isLoadOnScroll = false;
+	/**
+	 * set true to  if available more items to download
+	 */
+	private boolean hasMoreListings = false;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -489,15 +493,21 @@ ISlideMenuCallback, LocationListener{
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTINGS_SUCCESS && result.listings != null
 					&& result.listings.size() > 0) {
-				if (!isLoadOnScroll) {
+				if (!isLoadOnScroll && !hasMoreListings) {
 					listings.clear();
 				}
+				if(result.listings.size() >= LIST_PAGE_SIZE && CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY){
+					hasMoreListings = true;
+				}else {
+					hasMoreListings = false;
+				}
+				
 				listings.addAll(result.listings);
 				updateMap(listings);
 				listingsListAdapter.notifyDataSetChanged();
 				lastAdId = result.listings.get(result.listings.size()-1).getId();
 				isLoadOnScroll = false;
-			}else {
+			}else if(!isLoadOnScroll){
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
 			}
@@ -661,7 +671,7 @@ ISlideMenuCallback, LocationListener{
 	 * helper method to load more items in list view 
 	 */
 	public void getMoreListings(){
-		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
+		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && hasMoreListings) {
 			isLoadOnScroll = true;
 			getCurrentLocation();
 			if (locProvider != null) {
