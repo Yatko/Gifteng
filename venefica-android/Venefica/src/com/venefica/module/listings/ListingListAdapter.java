@@ -65,7 +65,7 @@ public class ListingListAdapter extends BaseAdapter {
 		} else {
 			((ListingListItemView)convertView).setListing(listings.get(position));
 		}
-		if (position == getCount()-1) {
+		if (position == getCount()-3) {
 			Log.d("last Item", ""+position);
 			if(this.context instanceof SearchListingsActivity){
 				((SearchListingsActivity)this.context).getMoreListings();
