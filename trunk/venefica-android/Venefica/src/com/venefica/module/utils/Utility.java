@@ -17,10 +17,12 @@ import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.hardware.Camera;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -430,5 +432,27 @@ public class Utility {
          return provider2 == null;
        }
        return provider1.equals(provider2);
+   }
+   
+   /** Check if this device has a camera */
+   public static boolean checkCameraHardware(Context context) {
+       if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+           // this device has a camera
+           return true;
+       } else {
+           // no camera on this device
+           return false;
+       }
+   }
+   /** A safe way to get an instance of the Camera object. */
+   public static Camera getCameraInstance(){
+       Camera c = null;
+       try {
+           c = Camera.open(); // attempt to get a Camera instance
+       }
+       catch (Exception e){
+           // Camera is not available (in use or does not exist)
+       }
+       return c; // returns null if camera is unavailable
    }
 }
