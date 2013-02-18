@@ -27,6 +27,8 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,13 +40,25 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageButton;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -57,6 +71,7 @@ import com.venefica.module.listings.browse.BrowseCategoriesActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.CameraPreview;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
@@ -68,7 +83,60 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash 
  * Activity to post listings/adds
  */
-public class PostListingActivity extends VeneficaMapActivity implements LocationListener {
+public class PostListingActivity extends VeneficaMapActivity implements LocationListener, OnClickListener, ViewFactory {
+	/**
+	 * main layout
+	 */
+	private LinearLayout layMain;
+	/**
+	 * images layout for step1 and step2
+	 */
+	private RelativeLayout layImagesView;
+	/**
+	 * Controls(buttons) layouts
+	 */
+	private LinearLayout layControlsStepOne, layControlsStepTwo;
+	/**
+	 * layout inflater
+	 */
+	private LayoutInflater infleter;
+	/**
+	 * surface view for camera in step 1
+	 */
+	private FrameLayout cameraPreview;
+	private Camera camera;
+	private CameraPreview camPreview;
+	/**
+	 * ImageSwitcher for preview of images in step 2
+	 */
+	private ImageSwitcher imgSwitcher;
+	/**
+	 * Gallery view
+	 */
+	private Gallery gallery;
+	/**
+	 * Images taken
+	 */
+	private ArrayList<Bitmap> images;
+	/**
+	 * Adapter for gallery
+	 */
+	private GalleryImageAdapter galImageAdapter;
+	/**
+	 * buttons for step one
+	 */
+	private ImageButton imgBtnPickGallery, imgBtnPickCamera, imgBtnNextToStep2;
+	/**
+	 * buttons for step two
+	 */
+	private ImageButton imgBtnBackToStepOne, imgBtnDelete, imgBtnContrast,
+			imgBtnCrop, imgBtnNextToStepThree;
+	/**
+	 * is step two 
+	 */
+	private boolean isStepTwo = false;
+	
+	
 	/**
 	 * Field validator
 	 */
@@ -116,17 +184,17 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private Spinner spinCurrency;
 	/**
 	 * Gallery to images
-	 */
+	 *//*
 	private Gallery gallery;
-	/**
+	*//**
 	 * Images
-	 */
+	 *//*
 	private List<Bitmap> drawables;
-	/**
+	*//**
 	 * Adapter for gallery
-	 */
+	 *//*
 	private GalleryImageAdapter galImageAdapter;
-	
+	*/
 	private Uri selectedImageUri;
 
 	/**
@@ -163,7 +231,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private WSAction wsAction;	
 	private AdDto selectedListing;
 	private ImageDto image;
-	private List<ImageDto> images;
+	private List<ImageDto> imageDtos;
 	
 	/**
 	 * Low resolution flag
@@ -173,16 +241,72 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
+		setProgressBarIndeterminateVisibility(false);
 		
 		setContentView(R.layout.activity_post_listing);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		setProgressBarIndeterminateVisibility(false);
 		//set mode
 		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
 		//location manager 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Gallery
+		// layout inflater
+		infleter = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		// main layout
+		layMain = (LinearLayout) findViewById(R.id.layPostlistingMain);
+		// images layout
+		layImagesView = (RelativeLayout) infleter.inflate(R.layout.view_post_listing_images, null);
+		layMain.addView(layImagesView);
+		// Controls layout
+		layControlsStepOne = (LinearLayout) layImagesView.findViewById(R.id.layPostListingStep1Controls);
+		imgBtnPickGallery = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingPickGallery);
+		imgBtnPickGallery.setOnClickListener(this);
+		imgBtnPickCamera = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingPickCamera);
+		imgBtnPickCamera.setOnClickListener(this);
+		imgBtnNextToStep2 = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingNextToStep2);
+		imgBtnNextToStep2.setOnClickListener(this);
+
+		layControlsStepTwo = (LinearLayout) layImagesView.findViewById(R.id.layPostListingStep2Controls);
+		imgBtnBackToStepOne = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingBackToStep1);
+		imgBtnBackToStepOne.setOnClickListener(this);
+		imgBtnDelete = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingDelete);
+		imgBtnDelete.setOnClickListener(this);
+		imgBtnContrast = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingContrast);
+		imgBtnContrast.setOnClickListener(this);
+		imgBtnCrop = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingCrop);
+		imgBtnCrop.setOnClickListener(this);
+		imgBtnNextToStepThree = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingNextToStep3);
+		imgBtnNextToStepThree.setOnClickListener(this);
+
+		cameraPreview = (FrameLayout) layImagesView.findViewById(R.id.layViewPostListingCameraPreview);
+		imgSwitcher = (ImageSwitcher) layImagesView.findViewById(R.id.imgSwitcherActPostListing);
+		imgSwitcher.setFactory(this);
+		gallery = (Gallery) layImagesView.findViewById(R.id.galleryActPostListing);
+		gallery.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long id) {
+				if (isStepTwo && images != null && images.size() > 0) {
+					Drawable dr = new BitmapDrawable(images.get(position));
+					imgSwitcher.setImageDrawable(dr);
+				}
+			}
+		});
+		setStepOneUIVisiblity(ViewGroup.VISIBLE);
+		
+		camPreview = new CameraPreview(this);
+		cameraPreview.addView(camPreview);
+		
+		//images
+		images = new ArrayList<Bitmap>();
+		galImageAdapter = new GalleryImageAdapter(this, null, images, true, true);
+		gallery.setAdapter(galImageAdapter);
+		/*// Gallery
 		gallery = (Gallery) findViewById(R.id.galleryActPostListingPhotos);
 		drawables = new ArrayList<Bitmap>();
 		galImageAdapter = new GalleryImageAdapter(this, null, drawables, true, true);
@@ -265,7 +389,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		edtLatitude =  (EditText) findViewById(R.id.edtActPostListingLatitude);
 		edtLongitude = (EditText) findViewById(R.id.edtActPostListingLongitude);
 		
-		/*txtTitle = (TextView) findViewById(R.id.txtActPostListingListTitle);
+		txtTitle = (TextView) findViewById(R.id.txtActPostListingListTitle);
 		txtSubTitle = (TextView) findViewById(R.id.txtActPostListingSubTitle);
 		txtCategory = (TextView) findViewById(R.id.txtActPostListingCategory);
 		txtDescription = (TextView) findViewById(R.id.txtActPostListingDescription);
@@ -277,13 +401,13 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		txtCity = (TextView) findViewById(R.id.txtActPostListingCity);
 		txtArea = (TextView) findViewById(R.id.txtActPostListingArea);
 		txtLatitude = (TextView) findViewById(R.id.txtActPostListingLatitude);
-		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);*/
+		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);
 		
 		if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
 			selectedListingId = getIntent().getLongExtra("ad_id", 0);
 			btnPost.setText(getResources().getString(R.string.label_update));
 			new PostListingTask().execute(ACT_MODE_GET_LISTING);
-		}
+		}*/
 	}
 
 	@Override
@@ -302,18 +426,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
 	    	showDialog(D_ERROR);	        
 	    }	    
-	    // Initialize the location fields
-		/*if (location != null) {
-			Utility.showLongToast(this,	locProvider
-							+ getResources().getString(
-									R.string.msg_postlisting_provider_selected));
-			onLocationChanged(location);
-		} else {
-			edtLatitude.setHint(getResources().getString(
-					R.string.hint_post_listing_location_unavailable));
-			edtLongitude.setHint(getResources().getString(
-					R.string.hint_post_listing_location_unavailable));
-		}*/
+	   
 	}
 
 	/* Request updates at startup */
@@ -321,6 +434,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	protected void onResume() {
 		super.onResume();
 		locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+		if (Utility.checkCameraHardware(this)) {
+			camera = Utility.getCameraInstance();
+			camPreview.setCamera(camera);
+		}
 	}
 
 	/* Remove the locationlistener updates when Activity is paused */
@@ -328,6 +445,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	protected void onPause() {
 		super.onPause();
 		locationManager.removeUpdates(this);
+		releaseCamera();
 	}
 
 	@Override
@@ -343,6 +461,70 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		}
 		return true;
 	}
+	@Override
+	public void onClick(View view) {
+		if (view.getId() == R.id.imgBtnPostListingPickGallery) {
+			
+		} else if (view.getId() == R.id.imgBtnPostListingPickCamera){
+			camera.takePicture(null, null, pictureCallback);
+		} else if (view.getId() == R.id.imgBtnPostListingNextToStep2){
+			setStepOneUIVisiblity(ViewGroup.GONE);
+			setStepTwoUIVisiblity(ViewGroup.VISIBLE); 
+			isStepTwo = true;
+		} else if (view.getId() == R.id.imgBtnPostListingBackToStep1){
+			setStepOneUIVisiblity(ViewGroup.VISIBLE);
+			setStepTwoUIVisiblity(ViewGroup.GONE);
+			isStepTwo = false;
+		} else if (view.getId() == R.id.imgBtnPostListingDelete){
+			
+		} else if (view.getId() == R.id.imgBtnPostListingContrast){
+			
+		} else if (view.getId() == R.id.imgBtnPostListingCrop){
+			
+		} else if (view.getId() == R.id.imgBtnPostListingNextToStep3){
+			
+		}
+	}
+	/**
+	 * helper method to show hide step one UI
+	 * @param visibility
+	 */
+	private void setStepOneUIVisiblity(int visibility) {
+		layControlsStepOne.setVisibility(visibility);
+		cameraPreview.setVisibility(visibility);		
+	}
+
+	/**
+	 * helper method to show hide step one UI
+	 * @param visibility
+	 */
+	private void setStepTwoUIVisiblity(int visibility) {
+		layControlsStepTwo.setVisibility(visibility);
+		imgSwitcher.setVisibility(visibility);
+	}
+	
+	/**
+	 * release the camera for other applications
+	 */
+	private void releaseCamera(){
+        if (camera != null){
+            camera.release();
+            camera = null;
+        }
+    }
+	
+	private PictureCallback pictureCallback = new PictureCallback() {
+		
+		@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+			Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+			
+			images.add(Bitmap.createScaledBitmap(image, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
+			galImageAdapter.notifyDataSetChanged();
+			image.recycle();
+			camera.startPreview();
+		}
+	};	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -540,14 +722,13 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				ERROR_CODE = Constants.ERROR_LOW_RESOLUTION_CROP;
 				showDialog(D_ERROR);
 			} else if(result.image != null){
-				if (images == null) {
-					images = new ArrayList<ImageDto>();
+				if (imageDtos == null) {
+					imageDtos = new ArrayList<ImageDto>();
 				}
 				image = new ImageDto(result.image);
-				images.add(image);
+				imageDtos.add(image);
 								
-//            	drawables.clear();
-                drawables.add(result.image);
+//                drawables.add(result.image);
                 galImageAdapter.notifyDataSetChanged();
 			} else if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
@@ -591,15 +772,15 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			listing.setImage(image);
 		}
 		if (images != null) {
-			listing.setImages(images);
+//			listing.setImages(images);
 		}
 		return listing;
 	}
 
 	public void onLocationChanged(Location location) {
 		if (location != null) {
-			edtLatitude.setText(location.getLatitude() + "");
-			edtLongitude.setText(location.getLongitude() + "");
+//			edtLatitude.setText(location.getLatitude() + "");
+//			edtLongitude.setText(location.getLongitude() + "");
 		}
 	}
 
@@ -796,4 +977,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     		Log.d("PostListingActivity::performCrop: ", anfe.toString());
     	}
     }
+
+	@Override
+	public View makeView() {
+		ImageView img = new ImageView(this);
+		img.setBackgroundColor(0xFF000000);
+		img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		img.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT));
+        return img;
+	}
 }
