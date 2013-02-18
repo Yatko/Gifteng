@@ -1,28 +1,36 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?ActivityBackground"
+    android:id="@+id/layPostlistingMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:paddingBottom="6dp" >
+    <ScrollView
+        style="?ActivityBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_postlisting_title"
-            tools:context=".PostListingActivity" />
-        <!-- Divider line -->
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:paddingBottom="6dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_postlisting_title"
+                tools:context=".PostListingActivity" />
+            <!-- Divider line -->
 
 
-        <!--
+            <!--
         <TextView
             android:id="@+id/divPost01"
             android:layout_width="fill_parent"
@@ -36,352 +44,353 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_listing_title" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingListTitle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/label_postlisting_listing_title"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/edtActPostListingListTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/label_postlisting_listing_title"
+                android:inputType="text" />
 
-        <!-- Subtitle -->
+            <!-- Subtitle -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingSubTitle"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_subtitle" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingSubTitle"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edtActPostListingSubTitle"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="text"
+                android:visibility="gone" />
 
-        <!-- Category -->
+            <!-- Category -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingCategory"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_category" />
-        -->
+            -->
 
-        <Button
-            android:id="@+id/btnActPostListingCategory"
-            style="@style/ButtonFullWidthLightBlue"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_postlisting_sel_category" />
+            <Button
+                android:id="@+id/btnActPostListingCategory"
+                style="@style/ButtonFullWidthLightBlue"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_postlisting_sel_category" />
 
-        <!-- Description -->
+            <!-- Description -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingDescription"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_description" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingDescription"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="@string/label_postlisting_description"
-            android:inputType="textMultiLine" />
+            <EditText
+                android:id="@+id/edtActPostListingDescription"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/label_postlisting_description"
+                android:inputType="textMultiLine" />
 
-        <!-- Condition -->
+            <!-- Condition -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingCondition"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_condition" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingCondition"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="textMultiLine"
-            android:visibility="gone" />
-        <!-- Price -->
+            <EditText
+                android:id="@+id/edtActPostListingCondition"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="textMultiLine"
+                android:visibility="gone" />
+            <!-- Price -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingPrice"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_price" />
-        -->
+            -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal"
-            android:weightSum="100" >
-
-            <EditText
-                android:id="@+id/edtActPostListingPrice"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="60"
-                android:hint="@string/label_postlisting_price"
-                android:inputType="numberDecimal" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="100" >
 
-            <Spinner
-                android:id="@+id/spinActPostListingCurrency"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="40"
-                android:entries="@array/array_currency_list" />
-        </LinearLayout>
-        <!-- Expiary -->
+                <EditText
+                    android:id="@+id/edtActPostListingPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="60"
+                    android:hint="@string/label_postlisting_price"
+                    android:inputType="numberDecimal" />
+
+                <Spinner
+                    android:id="@+id/spinActPostListingCurrency"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="40"
+                    android:entries="@array/array_currency_list" />
+            </LinearLayout>
+            <!-- Expiary -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingExpiary"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_expireson" />
-        -->
+            -->
 
-        <Button
-            android:id="@+id/btnActPostListingAddExpiary"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            style="@style/ButtonFullWidthLightGray"
-            android:layout_marginBottom="10dp" />
+            <Button
+                android:id="@+id/btnActPostListingAddExpiary"
+                style="@style/ButtonFullWidthLightGray"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
 
-        <!-- Photos -->
+            <!-- Photos -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingPhotos"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_photos" />
-        -->
-		
-        <Gallery
-            android:id="@+id/galleryActPostListingPhotos"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/black"
-            android:gravity="center_vertical"
-            android:minHeight="90dp"
-            android:padding="5dp"
-            android:spacing="5dp"
-            android:visibility="visible" />
-		
-        <Button
-            android:id="@+id/btnActPostListingAddPhotos"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            style="@style/ButtonFullWidthLightBlue"
-            android:layout_marginBottom="10dp"
-            android:text="@string/label_postlisting_add_photos" />
+            -->
 
-        <!-- Address -->
+            <Gallery
+                android:id="@+id/galleryActPostListingPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/black"
+                android:gravity="center_vertical"
+                android:minHeight="90dp"
+                android:padding="5dp"
+                android:spacing="5dp"
+                android:visibility="visible" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="100" >
-
-            <TextView
-                android:id="@+id/txtActPostListingAddress"
-                style="?LabelEditText"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btnActPostListingAddPhotos"
+                style="@style/ButtonFullWidthLightBlue"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="90"
-                android:text="@string/label_address" />
-            <!-- Locate btn -->
+                android:layout_marginBottom="10dp"
+                android:text="@string/label_postlisting_add_photos" />
 
-            <ImageButton
-                android:id="@+id/btnActPostListingLocateAddress"
-                android:layout_width="wrap_content"
+            <!-- Address -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="10"
-                android:contentDescription="@string/msg_postlisting_locate"
-                android:gravity="right"
-                android:src="@drawable/locate" />
-        </LinearLayout>
-        <!-- Map -->
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="100" >
 
-        <com.google.android.maps.MapView
-            android:id="@+id/mapviewActPostListingMapLocate"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:apiKey="@string/google_map_api_key"
-            android:clickable="true"
-            android:visibility="gone" />
-        <!-- Latitude -->
+                <TextView
+                    android:id="@+id/txtActPostListingAddress"
+                    style="?LabelEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="90"
+                    android:text="@string/label_address" />
+                <!-- Locate btn -->
+
+                <ImageButton
+                    android:id="@+id/btnActPostListingLocateAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:contentDescription="@string/msg_postlisting_locate"
+                    android:gravity="right"
+                    android:src="@drawable/locate" />
+            </LinearLayout>
+            <!-- Map -->
+
+            <com.google.android.maps.MapView
+                android:id="@+id/mapviewActPostListingMapLocate"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:apiKey="@string/google_map_api_key"
+                android:clickable="true"
+                android:visibility="gone" />
+            <!-- Latitude -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingLatitude"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_latitude" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingLatitude"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="numberDecimal"
-            android:visibility="gone" />
-        <!-- Longitude -->
+            <EditText
+                android:id="@+id/edtActPostListingLatitude"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="numberDecimal"
+                android:visibility="gone" />
+            <!-- Longitude -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingLongitude"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_postlisting_longitude" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingLongitude"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="numberDecimal"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edtActPostListingLongitude"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="numberDecimal"
+                android:visibility="gone" />
 
-        <!-- Zip -->
+            <!-- Zip -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingZip"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_zip" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingZip"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="number"
-            android:maxLength="6"
-            android:visibility="gone" />
-        <!-- State -->
+            <EditText
+                android:id="@+id/edtActPostListingZip"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="number"
+                android:maxLength="6"
+                android:visibility="gone" />
+            <!-- State -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingState"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_state" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingState"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:visibility="gone" />
-        <!-- County -->
+            <EditText
+                android:id="@+id/edtActPostListingState"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="text"
+                android:visibility="gone" />
+            <!-- County -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingCounty"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_county" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingCounty"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edtActPostListingCounty"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="text"
+                android:visibility="gone" />
 
-        <!-- City -->
+            <!-- City -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingCity"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_city" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingCity"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edtActPostListingCity"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="text"
+                android:visibility="gone" />
 
-        <!-- Area -->
+            <!-- Area -->
 
 
-        <!--
+            <!--
              <TextView
             android:id="@+id/txtActPostListingArea"
             style="?LabelEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_area" />
-        -->
+            -->
 
-        <EditText
-            android:id="@+id/edtActPostListingArea"
-            style="?EditTextSingleLine"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edtActPostListingArea"
+                style="?EditTextSingleLine"
+                android:background="@drawable/corners"
+                android:inputType="text"
+                android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btnActPostListingPost"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            style="@style/ButtonFullWidthLightBlue"
-            android:layout_marginBottom="10dp"
-            android:text="@string/label_postlisting_post" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnActPostListingPost"
+                style="@style/ButtonFullWidthLightBlue"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/label_postlisting_post" />
+        </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+</LinearLayout>
