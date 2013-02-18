@@ -472,7 +472,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
     		message.append("\n");
     	}
     	if (!result) {
-			Utility.showLongToast(this, message.toString());
+			Utility.showLongToast(this, message.toString()); 
 		}else{
 			getUserData();
 		}
