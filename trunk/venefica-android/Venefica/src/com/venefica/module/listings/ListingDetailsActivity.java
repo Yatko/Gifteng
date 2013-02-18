@@ -213,7 +213,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		mapView.setTraffic(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(7); // Zoom 1 is world view
+		mapController.setZoom(6); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
