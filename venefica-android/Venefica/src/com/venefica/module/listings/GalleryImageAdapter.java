@@ -119,7 +119,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 		}	
 		
 		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		return convertView;
 	}
 
