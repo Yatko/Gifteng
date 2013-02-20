@@ -2,7 +2,6 @@ package com.venefica.service.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -10,100 +9,98 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
  * Describes a filter for ads.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FilterDto {
-	private String searchString;
 
-	// all fields are input ones
-	@XmlElementWrapper(name = "categories")
-	@XmlElement(name = "item")
-	private List<Long> categories;
+    private String searchString;
+    // all fields are input ones
+    @XmlElementWrapper(name = "categories")
+    @XmlElement(name = "item")
+    private List<Long> categories;
+    private Long distance;
+    private Double latitude;
+    private Double longitude;
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+    private Boolean hasPhoto;
+    private Boolean wanted;
 
-	private Long distance;
-	private Double latitude;
-	private Double longitude;
+    // WARNING: required for JAX-WS
+    public FilterDto() {
+    }
 
-	private BigDecimal minPrice;
-	private BigDecimal maxPrice;
-	private Boolean hasPhoto;
-	private Boolean wanted;
+    public String getSearchString() {
+        return searchString;
+    }
 
-	// WARNING: required for JAX-WS
-	public FilterDto() {
-	}
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
-	public String getSearchString() {
-		return searchString;
-	}
+    public List<Long> getCategories() {
+        return categories;
+    }
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
+    public void setCategories(List<Long> categories) {
+        this.categories = categories;
+    }
 
-	public List<Long> getCategories() {
-		return categories;
-	}
+    public Long getDistance() {
+        return distance;
+    }
 
-	public void setCategories(List<Long> categories) {
-		this.categories = categories;
-	}
+    public void setDistance(Long distance) {
+        this.distance = distance;
+    }
 
-	public Long getDistance() {
-		return distance;
-	}
+    public Double getLatitude() {
+        return latitude;
+    }
 
-	public void setDistance(Long distance) {
-		this.distance = distance;
-	}
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
 
-	public Double getLatitude() {
-		return latitude;
-	}
+    public Double getLongitude() {
+        return longitude;
+    }
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
-	public Double getLongitude() {
-		return longitude;
-	}
+    public BigDecimal getMinPrice() {
+        return minPrice;
+    }
 
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+    public void setMinPrice(BigDecimal minPrice) {
+        this.minPrice = minPrice;
+    }
 
-	public BigDecimal getMinPrice() {
-		return minPrice;
-	}
+    public BigDecimal getMaxPrice() {
+        return maxPrice;
+    }
 
-	public void setMinPrice(BigDecimal minPrice) {
-		this.minPrice = minPrice;
-	}
+    public void setMaxPrice(BigDecimal maxPrice) {
+        this.maxPrice = maxPrice;
+    }
 
-	public BigDecimal getMaxPrice() {
-		return maxPrice;
-	}
+    public Boolean getHasPhoto() {
+        return hasPhoto;
+    }
 
-	public void setMaxPrice(BigDecimal maxPrice) {
-		this.maxPrice = maxPrice;
-	}
+    public void setHasPhoto(Boolean hasPhoto) {
+        this.hasPhoto = hasPhoto;
+    }
 
-	public Boolean getHasPhoto() {
-		return hasPhoto;
-	}
+    public Boolean isWanted() {
+        return wanted;
+    }
 
-	public void setHasPhoto(Boolean hasPhoto) {
-		this.hasPhoto = hasPhoto;
-	}
-
-	public Boolean isWanted() {
-		return wanted;
-	}
-
-	public void setWanted(Boolean wanted) {
-		this.wanted = wanted;
-	}	
+    public void setWanted(Boolean wanted) {
+        this.wanted = wanted;
+    }
 }

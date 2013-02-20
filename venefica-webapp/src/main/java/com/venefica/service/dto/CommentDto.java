@@ -1,114 +1,112 @@
 package com.venefica.service.dto;
 
-import java.util.Date;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.User;
-
+import java.util.Date;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  * Comment data transfer object.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CommentDto extends DtoBase {
-	// in, out
-	private Long id;
-	// in, out
-	private String text;
-	// out
-	private boolean owner;
-	// out
-	private String publisherName;
-	// out
-	private String publisherFullName;
-	// out
-	private String publisherAvatarUrl;
-	// out
-	private Date createdAt;
 
-	// required for JAX-WS
-	public CommentDto() {
-	}
+    // in, out
+    private Long id;
+    // in, out
+    private String text;
+    // out
+    private boolean owner;
+    // out
+    private String publisherName;
+    // out
+    private String publisherFullName;
+    // out
+    private String publisherAvatarUrl;
+    // out
+    private Date createdAt;
 
-	public CommentDto(String text) {
-		this.text = text;
-	}
+    // required for JAX-WS
+    public CommentDto() {
+    }
 
-	public CommentDto(Comment comment, User currentUser) {
-		id = comment.getId();
-		text = comment.getText();
-		owner = comment.getPublisher().equals(currentUser);
-		publisherName = comment.getPublisher().getName();
-		publisherFullName = comment.getPublisher().getFullName();
+    public CommentDto(String text) {
+        this.text = text;
+    }
 
-		Image avatar = comment.getPublisher().getAvatar();
-		publisherAvatarUrl = ImageDto.imageUrl(avatar);
-		createdAt = comment.getCreatedAt();
-	}
+    public CommentDto(Comment comment, User currentUser) {
+        id = comment.getId();
+        text = comment.getText();
+        owner = comment.getPublisher().equals(currentUser);
+        publisherName = comment.getPublisher().getName();
+        publisherFullName = comment.getPublisher().getFullName();
 
-	public void update(Comment comment) {
-		comment.setText(text);
-	}
+        Image avatar = comment.getPublisher().getAvatar();
+        publisherAvatarUrl = ImageDto.imageUrl(avatar);
+        createdAt = comment.getCreatedAt();
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void update(Comment comment) {
+        comment.setText(text);
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public boolean isOwner() {
-		return owner;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public void setOwner(boolean owner) {
-		this.owner = owner;
-	}
+    public boolean isOwner() {
+        return owner;
+    }
 
-	public String getPublisherName() {
-		return publisherName;
-	}
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
 
-	public void setPublisherName(String publisherName) {
-		this.publisherName = publisherName;
-	}
-	
-	public String getPublisherFullName() {
-		return publisherFullName;
-	}
+    public String getPublisherName() {
+        return publisherName;
+    }
 
-	public void setPublisherFullName(String publisherFullName) {
-		this.publisherFullName = publisherFullName;
-	}
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
+    }
 
-	public String getPublisherAvatarUrl() {
-		return publisherAvatarUrl;
-	}
+    public String getPublisherFullName() {
+        return publisherFullName;
+    }
 
-	public void setPublisherAvatarUrl(String publisherAvatarUrl) {
-		this.publisherAvatarUrl = publisherAvatarUrl;
-	}
+    public void setPublisherFullName(String publisherFullName) {
+        this.publisherFullName = publisherFullName;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public String getPublisherAvatarUrl() {
+        return publisherAvatarUrl;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setPublisherAvatarUrl(String publisherAvatarUrl) {
+        this.publisherAvatarUrl = publisherAvatarUrl;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }
