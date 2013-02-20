@@ -1,48 +1,47 @@
 package com.venefica.dao;
 
 import java.io.Serializable;
-
 import javax.inject.Inject;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 /**
- * Creates hibernate template by providing session factory from the spring context.
- * 
+ * Creates hibernate template by providing session factory from the spring
+ * context.
+ *
  * @author Sviatoslav Grebenchukov
  */
 public class DaoBase {
 
-	@Inject
-	private SessionFactory sessionFactory;
+    @Inject
+    private SessionFactory sessionFactory;
 
-	protected Session getCurrentSession() {
-		return sessionFactory.getCurrentSession();
-	}
-	
-	protected Session newSession() {
-		return sessionFactory.openSession();
-	}
+    protected Session getCurrentSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
-	protected Query createQuery(String queryString) {
-		return getCurrentSession().createQuery(queryString);
-	}
+    protected Session newSession() {
+        return sessionFactory.openSession();
+    }
 
-	protected Query createFilter(Object collection, String queryString) {
-		return getCurrentSession().createFilter(collection, queryString);
-	}
+    protected Query createQuery(String queryString) {
+        return getCurrentSession().createQuery(queryString);
+    }
 
-	protected Object getEntity(Class<?> clazz, Serializable id) {
-		return getCurrentSession().get(clazz, id);
-	}
+    protected Query createFilter(Object collection, String queryString) {
+        return getCurrentSession().createFilter(collection, queryString);
+    }
 
-	protected Long saveEntity(Object entity) {
-		return (Long) getCurrentSession().save(entity);
-	}
+    protected Object getEntity(Class<?> clazz, Serializable id) {
+        return getCurrentSession().get(clazz, id);
+    }
 
-	protected void deleteEntity(Object entity) {
-		getCurrentSession().delete(entity);
-	}
+    protected Long saveEntity(Object entity) {
+        return (Long) getCurrentSession().save(entity);
+    }
+
+    protected void deleteEntity(Object entity) {
+        getCurrentSession().delete(entity);
+    }
 }
