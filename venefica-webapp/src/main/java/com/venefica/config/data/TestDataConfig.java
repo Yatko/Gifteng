@@ -1,7 +1,6 @@
 package com.venefica.config.data;
 
 import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
@@ -17,39 +16,40 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Profile(value = "test")
 @EnableTransactionManagement
 public class TestDataConfig {
-	private static final String ModelPackage = "com.venefica.model";
 
-	@Bean
-	public DataSource dataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://localhost/venefica-tst");
-		dataSource.setUsername("venefica");
-		dataSource.setPassword("venefica");
-		return dataSource;
-	}
+    private static final String ModelPackage = "com.venefica.model";
 
-	@Bean
-	public SessionFactory sessionFactory() {
-		LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
-				.scanPackages(ModelPackage);
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost/venefica-tst");
+        dataSource.setUsername("venefica");
+        dataSource.setPassword("venefica");
+        return dataSource;
+    }
 
-		// Support PostGIS functions
-		factoryBuilder.getProperties().put(AvailableSettings.DIALECT,
-				"org.hibernate.spatial.dialect.postgis.PostgisDialect");
+    @Bean
+    public SessionFactory sessionFactory() {
+        LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
+                .scanPackages(ModelPackage);
 
-		// Show SQL
-		factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
-		factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, true);
+        // Support PostGIS functions
+        factoryBuilder.getProperties().put(AvailableSettings.DIALECT,
+                "org.hibernate.spatial.dialect.postgis.PostgisDialect");
 
-		// Recreate the database
-		factoryBuilder.setProperty(AvailableSettings.HBM2DDL_AUTO, "create");
+        // Show SQL
+        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
+        factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, true);
 
-		return factoryBuilder.buildSessionFactory();
-	}
+        // Recreate the database
+        factoryBuilder.setProperty(AvailableSettings.HBM2DDL_AUTO, "create");
 
-	@Bean(name = "transactionManager")
-	public PlatformTransactionManager transactionManager() {
-		return new HibernateTransactionManager(sessionFactory());
-	}
+        return factoryBuilder.buildSessionFactory();
+    }
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager() {
+        return new HibernateTransactionManager(sessionFactory());
+    }
 }
