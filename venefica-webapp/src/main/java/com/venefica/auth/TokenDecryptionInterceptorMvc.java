@@ -1,85 +1,81 @@
 package com.venefica.auth;
 
+import com.venefica.dao.UserDao;
+import com.venefica.model.User;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.venefica.dao.UserDao;
-import com.venefica.model.User;
-
 public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
 
-	public final static String AUTH_TOKEN = "AuthToken";
+    public final static String AUTH_TOKEN = "AuthToken";
+    
+    protected final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
+    
+    @Inject
+    private ThreadSecurityContextHolder securityContextHolder;
+    
+    @Inject
+    private UserDao userDao;
+    
+    @Inject
+    private TokenEncryptor tokenEncryptor;
 
-	protected final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+            Object handler) throws Exception {
 
-	@Inject
-	private ThreadSecurityContextHolder securityContextHolder;
+        String encryptedToken = getEncryptedToken(request);
 
-	@Inject
-	private UserDao userDao;
+        if (encryptedToken != null) {
+            log.debug("Encrypted token: " + encryptedToken);
+            log.debug("Encrypted token length: " + encryptedToken.length());
+        }
 
-	@Inject
-	private TokenEncryptor tokenEncryptor;
+        if (encryptedToken != null) {
+            Token token = tokenEncryptor.decrypt(encryptedToken);
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-			Object handler) throws Exception {
+            if (!token.isExpired()) {
+                Long userId = token.getUserId();
+                User user = userDao.get(userId);
 
-		String encryptedToken = getEncryptedToken(request);
+                if (user != null) {
+                    SecurityContext securityContext = new SecurityContext(user);
+                    securityContextHolder.setContext(securityContext);
+                }
+            }
+        }
 
-		if (encryptedToken != null) {
-			log.debug("Encrypted token: " + encryptedToken);
-			log.debug("Encrypted token length: " + encryptedToken.length());
-		}
+        return true;
+    }
 
-		if (encryptedToken != null) {
-			Token token = tokenEncryptor.decrypt(encryptedToken);
+    private String getEncryptedToken(HttpServletRequest request) {
+        String encryptedToken = request.getHeader(AUTH_TOKEN);
 
-			if (!token.isExpired()) {
-				Long userId = token.getUserId();
-				User user = userDao.get(userId);
+        if (encryptedToken == null) {
+            // Try to get token from the cookies
+            Cookie[] cookies = request.getCookies();
 
-				if (user != null) {
-					SecurityContext securityContext = new SecurityContext(user);
-					securityContextHolder.setContext(securityContext);
-				}
-			}
-		}
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals(AUTH_TOKEN)) {
+                        encryptedToken = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
 
-		return true;
-	}
+        return encryptedToken;
+    }
 
-	private String getEncryptedToken(HttpServletRequest request) {
-		String encryptedToken = request.getHeader(AUTH_TOKEN);
-
-		if (encryptedToken == null) {
-			// Try to get token from the cookies
-			Cookie[] cookies = request.getCookies();
-
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals(AUTH_TOKEN)) {
-						encryptedToken = cookie.getValue();
-						break;
-					}
-				}
-			}
-		}
-
-		return encryptedToken;
-	}
-
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-			Object handler, Exception ex) throws Exception {
-		securityContextHolder.clearContext();
-	}
-
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+            Object handler, Exception ex) throws Exception {
+        securityContextHolder.clearContext();
+    }
 }
