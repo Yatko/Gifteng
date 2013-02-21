@@ -1,22 +1,5 @@
 package com.venefica.service;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.jws.WebService;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.vkontakte.api.VKontakte;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.CommentDao;
@@ -38,261 +21,298 @@ import com.venefica.service.fault.MessageField;
 import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import javax.inject.Inject;
+import javax.jws.WebService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.vkontakte.api.VKontakte;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of {@link MessageService} interface.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Service("messageService")
 @WebService(endpointInterface = "com.venefica.service.MessageService")
 public class MessageServiceImpl implements MessageService {
 
-	@Inject
-	private AdDao adDao;
+    @Inject
+    private AdDao adDao;
+    
+    @Inject
+    private CommentDao commentDao;
+    
+    @Inject
+    private UserDao userDao;
+    
+    @Inject
+    private MessageDao messageDao;
+    
+    @Inject
+    private ThreadSecurityContextHolder securityContextHolder;
+    
+    @Autowired(required = false)
+    private ConnectionRepository connectionRegistry;
 
-	@Inject
-	private CommentDao commentDao;
+    @Override
+    @Transactional
+    public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException,
+            CommentValidationException {
+        if (adId == null) {
+            throw new NullPointerException("adId is null!");
+        }
+        if (commentDto == null) {
+            throw new NullPointerException("commentDto is null!");
+        }
 
-	@Inject
-	private UserDao userDao;
+        Ad ad = adDao.get(adId);
 
-	@Inject
-	private MessageDao messageDao;
+        if (ad == null) {
+            throw new AdNotFoundException(adId);
+        }
 
-	@Inject
-	private ThreadSecurityContextHolder securityContextHolder;
+        // ++ TODO: create comment validator
+        if (commentDto.getText() == null) {
+            throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
+        }
+        // ++
 
-	@Autowired(required = false)
-	private ConnectionRepository connectionRegistry;
+        Comment comment = new Comment(ad, getCurrentUser(), commentDto.getText());
+        commentDao.save(comment);
 
-	@Override
-	@Transactional
-	public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException,
-			CommentValidationException {
-		if (adId == null)
-			throw new NullPointerException("adId is null!");
-		if (commentDto == null)
-			throw new NullPointerException("commentDto is null!");
+        // Attach the comment to the ad
+        ad.getComments().add(comment);
+        return comment.getId();
+    }
 
-		Ad ad = adDao.get(adId);
+    @Override
+    @Transactional
+    public void updateComment(CommentDto commentDto) throws CommentNotFoundException,
+            CommentValidationException {
+        if (commentDto == null) {
+            throw new NullPointerException("commentDto is null!");
+        }
 
-		if (ad == null)
-			throw new AdNotFoundException(adId);
+        Long commentId = commentDto.getId();
+        Comment comment = commentDao.get(commentId);
 
-		// ++ TODO: create comment validator
-		if (commentDto.getText() == null)
-			throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
-		// ++
+        if (comment == null) {
+            throw new CommentNotFoundException(commentId);
+        }
 
-		Comment comment = new Comment(ad, getCurrentUser(), commentDto.getText());
-		commentDao.save(comment);
+        // ++ TODO: create comment validator
+        if (commentDto.getText() == null) {
+            throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
+        }
+        // ++
 
-		// Attach the comment to the ad
-		ad.getComments().add(comment);
-		return comment.getId();
-	}
+        // WARNING! This update must be performed within an active transaction!
+        commentDto.update(comment);
+        comment.setUpdatedAt(new Date());
+    }
 
-	@Override
-	@Transactional
-	public void updateComment(CommentDto commentDto) throws CommentNotFoundException,
-			CommentValidationException {
-		if (commentDto == null)
-			throw new NullPointerException("commentDto is null!");
+    @Override
+    @Transactional
+    public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments)
+            throws AdNotFoundException {
+        if (adId == null) {
+            throw new NullPointerException("adId is null");
+        }
 
-		Long commentId = commentDto.getId();
-		Comment comment = commentDao.get(commentId);
+        if (lastCommentId != -1) {
+            throw new RuntimeException("Not supported!");
+        }
 
-		if (comment == null)
-			throw new CommentNotFoundException(commentId);
+        Ad ad = adDao.get(adId);
 
-		// ++ TODO: create comment validator
-		if (commentDto.getText() == null)
-			throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
-		// ++
+        if (ad == null) {
+            throw new AdNotFoundException(adId);
+        }
 
-		// WARNING! This update must be performed within an active transaction!
-		commentDto.update(comment);
-		comment.setUpdatedAt(new Date());
-	}
+        LinkedList<CommentDto> result = new LinkedList<CommentDto>();
 
-	@Override
-	@Transactional
-	public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments)
-			throws AdNotFoundException {
-		if (adId == null)
-			throw new NullPointerException("adId is null");
+        User currentUser = getCurrentUser();
 
-		if (lastCommentId != -1)
-			throw new RuntimeException("Not supported!");
+        for (Comment comment : ad.getComments()) {
+            CommentDto commentDto = new CommentDto(comment, currentUser);
+            result.add(commentDto);
+        }
 
-		Ad ad = adDao.get(adId);
+        return result;
+    }
 
-		if (ad == null)
-			throw new AdNotFoundException(adId);
+    @Override
+    @Transactional
+    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException,
+            MessageValidationException {
+        if (messageDto == null) {
+            throw new NullPointerException("message is null!");
+        }
 
-		LinkedList<CommentDto> result = new LinkedList<CommentDto>();
+        User to = userDao.findUserByName(messageDto.getToName());
 
-		User currentUser = getCurrentUser();
+        if (to == null) {
+            throw new UserNotFoundException("User with name = '" + messageDto.getToName()
+                    + "' not found!");
+        }
 
-		for (Comment comment : ad.getComments()) {
-			CommentDto commentDto = new CommentDto(comment, currentUser);
-			result.add(commentDto);
-		}
+        if (messageDto.getText() == null) {
+            throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
+        }
 
-		return result;
-	}
+        User currentUser = getCurrentUser();
 
-	@Override
-	@Transactional
-	public Long sendMessage(MessageDto messageDto) throws UserNotFoundException,
-			MessageValidationException {
-		if (messageDto == null)
-			throw new NullPointerException("message is null!");
+        if (currentUser.getName().equals(to.getName())) {
+            throw new MessageValidationException(MessageField.TO,
+                    "You can't send messages to yourself!");
+        }
 
-		User to = userDao.findUserByName(messageDto.getToName());
+        Message message = new Message(messageDto.getText());
+        message.setTo(to);
+        message.setFrom(currentUser);
 
-		if (to == null)
-			throw new UserNotFoundException("User with name = '" + messageDto.getToName()
-					+ "' not found!");
+        return messageDao.save(message);
+    }
 
-		if (messageDto.getText() == null)
-			throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
+    @Override
+    @Transactional
+    public void updateMessage(MessageDto messageDto) throws MessageNotFoundException,
+            AuthorizationException, MessageValidationException {
 
-		User currentUser = getCurrentUser();
+        if (messageDto == null) {
+            throw new NullPointerException("messageDto is null!");
+        }
 
-		if (currentUser.getName().equals(to.getName()))
-			throw new MessageValidationException(MessageField.TO,
-					"You can't send messages to yourself!");
+        Message message = messageDao.get(messageDto.getId());
 
-		Message message = new Message(messageDto.getText());
-		message.setTo(to);
-		message.setFrom(currentUser);
+        if (message == null) {
+            throw new MessageNotFoundException(messageDto.getId());
+        }
 
-		return messageDao.save(message);
-	}
-	
-	@Override
-	@Transactional
-	public void updateMessage(MessageDto messageDto) throws MessageNotFoundException,
-			AuthorizationException, MessageValidationException {
-		
-		if (messageDto == null)
-			throw new NullPointerException("messageDto is null!");
-		
-		Message message = messageDao.get(messageDto.getId());
-		
-		if (message == null)
-			throw new MessageNotFoundException(messageDto.getId());
-		
-		User currentUser = getCurrentUser();
-		
-		if (!message.getFrom().equals(currentUser))
-			throw new AuthorizationException("Only owner can update the message!");
-		
-		if (messageDto.getText() == null)
-			throw new MessageValidationException(MessageField.TEXT, "Empty messages are not allowed!");
-		
-		// Only text can be updated!
-		message.setText(messageDto.getText());		
-	}
+        User currentUser = getCurrentUser();
 
-	@Override
-	@Transactional
-	public List<MessageDto> getAllMessages() {
-		User currentUser = getCurrentUser();
-		LinkedList<MessageDto> result = new LinkedList<MessageDto>();
+        if (!message.getFrom().equals(currentUser)) {
+            throw new AuthorizationException("Only owner can update the message!");
+        }
 
-		// incoming
-		for (Message msg : currentUser.getReceivedMessages()) {
-			if (msg.isHiddenByRecipient())
-				continue;
+        if (messageDto.getText() == null) {
+            throw new MessageValidationException(MessageField.TEXT, "Empty messages are not allowed!");
+        }
 
-			MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
-			msg.setRead(true); // mark as read
-			result.add(messageDto);
-		}
+        // Only text can be updated!
+        message.setText(messageDto.getText());
+    }
 
-		// outgoing
-		for (Message msg : currentUser.getSentMessages()) {
-			if (msg.isHiddenBySender())
-				continue;
+    @Override
+    @Transactional
+    public List<MessageDto> getAllMessages() {
+        User currentUser = getCurrentUser();
+        LinkedList<MessageDto> result = new LinkedList<MessageDto>();
 
-			MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
-			result.add(messageDto);
-		}
+        // incoming
+        for (Message msg : currentUser.getReceivedMessages()) {
+            if (msg.isHiddenByRecipient()) {
+                continue;
+            }
 
-		return result;
-	}
+            MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
+            msg.setRead(true); // mark as read
+            result.add(messageDto);
+        }
 
-	@Override
-	@Transactional
-	public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
-		Message message = messageDao.get(messageId);
+        // outgoing
+        for (Message msg : currentUser.getSentMessages()) {
+            if (msg.isHiddenBySender()) {
+                continue;
+            }
 
-		if (message == null)
-			throw new MessageNotFoundException(messageId);
+            MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
+            result.add(messageDto);
+        }
 
-		User currentUser = getCurrentUser();
+        return result;
+    }
 
-		if (message.getTo().equals(currentUser))
-			message.setHiddenByRecipient(true);
-		else if (message.getFrom().equals(currentUser))
-			message.setHiddenBySender(true);
-		else {
-			throw new AuthorizationException(
-					"You are neither recipient nor sender to hide the message!");
-		}
-	}
+    @Override
+    @Transactional
+    public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
+        Message message = messageDao.get(messageId);
 
-	@Override
-	public void shareOnSocialNetworks(String message) {
-		// Facebook
-		Facebook facebook = getSocialNetworkApi(Facebook.class);
+        if (message == null) {
+            throw new MessageNotFoundException(messageId);
+        }
 
-		if (facebook != null)
-			facebook.feedOperations().updateStatus(message);
+        User currentUser = getCurrentUser();
 
-		// Twitter
-		Twitter twitter = getSocialNetworkApi(Twitter.class);
+        if (message.getTo().equals(currentUser)) {
+            message.setHiddenByRecipient(true);
+        } else if (message.getFrom().equals(currentUser)) {
+            message.setHiddenBySender(true);
+        } else {
+            throw new AuthorizationException(
+                    "You are neither recipient nor sender to hide the message!");
+        }
+    }
 
-		if (twitter != null)
-			twitter.timelineOperations().updateStatus(message);
+    @Override
+    public void shareOnSocialNetworks(String message) {
+        // Facebook
+        Facebook facebook = getSocialNetworkApi(Facebook.class);
 
-		// VKontakte
-		VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
+        if (facebook != null) {
+            facebook.feedOperations().updateStatus(message);
+        }
 
-		if (vkontakte != null)
-			vkontakte.wallOperations().post(message);
-	}
+        // Twitter
+        Twitter twitter = getSocialNetworkApi(Twitter.class);
 
-	@Override
-	@Transactional
-	public void deleteMessage(Long messageId) throws MessageNotFoundException,
-			AuthorizationException {
-		Message message = messageDao.get(messageId);
+        if (twitter != null) {
+            twitter.timelineOperations().updateStatus(message);
+        }
 
-		if (message == null)
-			throw new MessageNotFoundException(messageId);
+        // VKontakte
+        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
 
-		User currentUser = getCurrentUser();
+        if (vkontakte != null) {
+            vkontakte.wallOperations().post(message);
+        }
+    }
 
-		if (!message.getTo().equals(currentUser) && !message.getFrom().equals(currentUser))
-			throw new AuthorizationException("You are neither recipient nor sender of the message!");
+    @Override
+    @Transactional
+    public void deleteMessage(Long messageId) throws MessageNotFoundException,
+            AuthorizationException {
+        Message message = messageDao.get(messageId);
 
-		messageDao.deleteMessage(message);
-	}
+        if (message == null) {
+            throw new MessageNotFoundException(messageId);
+        }
 
-	// internal helpers
+        User currentUser = getCurrentUser();
 
-	private <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
-		Connection<T> connection = connectionRegistry.findPrimaryConnection(socialNetworkInterface);
-		return connection != null ? connection.getApi() : null;
-	}
+        if (!message.getTo().equals(currentUser) && !message.getFrom().equals(currentUser)) {
+            throw new AuthorizationException("You are neither recipient nor sender of the message!");
+        }
 
-	private User getCurrentUser() {
-		Long currentUserId = securityContextHolder.getContext().getUserId();
-		return userDao.get(currentUserId);
-	}
+        messageDao.deleteMessage(message);
+    }
 
+    // internal helpers
+    private <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
+        Connection<T> connection = connectionRegistry.findPrimaryConnection(socialNetworkInterface);
+        return connection != null ? connection.getApi() : null;
+    }
+
+    private User getCurrentUser() {
+        Long currentUserId = securityContextHolder.getContext().getUserId();
+        return userDao.get(currentUserId);
+    }
 }
