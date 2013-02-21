@@ -1,14 +1,5 @@
 package com.venefica.service;
 
-import java.util.List;
-
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
-import javax.jws.soap.SOAPBinding.ParameterStyle;
-
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
@@ -22,6 +13,13 @@ import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOprationException;
+import java.util.List;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.ParameterStyle;
 
 
 /**
@@ -101,8 +99,10 @@ public interface AdService {
 	 */
 	@WebMethod(operationName = "GetAdsEx")
 	@WebResult(name = "ad")
-	List<AdDto> getAds(@WebParam(name = "lastAdId") Long lastAdId,
-			@WebParam(name = "numberAds") int numberAds, @WebParam(name = "filter") FilterDto filter);
+	List<AdDto> getAds(
+                @WebParam(name = "lastAdId") Long lastAdId,
+		@WebParam(name = "numberAds") int numberAds,
+                @WebParam(name = "filter") FilterDto filter);
 
 	/**
 	 * Returns the ad by its id.
