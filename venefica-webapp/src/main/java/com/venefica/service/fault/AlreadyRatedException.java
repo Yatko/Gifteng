@@ -11,7 +11,7 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class AlreadyRatedException extends Exception {
 
-	public AlreadyRatedException(String message) {
-		super(message);
-	}
+    public AlreadyRatedException(String message) {
+        super(message);
+    }
 }

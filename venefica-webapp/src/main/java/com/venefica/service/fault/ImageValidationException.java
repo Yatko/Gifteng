@@ -9,15 +9,15 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class ImageValidationException extends Exception {
 
-	@SuppressWarnings("unused")
-	private ImageField invalidField;
+    @SuppressWarnings("unused")
+    private ImageField invalidField;
 
-	public ImageValidationException(String message) {
-		super(message);
-	}
+    public ImageValidationException(String message) {
+        super(message);
+    }
 
-	public ImageValidationException(ImageField invalidField, String message) {
-		super(message);
-		this.invalidField = invalidField;
-	}
+    public ImageValidationException(ImageField invalidField, String message) {
+        super(message);
+        this.invalidField = invalidField;
+    }
 }

@@ -8,7 +8,8 @@ import javax.xml.ws.WebFault;
 @XmlAccessorType(XmlAccessType.FIELD)
 @SuppressWarnings("serial")
 public class AuthorizationException extends Exception {
-	public AuthorizationException(String message) {
-		super(message);
-	}
+
+    public AuthorizationException(String message) {
+        super(message);
+    }
 }

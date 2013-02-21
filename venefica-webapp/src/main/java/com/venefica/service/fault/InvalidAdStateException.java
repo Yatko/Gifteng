@@ -9,7 +9,7 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class InvalidAdStateException extends Exception {
 
-	public InvalidAdStateException(String message) {
-		super(message);
-	}
+    public InvalidAdStateException(String message) {
+        super(message);
+    }
 }

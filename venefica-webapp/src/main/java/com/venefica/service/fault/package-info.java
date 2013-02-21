@@ -1,4 +1,6 @@
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://service.venefica.com/", 
-	attributeFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED, 
-	elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@XmlSchema(namespace = Namespace.SERVICE, attributeFormDefault = XmlNsForm.QUALIFIED, elementFormDefault = XmlNsForm.QUALIFIED)
 package com.venefica.service.fault;
+
+import com.venefica.service.Namespace;
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;

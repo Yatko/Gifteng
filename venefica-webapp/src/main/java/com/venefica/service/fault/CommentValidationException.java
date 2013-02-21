@@ -8,15 +8,16 @@ import javax.xml.ws.WebFault;
 @WebFault(name = "CommentValidationError")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CommentValidationException extends Exception {
-	@SuppressWarnings("unused")
-	private CommentField invalidField;
 
-	public CommentValidationException(CommentField invalidField, String message) {
-		super(message);
-		this.invalidField = invalidField;
-	}
+    @SuppressWarnings("unused")
+    private CommentField invalidField;
 
-	public CommentValidationException(String message) {
-		super(message);
-	}
+    public CommentValidationException(CommentField invalidField, String message) {
+        super(message);
+        this.invalidField = invalidField;
+    }
+
+    public CommentValidationException(String message) {
+        super(message);
+    }
 }

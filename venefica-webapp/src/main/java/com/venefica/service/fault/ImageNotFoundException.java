@@ -8,12 +8,12 @@ import javax.xml.ws.WebFault;
 @WebFault(name = "ImageNotFoundError")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ImageNotFoundException extends Exception {
-	public ImageNotFoundException(String message) {
-		super(message);
-	}
-	
-	public ImageNotFoundException(Long imageId) {
-		this("Image with id = " + imageId + " not found!");
-	}
 
+    public ImageNotFoundException(String message) {
+        super(message);
+    }
+
+    public ImageNotFoundException(Long imageId) {
+        this("Image with id = " + imageId + " not found!");
+    }
 }

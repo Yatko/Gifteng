@@ -5,8 +5,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.ws.WebFault;
 
 /**
- * The exeption is thrown when the bookmark not found.
- * 
+ * The exception is thrown when the bookmark not found.
+ *
  * @author Sviatoslav Grebenchukov
  */
 @WebFault(name = "BookmarkNotFoundError")
@@ -14,11 +14,11 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class BookmarkNotFoundException extends Exception {
 
-	public BookmarkNotFoundException(String message) {
-		super(message);
-	}
+    public BookmarkNotFoundException(String message) {
+        super(message);
+    }
 
-	public BookmarkNotFoundException(Long bookmarkId) {
-		this("Bookmark not found for ad with id = " + bookmarkId + "!");
-	}
+    public BookmarkNotFoundException(Long bookmarkId) {
+        this("Bookmark not found for ad with id = " + bookmarkId + "!");
+    }
 }
