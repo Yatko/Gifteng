@@ -6,7 +6,7 @@ import javax.xml.ws.WebFault;
 
 /**
  * The exception is thrown when a user tries to rate his own ad.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @WebFault(name = "InvalidRateOperationError")
@@ -14,7 +14,7 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class InvalidRateOprationException extends Exception {
 
-	public InvalidRateOprationException(String message) {
-		super(message);
-	}
+    public InvalidRateOprationException(String message) {
+        super(message);
+    }
 }

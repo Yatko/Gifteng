@@ -9,11 +9,11 @@ import javax.xml.ws.WebFault;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CommentNotFoundException extends Exception {
 
-	public CommentNotFoundException(String message) {
-		super(message);
-	}
-	
-	public CommentNotFoundException(Long commentId) {
-		this("Comment with id = " + commentId + " not found!");
-	}
+    public CommentNotFoundException(String message) {
+        super(message);
+    }
+
+    public CommentNotFoundException(Long commentId) {
+        this("Comment with id = " + commentId + " not found!");
+    }
 }

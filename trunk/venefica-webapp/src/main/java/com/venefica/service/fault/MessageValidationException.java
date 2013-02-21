@@ -8,15 +8,16 @@ import javax.xml.ws.WebFault;
 @WebFault(name = "MessageValidationError")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MessageValidationException extends Exception {
-	@SuppressWarnings("unused")
-	private MessageField invalidField;
 
-	public MessageValidationException(MessageField invalidField, String message) {
-		super(message);
-		this.invalidField = invalidField;
-	}
+    @SuppressWarnings("unused")
+    private MessageField invalidField;
 
-	public MessageValidationException(String message) {
-		super(message);
-	}
+    public MessageValidationException(MessageField invalidField, String message) {
+        super(message);
+        this.invalidField = invalidField;
+    }
+
+    public MessageValidationException(String message) {
+        super(message);
+    }
 }

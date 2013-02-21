@@ -9,11 +9,11 @@ import javax.xml.ws.WebFault;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MessageNotFoundException extends Exception {
 
-	public MessageNotFoundException(String message) {
-		super(message);
-	}
-	
-	public MessageNotFoundException(Long messageId) {
-		this("Message with id = " + messageId + " not found!");
-	}
+    public MessageNotFoundException(String message) {
+        super(message);
+    }
+
+    public MessageNotFoundException(Long messageId) {
+        this("Message with id = " + messageId + " not found!");
+    }
 }

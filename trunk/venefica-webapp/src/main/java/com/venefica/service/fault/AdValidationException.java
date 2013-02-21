@@ -9,15 +9,15 @@ import javax.xml.ws.WebFault;
 @SuppressWarnings("serial")
 public class AdValidationException extends Exception {
 
-	@SuppressWarnings("unused")
-	private AdField invalidField;
+    @SuppressWarnings("unused")
+    private AdField invalidField;
 
-	public AdValidationException(String message) {
-		super(message);
-	}
+    public AdValidationException(String message) {
+        super(message);
+    }
 
-	public AdValidationException(AdField invalidField, String message) {
-		super(message);
-		this.invalidField = invalidField;
-	}
+    public AdValidationException(AdField invalidField, String message) {
+        super(message);
+        this.invalidField = invalidField;
+    }
 }
