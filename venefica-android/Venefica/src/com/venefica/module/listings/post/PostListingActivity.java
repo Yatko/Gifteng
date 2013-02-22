@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -21,12 +20,12 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -36,16 +35,20 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -57,7 +60,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -135,8 +138,30 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	 * is step two 
 	 */
 	private boolean isStepTwo = false;
-	
-	
+	/**
+	 * is step three
+	 */
+	private boolean isStepThree = false;
+	/**
+	 * is first image selected
+	 */
+	private boolean isFirstImage = true;
+	/**
+	 * selected image
+	 */
+	private int seletedImagePosition = 0;
+	/**
+	 * cover image position
+	 */
+	private int coverImagePosition = -1;
+	/**
+	 * layout details
+	 */
+	private RelativeLayout layDetails;
+	/**
+	 * image list
+	 */
+	private ArrayList<String> imageList;
 	/**
 	 * Field validator
 	 */
@@ -164,9 +189,12 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	public static final int ACT_MODE_UPDATE_LISTING = 3002;
 	public static final int ACT_MODE_GET_LISTING = 3003;
 	public static final int ACT_MODE_PROCESS_BITMAP = 3004;
+	public static final int  ACT_MODE_UPLOAD_IMAGES = 3005;
 	private static int CURRENT_MODE = ACT_MODE_POST_LISTING;
 	
 	protected static final int ERROR_DATE_VALIDATION = 22;
+	protected static final int ERROR_REMOVE_SEL_IMAGE = 23;
+	
 	
 	
 	/**
@@ -178,9 +206,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	/**
 	 * Text fields to collect listing data
 	 */
-	/*private TextView txtTitle, txtSubTitle, txtCategory, txtDescription,
+	private TextView txtSetAsCoverImg;/*txtTitle, txtSubTitle, txtCategory, txtDescription,
 			txtCondition, txtPrice, txtZip, txtState, txtCounty, txtCity, txtArea,
 			txtLatitude, txtLongitude;*/
+	private Button btnSelCategory;
 	private Spinner spinCurrency;
 	/**
 	 * Gallery to images
@@ -200,7 +229,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	/**
 	 * Buttons
 	 */
-	private Button btnSelCategory, btnAddPhotos, btnPost, btnExpiary;
+	private Button btnListItem, btnExpiary;
 	/**
 	 * Map button
 	 */
@@ -230,13 +259,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private long selectedListingId;
 	private WSAction wsAction;	
 	private AdDto selectedListing;
-	private ImageDto image;
+	private ImageDto coverImage;
 	private List<ImageDto> imageDtos;
 	
 	/**
 	 * Low resolution flag
 	 */
 	private boolean isLowResolution = false;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -261,6 +291,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		// images layout
 		layImagesView = (RelativeLayout) infleter.inflate(R.layout.view_post_listing_images, null);
 		layMain.addView(layImagesView);
+		txtSetAsCoverImg = (TextView) layImagesView.findViewById(R.id.txtActPostListingDefaultImg);
+		
 		// Controls layout
 		layControlsStepOne = (LinearLayout) layImagesView.findViewById(R.id.layPostListingStep1Controls);
 		imgBtnPickGallery = (ImageButton) layImagesView.findViewById(R.id.imgBtnPostListingPickGallery);
@@ -286,32 +318,79 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		imgSwitcher = (ImageSwitcher) layImagesView.findViewById(R.id.imgSwitcherActPostListing);
 		imgSwitcher.setFactory(this);
 		gallery = (Gallery) layImagesView.findViewById(R.id.galleryActPostListing);
-		gallery.setOnItemClickListener(new OnItemClickListener() {
+		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long id) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long id) {
 				if (isStepTwo && images != null && images.size() > 0) {
-					Drawable dr = new BitmapDrawable(images.get(position));
-					imgSwitcher.setImageDrawable(dr);
+					seletedImagePosition = position;
+					if (seletedImagePosition == coverImagePosition) {
+						txtSetAsCoverImg.setVisibility(View.VISIBLE);
+					} else {
+						txtSetAsCoverImg.setVisibility(View.GONE);
+					}
+					imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position))));
+					
 				}
 			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
+		registerForContextMenu(gallery);
 		setStepOneUIVisiblity(ViewGroup.VISIBLE);
 		
 		camPreview = new CameraPreview(this);
+		camPreview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		cameraPreview.addView(camPreview);
 		
 		//images
 		images = new ArrayList<Bitmap>();
+		images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
 		galImageAdapter = new GalleryImageAdapter(this, null, images, true, true);
 		gallery.setAdapter(galImageAdapter);
-		/*// Gallery
-		gallery = (Gallery) findViewById(R.id.galleryActPostListingPhotos);
-		drawables = new ArrayList<Bitmap>();
-		galImageAdapter = new GalleryImageAdapter(this, null, drawables, true, true);
-		gallery.setAdapter(galImageAdapter);
-
+		
+		
+		//layout details
+		layDetails = (RelativeLayout) infleter.inflate(R.layout.view_post_listing_details, null);
+		layMain.addView(layDetails);
+		//data
+		edtTitle = (EditText) layDetails.findViewById(R.id.edtActPostListingListTitle);
+		edtDescription = (EditText) layDetails.findViewById(R.id.edtActPostListingDescription);
+		edtPrice = (EditText) layDetails.findViewById(R.id.edtActPostListingPrice);
+		edtLatitude =  (EditText) layDetails.findViewById(R.id.edtActPostListingLatitude);
+		edtLongitude = (EditText) layDetails.findViewById(R.id.edtActPostListingLongitude);
+		btnListItem = (Button) layDetails.findViewById(R.id.btnActPostListingPost);
+		btnListItem.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				if (validateFields()) {
+					if(WSAction.isNetworkConnected(PostListingActivity.this)){
+						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
+							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
+						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+							new PostListingTask().execute(ACT_MODE_POST_LISTING);
+						}
+					} else {
+						ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+						showDialog(D_ERROR);
+					}
+				}
+			}
+		});
+		btnSelCategory = (Button) layDetails.findViewById(R.id.btnActPostListingCategory);
+		btnSelCategory.setOnClickListener(new View.OnClickListener() {			
+			public void onClick(View v) {
+				Intent selCatIntent = new Intent(PostListingActivity.this, BrowseCategoriesActivity.class);
+				selCatIntent.putExtra("act_mode", BrowseCategoriesActivity.ACT_MODE_GET_CATEGORY);
+				startActivityForResult(selCatIntent, REQ_SELECT_CATEGORY);
+			}
+		});
+		/*
 		// Map
 		mapView = (MapView) findViewById(R.id.mapviewActPostListingMapLocate);
 		mapView.setBuiltInZoomControls(true);
@@ -333,40 +412,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 
 			}
 		});
-		// Add photos
-		btnAddPhotos = (Button) findViewById(R.id.btnActPostListingAddPhotos);
-		btnAddPhotos.setOnClickListener(new View.OnClickListener() {			
-			public void onClick(View v) {
-				pickImage();
-			}
-		});
 		
-		btnPost = (Button) findViewById(R.id.btnActPostListingPost);
-		btnPost.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				if (validateFields()) {
-					if(WSAction.isNetworkConnected(PostListingActivity.this)){
-						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
-							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
-						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
-							new PostListingTask().execute(ACT_MODE_POST_LISTING);
-						}
-					} else {
-						ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-						showDialog(D_ERROR);
-					}
-				}
-			}
-		});
-		btnSelCategory = (Button) findViewById(R.id.btnActPostListingCategory);
-		btnSelCategory.setOnClickListener(new View.OnClickListener() {			
-			public void onClick(View v) {
-				Intent selCatIntent = new Intent(PostListingActivity.this, BrowseCategoriesActivity.class);
-				selCatIntent.putExtra("act_mode", BrowseCategoriesActivity.ACT_MODE_GET_CATEGORY);
-				startActivityForResult(selCatIntent, REQ_SELECT_CATEGORY);
-			}
-		});
 		btnExpiary = (Button) findViewById(R.id.btnActPostListingAddExpiary);
 		btnExpiary.setText(Utility.convertShortDateToString(new Date()));
 		btnExpiary.setOnClickListener(new View.OnClickListener() {
@@ -375,37 +421,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				showDialog(D_DATE);
 			}
 		});
-		//data
-		edtTitle = (EditText) findViewById(R.id.edtActPostListingListTitle);
-		edtSubTitle = (EditText) findViewById(R.id.edtActPostListingSubTitle);
-		edtDescription = (EditText) findViewById(R.id.edtActPostListingDescription);
-		edtCondition = (EditText) findViewById(R.id.edtActPostListingCondition);
-		edtPrice = (EditText) findViewById(R.id.edtActPostListingPrice);
-		edtZip = (EditText) findViewById(R.id.edtActPostListingZip);
-		edtState = (EditText) findViewById(R.id.edtActPostListingState);
-		edtCounty = (EditText) findViewById(R.id.edtActPostListingCounty);
-		edtCity = (EditText) findViewById(R.id.edtActPostListingCity);
-		edtArea = (EditText) findViewById(R.id.edtActPostListingArea);
-		edtLatitude =  (EditText) findViewById(R.id.edtActPostListingLatitude);
-		edtLongitude = (EditText) findViewById(R.id.edtActPostListingLongitude);
-		
-		txtTitle = (TextView) findViewById(R.id.txtActPostListingListTitle);
-		txtSubTitle = (TextView) findViewById(R.id.txtActPostListingSubTitle);
-		txtCategory = (TextView) findViewById(R.id.txtActPostListingCategory);
-		txtDescription = (TextView) findViewById(R.id.txtActPostListingDescription);
-		txtCondition = (TextView) findViewById(R.id.txtActPostListingCondition);
-		txtPrice = (TextView) findViewById(R.id.txtActPostListingPrice);
-		txtZip = (TextView) findViewById(R.id.txtActPostListingZip);
-		txtState = (TextView) findViewById(R.id.txtActPostListingState);
-		txtCounty = (TextView) findViewById(R.id.txtActPostListingCounty);
-		txtCity = (TextView) findViewById(R.id.txtActPostListingCity);
-		txtArea = (TextView) findViewById(R.id.txtActPostListingArea);
-		txtLatitude = (TextView) findViewById(R.id.txtActPostListingLatitude);
-		txtLongitude = (TextView) findViewById(R.id.txtActPostListingLongitude);
 		
 		if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
 			selectedListingId = getIntent().getLongExtra("ad_id", 0);
-			btnPost.setText(getResources().getString(R.string.label_update));
+			btnListItem.setText(getResources().getString(R.string.label_update));
 			new PostListingTask().execute(ACT_MODE_GET_LISTING);
 		}*/
 	}
@@ -440,7 +459,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		}
 	}
 
-	/* Remove the locationlistener updates when Activity is paused */
+	/* Remove the locationlistener updates and release camera when Activity is paused */
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -457,32 +476,76 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			finish();
+			if (isStepThree) {
+				showStepThreeUI(false);
+				isStepThree = false;
+			}else {
+				finish();
+			}			
 		}
 		return true;
 	}
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.activity_postlisting_gallery_context_menu, menu);
+	}
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    switch (item.getItemId()) {
+	        case R.id.menu_set_as_default_img:
+	        	coverImage = new ImageDto(getImageFromCache(imageList.get(gallery.getSelectedItemPosition())));
+	        	coverImagePosition = gallery.getSelectedItemPosition();
+	        	galImageAdapter.setCoverImagePosition(coverImagePosition);
+	        	galImageAdapter.notifyDataSetChanged();
+	        	gallery.setSelection(coverImagePosition);
+	            return true;	        
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
+	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.imgBtnPostListingPickGallery) {
-			
+			pickImageFromGallery();
 		} else if (view.getId() == R.id.imgBtnPostListingPickCamera){
 			camera.takePicture(null, null, pictureCallback);
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep2){
-			setStepOneUIVisiblity(ViewGroup.GONE);
-			setStepTwoUIVisiblity(ViewGroup.VISIBLE); 
-			isStepTwo = true;
+			if (!isFirstImage) {
+				setStepOneUIVisiblity(ViewGroup.GONE);
+				setStepTwoUIVisiblity(ViewGroup.VISIBLE);
+				showStepThreeUI(false);
+				isStepTwo = true;
+				gallery.setSelection(0);
+				if ( images != null && images.size() > 0) {
+					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
+				}
+			}else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_sel_image));
+			}			
 		} else if (view.getId() == R.id.imgBtnPostListingBackToStep1){
 			setStepOneUIVisiblity(ViewGroup.VISIBLE);
 			setStepTwoUIVisiblity(ViewGroup.GONE);
+			showStepThreeUI(false);
 			isStepTwo = false;
-		} else if (view.getId() == R.id.imgBtnPostListingDelete){
-			
+		} else if (view.getId() == R.id.imgBtnPostListingDelete){			
+			ERROR_CODE = ERROR_REMOVE_SEL_IMAGE;
+			showDialog(D_ERROR);
 		} else if (view.getId() == R.id.imgBtnPostListingContrast){
 			
 		} else if (view.getId() == R.id.imgBtnPostListingCrop){
 			
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep3){
-			
+			if (coverImage == null) {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_sel_cover_image));
+			} else {
+				isStepTwo = false;
+				showStepThreeUI(true);
+				((VeneficaApplication)getApplication()).getImgManager().flushCache();
+			}			
 		}
 	}
 	/**
@@ -495,14 +558,29 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	}
 
 	/**
-	 * helper method to show hide step one UI
+	 * helper method to show hide step two UI
 	 * @param visibility
 	 */
 	private void setStepTwoUIVisiblity(int visibility) {
 		layControlsStepTwo.setVisibility(visibility);
 		imgSwitcher.setVisibility(visibility);
 	}
-	
+	/**
+	 * helper method to show hide step three UI
+	 * @param visibility
+	 */
+	private void showStepThreeUI(boolean show) {
+		if (show) {
+			layDetails.setVisibility(ViewGroup.VISIBLE);
+			layImagesView.setVisibility(ViewGroup.GONE);
+			isStepThree = true;
+		}else {
+			layDetails.setVisibility(ViewGroup.GONE);
+			layImagesView.setVisibility(ViewGroup.VISIBLE);
+			isStepThree = false;
+		}
+		
+	}
 	/**
 	 * release the camera for other applications
 	 */
@@ -512,19 +590,36 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
             camera = null;
         }
     }
-	
+	@Override
+	public void onBackPressed() {
+		if (isStepThree) {
+			showStepThreeUI(false);
+			isStepThree = false;
+		}else {
+			super.onBackPressed();
+		}		
+	}
+	/**
+	 * Handle picture callback for camera
+	 */
 	private PictureCallback pictureCallback = new PictureCallback() {
 		
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 			Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
-			
+			putImageInCache(Bitmap.createScaledBitmap(image, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
+			if (isFirstImage) {
+				images.clear();
+			}
 			images.add(Bitmap.createScaledBitmap(image, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
 			galImageAdapter.notifyDataSetChanged();
 			image.recycle();
 			camera.startPreview();
+			isFirstImage = false;
+			gallery.setSelection(images.size()-1);
 		}
-	};	
+	};
+	public long createdListingId;	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -541,7 +636,26 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				final Bundle extras = data.getExtras();
 	            if (extras != null) {            		
 	    			selectedImageUri = data.getData();
-	    			performCrop();
+//	    			performCrop();
+	    			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	     
+	                Cursor cursor = getContentResolver().query(selectedImageUri,
+	                        filePathColumn, null, null, null);
+	                cursor.moveToFirst();
+	     
+	                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	                String picturePath = cursor.getString(columnIndex);
+	                cursor.close();
+	                if (isFirstImage) {
+	    				images.clear();
+	    			}
+	                Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+	                putImageInCache(Bitmap.createScaledBitmap(bitmap, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
+	                images.add(Bitmap.createScaledBitmap(bitmap, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
+	    			galImageAdapter.notifyDataSetChanged();
+	    			bitmap.recycle();
+	    			isFirstImage = false;
+	    			gallery.setSelection(images.size()-1);
 	            }			           
 	        } else if (requestCode == REQ_IMAGE_CROP) {
 	        	new PostListingTask().execute(ACT_MODE_PROCESS_BITMAP);
@@ -617,6 +731,16 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 						finish();
 					}else if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
 						enableLocationSettings();
+					}else if (ERROR_CODE == ERROR_REMOVE_SEL_IMAGE) {
+						images.remove(seletedImagePosition);
+						imageList.remove(seletedImagePosition);
+						if (seletedImagePosition == coverImagePosition) {
+							coverImage = null;
+						}
+						galImageAdapter.resetCoverImagePosition();
+						galImageAdapter.notifyDataSetChanged();
+						gallery.setSelection(seletedImagePosition - 1);
+						
 					}
 				}
 			});			
@@ -668,6 +792,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				message = (String) getResources().getText(R.string.msg_postlisting_update_success);
 			}else if(ERROR_CODE == Constants.ERROR_LOW_RESOLUTION_CROP){
 				message = (String) getResources().getText(R.string.msg_postlisting_low_resolution);
+			}else if (ERROR_CODE == ERROR_REMOVE_SEL_IMAGE) {
+				message = (String) getResources().getText(R.string.msg_postlisting_remove_sel_image);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -703,6 +829,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 					wrapper.result = detailsWrapper.result;
 				}else if (params[0].equals(ACT_MODE_UPDATE_LISTING)) {
 					wrapper = wsAction.updateListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(selectedListing));
+				}else if (params[0].equals(ACT_MODE_UPLOAD_IMAGES)) {
+					wrapper = uploadImages(((VeneficaApplication)getApplication()).getAuthToken(), createdListingId, wsAction);
 				}
 			}catch (IOException e) {
 				Log.e("PostListingTask::doInBackground :", e.toString());
@@ -725,8 +853,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				if (imageDtos == null) {
 					imageDtos = new ArrayList<ImageDto>();
 				}
-				image = new ImageDto(result.image);
-				imageDtos.add(image);
+				coverImage = new ImageDto(result.image);
+				imageDtos.add(coverImage);
 								
 //                drawables.add(result.image);
                 galImageAdapter.notifyDataSetChanged();
@@ -735,6 +863,12 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				showDialog(D_ERROR);
 			}else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
 				setListingDetails(result.listing);
+			}else if (result.result ==  Constants.RESULT_POST_LISTING_SUCCESS && !result.data.equals("")) {
+				createdListingId = Long.parseLong(result.data);
+				new PostListingTask().execute(ACT_MODE_UPLOAD_IMAGES);
+			}else if (result.result ==  Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS) {
+				ERROR_CODE = Constants.RESULT_POST_LISTING_SUCCESS;
+				showDialog(D_ERROR);
 			}else if (result.result != -1) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);				
@@ -755,32 +889,33 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		listing.setDescription(edtDescription.getText().toString());
 		listing.setCategoryId(categoryId);
 		listing.setPrice(new BigDecimal(edtPrice.getText().toString()));
-		listing.setLatitude(Double.parseDouble(edtLatitude.getText().toString()));
-		listing.setLongitude(Double.parseDouble(edtLongitude.getText().toString()));
+		if (location != null) {
+			listing.setLatitude(location.getLatitude());
+			listing.setLongitude(location.getLongitude());
+		}
+		
 		listing.setCanMarkAsSpam(true);
 		listing.setCanRate(true);
 //		listing.setCreatedAt(Utility.converDateToString(new Date()));
 		listing.setExpired(false);
-		listing.setExpiresAt(new Date(btnExpiary.getText().toString()));
+//		listing.setExpiresAt(new Date(btnExpiary.getText().toString()));
 		listing.setInBookmars(false);
 		listing.setNumAvailProlongations(0);
 		listing.setOwner(true);
 		listing.setWanted(false);
 		listing.setNumViews(0L);
 		listing.setRating(1.0f);
-		if (image != null) {
-			listing.setImage(image);
-		}
-		if (images != null) {
-//			listing.setImages(images);
-		}
+		if (coverImage != null) {
+			listing.setImage(coverImage);
+		}		
 		return listing;
 	}
 
 	public void onLocationChanged(Location location) {
 		if (location != null) {
-//			edtLatitude.setText(location.getLatitude() + "");
-//			edtLongitude.setText(location.getLongitude() + "");
+			this.location = location;
+			edtLatitude.setText(location.getLatitude()+"");
+			edtLongitude.setText(location.getLongitude()+"");
 		}
 	}
 
@@ -916,20 +1051,11 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     /**
      * Get image
      */
-    private void pickImage() {
-    	// Camera
-    	final List<Intent> cameraIntents = new ArrayList<Intent>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); 
-        cameraIntents.add(captureIntent);
+    private void pickImageFromGallery() {
         // Gallery.
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
-        // Chooser of filesystem options.
-        final Intent chooserIntent = Intent.createChooser(galleryIntent
-        		, getResources().getString(R.string.label_chooser));
-        // Add the camera options.
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
-        startActivityForResult(chooserIntent, REQ_GET_IMAGE);
+        startActivityForResult(galleryIntent, REQ_GET_IMAGE);
     }
     
     /**
@@ -978,6 +1104,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     	}
     }
 
+	/* (non-Javadoc)
+	 * @see android.widget.ViewSwitcher.ViewFactory#makeView()
+	 */
 	@Override
 	public View makeView() {
 		ImageView img = new ImageView(this);
@@ -986,5 +1115,45 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		img.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT));
         return img;
+	}
+	
+	/**
+	 * Store images in cache
+	 * @param bitmap
+	 */
+	private void putImageInCache(Bitmap bitmap){
+		String fileName = "IMG" + System.currentTimeMillis();
+		if (imageList == null) {
+			imageList = new ArrayList<String>();
+		}
+		((VeneficaApplication)getApplication()).getImgManager().putBitmapInCache(fileName, bitmap);
+		imageList.add(fileName);
+	}
+	
+	/**
+	 * get images from cache
+	 * @param fileName
+	 * @return Bitmap
+	 */
+	private Bitmap getImageFromCache(String fileName){
+		return ((VeneficaApplication)getApplication()).getImgManager().getBitmapFromCache(fileName);
+	}
+	
+	/**
+	 * Helper method to upload images
+	 * @param token
+	 * @param listingId
+	 * @param wsAction
+	 * @return PostListingResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	private PostListingResultWrapper uploadImages(String token, long listingId, WSAction wsAction) throws IOException, XmlPullParserException{
+		PostListingResultWrapper result =  new PostListingResultWrapper();
+		
+		for (String imageName : imageList) {			
+			result = wsAction.addImageToAd(token, listingId, getImageFromCache(imageName));		
+		}
+		return result;
 	}
 }
