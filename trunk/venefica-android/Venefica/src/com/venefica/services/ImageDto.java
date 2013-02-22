@@ -47,6 +47,7 @@ public class ImageDto implements KvmSerializable
 
 		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), 0);
 		Log.i("imageDto", "data size - " + (float)data.length() / 1024.0f + " kb");
+		image.recycle();
 	}
 
 	@SuppressLint("NewApi")
@@ -66,6 +67,7 @@ public class ImageDto implements KvmSerializable
 
 		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), 0);
 		Log.i("imageDto", "data size - " + (float)data.length() / 1024.0f + " kb");
+		image.recycle();
 	}
 
 	public Object getProperty(int index)
