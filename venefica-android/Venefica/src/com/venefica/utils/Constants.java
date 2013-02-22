@@ -58,7 +58,8 @@ public class Constants
 	public static final int RESULT_ADD_COMMENT_SUCCESS = 1048;
 	public static final int ERROR_LOW_RESOLUTION_CROP = 1049;
 	public static final int ERROR_SIGN_OUT_APPLICATION = 1050;
-	
+	public static final int RESULT_ADD_IMAGE_TO_AD_SUCCESS = 1051;
+	public static final int ERROR_RESULT_ADD_IMAGE_TO_AD = 1052;
 	//date
 	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -89,8 +90,8 @@ public class Constants
 	public static final int EXTERNAL_IMAGE_CACHE_LIMIT = 20 * 1024  * 1024;// in MB
 	public static final String EXTERNAL_IMAGE_CACHE_NAME = "venefica-cache";
 	public static final CompressFormat IMAGE_COMPRESS_FORMAT = CompressFormat.JPEG;
-	public static final int IMAGE_THUMBNAILS_WIDTH = 100;
-	public static final int IMAGE_THUMBNAILS_HEIGHT = 100;
+	public static final int IMAGE_THUMBNAILS_WIDTH = 200;
+	public static final int IMAGE_THUMBNAILS_HEIGHT = 200;
 
 	//settings to connect to the server
 	public static final boolean USE_SSL_SERVICES_TRANSPORT = false;
@@ -161,6 +162,6 @@ public class Constants
 	public static final int PREF_DEF_VAL_MILES = 50;
 	public static final String PREF_DEF_VAL_MAX_PRICE = "50";
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
-	public static final int PREF_DEF_VAL_CATEGORY = -1;
+	public static final int PREF_DEF_VAL_CATEGORY = -1;	
 	
 }
