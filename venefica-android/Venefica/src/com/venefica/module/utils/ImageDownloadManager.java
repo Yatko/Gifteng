@@ -87,7 +87,7 @@ public class ImageDownloadManager {
 	 * @param url
 	 * @return
 	 */
-	private Bitmap getBitmapFromCache(String url) {  
+	public Bitmap getBitmapFromCache(String url) {  
         return imgCache.getBitmapFromDiskCache(url);
 	}
 
@@ -96,7 +96,7 @@ public class ImageDownloadManager {
 	 * @param url
 	 * @param bitmap
 	 */
-	private synchronized void putBitmapInCache(String url,Bitmap bitmap) {  
+	public synchronized void putBitmapInCache(String url,Bitmap bitmap) {  
 	    imgCache.put(url, bitmap);
 	}  
 
