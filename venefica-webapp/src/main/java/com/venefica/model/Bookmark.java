@@ -5,64 +5,64 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.ForeignKey;
+//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes a bookmark to an ad.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-@SequenceGenerator(name = "bookmark_gen", sequenceName = "bookmark_seq", allocationSize = 1)
+//@SequenceGenerator(name = "bookmark_gen", sequenceName = "bookmark_seq", allocationSize = 1)
 @Table(name = "bookmark")
 public class Bookmark {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookmark_gen")
-	private Long id;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookmark_gen")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "bookmark_user_fk")
+    private User user;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "bookmark_ad_fk")
+    private Ad ad;
 
-	@ManyToOne(optional = false)
-	@ForeignKey(name = "bookmark_user_fk")
-	private User user;
+    // Required for hibernate
+    public Bookmark() {
+    }
 
-	@ManyToOne(optional = false)
-	@ForeignKey(name = "bookmark_ad_fk")
-	private Ad ad;
+    public Bookmark(User user, Ad ad) {
+        this.user = user;
+        this.ad = ad;
+    }
 
-	// Required for hibernate
-	public Bookmark() {
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Bookmark(User user, Ad ad) {
-		this.user = user;
-		this.ad = ad;
-	}
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	@SuppressWarnings("unused")
-	private void setId(Long id) {
-		this.id = id;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public Ad getAd() {
+        return ad;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Ad getAd() {
-		return ad;
-	}
-
-	public void setAd(Ad ad) {
-		this.ad = ad;
-	}	
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
 }
