@@ -33,6 +33,13 @@ public class ImageDto extends DtoBase {
         return image != null ? BASE_PATH + "img" + image.getId().toString() : null;
     }
 
+    /**
+     * Converts Image into ImageDTO. Note that the data and image type are intentionally
+     * not copied as this would create a huge response. Instead use the url field
+     * to get the image.
+     * 
+     * @param image 
+     */
     public ImageDto(Image image) {
         this.id = image.getId();
         this.url = imageUrl(image);
