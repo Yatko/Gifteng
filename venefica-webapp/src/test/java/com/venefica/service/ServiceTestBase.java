@@ -1,16 +1,18 @@
 package com.venefica.service;
 
-import static junit.framework.Assert.assertNotNull;
-
+import com.venefica.auth.Token;
+import com.venefica.auth.TokenAuthorizationInterceptor;
+import com.venefica.auth.TokenEncryptionException;
+import com.venefica.auth.TokenEncryptor;
+import com.venefica.dao.UserDao;
+import com.venefica.model.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
-
+import static junit.framework.Assert.assertNotNull;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -21,147 +23,170 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.venefica.auth.Token;
-import com.venefica.auth.TokenAuthorizationInterceptor;
-import com.venefica.auth.TokenEncryptionException;
-import com.venefica.auth.TokenEncryptor;
-import com.venefica.dao.UserDao;
-import com.venefica.model.User;
-
 /**
  * Utility class to simplify testing.
- * 
+ *
+ * @param <T>
  * @author Sviatoslav Grebenchukov
- * 
+ *
  */
 public abstract class ServiceTestBase<T> {
 
-	public static final Long FirstUserId = new Long(1);
-	public static final Long SecondUserId = new Long(2);
-	public static final Long ThirdUserId = new Long(3);
+    public static final Long FIRST_USER_ID = new Long(1);
+    public static final Long SECOND_USER_ID = new Long(2);
+    public static final Long THIRD_USER_ID = new Long(3);
+    
+    protected final Class<? extends T> serviceClass;
+    protected T client;
+    protected Client cxfClient;
+    
+    @Inject
+    private UserDao userDao;
+    
+    private User firstUser;
+    private String firstUserAuthToken;
+    
+    private User secondUser;
+    private String secondUserAuthToken;
+    
+    private User thirdUser;
+    private String thirdUserAuthToken;
+    
+    @Resource(name = "publishedUrl")
+    private String endpointAddress;
+    
+    @Inject
+    private TokenEncryptor tokenEncryptor;
+    
+    @Inject
+    private PlatformTransactionManager transactionManager;
 
-	protected final Class<? extends T> serviceClass;
-	protected T client;
-	protected Client cxfClient;
+    public ServiceTestBase(Class<? extends T> serviceClass) {
+        this.serviceClass = serviceClass;
+    }
 
-	@Inject
-	private UserDao userDao;
+    @Before
+    @SuppressWarnings("unchecked")
+    public void initClientAndProxy() {
+        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        factory.setAddress(getEndpointAddress());
+        factory.setServiceClass(serviceClass);
 
-	private User firstUser;
-	private String firstUserAuthToken;
+        client = (T) factory.create();
+        cxfClient = ClientProxy.getClient(client);
+    }
 
-	private User secondUser;
-	private String secondUserAuthToken;
+    @Before
+    public void initUsersAndAuthTokens() throws TokenEncryptionException {
+        firstUser = initUser(FIRST_USER_ID);
+        firstUserAuthToken = initAuthToken(FIRST_USER_ID);
+        
+        secondUser = initUser(SECOND_USER_ID);
+        secondUserAuthToken = initAuthToken(SECOND_USER_ID);
+        
+        thirdUser = initUser(THIRD_USER_ID);
+        thirdUserAuthToken = initAuthToken(THIRD_USER_ID);
+    }
+    
+    /**
+     * Returns the endpoint address of the service.
+     *
+     * @return
+     */
+    protected String getEndpointAddress() {
+        return endpointAddress;
+    }
 
-	private User thirdUser;
-	private String thirdUserAuthToken;
+    /**
+     * Returns first-test user.
+     *
+     * @return
+     */
+    protected User getFirstUser() {
+        return firstUser;
+    }
 
-	@Resource(name = "publishedUrl")
-	private String endpointAddress;
+    /**
+     * Returns second-test user .
+     *
+     * @return
+     */
+    protected User getSecondUser() {
+        return secondUser;
+    }
 
-	@Inject
-	private TokenEncryptor tokenEncryptor;
+    /**
+     * Returns third-test user.
+     *
+     * @return
+     */
+    protected User getThirdUser() {
+        return thirdUser;
+    }
 
-	@Inject
-	private PlatformTransactionManager transactionManager;
+    /**
+     * Adds authentication token to request headers of the underlying cxf
+     * client.
+     *
+     * @param token
+     */
+    protected void authenticateClientWithToken(String token) {
+        Map<String, List<?>> headers = new HashMap<String, List<?>>();
+        List<String> tokenHeader = new ArrayList<String>();
+        tokenHeader.add(token);
 
-	public ServiceTestBase(Class<? extends T> serviceClass) {
-		this.serviceClass = serviceClass;
-	}
+        headers.put(TokenAuthorizationInterceptor.AUTH_TOKEN, tokenHeader);
+        cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
+    }
 
-	@Before
-	@SuppressWarnings("unchecked")
-	public void initClientAndProxy() {
-		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-		factory.setAddress(getEndpointAddress());
-		factory.setServiceClass(serviceClass);
+    protected void authenticateClientAsFirstUser() {
+        authenticateClientWithToken(firstUserAuthToken);
+    }
 
-		client = (T) factory.create();
-		cxfClient = ClientProxy.getClient(client);
-	}
+    protected void authenticateClientAsSecondUser() {
+        authenticateClientWithToken(secondUserAuthToken);
+    }
 
-	@Before
-	public void initUsersAnAuthTokens() throws TokenEncryptionException {
-		firstUser = userDao.get(FirstUserId);
-		assertNotNull("First user not found!", firstUser);
+    protected void authenticateClientAsThirdUser() {
+        authenticateClientWithToken(thirdUserAuthToken);
+    }
 
-		firstUserAuthToken = tokenEncryptor.encrypt(new Token(FirstUserId));
+    protected TransactionStatus beginNewTransaction() {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition(
+                TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionManager.getTransaction(def);
+    }
 
-		secondUser = userDao.get(SecondUserId);
-		assertNotNull("Second user not found!", secondUser);
+    protected void commitTransaction(TransactionStatus status) {
+        transactionManager.commit(status);
+    }
 
-		secondUserAuthToken = tokenEncryptor.encrypt(new Token(SecondUserId));
-
-		thirdUser = userDao.get(ThirdUserId);
-		assertNotNull(thirdUser);
-
-		thirdUserAuthToken = tokenEncryptor.encrypt(new Token(ThirdUserId));
-	}
-
-	/**
-	 * Returns the endpoint address of the service.
-	 */
-	protected String getEndpointAddress() {
-		return endpointAddress;
-	}
-
-	/**
-	 * Returns first-test user.
-	 */
-	protected User getFirstUser() {
-		return firstUser;
-	}
-
-	/**
-	 * Returns second-test user .
-	 */
-	protected User getSecondUser() {
-		return secondUser;
-	}
-
-	/**
-	 * Returns third-test user.
-	 */
-	protected User getThirdUser() {
-		return thirdUser;
-	}
-
-	/**
-	 * Adds authentication token to request headers of the underlying cxf client.
-	 */
-	protected void authenticateClientWithToken(String token) {
-		Map<String, List<?>> headers = new HashMap<String, List<?>>();
-		List<String> tokenHeader = new ArrayList<String>();
-		tokenHeader.add(token);
-
-		headers.put(TokenAuthorizationInterceptor.AUTH_TOKEN, tokenHeader);
-		cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
-	}
-
-	protected void authenticateClientAsFirstUser() {
-		authenticateClientWithToken(firstUserAuthToken);
-	}
-
-	protected void authenticateClientAsSecondUser() {
-		authenticateClientWithToken(secondUserAuthToken);
-	}
-
-	protected void authenticateClientAsThirdUser() {
-		authenticateClientWithToken(thirdUserAuthToken);
-	}
-
-	protected TransactionStatus beginNewTransaction() {
-		DefaultTransactionDefinition def = new DefaultTransactionDefinition(
-				TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-		return transactionManager.getTransaction(def);
-	}
-
-	protected void commitTransaction(TransactionStatus status) {
-		transactionManager.commit(status);
-	}
-
-	protected void rollbackTransaction(TransactionStatus status) {
-		transactionManager.rollback(status);
-	}
-
+    protected void rollbackTransaction(TransactionStatus status) {
+        transactionManager.rollback(status);
+    }
+    
+    /**
+     * Retrieves the user on the specified id. Method will fail with assertion
+     * exception if the user cannot be found.
+     * 
+     * @param userId unique identifier
+     * @return resulted user
+     */
+    private User initUser(Long userId) {
+        User user = userDao.get(userId);
+        assertNotNull("User (id = " + userId + ") not found!", user);
+        return user;
+    }
+    
+    /**
+     * Generates an encrypted string for the Token of the given user id.
+     * 
+     * @param userId
+     * @return
+     * @throws TokenEncryptionException 
+     */
+    private String initAuthToken(Long userId) throws TokenEncryptionException {
+        String authToken = tokenEncryptor.encrypt(new Token(userId));
+        return authToken;
+    }
 }
