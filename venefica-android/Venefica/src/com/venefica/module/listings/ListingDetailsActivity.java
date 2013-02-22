@@ -11,8 +11,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -41,7 +41,6 @@ import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.venefica.module.main.R;
-import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.map.ListingOverlayItem;
 import com.venefica.module.map.OnSingleTapListener;
@@ -385,7 +384,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				.loadImage(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
 				, getResources().getDrawable(R.drawable.icon_picture_white));
 		images.clear();
-		images.add(listing.getImage());
+//		images.add(listing.getImage());
+		images.addAll(listing.getImages());
 		galImageAdapter.notifyDataSetChanged();
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
 		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
@@ -464,10 +464,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     public boolean onOptionsItemSelected(MenuItem item) {
     	int itemId = item.getItemId();
 		if (itemId == R.id.menu_listing_update) {
-			Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
+			/*Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
 			intent.putExtra("ad_id", selectedListingId);
 			intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
-			startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
+			startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);*/
 		} else if (itemId == R.id.menu_listing_end) {
 			new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
 		} else if (itemId == R.id.menu_listing_relist) {
