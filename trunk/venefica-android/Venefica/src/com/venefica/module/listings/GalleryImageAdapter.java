@@ -2,28 +2,24 @@ package com.venefica.module.listings;
 
 import java.util.List;
 
-import com.google.android.maps.MapView.LayoutParams;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
-import com.venefica.module.utils.ImageDownloadManager;
-import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Gallery;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ImageView.ScaleType;
-
 /**
- * @author avinash Adapter class for image gallery
+ * @author avinash 
+ * Adapter class for image gallery
  */
 public class GalleryImageAdapter extends BaseAdapter {
 	private Context context;
@@ -35,6 +31,8 @@ public class GalleryImageAdapter extends BaseAdapter {
 	private boolean useDrawables;
 	private static ViewHolder holder;
 	private boolean showThumbnails;
+
+	private int coverPosition = -1;
 
 	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Bitmap> images, boolean useDrawables, boolean showThumbnails) {
 
@@ -88,22 +86,24 @@ public class GalleryImageAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 
-			imageView = new ImageView(this.context);			
-
-			imageView.setPadding(3, 3, 3, 3);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.view_postlisting_image, null);
+			if (showThumbnails) {
+				holder.imageView = (ImageView) convertView.findViewById(R.id.imgPostListingSwitcherImage);				
+			} else {
+				holder.imageView = (ImageView) convertView.findViewById(R.id.imgListingDetailSwitcherImage);
+			}
+			holder.imageView.setVisibility(View.VISIBLE);
+			holder.txtCoverMark = (TextView) convertView.findViewById(R.id.txtPostListingCoverTicker);
 			
-			convertView = imageView;
-
-			holder.imageView = imageView;
-
 			convertView.setTag(holder);
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (useDrawables) {			
-			holder.imageView.setImageBitmap(Utility.resizeBitmap(images.get(position)
-					, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT));			
+			holder.imageView.setImageBitmap(/*Utility.resizeBitmap(*/images.get(position)
+					/*, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT)*/);			
 		} else {			
 			if(this.context instanceof ListingDetailsActivity){
 				((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
@@ -117,14 +117,31 @@ public class GalleryImageAdapter extends BaseAdapter {
 						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
 			}			
 		}	
-		
-		holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		holder.imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+		if (coverPosition == position) {
+			holder.txtCoverMark.setVisibility(View.VISIBLE);
+		}else {
+			holder.txtCoverMark.setVisibility(View.GONE);
+		}
+				
 		return convertView;
 	}
 
 	private static class ViewHolder {
+		TextView txtCoverMark;
 		ImageView imageView;
 	}
-
+	
+	/**
+	 *  set cover image position for post layout gallery
+	 * @param coverPosition
+	 */
+	public void setCoverImagePosition(int coverPosition){
+		this.coverPosition  = coverPosition;
+	}
+	/**
+	 * Reset cover image position for post layout gallery
+	 */
+	public void resetCoverImagePosition(){
+		this.coverPosition  = -1;
+	}
 }
