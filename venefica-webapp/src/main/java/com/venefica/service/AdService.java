@@ -107,11 +107,9 @@ public interface AdService {
 	/**
 	 * Returns the ad by its id.
 	 * 
-	 * @param adId
-	 *            the id of the add
+	 * @param adId the id of the ad
 	 * @return detailed ad object
-	 * @throws AdNotFoundException
-	 *             is thrown when the ad with the specified id not found
+	 * @throws AdNotFoundException is thrown when the ad with the specified id not found
 	 */
 	@WebMethod(operationName = "GetAdById")
 	@WebResult(name = "ad")
