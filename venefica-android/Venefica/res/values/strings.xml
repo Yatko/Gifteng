@@ -79,7 +79,7 @@
     <string name="label_postlisting_latitude">Latitude</string>
     <string name="label_postlisting_longitude">Longitude</string>
     <string name="label_postlisting_expireson">Expiray</string>
-    <string name="label_postlisting_post">Post</string>
+    <string name="label_postlisting_post">List item</string>
     <string name="label_listing_image">Listing photo</string>
     <string name="label_browse_cat_search_listing">Search listings</string>
     <string name="label_search_listing_search">Search</string>
@@ -116,7 +116,8 @@
     <string name="label_miles">miles</string>
     <string name="label_remaining">remaining</string>
     <string name="label_left">left</string>
-    
+    <string name="label_menu_set_default_img">Set as cover image</string>
+    <string name="label_post_listing_cover_img">Cover image</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -177,6 +178,9 @@
 	<string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
 	<string name="msg_postlisting_low_resolution">Cropped image is too small. Please crop with larger size or select large image.</string>
 	<string name="msg_enable_location_provider">To use My location, Please turn on a Location source in Settings. Go to settings now?</string>
+	<string name="msg_postlisting_remove_sel_image">Remove selected image.</string>
+	<string name="msg_postlisting_sel_image">Please select image to post listing.</string>
+	<string name="msg_postlisting_sel_cover_image">Please set cover image.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
