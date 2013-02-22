@@ -14,6 +14,7 @@ import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -30,6 +31,8 @@ import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
+import com.venefica.services.ServicesManager.AddImageToAdResult;
+import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 import com.venefica.module.utils.Utility;;
 
@@ -61,10 +64,12 @@ public class WSAction {
 	private final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
 	private final String WS_METHOD_SEND_MESSAGE = "SendMessage";
 	private final String WS_METHOD_ADD_COMMENT_TO_LISTING = "AddCommentToAd";
+	private static final String WS_METHOD_ADD_IMAGE_TO_AD = "AddImageToAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
+	
 			
 	
 	/**
@@ -989,4 +994,50 @@ public class WSAction {
 		return result;
 	}
 
+	/**
+	 * Method to add image to listing
+	 * @param token
+	 * @param adId
+	 * @param image
+	 * @return PostListingResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public PostListingResultWrapper addImageToAd(String token, long adId, Bitmap image) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_ADD_IMAGE_TO_AD;
+		PostListingResultWrapper result = new PostListingResultWrapper();
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_ADD_IMAGE_TO_AD);
+
+			request.addProperty("adId", adId);
+			request.addProperty("image", new ImageDto(image));
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+			envelope.setAddAdornments(false);
+			envelope.implicitTypes = true;
+			envelope.encodingStyle = SoapEnvelope.ENC;
+			new ImageDto().register(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+
+			result.data = getStringFromProperty(obj, "" + BAD_AD_ID);
+
+			if (result.data.equalsIgnoreCase(BAD_AD_ID + "")) {
+				result.result = Constants.ERROR_RESULT_ADD_IMAGE_TO_AD;
+			} else {
+				result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_ADD_IMAGE_TO_AD;
+		}
+		return result;
+	}
 }
