@@ -1,137 +1,138 @@
 package com.venefica.model;
 
 import java.util.Date;
-
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.ForeignKey;
+//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes a message sent to a user.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-@SequenceGenerator(name = "message_gen", sequenceName = "message_seq", allocationSize = 1)
+//@SequenceGenerator(name = "message_gen", sequenceName = "message_seq", allocationSize = 1)
 @Table(name = "message")
 public class Message {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_gen")
-	private Long id;
 
-	@ManyToOne(optional = false)
-	@ForeignKey(name = "message_to_fk")
-	private User to;
-	
-	private boolean hiddenByRecipient;
-	
-	@ManyToOne(optional = false)
-	@ForeignKey(name = "message_from_fk")
-	private User from;
-	
-	private boolean hiddenBySender;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_gen")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "message_to_fk")
+    private User to;
+    
+    private boolean hiddenByRecipient;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "message_from_fk")
+    private User from;
+    
+    private boolean hiddenBySender;
+    
+    @Basic(optional = false)
+    private String text;
+    @Column(name = "readd")
+    private boolean read;
+    
+    @Basic(optional = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
 
-	@Basic(optional = false)
-	private String text;
-		
-	private boolean read;
-	
-	@Basic(optional = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
+    public Message() {
+        createdAt = new Date();
+        read = false;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
-	
-	public Message() {
-		createdAt = new Date();
-		read = false;
-	}
+    public Message(String text) {
+        this();
+        this.text = text;
+    }
 
-	public Message(String text) {
-		this();
-		this.text = text;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
+    }
 
-	@SuppressWarnings("unused")
-	private void setId(Long id) {
-		this.id = id;
-	}
+    public User getTo() {
+        return to;
+    }
 
-	public User getTo() {
-		return to;
-	}
+    public void setTo(User to) {
+        this.to = to;
+    }
 
-	public void setTo(User to) {
-		this.to = to;
-	}
-	
-	public boolean isHiddenByRecipient() {
-		return hiddenByRecipient;
-	}
+    public boolean isHiddenByRecipient() {
+        return hiddenByRecipient;
+    }
 
-	public void setHiddenByRecipient(boolean hiddenByRecipient) {
-		this.hiddenByRecipient = hiddenByRecipient;
-	}
+    public void setHiddenByRecipient(boolean hiddenByRecipient) {
+        this.hiddenByRecipient = hiddenByRecipient;
+    }
 
-	public User getFrom() {
-		return from;
-	}
+    public User getFrom() {
+        return from;
+    }
 
-	public void setFrom(User from) {
-		this.from = from;
-	}
-	
-	public boolean isHiddenBySender() {
-		return hiddenBySender;
-	}
+    public void setFrom(User from) {
+        this.from = from;
+    }
 
-	public void setHiddenBySender(boolean hiddenBySender) {
-		this.hiddenBySender = hiddenBySender;
-	}
+    public boolean isHiddenBySender() {
+        return hiddenBySender;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setHiddenBySender(boolean hiddenBySender) {
+        this.hiddenBySender = hiddenBySender;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
-			
-	public boolean hasRead() {
-		return read;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setRead(boolean read) {
-		this.read = read;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public boolean hasRead() {
+        return read;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setRead(boolean read) {
+        this.read = read;
+    }
 
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

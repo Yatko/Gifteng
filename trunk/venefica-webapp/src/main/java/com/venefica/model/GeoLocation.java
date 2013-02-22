@@ -4,35 +4,36 @@ import javax.persistence.Embeddable;
 
 /**
  * Describes a geographic location.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Embeddable
 public class GeoLocation {
-	private Long latitude;
-	private Long longitude;
 
-	public GeoLocation() {
-	}
+    private Long latitude;
+    private Long longitude;
 
-	public GeoLocation(Long latitude, Long longitude) {
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
+    public GeoLocation() {
+    }
 
-	public Long getLatitude() {
-		return latitude;
-	}
+    public GeoLocation(Long latitude, Long longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
-	public void setLatitude(Long latitude) {
-		this.latitude = latitude;
-	}
+    public Long getLatitude() {
+        return latitude;
+    }
 
-	public Long getLongitude() {
-		return longitude;
-	}
+    public void setLatitude(Long latitude) {
+        this.latitude = latitude;
+    }
 
-	public void setLongitude(Long longitude) {
-		this.longitude = longitude;
-	}
+    public Long getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Long longitude) {
+        this.longitude = longitude;
+    }
 }

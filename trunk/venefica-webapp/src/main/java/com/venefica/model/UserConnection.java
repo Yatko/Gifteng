@@ -8,121 +8,122 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * Describes a connection between a social network user and a local one.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-@Table(name = "userconnection", uniqueConstraints = @UniqueConstraint(columnNames = { "userId",
-		"providerId", "rank" }))
+@Table(name = "userconnection", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"userId", "providerId", "rank"})
+})
 public class UserConnection {
 
-	// create table UserConnection (userId varchar(255) not null,
-	// providerId varchar(255) not null,
-	// providerUserId varchar(255),
-	// rank int not null,
-	// displayName varchar(255),
-	// profileUrl varchar(512),
-	// imageUrl varchar(512),
-	// accessToken varchar(255) not null,
-	// secret varchar(255),
-	// refreshToken varchar(255),
-	// expireTime bigint,
-	// primary key (userId, providerId, providerUserId));
-	//
-	// create unique index UserConnectionRank on UserConnection(userId, providerId, rank);
+    // create table UserConnection (userId varchar(255) not null,
+    // providerId varchar(255) not null,
+    // providerUserId varchar(255),
+    // rank int not null,
+    // displayName varchar(255),
+    // profileUrl varchar(512),
+    // imageUrl varchar(512),
+    // accessToken varchar(255) not null,
+    // secret varchar(255),
+    // refreshToken varchar(255),
+    // expireTime bigint,
+    // primary key (userId, providerId, providerUserId));
+    //
+    // create unique index UserConnectionRank on UserConnection(userId, providerId, rank);
+    
+    @EmbeddedId
+    private UserConnectionPk id;
+    
+    private int rank;
+    
+    private String displayName;
+    
+    private String profileUrl;
+    
+    private String imageUrl;
+    
+    @Column(nullable = false)
+    private String accessToken;
+    
+    private String secret;
+    
+    private String refreshToken;
+    
+    private Long expireTime;
 
-	@EmbeddedId
-	private UserConnectionPk id;
+    public UserConnection() {
+    }
 
-	private int rank;
+    public UserConnectionPk getId() {
+        return id;
+    }
 
-	private String displayName;
+    public void setId(UserConnectionPk id) {
+        this.id = id;
+    }
 
-	private String profileUrl;
+    public int getRank() {
+        return rank;
+    }
 
-	private String imageUrl;
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 
-	@Column(nullable = false)
-	private String accessToken;
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	private String secret;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	private String refreshToken;
+    public String getProfileUrl() {
+        return profileUrl;
+    }
 
-	private Long expireTime;
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 
-	public UserConnection() {
-	}
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-	public UserConnectionPk getId() {
-		return id;
-	}
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-	public void setId(UserConnectionPk id) {
-		this.id = id;
-	}
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-	public int getRank() {
-		return rank;
-	}
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	public void setRank(int rank) {
-		this.rank = rank;
-	}
+    public String getSecret() {
+        return secret;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-	public String getProfileUrl() {
-		return profileUrl;
-	}
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-	public void setProfileUrl(String profileUrl) {
-		this.profileUrl = profileUrl;
-	}
+    public long getExpireTime() {
+        return expireTime;
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
-
-	public String getSecret() {
-		return secret;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
-
-	public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
-	public long getExpireTime() {
-		return expireTime;
-	}
-
-	public void setExpireTime(long expireTime) {
-		this.expireTime = expireTime;
-	}
+    public void setExpireTime(long expireTime) {
+        this.expireTime = expireTime;
+    }
 }

@@ -5,64 +5,64 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.ForeignKey;
+//import javax.persistence.SequenceGenerator;
 
 /**
  * Represents a spam mark for an ad.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Entity
 @Table(name = "spammark")
-@SequenceGenerator(name = "spammark_gen", sequenceName = "spammark_seq",  allocationSize = 1)
+//@SequenceGenerator(name = "spammark_gen", sequenceName = "spammark_seq",  allocationSize = 1)
 public class SpamMark {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "spammark_gen")
-	private Long id;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "spammark_gen")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @ManyToOne
+    @ForeignKey(name = "spammark_ad_fk")
+    private Ad ad;
+    
+    @ManyToOne
+    @ForeignKey(name = "spammark_witness_fk")
+    private User witness;
 
-	@ManyToOne
-	@ForeignKey(name = "spammark_ad_fk")
-	private Ad ad;
+    // WARNING: required by hibernate
+    public SpamMark() {
+    }
 
-	@ManyToOne
-	@ForeignKey(name = "spammark_witness_fk")
-	private User witness;
+    public SpamMark(Ad ad, User user) {
+        this.ad = ad;
+        this.witness = user;
+    }
 
-	// WARNING: required by hibernate
-	public SpamMark() {
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public SpamMark(Ad ad, User user) {
-		this.ad = ad;
-		this.witness = user;
-	}
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public User getWitness() {
+        return witness;
+    }
 
-	@SuppressWarnings("unused")
-	private void setId(Long id) {
-		this.id = id;
-	}
+    public void setWitness(User witness) {
+        this.witness = witness;
+    }
 
-	public User getWitness() {
-		return witness;
-	}
+    public Ad getAd() {
+        return ad;
+    }
 
-	public void setWitness(User witness) {
-		this.witness = witness;
-	}
-
-	public Ad getAd() {
-		return ad;
-	}
-
-	public void setAd(Ad ad) {
-		this.ad = ad;
-	}
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
 }

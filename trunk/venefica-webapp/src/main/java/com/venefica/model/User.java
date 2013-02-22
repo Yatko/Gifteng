@@ -3,7 +3,6 @@ package com.venefica.model;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,251 +11,253 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.ForeignKey;
+//import javax.persistence.SequenceGenerator;
 
 /**
  * Local user model.
- * 
+ *
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-@SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1)
+//@SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1)
 @Table(name = "local_user")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
-	private Long id;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @Column(unique = true)
+    private String name;
+    @Column(nullable = false)
+    private String password;
+    
+    private String firstName;
+    private String lastName;
+    @Column(unique = true)
+    private String email;
+    private String phoneNumber;
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+    private String country;
+    private String city;
+    private String area;
+    private String zipCode;
+    @Column(nullable = false)
+    private boolean businessAcc;
+    
+    private boolean emailsAllowed;
+    private boolean smsAllowed;
+    private boolean callsAllowed;
+    
+    @OneToMany(mappedBy = "from")
+    @OrderBy
+    private List<Message> sentMessages;
+    
+    @OneToMany(mappedBy = "to")
+    @OrderBy
+    private List<Message> receivedMessages;
+    
+    @ManyToOne
+    @ForeignKey(name = "local_user_avatar_fk")
+    private Image avatar;
 
-	@Column(unique = true)
-	private String name;
-	@Column(nullable = false)
-	private String password;
-	private String firstName;
-	private String lastName;
-	@Column(unique = true)
-	private String email;
-	private String phoneNumber;
-	@Temporal(TemporalType.DATE)
-	private Date dateOfBirth;
-	private String country;
-	private String city;
-	private String area;
-	private String zipCode;
-	@Column(nullable = false)
-	private boolean businessAcc;
+    public User() {
+        businessAcc = false;
+        password = generatePassword();
+        sentMessages = new LinkedList<Message>();
+        receivedMessages = new LinkedList<Message>();
+    }
 
-	private boolean emailsAllowed;
-	private boolean smsAllowed;
-	private boolean callsAllowed;
+    public User(String name, String firstName, String lastName, String email) {
+        this();
+        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 
-	@OneToMany(mappedBy = "from")
-	@OrderBy
-	private List<Message> sentMessages;
+    public boolean isComplete() {
+        return name != null && password != null && firstName != null && lastName != null
+                && email != null && phoneNumber != null && dateOfBirth != null && country != null
+                && city != null;
+        // TODO: place other checks here!!
+    }
 
-	@OneToMany(mappedBy = "to")
-	@OrderBy
-	private List<Message> receivedMessages;
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
-	@ManyToOne
-	@ForeignKey(name = "local_user_avatar_fk")
-	private Image avatar;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof User)) {
+            return false;
+        }
 
-	public User() {
-		businessAcc = false;
-		password = generatePassword();
-		sentMessages = new LinkedList<Message>();
-		receivedMessages = new LinkedList<Message>();
-	}
+        User other = (User) obj;
 
-	public User(String name, String firstName, String lastName, String email) {
-		this();
-		this.name = name;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-	}
+        return id != null && id.equals(other.id);
+    }
 
-	public boolean isComplete() {
-		return name != null && password != null && firstName != null && lastName != null
-				&& email != null && phoneNumber != null && dateOfBirth != null && country != null
-				&& city != null;
-		// TODO: place other checks here!!
-	}
+    private String generatePassword() {
+        return "12345"; // TODO: Generate difficult password!!!
+    }
 
-	public String getFullName() {
-		return firstName + " " + lastName;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof User))
-			return false;
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
+    }
 
-		User other = (User) obj;
+    public String getName() {
+        return name;
+    }
 
-		return id != null && id.equals(other.id);
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	private String generatePassword() {
-		return "12345"; // TODO: Generate difficult password!!!
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@SuppressWarnings("unused")
-	private void setId(Long id) {
-		this.id = id;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public String getArea() {
+        return area;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public void setArea(String area) {
+        this.area = area;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public String getZipCode() {
+        return zipCode;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public boolean isBusinessAcc() {
+        return businessAcc;
+    }
 
-	public String getArea() {
-		return area;
-	}
+    public void setBusinessAcc(boolean businessAcc) {
+        this.businessAcc = businessAcc;
+    }
 
-	public void setArea(String area) {
-		this.area = area;
-	}
+    public Image getAvatar() {
+        return avatar;
+    }
 
-	public String getZipCode() {
-		return zipCode;
-	}
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
 
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
-	}
+    public boolean areEmailsAllowed() {
+        return emailsAllowed;
+    }
 
-	public boolean isBusinessAcc() {
-		return businessAcc;
-	}
+    public void setEmailsAllowed(boolean emailsAllowed) {
+        this.emailsAllowed = emailsAllowed;
+    }
 
-	public void setBusinessAcc(boolean businessAcc) {
-		this.businessAcc = businessAcc;
-	}
+    public boolean areSmsAllowed() {
+        return smsAllowed;
+    }
 
-	public Image getAvatar() {
-		return avatar;
-	}
+    public void setSmsAllowed(boolean smsAllowed) {
+        this.smsAllowed = smsAllowed;
+    }
 
-	public void setAvatar(Image avatar) {
-		this.avatar = avatar;
-	}
+    public boolean areCallsAllowed() {
+        return callsAllowed;
+    }
 
-	public boolean areEmailsAllowed() {
-		return emailsAllowed;
-	}
+    public void setCallsAllowed(boolean callsAllowed) {
+        this.callsAllowed = callsAllowed;
+    }
 
-	public void setEmailsAllowed(boolean emailsAllowed) {
-		this.emailsAllowed = emailsAllowed;
-	}
+    public List<Message> getSentMessages() {
+        return sentMessages;
+    }
 
-	public boolean areSmsAllowed() {
-		return smsAllowed;
-	}
+    public void setSentMessages(List<Message> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
 
-	public void setSmsAllowed(boolean smsAllowed) {
-		this.smsAllowed = smsAllowed;
-	}
+    public List<Message> getReceivedMessages() {
+        return receivedMessages;
+    }
 
-	public boolean areCallsAllowed() {
-		return callsAllowed;
-	}
-
-	public void setCallsAllowed(boolean callsAllowed) {
-		this.callsAllowed = callsAllowed;
-	}
-
-	public List<Message> getSentMessages() {
-		return sentMessages;
-	}
-
-	public void setSentMessages(List<Message> sentMessages) {
-		this.sentMessages = sentMessages;
-	}
-
-	public List<Message> getReceivedMessages() {
-		return receivedMessages;
-	}
-
-	public void setReceivedMessages(List<Message> receivedMessages) {
-		this.receivedMessages = receivedMessages;
-	}
+    public void setReceivedMessages(List<Message> receivedMessages) {
+        this.receivedMessages = receivedMessages;
+    }
 }
