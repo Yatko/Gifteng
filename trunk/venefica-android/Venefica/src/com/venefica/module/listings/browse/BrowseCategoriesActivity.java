@@ -17,14 +17,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
@@ -102,6 +99,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 						editor.putString(Constants.PREF_KEY_CATEGORY, categories.get(index).getName());
 						editor.putLong(Constants.PREF_KEY_CATEGORY_ID, categories.get(index).getId());
 						editor.commit();
+						finish();
 					}	
 				}
 							
