@@ -20,6 +20,14 @@ public interface AdDao {
     Long save(Ad ad);
 
     /**
+     * Returns the ad by its id.
+     *
+     * @param adId the id of the ad
+     * @return ad object
+     */
+    Ad get(Long adId);
+    
+    /**
      * Returns a list of ads with id is less than specified one.
      *
      * @param lastAdId last ad id or -1 to return ads from the beginning
@@ -38,14 +46,6 @@ public interface AdDao {
      * @return list of ads
      */
     List<Ad> get(Long lastAdId, int numberAds, FilterDto filter);
-
-    /**
-     * Returns the ad by its id.
-     *
-     * @param adId the id of the ad
-     * @return ad object
-     */
-    Ad get(Long adId);
 
     /**
      * Set 'expired' flag to true for all expired ads in the database.
