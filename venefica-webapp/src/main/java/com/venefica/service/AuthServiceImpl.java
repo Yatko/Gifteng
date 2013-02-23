@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userDao.findUserByName(name);
 
         if (user == null) {
-            throw new AuthenticationException("Wrong user name or password!");
+            throw new AuthenticationException("Wrong user name!");
         }
 
         try {
