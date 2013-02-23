@@ -25,6 +25,7 @@ public class AdDaoImpl extends DaoBase implements AdDao {
 
     private static final int MAX_ADS_TO_RETURN = 100;
     private static final double METERS_IN_ONE_DEGREE = 111319.9;
+    
     private static final Log log = LogFactory.getLog(AdDaoImpl.class);
 
     @Override
