@@ -1,5 +1,10 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.venefica.config.data;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
@@ -12,38 +17,66 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Test environment to enable full configuration via injection from spring
+ * XML definitions.
+ * 
+ * @author gyuszi
+ */
 @Configuration
 @Profile(value = "test")
 @EnableTransactionManagement
 public class TestDataConfig {
 
-    private static final String ModelPackage = "com.venefica.model";
+    /**
+     * Should be redefined as the standard definition in the hibernate
+     * package seems to be erroneous.
+     */
+    //private static final String HBM2DDL_IMPORT_FILES = "hibernate.hbm2ddl.import.files";
+    
+    private static final String MODEL_PACKAGE = "com.venefica.model";
+    
+    @Inject
+    private String hibernateDialect;
+    @Inject
+    private String hibernateHbmToDdlAuto = "update";
+    @Inject
+    private String hibernateHbmToDdlImportFiles = "import.sql";
+    @Inject
+    private Boolean hibernateShowSQL = true;
+    @Inject
+    private Boolean hibernateFormatSQL = true;
+    @Inject
+    private String jdbcDriver;
+    @Inject
+    private String jdbcUrl;
+    @Inject
+    private String jdbcUsername;
+    @Inject
+    private String jdbcPassword;
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost/venefica-tst");
-        dataSource.setUsername("venefica");
-        dataSource.setPassword("venefica");
+        dataSource.setDriverClassName(jdbcDriver);
+        dataSource.setUrl(jdbcUrl);
+        dataSource.setUsername(jdbcUsername);
+        dataSource.setPassword(jdbcPassword);
         return dataSource;
     }
 
     @Bean
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
-                .scanPackages(ModelPackage);
+                .scanPackages(MODEL_PACKAGE);
 
-        // Support PostGIS functions
-        factoryBuilder.getProperties().put(AvailableSettings.DIALECT,
-                "org.hibernate.spatial.dialect.postgis.PostgisDialect");
+        factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
 
-        // Show SQL
-        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
-        factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, true);
-
-        // Recreate the database
-        factoryBuilder.setProperty(AvailableSettings.HBM2DDL_AUTO, "create");
+        factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
+        factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
+        //factoryBuilder.getProperties().put(HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
+        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);
+        factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, hibernateFormatSQL);
 
         return factoryBuilder.buildSessionFactory();
     }
