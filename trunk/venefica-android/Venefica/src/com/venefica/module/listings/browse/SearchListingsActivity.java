@@ -680,4 +680,9 @@ ISlideMenuCallback, LocationListener{
 			}
 		}		
 	}
+	
+	@Override
+	public void onBackPressed() {
+		
+	}
 }
