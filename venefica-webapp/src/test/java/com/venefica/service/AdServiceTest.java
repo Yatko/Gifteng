@@ -40,7 +40,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
@@ -397,6 +399,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
     @Test
     @Transactional
+    public void transactionalTest() {
+        boolean active = TransactionSynchronizationManager.isActualTransactionActive();
+        assertTrue("Transaction is not active", active);
+    }
+    
+    @Test
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void markAsSpamTest() throws AdNotFoundException {
         authenticateClientAsFirstUser();
         client.markAsSpam(ad.getId());
@@ -411,7 +420,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         client.markAsSpam(ad.getId());
 
         updatedAd = adDao.get(ad.getId());
-        assertTrue("You can mark the ad as spam only one time!",
+        assertTrue("You can mark the ad as spam only once!",
                 updatedAd.getSpamMarks().size() == 1);
     }
 
@@ -422,10 +431,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void unmarkAsSpamTest() throws AdNotFoundException {
         authenticateClientAsFirstUser();
-        client.unmarkAsSapm(ad.getId());
+        client.unmarkAsSpam(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
         assertTrue("Spam mark not removed from the ad!", updatedAd.getSpamMarks().isEmpty());
@@ -434,7 +443,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test(expected = AdNotFoundException.class)
     public void unmarkAsSpamWithInvalidAdIdTest() throws AdNotFoundException {
         authenticateClientAsFirstUser();
-        client.unmarkAsSapm(new Long(-1));
+        client.unmarkAsSpam(new Long(-1));
     }
 
     @Test
@@ -454,9 +463,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void unmarkAsSapemAndRestoreTest() throws AdNotFoundException {
+    public void unmarkAsSpamAndRestoreTest() throws AdNotFoundException {
         authenticateClientAsFirstUser();
-        client.unmarkAsSapm(ad.getId());
+        client.unmarkAsSpam(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
         assertTrue("Ad must not be marked as deleted!", !updatedAd.isDeleted());
@@ -538,26 +547,22 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = InvalidAdStateException.class)
-    public void relistDeletedAdTest() throws AdNotFoundException, AuthorizationException,
-            InvalidAdStateException {
+    public void relistDeletedAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(ad.getId());
         client.relistAd(ad.getId());
     }
 
     @Test
-    public void relistAdTest() throws AdNotFoundException, AuthorizationException,
-            InvalidAdStateException {
+    public void relistAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         makeAdEnded();
 
         authenticateClientAsFirstUser();
         client.relistAd(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
-        assertTrue("Number of available prolongations might have changed!",
-                ad.getNumAvailProlongations() != updatedAd.getNumAvailProlongations());
-        assertTrue("ExpiresAt date must be in future!",
-                (new Date()).before(updatedAd.getExpiresAt()));
+        assertTrue("Number of available prolongations might have changed!", ad.getNumAvailProlongations() != updatedAd.getNumAvailProlongations());
+        assertTrue("ExpiresAt date must be in future!", (new Date()).before(updatedAd.getExpiresAt()));
     }
 
     @Test
@@ -634,12 +639,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     private void makeAdEnded() {
         TransactionStatus status = beginNewTransaction();
         try {
+            Date expiresAt = DateUtils.addDays(new Date(), -10);
+            
             Ad ad_ = adDao.get(FIRST_AD_ID);
             ad_.unmarkAsDeleted();
             ad_.unmarkAsSold();
             ad_.unmarkAsSpam();
             ad_.setExpired(true);
-            Date expiresAt = DateUtils.addDays(new Date(), -10);
             ad_.setExpiresAt(expiresAt);
             commitTransaction(status);
         } catch (Exception e) {
