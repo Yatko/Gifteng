@@ -60,7 +60,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
 
     @Test
     public void addCommentToAdTest() throws AdNotFoundException, CommentValidationException {
-        CommentDto comment = new CommentDto("Test message");
+        CommentDto comment = new CommentDto("This is a test comment");
 
         authenticateClientAsSecondUser();
         Long commentId = client.addCommentToAd(ad.getId(), comment);
@@ -159,7 +159,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     @Test
     public void sendMessageTest() throws UserNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message");
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "This is a test message");
         Long messageId = client.sendMessage(messageDto);
 
         Message message = messageDao.get(messageId);
