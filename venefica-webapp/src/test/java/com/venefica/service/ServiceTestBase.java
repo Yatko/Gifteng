@@ -4,6 +4,7 @@ import com.venefica.auth.Token;
 import com.venefica.auth.TokenAuthorizationInterceptor;
 import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
+import com.venefica.common.DumpErrorTestExecutionListener;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
 import org.junit.Before;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -28,8 +31,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  *
  * @param <T>
  * @author Sviatoslav Grebenchukov
- *
+ * @author gyuszi
  */
+@TestExecutionListeners({DumpErrorTestExecutionListener.class, TransactionalTestExecutionListener.class})
 public abstract class ServiceTestBase<T> {
 
     public static final Long FIRST_USER_ID = new Long(1);
