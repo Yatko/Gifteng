@@ -291,8 +291,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     @Transactional
-    public void relistAd(Long adId) throws AdNotFoundException, AuthorizationException,
-            InvalidAdStateException {
+    public void relistAd(Long adId) throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         Ad ad = adDao.get(adId);
 
         if (ad == null) {
@@ -587,7 +586,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     @Transactional
-    public void unmarkAsSapm(Long adId) throws AdNotFoundException {
+    public void unmarkAsSpam(Long adId) throws AdNotFoundException {
         if (adId == null) {
             throw new NullPointerException("adId is null!");
         }
