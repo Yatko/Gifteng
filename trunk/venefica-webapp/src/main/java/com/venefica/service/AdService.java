@@ -257,7 +257,7 @@ public interface AdService {
 	void markAsSpam(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
 
 	/**
-	 * Unmarks the ad as spam.
+	 * Un-marks the ad as spam.
 	 * 
 	 * @param adId
 	 *            id of the ad
@@ -265,7 +265,7 @@ public interface AdService {
 	 *             if the ad with the specified id not found
 	 */
 	@WebMethod(operationName = "UnmarkAsSpam")
-	void unmarkAsSapm(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
+	void unmarkAsSpam(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
 
 	/**
 	 * Add a rating to the ad.
