@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class CommentDaoImpl extends DaoBase implements CommentDao {
+public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
 
     @Override
     public Long save(Comment comment) {
@@ -21,6 +21,6 @@ public class CommentDaoImpl extends DaoBase implements CommentDao {
 
     @Override
     public Comment get(Long id) {
-        return (Comment) getEntity(Comment.class, id);
+        return getEntity(id);
     }
 }

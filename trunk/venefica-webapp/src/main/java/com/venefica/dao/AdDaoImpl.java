@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class AdDaoImpl extends DaoBase implements AdDao {
+public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
     private static final int MAX_ADS_TO_RETURN = 100;
     private static final double METERS_IN_ONE_DEGREE = 111319.9;
@@ -39,7 +39,7 @@ public class AdDaoImpl extends DaoBase implements AdDao {
             throw new NullPointerException("adId");
         }
 
-        return (Ad) getEntity(Ad.class, adId);
+        return getEntity(adId);
     }
 
     @Override
@@ -50,10 +50,14 @@ public class AdDaoImpl extends DaoBase implements AdDao {
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
         if (lastAdId < 0) {
-            ads = (List<Ad>) createQuery("from Ad a order by a.createdAt desc").setMaxResults(
-                    numberAds).list();
+            ads = createQuery("from Ad a order by a.createdAt desc")
+                    .setMaxResults(numberAds)
+                    .list();
         } else {
-            ads = (List<Ad>) createQuery("from Ad a where a.id < :lastId order by a.createdAt desc").setParameter("lastId", lastAdId).setMaxResults(numberAds).list();
+            ads = createQuery("from Ad a where a.id < :lastId order by a.createdAt desc")
+                    .setParameter("lastId", lastAdId)
+                    .setMaxResults(numberAds)
+                    .list();
         }
         return ads;
     }
@@ -160,7 +164,7 @@ public class AdDaoImpl extends DaoBase implements AdDao {
     @Override
     public void markExpiredAds() {
         // @formatter:off		
-        int numRows = getCurrentSession().createQuery(
+        int numRows = createQuery(
                 "update Ad a set a.expired = true where a.expiresAt < current_date() "
                 + "and a.expired = false").executeUpdate();
         // @formatter:on
@@ -173,8 +177,9 @@ public class AdDaoImpl extends DaoBase implements AdDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<Ad> getByUser(Long userId) {
-        return (List<Ad>) createQuery(
-                "from Ad a where a.creator.id = :userid and a.deleted = false order by a.id desc").setParameter("userid", userId).list();
+        return createQuery("from Ad a where a.creator.id = :userid and a.deleted = false order by a.id desc")
+                .setParameter("userid", userId)
+                .list();
     }
 
     /**

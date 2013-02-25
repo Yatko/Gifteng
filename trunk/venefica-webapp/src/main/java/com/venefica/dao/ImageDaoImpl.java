@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class ImageDaoImpl extends DaoBase implements ImageDao {
+public class ImageDaoImpl extends DaoBase<Image> implements ImageDao {
 
     @Override
     public Long save(Image image) {
@@ -21,7 +21,7 @@ public class ImageDaoImpl extends DaoBase implements ImageDao {
 
     @Override
     public Image get(Long imageId) {
-        return (Image) getEntity(Image.class, imageId);
+        return getEntity(imageId);
     }
 
     @Override

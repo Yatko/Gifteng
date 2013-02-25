@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class RatingDaoImpl extends DaoBase implements RatingDao {
+public class RatingDaoImpl extends DaoBase<Rating> implements RatingDao {
 
     @Override
     public Long save(Rating rating) {
