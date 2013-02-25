@@ -21,15 +21,14 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
 
     @Override
     public MessageDto build() {
+        boolean owner = currentUser != null ? currentUser.equals(model.getFrom()) : false;
+        Image toAvatar = model.getTo().getAvatar();
+        Image fromAvatar = model.getFrom().getAvatar();
+        
         MessageDto messageDto = new MessageDto();
         messageDto.setId(model.getId());
         messageDto.setText(model.getText());
-
-        boolean owner = currentUser != null ? currentUser.equals(model.getFrom()) : false;
         messageDto.setOwner(owner);
-
-        Image toAvatar = model.getTo().getAvatar();
-        Image fromAvatar = model.getFrom().getAvatar();
         messageDto.setToName(model.getTo().getName());
         messageDto.setToFullName(model.getTo().getFullName());
         messageDto.setToAvatarUrl(ImageDto.imageUrl(toAvatar));
