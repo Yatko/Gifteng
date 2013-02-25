@@ -21,7 +21,7 @@
         -->
 
 	<bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
-		<constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
+            <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
 	</bean>
 
 	<bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
