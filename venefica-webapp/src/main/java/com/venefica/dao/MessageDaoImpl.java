@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class MessageDaoImpl extends DaoBase implements MessageDao {
+public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
 
     @Override
     public Long save(Message message) {
@@ -21,7 +21,7 @@ public class MessageDaoImpl extends DaoBase implements MessageDao {
 
     @Override
     public Message get(Long id) {
-        return (Message) getEntity(Message.class, id);
+        return getEntity(id);
     }
 
     @Override

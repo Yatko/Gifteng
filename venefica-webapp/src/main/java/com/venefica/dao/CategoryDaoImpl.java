@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class CategoryDaoImpl extends DaoBase implements CategoryDao {
+public class CategoryDaoImpl extends DaoBase<Category> implements CategoryDao {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -21,12 +21,12 @@ public class CategoryDaoImpl extends DaoBase implements CategoryDao {
         List<Category> categories;
 
         if (parentCategoryId == null) {
-            categories = (List<Category>) getCurrentSession().createQuery(
-                    "from Category c where c.parent is null").list();
+            categories = createQuery("from Category c where c.parent is null")
+                    .list();
         } else {
-            categories = (List<Category>) getCurrentSession()
-                    .createQuery("from Category c where c.parent.id = :parentId")
-                    .setParameter("parentId", parentCategoryId).list();
+            categories = createQuery("from Category c where c.parent.id = :parentId")
+                    .setParameter("parentId", parentCategoryId)
+                    .list();
         }
 
         return categories;
@@ -34,22 +34,21 @@ public class CategoryDaoImpl extends DaoBase implements CategoryDao {
 
     @Override
     public Category findByName(String name) {
-        List<?> categories = getCurrentSession()
-                .createQuery("from Category c where c.name = :name").setParameter("name", name)
+        List<Category> categories = createQuery("from Category c where c.name = :name")
+                .setParameter("name", name)
                 .list();
 
-        return categories.isEmpty() ? null : (Category) categories.get(0);
+        return categories.isEmpty() ? null : categories.get(0);
     }
 
     @Override
     public Long save(Category category) {
-        return (Long) getCurrentSession().save(category);
+        return saveEntity(category);
     }
 
     @Override
     public boolean hasCategories() {
-        Long numCategories = (Long) getCurrentSession()
-                .createQuery("select count(*) from Category").uniqueResult();
+        Long numCategories = (Long) createQuery("select count(*) from Category").uniqueResult();
 
         return numCategories > 0;
     }
@@ -59,6 +58,6 @@ public class CategoryDaoImpl extends DaoBase implements CategoryDao {
         if (categoryId == null) {
             throw new NullPointerException("categoriId");
         }
-        return (Category) getCurrentSession().get(Category.class, categoryId);
+        return getEntity(categoryId);
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class SpamMarkDaoImpl extends DaoBase implements SpamMarkDao {
+public class SpamMarkDaoImpl extends DaoBase<SpamMark> implements SpamMarkDao {
 
     @Override
     public Long save(SpamMark mark) {

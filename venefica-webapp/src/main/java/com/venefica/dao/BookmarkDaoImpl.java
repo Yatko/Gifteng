@@ -15,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class BookmarkDaoImpl extends DaoBase implements BookmarkDao {
+public class BookmarkDaoImpl extends DaoBase<Bookmark> implements BookmarkDao {
 
     @Override
     public Bookmark get(Long bookmarkId) {
-        return (Bookmark) getEntity(Bookmark.class, bookmarkId);
+        return getEntity(bookmarkId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BookmarkDaoImpl extends DaoBase implements BookmarkDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<Ad> getBookmarkedAds(User user) {
-        return (List<Ad>) createQuery(
+        return createQuery(
                 "select b.ad from Bookmark b where b.user = :user order by b.id desc")
                 .setParameter("user", user)
                 .list();
