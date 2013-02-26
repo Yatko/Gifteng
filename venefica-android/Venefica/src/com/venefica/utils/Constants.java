@@ -164,4 +164,6 @@ public class Constants
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
 	public static final int PREF_DEF_VAL_CATEGORY = -1;	
 	
+	public static final int EXPIRE_AD_IN_DAYS = 60;	
+	
 }
