@@ -2,9 +2,11 @@ package com.venefica.module.listings.post;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -453,13 +455,20 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	protected void onResume() {
 		super.onResume();
 		locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+		startCamera();
+	}
+
+	/**
+	 * Start camera
+	 */
+	private void startCamera() {
 		if (Utility.checkCameraHardware(this)) {
 			camera = Utility.getCameraInstance();
 			camPreview.setCamera(camera);
 		}
 	}
 
-	/* Remove the locationlistener updates and release camera when Activity is paused */
+	/* Remove the location listener updates and release camera when Activity is paused */
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -523,12 +532,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				if ( images != null && images.size() > 0) {
 					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
 				}
+				releaseCamera();
 			}else {
 				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_sel_image));
 			}			
 		} else if (view.getId() == R.id.imgBtnPostListingBackToStep1){
 			setStepOneUIVisiblity(ViewGroup.VISIBLE);
 			setStepTwoUIVisiblity(ViewGroup.GONE);
+			startCamera();
 			showStepThreeUI(false);
 			isStepTwo = false;
 		} else if (view.getId() == R.id.imgBtnPostListingDelete){			
@@ -632,31 +643,27 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 					btnSelCategory.setText(categoryName);
 				}
 				
-			} else if (requestCode == REQ_GET_IMAGE){
-				final Bundle extras = data.getExtras();
-	            if (extras != null) {            		
-	    			selectedImageUri = data.getData();
-//	    			performCrop();
-	    			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-	     
-	                Cursor cursor = getContentResolver().query(selectedImageUri,
-	                        filePathColumn, null, null, null);
-	                cursor.moveToFirst();
-	     
-	                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	                String picturePath = cursor.getString(columnIndex);
-	                cursor.close();
+			} else if (requestCode == REQ_GET_IMAGE && data != null){
+				final Bundle extras = data.getExtras();	            
+				try {               
+	                InputStream stream = getContentResolver().openInputStream(
+	                        data.getData());
+	                Bitmap bitmap = BitmapFactory.decodeStream(stream);
 	                if (isFirstImage) {
 	    				images.clear();
 	    			}
-	                Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
 	                putImageInCache(Bitmap.createScaledBitmap(bitmap, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
 	                images.add(Bitmap.createScaledBitmap(bitmap, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
 	    			galImageAdapter.notifyDataSetChanged();
 	    			bitmap.recycle();
 	    			isFirstImage = false;
-	    			gallery.setSelection(images.size()-1);
-	            }			           
+	    			gallery.setSelection(images.size()-1);	                
+	                stream.close();
+	            } catch (FileNotFoundException e) {
+	                e.printStackTrace();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
 	        } else if (requestCode == REQ_IMAGE_CROP) {
 	        	new PostListingTask().execute(ACT_MODE_PROCESS_BITMAP);
 			}
@@ -898,7 +905,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		listing.setCanRate(true);
 //		listing.setCreatedAt(Utility.converDateToString(new Date()));
 		listing.setExpired(false);
-//		listing.setExpiresAt(new Date(btnExpiary.getText().toString()));
+		listing.setExpiresAt(Utility.shiftDate(new Date(), Constants.EXPIRE_AD_IN_DAYS));
 		listing.setInBookmars(false);
 		listing.setNumAvailProlongations(0);
 		listing.setOwner(true);
