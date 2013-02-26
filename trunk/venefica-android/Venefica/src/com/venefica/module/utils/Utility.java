@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.ksoap2.transport.HttpTransportSE;
@@ -455,4 +456,16 @@ public class Utility {
        }
        return c; // returns null if camera is unavailable
    }
+   
+	/**
+	 * Shifts the given Date to the same time at the given day. This uses the
+	 * current time zone.
+	 */
+	public static Date shiftDate(Date date, int daysToShift) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DAY_OF_YEAR, daysToShift);
+		date.setTime(c.getTimeInMillis());
+		return date;
+	}
 }
