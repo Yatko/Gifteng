@@ -9,10 +9,9 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 
+import com.venefica.utils.Base64;
 import com.venefica.utils.BitmapUtil;
 import com.venefica.utils.Constants;
 
@@ -45,7 +44,7 @@ public class ImageDto implements KvmSerializable
 		ByteArrayOutputStream FinalImageByteArray = new ByteArrayOutputStream();
 		image.compress(Bitmap.CompressFormat.JPEG, Constants.JPEG_COMPRESS_QUALITY, FinalImageByteArray);
 
-		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), 0);
+		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), false);
 		Log.i("imageDto", "data size - " + (float)data.length() / 1024.0f + " kb");
 		image.recycle();
 	}
@@ -65,7 +64,7 @@ public class ImageDto implements KvmSerializable
 		ByteArrayOutputStream FinalImageByteArray = new ByteArrayOutputStream();
 		tmpImage.compress(Bitmap.CompressFormat.JPEG, Constants.JPEG_COMPRESS_QUALITY, FinalImageByteArray);
 
-		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), 0);
+		data = Base64.encodeToString(FinalImageByteArray.toByteArray(), false);
 		Log.i("imageDto", "data size - " + (float)data.length() / 1024.0f + " kb");
 		image.recycle();
 	}
