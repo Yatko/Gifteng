@@ -441,8 +441,8 @@ ISlideMenuCallback, LocationListener{
 				message = (String) getResources().getText(R.string.error_get_my_listings);
 			}else if(ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION){
 				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.VISIBLE);
-				((AlertDialog) dialog).getButton(Dialog.BUTTON_POSITIVE)
-					.setText(getResources().getText(R.string.label_btn_yes));
+//				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEUTRAL)
+//					.setText(getResources().getText(R.string.label_btn_yes));
 				message = (String) getResources().getText(R.string.msg_app_exit);
 			}
     		((AlertDialog) dialog).setMessage(message);
