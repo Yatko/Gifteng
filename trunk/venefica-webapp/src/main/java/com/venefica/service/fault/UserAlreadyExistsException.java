@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.ws.WebFault;
 
 @SuppressWarnings("serial")
-@WebFault(name = "UserAlreadyExists")
+@WebFault(name = "UserAlreadyExistsError")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UserAlreadyExistsException extends Exception {
 

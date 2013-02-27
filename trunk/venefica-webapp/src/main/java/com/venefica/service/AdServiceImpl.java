@@ -30,7 +30,7 @@ import com.venefica.service.fault.ImageField;
 import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
-import com.venefica.service.fault.InvalidRateOprationException;
+import com.venefica.service.fault.InvalidRateOperationException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -623,7 +623,7 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public float rateAd(Long adId, int ratingValue) throws AdNotFoundException,
-            InvalidRateOprationException, AlreadyRatedException {
+            InvalidRateOperationException, AlreadyRatedException {
         Ad ad = adDao.get(adId);
         User currentUser = getCurrentUser();
 
@@ -632,11 +632,11 @@ public class AdServiceImpl implements AdService {
         }
 
         if (ad.getCreator().equals(currentUser)) {
-            throw new InvalidRateOprationException("You can't rate your own ads!");
+            throw new InvalidRateOperationException("You can't rate your own ads!");
         }
 
         if (ratingValue != -1 && ratingValue != 1) {
-            throw new InvalidRateOprationException("Only '1' or '-1' can be used as rating values!");
+            throw new InvalidRateOperationException("Only '1' or '-1' can be used as rating values!");
         }
 
         for (Rating r : ad.getRatings()) {

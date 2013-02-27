@@ -12,9 +12,9 @@ import javax.xml.ws.WebFault;
 @WebFault(name = "InvalidRateOperationError")
 @XmlAccessorType(XmlAccessType.FIELD)
 @SuppressWarnings("serial")
-public class InvalidRateOprationException extends Exception {
+public class InvalidRateOperationException extends Exception {
 
-    public InvalidRateOprationException(String message) {
+    public InvalidRateOperationException(String message) {
         super(message);
     }
 }
