@@ -58,8 +58,7 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
             Map<String, ?> headers = (Map<String, ?>) msg.get(Message.PROTOCOL_HEADERS);
 
             if (headers == null || !headers.containsKey(AUTH_TOKEN)) {
-                throw new AuthenticationException(
-                        "Unauthorized request arrived (no token provided)!");
+                throw new AuthenticationException("Unauthorized request arrived (no token provided)!");
             }
 
             List<String> authTokenHeader = (List<String>) headers.get(AUTH_TOKEN);
