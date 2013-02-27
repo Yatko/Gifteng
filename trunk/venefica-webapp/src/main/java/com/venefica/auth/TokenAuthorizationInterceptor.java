@@ -21,6 +21,9 @@ import org.apache.cxf.ws.addressing.EndpointReferenceType;
 /**
  * Custom token authorization intercepter. Used for authentication in JAX-WS web
  * services.
+ * 
+ * Read also:
+ * http://cxf.apache.org/docs/ws-security.html#WS-Security-UsernameTokenAuthentication
  *
  * @author Sviatoslav Grebenchukov
  */
