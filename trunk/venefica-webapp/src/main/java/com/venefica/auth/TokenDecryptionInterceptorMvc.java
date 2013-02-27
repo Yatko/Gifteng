@@ -14,7 +14,7 @@ public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
 
     public final static String AUTH_TOKEN = "AuthToken";
     
-    protected final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
+    protected final Log log = LogFactory.getLog(TokenDecryptionInterceptorMvc.class);
     
     @Inject
     private ThreadSecurityContextHolder securityContextHolder;
