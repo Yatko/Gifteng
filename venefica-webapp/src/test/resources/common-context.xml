@@ -12,66 +12,66 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
                 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
-	<context:annotation-config />
-        <context:component-scan base-package="com.venefica.dao" />
+    <context:annotation-config />
+    <context:component-scan base-package="com.venefica.dao" />
 
-        <!--
-        NOTE: unexistent resource
-	<import resource="classpath:META-INF/cxf/cxf.xml" />
-        -->
+    <!-- Resource can be found in library: cxf-rt-core-2.6.0.jar -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <!-- Resource can be found in library: cxf-rt-transports-http-2.6.0.jar -->
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-	<bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
-            <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
-	</bean>
+    <bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
+        <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
+    </bean>
 
-	<bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
-	<bean id="securityContextHolder" class="com.venefica.auth.ThreadSecurityContextHolder" />
-	<bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
+    <bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
+    <bean id="securityContextHolder" class="com.venefica.auth.ThreadSecurityContextHolder" />
+    <bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
 
-	<bean id="baseUrl" class="java.lang.String">
-            <constructor-arg value="http://localhost:8082/" />
-	</bean>
+    <bean id="baseUrl" class="java.lang.String">
+        <constructor-arg value="http://localhost:8082/" />
+    </bean>
 
 
 
-        <bean id="hibernateDialect" class="java.lang.String">
-            <constructor-arg value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
-	</bean>
-        <bean id="jdbcDriver" class="java.lang.String">
-            <constructor-arg value="com.mysql.jdbc.Driver" />
-	</bean>
-        <bean id="jdbcUrl" class="java.lang.String">
-            <constructor-arg value="jdbc:mysql://localhost:3306/venefica" />
-	</bean>
-        <bean id="jdbcUsername" class="java.lang.String">
-            <constructor-arg value="root" />
-	</bean>
-        <bean id="jdbcPassword" class="java.lang.String">
-            <constructor-arg value="" />
-	</bean>
-        <bean id="hibernateHbmToDdlAuto" class="java.lang.String">
-            <constructor-arg value="create" />
-            <!--<constructor-arg value="update" />-->
-	</bean>
-        <bean id="hibernateHbmToDdlImportFiles" class="java.lang.String">
-            <constructor-arg value="sql/import_mysql.sql" />
-	</bean>
-        <bean id="hibernateShowSQL" class="java.lang.Boolean">
-            <constructor-arg value="true" />
-	</bean>
-        <bean id="hibernateFormatSQL" class="java.lang.Boolean">
-            <constructor-arg value="true" />
-	</bean>
+    <bean id="hibernateDialect" class="java.lang.String">
+        <constructor-arg value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
+    </bean>
+    <bean id="jdbcDriver" class="java.lang.String">
+        <constructor-arg value="com.mysql.jdbc.Driver" />
+    </bean>
+    <bean id="jdbcUrl" class="java.lang.String">
+        <constructor-arg value="jdbc:mysql://localhost:3306/venefica" />
+    </bean>
+    <bean id="jdbcUsername" class="java.lang.String">
+        <constructor-arg value="root" />
+    </bean>
+    <bean id="jdbcPassword" class="java.lang.String">
+        <constructor-arg value="" />
+    </bean>
+    <bean id="hibernateHbmToDdlAuto" class="java.lang.String">
+        <constructor-arg value="create" />
+        <!--<constructor-arg value="update" />-->
+    </bean>
+    <bean id="hibernateHbmToDdlImportFiles" class="java.lang.String">
+        <constructor-arg value="sql/import_mysql.sql" />
+    </bean>
+    <bean id="hibernateShowSQL" class="java.lang.Boolean">
+        <constructor-arg value="true" />
+    </bean>
+    <bean id="hibernateFormatSQL" class="java.lang.Boolean">
+        <constructor-arg value="true" />
+    </bean>
 
-	<!-- import java-based configurations -->
-        <bean class="com.venefica.config.data.TestDataConfig" />
-        
-        
+    <!-- import java-based configurations -->
+    <bean class="com.venefica.config.data.TestDataConfig" />
 
-	<cxf:bus>
-            <cxf:inInterceptors>
-                <ref bean="securityContextCleaner" />
-            </cxf:inInterceptors>
-	</cxf:bus>
+
+
+    <cxf:bus>
+        <cxf:inInterceptors>
+            <ref bean="securityContextCleaner" />
+        </cxf:inInterceptors>
+    </cxf:bus>
 
 </beans>
