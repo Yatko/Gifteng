@@ -57,21 +57,38 @@
         <constructor-arg value="sql/import_mysql.sql" />
     </bean>
     <bean id="hibernateShowSQL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
+        <constructor-arg value="false" />
     </bean>
     <bean id="hibernateFormatSQL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
+        <constructor-arg value="false" />
     </bean>
 
     <!-- import java-based configurations -->
     <bean class="com.venefica.config.data.TestDataConfig" />
 
 
+    
+    <bean id="abstractLoggingInterceptor" abstract="true">
+        <property name="prettyLogging" value="true"/>
+    </bean>
+    <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor"/>
+    <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" parent="abstractLoggingInterceptor"/>
+    
 
     <cxf:bus>
         <cxf:inInterceptors>
+            <ref bean="loggingInInterceptor"/>
             <ref bean="securityContextCleaner" />
         </cxf:inInterceptors>
+        <cxf:inFaultInterceptors>
+            <ref bean="loggingInInterceptor"/>
+        </cxf:inFaultInterceptors>
+        <cxf:outInterceptors>
+            <ref bean="loggingOutInterceptor"/>
+        </cxf:outInterceptors>
+        <cxf:outFaultInterceptors>
+            <ref bean="loggingOutInterceptor"/>
+        </cxf:outFaultInterceptors>
     </cxf:bus>
 
 </beans>
