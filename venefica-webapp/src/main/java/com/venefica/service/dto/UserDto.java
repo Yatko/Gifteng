@@ -39,6 +39,8 @@ public class UserDto extends DtoBase {
     private boolean businessAcc;
     // in, out
     private ImageDto avatar;
+    // out
+    private Date joinedAt;
 
     // TODO: add necessary fields
     // Required for JAX-WS
@@ -64,6 +66,7 @@ public class UserDto extends DtoBase {
         area = user.getArea();
         zipCode = user.getZipCode();
         businessAcc = user.isBusinessAcc();
+        joinedAt = user.getJoinedAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
     }
 
@@ -84,6 +87,7 @@ public class UserDto extends DtoBase {
         user.setArea(area);
         user.setZipCode(zipCode);
         user.setBusinessAcc(businessAcc);
+        //user.setJoinedAt(joinedAt);
 
         // Handle avatar image
         if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
@@ -202,4 +206,12 @@ public class UserDto extends DtoBase {
     public void setAvatar(ImageDto avatar) {
         this.avatar = avatar;
     }
+
+    public Date getJoinedAt() {
+        return joinedAt;
+    }
+
+    //public void setJoinedAt(Date joinedAt) {
+    //    this.joinedAt = joinedAt;
+    //}
 }
