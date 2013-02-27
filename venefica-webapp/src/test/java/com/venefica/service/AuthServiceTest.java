@@ -43,13 +43,13 @@ public class AuthServiceTest extends ServiceTestBase<AuthService> {
     }
 
     @Test
-    public void correctCredentiansTest() throws AuthenticationException {
+    public void correctCredentialsTest() throws AuthenticationException {
         String token = client.authenticate(FIRST_USER_NAME, RIGHT_PASSWORD);
         assertNotNull("Token is null!", token);
     }
 
     @Test(expected = AuthenticationException.class)
-    public void incorrectCredentiansTest() throws AuthenticationException {
+    public void incorrectCredentialsTest() throws AuthenticationException {
         client.authenticate(FIRST_USER_NAME, WRONG_PASSWORD);
     }
 

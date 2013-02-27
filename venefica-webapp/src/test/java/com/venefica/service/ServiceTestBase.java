@@ -135,11 +135,12 @@ public abstract class ServiceTestBase<T> {
      * @param token
      */
     protected void authenticateClientWithToken(String token) {
-        Map<String, List<?>> headers = new HashMap<String, List<?>>();
         List<String> tokenHeader = new ArrayList<String>();
         tokenHeader.add(token);
 
+        Map<String, List<?>> headers = new HashMap<String, List<?>>();
         headers.put(TokenAuthorizationInterceptor.AUTH_TOKEN, tokenHeader);
+        
         cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
     }
 
@@ -156,8 +157,7 @@ public abstract class ServiceTestBase<T> {
     }
 
     protected TransactionStatus beginNewTransaction() {
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition(
-                TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         return transactionManager.getTransaction(def);
     }
 

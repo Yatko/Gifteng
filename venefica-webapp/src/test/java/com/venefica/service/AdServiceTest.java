@@ -22,7 +22,7 @@ import com.venefica.service.fault.CategoryNotFoundException;
 import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
-import com.venefica.service.fault.InvalidRateOprationException;
+import com.venefica.service.fault.InvalidRateOperationException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
@@ -578,28 +578,28 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void rateUnexistingAd() throws AdNotFoundException, InvalidRateOprationException,
+    public void rateUnexistingAd() throws AdNotFoundException, InvalidRateOperationException,
             AlreadyRatedException {
         authenticateClientAsFirstUser();
         client.rateAd(new Long(-1), 0);
     }
 
-    @Test(expected = InvalidRateOprationException.class)
-    public void rateAdByCreatorTest() throws AdNotFoundException, InvalidRateOprationException,
+    @Test(expected = InvalidRateOperationException.class)
+    public void rateAdByCreatorTest() throws AdNotFoundException, InvalidRateOperationException,
             AlreadyRatedException {
         authenticateClientAsFirstUser();
         client.rateAd(ad.getId(), 1);
     }
 
-    @Test(expected = InvalidRateOprationException.class)
+    @Test(expected = InvalidRateOperationException.class)
     public void rateAdWithInvalidValueTest() throws AdNotFoundException,
-            InvalidRateOprationException, AlreadyRatedException {
+            InvalidRateOperationException, AlreadyRatedException {
         authenticateClientAsSecondUser();
         client.rateAd(ad.getId(), -10);
     }
 
     @Test
-    public void rateAdTest() throws AdNotFoundException, InvalidRateOprationException,
+    public void rateAdTest() throws AdNotFoundException, InvalidRateOperationException,
             AlreadyRatedException {
         authenticateClientAsSecondUser();
         client.rateAd(ad.getId(), 1);
