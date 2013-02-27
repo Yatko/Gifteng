@@ -5,7 +5,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 public class DtoBase {
 
     @SuppressWarnings("unused")
-    @XmlAttribute(name = "type", namespace = "http://www.w3.org/2001/XMLSchema-instance")
+    //NOTE: why was this namespace set?
+    //@XmlAttribute(name = "type", namespace = "http://www.w3.org/2001/XMLSchema-instance")
+    @XmlAttribute(name = "type")
     private String type;
 
     public DtoBase() {
