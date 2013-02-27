@@ -11,19 +11,18 @@
                 http://www.springframework.org/schema/context
                 http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-	<import resource="common-context.xml" />
+    <import resource="common-context.xml" />
 
-	<bean id="userManagementService" class="com.venefica.service.UserManagementServiceImpl" />
+    <bean id="userManagementService" class="com.venefica.service.UserManagementServiceImpl" />
 
-	<bean id="publishedUrl" class="java.lang.String">
-		<constructor-arg value="#{baseUrl + 'UserManagementService'}" />
-	</bean>
+    <bean id="publishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'UserManagementService'}" />
+    </bean>
 
-	<jaxws:endpoint id="userManagementServiceEndpoint"
-		implementor="#userManagementService" address="#publishedUrl">
-		<jaxws:inInterceptors>
-			<ref bean="tokenAuthorizationInterceptor" />
-		</jaxws:inInterceptors>
-	</jaxws:endpoint>
+    <jaxws:endpoint id="userManagementServiceEndpoint" implementor="#userManagementService" address="#publishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
 
 </beans>
