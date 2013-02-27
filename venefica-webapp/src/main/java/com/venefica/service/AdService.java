@@ -12,7 +12,7 @@ import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
-import com.venefica.service.fault.InvalidRateOprationException;
+import com.venefica.service.fault.InvalidRateOperationException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -285,5 +285,5 @@ public interface AdService {
 	@WebMethod(operationName = "RateAd")
 	@WebResult(name = "rating")
 	float rateAd(@WebParam(name = "adId") Long adId, @WebParam(name = "ratingValue") int ratingValue)
-			throws AdNotFoundException, InvalidRateOprationException, AlreadyRatedException;
+			throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException;
 }
