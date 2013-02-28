@@ -144,9 +144,9 @@ public class Utility {
 	/**
 	 * Convert date to string 
 	 * @param date
-	 * @return
+	 * @return date String MM/dd/yyyy HH:mm  
 	 */
-	public static String convertDateToString(Date date){
+	public static String convertDateTimeToString(Date date){
 		return Constants.dateTimeFormat.format(date);
 	}
 	/**
