@@ -388,7 +388,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		images.addAll(listing.getImages());
 		galImageAdapter.notifyDataSetChanged();
 		txtUserName.setText(listing.getCreator().getFirstName()+" "+(listing.getCreator().getLastName()));
-		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString()/*listing.getCreator()*/);
+		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString());
+		txtMemberInfo.append(" ");
+		txtMemberInfo.append(Utility.convertShortDateToString(listing.getCreator().getJoinedAt()));
 		txtAddress.setText(listing.getCreator().getCity() +", "+listing.getCreator().getCounty());
 		
 		//set listing details
