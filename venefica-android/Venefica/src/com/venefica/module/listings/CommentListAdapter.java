@@ -88,7 +88,7 @@ public class CommentListAdapter extends BaseAdapter implements OnClickListener {
 		holder.txtComment.setText(comments.get(position).getText());
 		holder.txtName.setText(comments.get(position).getPublisherFullName());
 		if (comments.get(position).getCreatedAt() != null) {
-			holder.txtTime.setText(Utility.convertDateToString(comments.get(position).getCreatedAt()));
+			holder.txtTime.setText(Utility.convertDateTimeToString(comments.get(position).getCreatedAt()));
 		}		
 		((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
 				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX +comments.get(position)
