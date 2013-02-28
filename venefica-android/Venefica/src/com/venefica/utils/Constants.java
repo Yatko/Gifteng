@@ -61,8 +61,9 @@ public class Constants
 	public static final int RESULT_ADD_IMAGE_TO_AD_SUCCESS = 1051;
 	public static final int ERROR_RESULT_ADD_IMAGE_TO_AD = 1052;
 	//date
-	public static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-	public static final DateFormat dateTimeFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+	public static final DateFormat dateFormat = DateFormat.getDateInstance();
+	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
+	public static final DateFormat timeFormat = DateFormat.getTimeInstance();
 	
 	//Location settings
 	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
