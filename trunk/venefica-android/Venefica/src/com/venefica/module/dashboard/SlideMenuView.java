@@ -7,6 +7,7 @@ import org.xmlpull.v1.XmlPullParser;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.user.UserDto;
+import com.venefica.module.utils.Utility;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -275,7 +276,9 @@ public class SlideMenuView extends LinearLayout {
 			txtMemberInfo
 					.setText(getResources().getText(
 							R.string.label_detail_listing_member_since)
-							.toString()/*listing.getCreator()*/);
+							.toString());
+			txtMemberInfo.append(" ");
+			txtMemberInfo.append(Utility.convertShortDateToString(user.getJoinedAt()));
 			txtAddress.setText(user.getCity() + ", " + user.getCounty());
 		}
 	}
