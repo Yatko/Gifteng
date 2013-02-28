@@ -28,9 +28,9 @@ public class UserDto implements KvmSerializable
 	private String city = "";
 	private String area = "";
 	private ImageDto avatar;
-
+	private Date joinedAt;
 	//no services
-	public boolean useMiles = true;
+//	public boolean useMiles = true;
 
 	public Object getProperty(int index)
 	{
@@ -59,9 +59,11 @@ public class UserDto implements KvmSerializable
 		case 9:
 			return city;
 		case 10:
-			return area;
+			return area;		
 		case 11:
 			return avatar;
+		case 12:
+			return joinedAt.getTime();
 		}
 
 		return null;
@@ -69,7 +71,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 12;
+		return 13;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -130,12 +132,16 @@ public class UserDto implements KvmSerializable
 			info.name = "area";
 			info.type = String.class;
 			break;
-
+			
 		case 11:
 			info.name = "avatar";
 			info.type = ImageDto.class;
 			break;
-
+			
+		case 12:
+			info.name = "joinedAt";
+			info.type = Long.class;
+			break;
 		default:
 			break;
 		}
@@ -177,9 +183,12 @@ public class UserDto implements KvmSerializable
 			break;
 		case 10:
 			area = String.valueOf(value);
-			break;
+			break;		
 		case 11:
 			avatar = (ImageDto)value;
+			break;
+		case 12:
+			joinedAt = new Date(Long.parseLong(value.toString()));
 			break;
 		}
 	}
@@ -367,14 +376,28 @@ public class UserDto implements KvmSerializable
 	/**
 	 * @return the useMiles
 	 */
-	public boolean isUseMiles() {
+	/*public boolean isUseMiles() {
 		return useMiles;
-	}
+	}*/
 
 	/**
 	 * @param useMiles the useMiles to set
 	 */
-	public void setUseMiles(boolean useMiles) {
+	/*public void setUseMiles(boolean useMiles) {
 		this.useMiles = useMiles;
+	}*/
+
+	/**
+	 * @return the joinedAt
+	 */
+	public Date getJoinedAt() {
+		return joinedAt;
+	}
+
+	/**
+	 * @param joinedAt the joinedAt to set
+	 */
+	public void setJoinedAt(Date joinedAt) {
+		this.joinedAt = joinedAt;
 	}
 }
