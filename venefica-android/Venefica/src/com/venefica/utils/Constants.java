@@ -60,6 +60,7 @@ public class Constants
 	public static final int ERROR_SIGN_OUT_APPLICATION = 1050;
 	public static final int RESULT_ADD_IMAGE_TO_AD_SUCCESS = 1051;
 	public static final int ERROR_RESULT_ADD_IMAGE_TO_AD = 1052;
+	public static final int ERROR_START_CAMERA = 1053;
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -161,7 +162,7 @@ public class Constants
 	
 	//Filter values
 	public static final int PREF_DEF_VAL_MILES = 50;
-	public static final String PREF_DEF_VAL_MAX_PRICE = "50";
+	public static final String PREF_DEF_VAL_MAX_PRICE = "5000000";
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
 	public static final int PREF_DEF_VAL_CATEGORY = -1;	
 	
