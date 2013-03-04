@@ -29,6 +29,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
+        	setDisplayOrientation(mCamera, 90);
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
@@ -62,7 +63,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         parameters.setPictureFormat(PixelFormat.JPEG); 
         parameters.set("orientation", "portrait");
         parameters.setRotation(90);
-        setDisplayOrientation(mCamera, 90);
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+//        setDisplayOrientation(mCamera, 90);
         mCamera.setParameters(parameters);
         // start preview with new settings
         try {
