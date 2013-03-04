@@ -22,7 +22,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -165,6 +164,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	 */
 	private ArrayList<String> imageList;
 	/**
+	 * flag processing (working) indicates post listing process is running
+	 */
+	private boolean uploadingData = false;
+	/**
 	 * Field validator
 	 */
 	private InputFieldValidator vaildator;
@@ -213,19 +216,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			txtLatitude, txtLongitude;*/
 	private Button btnSelCategory;
 	private Spinner spinCurrency;
-	/**
-	 * Gallery to images
-	 *//*
-	private Gallery gallery;
-	*//**
-	 * Images
-	 *//*
-	private List<Bitmap> drawables;
-	*//**
-	 * Adapter for gallery
-	 *//*
-	private GalleryImageAdapter galImageAdapter;
-	*/
+	
 	private Uri selectedImageUri;
 
 	/**
@@ -284,8 +275,6 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		setContentView(R.layout.activity_post_listing);
 		//set mode
 		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
-		//location manager 
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// layout inflater
 		infleter = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		// main layout
@@ -367,31 +356,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		edtLatitude =  (EditText) layDetails.findViewById(R.id.edtActPostListingLatitude);
 		edtLongitude = (EditText) layDetails.findViewById(R.id.edtActPostListingLongitude);
 		btnListItem = (Button) layDetails.findViewById(R.id.btnActPostListingPost);
-		btnListItem.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				if (validateFields()) {
-					if(WSAction.isNetworkConnected(PostListingActivity.this)){
-						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
-							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
-						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
-							new PostListingTask().execute(ACT_MODE_POST_LISTING);
-						}
-					} else {
-						ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-						showDialog(D_ERROR);
-					}
-				}
-			}
-		});
+		btnListItem.setOnClickListener(this);
 		btnSelCategory = (Button) layDetails.findViewById(R.id.btnActPostListingCategory);
-		btnSelCategory.setOnClickListener(new View.OnClickListener() {			
-			public void onClick(View v) {
-				Intent selCatIntent = new Intent(PostListingActivity.this, BrowseCategoriesActivity.class);
-				selCatIntent.putExtra("act_mode", BrowseCategoriesActivity.ACT_MODE_GET_CATEGORY);
-				startActivityForResult(selCatIntent, REQ_SELECT_CATEGORY);
-			}
-		});
+		btnSelCategory.setOnClickListener(this);
 		/*
 		// Map
 		mapView = (MapView) findViewById(R.id.mapviewActPostListingMapLocate);
@@ -434,6 +401,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	@Override
 	protected void onStart() {
 		super.onStart();
+		// get locaton service
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 		criteria.setCostAllowed(false);
@@ -462,9 +431,15 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	 * Start camera
 	 */
 	private void startCamera() {
-		if (Utility.checkCameraHardware(this)) {
-			camera = Utility.getCameraInstance();
-			camPreview.setCamera(camera);
+		try {
+			if (Utility.checkCameraHardware(this)) {
+				camera = Utility.getCameraInstance();
+				camPreview.setCamera(camera);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			ERROR_CODE = Constants.ERROR_START_CAMERA;
+	    	showDialog(D_ERROR);
 		}
 	}
 
@@ -472,10 +447,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	@Override
 	protected void onPause() {
 		super.onPause();
-		locationManager.removeUpdates(this);
 		releaseCamera();
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		locationManager.removeUpdates(this);
+	}
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
@@ -485,12 +464,17 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			if (isStepThree) {
-				showStepThreeUI(false);
-				isStepThree = false;
-			}else {
-				finish();
-			}			
+			if (!uploadingData) {
+				if (isStepThree) {
+					showStepThreeUI(false);
+					isStepThree = false;
+				} else {
+					coverImage = null;
+					finish();
+				}
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			}	
 		}
 		return true;
 	}
@@ -532,14 +516,18 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				if ( images != null && images.size() > 0) {
 					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
 				}
-				releaseCamera();
+				if (camera != null) {
+					camera.stopPreview();
+				}
 			}else {
 				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_sel_image));
 			}			
 		} else if (view.getId() == R.id.imgBtnPostListingBackToStep1){
 			setStepOneUIVisiblity(ViewGroup.VISIBLE);
 			setStepTwoUIVisiblity(ViewGroup.GONE);
-			startCamera();
+			if (camera != null) {
+				camera.startPreview();
+			}
 			showStepThreeUI(false);
 			isStepTwo = false;
 		} else if (view.getId() == R.id.imgBtnPostListingDelete){			
@@ -557,6 +545,31 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				showStepThreeUI(true);
 				((VeneficaApplication)getApplication()).getImgManager().flushCache();
 			}			
+		} else if (view.getId() == R.id.btnActPostListingPost) {
+			if (!uploadingData) {
+				if (validateFields()) {
+					if(WSAction.isNetworkConnected(PostListingActivity.this)){
+						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
+							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
+						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+							new PostListingTask().execute(ACT_MODE_POST_LISTING);
+						}
+					} else {
+						ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+						showDialog(D_ERROR);
+					}
+				}
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			}
+		} else if (view.getId() == R.id.btnActPostListingCategory) {
+			if (!uploadingData) {
+				Intent selCatIntent = new Intent(PostListingActivity.this, BrowseCategoriesActivity.class);
+				selCatIntent.putExtra("act_mode", BrowseCategoriesActivity.ACT_MODE_GET_CATEGORY);
+				startActivityForResult(selCatIntent, REQ_SELECT_CATEGORY);
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			}		
 		}
 	}
 	/**
@@ -603,12 +616,17 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
     }
 	@Override
 	public void onBackPressed() {
-		if (isStepThree) {
-			showStepThreeUI(false);
-			isStepThree = false;
-		}else {
-			super.onBackPressed();
-		}		
+		if (!uploadingData) {
+			if (isStepThree) {
+				showStepThreeUI(false);
+				isStepThree = false;
+			}else {
+				coverImage = null;
+				super.onBackPressed();
+			}
+		} else {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+		}				
 	}
 	/**
 	 * Handle picture callback for camera
@@ -644,11 +662,14 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				}
 				
 			} else if (requestCode == REQ_GET_IMAGE && data != null){
-				final Bundle extras = data.getExtras();	            
-				try {               
+			try {               
 	                InputStream stream = getContentResolver().openInputStream(
 	                        data.getData());
-	                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+	                Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
+	        	    BitmapFactory.Options opts = new BitmapFactory.Options();
+	        	    opts.inInputShareable = false;
+	        	    opts.inSampleSize = 2;
+	                Bitmap bitmap = BitmapFactory.decodeStream(stream, rect, opts);
 	                if (isFirstImage) {
 	    				images.clear();
 	    			}
@@ -801,6 +822,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				message = (String) getResources().getText(R.string.msg_postlisting_low_resolution);
 			}else if (ERROR_CODE == ERROR_REMOVE_SEL_IMAGE) {
 				message = (String) getResources().getText(R.string.msg_postlisting_remove_sel_image);
+			}else if (ERROR_CODE == Constants.ERROR_START_CAMERA) {
+				message = (String) getResources().getText(R.string.error_start_camera);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -814,8 +837,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-//			showDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(true);
+			uploadingData = true;
 		}
 
 		@Override
@@ -851,8 +874,8 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		@Override
 		protected void onPostExecute(PostListingResultWrapper result) {
 			super.onPostExecute(result);
-//			dismissDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(false);
+			uploadingData = false;
 			if (isLowResolution && result.image == null) {
 				ERROR_CODE = Constants.ERROR_LOW_RESOLUTION_CROP;
 				showDialog(D_ERROR);
@@ -872,6 +895,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				setListingDetails(result.listing);
 			}else if (result.result ==  Constants.RESULT_POST_LISTING_SUCCESS && !result.data.equals("")) {
 				createdListingId = Long.parseLong(result.data);
+				coverImage = null;
 				new PostListingTask().execute(ACT_MODE_UPLOAD_IMAGES);
 			}else if (result.result ==  Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS) {
 				ERROR_CODE = Constants.RESULT_POST_LISTING_SUCCESS;
@@ -1135,6 +1159,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		}
 		((VeneficaApplication)getApplication()).getImgManager().putBitmapInCache(fileName, bitmap);
 		imageList.add(fileName);
+		bitmap.recycle();
 	}
 	
 	/**
@@ -1158,9 +1183,20 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 	private PostListingResultWrapper uploadImages(String token, long listingId, WSAction wsAction) throws IOException, XmlPullParserException{
 		PostListingResultWrapper result =  new PostListingResultWrapper();
 		
-		for (String imageName : imageList) {			
-			result = wsAction.addImageToAd(token, listingId, getImageFromCache(imageName));		
+		for (String imageName : imageList) {
+			Bitmap img = getImageFromCache(imageName);
+			result = wsAction.addImageToAd(token, listingId, img);
+			img.recycle();
 		}
 		return result;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// Set large objects to null to mark them for garbage collection
+		imageDtos = null;
+		images = null;
+		coverImage = null;
+		super.onDestroy();
 	}
 }
