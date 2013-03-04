@@ -162,8 +162,6 @@ ISlideMenuCallback, LocationListener{
         setContentView(R.layout.activity_search_listings);
         //get preferences
         prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
-        //get location service
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //set mode 
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         //slide menu
@@ -286,25 +284,6 @@ ISlideMenuCallback, LocationListener{
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
 		toggleMapView(false);
-		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
-			//start GPS
-			getCurrentLocation();
-			//Get Filter settings
-			getFilterOptions();
-		}
-		
-		if(WSAction.isNetworkConnected(this)){
-			if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && locProvider != null) {
-				isLoadOnScroll = false;
-				new SearchListingTask().execute(CURRENT_MODE);
-			}else{
-				toggleButtonMap.setVisibility(View.GONE);
-				setSupportProgressBarIndeterminateVisibility(false);
-			}
-	    }else{
-	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-	    	showDialog(D_ERROR);	 
-	    }
     }
         
     /**
@@ -324,6 +303,8 @@ ISlideMenuCallback, LocationListener{
     @Override
     protected void onStart() {
     	super.onStart();
+    	//get location service
+    	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     	if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY) {
     		getCurrentLocation();
         	//Get Filter settings
@@ -334,7 +315,11 @@ ISlideMenuCallback, LocationListener{
 	    	if (CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS) {
 	    		isLoadOnScroll = false;
 	    		new SearchListingTask().execute(CURRENT_MODE);
-			}	    	
+	    		toggleButtonMap.setVisibility(View.GONE);
+			} else if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && locProvider != null && lastAdId == -1) {
+				isLoadOnScroll = false;
+				new SearchListingTask().execute(CURRENT_MODE);
+			}
 	    }else{
 	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
 	    	showDialog(D_ERROR);	 
@@ -353,23 +338,20 @@ ISlideMenuCallback, LocationListener{
     	if(useCurrentLocation && (locProvider != null)
     			&& !(CURRENT_MODE == ACT_MODE_DOWNLOAD_BOOKMARKS || CURRENT_MODE == ACT_MODE_DOWNLOAD_MY_LISTINGS)){
     		locationManager.requestLocationUpdates(locProvider, Constants.LOCATION_UPDATE_PERIOD, Constants.LOCATION_UPDATE_MIN_DISTANCE, this);
-//    		updateMap(location);
     	}	    
     }
     @Override
     protected void onPause() {    	
     	super.onPause();
-    	//Stop location updates
-        locationManager.removeUpdates(this);
         //Flush image cache
         ((VeneficaApplication)getApplication()).getImgManager().flushCache();
     }
     
     @Override
-    protected void onDestroy() {
-    	//stop image loading thread
-    	/*ImageDownloadManager.getImageDownloadManagerInstance().reset();*/
-    	super.onDestroy();
+    protected void onStop() {
+    	super.onStop();
+    	//Stop location updates
+        locationManager.removeUpdates(this);
     }
 	@Override
     protected Dialog onCreateDialog(int id) {
@@ -441,8 +423,6 @@ ISlideMenuCallback, LocationListener{
 				message = (String) getResources().getText(R.string.error_get_my_listings);
 			}else if(ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION){
 				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.VISIBLE);
-//				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEUTRAL)
-//					.setText(getResources().getText(R.string.label_btn_yes));
 				message = (String) getResources().getText(R.string.msg_app_exit);
 			}
     		((AlertDialog) dialog).setMessage(message);
@@ -457,7 +437,6 @@ ISlideMenuCallback, LocationListener{
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-//			showDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
@@ -486,7 +465,6 @@ ISlideMenuCallback, LocationListener{
 		@Override
 		protected void onPostExecute(SearchListingResultWrapper result) {
 			super.onPostExecute(result);
-//			dismissDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.listings == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
@@ -532,9 +510,15 @@ ISlideMenuCallback, LocationListener{
 		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
-		List<Long> cats = new ArrayList<Long>();
-		cats.add(prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY));
-		filter.setCategories(cats);
+		Long cat = prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
+		//Load all if no category set
+		if (cat == Constants.PREF_DEF_VAL_CATEGORY) {
+			filter.setCategories(null);
+		} else {
+			List<Long> cats = new ArrayList<Long>();
+			cats.add(cat);		
+			filter.setCategories(cats);
+		}		
 	}
 	
 	@Override
@@ -673,7 +657,6 @@ ISlideMenuCallback, LocationListener{
 	public void getMoreListings(){
 		if (CURRENT_MODE == ACT_MODE_SEARCH_BY_CATEGORY && hasMoreListings) {
 			isLoadOnScroll = true;
-			getCurrentLocation();
 			if (locProvider != null) {
 				getFilterOptions();
 				new SearchListingTask().execute(CURRENT_MODE);
@@ -683,6 +666,6 @@ ISlideMenuCallback, LocationListener{
 	
 	@Override
 	public void onBackPressed() {
-		
+		// disable app exit on back button press
 	}
 }
