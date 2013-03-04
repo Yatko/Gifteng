@@ -140,6 +140,7 @@
     <string name="error_search_listings_no_data">No listings found.</string>
     <string name="error_send_message">Message sending failed. Please try again later.</string>
     <string name="error_add_comment">Unable to update comments. Please try again later.</string>
+    <string name="error_start_camera">Unable to start camera.</string>
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
@@ -181,6 +182,7 @@
 	<string name="msg_postlisting_remove_sel_image">Remove selected image.</string>
 	<string name="msg_postlisting_sel_image">Please select image to post listing.</string>
 	<string name="msg_postlisting_sel_cover_image">Please set cover image.</string>
+	<string name="msg_working_in_background">Working. Please wait....</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
@@ -287,7 +289,7 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
     <!-- Release key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
+    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
 </resources>
