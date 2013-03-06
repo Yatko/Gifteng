@@ -41,6 +41,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -490,7 +492,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    switch (item.getItemId()) {
 	        case R.id.menu_set_as_default_img:
-	        	coverImage = new ImageDto(getImageFromCache(imageList.get(gallery.getSelectedItemPosition())));
+//	        	coverImage = new ImageDto(getImageFromCache(imageList.get(gallery.getSelectedItemPosition())));
 	        	coverImagePosition = gallery.getSelectedItemPosition();
 	        	galImageAdapter.setCoverImagePosition(coverImagePosition);
 	        	galImageAdapter.notifyDataSetChanged();
@@ -516,6 +518,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 				if ( images != null && images.size() > 0) {
 					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
 				}
+				if (coverImagePosition == -1) {
+					showCoverImgInstructions(getResources().getString(R.string.msg_postlisting_sel_cover_image_instruction));
+				}				
 				if (camera != null) {
 					camera.stopPreview();
 				}
@@ -538,8 +543,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		} else if (view.getId() == R.id.imgBtnPostListingCrop){
 			
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep3){
-			if (coverImage == null) {
-				Utility.showLongToast(this, getResources().getString(R.string.msg_postlisting_sel_cover_image));
+			if (coverImagePosition == -1) {
+				showCoverImgInstructions(getResources().getString(R.string.msg_postlisting_sel_cover_image) 
+						+ getResources().getString(R.string.msg_postlisting_sel_cover_image_instruction));
 			} else {
 				isStepTwo = false;
 				showStepThreeUI(true);
@@ -764,6 +770,7 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 						imageList.remove(seletedImagePosition);
 						if (seletedImagePosition == coverImagePosition) {
 							coverImage = null;
+							coverImagePosition = -1;
 						}
 						galImageAdapter.resetCoverImagePosition();
 						galImageAdapter.notifyDataSetChanged();
@@ -936,9 +943,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		listing.setWanted(false);
 		listing.setNumViews(0L);
 		listing.setRating(1.0f);
-		if (coverImage != null) {
-			listing.setImage(coverImage);
-		}		
+//		if (coverImage != null) {
+		coverImage = new ImageDto(getImageFromCache(imageList.get(gallery.getSelectedItemPosition())));
+		listing.setImage(coverImage);
+//		}		
 		return listing;
 	}
 
@@ -1198,5 +1206,23 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		images = null;
 		coverImage = null;
 		super.onDestroy();
+	}
+	
+	private void showCoverImgInstructions(String message){
+		int [] location = new int[2];
+		layImagesView.getLocationOnScreen(location);
+		
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.view_set_cover_image,
+		                               (ViewGroup) findViewById(R.id.toastPostLayoutRootCoverImg));
+		
+		TextView text = (TextView) layout.findViewById(R.id.txtPostListingSetCoverMsg);
+		text.setText(message);
+		Toast toast = new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 
+				location[1] + (gallery.getHeight()/3));
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setView(layout);
+		toast.show();
 	}
 }
