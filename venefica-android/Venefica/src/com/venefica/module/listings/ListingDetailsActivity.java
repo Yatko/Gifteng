@@ -279,7 +279,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					dismissDialog(D_ERROR);
 					if (ERROR_CODE == Constants.RESULT_END_LISTING_SUCCESS 
 							|| ERROR_CODE == Constants.RESULT_DELETE_LISTING_SUCCESS 
-							|| ERROR_CODE == Constants.ERROR_RESULT_GET_LISTING_DETAILS) {
+							|| ERROR_CODE == Constants.ERROR_RESULT_GET_LISTING_DETAILS
+							|| ERROR_CODE == Constants.ERROR_NETWORK_CONNECT) {
 						finish();
 					}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS) {
 						new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
