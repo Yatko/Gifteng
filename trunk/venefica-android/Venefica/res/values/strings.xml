@@ -181,8 +181,9 @@
 	<string name="msg_enable_location_provider">To use My location, Please turn on a Location source in Settings. Go to settings now?</string>
 	<string name="msg_postlisting_remove_sel_image">Remove selected image.</string>
 	<string name="msg_postlisting_sel_image">Please select image to post listing.</string>
-	<string name="msg_postlisting_sel_cover_image">Please set cover image.</string>
+	<string name="msg_postlisting_sel_cover_image">Please set cover image. </string>
 	<string name="msg_working_in_background">Working. Please wait....</string>
+	<string name="msg_postlisting_sel_cover_image_instruction">Long press to set as cover image.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
