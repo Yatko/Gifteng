@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ksoap2.HeaderProperty;
+import org.ksoap2.SoapFault;
 
 /**
  * Connection for J2SE environments.
@@ -94,9 +95,12 @@ public class ServiceConnectionSE implements ServiceConnection
 		connection.disconnect();
 	}
 
-	public List<HeaderProperty> getResponseProperties()
+	public List<HeaderProperty> getResponseProperties() throws IOException
 	{
 		Map<?, ?> properties = connection.getHeaderFields();
+		if (properties == null) {
+			throw(new IOException());
+		}
 		Set<?> keys = properties.keySet();
 		List<HeaderProperty> retList = new LinkedList<HeaderProperty>();
 
