@@ -377,6 +377,8 @@ ISlideMenuCallback, LocationListener{
 					if (ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER) {
 						showLocationSettings();
 					} else if (ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION) {
+						//clear image cache before exit
+						((VeneficaApplication)getApplication()).getImgManager().reset();
 						System.exit(0);
 					}
 					dismissDialog(D_ERROR);
