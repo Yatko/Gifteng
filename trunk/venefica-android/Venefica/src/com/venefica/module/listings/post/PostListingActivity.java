@@ -1,6 +1,8 @@
 package com.venefica.module.listings.post;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -33,6 +36,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -641,19 +645,71 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			Bitmap image = BitmapFactory.decodeByteArray(data, 0, data.length);
+			imgBtnPickCamera.setEnabled(false);
+			Bitmap image = null;
+			FileOutputStream outStream = null;
+			String path;
+			ExifInterface exif = null;
+			try {
+				path = String.format(Locale.US,
+						"/sdcard/img.jpg", System.currentTimeMillis());
+				outStream = new FileOutputStream(path);
+				outStream.write(data);
+				outStream.close();
+				//get Exif data
+				exif=new ExifInterface(path);
+				InputStream is = new FileInputStream(path);
+				Rect rect = new Rect(0, 0, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y);
+        	    BitmapFactory.Options opts = new BitmapFactory.Options();
+        	    opts.inInputShareable = false;
+        	    opts.inSampleSize = 2;
+                image = BitmapFactory.decodeStream(is, rect, opts);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+			}
+			if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")){
+
+			    image = rotate(image, 90);
+			}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")){
+				image= rotate(image, 270);
+			}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
+				image= rotate(image, 180);
+			}
 			putImageInCache(Bitmap.createScaledBitmap(image, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
 			if (isFirstImage) {
 				images.clear();
 			}
 			images.add(Bitmap.createScaledBitmap(image, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
 			galImageAdapter.notifyDataSetChanged();
-			image.recycle();
-			camera.startPreview();
+			image.recycle();			
 			isFirstImage = false;
 			gallery.setSelection(images.size()-1);
+			try {
+				camera.startPreview();
+			} catch (Exception e) {
+			}
+			imgBtnPickCamera.setEnabled(true);
 		}
 	};
+	
+	/**
+	 * Method to rotate given bitmap with specified angle
+	 * @param bitmap
+	 * @param degree
+	 * @return bitmap rotated with specified angle
+	 */
+	private Bitmap rotate(Bitmap bitmap, int degree) {
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+
+		Matrix mtx = new Matrix();
+		mtx.postRotate(degree);
+
+		return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
+	}
 	public long createdListingId;	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
