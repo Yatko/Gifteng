@@ -1,8 +1,6 @@
 package com.venefica.module.settings;
 
 
-import com.venefica.module.main.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
@@ -16,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
 
 /**
  * @author avinash

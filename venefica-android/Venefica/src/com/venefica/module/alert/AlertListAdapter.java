@@ -2,8 +2,6 @@ package com.venefica.module.alert;
 
 import java.util.ArrayList;
 
-import com.venefica.module.main.R;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
 
 /**
  * @author avinash

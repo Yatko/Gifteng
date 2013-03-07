@@ -23,8 +23,12 @@
 
 package org.ksoap2.transport;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +36,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ksoap2.HeaderProperty;
-import org.ksoap2.SoapFault;
 
 /**
  * Connection for J2SE environments.

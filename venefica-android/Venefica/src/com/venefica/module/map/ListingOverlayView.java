@@ -12,8 +12,6 @@ import com.google.android.maps.OverlayItem;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
-import com.venefica.module.utils.ImageDownloadManager;
-import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 /**

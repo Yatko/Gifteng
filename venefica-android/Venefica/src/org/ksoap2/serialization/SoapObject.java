@@ -25,7 +25,8 @@
 
 package org.ksoap2.serialization;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * A simple dynamic object that can be used to build soap calls without

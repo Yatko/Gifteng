@@ -1,10 +1,10 @@
 package com.venefica.module.messages;
 
-import com.venefica.module.main.R;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
 
 /**
  * @author avinash

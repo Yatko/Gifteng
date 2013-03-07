@@ -1,13 +1,13 @@
 package com.venefica.module.messages;
 
-import com.venefica.module.main.R;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
 
 /**
  * @author avinash

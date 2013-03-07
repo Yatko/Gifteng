@@ -5,14 +5,14 @@ package com.venefica.module.listings;
 
 import java.util.List;
 
-import com.venefica.module.listings.browse.SearchListingsActivity;
-import com.venefica.services.AdDto;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.services.AdDto;
 
 /**
  * @author avinash

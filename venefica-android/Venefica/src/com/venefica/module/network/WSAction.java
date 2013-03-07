@@ -3,6 +3,7 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -25,16 +26,14 @@ import com.venefica.module.listings.browse.SearchListingResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.CategoryDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
-import com.venefica.services.ServicesManager.AddImageToAdResult;
-import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
-import com.venefica.module.utils.Utility;;
 
 /**
  * @author avinash Class to perform webservice operations.

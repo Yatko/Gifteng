@@ -2,14 +2,13 @@ package com.venefica.module.alert;
 
 import java.util.ArrayList;
 
-import com.venefica.module.main.R;
-
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.venefica.module.main.R;
 
 /**
  * @author avinash

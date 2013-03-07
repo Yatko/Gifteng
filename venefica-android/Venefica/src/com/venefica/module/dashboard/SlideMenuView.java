@@ -4,13 +4,6 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import com.venefica.module.listings.browse.SearchListingsActivity;
-import com.venefica.module.main.R;
-import com.venefica.module.user.UserDto;
-import com.venefica.module.utils.Utility;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
@@ -27,6 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.module.main.R;
+import com.venefica.module.user.UserDto;
+import com.venefica.module.utils.Utility;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * View of displaying side navigation.

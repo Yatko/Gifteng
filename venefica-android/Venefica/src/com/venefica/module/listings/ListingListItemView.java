@@ -1,9 +1,5 @@
 package com.venefica.module.listings;
 
-import com.venefica.module.main.R;
-import com.venefica.module.utils.Utility;
-import com.venefica.services.AdDto;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +7,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.AdDto;
 
 /**
  * @author avinash

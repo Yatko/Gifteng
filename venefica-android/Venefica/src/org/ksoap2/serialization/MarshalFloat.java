@@ -21,9 +21,11 @@
 
 package org.ksoap2.serialization;
 
-import java.io.*;
+import java.io.IOException;
 
-import org.xmlpull.v1.*;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 public class MarshalFloat implements Marshal {
 

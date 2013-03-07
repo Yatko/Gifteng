@@ -24,10 +24,13 @@
 
 package org.ksoap2.serialization;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-import org.xmlpull.v1.*;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * Serializes instances of hashtable to and from xml. This implementation is

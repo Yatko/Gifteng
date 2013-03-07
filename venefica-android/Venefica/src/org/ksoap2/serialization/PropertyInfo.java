@@ -21,13 +21,12 @@
 
 package org.ksoap2.serialization;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 /**
  * This class is used to store information about each property an implementation of KvmSerializable exposes.
  */

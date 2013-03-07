@@ -24,18 +24,21 @@
  * */
 package org.ksoap2.transport;
 
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
-import org.ksoap2.*;
+import org.ksoap2.HeaderProperty;
+import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.xmlpull.v1.*;
-
-import android.util.Log;
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * A J2SE based HttpTransport layer.

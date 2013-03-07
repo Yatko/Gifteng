@@ -18,8 +18,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-//import com.venefica.activity.PostStepLogic.PostData;
-
 import com.venefica.module.user.UserDto;
 import com.venefica.module.utils.Utility;
 import com.venefica.utils.Constants;

@@ -20,9 +20,13 @@
 
 package org.ksoap2;
 
-import java.io.*;
-import org.kxml2.kdom.*;
-import org.xmlpull.v1.*;
+import java.io.IOException;
+
+import org.kxml2.kdom.Element;
+import org.kxml2.kdom.Node;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * A SOAP envelope, holding head and body objects. While this basic envelope
