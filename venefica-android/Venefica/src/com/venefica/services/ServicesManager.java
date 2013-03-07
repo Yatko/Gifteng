@@ -127,7 +127,7 @@ public class ServicesManager
 		}
 	}
 
-	public static class GetUserResult extends IResult<User>
+	/*public static class GetUserResult extends IResult<User>
 	{
 		public GetUserResult(SoapRequestResult SoapResult, User Return)
 		{
@@ -138,7 +138,7 @@ public class ServicesManager
 		{
 
 		}
-	}
+	}*/
 
 	public static class UpdateUserResult extends IResult<UpdateUserReturn>
 	{
@@ -394,7 +394,7 @@ public class ServicesManager
 		}
 	}
 
-	public static class GetUserByNameResult extends IResult<User>
+	/*public static class GetUserByNameResult extends IResult<User>
 	{
 		public GetUserByNameResult(SoapRequestResult SoapResult, User Return)
 		{
@@ -405,7 +405,7 @@ public class ServicesManager
 		{
 
 		}
-	}
+	}*/
 
 	public static class EndAdResult extends IResult<Void>
 	{
@@ -591,7 +591,7 @@ public class ServicesManager
 	
 
 	//- - - - - FUNCTION - - - - -//
-	public GetUserResult GetUser(String token)
+	/*public GetUserResult GetUser(String token)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + GET_USER_METHOD;
 		GetUserResult result = new GetUserResult();
@@ -652,7 +652,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public UpdateUserResult UpdateUser(String token, UserDto user)
 	{
@@ -1897,7 +1897,7 @@ public class ServicesManager
 		return result;
 	}
 
-	public GetUserByNameResult GetUserByName(String token, String name)
+	/*public GetUserByNameResult GetUserByName(String token, String name)
 	{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + GET_USER_BY_NAME_METHOD;
 		GetUserByNameResult result = new GetUserByNameResult();
@@ -1960,7 +1960,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public EndAdResult EndAd(String token, long adId)
 	{
