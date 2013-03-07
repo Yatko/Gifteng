@@ -3,8 +3,6 @@ package com.venefica.module.settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;

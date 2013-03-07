@@ -22,16 +22,16 @@
 
 package org.ksoap2.serialization;
 
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Vector;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.SoapFault12;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
-
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  * @author Stefan Haustein

@@ -3,21 +3,21 @@
  */
 package com.venefica.module.dashboard;
 
-import com.venefica.module.main.R;
-import com.venefica.module.alert.AlertListActivity;
-import com.venefica.module.listings.browse.BrowseCategoriesActivity;
-import com.venefica.module.listings.mylistings.MyListingsActivity;
-import com.venefica.module.listings.post.PostListingActivity;
-import com.venefica.module.messages.MessageListActivity;
-import com.venefica.module.settings.SettingsActivity;
-import com.venefica.module.user.RegisterUserActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.venefica.module.alert.AlertListActivity;
+import com.venefica.module.listings.browse.BrowseCategoriesActivity;
+import com.venefica.module.listings.mylistings.MyListingsActivity;
+import com.venefica.module.listings.post.PostListingActivity;
+import com.venefica.module.main.R;
+import com.venefica.module.messages.MessageListActivity;
+import com.venefica.module.settings.SettingsActivity;
+import com.venefica.module.user.RegisterUserActivity;
 
 /**
  * @author avinash

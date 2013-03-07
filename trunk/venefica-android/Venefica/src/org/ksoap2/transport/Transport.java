@@ -23,13 +23,18 @@
 
 package org.ksoap2.transport;
 
-import java.util.List;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Proxy;
+import java.util.List;
 
-import org.ksoap2.*;
-import org.kxml2.io.*;
-import org.xmlpull.v1.*;
+import org.ksoap2.SoapEnvelope;
+import org.kxml2.io.KXmlParser;
+import org.kxml2.io.KXmlSerializer;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * Abstract class which holds common methods and members that are used by the

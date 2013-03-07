@@ -3,15 +3,9 @@ package com.venefica.module.listings;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.venefica.module.main.R;
-import com.venefica.module.main.R.layout;
-import com.venefica.module.main.R.menu;
-
-import android.os.Bundle;
-import android.provider.MediaStore.Images;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.view.Menu;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
@@ -21,6 +15,8 @@ import android.widget.Gallery;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher.ViewFactory;
+
+import com.venefica.module.main.R;
 
 public class GalleryActivity extends Activity implements ViewFactory {
 	/**

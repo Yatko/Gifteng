@@ -1,17 +1,5 @@
 package org.ksoap2.transport;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.ksoap2.HeaderProperty;
-
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,9 +11,21 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.ksoap2.HeaderProperty;
+
+import android.util.Log;
 
 /**
  * HttpsServiceConnectionSE is a service connection that uses a https url
@@ -101,7 +101,7 @@ public class HttpsServiceConnectionSE implements ServiceConnection
 	public HttpsServiceConnectionSE(String host, int port, String file, int timeout) throws IOException
 	{
 		
-		//TODO WARNING!!! SSL сертификат не проверяется, вместо него фейковый
+		//TODO WARNING!!! SSL пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		try
 		{
 			SSLContext sc = SSLContext.getInstance("TLS");

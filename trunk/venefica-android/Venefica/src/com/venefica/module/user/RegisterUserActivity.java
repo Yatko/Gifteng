@@ -11,28 +11,17 @@ import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-import com.venefica.module.main.R;
-import com.venefica.module.main.VeneficaActivity;
-import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.InputFieldValidator;
-import com.venefica.module.utils.Utility;
-import com.venefica.services.ImageDto;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +34,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
+import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
+import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.ImageDto;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash

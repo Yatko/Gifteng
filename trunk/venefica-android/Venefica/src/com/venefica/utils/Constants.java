@@ -1,7 +1,6 @@
 package com.venefica.utils;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import android.graphics.Bitmap.CompressFormat;
 

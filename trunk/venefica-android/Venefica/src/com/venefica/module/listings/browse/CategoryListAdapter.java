@@ -2,9 +2,6 @@ package com.venefica.module.listings.browse;
 
 import java.util.List;
 
-import com.venefica.module.main.R;
-import com.venefica.services.CategoryDto;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
+import com.venefica.services.CategoryDto;
 
 /**
  * @author avinash

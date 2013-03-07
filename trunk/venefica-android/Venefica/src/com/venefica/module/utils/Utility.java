@@ -1,7 +1,6 @@
 package com.venefica.module.utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -10,8 +9,6 @@ import java.util.Date;
 
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.transport.HttpsTransportSE;
-
-import com.venefica.utils.Constants;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -35,8 +32,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
-import android.widget.Toast;
 import android.view.animation.Transformation;
+import android.widget.Toast;
+
+import com.venefica.utils.Constants;
 
 /**
  * @author avinash

@@ -1,6 +1,7 @@
 package com.venefica.utils;
 
 import android.app.Application;
+
 import com.venefica.module.user.UserDto;
 import com.venefica.module.utils.ImageDownloadManager;
 

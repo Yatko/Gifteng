@@ -20,9 +20,12 @@
 
 package org.ksoap2.serialization;
 
-import java.io.*;
-import org.xmlpull.v1.*;
-import org.ksoap2.*;
+import java.io.IOException;
+
+import org.ksoap2.SoapEnvelope;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * This class is not public, so save a few bytes by using a short class name (DM
