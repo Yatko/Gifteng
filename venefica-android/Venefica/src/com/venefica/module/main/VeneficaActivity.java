@@ -8,6 +8,7 @@ import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
+import com.venefica.module.messages.MessageListActivity;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.user.RegisterUserActivity;
 import com.venefica.module.utils.Utility;
@@ -73,7 +74,11 @@ ISlideMenuCallback {
 			}
     		break;
 		case R.id.slideMenuMessages:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+			if(!(getApplicationContext() instanceof MessageListActivity)){
+				Intent messageIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(messageIntent);
+			}
     		break;
 		case R.id.slideMenuReviews:
     		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
