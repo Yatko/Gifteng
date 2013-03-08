@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.venefica.module.main.R;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.MessageDto;
 
 /**
  * @author avinash
@@ -12,12 +14,12 @@ import com.venefica.module.main.R;
  */
 public class MessageDetailActivity extends Activity {
 	private TextView txtSender, txtTime, txtMessageText, txtVotes, txtLikes, txtDislikes;
-	private MessageData message;
+	private MessageDto message;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_detail);
-        message = getDemoMessage();
+//        message = getDemoMessage();
         
         txtSender = (TextView) findViewById(R.id.txtActMsgDetailSender);
         txtTime = (TextView) findViewById(R.id.txtActMsgDetailTime);
@@ -35,27 +37,15 @@ public class MessageDetailActivity extends Activity {
      * Method to show message data
      * @param message
      */
-    private void displayMessage(MessageData message) {
-    	txtSender.setText(message.getSenderName());
-    	txtTime.setText(message.getCreationDate());
-    	txtLikes.setText(message.getLikes()+"");
-    	txtDislikes.setText(message.getDisLikes()+"");
-    	txtMessageText.setText(message.getMessageText());
+    private void displayMessage(MessageDto message) {
+    	txtSender.setText(message.getFromFullName());
+    	if (message.getCreatedAt() != null) {
+    		txtTime.setText(Utility.convertDateTimeToString(message.getCreatedAt()));
+		}    	
+//    	txtLikes.setText(message.getLikes()+"");
+//    	txtDislikes.setText(message.getDisLikes()+"");
+    	txtMessageText.setText(message.getText());
 	}
-	/**
-     * Get Demo message
-     * @return
-     */
-	private MessageData getDemoMessage() {
-		MessageData message = new MessageData();
-		message.setMessageId(1000);
-		message.setDisLikes(10);
-		message.setLikes(20);
-		message.setCreationDate("10:30");
-		message.setMessageText("Demo Message");
-		message.setSenderName("Demo Sender");
-		return message;
-	}
-
+	
 	
 }
