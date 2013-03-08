@@ -3,6 +3,7 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -24,6 +25,7 @@ import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.browse.SearchListingResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
+import com.venefica.module.messages.MessageResultWrapper;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
 import com.venefica.module.utils.Utility;
@@ -33,6 +35,8 @@ import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
+import com.venefica.services.ServicesManager.GetAllMessagesResult;
+import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 
 /**
@@ -63,7 +67,8 @@ public class WSAction {
 	private final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
 	private final String WS_METHOD_SEND_MESSAGE = "SendMessage";
 	private final String WS_METHOD_ADD_COMMENT_TO_LISTING = "AddCommentToAd";
-	private static final String WS_METHOD_ADD_IMAGE_TO_AD = "AddImageToAd";
+	private final String WS_METHOD_ADD_IMAGE_TO_AD = "AddImageToAd";
+	private final String WS_METHOD_GET_ALL_MESSAGE = "GetAllMessages";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -351,7 +356,7 @@ public class WSAction {
 			if (envelope.getResponse() instanceof UserDto) {
 				user = (UserDto) envelope.getResponse();
 			} else {
-				Log.e("WSAction getUser: ", "UserDto not found.");
+				Log.e("WSAction getUser: ", "UserDto not found." + envelope.getResponse().getClass());
 				user = null;
 			}
 		} catch (SoapFault e) {
@@ -1041,6 +1046,50 @@ public class WSAction {
 			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_ADD_IMAGE_TO_AD;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to get all messages
+	 * @param token String
+	 * @return messages MessageResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	@SuppressWarnings("unchecked")
+	public MessageResultWrapper getAllMessages(String token) throws IOException, XmlPullParserException {
+		final String SOAP_METHOD = WS_METHOD_GET_ALL_MESSAGE;
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		MessageResultWrapper result = new MessageResultWrapper();
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_MESSAGE_URL);
+		try {
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,
+					SOAP_METHOD);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+					SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+			new MessageDto().registerRead(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response instanceof MessageDto) {
+				result.messages = new ArrayList<MessageDto>();
+				result.messages.add((MessageDto) response);
+				result.result = Constants.RESULT_GET_ALL_MESSAGES_SUCCESS;
+			} else {
+				result.messages = (List<MessageDto>) response;
+				result.result = Constants.RESULT_GET_ALL_MESSAGES_SUCCESS;
+			}
+		} catch (SoapFault e) {
+			result.result = Constants.ERROR_RESULT_GET_ALL_MESSAGES;
 		}
 		return result;
 	}
