@@ -153,7 +153,9 @@ public class ImageDownloadManager {
 	        e.printStackTrace();  
 	    } catch (IOException e) {  
 	        e.printStackTrace();  
-	    }
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+		}
 
 	    return null;  
 	} 
@@ -165,7 +167,7 @@ public class ImageDownloadManager {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private Bitmap getScaledDownBitmap(String urlString) throws MalformedURLException, IOException{
+	private Bitmap getScaledDownBitmap(String urlString) throws MalformedURLException, IOException, Exception{
 		URL url = new URL(urlString);
 		HttpURLConnection connection;
 	    connection = (HttpURLConnection)url.openConnection();
