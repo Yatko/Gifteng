@@ -1,6 +1,7 @@
 package com.venefica.module.utils;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -63,9 +64,18 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         parameters.setPictureFormat(PixelFormat.JPEG); 
         parameters.set("orientation", "portrait");
         parameters.setRotation(90);
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-//        setDisplayOrientation(mCamera, 90);
+        List<String> focusModes = parameters.getSupportedFocusModes();
+        if (focusModes != null) {
+        	if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+        		parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+			}        	
+		}
+        List<String> flashModes = parameters.getSupportedFlashModes();
+        if (flashModes != null) {
+        	if(flashModes.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+        		parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        	}
+		}
         mCamera.setParameters(parameters);
         // start preview with new settings
         try {
