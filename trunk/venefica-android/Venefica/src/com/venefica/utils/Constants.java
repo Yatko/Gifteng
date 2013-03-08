@@ -60,6 +60,9 @@ public class Constants
 	public static final int RESULT_ADD_IMAGE_TO_AD_SUCCESS = 1051;
 	public static final int ERROR_RESULT_ADD_IMAGE_TO_AD = 1052;
 	public static final int ERROR_START_CAMERA = 1053;
+	public static final int ERROR_RESULT_GET_ALL_MESSAGES = 1054;
+	public static final int RESULT_GET_ALL_MESSAGES_SUCCESS = 1055;
+	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -165,6 +168,6 @@ public class Constants
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
 	public static final int PREF_DEF_VAL_CATEGORY = -1;	
 	
-	public static final int EXPIRE_AD_IN_DAYS = 60;	
+	public static final int EXPIRE_AD_IN_DAYS = 60;		
 	
 }
