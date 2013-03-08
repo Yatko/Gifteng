@@ -1,49 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableMessageListItem"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical" >
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:orientation="horizontal" >
 
-    <TableRow
-        android:id="@+id/tableRowMessageListItemTitle"
+    <ImageView
+        android:id="@+id/imgMessageLItemImage"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/black"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_picture_white" />
+
+    <!-- Sender -->
+
+    <TextView
+        android:id="@+id/txtMessageLItemSender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgMessageLItemImage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="3dp"
+        android:maxLines="1"
+        android:maxLength="20"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+    <ImageButton
+        android:id="@+id/imgBtnMessageLItemReply"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/icon_goleft"
+        android:background="@color/transparent"/>
+    <!-- Time -->
+
+    <TextView
+        android:id="@+id/txtMessageLItemTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgMessageLItemImage"
+        android:layout_below="@id/txtMessageLItemSender"
+        android:layout_alignBottom="@id/imgMessageLItemImage"
+        android:gravity="bottom"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="3dp"
+        android:maxLines="1"
+        android:textColor="@color/light_gray"
+        android:textSize="13sp"
+        android:textStyle="normal"/>
+
+    <TextView
+        android:id="@+id/txtMessageLItemText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dip"
-        android:weightSum="100" >
+        android:layout_below="@id/imgMessageLItemImage"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="3dp"
+        android:minLines="1"
+        android:maxLines="3"
+        android:textColor="@color/gray"
+        android:textSize="15sp"
+        android:textStyle="normal" />
 
-        <!-- Sender -->
-
-        <TextView
-            android:id="@+id/txtMessageLItemSender"
-            style="?LabelEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="80"
-            android:ellipsize="end"
-            android:maxLines="1" />
-        <!-- Time -->
-
-        <TextView
-            android:id="@+id/txtMessageLItemTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="20" />
-    </TableRow>
-    <!-- Description span 2 column -->
-
-    <TableRow
-        android:id="@+id/tableRowMessageLItemDetails"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dip" >
-
-        <TextView
-            android:id="@+id/txtMessageLItemDetails"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2" />
-    </TableRow>
-
-</TableLayout>
+</RelativeLayout>
