@@ -212,7 +212,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		mapView.setTraffic(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(6); // Zoom 1 is world view
+		mapController.setZoom(14); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
@@ -418,8 +418,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
-			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
-			mapView.invalidate();
+			//scroll map to view overlay in visiblee area
+			mapView.scrollBy(0, -mapView.getHeight()/4);
 		}	
 	}
 	
@@ -540,6 +540,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
+				Log.e("ListingDetailsTask::doInBackground :", e.toString());
+			} catch (Exception e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
 			}
 			return wrapper;
