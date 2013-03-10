@@ -68,17 +68,17 @@ public class ImageDownloadManager {
 	 */
 	public void loadImage(final String url, final ImageView imageView,Drawable placeholder) {
 	    imageViews.put(imageView, url);
-	    Bitmap bitmap = getBitmapFromCache(url);  
+//	    Bitmap bitmap = null/*getBitmapFromCache(url)*/;  
 
 	    // check in UI thread, so no concurrency issues  
-	    if (bitmap != null) {  
+	   /* if (bitmap != null) {  
 	        imageView.setImageBitmap(bitmap);  
-	    } else {  
+	    } else {  */
 	        imageView.setImageDrawable(placeholder);
 	        if (url != null && URLUtil .isValidUrl(url)) {
 	        	queueJob(url, imageView, placeholder);
 	        }
-	    }  
+//	    }  
 	} 
 
 
@@ -125,8 +125,11 @@ public class ImageDownloadManager {
 
 	    downloadThreadPool.submit(new Runnable() {  
 	        @Override  
-	        public void run() {  
-	            final Bitmap bmp = downloadBitmap(url);
+	        public void run() { 
+	            Bitmap bmp = getBitmapFromCache(url);
+	            if (bmp == null) {
+	            	bmp = downloadBitmap(url);
+				}	            
 	            // if the view is not visible anymore, the image will be ready for next time in cache
 	            if (imageView.isShown())
 	            {
