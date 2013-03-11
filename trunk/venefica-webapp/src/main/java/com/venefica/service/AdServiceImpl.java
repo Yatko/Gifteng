@@ -1,13 +1,11 @@
 package com.venefica.service;
 
-import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.SpamMarkDao;
-import com.venefica.dao.UserDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Category;
@@ -45,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("adService")
 @WebService(endpointInterface = "com.venefica.service.AdService")
-public class AdServiceImpl implements AdService {
+public class AdServiceImpl extends AbstractService implements AdService {
 
     public static final int PROLONGATION_PERIOD_DAYS = 31;
     public static final int EXPIRATION_PERIOD_DAYS = 31 * 2;
@@ -55,20 +53,20 @@ public class AdServiceImpl implements AdService {
     private final Log log = LogFactory.getLog(AdServiceImpl.class);
     
     @Inject
-    private ThreadSecurityContextHolder securityContextHolder;
+    private CategoryDao categoryDao;
     
     @Inject
-    private CategoryDao categoryDao;
-    @Inject
     private AdDao adDao;
+    
     @Inject
     private ImageDao imageDao;
+    
     @Inject
     private BookmarkDao bookmarkDao;
-    @Inject
-    private UserDao userDao;
+    
     @Inject
     private SpamMarkDao spamMarkDao;
+    
     @Inject
     private RatingDao ratingDao;
 
@@ -662,15 +660,6 @@ public class AdServiceImpl implements AdService {
 
     // internal helpers
     
-//	private User getCurrentUser() {
-//		return securityContextHolder.getContext().getUser();
-//	}
-    
-    private User getCurrentUser() {
-        Long currentUserId = securityContextHolder.getContext().getUserId();
-        return userDao.get(currentUserId);
-    }
-
     private List<CategoryDto> getCategoriesInternal(Long categoryId, boolean includeSubcategories) {
         List<CategoryDto> result = new LinkedList<CategoryDto>();
         List<Category> categories = categoryDao.getSubcategories(categoryId);

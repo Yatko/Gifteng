@@ -1,10 +1,8 @@
 package com.venefica.service;
 
-import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.auth.Token;
 import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
-import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
@@ -15,12 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("authService")
 @WebService(endpointInterface = "com.venefica.service.AuthService")
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl extends AbstractService implements AuthService {
 
-    @Inject
-    private UserDao userDao;
-    @Inject
-    private ThreadSecurityContextHolder securityContextHolder;
     @Inject
     private TokenEncryptor tokenEncryptor;
 

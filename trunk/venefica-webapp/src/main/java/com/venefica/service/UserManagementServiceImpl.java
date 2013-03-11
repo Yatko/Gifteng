@@ -1,8 +1,6 @@
 package com.venefica.service;
 
-import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.dao.ImageDao;
-import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.UserAlreadyExistsException;
@@ -13,26 +11,18 @@ import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 @Service("userManagementService")
 @WebService(endpointInterface = "com.venefica.service.UserManagementService")
-public class UserManagementServiceImpl implements UserManagementService {
+public class UserManagementServiceImpl extends AbstractService implements UserManagementService {
 
-    @Inject
-    private ThreadSecurityContextHolder securityContextHolder;
-    @Inject
-    private UserDao userDao;
     @Inject
     private ImageDao imageDao;
-    @Autowired(required = false)
-    private ConnectionRepository connectionRepository;
-
+    
     @Override
     @Transactional
     public Long registerUser(UserDto userDto, String password) throws UserAlreadyExistsException {
@@ -60,7 +50,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             User user = userDao.get(currentUserId);
             return new UserDto(user);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            logger.error("Getting user failed", e);
             throw new RuntimeException(e);
         }
     }
@@ -107,7 +97,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             userDto.update(user, imageDao);
             return user.isComplete();
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            logger.error("Update user failed", e);
             throw new RuntimeException(e);
         }
     }

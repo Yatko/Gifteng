@@ -1,10 +1,8 @@
 package com.venefica.service;
 
-import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.CommentDao;
 import com.venefica.dao.MessageDao;
-import com.venefica.dao.UserDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Comment;
 import com.venefica.model.Message;
@@ -26,9 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.jws.WebService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.vkontakte.api.VKontakte;
@@ -42,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("messageService")
 @WebService(endpointInterface = "com.venefica.service.MessageService")
-public class MessageServiceImpl implements MessageService {
+public class MessageServiceImpl extends AbstractService implements MessageService {
 
     @Inject
     private AdDao adDao;
@@ -51,17 +46,8 @@ public class MessageServiceImpl implements MessageService {
     private CommentDao commentDao;
     
     @Inject
-    private UserDao userDao;
-    
-    @Inject
     private MessageDao messageDao;
     
-    @Inject
-    private ThreadSecurityContextHolder securityContextHolder;
-    
-    @Autowired(required = false)
-    private ConnectionRepository connectionRegistry;
-
     @Override
     @Transactional
     public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException,
@@ -303,16 +289,5 @@ public class MessageServiceImpl implements MessageService {
         }
 
         messageDao.deleteMessage(message);
-    }
-
-    // internal helpers
-    private <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
-        Connection<T> connection = connectionRegistry.findPrimaryConnection(socialNetworkInterface);
-        return connection != null ? connection.getApi() : null;
-    }
-
-    private User getCurrentUser() {
-        Long currentUserId = securityContextHolder.getContext().getUserId();
-        return userDao.get(currentUserId);
     }
 }
