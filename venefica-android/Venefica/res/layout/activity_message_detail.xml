@@ -1,126 +1,104 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?ActivityBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableLayout
-        android:id="@+id/tblActMsgDetailTitle"
-        style="?ViewGroupBackground"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dip">
+        android:layout_height="wrap_content" >
 
-        <TableRow
-            android:id="@+id/tblRowActMsgDetailTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:weightSum="100" >
+        <!-- Sender -->
 
-            <!-- Sender -->
-
-            <TextView
-                android:id="@+id/txtActMsgDetailSender"
-                style="?LabelEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="80"
-                android:ellipsize="end"
-                android:maxLines="1" />
-            <!-- Time -->
-
-            <TextView
-                android:id="@+id/txtActMsgDetailTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="20" />
-        </TableRow>
-
-        <!-- Votes -->
-
-        <TableRow
-            android:id="@+id/tableRowMessageDetailsIcons"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"            
-            android:padding="5dip"
-            android:weightSum="100" >
-
-            <!--
-             <ImageView
-            android:id="@+id/imgActMsgDetailVotes"
+        <TextView
+            android:id="@+id/txtActMsgDetailSender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"/>
-            -->
-            <!--
-            <TextView
-            android:id="@+id/txtActMsgDetailVotes"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+        <!-- reply button -->
+
+        <ImageButton
+            android:id="@+id/imgBtnActMsgDetailReply"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_goleft" />
+        <!-- Time -->
+
+        <TextView
+            android:id="@+id/txtActMsgDetailTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"/>
-            -->
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/txtActMsgDetailSender"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/light_gray"
+            android:textSize="13sp"
+            android:textStyle="normal" />
 
-            <ImageView
-                android:id="@+id/imgActMsgDetailLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:src="@drawable/feedback" />
+        <!-- divider -->
 
-            <TextView
-                android:id="@+id/txtActMsgDetailLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="25"
-                android:ellipsize="end" />
-
-            <ImageView
-                android:id="@+id/imgActMsgDetailDisLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:src="@drawable/dislikes" />
-
-            <TextView
-                android:id="@+id/txtActMsgDetailDisLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="25"
-                android:ellipsize="end" />
-        </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableRowMessageDevider"
+        <TextView
+            android:id="@+id/txtActMsgDetailDevider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:weightSum="100"  >
+            android:layout_height="2dp"
+            android:layout_below="@id/txtActMsgDetailTime"
+            android:background="@color/gray" />
 
-            <TextView
-                android:id="@+id/txtActMsgDetailDevider"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_weight="100"
-                android:background="@color/gray"/>
-        </TableRow>
-        <!-- Details span 2 column -->
+        <!-- Details -->
 
-        <TableRow
-            android:id="@+id/tableRowMessageDetails"
+        <TextView
+            android:id="@+id/txtActMsgDetailMsgText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="5dip" >
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/txtActMsgDetailDevider"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:ellipsize="end"
+            android:minHeight="80dp"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+        <!-- send button -->
 
-            <TextView
-                android:id="@+id/txtActMsgDetailMsgText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end" />
-        </TableRow>
-    </TableLayout>
+        <ImageButton
+            android:id="@+id/imgBtnActMsgDetailSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_send" />
+        <!-- Roply text -->
+
+        <EditText
+            android:id="@+id/edtActMsgDetailReplyText"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/txtActMsgDetailMsgText"
+            android:layout_toLeftOf="@id/imgBtnActMsgDetailSend"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="textMultiLine" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
 
 </ScrollView>
