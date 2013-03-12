@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,7 +71,6 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 			holder = new ViewHolder();
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.view_message_list_item, parent, false);
-			convertView.setTag(holder);
 			holder.txtMessageText = (TextView) convertView.findViewById(R.id.txtMessageLItemText);
 			holder.txtSenderName = (TextView) convertView.findViewById(R.id.txtMessageLItemSender);
 			holder.txtTime = (TextView) convertView.findViewById(R.id.txtMessageLItemTime);
@@ -99,7 +99,8 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 					((MessageListActivity)context).setActionModeTitle(selectedPositions.size() 
 							+" "+ context.getResources().getString(R.string.label_selected));
 				}
-			});			
+			});
+			convertView.setOnClickListener(this);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -111,6 +112,8 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 			holder.txtSenderName.setText(messages.get(position).getFromFullName());
 			holder.imgViewMode.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_arrow_bottom));
 		}
+		//set is owner value as description to send it on message detail
+		holder.txtSenderName.setContentDescription(String.valueOf(messages.get(position).isOwner()));
 		holder.txtMessageText.setText(messages.get(position).getText());
 		holder.chkSelected.setContentDescription(messages.get(position).getId()+"");
 		if (messages.get(position).getCreatedAt() != null) {
@@ -137,8 +140,17 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.imgMessageLItemImage) {
+			
+		} else {
+			holder = (ViewHolder) view.getTag();
 			Intent intent = new Intent((MessageListActivity)context,
 					MessageDetailActivity.class);
+			if (holder != null) {
+				intent.putExtra("sender", holder.txtSenderName.getText().toString());
+				intent.putExtra("time", holder.txtTime.getText().toString());
+				intent.putExtra("message_text", holder.txtMessageText.getText().toString());
+				intent.putExtra("is_owner", Boolean.parseBoolean(holder.txtSenderName.getContentDescription().toString()));
+			}			
 			context.startActivity(intent);
 		}
 	}
