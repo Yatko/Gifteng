@@ -15,9 +15,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
@@ -48,6 +52,7 @@ public class MessageListActivity extends VeneficaActivity {
 	 * Modes
 	 */
 	private final int ACT_MODE_GET_ALL_MESSAGES = 4001;
+	private final int ACT_MODE_DELETE_MESSAGES = 4002;
 	/**
 	 * Current error code.
 	 */
@@ -55,7 +60,23 @@ public class MessageListActivity extends VeneficaActivity {
 	/**
 	 * Constants to identify dialogs
 	 */
-	private final int D_PROGRESS = 1, D_ERROR = 2, D_CONFIRM = 3;	
+	private final int D_PROGRESS = 1, D_ERROR = 2, D_CONFIRM = 3;
+	/**
+	 * ActionMode
+	 */
+	private ActionMode actionMode;
+	/**
+	 * action mode visible flag
+	 */
+	private boolean isActionModeActive = false;
+	/**
+	 * web service task progress 
+	 */
+	private boolean isWorking = false;
+	/**
+	 * list header
+	 */
+	private TextView txtListHeader;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -68,20 +89,25 @@ public class MessageListActivity extends VeneficaActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);   
 		setContentView(R.layout.activity_message_list);
 		listViewMessages = (ListView) findViewById(R.id.listActMessageList);
+		listViewMessages.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
+		txtListHeader = new TextView(this);
+		txtListHeader.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT
+				, AbsListView.LayoutParams.WRAP_CONTENT));
+		//set list header
+		listViewMessages.addHeaderView(txtListHeader);
 		messages = new ArrayList<MessageDto>();
 
 		messageListAdapter = new MessageListAdapter(this, messages);
 		listViewMessages.setAdapter(messageListAdapter);
-		listViewMessages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				Intent intent = new Intent(MessageListActivity.this,
-						MessageDetailActivity.class);
-				startActivity(intent);
-			}
-		});
-		new MessageListTask().execute(ACT_MODE_GET_ALL_MESSAGES);
+		
+		//get all messages
+		if(WSAction.isNetworkConnected(this)){
+			new MessageListTask().execute(ACT_MODE_GET_ALL_MESSAGES);
+		} else {
+	    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+	    	showDialog(D_ERROR);	 
+	    }
 	}
 	@Override
     protected Dialog onCreateDialog(int id) {
@@ -108,7 +134,12 @@ public class MessageListActivity extends VeneficaActivity {
 					if (ERROR_CODE == Constants.ERROR_RESULT_GET_LISTING_DETAILS
 							|| ERROR_CODE == Constants.ERROR_NETWORK_CONNECT) {
 						finish();
+					} else if (ERROR_CODE == Constants.RESULT_DELETE_MESSAGE_SUCCESS  && actionMode != null) {
+						if (messageListAdapter != null) {
+							messageListAdapter.clearSelectedPositions();
+						}						
 					}
+					
 				}
 			});			
 			AlertDialog aDialog = builder.create();
@@ -144,16 +175,22 @@ public class MessageListActivity extends VeneficaActivity {
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
     	if(id == D_ERROR) {
-    		String message = "";
+    		StringBuffer message = new StringBuffer();
     		//Display error message as per the error code
     		if (ERROR_CODE == Constants.ERROR_NETWORK_UNAVAILABLE) {
-    			message = (String) getResources().getText(R.string.error_network_01);
+    			message.append((String) getResources().getText(R.string.error_network_01));
 			} else if(ERROR_CODE == Constants.ERROR_NETWORK_CONNECT){
-				message = (String) getResources().getText(R.string.error_network_02);
-			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_ALL_MESSAGES){
-				message = (String) getResources().getText(R.string.error_get_all_messages);
-			}  		
-    		((AlertDialog) dialog).setMessage(message);
+				message.append((String) getResources().getText(R.string.error_network_02));
+			} else if(ERROR_CODE == Constants.ERROR_RESULT_GET_ALL_MESSAGES){
+				message.append((String) getResources().getText(R.string.error_get_all_messages));
+			} else if(ERROR_CODE == Constants.ERROR_RESULT_DELETE_MESSAGE){
+				message.append((String) getResources().getText(R.string.error_delete_messages));
+			} else if(ERROR_CODE == Constants.RESULT_DELETE_MESSAGE_SUCCESS){
+				message.append(messageListAdapter.getSelectedPositions().size());
+				message.append(" ");
+				message.append((String) getResources().getText(R.string.msg_delete_messages_success));
+			}
+    		((AlertDialog) dialog).setMessage(message.toString());
 		}    	
     }
     
@@ -162,8 +199,105 @@ public class MessageListActivity extends VeneficaActivity {
     	int itemId = item.getItemId();
     	if (itemId == android.R.id.home) {
     		finish();
-    	}
+    	} else if (itemId == R.id.menu_message_list_refresh) {
+    		//refresh messages
+    		if (!isWorking) {
+    			if(WSAction.isNetworkConnected(this)){
+    				new MessageListTask().execute(ACT_MODE_GET_ALL_MESSAGES);
+    			} else {
+    		    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+    		    	showDialog(D_ERROR);	 
+    		    }
+			}			
+		}
     	return true;
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	getSupportMenuInflater()
+		.inflate(R.menu.activity_message_list, menu);
+    	return super.onCreateOptionsMenu(menu);
+    }
+	/**
+	 * @author avinash
+	 * Class to handle action modes
+	 */
+	private final class AnActionModeOfMessageList implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			getSupportMenuInflater()
+					.inflate(R.menu.activity_message_list_action_modes, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			isActionModeActive = true;
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			if (item.getItemId() == R.id.menu_message_list_delete) {
+				//delete selected messages
+				if(WSAction.isNetworkConnected(MessageListActivity.this)){
+					new MessageListTask().execute(ACT_MODE_DELETE_MESSAGES);
+				} else {
+			    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+			    	showDialog(D_ERROR);	 
+			    }
+				if (actionMode != null) {
+					actionMode.finish();
+				}				
+			}
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			isActionModeActive = false;
+		}
+	}
+    
+	/**
+	 * Method to delete multiple messages
+	 * @param token
+	 * @param wsAction
+	 * @return result MessageResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	private MessageResultWrapper deleteSelectedMessages(String token, WSAction wsAction) throws IOException, XmlPullParserException{
+		MessageResultWrapper result = new MessageResultWrapper();
+		if (messageListAdapter != null) {
+			ArrayList<Long> selMessages = messageListAdapter.getSelectedPositions();
+			for (Long id : selMessages) {
+				result = wsAction.hideMessage(token, id);
+			}
+		}
+		return result;		
+	}
+    /**
+     * Helper method to show action modes
+     * @param show boolean
+     */
+    public void showActionMode(boolean show){
+    	if (show && !isActionModeActive) {
+    		actionMode = startActionMode(new AnActionModeOfMessageList());
+		} else if (actionMode != null) {
+			actionMode.finish();
+		}    	
+    }
+    /**
+     * Method to set action mode title
+     * @param title CharSequence
+     */
+    public void setActionModeTitle(CharSequence title){
+    	if (actionMode != null) {
+    		actionMode.setTitle(title);
+		}    	
     }
 	/**
 	 * @author avinash
@@ -174,6 +308,7 @@ public class MessageListActivity extends VeneficaActivity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			setSupportProgressBarIndeterminateVisibility(true);
+			isWorking = true;
 		}
 		@Override
 		protected MessageResultWrapper doInBackground(Integer... params) {
@@ -184,6 +319,8 @@ public class MessageListActivity extends VeneficaActivity {
 				}
 				if (params[0].equals(ACT_MODE_GET_ALL_MESSAGES)){
 					wrapper = wsAction.getAllMessages(((VeneficaApplication)getApplication()).getAuthToken());
+				} else if (params[0].equals(ACT_MODE_DELETE_MESSAGES)) {
+					wrapper = deleteSelectedMessages(((VeneficaApplication)getApplication()).getAuthToken(), wsAction);
 				}
 			} catch (IOException e) {
 				Log.e("MessageListTask::doInBackground :", e.toString());
@@ -204,13 +341,25 @@ public class MessageListActivity extends VeneficaActivity {
 			if(result.message == null && result.messages == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
-			} else if (result.result == Constants.RESULT_GET_ALL_MESSAGES_SUCCESS && result.messages != null) {
-				messages.addAll(result.messages);
+			} else if (result.result == Constants.RESULT_GET_ALL_MESSAGES_SUCCESS) {
+				messages.clear();
+				if (result.messages != null) {
+					messages.addAll(result.messages);					
+				}
+				//set message count to list header
+				txtListHeader.setText(messages.size()+" "+getResources().getText(R.string.msg_messages_found));				
 				messageListAdapter.notifyDataSetChanged();
-			} else if(result.result != Constants.ERROR_RESULT_GET_ALL_MESSAGES){
+			} else if (result.result == Constants.RESULT_DELETE_MESSAGE_SUCCESS) {
+				ERROR_CODE = result.result;
+				showDialog(D_ERROR);
+				//get all messages
+				new MessageListTask().execute(ACT_MODE_GET_ALL_MESSAGES);
+			} else if(result.result == Constants.ERROR_RESULT_GET_ALL_MESSAGES 
+					|| result.result == Constants.ERROR_RESULT_DELETE_MESSAGE){
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
 			}
+			isWorking = false;
 		}
 	}
 
