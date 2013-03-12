@@ -5,7 +5,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingTop="?actionBarSize" >
 
         <!-- Sender -->
 
@@ -27,8 +28,8 @@
 
         <ImageButton
             android:id="@+id/imgBtnActMsgDetailReply"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@color/transparent_white"
@@ -48,7 +49,11 @@
             android:textColor="@color/light_gray"
             android:textSize="13sp"
             android:textStyle="normal" />
-
+		<!-- mode -->
+		<!-- <ImageView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/txtActMsgDetailTime"/> -->
         <!-- divider -->
 
         <TextView
@@ -78,8 +83,8 @@
 
         <ImageButton
             android:id="@+id/imgBtnActMsgDetailSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:background="@color/transparent_white"
