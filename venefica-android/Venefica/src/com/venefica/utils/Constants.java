@@ -62,6 +62,8 @@ public class Constants
 	public static final int ERROR_START_CAMERA = 1053;
 	public static final int ERROR_RESULT_GET_ALL_MESSAGES = 1054;
 	public static final int RESULT_GET_ALL_MESSAGES_SUCCESS = 1055;
+	public static final int RESULT_DELETE_MESSAGE_SUCCESS = 1056;
+	public static final int ERROR_RESULT_DELETE_MESSAGE = 1057;
 	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
@@ -168,6 +170,7 @@ public class Constants
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
 	public static final int PREF_DEF_VAL_CATEGORY = -1;	
 	
-	public static final int EXPIRE_AD_IN_DAYS = 60;		
+	public static final int EXPIRE_AD_IN_DAYS = 60;
+			
 	
 }
