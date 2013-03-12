@@ -2257,7 +2257,7 @@ public class ServicesManager
 		return result;
 	}
 
-	public DeleteMessageResult DeleteMessage(String token, long messageId)
+	/*public DeleteMessageResult DeleteMessage(String token, long messageId)
 	{
 		final String SOAP_METHOD = DELETE_MESSAGE_METHOD;
 
@@ -2309,7 +2309,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	public UpdateCommentResult UpdateComment(String token, CommentDto comment)
 	{
