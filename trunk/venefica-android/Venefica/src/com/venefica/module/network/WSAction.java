@@ -35,6 +35,7 @@ import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
+import com.venefica.services.ServicesManager.DeleteMessageResult;
 import com.venefica.services.ServicesManager.GetAllMessagesResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
@@ -69,6 +70,7 @@ public class WSAction {
 	private final String WS_METHOD_ADD_COMMENT_TO_LISTING = "AddCommentToAd";
 	private final String WS_METHOD_ADD_IMAGE_TO_AD = "AddImageToAd";
 	private final String WS_METHOD_GET_ALL_MESSAGE = "GetAllMessages";
+	private final String WS_METHOD_HIDE_MESSAGE = "HideMessage";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -1090,6 +1092,44 @@ public class WSAction {
 			}
 		} catch (SoapFault e) {
 			result.result = Constants.ERROR_RESULT_GET_ALL_MESSAGES;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to delete message
+	 * @param token
+	 * @param messageId
+	 * @return result MessageResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public MessageResultWrapper hideMessage(String token, long messageId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_HIDE_MESSAGE;
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		MessageResultWrapper result = new MessageResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_MESSAGE_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("messageId", messageId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_DELETE_MESSAGE_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_DELETE_MESSAGE;
 		}
 		return result;
 	}
