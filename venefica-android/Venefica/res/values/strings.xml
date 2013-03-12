@@ -118,6 +118,8 @@
     <string name="label_left">left</string>
     <string name="label_menu_set_default_img">Set as cover image</string>
     <string name="label_post_listing_cover_img">Cover image</string>
+    <string name="label_selected">selected</string>
+    <string name="label_menu_refresh">Reload</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -142,6 +144,8 @@
     <string name="error_add_comment">Unable to update comments. Please try again later.</string>
     <string name="error_start_camera">Unable to start camera.</string>
     <string name="error_get_all_messages">Unable to get messages.</string>
+    <string name="error_delete_messages">Unable to delete messages.</string>
+    <string name="msg_messages_found">messages found.</string>
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
     <string name="msg_reg_user_duplicate_email">User with the specified E-Mail already exists.</string>
@@ -185,6 +189,7 @@
 	<string name="msg_postlisting_sel_cover_image">Please set cover image. </string>
 	<string name="msg_working_in_background">Working. Please wait....</string>
 	<string name="msg_postlisting_sel_cover_image_instruction">Long press to set as cover image.</string>
+	<string name="msg_delete_messages_success">messages deleted successfully.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
