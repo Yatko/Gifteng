@@ -1,5 +1,6 @@
 package com.venefica.connect;
 
+import com.venefica.config.Constants;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,10 +33,7 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class ConnectSupport {
 
-    public static final String CALLBACK_PATH = "callback";
-    private static final String OAUTH_TOKEN_ATTRIBUTE = "oauthToken";
-    
-    private final static Log logger = LogFactory.getLog(ConnectSupport.class);
+    private static final Log logger = LogFactory.getLog(ConnectSupport.class);
 
     /**
      * Builds the provider URL to redirect the user to for connection
@@ -126,7 +124,7 @@ public class ConnectSupport {
             parameters.setCallbackUrl(callbackUrl(request));
         }
         OAuthToken requestToken = fetchRequestToken(request, oauthOperations);
-        request.setAttribute(OAUTH_TOKEN_ATTRIBUTE, requestToken, RequestAttributes.SCOPE_SESSION);
+        request.setAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE, requestToken, RequestAttributes.SCOPE_SESSION);
         return buildOAuth1Url(oauthOperations, requestToken.getValue(), parameters);
     }
 
@@ -173,14 +171,14 @@ public class ConnectSupport {
         HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
         String requestUrl = nativeRequest.getRequestURL().toString();
 
-        return requestUrl.endsWith(CALLBACK_PATH) ? requestUrl : nativeRequest.getRequestURL()
-                .toString() + "/" + CALLBACK_PATH;
+        return requestUrl.endsWith(Constants.CALLBACK_PATH) ? requestUrl : nativeRequest.getRequestURL()
+                .toString() + "/" + Constants.CALLBACK_PATH;
     }
 
     private OAuthToken extractCachedRequestToken(WebRequest request) {
-        OAuthToken requestToken = (OAuthToken) request.getAttribute(OAUTH_TOKEN_ATTRIBUTE,
+        OAuthToken requestToken = (OAuthToken) request.getAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE,
                 RequestAttributes.SCOPE_SESSION);
-        request.removeAttribute(OAUTH_TOKEN_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
+        request.removeAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
         return requestToken;
     }
     

@@ -13,8 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ImageDto extends DtoBase {
 
-    public static final String BASE_PATH = "/images/";
-    public static final String NOIMAGE = "noimage";
+    private static final String BASE_PATH = "/images/";
+    private static final String NOIMAGE = "noimage";
     
     // out
     private Long id;

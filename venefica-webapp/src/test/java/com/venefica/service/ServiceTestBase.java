@@ -1,10 +1,10 @@
 package com.venefica.service;
 
 import com.venefica.auth.Token;
-import com.venefica.auth.TokenAuthorizationInterceptor;
 import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
 import com.venefica.common.DumpErrorTestExecutionListener;
+import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import java.util.ArrayList;
@@ -139,7 +139,7 @@ public abstract class ServiceTestBase<T> {
         tokenHeader.add(token);
 
         Map<String, List<?>> headers = new HashMap<String, List<?>>();
-        headers.put(TokenAuthorizationInterceptor.AUTH_TOKEN, tokenHeader);
+        headers.put(Constants.AUTH_TOKEN, tokenHeader);
         
         cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
     }

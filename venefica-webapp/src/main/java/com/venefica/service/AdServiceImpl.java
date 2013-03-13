@@ -43,9 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AdService")
 public class AdServiceImpl extends AbstractService implements AdService {
 
-    public static final int PROLONGATION_PERIOD_DAYS = 31;
-    public static final int EXPIRATION_PERIOD_DAYS = 31 * 2;
-    public static final int MAX_SPAM_MARKS = 3;
+    private static final int PROLONGATION_PERIOD_DAYS = 31;
+    private static final int EXPIRATION_PERIOD_DAYS = 31 * 2;
+    private static final int MAX_SPAM_MARKS = 3;
     
     @Inject
     private CategoryDao categoryDao;

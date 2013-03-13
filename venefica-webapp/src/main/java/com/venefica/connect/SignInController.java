@@ -1,5 +1,6 @@
 package com.venefica.connect;
 
+import com.venefica.config.Constants;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
@@ -31,9 +32,12 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/signin")
 public class SignInController {
     
-    private final static String ERROR_CODE = "error";
+    private static final String ERROR_CODE = "error";
+    private static final String ERROR_REASON_PROVIDER = "provider";
+    private static final String ERROR_REASON_REJECT = "reject";
+    private static final String ERROR_REASON_MULTIPLE_USERS = "multiple_users";
     
-    private final static Log logger = LogFactory.getLog(SignInController.class);
+    private static final Log logger = LogFactory.getLog(SignInController.class);
     
     @Inject
     private ConnectionFactoryLocator connectionFactoryLocator;
@@ -48,7 +52,7 @@ public class SignInController {
     private ConnectSupport connectSupport;
     
     private String signInErrorUrl = "/signin/error";
-
+    
     /**
      * Sets URL of application's sign-in error page.
      *
@@ -64,20 +68,19 @@ public class SignInController {
      */
     @RequestMapping(value = "/{providerId}", method = RequestMethod.GET)
     public RedirectView signIn(@PathVariable String providerId, NativeWebRequest request) {
-        ConnectionFactory<?> connectionFactory = connectionFactoryLocator
-                .getConnectionFactory(providerId);
         try {
+            ConnectionFactory<?> connectionFactory = connectionFactoryLocator
+                    .getConnectionFactory(providerId);
             return new RedirectView(connectSupport.buildOAuthUrl(connectionFactory, request));
         } catch (Exception e) {
-            return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
-                    .queryParam(ERROR_CODE, "provider").build().toString(), true);
+            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
         }
     }
 
     /**
      * Process the authentication callback from an OAuth 1 service provider.
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "oauth_token")
+    @RequestMapping(value = "/{providerId}/" + Constants.CALLBACK_PATH, method = RequestMethod.GET, params = "oauth_token")
     public RedirectView oauth1Callback(@PathVariable String providerId, NativeWebRequest request) {
         try {
             OAuth1ConnectionFactory<?> connectionFactory = (OAuth1ConnectionFactory<?>) connectionFactoryLocator
@@ -88,8 +91,7 @@ public class SignInController {
         } catch (Exception e) {
             logger.warn("Exception while handling OAuth1 callback (" + e.getMessage()
                     + "). Redirecting to " + signInErrorUrl + ".", e);
-            return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
-                    .queryParam(ERROR_CODE, "provider").build().toString(), true);
+            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
         }
     }
 
@@ -98,10 +100,9 @@ public class SignInController {
      * parameter is given, likely indicating that the user denied authorization
      * with the provider.
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET)
+    @RequestMapping(value = "/{providerId}/" + Constants.CALLBACK_PATH, method = RequestMethod.GET)
     public RedirectView cancelAuthorizationCallback(@PathVariable("providerId") String providerId) {
-        return new RedirectView(URIBuilder.fromUri(signInErrorUrl).queryParam(ERROR_CODE, "reject")
-                .build().toString(), true);
+        return new RedirectView(buildErrorURL(ERROR_REASON_REJECT), true);
     }
 
     /**
@@ -117,10 +118,9 @@ public class SignInController {
      * by having her of she click "Allow" in their web browser at the provider's
      * site.
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "code")
+    @RequestMapping(value = "/{providerId}/" + Constants.CALLBACK_PATH, method = RequestMethod.GET, params = "code")
     public RedirectView oath2Callback(@PathVariable String providerId,
             @RequestParam("code") String code, NativeWebRequest request) {
-
         try {
             OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) connectionFactoryLocator
                     .getConnectionFactory(providerId);
@@ -130,8 +130,7 @@ public class SignInController {
         } catch (Exception e) {
             logger.warn("Exception while handling OAut2 callback (" + e.getMessage()
                     + "). Redirecting to " + signInErrorUrl, e);
-            return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
-                    .queryParam(ERROR_CODE, "provider").build().toString(), true);
+            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
         }
     }
 
@@ -139,14 +138,16 @@ public class SignInController {
         List<String> userIds = usersConnectionRepository.findUserIdsWithConnection(connection);
 
         if (userIds.size() == 1) {
-            usersConnectionRepository.createConnectionRepository(userIds.get(0)).updateConnection(
-                    connection);
+            usersConnectionRepository.createConnectionRepository(userIds.get(0)).updateConnection(connection);
             // Generate session token and perform redirect to the "special" URL.
             String redirectUrl = signInAdapter.signIn(userIds.get(0), connection, request);
             return new RedirectView(redirectUrl, true);
         } else {
-            return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
-                    .queryParam(ERROR_CODE, "multiple_users").build().toString());
+            return new RedirectView(buildErrorURL(ERROR_REASON_MULTIPLE_USERS));
         }
+    }
+    
+    private String buildErrorURL(String reason) {
+        return URIBuilder.fromUri(signInErrorUrl).queryParam(ERROR_CODE, reason).build().toString();
     }
 }

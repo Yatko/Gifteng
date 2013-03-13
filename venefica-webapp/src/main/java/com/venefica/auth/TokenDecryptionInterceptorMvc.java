@@ -1,5 +1,6 @@
 package com.venefica.auth;
 
+import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import javax.inject.Inject;
@@ -12,8 +13,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
 
-    public final static String AUTH_TOKEN = "AuthToken";
-    
     protected final Log log = LogFactory.getLog(TokenDecryptionInterceptorMvc.class);
     
     @Inject
@@ -54,7 +53,7 @@ public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
     }
 
     private String getEncryptedToken(HttpServletRequest request) {
-        String encryptedToken = request.getHeader(AUTH_TOKEN);
+        String encryptedToken = request.getHeader(Constants.AUTH_TOKEN);
 
         if (encryptedToken == null) {
             // Try to get token from the cookies
@@ -62,7 +61,7 @@ public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
 
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(AUTH_TOKEN)) {
+                    if (cookie.getName().equals(Constants.AUTH_TOKEN)) {
                         encryptedToken = cookie.getValue();
                         break;
                     }

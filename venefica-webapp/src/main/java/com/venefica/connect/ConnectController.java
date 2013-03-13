@@ -1,6 +1,7 @@
 package com.venefica.connect;
 
 import com.venefica.auth.TokenDecryptionInterceptorMvc;
+import com.venefica.config.Constants;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
@@ -34,11 +35,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/connect")
 public class ConnectController {
     
-    private final static String ERROR_CODE = "error";
-    private final static String PROVIDER_ERROR_CODE = "provider";
-    private final static String MULTIPLE_CONNECTIONS_CODE = "multiple";
+    private static final String ERROR_CODE = "error";
+    private static final String PROVIDER_ERROR_CODE = "provider";
+    private static final String MULTIPLE_CONNECTIONS_CODE = "multiple";
     
-    private final static Log logger = LogFactory.getLog(ConnectController.class);
+    private static final Log logger = LogFactory.getLog(ConnectController.class);
     
     @Inject
     private ConnectionFactoryLocator connectionFactoryLocator;
@@ -76,14 +77,14 @@ public class ConnectController {
         ConnectionFactory<?> connectionFactory = connectionFactoryLocator
                 .getConnectionFactory(providerId);
         try {
-            String encryptedToken = request.getHeader(TokenDecryptionInterceptorMvc.AUTH_TOKEN);
+            String encryptedToken = request.getHeader(Constants.AUTH_TOKEN);
 
             if (encryptedToken != null) {
                 logger.debug("Encrypted token: " + encryptedToken);
                 logger.debug("Encrypted token length: " + encryptedToken.length());
             }
 
-            response.addCookie(new Cookie(TokenDecryptionInterceptorMvc.AUTH_TOKEN, encryptedToken));
+            response.addCookie(new Cookie(Constants.AUTH_TOKEN, encryptedToken));
             return new RedirectView(connectSupport.buildOAuthUrl(connectionFactory, request));
         } catch (Exception e) {
             return redirectToConnectError(PROVIDER_ERROR_CODE);
@@ -93,7 +94,7 @@ public class ConnectController {
     /**
      * Process the authorization callback from an OAuth 1 service provider.
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "oauth_token")
+    @RequestMapping(value = "/{providerId}/" + Constants.CALLBACK_PATH, method = RequestMethod.GET, params = "oauth_token")
     public RedirectView oauth1Callback(@PathVariable String providerId, NativeWebRequest request) {
         try {
             OAuth1ConnectionFactory<?> connectionFactory = (OAuth1ConnectionFactory<?>) connectionFactoryLocator
@@ -114,7 +115,7 @@ public class ConnectController {
     /**
      * Process the authorization callback from an OAuth 2 service provider.
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "code")
+    @RequestMapping(value = "/{providerId}/" + Constants.CALLBACK_PATH, method = RequestMethod.GET, params = "code")
     public RedirectView oauth2Callback(@PathVariable String providerId, NativeWebRequest request) {
         try {
             OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory<?>) connectionFactoryLocator

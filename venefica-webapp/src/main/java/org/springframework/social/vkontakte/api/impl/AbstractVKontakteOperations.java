@@ -27,7 +27,7 @@ import java.util.Properties;
  * @author vkolodrevskiy
  */
 class AbstractVKontakteOperations {
-    private final static String VK_REST_URL = "https://api.vkontakte.ru/method/";
+    private static final String VK_REST_URL = "https://api.vkontakte.ru/method/";
 
     private final boolean isAuthorized;
     private final String accessToken;

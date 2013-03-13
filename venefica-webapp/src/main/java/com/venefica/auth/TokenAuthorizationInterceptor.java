@@ -1,5 +1,6 @@
 package com.venefica.auth;
 
+import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.fault.AuthenticationException;
@@ -29,11 +30,7 @@ import org.apache.cxf.ws.addressing.EndpointReferenceType;
  */
 public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
 
-    public final static String REGISTERUSER_OPERATION = "RegisterUser";
-    public final static String AUTHENTICATE_OPERATION = "Authenticate";
-    public final static String AUTH_TOKEN = "AuthToken";
-    
-    protected final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
+    private final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
     
     @Inject
     private ThreadSecurityContextHolder securityContextHolder;
@@ -53,18 +50,18 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
         String operation = msg.getExchange().getBindingOperationInfo().getName().getLocalPart();
 
         // Skip "register" operation
-        if (operation.equals(REGISTERUSER_OPERATION) || operation.equals(AUTHENTICATE_OPERATION)) {
+        if (operation.equals(Constants.REGISTERUSER_OPERATION) || operation.equals(Constants.AUTHENTICATE_OPERATION)) {
             return;
         }
 
         try {
             Map<String, ?> headers = (Map<String, ?>) msg.get(Message.PROTOCOL_HEADERS);
 
-            if (headers == null || !headers.containsKey(AUTH_TOKEN)) {
+            if (headers == null || !headers.containsKey(Constants.AUTH_TOKEN)) {
                 throw new AuthenticationException("Unauthorized request arrived (no token provided)!");
             }
 
-            List<String> authTokenHeader = (List<String>) headers.get(AUTH_TOKEN);
+            List<String> authTokenHeader = (List<String>) headers.get(Constants.AUTH_TOKEN);
             Token token = decryptToken(authTokenHeader);
 
             if (token.isExpired()) {

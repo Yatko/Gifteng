@@ -23,8 +23,9 @@ import org.springframework.social.connect.UserProfile;
  */
 public class UserSignUpAdapter implements ConnectionSignUp {
 
-    private final Log log = LogFactory.getLog(UserSignUpAdapter.class);
-    private final static int BUFFER_SIZE = 4 * 1024;
+    private final static Log log = LogFactory.getLog(UserSignUpAdapter.class);
+    
+    private static final int BUFFER_SIZE = 4 * 1024;
     
     @Inject
     private UserDao userDao;

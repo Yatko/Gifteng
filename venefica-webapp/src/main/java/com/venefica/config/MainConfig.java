@@ -32,7 +32,7 @@ import org.springframework.core.env.Environment;
 @PropertySource("/application.properties")
 public class MainConfig {
 
-    public static final int EXPIRATION_INTERVAL_CHECK_SECS = 60;
+    private static final int EXPIRATION_INTERVAL_CHECK_SECS = 60;
     
     @Inject
     private Environment environment;
@@ -64,7 +64,7 @@ public class MainConfig {
         JobDetail job = newJob(ExpirationJob.class)
                 .withIdentity("expirationJob", "common")
                 .build();
-        job.getJobDataMap().put(ExpirationJob.ADDAO, adDao);
+        job.getJobDataMap().put(Constants.ADDAO, adDao);
         return job;
         // @formatter:on 
     }
