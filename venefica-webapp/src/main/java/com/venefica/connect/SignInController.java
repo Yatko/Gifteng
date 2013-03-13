@@ -87,7 +87,7 @@ public class SignInController {
             return handleSignIn(connection, request);
         } catch (Exception e) {
             logger.warn("Exception while handling OAuth1 callback (" + e.getMessage()
-                    + "). Redirecting to " + signInErrorUrl + ".");
+                    + "). Redirecting to " + signInErrorUrl + ".", e);
             return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
                     .queryParam(ERROR_CODE, "provider").build().toString(), true);
         }
@@ -129,7 +129,7 @@ public class SignInController {
             return handleSignIn(connection, request);
         } catch (Exception e) {
             logger.warn("Exception while handling OAut2 callback (" + e.getMessage()
-                    + "). Redirecting to " + signInErrorUrl);
+                    + "). Redirecting to " + signInErrorUrl, e);
             return new RedirectView(URIBuilder.fromUri(signInErrorUrl)
                     .queryParam(ERROR_CODE, "provider").build().toString(), true);
         }

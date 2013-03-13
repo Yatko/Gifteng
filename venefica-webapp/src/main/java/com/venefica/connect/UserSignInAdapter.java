@@ -35,7 +35,7 @@ public class UserSignInAdapter implements SignInAdapter {
             return URIBuilder.fromUri(PROFILE_URL).queryParam(TOKEN_PARAM, encryptedToken).build()
                     .toString();
         } catch (Exception e) {
-            log.error(e);
+            log.error("Exception thrown", e);
             throw new RuntimeException(e);
         }
     }
