@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -40,6 +42,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.map.ListingOverlayItem;
@@ -636,6 +639,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		} else if(v.getId() == R.id.imgBtnActListingDetailsSend && listing != null){
 			//Check for empty message
 			if (edtMessage.getText().toString().trim().length() > 0) {
+				// hide virtual keyboard
+				InputMethodManager imm = (InputMethodManager) ListingDetailsActivity.this
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(imgBtnSend.getWindowToken(), 0);
 				if (isSendMessage) {
 					new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
 				} else {
