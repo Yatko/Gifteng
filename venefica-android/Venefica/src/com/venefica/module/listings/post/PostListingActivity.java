@@ -52,6 +52,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -78,6 +79,7 @@ import com.google.android.maps.Overlay;
 import com.venefica.module.listings.GalleryImageAdapter;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCategoriesActivity;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.network.WSAction;
@@ -360,7 +362,9 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 		edtDescription = (EditText) layDetails.findViewById(R.id.edtActPostListingDescription);
 		edtPrice = (EditText) layDetails.findViewById(R.id.edtActPostListingPrice);
 		edtLatitude =  (EditText) layDetails.findViewById(R.id.edtActPostListingLatitude);
+		edtLatitude.setFocusable(false);
 		edtLongitude = (EditText) layDetails.findViewById(R.id.edtActPostListingLongitude);
+		edtLongitude.setFocusable(false);
 		btnListItem = (Button) layDetails.findViewById(R.id.btnActPostListingPost);
 		btnListItem.setOnClickListener(this);
 		btnSelCategory = (Button) layDetails.findViewById(R.id.btnActPostListingCategory);
@@ -559,6 +563,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			if (!uploadingData) {
 				if (validateFields()) {
 					if(WSAction.isNetworkConnected(PostListingActivity.this)){
+						// hide virtual keyboard
+						InputMethodManager imm = (InputMethodManager) PostListingActivity.this
+								.getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(btnListItem.getWindowToken(), 0);
 						if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
 							new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
 						}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
@@ -574,6 +582,10 @@ public class PostListingActivity extends VeneficaMapActivity implements Location
 			}
 		} else if (view.getId() == R.id.btnActPostListingCategory) {
 			if (!uploadingData) {
+				// hide virtual keyboard
+				InputMethodManager imm = (InputMethodManager) PostListingActivity.this
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(btnSelCategory.getWindowToken(), 0);
 				Intent selCatIntent = new Intent(PostListingActivity.this, BrowseCategoriesActivity.class);
 				selCatIntent.putExtra("act_mode", BrowseCategoriesActivity.ACT_MODE_GET_CATEGORY);
 				startActivityForResult(selCatIntent, REQ_SELECT_CATEGORY);
