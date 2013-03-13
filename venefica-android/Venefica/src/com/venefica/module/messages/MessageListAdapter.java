@@ -107,13 +107,23 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 		}
 		if (messages.get(position).isOwner()) {			
 			holder.txtSenderName.setText(messages.get(position).getToFullName());
+			//to send on details
+			holder.txtMessageText.setContentDescription(messages.get(position).getToName());
+			holder.imgProfile.setContentDescription(messages.get(position).getToAvatarUrl());
+			//set image as per mode sent/received
 			holder.imgViewMode.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_arrow_top));
 		} else {
 			holder.txtSenderName.setText(messages.get(position).getFromFullName());
+			//to send on details
+			holder.txtMessageText.setContentDescription(messages.get(position).getFromName());
+			holder.imgProfile.setContentDescription(messages.get(position).getFromAvatarUrl());
+			//set image as per mode sent/received
 			holder.imgViewMode.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_arrow_bottom));
 		}
 		//set is owner value as description to send it on message detail
-		holder.txtSenderName.setContentDescription(String.valueOf(messages.get(position).isOwner()));
+		holder.txtSenderName.setContentDescription(String.valueOf(messages.get(position).isOwner()));		
+		holder.txtTime.setContentDescription(String.valueOf(messages.get(position).getId()));
+		
 		holder.txtMessageText.setText(messages.get(position).getText());
 		holder.chkSelected.setContentDescription(messages.get(position).getId()+"");
 		if (messages.get(position).getCreatedAt() != null) {
@@ -142,16 +152,20 @@ public class MessageListAdapter extends BaseAdapter implements OnClickListener{
 		if (view.getId() == R.id.imgMessageLItemImage) {
 			
 		} else {
-			holder = (ViewHolder) view.getTag();
+			//show detail screen
+			ViewHolder tempHolder = (ViewHolder) view.getTag();
 			Intent intent = new Intent((MessageListActivity)context,
 					MessageDetailActivity.class);
-			if (holder != null) {
-				intent.putExtra("sender", holder.txtSenderName.getText().toString());
-				intent.putExtra("time", holder.txtTime.getText().toString());
-				intent.putExtra("message_text", holder.txtMessageText.getText().toString());
-				intent.putExtra("is_owner", Boolean.parseBoolean(holder.txtSenderName.getContentDescription().toString()));
+			if (tempHolder != null) {
+				intent.putExtra("sender_full_name", tempHolder.txtSenderName.getText().toString());
+				intent.putExtra("time", tempHolder.txtTime.getText().toString());
+				intent.putExtra("message_text", tempHolder.txtMessageText.getText().toString());
+				intent.putExtra("is_owner", Boolean.parseBoolean(tempHolder.txtSenderName.getContentDescription().toString()));
+				intent.putExtra("avatar_url", tempHolder.imgProfile.getContentDescription().toString());
+				intent.putExtra("sender_name", tempHolder.txtMessageText.getContentDescription().toString());
+				intent.putExtra("message_id", Long.parseLong(tempHolder.txtTime.getContentDescription().toString()));
 			}			
-			context.startActivity(intent);
+			((MessageListActivity)context).startActivityForResult(intent, MessageListActivity.REQ_SHOW_MESSAAGE_DETAILS);
 		}
 	}
 
