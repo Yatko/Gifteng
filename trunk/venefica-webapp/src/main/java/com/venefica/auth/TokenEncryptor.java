@@ -22,8 +22,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TokenEncryptor {
 
-    public static final String ALGORITHM = "AES";
-    public static final String TRANSFORMATION = ALGORITHM + "/CBC/PKCS5Padding";
+    private static final String ALGORITHM = "AES";
+    private static final String TRANSFORMATION = ALGORITHM + "/CBC/PKCS5Padding";
     
     private final Log log = LogFactory.getLog(TokenEncryptor.class);
     

@@ -18,8 +18,8 @@ import org.springframework.web.context.request.NativeWebRequest;
  */
 public class UserSignInAdapter implements SignInAdapter {
 
-    private final static String TOKEN_PARAM = "token";
-    public final static String PROFILE_URL = "/profile";
+    private static final String TOKEN_PARAM = "token";
+    private static final String PROFILE_URL = "/profile";
     
     private final Log log = LogFactory.getLog(UserSignInAdapter.class);
     

@@ -12,7 +12,7 @@ import org.apache.commons.lang.time.DateUtils;
 public class Token implements Serializable {
 
     private static final long serialVersionUID = -5601354813824855907L;
-    public static final int EXPIRES_IN_DAYS = 14;
+    private static final int EXPIRES_IN_DAYS = 14;
     
     private Long userId;
     private Date expiresAt;

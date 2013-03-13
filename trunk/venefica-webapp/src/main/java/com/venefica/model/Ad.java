@@ -35,7 +35,7 @@ import org.hibernate.annotations.Type;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Ad {
 
-    public static final int DEFAULT_AVAIL_PROLONGATIONS = 1;
+    private static final int DEFAULT_AVAIL_PROLONGATIONS = 1;
     
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ad_gen")

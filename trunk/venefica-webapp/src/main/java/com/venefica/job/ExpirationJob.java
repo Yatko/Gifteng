@@ -1,5 +1,6 @@
 package com.venefica.job;
 
+import com.venefica.config.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.DisallowConcurrentExecution;
@@ -12,14 +13,12 @@ import com.venefica.dao.AdDao;
 @DisallowConcurrentExecution
 public class ExpirationJob implements Job {
 
-    public static final String ADDAO = "AdDao";
-    
     private static final Log log = LogFactory.getLog(ExpirationJob.class);
 
     @Override
     // @Transactional
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(ADDAO);
+        AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.ADDAO);
 
         try {
             log.info("Processing expired advertisiments");
