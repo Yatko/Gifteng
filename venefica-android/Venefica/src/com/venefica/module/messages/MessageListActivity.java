@@ -5,18 +5,17 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,6 +52,7 @@ public class MessageListActivity extends VeneficaActivity {
 	 */
 	private final int ACT_MODE_GET_ALL_MESSAGES = 4001;
 	private final int ACT_MODE_DELETE_MESSAGES = 4002;
+	public static final int REQ_SHOW_MESSAAGE_DETAILS = 5001;
 	/**
 	 * Current error code.
 	 */
@@ -284,8 +284,10 @@ public class MessageListActivity extends VeneficaActivity {
      * @param show boolean
      */
     public void showActionMode(boolean show){
-    	if (show && !isActionModeActive) {
-    		actionMode = startActionMode(new AnActionModeOfMessageList());
+    	if (show) {
+    		if (!isActionModeActive) {
+    			actionMode = startActionMode(new AnActionModeOfMessageList());
+			}    		
 		} else if (actionMode != null) {
 			actionMode.finish();
 		}    	
@@ -298,6 +300,20 @@ public class MessageListActivity extends VeneficaActivity {
     	if (actionMode != null) {
     		actionMode.setTitle(title);
 		}    	
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	if(resultCode == Activity.RESULT_OK 
+    			&& requestCode == REQ_SHOW_MESSAAGE_DETAILS && data.getBooleanExtra("is_deleted", false)){
+    		//refresh list if any message is deleted
+    		if(WSAction.isNetworkConnected(this)){
+				new MessageListTask().execute(ACT_MODE_GET_ALL_MESSAGES);
+			} else {
+		    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+		    	showDialog(D_ERROR);	 
+		    }
+    	}
     }
 	/**
 	 * @author avinash
