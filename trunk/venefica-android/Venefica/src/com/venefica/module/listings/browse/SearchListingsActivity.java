@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -186,6 +187,10 @@ ISlideMenuCallback, LocationListener{
 						getFilterOptions();
 						lastAdId = -1;
 						isLoadOnScroll = false;
+						// hide virtual keyboard
+						InputMethodManager imm = (InputMethodManager) SearchListingsActivity.this
+								.getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 						new SearchListingTask().execute(CURRENT_MODE);
 					}					
 		            return true;
