@@ -41,7 +41,7 @@ public class ProfileController {
                 }
             }
         } catch (TokenDecryptionException e) {
-            log.warn(e);
+            log.warn("Exception thrown when trying to decrypt token", e);
         }
     }
 }

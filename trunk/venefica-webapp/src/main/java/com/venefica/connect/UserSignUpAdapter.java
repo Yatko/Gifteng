@@ -64,9 +64,9 @@ public class UserSignUpAdapter implements ConnectionSignUp {
                     user.setAvatar(avatar);
                 }
             } catch (MalformedURLException e) {
-                log.error(e);
+                log.error("", e);
             } catch (IOException e) {
-                log.error(e);
+                log.error("", e);
             }
 
             if (user.getName() == null) {

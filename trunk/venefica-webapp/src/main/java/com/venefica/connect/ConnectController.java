@@ -127,7 +127,7 @@ public class ConnectController {
             return redirectToConnectError(MULTIPLE_CONNECTIONS_CODE);
         } catch (Exception e) {
             logger.warn("Exception while handling OAut2 callback (" + e.getMessage()
-                    + "). Redirecting to " + connectErrorUrl);
+                    + "). Redirecting to " + connectErrorUrl, e);
             return redirectToConnectError(PROVIDER_ERROR_CODE);
         }
     }
