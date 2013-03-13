@@ -120,6 +120,7 @@
     <string name="label_post_listing_cover_img">Cover image</string>
     <string name="label_selected">selected</string>
     <string name="label_menu_refresh">Reload</string>
+    <string name="label_menu_reply">Reply</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
