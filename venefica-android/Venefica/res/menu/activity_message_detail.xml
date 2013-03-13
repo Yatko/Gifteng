@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_reply_message"
+        android:icon="@drawable/icon_goleft"
+        android:orderInCategory="99"
+        android:showAsAction="ifRoom"
+        android:title="@string/label_menu_reply"/>
+    <item
+        android:id="@+id/menu_message_list_delete"
+        android:icon="@drawable/icon_trash"
+        android:orderInCategory="98"
+        android:showAsAction="ifRoom"
+        android:title="@string/label_menu_delete"/>
+
+</menu>
