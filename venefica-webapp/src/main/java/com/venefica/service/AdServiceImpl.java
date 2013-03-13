@@ -36,8 +36,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +46,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public static final int PROLONGATION_PERIOD_DAYS = 31;
     public static final int EXPIRATION_PERIOD_DAYS = 31 * 2;
     public static final int MAX_SPAM_MARKS = 3;
-    
-    @SuppressWarnings("unused")
-    private final Log log = LogFactory.getLog(AdServiceImpl.class);
     
     @Inject
     private CategoryDao categoryDao;
