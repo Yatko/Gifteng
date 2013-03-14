@@ -7,7 +7,7 @@ import com.venefica.common.DumpErrorTestExecutionListener;
 import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +127,7 @@ public abstract class ServiceTestBase<T> {
     protected User getThirdUser() {
         return thirdUser;
     }
-
+    
     /**
      * Adds authentication token to request headers of the underlying cxf
      * client.
@@ -135,13 +135,7 @@ public abstract class ServiceTestBase<T> {
      * @param token
      */
     protected void authenticateClientWithToken(String token) {
-        List<String> tokenHeader = new ArrayList<String>();
-        tokenHeader.add(token);
-
-        Map<String, List<?>> headers = new HashMap<String, List<?>>();
-        headers.put(Constants.AUTH_TOKEN, tokenHeader);
-        
-        cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
+        addToHttpHeader(Constants.AUTH_TOKEN, token);
     }
 
     protected void authenticateClientAsFirstUser() {
@@ -167,6 +161,22 @@ public abstract class ServiceTestBase<T> {
 
     protected void rollbackTransaction(TransactionStatus status) {
         transactionManager.rollback(status);
+    }
+    
+    /**
+     * Inserts a new key/value pair into HTTP headers.
+     * 
+     * @param key
+     * @param value 
+     */
+    private void addToHttpHeader(String key, Object value) {
+        Object headers = cxfClient.getRequestContext().get(Message.PROTOCOL_HEADERS);
+        if ( headers == null || !(headers instanceof Map) ) {
+            headers = new HashMap<String, List<?>>();
+        }
+        
+        ((Map) headers).put(key, Arrays.asList(value));
+        cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
     }
     
     /**
