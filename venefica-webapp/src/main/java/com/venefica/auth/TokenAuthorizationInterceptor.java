@@ -4,20 +4,20 @@ import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.fault.AuthenticationException;
-import java.io.IOException;
-import java.io.OutputStream;
+//import java.io.IOException;
+//import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.binding.soap.interceptor.SoapHeaderInterceptor;
-import org.apache.cxf.endpoint.Endpoint;
+//import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.message.Exchange;
+//import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.Message;
-import org.apache.cxf.transport.Conduit;
-import org.apache.cxf.ws.addressing.EndpointReferenceType;
+//import org.apache.cxf.transport.Conduit;
+//import org.apache.cxf.ws.addressing.EndpointReferenceType;
 
 /**
  * Custom token authorization intercepter. Used for authentication in JAX-WS web
@@ -92,46 +92,46 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
         return tokenEncryptor.decrypt(authTokenHeader.get(0));
     }
 
-    protected void sendErrorResponse(Message msg, int responseCode) {
-        Message outMsg = getOutMessage(msg);
-        outMsg.put(Message.RESPONSE_CODE, responseCode);
+//    private void sendErrorResponse(Message msg, int responseCode) {
+//        Message outMsg = getOutMessage(msg);
+//        outMsg.put(Message.RESPONSE_CODE, responseCode);
+//
+//        msg.getInterceptorChain().abort();
+//
+//        try {
+//            // Send out message back
+//            getConduit(msg).prepare(outMsg);
+//            close(outMsg);
+//        } catch (IOException e) {
+//            log.warn(e.getMessage(), e);
+//        }
+//    }
 
-        msg.getInterceptorChain().abort();
+//    private Message getOutMessage(Message msg) {
+//        Exchange exchange = msg.getExchange();
+//        Message outMsg = exchange.getOutFaultMessage();
+//
+//        if (outMsg == null) {
+//            Endpoint endpoint = exchange.get(Endpoint.class);
+//            outMsg = endpoint.getBinding().createMessage();
+//            exchange.setOutMessage(outMsg);
+//        }
+//
+//        outMsg.putAll(msg);
+//        return outMsg;
+//    }
 
-        try {
-            // Send out message back
-            getConduit(msg).prepare(outMsg);
-            close(outMsg);
-        } catch (IOException e) {
-            log.warn(e.getMessage(), e);
-        }
-    }
+//    private Conduit getConduit(Message msg) throws IOException {
+//        Exchange exchange = msg.getExchange();
+//        EndpointReferenceType target = exchange.get(EndpointReferenceType.class);
+//        Conduit conduit = exchange.getDestination().getBackChannel(msg, null, target);
+//        exchange.setConduit(conduit);
+//        return conduit;
+//    }
 
-    protected Message getOutMessage(Message msg) {
-        Exchange exchange = msg.getExchange();
-        Message outMsg = exchange.getOutFaultMessage();
-
-        if (outMsg == null) {
-            Endpoint endpoint = exchange.get(Endpoint.class);
-            outMsg = endpoint.getBinding().createMessage();
-            exchange.setOutMessage(outMsg);
-        }
-
-        outMsg.putAll(msg);
-        return outMsg;
-    }
-
-    private Conduit getConduit(Message msg) throws IOException {
-        Exchange exchange = msg.getExchange();
-        EndpointReferenceType target = exchange.get(EndpointReferenceType.class);
-        Conduit conduit = exchange.getDestination().getBackChannel(msg, null, target);
-        exchange.setConduit(conduit);
-        return conduit;
-    }
-
-    private void close(Message outMsg) throws IOException {
-        OutputStream os = outMsg.getContent(OutputStream.class);
-        os.flush();
-        os.close();
-    }
+//    private void close(Message outMsg) throws IOException {
+//        OutputStream os = outMsg.getContent(OutputStream.class);
+//        os.flush();
+//        os.close();
+//    }
 }
