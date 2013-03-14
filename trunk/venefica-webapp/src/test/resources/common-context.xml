@@ -23,8 +23,12 @@
     <bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
         <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
     </bean>
+    <bean id="messageEncryptor" class="com.venefica.auth.MessageEncryptor">
+    </bean>
 
     <bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
+    <bean id="messageSignatureInterceptor" class="com.venefica.auth.MessageSignatureInterceptor" />
+    
     <bean id="securityContextHolder" class="com.venefica.auth.ThreadSecurityContextHolder" />
     <bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
 
@@ -77,6 +81,7 @@
 
     <cxf:bus>
         <cxf:inInterceptors>
+            <ref bean="messageSignatureInterceptor" />
             <ref bean="loggingInInterceptor"/>
             <ref bean="securityContextCleaner" />
         </cxf:inInterceptors>
@@ -84,6 +89,7 @@
             <ref bean="loggingInInterceptor"/>
         </cxf:inFaultInterceptors>
         <cxf:outInterceptors>
+            <ref bean="messageSignatureInterceptor" />
             <ref bean="loggingOutInterceptor"/>
         </cxf:outInterceptors>
         <cxf:outFaultInterceptors>

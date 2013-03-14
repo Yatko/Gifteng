@@ -23,6 +23,7 @@
 
     <cxf:bus>
         <cxf:inInterceptors>
+            <ref bean="messageSignatureInterceptor" />
             <ref bean="loggingInInterceptor"/>
             <ref bean="tokenAuthorizationInterceptor" />
             <ref bean="securityContextCleaner" />
@@ -31,6 +32,7 @@
             <ref bean="loggingInInterceptor"/>
         </cxf:inFaultInterceptors>
         <cxf:outInterceptors>
+            <ref bean="messageSignatureInterceptor" />
             <ref bean="loggingOutInterceptor"/>
         </cxf:outInterceptors>
         <cxf:outFaultInterceptors>
