@@ -49,7 +49,7 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
     public void handleMessage(Message msg) throws Fault {
         String operation = msg.getExchange().getBindingOperationInfo().getName().getLocalPart();
 
-        // Skip "register" operation
+        // Skip "register" and "authenticate" operations
         if (operation.equals(Constants.REGISTERUSER_OPERATION) || operation.equals(Constants.AUTHENTICATE_OPERATION)) {
             return;
         }
