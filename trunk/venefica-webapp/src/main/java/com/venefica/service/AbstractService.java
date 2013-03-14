@@ -20,7 +20,7 @@ import org.springframework.social.connect.ConnectionRepository;
  */
 public abstract class AbstractService {
     
-    protected final static Log logger = LogFactory.getLog(AbstractService.class);
+    protected static final Log logger = LogFactory.getLog(AbstractService.class);
     
     @Inject
     protected UserDao userDao;
