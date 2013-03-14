@@ -7,7 +7,7 @@ package com.venefica.auth;
  */
 public class ThreadSecurityContextHolder {
 
-    ThreadLocal<SecurityContext> context;
+    private ThreadLocal<SecurityContext> context;
 
     public ThreadSecurityContextHolder() {
         context = new ThreadLocal<SecurityContext>();
