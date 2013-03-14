@@ -1,5 +1,6 @@
 package com.venefica.config;
 
+import com.venefica.auth.MessageSignatureInterceptor;
 import com.venefica.auth.SecurityContextCleaner;
 import com.venefica.auth.TokenAuthorizationInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +24,10 @@ public class CxfConfig {
     @Bean(name = "tokenAuthorizationInterceptor")
     public TokenAuthorizationInterceptor tokenAuthenticationInterceptor() {
         return new TokenAuthorizationInterceptor();
+    }
+    
+    @Bean(name = "messageSignatureInterceptor")
+    public MessageSignatureInterceptor messageSignatureInterceptor() {
+        return new MessageSignatureInterceptor();
     }
 }

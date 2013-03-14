@@ -1,5 +1,6 @@
 package com.venefica.config;
 
+import com.venefica.auth.MessageEncryptor;
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.auth.TokenEncryptor;
 import com.venefica.dao.AdDao;
@@ -43,6 +44,11 @@ public class MainConfig {
     @Bean(name = "tokenEncryptor")
     public TokenEncryptor tokenEncryptor() throws NoSuchAlgorithmException, NoSuchPaddingException {
         return new TokenEncryptor(environment.getProperty("authentication.secretkey"));
+    }
+    
+    @Bean(name = "messageEncryptor")
+    public MessageEncryptor messageEncryptor() throws NoSuchAlgorithmException, NoSuchPaddingException {
+        return new MessageEncryptor();
     }
 
     @Bean(name = "securityContextHolder")
