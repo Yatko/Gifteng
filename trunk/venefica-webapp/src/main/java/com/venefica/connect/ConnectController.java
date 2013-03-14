@@ -1,6 +1,5 @@
 package com.venefica.connect;
 
-import com.venefica.auth.TokenDecryptionInterceptorMvc;
 import com.venefica.config.Constants;
 import java.util.List;
 import javax.inject.Inject;
