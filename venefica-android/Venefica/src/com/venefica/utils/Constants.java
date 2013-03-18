@@ -64,6 +64,8 @@ public class Constants
 	public static final int RESULT_GET_ALL_MESSAGES_SUCCESS = 1055;
 	public static final int RESULT_DELETE_MESSAGE_SUCCESS = 1056;
 	public static final int ERROR_RESULT_DELETE_MESSAGE = 1057;
+	public static final int ERROR_RESULT_POST_RATING = 1058;
+	public static final int RESULT_POST_RATING_SUCCESS = 1059;
 	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
