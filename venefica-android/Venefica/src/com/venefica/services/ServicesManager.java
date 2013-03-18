@@ -2200,7 +2200,7 @@ public class ServicesManager
 		return result;
 	}*/
 
-	public RateAdResult RateAd(String token, long adId, int ratingValue)
+	/*public RateAdResult RateAd(String token, long adId, int ratingValue)
 	{
 		final String SOAP_METHOD = RATE_AD_METHOD;
 
@@ -2255,7 +2255,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 
 	/*public DeleteMessageResult DeleteMessage(String token, long messageId)
 	{
