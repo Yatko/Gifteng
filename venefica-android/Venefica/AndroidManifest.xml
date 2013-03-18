@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.venefica.module.main"
-    android:versionCode="7"
-    android:versionName="1.6" >
+    android:versionCode="8"
+    android:versionName="1.7" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -18,8 +18,9 @@
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.camera" />
-	<uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name="com.venefica.utils.VeneficaApplication"
@@ -27,7 +28,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Green" >
         <uses-library android:name="com.google.android.maps" />
-        
+
         <activity
             android:name="com.venefica.module.user.LoginActivity"
             android:label="@string/app_name"
@@ -39,11 +40,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="com.venefica.module.user.WebAuthorizationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />        
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.user.RegisterUserActivity"
             android:label="@string/app_name"
@@ -65,7 +65,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name="com.venefica.module.messages.MessageDetailActivity"
             android:icon="@drawable/icon_undo"
@@ -74,25 +73,26 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.settings.SettingsActivity"
-            android:label="@string/app_name"
             android:icon="@drawable/icon_undo"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.post.PostListingActivity"
-            android:label="@string/app_name"
             android:icon="@drawable/icon_undo"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.browse.BrowseCategoriesActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:icon="@drawable/icon_undo"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false" >
+            android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="com.venefica.module.listings.browse.GET_CATEGORY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -108,21 +108,27 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.browse.SearchListingsActivity"
-            android:label="@string/app_name"
             android:icon="@drawable/icon_list"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.ListingDetailsActivity"
-            android:label="@string/app_name"
             android:icon="@drawable/icon_undo"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.GalleryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />          
-</application>
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.listings.RatingActivity"
+            android:icon="@drawable/icon_undo"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+    </application>
 
 </manifest>
