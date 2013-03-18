@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp" >
+
+    <ImageView
+        android:id="@+id/imgListingTileBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_picture_white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/background_transperent_black"
+        android:weightSum="100" >
+
+        <TextView
+            android:id="@+id/txtListingTileTitle"
+            style="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="1"
+            android:textColor="@color/white" />
+
+        <ImageButton
+            android:id="@+id/imgBtnListingTileShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="20"
+            android:background="@color/transparent"
+            android:contentDescription="@string/label_share"
+            android:gravity="right"
+            android:src="@drawable/icon_share" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtListingTilePrice"
+        style="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="right"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+</RelativeLayout>

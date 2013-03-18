@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="140dp" >
+
+        <FrameLayout
+            android:id="@+id/layViewPostListingCameraPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageSwitcher
+            android:id="@+id/imgSwitcherActPostListing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtActPostListingDefaultImg"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="right|center_vertical"
+            android:background="@color/transparent_black"
+            android:text="@string/label_post_listing_cover_img"
+            android:textColor="@color/light_blue"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <Gallery
+        android:id="@+id/galleryActPostListing"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray"
+        android:gravity="left"
+        android:paddingBottom="60dp"
+        android:spacing="1dp" />
+
+    <LinearLayout
+        android:id="@+id/layPostListingStep1Controls"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/side_navigation_outside_background"
+        android:gravity="center_vertical"
+        android:weightSum="100" >
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingPickGallery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_picture" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingPickCamera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_camera" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingNextToStep2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_arrow_right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layPostListingStep2Controls"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/side_navigation_outside_background"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:weightSum="100" >
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingBackToStep1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_arrow_left" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingDelete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_trash" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingContrast"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_contrast" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingCrop"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_crop" />
+
+        <ImageButton
+            android:id="@+id/imgBtnPostListingNextToStep3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="@color/transparent_white"
+            android:src="@drawable/icon_arrow_right" />
+    </LinearLayout>
+
+</RelativeLayout>
