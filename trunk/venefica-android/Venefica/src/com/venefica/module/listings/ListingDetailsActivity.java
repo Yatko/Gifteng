@@ -42,7 +42,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
-import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.map.ListingOverlayItem;
@@ -155,6 +154,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 */
 	private final int viewHeightMin = 150, viewHeightMax = 250; // in pixels
 	
+	private ImageButton imgBtnMore;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -250,6 +250,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         imgBtnSend = (ImageButton) findViewById(R.id.imgBtnActListingDetailsSend);
         imgBtnSend.setOnClickListener(this);
         laySend = (LinearLayout) findViewById(R.id.layActListingDetailsSend);
+        
+        imgBtnMore = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpMore);
+        imgBtnMore.setOnClickListener(this);
     }
     
     @Override
@@ -626,17 +629,18 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	@Override
 	public void onClick(View v) {
 		popupWindow.dismiss();
-		if (v.getId() == R.id.btnActListingDetailsBookmark) {
+		int id = v.getId();
+		if (id == R.id.btnActListingDetailsBookmark) {
 			if (listing != null && !listing.isOwner() && !listing.isInBookmars()) {
 				new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
 			} else if(!listing.isOwner()) {
 				ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
 				showDialog(D_CONFIRM);
 			}
-		} else if (v.getId() == R.id.imgBtnUserViewSendMsg && listing != null && !listing.isOwner()) {
+		} else if (id == R.id.imgBtnUserViewSendMsg && listing != null && !listing.isOwner()) {
 			setMessageLayoutVisiblity(true);
 			isSendMessage = true;
-		} else if(v.getId() == R.id.imgBtnActListingDetailsSend && listing != null){
+		} else if(id == R.id.imgBtnActListingDetailsSend && listing != null){
 			//Check for empty message
 			if (edtMessage.getText().toString().trim().length() > 0) {
 				// hide virtual keyboard
@@ -649,12 +653,17 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
 				}
 			}						
-		} else if (v.getId() == R.id.imgBtnUserViewFollow) {
+		} else if (id == R.id.imgBtnUserViewFollow) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-		} else if (v.getId() == R.id.btnActListingDetailsFlag) {
+		} else if (id == R.id.btnActListingDetailsFlag) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-		} else if (v.getId() == R.id.btnActListingDetailsGetIt) {
+		} else if (id == R.id.btnActListingDetailsGetIt) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+		} else if (id == R.id.btnListingDetailsPopUpMore) {
+			//start rating activity
+			Intent reviewIntent = new Intent(this, RatingActivity.class);
+			reviewIntent.putExtra("ad_id", selectedListingId);
+			startActivity(reviewIntent);
 		}
 	}
 	
