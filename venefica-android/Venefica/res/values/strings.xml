@@ -121,6 +121,7 @@
     <string name="label_selected">selected</string>
     <string name="label_menu_refresh">Reload</string>
     <string name="label_menu_reply">Reply</string>
+    <string name="label_post">Post</string>
     <!-- Messages -->
     <string name="error_network_01">Network unavailable. Please check the network.</string>
     <string name="error_network_02">Error occurred while performing network operations. Please try again later.</string>
@@ -146,6 +147,7 @@
     <string name="error_start_camera">Unable to start camera.</string>
     <string name="error_get_all_messages">Unable to get messages.</string>
     <string name="error_delete_messages">Unable to delete messages.</string>
+    <string name="error_post_rating">Unable to post rating.</string>
     <string name="msg_messages_found">messages found.</string>
     <string name="msg_invalid_user_password">Invalid login or password.</string>
     <string name="msg_empty_user_password">Please enter valid login and password.</string>
@@ -179,34 +181,37 @@
     <string name="msg_app_exit">Are you sure, you want to logout?</string>
     <string name="msg_reguser_social_notice">We won\'t post anything without your permission.</string>
     <string name="msg_reguser_terms">By signing up you confirm that you accept our Terms of Service and Privacy Policy.</string>
-	<string name="msg_send_message_success">Message sent successfully.</string>
-	<string name="msg_add_comment_success">Comment added successfully.</string>
-	<string name="msg_not_impl">This function is not yet implemented.</string>
-	<string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
-	<string name="msg_postlisting_low_resolution">Cropped image is too small. Please crop with larger size or select large image.</string>
-	<string name="msg_enable_location_provider">To use My location, Please turn on a Location source in Settings. Go to settings now?</string>
-	<string name="msg_postlisting_remove_sel_image">Remove selected image.</string>
-	<string name="msg_postlisting_sel_image">Please select image to post listing.</string>
-	<string name="msg_postlisting_sel_cover_image">Please set cover image. </string>
-	<string name="msg_working_in_background">Working. Please wait....</string>
-	<string name="msg_postlisting_sel_cover_image_instruction">Long press to set as cover image.</string>
-	<string name="msg_delete_messages_success">messages deleted successfully.</string>
+    <string name="msg_send_message_success">Message sent successfully.</string>
+    <string name="msg_add_comment_success">Comment added successfully.</string>
+    <string name="msg_not_impl">This function is not yet implemented.</string>
+    <string name="msg_blocked">This function is not yet implemented. Reason: web-service missing.</string>
+    <string name="msg_postlisting_low_resolution">Cropped image is too small. Please crop with larger size or select large image.</string>
+    <string name="msg_enable_location_provider">To use My location, Please turn on a Location source in Settings. Go to settings now?</string>
+    <string name="msg_postlisting_remove_sel_image">Remove selected image.</string>
+    <string name="msg_postlisting_sel_image">Please select image to post listing.</string>
+    <string name="msg_postlisting_sel_cover_image">Please set cover image. </string>
+    <string name="msg_working_in_background">Working. Please wait....</string>
+    <string name="msg_postlisting_sel_cover_image_instruction">Long press to set as cover image.</string>
+    <string name="msg_delete_messages_success">messages deleted successfully.</string>
+    <string name="msg_rating_validation">Please set rating value.</string>
+    <string name="msg_post_rating_success">Rating posted successfully.</string>
     <!-- Hints/  tooltips -->
     <string name="hint_user_password_pattern">Use only numbers and letters, minimum 6 characters</string>
     <string name="hint_post_listing_location_unavailable">Location not available</string>
     <string name="hint_search_listing">Search Listings...</string>
+    <string name="hint_comment">Comment</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_message_text">Message....</string>
     <!-- Titles -->
     <string name="app_name">Venefica</string>
 
     <!-- Pref -->
     <string name="pref_connect">Connect</string>
     <string name="pref_connect_summ">We will never post anything without your permission.</string>
-    
     <string name="pref_connect_facebook">Facebook</string>
     <string name="pref_key_facebook">pref_key_connect_facebook</string>
     <string name="pref_connect_twitter">Twitter</string>
     <string name="pref_key_twitter">pref_key_connect_twitter</string>
-    
     <string name="pref_notifications">Notifications</string>
     <string name="pref_notifications_listing">Listing</string>
     <string name="pref_key_notification_listing">pref_key_notification_listing</string>
@@ -214,7 +219,6 @@
     <string name="pref_key_notification_messages">pref_key_notification_messages</string>
     <string name="pref_notifications_feedback">Feedback</string>
     <string name="pref_key_notification_feedback">pref_key_notification_feedback</string>
-    
     <string name="pref_privacy_settings">Privacy Settings</string>
     <string name="pref_privacy_settings_email_alerts">Email Alerts</string>
     <string name="pref_key_privacy_settings_email_alerts">pref_key_privacy_settings_email_alerts</string>
@@ -222,25 +226,23 @@
     <string name="pref_key_privacy_settings_text_alerts">pref_key_privacy_settings_text_alerts</string>
     <string name="pref_privacy_settings_stay_logged_in">Stay Logged In</string>
     <string name="pref_key_privacy_settings_stay_logged_in">pref_key_privacy_settings_stay_logged_in</string>
-    
-    <!-- Pref Filter-->
+
+    <!-- Pref Filter -->
     <string name="pref_filter_title">Filter Settings</string>
     <string name="pref_key_use_miles">pref_key_use_miles</string>
     <string name="pref_use_miles_title">Distance</string>
     <string name="pref_use_miles_summ">Set distance in miles</string>
-   
     <string name="pref_key_category">pref_key_category</string>
     <string name="pref_category_title">Category</string>
     <string name="pref_category_summ">Select category to filter results.</string>
-    
     <string name="pref_key_use_current_location">pref_key_use_current_location</string>
     <string name="pref_use_current_location_title">Use current location</string>
     <string name="pref_use_current_location_summ">Select to use current location to filter results.</string>
-    
     <string name="pref_key_sort_by">pref_key_sort_by</string>
     <string name="pref_sort_by_title">Sort By</string>
     <string name="pref_sort_by_summ">Select sort preference.</string>
     <string name="pref_sort_by_default">1</string>
+
     <string-array name="array_filter_entries_sort_by">
         <item>Price</item>
         <item>Newest First</item>
@@ -251,14 +253,14 @@
         <item>2</item>
         <item>3</item>
     </string-array>
-    
+
     <string name="pref_price_title">Price</string>
     <string name="pref_price_summ">Set price rage to filter search results.</string>
     <string name="pref_key_price_min">pref_key_price_min</string>
     <string name="pref_price_min_title">Min</string>
     <string name="pref_key_price_max">pref_key_price_max</string>
     <string name="pref_price_max_title">Max</string>
-    
+
     <!-- Data -->
     <!-- Dashboard menu list -->
     <string-array name="array_dashboard_menu">
@@ -300,4 +302,8 @@
     <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
     <!-- Release key -->
     <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_rating">Rating &amp; Review by</string>
+
 </resources>
