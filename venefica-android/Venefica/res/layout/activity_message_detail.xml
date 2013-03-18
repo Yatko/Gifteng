@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_below="@id/txtActMsgDetailTime"
-            android:background="@color/gray" />
+            android:background="@color/light_blue" />
 
         <!-- Details -->
 
@@ -93,10 +93,10 @@
             android:layout_below="@id/txtActMsgDetailMsgText"
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/imgBtnActMsgDetailSend"
-            android:background="@drawable/corners"
             android:ems="10"
             android:gravity="top"
             android:inputType="textMultiLine"
+            android:hint="@string/hint_message_text"
             android:padding="5dp" >
 
             <requestFocus />
