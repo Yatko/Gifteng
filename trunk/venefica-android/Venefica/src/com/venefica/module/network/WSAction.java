@@ -37,6 +37,7 @@ import com.venefica.services.ImageDto;
 import com.venefica.services.MessageDto;
 import com.venefica.services.ServicesManager.DeleteMessageResult;
 import com.venefica.services.ServicesManager.GetAllMessagesResult;
+import com.venefica.services.ServicesManager.RateAdResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 
@@ -71,6 +72,7 @@ public class WSAction {
 	private final String WS_METHOD_ADD_IMAGE_TO_AD = "AddImageToAd";
 	private final String WS_METHOD_GET_ALL_MESSAGE = "GetAllMessages";
 	private final String WS_METHOD_HIDE_MESSAGE = "HideMessage";
+	private final String WS_METHOD_RATE_AD = "RateAd";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -1130,6 +1132,50 @@ public class WSAction {
 			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_DELETE_MESSAGE;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to post ratings for ad
+	 * @param token
+	 * @param adId
+	 * @param ratingValue
+	 * @return result MessageResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper rateAd(String token, long adId, int ratingValue) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_RATE_AD;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+			request.addProperty("ratingValue", ratingValue);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			float id = Float.valueOf(getStringFromProperty(obj, "0.0f"));
+			if (id != 0.0f) {
+				result.result = Constants.RESULT_POST_RATING_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_POST_RATING;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_POST_RATING;
 		}
 		return result;
 	}
