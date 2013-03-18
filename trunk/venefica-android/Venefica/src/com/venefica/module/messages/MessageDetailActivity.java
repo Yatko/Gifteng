@@ -309,13 +309,13 @@ public class MessageDetailActivity extends VeneficaActivity implements View.OnCl
 					wrapper = wsAction.hideMessage(((VeneficaApplication)getApplication()).getAuthToken(), messageId);
 				}
 			} catch (IOException e) {
-				Log.e("MessageListTask::doInBackground :", e.toString());
+				Log.e("MessageDetailsTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
-				Log.e("MessageListTask::doInBackground :", e.toString());
+				Log.e("MessageDetailsTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (Exception e) {
-				Log.e("MessageListTask::doInBackground :", e.toString());
+				Log.e("MessageDetailsTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			}
 			return wrapper;
