@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- gifteng styles -->
+    <attr name="EditTextGrayBorder" format="reference"></attr>
+    <attr name="TextViewGrayText" format="reference"></attr>
+    <attr name="ButtonRoundCorner" format="reference"></attr>
+    
     <!-- View styles -->
 	<attr name="LabelTitle" format="reference" />
 	<attr name="LabelGroupTitle" format="reference" />

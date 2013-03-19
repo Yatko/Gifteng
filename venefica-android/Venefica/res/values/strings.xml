@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Gifteng -->
+    <!-- Labels -->
+    <string name="g_label_share">share</string>
+    <string name="g_label_app_name">Gifteng</string>
+    <string name="g_label_continue">CONTINUE</string>
+    <string name="g_label_use_gifteng_for">What would you use Gifteng for?</string>
+    <string name="g_label_giving">Giving</string>
+    <string name="g_label_receiving">Receiving</string>
+    <string name="g_label_confirm_req">CONFIRM REQUEST</string>
+    <string name="g_label_verify_invitation">VERIFY INVITATION</string>
+    <string name="g_label_password">Password</string>
+    <string name="g_label_forgot_password">Forgot Password</string>
+    <string name="g_label_remember">Remember me</string>
+    <string name="g_label_login">LOG IN</string>
+    
+    <!-- hint -->
+    <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
+    <string name="g_hint_zip">Your Zip Code</string>
+    <string name="g_hint_how_know_us">How did you here out about us?</string>
+    <string name="g_hint_invitation_code">Enter Your Invitation Code</string>
+    
+    <!-- messages -->
+    <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
+    <string name="g_msg_login_title_msg">- make the world a giving place -</string>
+    <string name="g_msg_password_reset">Please enter your email address or phone # so we can lookup your account</string>
+    <!-- errors -->
+    <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
+    
+    <!-- Venefica -->
     <!-- Labels -->
     <string name="label_act_login_welcome">Don\'t have a Venefica ID?</string>
     <string name="label_act_login_btn_sign_up">Register</string>
@@ -109,7 +138,7 @@
     <string name="label_menu_bookmark">Bookmark</string>
     <string name="label_update">Update</string>
     <string name="label_search">Search</string>
-    <string name="label_share">Share</string>
+    <string name="label_share">share</string>
     <string name="label_search_setting">Search Settings</string>
     <string name="label_chooser">Select Source</string>
     <string name="label_follow">Follow</string>

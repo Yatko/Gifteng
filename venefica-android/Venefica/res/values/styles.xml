@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Gifteng styles -->
+    <style name="EditTextGrayBorder" parent="@android:style/Widget.EditText">       
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>      
+    </style>
+    <style name="TextViewGrayText" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="ButtonRoundCorner" parent="@android:style/Widget.Button">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:background">@drawable/button_blue_bg</item>
+    </style>
+    <!-- venefica -->
     <style name="ButtonFullWidthTransperent">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">40dp</item>
