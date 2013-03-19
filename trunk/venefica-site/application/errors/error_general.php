@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Error</title>
+<title>Gifteng - Error</title>
+<link rel="shortcut icon" href="assets/img/favicon.ico" >
 <style type="text/css">
 
 ::selection{ background-color: #E13300; color: white; }
