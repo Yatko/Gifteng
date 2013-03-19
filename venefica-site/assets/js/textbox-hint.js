@@ -8,17 +8,18 @@ jQuery.fn.hint = function(blurClass) {
         var $input = jQuery(this),
                 // capture the rest of the variable to allow for reuse
                 title = $input.attr('title'),
+                placeholder = $input.attr('placeholder'), //this is the HTML5 way - if present no need to use this script
                 $form = jQuery(this.form),
                 $win = jQuery(window);
 
-        function remove() {
-            if ($input.val() === title && $input.hasClass(blurClass)) {
-                $input.val('').removeClass(blurClass);
-            }
-        }
-
         // only apply logic if the element has the attribute
-        if (title) {
+        if (title && !placeholder) {
+            function remove() {
+                if ($input.val() === title && $input.hasClass(blurClass)) {
+                    $input.val('').removeClass(blurClass);
+                }
+            }
+            
             // on blur, set value to title attr if text is blank
             $input.blur(function() {
                 if (this.value === '') {
