@@ -1,0 +1,99 @@
+/* 
+    Document   : style
+    Created on : Mar 15, 2013, 3:34:39 PM
+    Author     : gyuszi
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    background: url(../img/pageBg.png) repeat;
+}
+
+body, p, div, input {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+img {
+    border: none;
+}
+
+a {
+    outline: none; /* remove the dotted outlines when clicking links/tabs */
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+input {
+    background: url(../img/textboxBg.png) center center no-repeat;
+    border: none;
+    width: 256px;
+    height: 47px;
+    border-spacing: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+input.blur {
+    color: #999;
+    font-style: italic;
+}
+
+form {
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* HEADER */
+
+#header {
+    background: url(../img/headerBg.png) repeat-x;
+}
+#header div {
+    margin: auto;
+    height: 91px;
+    width: 970px;
+    text-align: center;
+}
+#header .logo {
+    padding: 0;
+    height: 52px;
+    background: url(../img/logo.png) no-repeat top center;
+}
+#header .slogan {
+    margin-top: 1px;
+    height: 37px;
+    background: url(../img/slogan.png) no-repeat bottom center;
+}
+
+/* CONTAINER */
+
+#container {
+    margin: auto;
+    height: 91px;
+    width: 970px;
+}
+
+/* INPUT ELEMENTS */
+.buttonBlue {
+    border: none;
+    display: block;
+    width: 276px;
+    height: 40px;
+    background: url(../img/buttonBlueBg.png) center center no-repeat;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+    margin: 0 auto;
+}
