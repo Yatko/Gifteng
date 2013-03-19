@@ -10,6 +10,7 @@
 	    android:gravity="center"
 	    android:background="@color/transparent"
 	    android:textSize="@dimen/abs__action_bar_title_text_size"
-	    android:textColor="@color/light_blue"
-	    android:text="@string/app_name"/>
+	    android:textColor="@color/gray"
+	    android:textStyle="bold"
+	    android:text="@string/g_label_app_name"/>
 </RelativeLayout>

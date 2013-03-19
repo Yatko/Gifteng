@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+
+    <FrameLayout
+        android:id="@+id/frmLayActLoginStartVideo"
+        android:layout_width="fill_parent"
+        android:layout_height="214dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_corner_video_background" >
+
+        <VideoView
+            android:id="@+id/videoView1"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_margin="7dp" />
+
+        <ImageButton
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_margin="7dp"
+            android:background="@color/app_main_color"
+            android:src="@drawable/icon_playback_play_white" /> 
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/layActLoginShareDivider"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frmLayActLoginStartVideo"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginRight="55dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="100" >
+
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/divActLoginShare01"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_weight="40"
+            android:background="@color/gray" />
+        <!-- Or -->
+
+        <TextView
+            android:id="@+id/txtActLoginShare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="20"
+            android:textSize="11sp"
+            android:textColor="@color/gray"
+            android:text="@string/g_label_share" />
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/divActLoginShare02"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_weight="40"
+            android:background="@color/gray" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layActLoginShareButtons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layActLoginShareDivider"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="100" >
+
+        <ImageButton
+            android:id="@+id/imgBtnActLoginShareChat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="25"
+            android:src="@drawable/icon_monolog" />
+
+        <ImageButton
+            android:id="@+id/imgBtnActLoginShareTweeter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="25"
+            android:src="@drawable/icon_twitter" />
+
+        <ImageButton
+            android:id="@+id/imgBtnActLoginShareFacebook"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="25"
+            android:src="@drawable/icon_facebook" />
+
+        <ImageButton
+            android:id="@+id/imgBtnActLoginShareMail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="25"
+            android:src="@drawable/icon_mail" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtActLoginShareAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layActLoginShareButtons"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="5dp"
+        android:maxLines="2"
+        android:textSize="10sp"
+        android:minLines="2"
+        android:text="@string/g_msg_about"
+        android:textColor="@color/gray" />
+
+</RelativeLayout>
