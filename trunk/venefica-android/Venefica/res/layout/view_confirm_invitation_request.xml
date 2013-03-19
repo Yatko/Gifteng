@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp" >
+
+    <EditText
+        android:id="@+id/edtActLoginZipCode"
+        style="?EditTextGrayBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:hint="@string/g_hint_zip"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp" />
+
+    <Spinner
+        android:id="@+id/spinActLoginKnowUs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtActLoginZipCode"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp" />
+
+    <TextView
+        android:id="@+id/txtActLoginUseGiftingFor"
+        style="?TextViewGrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinActLoginKnowUs"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/g_label_use_gifteng_for" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupActLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtActLoginUseGiftingFor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioActLoginGiving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/g_label_giving" />
+
+        <RadioButton
+            android:id="@+id/radioActLoginReceiving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/g_label_receiving" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnActLoginConfirmReq"
+        style="?ButtonRoundCorner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/radioGroupActLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/g_label_confirm_req" />
+
+</RelativeLayout>
