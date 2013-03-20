@@ -24,7 +24,7 @@
                         <div><input type="password" class="textbox" title="<?=lang('authentication_login_password_hint')?>" placeholder="<?=lang('authentication_login_password_hint')?>"></div>
                         <div><a href="#" class="buttonBlue"><?=lang('authentication_login_login_button')?></a></div>
                         <div class="tabContent">
-                            <div class="fl"><?=lang('authentication_login_forgot_password')?></div>
+                            <div class="fl"><a href="#"><?=lang('authentication_login_forgot_password')?></a></div>
                             <div class="fr">
                                 <input id="remember_me" type="checkbox" class="checkbox">
                                 <label for="remember_me"><?=lang('authentication_login_remember_me')?></label>
