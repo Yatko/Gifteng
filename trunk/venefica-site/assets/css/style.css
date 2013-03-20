@@ -15,9 +15,10 @@ html {
     background: url(../img/pageBg.png) repeat;
 }
 
-body, p, div, input {
+body, p, div, input, label {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 13px;
+    color: #A5A5A4;
 }
 
 img {
@@ -34,14 +35,9 @@ ul {
 }
 
 input {
-    background: url(../img/textboxBg.png) center center no-repeat;
+    outline: none; /* removes the focus border */
     border: none;
-    width: 256px;
-    height: 47px;
-    border-spacing: 0;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-bottom: 10px;
+    border: 0;
 }
 input.blur {
     color: #999;
@@ -51,6 +47,22 @@ input.blur {
 form {
     margin: 0 auto;
     text-align: center;
+}
+label, .label {
+    position: relative;
+    top: -3px;
+}
+
+/* COMMON */
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clear {
+    clear: both;
 }
 
 /* HEADER */
@@ -84,6 +96,20 @@ form {
 }
 
 /* INPUT ELEMENTS */
+
+.textbox {
+    background: url(../img/textboxBg.png) center center no-repeat;
+    width: 256px;
+    height: 47px;
+    padding: 0 10px 0 10px;
+    margin-bottom: 10px;
+}
+.checkbox {
+    position: relative;
+    top: 0px;
+    *overflow: hidden;
+}
+
 .buttonBlue {
     border: none;
     display: block;
@@ -95,4 +121,14 @@ form {
     font-size: 14px;
     line-height: 40px;
     margin: 0 auto;
+    margin-bottom: 10px;
+}
+.linkOrange {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #eb884f;
+    line-height: 40px;
+    margin: 0 auto;
+    margin-bottom: 10px;
 }

@@ -19,7 +19,7 @@ jQuery(function() {
 var j = 0;
 jQuery.fn.codaSlider = function(settings) {
     settings = jQuery.extend({
-        easeFunc: "expoinout",
+        easeFunc: "backinout",
         easeTime: 350
     }, settings);
     return this.each(function() {

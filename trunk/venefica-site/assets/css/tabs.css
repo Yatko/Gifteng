@@ -9,9 +9,11 @@
 }
 
 .stripViewer {
+    /**
     position: relative;
     overflow: hidden;
     clear: both;
+    /**/
     width: 328px;
     margin: 50px auto;
 }
@@ -37,6 +39,10 @@
     width: 328px;
     overflow: hidden;
     background: url(../img/boxBgMiddle.png) center bottom repeat-y;
+}
+
+.tabContent {
+    padding: 0 7px 0 7px;
 }
 
 /* MAIN TABBED NAVIGATION */
@@ -75,7 +81,6 @@
     padding-top: 10px;
 }
 
-/* It is neccessary to repeat the image paths here */
 .stripNav li.tab1 a.current {
     background: url(../img/tabLeftActiveBg.png) top center no-repeat;
 }
