@@ -10,19 +10,15 @@
     
     <link rel='stylesheet' type='text/css' media='all' href="assets/css/style.css" />
     <link rel='stylesheet' type='text/css' media='all' href="assets/css/tabs.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="assets/css/prettyCheckboxes.css" />
     
     <script src="assets/js/jquery-1.9.1.min.js"></script>
     <script src="assets/js/jquery-easing.1.2.js"></script>
     <script src="assets/js/jquery-easing-compatibility.1.2.js"></script>
     <script src="assets/js/coda-slider.1.1.1.js"></script>
     <script src="assets/js/textbox-hint.js"></script>
-    
-    <script language="javascript">
-        $(function() {
-            // find all the input elements with title attributes
-            $('input[title != ""]').hint();
-        });
-    </script>
+    <script src="assets/js/prettyCheckboxes.js"></script>
+    <script src="assets/js/common.js"></script>
 </head>
 <body>
     <div id="header">
