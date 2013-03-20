@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- view to verify invitation code -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp" >
+
+    <LinearLayout
+        android:id="@+id/layActLoginJoinName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100" >
+
+        <EditText
+            android:id="@+id/edtActLoginJoinFName"
+            style="?EditTextGrayBorder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="50"
+            android:hint="@string/g_hint_fname"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp" />
+
+        <EditText
+            android:id="@+id/edtActLoginJoinLName"
+            style="?EditTextGrayBorder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="50"
+            android:hint="@string/g_hint_lname"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edtActLoginJoinEmail"
+        style="?EditTextGrayBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layActLoginJoinName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
+        android:hint="@string/g_hint_email"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp" />
+
+    <EditText
+        android:id="@+id/edtActLoginJoinPassword"
+        style="?EditTextGrayBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtActLoginJoinEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
+        android:hint="@string/g_hint_password"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp" />
+
+    <Button
+        android:id="@+id/btnActLoginJoin"
+        style="?ButtonRoundCorner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/edtActLoginJoinPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/g_label_verify_invitation" />
+
+    <TextView
+        android:id="@+id/txtActLoginJoinTerms"
+        style="?TextViewGrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnActLoginJoin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/g_msg_terms"
+        android:textSize="9sp" />
+
+</RelativeLayout>
