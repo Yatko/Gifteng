@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+//import javax.persistence.Inheritance;
+//import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -32,7 +32,7 @@ import org.hibernate.annotations.Type;
 @Entity
 //@SequenceGenerator(name = "ad_gen", sequenceName = "ad_seq", allocationSize = 1)
 @Table(name = "ad")
-@Inheritance(strategy = InheritanceType.JOINED)
+//@Inheritance(strategy = InheritanceType.JOINED)
 public class Ad {
 
     private static final int DEFAULT_AVAIL_PROLONGATIONS = 1;
