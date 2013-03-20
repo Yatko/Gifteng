@@ -15,17 +15,29 @@
     <string name="g_label_forgot_password">Forgot Password</string>
     <string name="g_label_remember">Remember me</string>
     <string name="g_label_login">LOG IN</string>
+    <string name="g_label_reset_password">RESET PASSWORD</string>
+    <string name="g_label_request_invitation">REQUEST AN INVITATION</string>
+    <string name="g_label_have_invitation">I have an invitation</string>
     
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
     <string name="g_hint_how_know_us">How did you here out about us?</string>
     <string name="g_hint_invitation_code">Enter Your Invitation Code</string>
+    <string name="g_hint_new_password">New Password</string>
+    <string name="g_hint_conf_password">Confirm Password</string>
+    <string name="g_hint_password">Password</string>
+    <string name="g_hint_email">Email</string>
+    <string name="g_hint_fname">First Name</string>
+    <string name="g_hint_lname">Last Name</string>
+    
     
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
     <string name="g_msg_login_title_msg">- make the world a giving place -</string>
     <string name="g_msg_password_reset">Please enter your email address or phone # so we can lookup your account</string>
+    <string name="g_msg_password_reset_validation">At least 6 characters with letters and numbers</string>
+    <string name="g_msg_terms">By joining , you agree to our Terms of Use and Privacy policy.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     
