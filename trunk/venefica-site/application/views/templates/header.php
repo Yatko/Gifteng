@@ -18,6 +18,7 @@
     <script src="assets/js/coda-slider.1.1.1.js"></script>
     <script src="assets/js/textbox-hint.js"></script>
     <script src="assets/js/prettyCheckboxes.js"></script>
+    <script src="assets/js/chosen.jquery.min.js"></script>
     <script src="assets/js/common.js"></script>
 </head>
 <body>

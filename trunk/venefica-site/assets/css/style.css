@@ -107,7 +107,7 @@ label, .label {
 .checkbox {
     position: relative;
     top: 0px;
-    *overflow: hidden;
+    overflow: hidden;
 }
 
 .buttonBlue {
