@@ -16,7 +16,7 @@ html {
 }
 
 body, p, div, input, label, a {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: 'PTSansRegular', Arial, sans-serif;
     font-size: 13px;
     color: #A5A5A4;
 }

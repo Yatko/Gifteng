@@ -8,6 +8,7 @@
     
     <link rel="shortcut icon" href="assets/img/favicon.ico" >
     
+    <link rel='stylesheet' type='text/css' media='all' href="assets/css/fonts.css" />
     <link rel='stylesheet' type='text/css' media='all' href="assets/css/style.css" />
     <link rel='stylesheet' type='text/css' media='all' href="assets/css/tabs.css" />
     <link rel='stylesheet' type='text/css' media='all' href="assets/css/prettyCheckboxes.css" />
