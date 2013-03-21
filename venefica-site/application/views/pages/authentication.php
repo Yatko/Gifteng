@@ -1,11 +1,11 @@
 <script langauge="javascript">
     $(function() {
-        $("#loginSlider").codaSlider();
+        $("#authenticationSlider").codaSlider();
     });
 </script>
 
 <div class="stripViewer">
-    <div id="loginSliderWrap"><div id="loginSlider">
+    <div id="authenticationSliderWrap"><div id="authenticationSlider">
         <div class="innerWrap"><div class="panelContainer">
             <div class="panel" title="<?=lang('authentication_tab_invitation')?>">
                 <div class="wrapper">

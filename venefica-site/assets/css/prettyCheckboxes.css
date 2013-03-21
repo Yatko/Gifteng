@@ -9,30 +9,38 @@ label.radio span.holder {
 }
 
 label.checkbox:hover span.holder,
-label.radio:hover span.holder { top: -19px !important; } /* Background position on mouseover */
+label.radio:hover span.holder {
+    top: -19px !important;
+} /* Background position on mouseover */
 
 label.checked span.holder,
 label.checked span.holder,
 label.checked:hover span.holder,
-label.checked:hover span.holder { top: -38px !important; } /* Background position when checked */
+label.checked:hover span.holder {
+    top: -38px !important;
+} /* Background position when checked */
 
 
 
 label.list {
-    float: left; clear: left;
+    float: left;
+    clear: left;
     margin: 0 0 5px 0;
 }
 
 label.inline {
-    float: left; margin: 0 10px 0 0;
+    float: left;
+    margin: 0 10px 0 0;
 }
 
 input.hiddenCheckbox {
-    position: absolute; left: -10000px; /* Hide the input */
+    position: absolute;
+    left: -10000px; /* Hide the input */
 }
 
 label.prettyCheckbox span.holderWrap {
-    display: block; float: left;
+    display: block;
+    float: left;
     position: relative;
     margin-right: 5px;
     overflow: hidden;
@@ -41,5 +49,6 @@ label.prettyCheckbox span.holderWrap {
 label.prettyCheckbox span.holder {
     display: block;
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
 }
