@@ -33,13 +33,7 @@
             android:name="com.venefica.module.user.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.user.WebAuthorizationActivity"
             android:screenOrientation="portrait"
@@ -128,6 +122,24 @@
             android:icon="@drawable/icon_undo"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.main.StartUpActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/GiftengTheme.LightBlue"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.venefica.module.main.InvitationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/GiftengTheme.LightBlue"
             android:windowSoftInputMode="stateHidden" />
     </application>
 
