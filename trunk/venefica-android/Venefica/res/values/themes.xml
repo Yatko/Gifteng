@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Gifteng light blue -->
-    <style name="GiftengTheme" parent="@style/Sherlock.__Theme.Light" />
+    <style name="GiftengTheme" parent="@style/Sherlock.__Theme.DarkActionBar" />
     <style name="GiftengTheme.LightBlue">
         <item name="EditTextGrayBorder">@style/EditTextGrayBorder</item>
         <item name="TextViewGrayText">@style/TextViewGrayText</item>
