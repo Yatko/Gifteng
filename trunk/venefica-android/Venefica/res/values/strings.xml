@@ -18,7 +18,9 @@
     <string name="g_label_reset_password">RESET PASSWORD</string>
     <string name="g_label_request_invitation">REQUEST AN INVITATION</string>
     <string name="g_label_have_invitation">I have an invitation</string>
-    
+    <string name="g_label_invitation">Invitation</string>
+    <string name="g_label_log_in">Log in</string>
+
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -30,8 +32,7 @@
     <string name="g_hint_email">Email</string>
     <string name="g_hint_fname">First Name</string>
     <string name="g_hint_lname">Last Name</string>
-    
-    
+
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
     <string name="g_msg_login_title_msg">- make the world a giving place -</string>
@@ -40,7 +41,7 @@
     <string name="g_msg_terms">By joining , you agree to our Terms of Use and Privacy policy.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
-    
+
     <!-- Venefica -->
     <!-- Labels -->
     <string name="label_act_login_welcome">Don\'t have a Venefica ID?</string>
@@ -244,7 +245,7 @@
     <string name="hint_title">Title</string>
     <string name="hint_message_text">Message....</string>
     <!-- Titles -->
-    <string name="app_name">Venefica</string>
+    <string name="app_name">Gifteng</string>
 
     <!-- Pref -->
     <string name="pref_connect">Connect</string>
@@ -346,5 +347,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
+    <string name="title_activity_start_up">StartUpActivity</string>
+    <string name="title_activity_invitation">InvitationActivity</string>
 
 </resources>
