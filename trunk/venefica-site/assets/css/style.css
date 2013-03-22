@@ -105,6 +105,13 @@ label, .label {
     margin-top: 0;
 }
 
+.tabContent {
+    padding: 5px 7px 5px 7px;
+}
+.tabTitle {
+    display: none;
+}
+
 /* INPUT ELEMENTS */
 
 .textbox {
