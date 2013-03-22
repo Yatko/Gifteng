@@ -13,9 +13,6 @@
  - CSS included in index.html
  */
 
-jQuery(function() {
-    //jQuery("div.csw").prepend("<p class='loading'>Loading...<br /><img src='images/ajax-loader.gif' alt='loading...'/ ></p>");
-});
 var j = 0;
 jQuery.fn.codaSlider = function(settings) {
     settings = jQuery.extend({
