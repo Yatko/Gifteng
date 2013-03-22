@@ -66,6 +66,30 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
         return new UserDto(user);
     }
+    
+    @Override
+    @Transactional
+    public UserDto getUserByEmail(String email) throws UserNotFoundException {
+        User user = userDao.findUserByEmail(email);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with email '" + email + "' not found!");
+        }
+
+        return new UserDto(user);
+    }
+    
+    @Override
+    @Transactional
+    public UserDto getUserByPhone(String phone) throws UserNotFoundException {
+        User user = userDao.findUserByPhoneNumber(phone);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with phone number '" + phone + "' not found!");
+        }
+
+        return new UserDto(user);
+    }
 
     @Override
     public boolean isUserComplete() {

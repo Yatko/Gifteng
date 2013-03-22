@@ -67,6 +67,30 @@ public interface UserManagementService {
     @WebMethod(operationName = "GetUserByName")
     @WebResult(name = "user")
     public UserDto getUserByName(@WebParam(name = "name") String name) throws UserNotFoundException;
+    
+    /**
+     * Retrieves information about the user by his email address.
+     * 
+     * @param email the email address of the user
+     * @return user object
+     * @throws UserNotFoundException when the user with the specified email
+     * address not found
+     */
+    @WebMethod(operationName = "GetUserByEmail")
+    @WebResult(name = "user")
+    public UserDto getUserByEmail(@WebParam(name = "email") String email) throws UserNotFoundException;
+    
+    /**
+     * Retrieves information about the user by his phone number.
+     * 
+     * @param phone the phone number of the user
+     * @return user object
+     * @throws UserNotFoundException when the user with the specified phone
+     * number not found
+     */
+    @WebMethod(operationName = "GetUserByPhone")
+    @WebResult(name = "user")
+    public UserDto getUserByPhone(@WebParam(name = "phone") String phone) throws UserNotFoundException;
 
     /**
      * Returns true if all required information is gathered for the current
