@@ -53,6 +53,9 @@ label, .label {
     top: -3px;
 }
 
+:focus { outline:none; }
+::-moz-focus-inner { border:0; }
+
 /* COMMON */
 
 .fl {
@@ -93,6 +96,13 @@ label, .label {
     margin: auto;
     height: 91px;
     width: 970px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    margin: 10px auto;
+    margin-top: 0;
 }
 
 /* INPUT ELEMENTS */
@@ -102,7 +112,7 @@ label, .label {
     width: 256px;
     height: 47px;
     padding: 0 10px 0 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 .checkbox {
     position: relative;
@@ -118,10 +128,10 @@ label, .label {
     background: url(../img/buttonBlueBg.png) center center no-repeat;
     color: white;
     text-align: center;
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: normal;
     line-height: 40px;
-    margin: 0 auto;
-    margin-bottom: 10px;
+    margin: 5px auto;
 }
 .linkOrange {
     display: block;
