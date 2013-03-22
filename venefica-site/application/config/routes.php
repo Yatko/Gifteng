@@ -38,10 +38,16 @@
 |
 */
 
-$route['(:any)'] = 'pages/view/$1';
-$route['default_controller'] = 'pages/view';
-
+$route['default_controller'] = 'index/view';
 $route['404_override'] = '';
+
+$route['browse/(:any)'] = 'browse/view/$1';
+$route['browse'] = 'browse/view';
+
+$route['authentication/(:any)'] = 'authentication/$1';
+$route['authentication'] = 'authentication/view';
+
+$route['(:any)'] = 'index/view';
 
 
 /* End of file routes.php */

@@ -12,3 +12,9 @@ $lang['authentication_login_password_hint'] = "Password";
 $lang['authentication_login_login_button'] = "LOG IN";
 $lang['authentication_login_forgot_password'] = "Forgot password?";
 $lang['authentication_login_remember_me'] = "Remember me";
+
+$lang['invitation_email'] = "Email";
+
+$lang['authentication_email'] = "Email";
+$lang['authentication_password'] = "Password";
+$lang['authentication_remember_me'] = "Remember me";
