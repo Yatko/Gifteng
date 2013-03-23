@@ -50,10 +50,10 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
         String operation = msg.getExchange().getBindingOperationInfo().getName().getLocalPart();
 
         // Skip "register" and "authenticate" operations
-        if (operation.equals(Constants.REGISTERUSER_OPERATION) || operation.equals(Constants.AUTHENTICATE_OPERATION)) {
+        if ( Constants.OPERATIONS_FOR_SKIP_TOKEN_AUTHORIZATION.contains(operation) ) {
             return;
         }
-
+        
         try {
             Map<String, ?> headers = (Map<String, ?>) msg.get(Message.PROTOCOL_HEADERS);
 
