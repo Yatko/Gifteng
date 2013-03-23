@@ -37,6 +37,46 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 
         throw new AuthenticationException("Wrong user name or password!");
     }
+    
+    @Override
+    public String authenticateEmail(String email, String password) throws AuthenticationException {
+        User user = userDao.findUserByEmail(email);
+
+        if (user == null) {
+            throw new AuthenticationException("Wrong email address!");
+        }
+
+        try {
+            if (user.getPassword().equals(password)) {
+                Token token = new Token(user.getId());
+                return tokenEncryptor.encrypt(token);
+            }
+        } catch (TokenEncryptionException e) {
+            throw new AuthenticationException("Internal error!");
+        }
+
+        throw new AuthenticationException("Wrong email address or password!");
+    }
+    
+    @Override
+    public String authenticatePhone(String phone, String password) throws AuthenticationException {
+        User user = userDao.findUserByPhoneNumber(phone);
+
+        if (user == null) {
+            throw new AuthenticationException("Wrong phone number!");
+        }
+
+        try {
+            if (user.getPassword().equals(password)) {
+                Token token = new Token(user.getId());
+                return tokenEncryptor.encrypt(token);
+            }
+        } catch (TokenEncryptionException e) {
+            throw new AuthenticationException("Internal error!");
+        }
+
+        throw new AuthenticationException("Wrong phone number or password!");
+    }
 
     @Override
     @Transactional
