@@ -39,6 +39,7 @@
     <string name="g_msg_password_reset">Please enter your email address or phone # so we can lookup your account</string>
     <string name="g_msg_password_reset_validation">At least 6 characters with letters and numbers</string>
     <string name="g_msg_terms">By joining , you agree to our Terms of Use and Privacy policy.</string>
+    <string name="g_msg_inv_req_success">Thank you for your request, we will contact you soon!</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
 
