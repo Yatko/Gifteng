@@ -38,8 +38,11 @@
     <div>
         <div class="tabTitle" title="login"><?=lang('authentication_tab_login')?></div>
         <div>
-            <?=isset($this->login_form) ? $this->login_form->error_string() : ""?>
-            <?=form_open('/authentication/login')?>
+            <? if ( $is_logged && $user ): ?>
+                <?=sprintf(lang('authentication_login_welcome'), $user->name)?>
+            <? else: ?>
+                <?=isset($this->login_form) ? $this->login_form->error_string() : ""?>
+                <?=form_open('/authentication/login')?>
             
                 <div><input name="login_email" value="<?=set_value('login_email')?>" type="text" class="textbox" title="<?=lang('authentication_login_email_hint')?>" placeholder="<?=lang('authentication_login_email_hint')?>"></div>
                 <div><input name="login_password" type="password" class="textbox" title="<?=lang('authentication_login_password_hint')?>" placeholder="<?=lang('authentication_login_password_hint')?>"></div>
@@ -53,7 +56,8 @@
                 </div>
                 <div class="clear"></div>
                 
-            <?=form_close()?>
+                <?=form_close()?>
+            <? endif; ?>
         </div>
     </div>
 </div>

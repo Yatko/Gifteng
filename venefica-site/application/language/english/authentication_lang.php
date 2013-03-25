@@ -13,6 +13,8 @@ $lang['authentication_login_login_button'] = "LOG IN";
 $lang['authentication_login_forgot_password'] = "Forgot password?";
 $lang['authentication_login_remember_me'] = "Remember me";
 
+$lang['authentication_login_welcome'] = "Welcome <b>%s</b>!";
+
 $lang['invitation_email'] = "Email";
 
 $lang['authentication_email'] = "Email";
