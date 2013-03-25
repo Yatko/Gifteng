@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Gifteng styles -->
-    <style name="EditTextGrayBorder" parent="@android:style/Widget.EditText">       
+    <!-- edit text -->
+    <style name="EditTextGrayBorder" parent="@android:style/Widget.EditText">
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">5dp</item>
@@ -9,16 +10,24 @@
         <item name="android:height">50dp</item>
         <item name="android:background">@drawable/round_corner_white_background</item>
     </style>
+    <!-- text view -->
     <style name="TextViewGrayText" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/gray</item>
         <item name="android:textSize">13sp</item>
     </style>
+
+    <style name="TextViewOrangeText" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+    <!-- buttons -->
     <style name="ButtonRoundCorner" parent="@android:style/Widget.Button">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#ffffffff</item>
         <item name="android:height">50dp</item>
         <item name="android:background">@drawable/button_blue_bg</item>
     </style>
+    
     <!-- venefica -->
     <style name="ButtonFullWidthTransperent">
         <item name="android:layout_width">fill_parent</item>

@@ -4,6 +4,7 @@
     <attr name="EditTextGrayBorder" format="reference"></attr>
     <attr name="TextViewGrayText" format="reference"></attr>
     <attr name="ButtonRoundCorner" format="reference"></attr>
+    <attr name="TextViewOrangeText" format="reference"></attr>
     
     <!-- View styles -->
 	<attr name="LabelTitle" format="reference" />
