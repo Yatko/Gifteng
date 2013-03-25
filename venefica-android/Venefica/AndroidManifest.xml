@@ -136,7 +136,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.venefica.module.main.InvitationActivity"
+            android:name="com.venefica.module.invitation.InvitationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/GiftengTheme.LightBlue"
