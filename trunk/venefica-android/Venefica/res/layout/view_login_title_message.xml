@@ -9,10 +9,10 @@
     <TextView
         android:id="@+id/txtActLoginTitleMessage"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:height="30dp"
+        android:textSize="14sp"
         android:text="@string/g_msg_login_title_msg"
         android:textColor="@color/white" />
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Remove this layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:weightSum="100" >
 
-    <ImageButton
+   <!--  <ImageButton
         android:id="@+id/btnActStartBack"
         android:layout_width="0dp"
         android:layout_height="?actionBarSize"
@@ -27,6 +28,6 @@
         android:layout_weight="10"
         android:layout_gravity="right"
         android:background="@color/transparent"
-        android:src="@drawable/icon_arrow_right" />
+        android:src="@drawable/icon_arrow_right" /> -->
 
 </LinearLayout>
