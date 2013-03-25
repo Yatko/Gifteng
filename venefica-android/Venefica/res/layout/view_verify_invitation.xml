@@ -44,6 +44,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center"
-        android:text="@string/g_error_invtation_code" />
+        android:text="@string/g_error_invtation_code"
+        android:visibility="invisible" />
 
 </RelativeLayout>

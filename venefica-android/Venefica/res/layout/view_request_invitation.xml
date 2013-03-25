@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp" >
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="20dp">
 
     <EditText
         android:id="@+id/edtActLoginReqInvEmail"
@@ -22,10 +24,10 @@
         android:id="@+id/btnActLoginRequestInvite"
         style="?ButtonRoundCorner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@id/edtActLoginReqInvEmail"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -33,16 +35,16 @@
         android:text="@string/g_label_request_invitation" />
 
     <Button
-        android:id="@+id/btnActLoginForgotPassword"
+        android:id="@+id/btnActLoginHaveInviteCode"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_below="@id/btnActLoginRequestInvite"
-        android:layout_marginLeft="10dp"
+        android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:gravity="center"
         android:textSize="14sp"
         android:text="@string/g_label_have_invitation"
-        android:textColor="@color/light_gray" />
+        android:textColor="@color/orange" />
 
 </RelativeLayout>
