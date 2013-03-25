@@ -2,6 +2,11 @@
 
 /**
  * Authentication helper.
+ * 
+ * NOTE: the PHP version 5.2 has a bug (fixed in 5.3) that the custom http headers
+ * are not sent. This is a serious issue as the authorization token should be sent
+ * to the venefica server on every WS request. The PHP dependency of the venefica
+ * web-application for this reason is at least 5.3.
  *
  * @author gyuszi
  */
