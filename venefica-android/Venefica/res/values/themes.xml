@@ -6,6 +6,7 @@
         <item name="EditTextGrayBorder">@style/EditTextGrayBorder</item>
         <item name="TextViewGrayText">@style/TextViewGrayText</item>
         <item name="ButtonRoundCorner">@style/ButtonRoundCorner</item>
+        <item name="TextViewOrangeText">@style/TextViewOrangeText</item>
     </style>
     
     
