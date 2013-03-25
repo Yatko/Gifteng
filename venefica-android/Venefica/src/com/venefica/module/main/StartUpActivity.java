@@ -1,47 +1,33 @@
 package com.venefica.module.main;
 
 
-import android.app.TabActivity;
+import java.util.HashMap;
+
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.venefica.module.invitation.RequestInvitationFragment;
 import com.venefica.module.user.LoginActivity;
 
-@SuppressWarnings("deprecation")
-public class StartUpActivity extends TabActivity implements OnClickListener {
+public class StartUpActivity extends SherlockFragmentActivity implements OnClickListener {
 
 	/**
 	 * Tabs
 	 */
 	private TabHost tabHost;
 	private TabHost.TabSpec spec;
+	private TabManager tabManager;
 	private static String TAB_INVITATION =  "invitation", TAB_LOGIN = "log_in";
 	
-	/**
-	 * action bar buttons
-	 */
-	private ImageButton btnBack, btnNext;
-	/**
-	 * 
-	 * steps 
-	 *
-	 */
-	private enum Steps {
-		START_PAGE, REQ_INVITE, REQ_INVITE_CONFIRM, REQ_INVITE_SUCCESS, VERIFY_INVITE
-	}
-	private Steps currentStep;
+//	private int REQ_INVITATION_CONF = 4001, REQ_VERIFY_INVITATION = 4002;
+	
 	/**
 	 * layouts
 	 */
@@ -49,94 +35,143 @@ public class StartUpActivity extends TabActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// remove title
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.abs__ab_transparent_light_holo));
+        getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 		setContentView(R.layout.activity_start_up);
-		Drawable icon = getResources().getDrawable(R.drawable.ic_launcher);
 		
-		tabHost = getTabHost();
-		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
-			
-			public void onTabChanged(String tabId) {
-				InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				inputMgr.hideSoftInputFromWindow(tabHost.getApplicationWindowToken(), 0);
-			}
-		});
-		//set Invitation tab
-		spec = tabHost.newTabSpec(TAB_INVITATION);
-		spec.setIndicator(
-				getResources().getString(R.string.g_label_invitation),
-				icon);
-		spec.setContent(new Intent(this, InvitationActivity.class));
-		tabHost.addTab(spec);
-		//set login tab
-		spec = tabHost.newTabSpec(TAB_LOGIN);
-		spec.setIndicator(
-				getResources().getString(R.string.g_label_log_in),
-				icon);
-		spec.setContent(new Intent(this, LoginActivity.class));
-		tabHost.addTab(spec);		
+		tabHost = (TabHost)findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		tabManager = new TabManager(this, tabHost, R.id.realtabcontent);
 
-		tabHost.setCurrentTab(0);
-		tabHost.setClickable(true);
-		//set current step
-		currentStep = Steps.START_PAGE;
-		//action bar buttons
-		btnBack = (ImageButton) findViewById(R.id.btnActStartBack);
-		btnBack.setOnClickListener(this);
-		btnNext = (ImageButton) findViewById(R.id.btnActStartNext);
-		btnNext.setOnClickListener(this);
-		
+        tabManager.addTab(tabHost.newTabSpec(TAB_INVITATION).setIndicator(getResources().getString(R.string.g_label_invitation)),
+                RequestInvitationFragment.class, null);
+        tabManager.addTab(tabHost.newTabSpec(TAB_LOGIN).setIndicator(getResources().getString(R.string.g_label_log_in)),
+                LoginActivity.class, null);
+
+        if (savedInstanceState != null) {
+            tabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+        }
+			
 		//start page
 		layStartPage = (ViewGroup) findViewById(R.id.layStartPage);
 		//tabs
 		
 		
-		setActionBarButtonVisibility();		
 	}
 
-	/**
-	 * method to set actionbar next/back button visibility
-	 */
-	private void setActionBarButtonVisibility() {
-		if (currentStep == Steps.START_PAGE) {
-			btnBack.setVisibility(View.INVISIBLE);
-			btnNext.setVisibility(View.VISIBLE);
-		} else if (currentStep == Steps.REQ_INVITE) {
-			btnBack.setVisibility(View.VISIBLE);
-			btnNext.setVisibility(View.INVISIBLE);
-		} else {
-
-		}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("tab", tabHost.getCurrentTabTag());
 	}
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_start_up, menu);
-		return true;
-	}*/
+	
 
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		if (id == R.id.btnActStartNext) {
-			if (currentStep == Steps.START_PAGE) {
-				//got request invite
-				layStartPage.setVisibility(ViewGroup.GONE);
-				currentStep = Steps.REQ_INVITE;
-				tabHost.setVisibility(TabHost.VISIBLE);
-			}
-			setActionBarButtonVisibility();
-		} else if (id == R.id.btnActStartBack){
-			if (currentStep == Steps.REQ_INVITE) {
-				//go back to start page
-				layStartPage.setVisibility(ViewGroup.VISIBLE);
-				currentStep = Steps.START_PAGE;
-				tabHost.setVisibility(TabHost.INVISIBLE);
-			}
-			setActionBarButtonVisibility();
-		}
-		
+				
 	}
 
+	/**
+     * This is a helper class that implements a generic mechanism for
+     * associating fragments with the tabs in a tab host.  It relies on a
+     * trick.  Normally a tab host has a simple API for supplying a View or
+     * Intent that each tab will show.  This is not sufficient for switching
+     * between fragments.  So instead we make the content part of the tab host
+     * 0dp high (it is not shown) and the TabManager supplies its own dummy
+     * view to show as the tab content.  It listens to changes in tabs, and takes
+     * care of switch to the correct fragment shown in a separate content area
+     * whenever the selected tab changes.
+     */
+    public static class TabManager implements TabHost.OnTabChangeListener {
+        private final SherlockFragmentActivity mActivity;
+        private final TabHost mTabHost;
+        private final int mContainerId;
+        private final HashMap<String, TabInfo> mTabs = new HashMap<String, TabInfo>();
+        TabInfo mLastTab;
+
+        static final class TabInfo {
+            private final String tag;
+            private final Class<?> clss;
+            private final Bundle args;
+            private SherlockFragment fragment;
+
+            TabInfo(String _tag, Class<?> _class, Bundle _args) {
+                tag = _tag;
+                clss = _class;
+                args = _args;
+            }
+        }
+
+        static class DummyTabFactory implements TabHost.TabContentFactory {
+            private final Context mContext;
+
+            public DummyTabFactory(Context context) {
+                mContext = context;
+            }
+
+            @Override
+            public View createTabContent(String tag) {
+                View v = new View(mContext);
+                v.setMinimumWidth(0);
+                v.setMinimumHeight(0);
+                return v;
+            }
+        }
+
+        public TabManager(SherlockFragmentActivity activity, TabHost tabHost, int containerId) {
+            mActivity = activity;
+            mTabHost = tabHost;
+            mContainerId = containerId;
+            mTabHost.setOnTabChangedListener(this);
+        }
+
+        public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
+            tabSpec.setContent(new DummyTabFactory(mActivity));
+            String tag = tabSpec.getTag();
+
+            TabInfo info = new TabInfo(tag, clss, args);
+
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.  If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            info.fragment = (SherlockFragment) mActivity.getSupportFragmentManager().findFragmentByTag(tag);
+            if (info.fragment != null && !info.fragment.isDetached()) {
+                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+                ft.detach(info.fragment);
+                ft.commit();
+            }
+
+            mTabs.put(tag, info);
+            mTabHost.addTab(tabSpec);
+        }
+
+        @Override
+        public void onTabChanged(String tabId) {
+            TabInfo newTab = mTabs.get(tabId);
+            if (mLastTab != newTab) {
+                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+                if (mLastTab != null) {
+                    if (mLastTab.fragment != null) {
+                        ft.detach(mLastTab.fragment);
+                    }
+                }
+                if (newTab != null) {
+                    if (newTab.fragment == null) {
+                        newTab.fragment = (SherlockFragment) SherlockFragment.instantiate(mActivity,
+                                newTab.clss.getName(), newTab.args);
+                        ft.add(mContainerId, newTab.fragment, newTab.tag);
+                    } else {
+                        ft.attach(newTab.fragment);
+                    }
+                }
+
+                mLastTab = newTab;
+                ft.commit();
+                mActivity.getSupportFragmentManager().executePendingTransactions();
+            }
+        }
+    }	
 }
