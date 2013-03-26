@@ -5,7 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Composite primary key for ${link UserConnection} entity.
+ * Composite primary key for {@link UserConnection} entity.
  *
  * @author Sviatoslav Grebenchukov
  */
