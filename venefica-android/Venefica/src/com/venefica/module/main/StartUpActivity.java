@@ -4,6 +4,7 @@ package com.venefica.module.main;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -15,8 +16,11 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.venefica.module.invitation.RequestInvitationFragment;
 import com.venefica.module.user.LoginActivity;
+import com.venefica.module.user.PasswordResetActivity;
+import com.venefica.module.user.SigninFragment;
+import com.venefica.module.user.SigninFragment.OnSigninListener;
 
-public class StartUpActivity extends SherlockFragmentActivity implements OnClickListener {
+public class StartUpActivity extends SherlockFragmentActivity implements OnClickListener, OnSigninListener {
 
 	/**
 	 * Tabs
@@ -26,7 +30,7 @@ public class StartUpActivity extends SherlockFragmentActivity implements OnClick
 	private TabManager tabManager;
 	private static String TAB_INVITATION =  "invitation", TAB_LOGIN = "log_in";
 	
-//	private int REQ_INVITATION_CONF = 4001, REQ_VERIFY_INVITATION = 4002;
+	private int REQ_RESET_PASSWORD = 4001;
 	
 	/**
 	 * layouts
@@ -48,7 +52,7 @@ public class StartUpActivity extends SherlockFragmentActivity implements OnClick
         tabManager.addTab(tabHost.newTabSpec(TAB_INVITATION).setIndicator(getResources().getString(R.string.g_label_invitation)),
                 RequestInvitationFragment.class, null);
         tabManager.addTab(tabHost.newTabSpec(TAB_LOGIN).setIndicator(getResources().getString(R.string.g_label_log_in)),
-                LoginActivity.class, null);
+                SigninFragment.class, null);
 
         if (savedInstanceState != null) {
             tabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
@@ -173,5 +177,18 @@ public class StartUpActivity extends SherlockFragmentActivity implements OnClick
                 mActivity.getSupportFragmentManager().executePendingTransactions();
             }
         }
-    }	
+    }
+
+	@Override
+	public void onSigninButtonClick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onForgotPasswordButtonClick() {
+		Intent forgotPassIntent = new Intent(this, PasswordResetActivity.class);
+		forgotPassIntent.putExtra("act_mode", PasswordResetActivity.ACT_MODE_VERIFY_EMAIL);
+		startActivityForResult(forgotPassIntent, REQ_RESET_PASSWORD);		
+	}	
 }
