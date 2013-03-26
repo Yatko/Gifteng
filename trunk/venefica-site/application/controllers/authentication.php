@@ -4,7 +4,7 @@ class Authentication extends CI_Controller {
     
     var $initialized = false;
     
-    public function view() {
+    public function view($data = array()) {
         $this->init();
         
         $data['selected_tab'] = $this->uri->segment(2, null);
@@ -48,13 +48,26 @@ class Authentication extends CI_Controller {
     public function invitation() {
         $this->init();
         
-        $this->load->library('form_validation', null, 'invitation_form');
-        $this->invitation_form->set_error_delimiters('<div class="error">', '</div>');
-        $this->invitation_form->set_rules('invitation_email', 'lang:invitation_email', 'trim|required|valid_email');
-        $is_valid = $this->invitation_form->run();
+        $action = $this->uri->segment(3, null);
+        $data['action'] = $action;
+        
+        if ( $action == "request" ) {
+            $this->load->library('form_validation', null, 'request_invitation_form');
+            $this->request_invitation_form->set_error_delimiters('<div class="error">', '</div>');
+            $this->request_invitation_form->set_rules('invitation_email', 'lang:invitation_email', 'trim|required|valid_email');
+            $is_valid = $this->request_invitation_form->run();
+        } else if ( $action == "verify" ) {
+            $this->load->library('form_validation', null, 'verify_invitation_form');
+            $this->verify_invitation_form->set_error_delimiters('<div class="error">', '</div>');
+            $this->verify_invitation_form->set_rules('invitation_code', 'lang:invitation_code', 'trim|required');
+            $is_valid = $this->verify_invitation_form->run();
+        } else {
+            log_message(ERROR, "Invalid invitation action ($action)!");
+            $is_valid = FALSE;
+        }
         
         if ( $is_valid == FALSE ) {
-            $this->view();
+            $this->view($data);
         } else {
             //$email = $this->input->post('invitation_email');
             
