@@ -3,6 +3,7 @@
  */
 package com.venefica.module.invitation;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,16 +47,19 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 		return view;
 	}
 
-	/**
-	 * Set listener
-	 * @param listener
-	 */
-	public void setOnRequestInvitationConfirmClickListener(
-			OnRequestInvitationConfirmClickListener listener) {
-		if (listener != null) {
-			this.listener = listener;
-		}
-	}
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+        	listener = (OnRequestInvitationConfirmClickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnRequestInvitationConfirmClickListener");
+        }
+    }
 
 	@Override
 	public void onClick(View view) {
