@@ -140,6 +140,19 @@ label, .label {
     line-height: 40px;
     margin: 5px auto;
 }
+.buttonOrange {
+    border: none;
+    display: block;
+    width: 276px;
+    height: 52px;
+    background: url(../img/buttonOrangeBg.png) center center no-repeat;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 52px;
+    margin: 5px auto;
+}
 .linkOrange {
     display: block;
     text-align: center;
@@ -148,4 +161,5 @@ label, .label {
     line-height: 40px;
     margin: 0 auto;
     margin-bottom: 10px;
+    cursor: pointer;
 }
