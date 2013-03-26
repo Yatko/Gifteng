@@ -19,43 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layActInvitationTitleMsg" >
-    </FrameLayout>
-    <!-- layout to request invitation -->
-
-
-    <!--
-         <include
-        android:id="@+id/layRequestInvitation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_request_invitation" />
-    -->
-    <!-- layout to confirm request invitation -->
-
-
-    <!--
-    <include
-        android:id="@+id/layConfirmInvitationRequest"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_confirm_invitation_request"
-        android:visibility="gone" />
-    layout to verify invitation
-
-    <include
-        android:id="@+id/layVerifyInvitation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_verify_invitation"
-        android:visibility="gone" />
-    layout to show request invitation success
-
-    <include
-        android:id="@+id/layRequestInvitationSuccess"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_request_invitation_success"
-        android:visibility="gone" />
-    -->
+    </FrameLayout>   
 
 </RelativeLayout>
