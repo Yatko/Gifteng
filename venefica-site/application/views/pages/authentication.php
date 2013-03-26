@@ -1,6 +1,6 @@
 <script langauge="javascript">
     $(function() {
-        selectedTab = 1;
+        var selectedTab = 1;
         $('#authenticationSlider').find('.tabTitle').each(function(index) {
             if ( $(this).attr('title') && $(this).attr('title') === "<?=$selected_tab?>" ) {
                 selectedTab = index + 1;
@@ -17,6 +17,10 @@
             slideEaseFunction: "backinout",
             panelTitleSelector: ".tabTitle"
         });
+        
+        $("#requestInvitation").click(function() {
+            $("#requestInvitationForm").slideToggle(350, "backinout");
+        });
     });
 </script>
 
@@ -24,14 +28,25 @@
     <div>
         <div class="tabTitle" title="invitation"><?=lang('authentication_tab_invitation')?></div>
         <div>
-            <?=isset($this->invitation_form) ? $this->invitation_form->error_string() : ""?>
-            <?=form_open('/authentication/invitation')?>
+            <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
+            <?=form_open('/authentication/invitation/request')?>
             
                 <div><input name="invitation_email" value="<?=set_value('invitation_email')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_email_hint')?>" placeholder="<?=lang('authentication_invitation_email_hint')?>"></div>
                 <div><input type="submit" value="<?=lang('authentication_invitation_request_button')?>" class="buttonBlue"></div>
-                <div><a href="#" class="linkOrange"><?=lang('authentication_invitation_invitation')?></a></div>
+                <div><a id="requestInvitation" class="linkOrange"><?=lang('authentication_invitation_invitation')?></a></div>
                 
             <?=form_close()?>
+            
+            
+            <div id="requestInvitationForm" class="tabContent" style="display: <?=isset($action) && $action == "verify" ? "block" : "none"?>;">
+                <?=isset($this->verify_invitation_form) ? $this->verify_invitation_form->error_string() : ""?>
+                <?=form_open('/authentication/invitation/verify')?>
+                
+                    <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_code_hint')?>" placeholder="<?=lang('authentication_invitation_code_hint')?>"></div>
+                    <div><input type="submit" value="<?=lang('authentication_invitation_verify_button')?>" class="buttonOrange"></div>
+                
+                <?=form_close()?>
+            </div>
         </div>
     </div>
 
