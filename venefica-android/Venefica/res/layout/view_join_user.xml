@@ -82,7 +82,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="@string/g_label_verify_invitation" />
+        android:text="@string/g_label_join" />
 
     <TextView
         android:id="@+id/txtActLoginJoinTerms"
