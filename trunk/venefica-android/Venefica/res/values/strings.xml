@@ -20,6 +20,7 @@
     <string name="g_label_have_invitation">I have an invitation</string>
     <string name="g_label_invitation">Invitation</string>
     <string name="g_label_log_in">Log in</string>
+    <string name="g_label_join">JOIN</string>
 
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
@@ -36,10 +37,11 @@
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
     <string name="g_msg_login_title_msg">- make the world a giving place -</string>
-    <string name="g_msg_password_reset">Please enter your email address or phone # so we can lookup your account</string>
+    <string name="g_msg_password_reset">Please enter your email address so we can lookup your account</string>
     <string name="g_msg_password_reset_validation">At least 6 characters with letters and numbers</string>
     <string name="g_msg_terms">By joining , you agree to our Terms of Use and Privacy policy.</string>
     <string name="g_msg_inv_req_success">Thank you for your request, we will contact you soon!</string>
+    <string name="g_msg_congrats">Congratulation!</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
 
@@ -350,5 +352,6 @@
     <string name="title_activity_rating">Rating &amp; Review by</string>
     <string name="title_activity_start_up">StartUpActivity</string>
     <string name="title_activity_invitation">InvitationActivity</string>
+    <string name="title_activity_password_reset">PasswordResetActivity</string>
 
 </resources>
