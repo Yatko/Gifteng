@@ -43,9 +43,12 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
 		if (id == R.id.btnActLoginRequestInvite) {
 			Intent invitationIntent = new Intent(getSherlockActivity(), InvitationActivity.class);
 			invitationIntent.putExtra("email", edtEmail.getText().toString());
+			invitationIntent.putExtra("act_mode", InvitationActivity.ACT_MODE_CONF_INVITATION_REQ);
 			startActivity(invitationIntent);					
 		} else if (id == R.id.btnActLoginHaveInviteCode){
-			
+			Intent invitationIntent = new Intent(getSherlockActivity(), InvitationActivity.class);
+			invitationIntent.putExtra("act_mode", InvitationActivity.ACT_MODE_VERIFY_INVTATION);
+			startActivity(invitationIntent);
 		}
 	}
 }
