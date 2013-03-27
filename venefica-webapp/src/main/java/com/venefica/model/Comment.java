@@ -20,7 +20,7 @@ import org.hibernate.annotations.ForeignKey;
  */
 @Entity
 //@SequenceGenerator(name = "comment_gen", sequenceName = "comment_seq", allocationSize = 1)
-@Table(name = "Comment")
+@Table(name = "comment")
 public class Comment {
 
     @Id
@@ -45,6 +45,10 @@ public class Comment {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    
+    @ManyToOne()
+    @ForeignKey(name = "comment_reply_fk")
+    private Comment reply;
 
     public Comment() {
         createdAt = new Date();
@@ -105,5 +109,13 @@ public class Comment {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Comment getReply() {
+        return reply;
+    }
+
+    public void setReply(Comment reply) {
+        this.reply = reply;
     }
 }
