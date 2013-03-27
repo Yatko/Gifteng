@@ -35,8 +35,7 @@ public class ProfileController {
 
                 if (user != null) {
                     model.addAttribute("token", encryptedToken);
-                    model.addAttribute("firstName", user.getFirstName());
-                    model.addAttribute("lastName", user.getLastName());
+                    model.addAttribute("fullName", user.getFullName());
                     model.addAttribute("email", user.getEmail());
                 }
             }
