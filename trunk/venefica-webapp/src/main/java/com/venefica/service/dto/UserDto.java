@@ -1,7 +1,9 @@
 package com.venefica.service.dto;
 
 import com.venefica.dao.ImageDao;
+import com.venefica.dao.UserDataDao;
 import com.venefica.model.Image;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,8 +38,6 @@ public class UserDto extends DtoBase {
     // in, out
     private String zipCode;
     // in, out
-    private boolean businessAcc;
-    // in, out
     private ImageDto avatar;
     // out
     private Date joinedAt;
@@ -54,18 +54,17 @@ public class UserDto extends DtoBase {
      */
     public UserDto(User user) {
         name = user.getName();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
+        firstName = ((MemberUserData) user.getUserData()).getFirstName();
+        lastName = ((MemberUserData) user.getUserData()).getLastName();
 
         email = user.getEmail();
         phoneNumber = user.getPhoneNumber();
 
-        dateOfBirth = user.getDateOfBirth();
+        dateOfBirth = ((MemberUserData) user.getUserData()).getDateOfBirth();
         country = user.getCountry();
         city = user.getCity();
         area = user.getArea();
         zipCode = user.getZipCode();
-        businessAcc = user.isBusinessAcc();
         joinedAt = user.getJoinedAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
     }
@@ -75,20 +74,20 @@ public class UserDto extends DtoBase {
      *
      * @param user domain object to update
      */
-    public void update(User user, ImageDao imageDao) {
+    public void update(User user, UserDataDao userDataDao, ImageDao imageDao) {
         user.setName(name);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
-        user.setDateOfBirth(dateOfBirth);
         user.setCountry(country);
         user.setCity(city);
         user.setArea(area);
         user.setZipCode(zipCode);
-        user.setBusinessAcc(businessAcc);
-        //user.setJoinedAt(joinedAt);
+        ((MemberUserData) user.getUserData()).setDateOfBirth(dateOfBirth);
+        ((MemberUserData) user.getUserData()).setLastName(lastName);
+        ((MemberUserData) user.getUserData()).setFirstName(firstName);
 
+        userDataDao.saveOrUpdate(user.getUserData());
+        
         // Handle avatar image
         if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
             if (user.getAvatar() != null) {
@@ -105,9 +104,10 @@ public class UserDto extends DtoBase {
         }
     }
 
-    public User toUser(ImageDao imageDao) {
+    public User toUser(UserDataDao userDataDao, ImageDao imageDao) {
         User user = new User();
-        update(user, imageDao);
+        user.setUserData(new MemberUserData());
+        update(user, userDataDao, imageDao);
         return user;
     }
 
@@ -189,14 +189,6 @@ public class UserDto extends DtoBase {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public boolean isBusinessAcc() {
-        return businessAcc;
-    }
-
-    public void setBusinessAcc(boolean businessAcc) {
-        this.businessAcc = businessAcc;
     }
 
     public ImageDto getAvatar() {

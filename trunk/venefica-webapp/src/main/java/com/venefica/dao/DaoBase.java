@@ -48,6 +48,10 @@ public class DaoBase<D> {
     protected void updateEntity(D entity) {
         getCurrentSession().update(entity);
     }
+    
+    protected void saveOrUpdateEntity(D entity) {
+        getCurrentSession().saveOrUpdate(entity);
+    }
 
     protected void deleteEntity(D entity) {
         getCurrentSession().delete(entity);
