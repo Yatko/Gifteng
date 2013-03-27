@@ -1,6 +1,7 @@
 package com.venefica.service;
 
 import com.venefica.dao.ImageDao;
+import com.venefica.dao.UserDataDao;
 import com.venefica.model.User;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.UserAlreadyExistsException;
@@ -22,11 +23,13 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
     @Inject
     private ImageDao imageDao;
+    @Inject
+    protected UserDataDao userDataDao;
     
     @Override
     @Transactional
     public Long registerUser(UserDto userDto, String password) throws UserAlreadyExistsException {
-        User user = userDto.toUser(imageDao);
+        User user = userDto.toUser(userDataDao, imageDao);
         user.setPassword(password);
 
         // Check for existing users
@@ -38,7 +41,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new UserAlreadyExistsException(UserField.EMAIL,
                     "User with the specified email already exists!");
         }
-
+        
         return userDao.save(user);
     }
 
@@ -118,7 +121,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
                         "User with the same email already exists!");
             }
 
-            userDto.update(user, imageDao);
+            userDto.update(user, userDataDao, imageDao);
             return user.isComplete();
         } catch (NumberFormatException e) {
             logger.error("Update user failed", e);

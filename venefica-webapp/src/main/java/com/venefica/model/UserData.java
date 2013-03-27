@@ -5,66 +5,59 @@
 package com.venefica.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 /**
- * Contains user data.
- * 
+ * Contains user data. Based on user type (business or simple member) the
+ * extender contains additional informations (columns). This class contains
+ * fields that are in common use for every type.
+ *
  * @author gyuszi
  */
-@Embeddable
-@SuppressWarnings("serial")
-public class UserData implements Serializable {
+@Entity
+//@SequenceGenerator(name = "userdata_gen", sequenceName = "userdata_seq", allocationSize = 1)
+@Table(name = "userdata")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class UserData implements Serializable {
     
-    @Temporal(TemporalType.DATE)
-    private Date joinedAt;
-    
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-    private String firstName;
-    private String lastName;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userdata_gen")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     
     private String phoneNumber;
+    private String website;
     
-    private String country;
+    private String address1;
+    private String address2;
     private String city;
+    private String county;
+    private String country;
+    @Column(name = "statee")
+    private String state;
     private String area;
     private String zipCode;
     
-    private boolean emailsAllowed;
-    private boolean smsAllowed;
-    private boolean callsAllowed;
+    public abstract boolean isBusinessAccount();
     
-    public UserData() {
-    }
+    public abstract boolean isComplete();
     
-    public UserData(String firstName, String lastName) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+    public abstract String getFullName();
     
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-    
-    public String getFirstName() {
-        return firstName;
+    public Long getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
     }
     
     public String getPhoneNumber() {
@@ -75,12 +68,44 @@ public class UserData implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     public String getCountry() {
@@ -91,12 +116,12 @@ public class UserData implements Serializable {
         this.country = country;
     }
 
-    public String getCity() {
-        return city;
+    public String getState() {
+        return state;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getArea() {
@@ -115,35 +140,4 @@ public class UserData implements Serializable {
         this.zipCode = zipCode;
     }
     
-    public boolean areEmailsAllowed() {
-        return emailsAllowed;
-    }
-
-    public void setEmailsAllowed(boolean emailsAllowed) {
-        this.emailsAllowed = emailsAllowed;
-    }
-
-    public boolean areSmsAllowed() {
-        return smsAllowed;
-    }
-
-    public void setSmsAllowed(boolean smsAllowed) {
-        this.smsAllowed = smsAllowed;
-    }
-
-    public boolean areCallsAllowed() {
-        return callsAllowed;
-    }
-
-    public void setCallsAllowed(boolean callsAllowed) {
-        this.callsAllowed = callsAllowed;
-    }
-
-    public Date getJoinedAt() {
-        return joinedAt;
-    }
-
-    public void setJoinedAt(Date joinedAt) {
-        this.joinedAt = joinedAt;
-    }
 }

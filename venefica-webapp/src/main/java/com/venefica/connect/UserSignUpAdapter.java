@@ -2,8 +2,10 @@ package com.venefica.connect;
 
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.UserDao;
+import com.venefica.dao.UserDataDao;
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +31,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     
     @Inject
     private UserDao userDao;
-    
+    @Inject
+    private UserDataDao userDataDao;
     @Inject
     private ImageDao imageDao;
 
@@ -45,8 +48,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         }
 
         if (user == null) {
-            user = new User(userProfile.getUsername(), userProfile.getFirstName(),
-                    userProfile.getLastName(), email);
+            user = new User(userProfile.getUsername(), email);
+            user.setUserData(new MemberUserData(userProfile.getFirstName(), userProfile.getLastName()));
 
             String avatarUrlStr = connection.getImageUrl();
 
@@ -74,7 +77,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
                 Long maxUserId = userDao.getMaxUserId();
                 user.setName("user" + maxUserId + 1);
             }
-
+            
+            userDataDao.saveOrUpdate(user.getUserData());
             userId = userDao.save(user);
         } else {
             userId = user.getId();

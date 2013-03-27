@@ -4,15 +4,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
@@ -31,18 +33,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, updatable = false)
     private String name;
     @Column(nullable = false)
     private String password;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     
-    @Embedded
-    private UserData userData;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginAt;
     
-    @Column(nullable = false)
-    private boolean businessAcc; //TODO: this should be rewritten into group based account management
+    @OneToOne
+    @ForeignKey(name = "userdata_fk")
+    private UserData userData;
     
     @OneToMany(mappedBy = "from")
     @OrderBy
@@ -57,58 +62,32 @@ public class User {
     private Image avatar;
 
     public User() {
-        userData = new UserData();
-        businessAcc = false;
         password = generatePassword();
         sentMessages = new LinkedList<Message>();
         receivedMessages = new LinkedList<Message>();
     }
 
-    public User(String name, String firstName, String lastName, String email) {
+    public User(String name, String email) {
         this();
         this.name = name;
         this.email = email;
-        this.userData.setFirstName(firstName);
-        this.userData.setLastName(lastName);
     }
 
     public boolean isComplete() {
-        return name != null && password != null && userData != null
-                && userData.getFirstName() != null && userData.getLastName() != null
-                && email != null && userData.getPhoneNumber() != null
-                && userData.getDateOfBirth() != null && userData.getCountry() != null
-                && userData.getCity() != null;
-        // TODO: place other checks here!!
+        return name != null && password != null && email != null
+                && userData != null && userData.isComplete();
     }
     
     private String generatePassword() {
         return "12345"; // TODO: Generate difficult password!!!
     }
     
-    private void initUserData() {
-        if ( userData == null ) {
-            userData = new UserData();
-        }
-    }
-
     public String getFullName() {
         return userData != null ? userData.getFullName() : null;
     }
     
-    public String getFirstName() {
-        return userData != null ? userData.getFirstName() : null;
-    }
-    
-    public String getLastName() {
-        return userData != null ? userData.getLastName() : null;
-    }
-    
     public String getPhoneNumber() {
         return userData != null ? userData.getPhoneNumber() : null;
-    }
-    
-    public Date getDateOfBirth() {
-        return userData != null ? userData.getDateOfBirth() : null;
     }
     
     public String getCountry() {
@@ -127,55 +106,30 @@ public class User {
         return userData != null ? userData.getZipCode() : null;
     }
     
-    public Date getJoinedAt() {
-        return userData != null ? userData.getJoinedAt() : null;
-    }
-    
-    public void setFirstName(String firstName) {
-        initUserData();
-        this.userData.setFirstName(firstName);
-    }
-    
-    public void setLastName(String lastName) {
-        initUserData();
-        this.userData.setLastName(lastName);
-    }
-    
     public void setPhoneNumber(String phoneNumber) {
-        initUserData();
         this.userData.setPhoneNumber(phoneNumber);
     }
     
-    public void setDateOfBirth(Date dateOfBirth) {
-        initUserData();
-        this.userData.setDateOfBirth(dateOfBirth);
-    }
-    
     public void setCountry(String country) {
-        initUserData();
         this.userData.setCountry(country);
     }
     
     public void setCity(String city) {
-        initUserData();
         this.userData.setCity(city);
     }
     
     public void setArea(String area) {
-        initUserData();
         this.userData.setArea(area);
     }
     
     public void setZipCode(String zipCode) {
-        initUserData();
         this.userData.setZipCode(zipCode);
     }
     
-    public void setJoinedAt(Date joinedAt) {
-        initUserData();
-        this.userData.setJoinedAt(joinedAt);
+    public boolean isBusinessAcc() {
+        return userData.isBusinessAccount();
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof User)) {
@@ -219,13 +173,21 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public boolean isBusinessAcc() {
-        return businessAcc;
+    
+    public Date getJoinedAt() {
+        return joinedAt;
     }
 
-    public void setBusinessAcc(boolean businessAcc) {
-        this.businessAcc = businessAcc;
+    public void setJoinedAt(Date joinedAt) {
+        this.joinedAt = joinedAt;
+    }
+
+    public Date getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(Date lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public Image getAvatar() {
