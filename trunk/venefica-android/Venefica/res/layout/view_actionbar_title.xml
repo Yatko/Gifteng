@@ -4,9 +4,9 @@
     android:layout_height="match_parent" >
     
 	<TextView 
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="match_parent"
-	    android:layout_centerInParent="true"
+	    android:layout_centerHorizontal="true"
 	    android:gravity="center"
 	    android:background="@color/transparent"
 	    android:textSize="@dimen/abs__action_bar_title_text_size"
