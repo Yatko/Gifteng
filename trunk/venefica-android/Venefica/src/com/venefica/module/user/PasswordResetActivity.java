@@ -28,6 +28,7 @@ public class PasswordResetActivity extends SherlockFragmentActivity implements O
         getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+        setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.activity_password_reset);
 		
 		ACT_MODE = getIntent().getExtras().getInt("act_mode", ACT_MODE_VERIFY_EMAIL);
