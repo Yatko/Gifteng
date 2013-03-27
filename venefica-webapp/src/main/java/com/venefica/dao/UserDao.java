@@ -3,9 +3,7 @@ package com.venefica.dao;
 import com.venefica.model.User;
 
 /**
- * Data access interface for
- *
- * @{link {@link User} entity.
+ * Data access interface for {@link User} entity.
  *
  * @author Sviatoslav Grebenchukov
  */
