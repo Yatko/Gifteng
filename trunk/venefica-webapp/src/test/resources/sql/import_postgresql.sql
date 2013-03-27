@@ -1,10 +1,22 @@
 
+-- User data
+insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
+insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
+insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
+insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '000000');
+
+-- Member user data
+insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (1, 'f', 'f', 'f');
+insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (2, 'f', 'f', 'f');
+insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (3, 'f', 'f', 'f');
+insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (4, 'f', 'f', 'f');
+
 -- Users
 delete from local_user;
-insert into local_user ("id", "name", "password", "email", "phonenumber", "businessacc", "callsallowed", "smsallowed", "emailsallowed") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com', '123456789', 'f', 'f', 'f', 'f');
-insert into local_user ("id", "name", "password", "email", "phonenumber", "businessacc", "callsallowed", "smsallowed", "emailsallowed") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com', '123456789', 'f', 'f', 'f', 'f');
-insert into local_user ("id", "name", "password", "email", "phonenumber", "businessacc", "callsallowed", "smsallowed", "emailsallowed") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com', '123456789', 'f', 'f', 'f', 'f');
-insert into local_user ("id", "name", "password", "email", "phonenumber", "businessacc", "callsallowed", "smsallowed", "emailsallowed") values (nextval('user_seq'), null, '12345', 'null@gmail.com', '000000', 'f', 'f', 'f', 'f');
+insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com');
+insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com');
+insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com');
+insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com');
 
 -- Categories
 delete from category;

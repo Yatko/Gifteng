@@ -1,10 +1,22 @@
 
+-- User data
+insert into `userdata` (`id`, `phoneNumber`) values (1, '123456789');
+insert into `userdata` (`id`, `phoneNumber`) values (2, '123456789');
+insert into `userdata` (`id`, `phoneNumber`) values (3, '123456789');
+insert into `userdata` (`id`, `phoneNumber`) values (4, '000000');
+
+-- Member user data
+insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (1, 0, 0, 0);
+insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (2, 0, 0, 0);
+insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (3, 0, 0, 0);
+insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (4, 0, 0, 0);
+
 -- Users
 delete from `local_user`;
-insert into `local_user` (`name`, `password`, `email`, `phonenumber`, `businessacc`, `callsallowed`, `smsallowed`, `emailsallowed`) values ('first', '12345', 'firstUser@gmail.com', '123456789', '0', '0', '0', '0');
-insert into `local_user` (`name`, `password`, `email`, `phonenumber`, `businessacc`, `callsallowed`, `smsallowed`, `emailsallowed`) values ('second', '12345', 'secondUser@gmail.com', '123456789', '0', '0', '0', '0');
-insert into `local_user` (`name`, `password`, `email`, `phonenumber`, `businessacc`, `callsallowed`, `smsallowed`, `emailsallowed`) values ('third', '12345', 'thirdUser@gmail.com', '123456789', '0', '0', '0', '0');
-insert into `local_user` (`name`, `password`, `email`, `phonenumber`, `businessacc`, `callsallowed`, `smsallowed`, `emailsallowed`) values (null, '12345', 'null@gmail.com', '000000', '0', '0', '0', '0');
+insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('first', '12345', 'firstUser@gmail.com', 1);
+insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('second', '12345', 'secondUser@gmail.com', 2);
+insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('third', '12345', 'thirdUser@gmail.com', 3);
+insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('null', '12345', 'null@gmail.com', 4);
 
 -- Categories
 delete from `category`;
