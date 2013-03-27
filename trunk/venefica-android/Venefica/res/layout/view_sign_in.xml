@@ -9,7 +9,7 @@
         android:id="@+id/edtActLoginEmailPhone"
         style="?EditTextGrayBorder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
@@ -17,13 +17,14 @@
         android:layout_marginTop="15dp"
         android:hint="@string/g_hint_enter_email_phone"
         android:paddingLeft="15dp"
-        android:paddingRight="5dp" />
+        android:paddingRight="5dp"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/edtActLoginPassword"
         style="?EditTextGrayBorder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@id/edtActLoginEmailPhone"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
@@ -31,8 +32,10 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:hint="@string/g_label_password"
+        android:inputType="textPassword"
         android:paddingLeft="15dp"
-        android:paddingRight="5dp" />
+        android:paddingRight="5dp"
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/btnActLoginLogin"
@@ -65,12 +68,12 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="50"
-            android:textSize="14sp"
             android:background="@android:color/transparent"
             android:clickable="true"
             android:gravity="left|center_vertical"
             android:text="@string/label_act_login_forgot_pass"
-            android:textColor="@color/light_gray" />
+            android:textColor="@color/light_gray"
+            android:textSize="14sp" />
 
         <CheckBox
             android:id="@+id/chkActLoginRememberMe"
@@ -78,10 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_weight="50"
-            android:textSize="14sp"
             android:checked="true"
             android:text="@string/label_remember_me"
-            android:textColor="@color/light_gray" />
+            android:textColor="@color/light_gray"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </RelativeLayout>
