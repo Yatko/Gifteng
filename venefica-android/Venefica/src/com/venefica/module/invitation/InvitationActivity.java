@@ -35,6 +35,7 @@ public class InvitationActivity extends SherlockFragmentActivity
         getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+        setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.activity_invitation);
 		
 		ACT_MODE = getIntent().getExtras().getInt("act_mode", ACT_MODE_CONF_INVITATION_REQ);
