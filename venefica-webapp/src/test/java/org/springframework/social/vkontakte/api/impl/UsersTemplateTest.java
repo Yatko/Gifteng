@@ -35,6 +35,7 @@ import org.springframework.social.vkontakte.api.VKontakteProfile;
  * @author vkolodrevskiy
  */
 public class UsersTemplateTest extends AbstractVKontakteApiTest {
+
     @Test
     public void getProfile_currentUser() {
         mockServer
@@ -104,6 +105,7 @@ public class UsersTemplateTest extends AbstractVKontakteApiTest {
 
         vkontakte.usersOperations().getProfiles(new ArrayList<String>() {
             private static final long serialVersionUID = 4211781776280003660L;
+
             {
                 add("1");
                 add("2");

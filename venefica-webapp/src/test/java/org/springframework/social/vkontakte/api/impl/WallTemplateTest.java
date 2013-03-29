@@ -30,6 +30,7 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
  * @author vkolodrevskiy
  */
 public class WallTemplateTest extends AbstractVKontakteApiTest {
+
     @Test
     public void post() {
         mockServer.expect(requestTo("https://api.vkontakte.ru/method/wall.post?access_token=ACCESS_TOKEN&message=hello"))
@@ -41,11 +42,11 @@ public class WallTemplateTest extends AbstractVKontakteApiTest {
 
     @Test(expected = VKontakteErrorException.class)
     public void post_expiredToken() {
-		mockServer.expect(requestTo("https://api.vkontakte.ru/method/wall.post?access_token=ACCESS_TOKEN&message=hello"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("error-code-5"), responseHeaders));
+        mockServer.expect(requestTo("https://api.vkontakte.ru/method/wall.post?access_token=ACCESS_TOKEN&message=hello"))
+                .andExpect(method(GET))
+                .andRespond(withResponse(jsonResource("error-code-5"), responseHeaders));
 
-		vkontakte.wallOperations().post("hello");
+        vkontakte.wallOperations().post("hello");
     }
 
     @Test(expected = MissingAuthorizationException.class)
