@@ -33,6 +33,7 @@
             android:name="com.venefica.module.user.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:theme="@style/GiftengTheme.LightBlue"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.user.WebAuthorizationActivity"
