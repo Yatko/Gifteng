@@ -1,5 +1,6 @@
 package com.venefica.module.invitation;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,15 @@ import com.venefica.module.main.R;
  */
 public class RequestInvitationFragment extends SherlockFragment implements OnClickListener{
 		
+	/**
+	 * @author avinash
+	 * Listener to communicate with activity
+	 */
+	public interface OnRequestInvitationListener{
+		public void onRequestInvitationClick(String email);
+		public void onHaveInvitationClick();		
+	}
+	private OnRequestInvitationListener onRequestInvitationListener;
 	/**
 	 * Buttons
 	 */
@@ -38,17 +48,24 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		// This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+        	onRequestInvitationListener = (OnRequestInvitationListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnRequestInvitationListener");
+        }
+	}
+	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		if (id == R.id.btnActLoginRequestInvite) {
-			Intent invitationIntent = new Intent(getSherlockActivity(), InvitationActivity.class);
-			invitationIntent.putExtra("email", edtEmail.getText().toString());
-			invitationIntent.putExtra("act_mode", InvitationActivity.ACT_MODE_CONF_INVITATION_REQ);
-			startActivity(invitationIntent);					
-		} else if (id == R.id.btnActLoginHaveInviteCode){
-			Intent invitationIntent = new Intent(getSherlockActivity(), InvitationActivity.class);
-			invitationIntent.putExtra("act_mode", InvitationActivity.ACT_MODE_VERIFY_INVTATION);
-			startActivity(invitationIntent);
+		if (id == R.id.btnActLoginRequestInvite && onRequestInvitationListener != null) {
+			onRequestInvitationListener.onRequestInvitationClick(edtEmail.getText().toString());								
+		} else if (id == R.id.btnActLoginHaveInviteCode && onRequestInvitationListener != null){
+			onRequestInvitationListener.onHaveInvitationClick();
 		}
 	}
 }
