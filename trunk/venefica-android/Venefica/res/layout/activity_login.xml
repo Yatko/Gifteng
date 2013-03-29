@@ -1,222 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for LoginActivity.java -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?ActivityBackground"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical" >
+    android:animateLayoutChanges="true" >
 
-    <TextView
-        android:id="@+id/txtLoginActTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/app_name" />
+    <!-- title message bar -->
 
-    <RelativeLayout
-        android:id="@+id/layLoginActWelcome"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="6dp" >
-
-        <Button
-            android:id="@+id/btnActLoginWelcomeSignIn"
-            style="@style/ButtonFullWidthLightGray"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:text="@string/label_act_login_btn_sign_in" />
-
-        <Button
-            android:id="@+id/btnActLoginSignUp"
-            style="@style/ButtonFullWidthLightBlue"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@id/btnActLoginWelcomeSignIn"
-            android:text="@string/label_act_login_btn_sign_up" />
-    </RelativeLayout>
-
-    <!-- Sign in layout -->
-
-    <ScrollView
-        android:id="@+id/layActLoginSignIn"
+    <include
+        android:id="@+id/layActLoginTitleMsg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:visibility="gone" >
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        layout="@layout/view_login_title_message" />
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="6dp" >
-
-            <EditText
-                android:id="@+id/edtActLoginUserId"
-                style="?EditTextSingleLine"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/corners"
-                android:inputType="text"
-                android:hint="@string/label_login"/>
-
-            <EditText
-                android:id="@+id/edtActLoginPassword"
-                style="?EditTextSingleLine"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_below="@id/edtActLoginUserId"
-                android:background="@drawable/corners"
-                android:inputType="textPassword"
-                android:hint="@string/label_password" />
-
-            <LinearLayout
-                android:id="@+id/layActLoginRemember"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/edtActLoginPassword"
-                android:orientation="horizontal"
-                android:weightSum="100" >
-
-                <Button
-                    android:id="@+id/btnActLoginForgotPass"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="50"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:gravity="left|center_vertical"
-                    android:text="@string/label_act_login_forgot_pass" />
-
-                <CheckBox
-                    android:id="@+id/chkActLoginRemember"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_weight="50"
-                    android:checked="true"
-                    android:text="@string/label_remember_me" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnActLoginSignIn"
-                style="@style/ButtonFullWidthLightBlue"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_below="@id/layActLoginRemember"
-                android:text="@string/label_act_login_btn_sign_in" />
-
-            <LinearLayout
-                android:id="@+id/layActLoginOr"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btnActLoginSignIn"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:weightSum="100" >
-
-                <!-- Divider line -->
-
-                <TextView
-                    android:id="@+id/div_act_login_04"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="45"
-                    android:background="@color/black" />
-                <!-- Or -->
-
-                <TextView
-                    android:id="@+id/txtActLoginOr"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="10"
-                    android:text="@string/label_act_login_or" />
-                <!-- Divider line -->
-
-                <TextView
-                    android:id="@+id/div_act_login_05"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="45"
-                    android:background="@color/black" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnActLoginFacebook"
-                style="?ButtonFullWidth"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_below="@id/layActLoginOr"
-                android:background="@drawable/facebook_button" />
-
-            <Button
-                android:id="@+id/btnActLoginTwitter"
-                style="?ButtonFullWidth"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_below="@+id/btnActLoginFacebook"
-                android:background="@drawable/twitter_button" />
-
-            <Button
-                android:id="@+id/btnActLoginVK"
-                style="?ButtonFullWidth"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_below="@+id/btnActLoginTwitter"
-                android:background="@drawable/vk_button"
-                android:visibility="gone" />
-        </RelativeLayout>
-    </ScrollView>
-	<!-- Forgot passowrd -->
-    <RelativeLayout
-        android:id="@+id/layLoginActForgetPassword"
-        android:layout_width="fill_parent"
+    <FrameLayout
+        android:id="@+id/layActLoginRoot"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="6dp" >
+        android:layout_below="@id/layActLoginTitleMsg" >
+    </FrameLayout>
 
-        <EditText
-            android:id="@+id/edtActLoginForgetPassUserId"
-            style="?EditTextSingleLine"
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/corners"
-            android:inputType="text"
-            android:hint="@string/label_login"/>
-
-        <Button
-            android:id="@+id/btnActLoginRequestPass"
-            style="@style/ButtonFullWidthLightBlue"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@+id/edtActLoginForgetPassUserId"
-            android:text="@string/label_act_login_req_pass" />
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
