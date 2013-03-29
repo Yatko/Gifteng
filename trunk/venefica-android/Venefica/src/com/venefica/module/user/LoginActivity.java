@@ -1,7 +1,6 @@
 package com.venefica.module.user;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -14,22 +13,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
+import android.view.View.OnClickListener;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
-import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
-import com.venefica.module.utils.InputFieldValidator;
-import com.venefica.module.utils.Utility;
+import com.venefica.module.user.SigninFragment.OnSigninListener;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -37,19 +31,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Class for startup activity 
  */
-public class LoginActivity extends VeneficaActivity implements View.OnClickListener{
-	/**
-	 * SignIn and SignUp buttons
-	 */
-	private Button btnSignUp, btnSignIn, btnWelComeLogin, btnForgotPass, btnRequestPass;
-	/**
-	 * Input fields for login id and password
-	 */
-	private EditText edtLogin, edtPassword;
-	/**
-	 * Facebook, Twitter and VK buttons
-	 */
-	private Button btnFacebook, btnTwitter, btnVk;
+public class LoginActivity extends SherlockFragmentActivity implements OnClickListener, OnSigninListener {
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -60,6 +42,10 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	private final int AUTH_FACEBOOK = 11, AUTH_TWITTER = 12, AUTH_VK = 13
 			, AUTH_VENEFICA = 14, CHECK_REGRISTRATION = 15, MODE_GET_USER = 16;
 	/**
+	 * activity request codes
+	 */
+	private int REQ_RESET_PASSWORD = 4001;
+	/**
 	 * Auth type
 	 */
 	private static int AUTH_TYPE = -1;
@@ -67,14 +53,6 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
-	/**
-	 * Field validator
-	 */
-	private InputFieldValidator validator;
-	/**
-	 * Checkbox remember me
-	 */
-	private CheckBox chkRemember;
 	/**
 	 * Shared prefs
 	 */
@@ -84,76 +62,38 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 */
 	private WSAction wsAction;
 	/**
-	 * view groups 
+	 * userId & password
 	 */
-	private RelativeLayout layWelcome, layForgetPass;
-	private ScrollView layLogin;
+	private String userId, password;
+	/**
+	 * flag processing (working) indicates post listing process is running
+	 */
+	private boolean uploadingData = false;
+	/**
+	 * login fragment
+	 */
+	private SigninFragment signinFragment;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS | Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.abs__ab_transparent_light_holo));
+        getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.activity_login);
-		setSupportProgressBarIndeterminateVisibility(false);
-		//view groups
-		layWelcome = (RelativeLayout) findViewById(R.id.layLoginActWelcome);
-		layLogin = (ScrollView) findViewById(R.id.layActLoginSignIn);
-		layForgetPass = (RelativeLayout) findViewById(R.id.layLoginActForgetPassword);
-		//Welcome 
-		//Login
-		btnWelComeLogin = (Button) findViewById(R.id.btnActLoginWelcomeSignIn);
-		btnWelComeLogin.setOnClickListener(this);
-		//Sign up button
-		btnSignUp = (Button) findViewById(R.id.btnActLoginSignUp);
-		btnSignUp.setOnClickListener(this);
-		//Sign in button		
-		btnSignIn = (Button) findViewById(R.id.btnActLoginSignIn);
-		btnSignIn.setOnClickListener(this);
-		//Facebook 
-		btnFacebook = (Button) findViewById(R.id.btnActLoginFacebook);
-		btnFacebook.setOnClickListener(this);
-		//Twitter
-		btnTwitter = (Button) findViewById(R.id.btnActLoginTwitter);
-		btnTwitter.setOnClickListener(this);
-		//VK
-		btnVk = (Button) findViewById(R.id.btnActLoginVK);
-		btnVk.setOnClickListener(this);
-		//Forget pass
-		btnForgotPass = (Button) findViewById(R.id.btnActLoginForgotPass);
-		btnForgotPass.setOnClickListener(this);
-		//Request pass
-		btnRequestPass = (Button) findViewById(R.id.btnActLoginRequestPass);
-		btnRequestPass.setOnClickListener(this);
 		
-		edtLogin = (EditText) findViewById(R.id.edtActLoginUserId);
-		edtPassword = (EditText) findViewById(R.id.edtActLoginPassword);
-
-		chkRemember = (CheckBox) findViewById(R.id.chkActLoginRemember);
-		//Check if session is valid
-		prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
-		if((System.currentTimeMillis() - prefs.getLong(Constants.PREFERENCES_SESSION_IN_TIME, 0)) < Constants.SESSION_TIME_OUT 
-				&& !prefs.getString(Constants.PREFERENCES_AUTH_TOKEN, "").equals("")){	
-
-			((VeneficaApplication)getApplication()).setAuthToken(prefs.getString(Constants.PREFERENCES_AUTH_TOKEN, ""));
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putLong(Constants.PREFERENCES_SESSION_IN_TIME, System.currentTimeMillis());
-			editor.commit();
-			//Go to TabHome for valid session
-			startHomeScreen();
-
-			finish();
-		}else if(prefs.getString(Constants.PREF_KEY_LOGIN_TYPE, "").equals(Constants.PREF_VAL_LOGIN_VENEFICA)){
-			edtLogin.setText(prefs.getString(Constants.PREF_KEY_LOGIN, ""));
-			edtPassword.setText(prefs.getString(Constants.PREF_KEY_PASSWORD, ""));
-		}
-		//Show welcome layout on startup
-		layWelcome.setVisibility(ViewGroup.VISIBLE);
-		layLogin.setVisibility(ViewGroup.GONE);
-		layForgetPass.setVisibility(ViewGroup.GONE);
+		//add fragment as per mode
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();		
+		signinFragment = new SigninFragment();
+		fragmentTransaction.add(R.id.layActLoginRoot, signinFragment);
+		fragmentTransaction.commit();
+		
 		if(!WSAction.isNetworkConnected(this)){
 			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
 			showDialog(D_ERROR);
@@ -165,77 +105,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 	 */
 	public void onClick(View v) {
 		int id = v.getId();
-		if (id == R.id.btnActLoginSignUp) {
-			AUTH_TYPE = AUTH_VENEFICA;
-			//Go to user registration
-			Intent intent = new Intent(LoginActivity.this, RegisterUserActivity.class);
-			intent.putExtra("activity_mode",RegisterUserActivity.MODE_REGISTER_USR);
-			startActivityForResult(intent, 0);
-		} else if (id == R.id.btnActLoginSignIn) {
-			AUTH_TYPE = AUTH_VENEFICA;
-			if(validator == null){
-				validator = new InputFieldValidator();
-			}
-			//Empty field check
-			if (edtLogin.getText().toString().equals("") || edtPassword.getText().toString().equals("")) {
-				Utility.showShortToast(LoginActivity.this, getResources().getString(R.string.msg_empty_user_password)
-						+" "+getResources().getString(R.string.hint_user_password_pattern));
-			}else if(!validateInput()){
-				//Validate fields
-				Utility.showShortToast(LoginActivity.this, getResources().getString(R.string.hint_user_password_pattern));
-			}else{
-				if(WSAction.isNetworkConnected(this)){
-					//Call web service to authenticate user
-					new AuthenticationTask().execute(AUTH_VENEFICA+"");
-					//remember user pass
-					rememberUser(chkRemember.isChecked());
-				}else{
-					ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-					showDialog(D_ERROR);
-				}
-			}
-		} else if (id == R.id.btnActLoginFacebook) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-			if(WSAction.isNetworkConnected(this)){
-				loginWithSocialNetwork(Constants.SIGN_IN_FACEBOOK_URL, AUTH_FACEBOOK);
-			}else{
-				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-				showDialog(D_ERROR);
-			}
-		} else if (id == R.id.btnActLoginTwitter) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-			if(WSAction.isNetworkConnected(this)){
-				loginWithSocialNetwork(Constants.SIGN_IN_TWITTER_URL, AUTH_TWITTER);
-			}else{
-				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-				showDialog(D_ERROR);
-			}
-		} else if (id == R.id.btnActLoginVK) {
-			if(WSAction.isNetworkConnected(this)){
-				loginWithSocialNetwork(Constants.SIGN_IN_VK_URL, AUTH_VK);
-			}else{
-				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-				showDialog(D_ERROR);
-			}
-		} else if(id == R.id.btnActLoginWelcomeSignIn){
-			//Show login layout
-			layWelcome.setVisibility(ViewGroup.GONE);
-			layLogin.setVisibility(ViewGroup.VISIBLE);
-			layForgetPass.setVisibility(ViewGroup.GONE);
-		} else if (id == R.id.btnActLoginForgotPass) {
-			//Show requset password layout
-			layWelcome.setVisibility(ViewGroup.GONE);
-			layLogin.setVisibility(ViewGroup.GONE);
-			layForgetPass.setVisibility(ViewGroup.VISIBLE);			
-		} else if (id == R.id.btnActLoginRequestPass) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-			if(WSAction.isNetworkConnected(this)){
-				
-			}else{
-				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-				showDialog(D_ERROR);
-			}
-		}
+		
 
 	}
 	/* (non-Javadoc)
@@ -300,39 +170,73 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		startActivityForResult(intent, requestCode);
 	}
 
+	
+
+
 	/**
-	 * Method to validate id and password
-	 * @return validation result
+	 * Start home screen of application
 	 */
-	private boolean validateInput(){
-		if((validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.phonePatternRegx)) 
-				|| (validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.emailPatternRegx)))
-				&& validator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx)))){
-			return true;
-		}
-		return false;
+	private void startHomeScreen(){
+		Intent intent = new Intent(this, SearchListingsActivity.class);
+		intent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
+		startActivity(intent);
+		finish();
 	}
-
-
+	/**
+	 * Method to store authToken
+	 */
+	private void saveAuthToken(String authToken){
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Constants.PREFERENCES_AUTH_TOKEN, authToken);
+		editor.commit();
+	}
+	
 	/**
 	 * Method to store user password when remember me is checked
 	 */
-	private void rememberUser(boolean rememberUser){
+	private void rememberUser(boolean rememberUser, String userId, String password){
 		if(prefs == null){
 			prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
 		}
 		SharedPreferences.Editor editor = prefs.edit();
 		if (rememberUser) {
 			editor.putString(Constants.PREF_KEY_LOGIN_TYPE, Constants.PREF_VAL_LOGIN_VENEFICA);
-			editor.putString(Constants.PREF_KEY_LOGIN, edtLogin.getText().toString());
-			editor.putString(Constants.PREF_KEY_PASSWORD, edtPassword.getText().toString());
+			editor.putString(Constants.PREF_KEY_LOGIN, userId);
+			editor.putString(Constants.PREF_KEY_PASSWORD, password);
 		} else {
 			editor.putString(Constants.PREF_KEY_LOGIN, "");
 			editor.putString(Constants.PREF_KEY_PASSWORD, "");
 		}        
 		editor.commit();
 	}
+	
+	@Override
+	public void onSigninButtonClick(boolean rememberUser, String userId, String password) {
+		if (!uploadingData) {
+			if (WSAction.isNetworkConnected(this)) {
+				this.userId = userId;
+				this.password = password;
+				//Call web service to authenticate user
+				new AuthenticationTask().execute(AUTH_VENEFICA + "");
+				//remember user pass
+				rememberUser(rememberUser, userId, password);
+			} else {
+				ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+				showDialog(D_ERROR);
+			}
+		}
+	}
 
+	@Override
+	public void onForgotPasswordButtonClick() {
+		if (!uploadingData) {
+			Intent forgotPassIntent = new Intent(this,
+					PasswordResetActivity.class);
+			forgotPassIntent.putExtra("act_mode",
+					PasswordResetActivity.ACT_MODE_VERIFY_EMAIL);
+			startActivityForResult(forgotPassIntent, REQ_RESET_PASSWORD);
+		}		
+	}
 	/**
 	 * @author avinash
 	 *	Class to perform login task
@@ -341,7 +245,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-//			showDialog(D_PROGRESS);
+			uploadingData = true;
 			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
@@ -352,7 +256,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 					wsAction = new WSAction();
 				}
 				if (params[0].equalsIgnoreCase(AUTH_VENEFICA+"")) {
-					wrapper = wsAction.authenticateUser(edtLogin.getText().toString(), edtPassword.getText().toString());					
+					wrapper = wsAction.authenticateUser(userId, password);					
 				}else if (params[0].equalsIgnoreCase(CHECK_REGRISTRATION+"")) {
 					wrapper = wsAction.checkUserRegistration(params[1]);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
@@ -372,7 +276,7 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 		@Override
 		protected void onPostExecute(UserRegistrationResultWrapper result) {
 			super.onPostExecute(result);
-//			dismissDialog(D_PROGRESS);
+			uploadingData = false;
 			setSupportProgressBarIndeterminateVisibility(false);
 			if(result != null){
 				if (result != null && result.result == Constants.RESULT_USER_AUTHORISED) {
@@ -412,57 +316,5 @@ public class LoginActivity extends VeneficaActivity implements View.OnClickListe
 				showDialog(D_ERROR);
 			}
 		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		String authToken = "";
-		super.onActivityResult(requestCode, resultCode, data);
-		if(resultCode == Constants.ERROR_RESULT_USER_AUTH || resultCode == Constants.ERROR_NETWORK_CONNECT){
-			ERROR_CODE = resultCode;
-			showDialog(D_ERROR);
-		}else{
-			if(data != null && data.getExtras()!= null && data.getExtras().containsKey(Constants.PREFERENCES_AUTH_TOKEN)){
-				AUTH_TYPE = requestCode;
-				authToken = data.getExtras().getString(Constants.PREFERENCES_AUTH_TOKEN);
-				new AuthenticationTask().execute(CHECK_REGRISTRATION+"", authToken);
-				saveAuthToken(authToken);
-				//Set data at application level
-				((VeneficaApplication)getApplication()).setAuthToken(authToken);
-			}
-		}		
-	}
-	/**
-	 * Start home screen of application
-	 */
-	private void startHomeScreen(){
-		Intent intent = new Intent(this, SearchListingsActivity.class);
-		intent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_SEARCH_BY_CATEGORY);
-		startActivity(intent);
-		finish();
-	}
-	/**
-	 * Method to store authToken
-	 */
-	private void saveAuthToken(String authToken){
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(Constants.PREFERENCES_AUTH_TOKEN, authToken);
-		editor.commit();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		if (layForgetPass.getVisibility() == ViewGroup.VISIBLE) {
-			layWelcome.setVisibility(ViewGroup.GONE);
-			layLogin.setVisibility(ViewGroup.VISIBLE);
-			layForgetPass.setVisibility(ViewGroup.GONE);
-		} else if (layWelcome.getVisibility() == ViewGroup.VISIBLE) {
-			super.onBackPressed();
-		} else if (layLogin.getVisibility() == ViewGroup.VISIBLE) {
-			layWelcome.setVisibility(ViewGroup.VISIBLE);
-			layLogin.setVisibility(ViewGroup.GONE);
-			layForgetPass.setVisibility(ViewGroup.GONE);
-		}
-	}
+	}	
 }
