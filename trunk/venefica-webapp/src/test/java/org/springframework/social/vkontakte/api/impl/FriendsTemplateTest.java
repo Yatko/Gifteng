@@ -34,44 +34,45 @@ import org.springframework.social.vkontakte.api.VKontakteProfile;
  * @author vkolodrevskiy
  */
 public class FriendsTemplateTest extends AbstractVKontakteApiTest {
-    @Test
-	public void get_currentUser() throws ParseException {
-		mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
-
-		List<VKontakteProfile> friends = vkontakte.friendsOperations().get();
-        assertFriends(friends);
-	}
-
-	@Test(expected = MissingAuthorizationException.class)
-	public void get_currentUser_unauthorized() {
-		unauthorizedVKontakte.friendsOperations().get();
-	}
 
     @Test
-	public void get_byUserId() throws ParseException {
-		mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate&uid=123"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
+    public void get_currentUser() throws ParseException {
+        mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate"))
+                .andExpect(method(GET))
+                .andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
 
-		List<VKontakteProfile> friends = vkontakte.friendsOperations().get("123");
+        List<VKontakteProfile> friends = vkontakte.friendsOperations().get();
         assertFriends(friends);
     }
 
-	@Test(expected = MissingAuthorizationException.class)
-	public void getFriends_byUserId_unauthorized() {
-		unauthorizedVKontakte.friendsOperations().get("123");
-	}
+    @Test(expected = MissingAuthorizationException.class)
+    public void get_currentUser_unauthorized() {
+        unauthorizedVKontakte.friendsOperations().get();
+    }
 
-	@Test(expected = VKontakteErrorException.class)
-	public void get_expiredToken() {
-		mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate&uid=123"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("error-code-5"), responseHeaders));
+    @Test
+    public void get_byUserId() throws ParseException {
+        mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate&uid=123"))
+                .andExpect(method(GET))
+                .andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
 
-		vkontakte.friendsOperations().get("123");
-	}
+        List<VKontakteProfile> friends = vkontakte.friendsOperations().get("123");
+        assertFriends(friends);
+    }
+
+    @Test(expected = MissingAuthorizationException.class)
+    public void getFriends_byUserId_unauthorized() {
+        unauthorizedVKontakte.friendsOperations().get("123");
+    }
+
+    @Test(expected = VKontakteErrorException.class)
+    public void get_expiredToken() {
+        mockServer.expect(requestTo("https://api.vkontakte.ru/method/friends.get?access_token=ACCESS_TOKEN&fields=uid,first_name,last_name,photo,photo_medium,photo_big,contacts,bdate&uid=123"))
+                .andExpect(method(GET))
+                .andRespond(withResponse(jsonResource("error-code-5"), responseHeaders));
+
+        vkontakte.friendsOperations().get("123");
+    }
 
     private void assertFriends(List<VKontakteProfile> profiles) throws ParseException {
         assertEquals(3, profiles.size());

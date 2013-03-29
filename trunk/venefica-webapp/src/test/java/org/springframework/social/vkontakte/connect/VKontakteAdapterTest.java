@@ -31,21 +31,21 @@ import org.springframework.social.vkontakte.api.VKontakteProfile;
  * @author vkolodrevskiy
  */
 public class VKontakteAdapterTest {
-	private VKontakteAdapter apiAdapter = new VKontakteAdapter();
-	
-	private VKontakte vkontakte = Mockito.mock(VKontakte.class);
+
+    private VKontakteAdapter apiAdapter = new VKontakteAdapter();
+    private VKontakte vkontakte = Mockito.mock(VKontakte.class);
     private UsersOperations usersOperations = Mockito.mock(UsersOperations.class);
-	
-	@Test
-	public void fetchProfile() {
-		Mockito.when(usersOperations.getProfile()).thenReturn(new VKontakteProfile("123", "Viktor", "Kolodrevskiy", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "1111", "222", new VKontakteDate(15,12,1977)));
+
+    @Test
+    public void fetchProfile() {
+        Mockito.when(usersOperations.getProfile()).thenReturn(new VKontakteProfile("123", "Viktor", "Kolodrevskiy", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "http://cs9686.vkontakte.ru/u6398868/a_4e041afa.jpg", "1111", "222", new VKontakteDate(15, 12, 1977)));
         Mockito.when(vkontakte.usersOperations()).thenReturn(usersOperations);
 
         UserProfile profile = apiAdapter.fetchUserProfile(vkontakte);
-		assertEquals("Viktor Kolodrevskiy", profile.getName());
-		assertEquals("Viktor", profile.getFirstName());
-		assertEquals("Kolodrevskiy", profile.getLastName());
-		assertNull(profile.getEmail());
-		assertNull(profile.getUsername());
-	}
+        assertEquals("Viktor Kolodrevskiy", profile.getName());
+        assertEquals("Viktor", profile.getFirstName());
+        assertEquals("Kolodrevskiy", profile.getLastName());
+        assertNull(profile.getEmail());
+        assertNull(profile.getUsername());
+    }
 }
