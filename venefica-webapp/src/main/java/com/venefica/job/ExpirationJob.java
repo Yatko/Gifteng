@@ -21,7 +21,7 @@ public class ExpirationJob implements Job {
         AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.ADDAO);
 
         try {
-            log.info("Processing expired advertisiments");
+            log.info("Processing expired advertisements");
             adDao.markExpiredAds();
         } catch (Exception e) {
             log.error("Unable to process ads", e);
