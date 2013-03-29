@@ -25,9 +25,9 @@ import org.springframework.web.context.request.WebRequest;
 
 /**
  * Contains utility methods used by
- *
- * @{link {@link SignInController} and
- * @{link {@link ConnectController}.
+ * 
+ * {@link SignInController} and
+ * {@link ConnectController}.
  *
  * @author Sviatoslav Grebenchukov
  */
@@ -181,5 +181,4 @@ public class ConnectSupport {
         request.removeAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
         return requestToken;
     }
-    
 }
