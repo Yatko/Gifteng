@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * Implementation of {@link UserDataDao} interface.
+ * 
  * @author gyuszi
  */
 @Repository
