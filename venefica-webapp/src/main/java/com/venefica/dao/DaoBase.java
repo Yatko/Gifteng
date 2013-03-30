@@ -24,6 +24,16 @@ public class DaoBase<D> {
     public DaoBase() {
         this.domainClass = getDomainClass();
     }
+    
+    /**
+     * Method useful when creating HQL queries to help when refactoring
+     * domain classes.
+     * 
+     * @return the current domain class simple name.
+     */
+    protected String getDomainClassName() {
+        return getDomainClass().getSimpleName();
+    }
 
     protected Session newSession() {
         return sessionFactory.openSession();
