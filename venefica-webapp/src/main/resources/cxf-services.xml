@@ -41,6 +41,7 @@
     </cxf:bus>
 
     <jaxws:endpoint id="authEndpoint" implementor="#authService" address="/AuthService" />
+    <jaxws:endpoint id="invitationEndpoint" implementor="#invitationService" address="/InvitationService" />
     <jaxws:endpoint id="userManagementEndpoint" implementor="#userManagementService" address="/UserManagementService" />
     <jaxws:endpoint id="adEndpoint" implementor="#adService" address="/AdService" />
     <jaxws:endpoint id="messageEndpoint" implementor="#messageService" address="/MessageService" />

@@ -26,7 +26,8 @@ public interface Constants {
             "RegisterUser",
             "Authenticate",
             "AuthenticateEmail",
-            "AuthenticatePhone"
+            "AuthenticatePhone",
+            "RequestInvitation"
     ));
     
 }
