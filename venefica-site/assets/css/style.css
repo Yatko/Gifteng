@@ -25,9 +25,10 @@ img {
     border: none;
 }
 
-a {
+a, .link {
     outline: none; /* remove the dotted outlines when clicking links/tabs */
     text-decoration: none;
+    cursor: pointer;
 }
 
 ul {
@@ -106,7 +107,8 @@ label, .label {
 }
 
 .tabContent {
-    padding: 5px 7px 5px 7px;
+    text-align: left;
+    padding: 7px 7px 7px 7px;
 }
 .tabTitle {
     display: none;
@@ -125,6 +127,11 @@ label, .label {
     position: relative;
     top: 0px;
     overflow: hidden;
+}
+
+.inlineRadio {
+    display: inline;
+    text-align: center;
 }
 
 .buttonBlue {
@@ -153,13 +160,14 @@ label, .label {
     line-height: 52px;
     margin: 5px auto;
 }
-.linkOrange {
+
+.textOrange {
     display: block;
     text-align: center;
     font-size: 14px;
     color: #eb884f;
-    line-height: 40px;
+    /*line-height: 40px;*/
     margin: 0 auto;
     margin-bottom: 10px;
-    cursor: pointer;
+    padding: 10px;
 }

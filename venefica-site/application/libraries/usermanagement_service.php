@@ -7,11 +7,23 @@
  */
 class Usermanagement_service {
     
+    /**
+     * Gets the user from the server by the given email and stores into session
+     * under 'user' key.
+     * 
+     * @param string $email the user email
+     * @throws Exception in case of WS invocation error
+     */
     public function storeUser($email) {
         $user = $this->getUserByEmail($email, loadToken());
         storeIntoSession('user', $user);
     }
     
+    /**
+     * Loads the user from the session that was stored previously.
+     * 
+     * @return User model
+     */
     public function loadUser() {
         return loadFromSession('user');
     }

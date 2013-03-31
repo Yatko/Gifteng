@@ -1,9 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-define('AUTH_SERVICE_WSDL',     'http://veneficalabs.com:8080/venefica/services/AuthService?wsdl');
-define('AD_SERVICE_WSDL',       'http://veneficalabs.com:8080/venefica/services/AdService?wsdl');
-define('MESSAGE_SERVICE_WSDL',  'http://veneficalabs.com:8080/venefica/services/MessageService?wsdl');
-define('USER_SERVICE_WSDL',     'http://veneficalabs.com:8080/venefica/services/UserManagementService?wsdl');
+define('AUTH_SERVICE_WSDL',         'http://veneficalabs.com:8080/venefica/services/AuthService?wsdl');
+define('AD_SERVICE_WSDL',           'http://veneficalabs.com:8080/venefica/services/AdService?wsdl');
+define('INVITATION_SERVICE_WSDL',   'http://veneficalabs.com:8080/venefica/services/InvitationService?wsdl');
+define('MESSAGE_SERVICE_WSDL',      'http://veneficalabs.com:8080/venefica/services/MessageService?wsdl');
+define('USER_SERVICE_WSDL',         'http://veneficalabs.com:8080/venefica/services/UserManagementService?wsdl');
 
 define('DEBUG', 'debug');
 define('INFO',  'info');
