@@ -21,6 +21,7 @@
             <config-file>src/main/resources/cxf-services.xml</config-file>
             <config-file>src/test/resources/AdServiceTest-context.xml</config-file>
             <config-file>src/test/resources/AuthServiceTest-context.xml</config-file>
+            <config-file>src/test/resources/InvitationServiceTest-context.xml</config-file>
             <config-file>src/test/resources/MessageServiceTest-context.xml</config-file>
             <config-file>src/test/resources/UserManagementServiceTest-context.xml</config-file>
             <config-file>src/test/resources/common-context.xml</config-file>
@@ -29,6 +30,7 @@
             <config-file-group name="Test resources">
                 <config-file>src/test/resources/AdServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/AuthServiceTest-context.xml</config-file>
+                <config-file>src/test/resources/InvitationServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/MessageServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/UserManagementServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/common-context.xml</config-file>
