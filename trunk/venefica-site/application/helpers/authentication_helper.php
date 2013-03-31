@@ -29,12 +29,6 @@ if ( ! function_exists('getSoapOptions')) {
     }
 }
 
-if ( ! function_exists('storeToken')) {
-    function storeToken($token) {
-        storeIntoSession('token', $token);
-    }
-}
-
 if ( ! function_exists('loadToken')) {
     function loadToken() {
         return loadFromSession('token');

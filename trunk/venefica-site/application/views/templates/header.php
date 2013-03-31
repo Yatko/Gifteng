@@ -23,6 +23,7 @@ $font_path  = $base_path.'font/';
     <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>style.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>coda-slider.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>prettyCheckboxes.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>chosen.css" />
     
     <script src="<?=$js_path?>jquery-1.9.1.min.js"></script>
     <script src="<?=$js_path?>jquery-migrate-1.1.1.min.js"></script>
