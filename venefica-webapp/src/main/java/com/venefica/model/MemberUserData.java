@@ -30,6 +30,10 @@ public class MemberUserData extends UserData {
     private Date dateOfBirth;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+    @Enumerated(EnumType.STRING)
+    private MaritalStatus maritalStatus;
     
     private boolean emailsAllowed;
     private boolean smsAllowed;
@@ -116,5 +120,21 @@ public class MemberUserData extends UserData {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public MaritalStatus getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(MaritalStatus maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 }
