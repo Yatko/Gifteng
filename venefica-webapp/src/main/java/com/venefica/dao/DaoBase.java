@@ -3,6 +3,8 @@ package com.venefica.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import javax.inject.Inject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +18,8 @@ import org.hibernate.SessionFactory;
  */
 public class DaoBase<D> {
 
+    protected static final Log logger = LogFactory.getLog(DaoBase.class);
+    
     @Inject
     private SessionFactory sessionFactory;
     
@@ -59,9 +63,9 @@ public class DaoBase<D> {
         getCurrentSession().update(entity);
     }
     
-    protected void saveOrUpdateEntity(D entity) {
-        getCurrentSession().saveOrUpdate(entity);
-    }
+    //protected void saveOrUpdateEntity(D entity) {
+    //    getCurrentSession().saveOrUpdate(entity);
+    //}
 
     protected void deleteEntity(D entity) {
         getCurrentSession().delete(entity);
