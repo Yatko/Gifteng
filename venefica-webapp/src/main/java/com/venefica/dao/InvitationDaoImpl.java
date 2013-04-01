@@ -36,6 +36,11 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
     public Long save(Invitation invitation) {
         return saveEntity(invitation);
     }
+    
+    @Override
+    public void update(Invitation invitation) {
+        updateEntity(invitation);
+    }
 
     @Override
     public Invitation findByCode(String code) {

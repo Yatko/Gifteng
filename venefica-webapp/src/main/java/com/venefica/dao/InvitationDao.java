@@ -30,6 +30,13 @@ public interface InvitationDao {
     public Long save(Invitation invitation);
     
     /**
+     * Updates the invitation.
+     *
+     * @param invitation updated invitation object
+     */
+    public void update(Invitation invitation);
+    
+    /**
      * Finds the invitation by its code.
      *
      * @param code code of the invitation
