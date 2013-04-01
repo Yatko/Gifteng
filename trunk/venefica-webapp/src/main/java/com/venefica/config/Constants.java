@@ -23,11 +23,17 @@ public interface Constants {
     public static final String ADDAO = "AdDao";
     
     public static final Set<String> OPERATIONS_FOR_SKIP_TOKEN_AUTHORIZATION = new HashSet<String>(Arrays.asList(
+            //registration related
             "RegisterUser",
+            
+            //login related
             "Authenticate",
             "AuthenticateEmail",
             "AuthenticatePhone",
-            "RequestInvitation"
+            
+            //invitation related
+            "RequestInvitation",
+            "IsInvitationValid"
     ));
     
 }
