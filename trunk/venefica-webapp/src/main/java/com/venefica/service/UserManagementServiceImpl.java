@@ -1,9 +1,13 @@
 package com.venefica.service;
 
 import com.venefica.dao.ImageDao;
+import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
+import com.venefica.model.Invitation;
 import com.venefica.model.User;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.InvalidInvitationException;
+import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
@@ -24,23 +28,39 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Inject
     private ImageDao imageDao;
     @Inject
+    private InvitationDao invitationDao;
+    @Inject
     protected UserDataDao userDataDao;
     
     @Override
     @Transactional
-    public Long registerUser(UserDto userDto, String password) throws UserAlreadyExistsException {
-        User user = userDto.toUser(userDataDao, imageDao);
+    public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+        User user = userDto.toUser(imageDao);
         user.setPassword(password);
 
         // Check for existing users
         if (userDao.findUserByName(user.getName()) != null) {
             throw new UserAlreadyExistsException(UserField.NAME,
                     "User with the same name already exists!");
-        }
-        if (userDao.findUserByEmail(user.getEmail()) != null) {
+        } else if (userDao.findUserByEmail(user.getEmail()) != null) {
             throw new UserAlreadyExistsException(UserField.EMAIL,
                     "User with the specified email already exists!");
+        } else if ( invitationCode == null ) {
+            throw new InvalidInvitationException("Invitation code cannot be empty!");
         }
+        
+        Invitation invitation = invitationDao.findByCode(invitationCode);
+        if (invitation == null) {
+            throw new InvitationNotFoundException("Invitation with code '" + invitationCode + "' not found!");
+        } else if ( !invitation.isValid() ) {
+            throw new InvalidInvitationException("Invitation with code '" + invitationCode + "' is invalid!");
+        }
+        
+        invitation.use();
+        invitationDao.update(invitation);
+        
+        user.getUserData().setInvitation(invitation);
+        userDataDao.save(user.getUserData());
         
         return userDao.save(user);
     }
@@ -120,8 +140,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
                 throw new UserAlreadyExistsException(UserField.EMAIL,
                         "User with the same email already exists!");
             }
-
-            userDto.update(user, userDataDao, imageDao);
+            
+            userDto.update(user, imageDao);
+            userDataDao.update(user.getUserData());
+            
             return user.isComplete();
         } catch (NumberFormatException e) {
             logger.error("Update user failed", e);

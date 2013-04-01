@@ -1,6 +1,8 @@
 package com.venefica.service;
 
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.InvalidInvitationException;
+import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Set;
@@ -26,14 +28,18 @@ public interface UserManagementService {
      * @param userDto the user to register
      * @param password the password (may be a hash of the password in the
      * future)
+     * @param invitationCode the invitation code
      * @throws UserAlreadyExistsException is thrown when a user with the same
      * name already exists
+     * @throws InvitationNotFoundException thrown when the provided invitation code
+     * could not be found
      */
     @WebMethod(operationName = "RegisterUser")
     @WebResult(name = "userId")
     public Long registerUser(@WebParam(name = "user") UserDto userDto,
-            @WebParam(name = "password") String password) throws UserAlreadyExistsException;
-
+            @WebParam(name = "password") String password,
+            @WebParam(name = "invitationCode") String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException;
+    
     /**
      * Updates user information.
      *
