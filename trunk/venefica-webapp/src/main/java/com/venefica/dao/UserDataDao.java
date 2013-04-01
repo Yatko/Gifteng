@@ -13,6 +13,19 @@ import com.venefica.model.UserData;
  */
 public interface UserDataDao {
     
-    public void saveOrUpdate(UserData userData);
+    /**
+     * Stores the user data in the database.
+     *
+     * @param userData user data object to store
+     * @return user data id
+     */
+    public Long save(UserData userData);
+    
+    /**
+     * Updates the user data.
+     *
+     * @param userData updated user data object
+     */
+    public void update(UserData userData);
     
 }

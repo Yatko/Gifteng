@@ -19,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDataDaoImpl extends DaoBase<UserData> implements UserDataDao {
 
     @Override
-    public void saveOrUpdate(UserData userData) {
-        saveOrUpdateEntity(userData);
+    public Long save(UserData userData) {
+        return saveEntity(userData);
     }
     
+    @Override
+    public void update(UserData userData) {
+        updateEntity(userData);
+    }
 }
