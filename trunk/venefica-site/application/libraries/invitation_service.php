@@ -10,7 +10,7 @@ class Invitation_service {
     /**
      * Requests an invitation from the server.
      * 
-     * @param string $invitation the invitation model
+     * @param Invitation_model the invitation model
      * @return the invitation ID
      * @throws Exception in case of WS invocation error
      */
