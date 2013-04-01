@@ -23,9 +23,9 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "memberuserdata")
 public class MemberUserData extends UserData {
     
+    //personal data
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
     private String firstName;
@@ -35,6 +35,7 @@ public class MemberUserData extends UserData {
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     
+    //configurations
     private boolean emailsAllowed;
     private boolean smsAllowed;
     private boolean callsAllowed;
