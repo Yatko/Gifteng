@@ -78,7 +78,7 @@ public class UserSignUpAdapter implements ConnectionSignUp {
                 user.setName("user" + maxUserId + 1);
             }
             
-            userDataDao.saveOrUpdate(user.getUserData());
+            userDataDao.save(user.getUserData());
             userId = userDao.save(user);
         } else {
             userId = user.getId();
