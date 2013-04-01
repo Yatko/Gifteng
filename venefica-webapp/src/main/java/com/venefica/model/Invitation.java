@@ -30,8 +30,9 @@ public class Invitation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Column(nullable = false)
     private String email;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String code;
     
     private String zipCode;
@@ -66,6 +67,15 @@ public class Invitation {
         }
         
         numAvailUse--;
+        return true;
+    }
+    
+    public boolean isValid() {
+        if ( expired ) {
+            return false;
+        } else if ( numAvailUse <= 0 ) {
+            return false;
+        }
         return true;
     }
     
