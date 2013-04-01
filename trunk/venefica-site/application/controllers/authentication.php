@@ -165,7 +165,7 @@ class Authentication extends CI_Controller {
     /**
      * Internal validation method, that will tries to create an invitation.
      * 
-     * @param type $email
+     * @param string $email
      * @return boolean
      */
     public function request_invitation($email) {
@@ -212,7 +212,7 @@ class Authentication extends CI_Controller {
      * provided email and password. On success the token and user data will be
      * stored in the session.
      * 
-     * @param type $password
+     * @param string $password
      * @return boolean
      */
     public function authorize_email_password($password) {
