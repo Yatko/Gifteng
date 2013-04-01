@@ -43,6 +43,21 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
         return invitationDao.save(invitation);
     }
     
+    @Override
+    public boolean isInvitationValid(String code) {
+        Invitation invitation = invitationDao.findByCode(code);
+        
+        if ( invitation == null ) {
+            logger.debug("Invitation (code: " + code + ") could not be found.");
+            return false;
+        } else if ( !invitation.isValid()) {
+            logger.warn("Invitation (code: " + code + ") is not valid anymore.");
+            return false;
+        }
+        
+        return true;
+    }
+    
     // internal helpers
     
     private String generateCode() {
