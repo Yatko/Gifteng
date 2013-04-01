@@ -59,9 +59,9 @@
                 </div>
                 <div class="tabContent"><?=lang('authentication_invitation_usertype_message')?></div>
                 <div class="tabContent">
-                    <input type="radio" name="invitation_usertype" id="giver_usertype" value="GIVER"  <?=set_radio('invitation_usertype', 'GIVER', TRUE)?> class="radionInline" />
+                    <input type="radio" name="invitation_usertype" id="giver_usertype" value="GIVER" <?=set_radio('invitation_usertype', 'GIVER', TRUE)?> class="radionInline" />
                     <label for="giver_usertype"><?=lang('authentication_invitation_usertype_giver')?></label>
-                    <input type="radio" name="invitation_usertype" id="receiver_usertype" value="RECEIVER"  <?=set_radio('invitation_usertype', 'RECEIVER')?> class="radionInline" />
+                    <input type="radio" name="invitation_usertype" id="receiver_usertype" value="RECEIVER" <?=set_radio('invitation_usertype', 'RECEIVER')?> class="radionInline" />
                     <label for="receiver_usertype"><?=lang('authentication_invitation_usertype_receiver')?></label>
                 </div>
                 <div class="clear"></div>
