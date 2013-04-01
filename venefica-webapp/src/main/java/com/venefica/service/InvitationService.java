@@ -29,4 +29,17 @@ public interface InvitationService {
     @WebResult(name = "invitationId")
     Long requestInvitation(@WebParam(name = "invitation") InvitationDto invitationDto);
     
+    /**
+     * Checks if the invitation identified with the given code exists and is valid.
+     * Valid invitation means:
+     * - is not expired
+     * - the maximum allowed number of use is not exceeded
+     * 
+     * @param code the invitation code
+     * @return 
+     */
+    @WebMethod(operationName = "IsInvitationValid")
+    @WebResult(name = "valid")
+    boolean isInvitationValid(@WebParam(name = "code") String code);
+    
 }
