@@ -61,10 +61,10 @@
         <constructor-arg value="sql/import_mysql.sql" />
     </bean>
     <bean id="hibernateShowSQL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
+        <constructor-arg value="false" />
     </bean>
     <bean id="hibernateFormatSQL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
+        <constructor-arg value="false" />
     </bean>
 
     <!-- import java-based configurations -->
