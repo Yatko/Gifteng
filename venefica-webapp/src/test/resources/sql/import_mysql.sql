@@ -1,11 +1,17 @@
 
+-- Invitation
+delete from `invitation`;
+insert into `invitation` (`code`, `createdAt`, `email`, `expired`, `numAvailUse`) values ('12345', now(), 'firstUser@gmail.com', '0', '5');
+
 -- User data
+delete from `userdata`;
 insert into `userdata` (`id`, `phoneNumber`) values (1, '123456789');
 insert into `userdata` (`id`, `phoneNumber`) values (2, '123456789');
 insert into `userdata` (`id`, `phoneNumber`) values (3, '123456789');
 insert into `userdata` (`id`, `phoneNumber`) values (4, '000000');
 
 -- Member user data
+delete from `memberuserdata`;
 insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (1, 0, 0, 0);
 insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (2, 0, 0, 0);
 insert into `memberuserdata` (`id`, `callsAllowed`, `emailsAllowed`, `smsAllowed`) values (3, 0, 0, 0);
@@ -24,7 +30,7 @@ insert into `category` (`name`, `hidden`) values ('test category', '0');
 
 -- Ads
 delete from `ad`;
-insert into `ad` (`creator_id`, `category_id`, `title`, `createdat`, `expired`, `deleted`, `sold`, `numviews`, `wanted`, `reviewed`, `spam`, `numavailprolongations`, `rating`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', '0', 1, 0.0);
+insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `wanted`, `reviewed`, `spam`, `numavailprolongations`, `rating`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', '0', 1, 0.0);
 
 -- Bookmarks
 delete from `bookmark`;

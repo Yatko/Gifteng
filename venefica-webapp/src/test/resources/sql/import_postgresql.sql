@@ -1,11 +1,17 @@
 
+-- Invitation
+delete from invitation;
+insert into invitation ("id", "code", "createdAt", "email", "expired", "numAvailUse") values (nextval('invitation_seq'), '12345', now(), 'firstUser@gmail.com', 'f', '5');
+
 -- User data
+delete from userdata;
 insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
 insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
 insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '123456789');
 insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '000000');
 
 -- Member user data
+delete from memberuserdata;
 insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (1, 'f', 'f', 'f');
 insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (2, 'f', 'f', 'f');
 insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (3, 'f', 'f', 'f');
