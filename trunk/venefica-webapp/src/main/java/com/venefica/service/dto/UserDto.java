@@ -1,7 +1,6 @@
 package com.venefica.service.dto;
 
 import com.venefica.dao.ImageDao;
-import com.venefica.dao.UserDataDao;
 import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
@@ -74,7 +73,7 @@ public class UserDto extends DtoBase {
      *
      * @param user domain object to update
      */
-    public void update(User user, UserDataDao userDataDao, ImageDao imageDao) {
+    public void update(User user, ImageDao imageDao) {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
@@ -86,8 +85,6 @@ public class UserDto extends DtoBase {
         ((MemberUserData) user.getUserData()).setLastName(lastName);
         ((MemberUserData) user.getUserData()).setFirstName(firstName);
 
-        userDataDao.saveOrUpdate(user.getUserData());
-        
         // Handle avatar image
         if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
             if (user.getAvatar() != null) {
@@ -104,10 +101,10 @@ public class UserDto extends DtoBase {
         }
     }
 
-    public User toUser(UserDataDao userDataDao, ImageDao imageDao) {
+    public User toUser(ImageDao imageDao) {
         User user = new User();
         user.setUserData(new MemberUserData());
-        update(user, userDataDao, imageDao);
+        update(user, imageDao);
         return user;
     }
 
