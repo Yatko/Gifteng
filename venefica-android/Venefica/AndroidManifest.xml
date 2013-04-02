@@ -77,6 +77,7 @@
             android:icon="@drawable/icon_undo"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:theme="@style/GiftengTheme.LightBlue"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.listings.browse.BrowseCategoriesActivity"
@@ -144,6 +145,13 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.venefica.module.user.PasswordResetActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/GiftengTheme.LightBlue"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.venefica.module.listings.post.GetListingDetails"
+            android:icon="@drawable/icon_undo"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/GiftengTheme.LightBlue"
