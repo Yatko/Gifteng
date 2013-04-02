@@ -2,6 +2,7 @@
 -- Invitation
 delete from `invitation`;
 insert into `invitation` (`code`, `createdAt`, `email`, `expired`, `numAvailUse`) values ('12345', now(), 'firstUser@gmail.com', '0', '5');
+insert into `invitation` (`code`, `createdAt`, `email`, `expired`, `numAvailUse`) values ('11111', now(), 'null@gmail.com', '0', '2');
 
 -- User data
 delete from `userdata`;
