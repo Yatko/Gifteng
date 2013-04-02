@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:hint="@string/g_hint_enter_email_phone"
+        android:hint="@string/g_hint_email"
         android:paddingLeft="15dp"
         android:paddingRight="5dp"
         android:singleLine="true" />
