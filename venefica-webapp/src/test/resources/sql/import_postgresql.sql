@@ -2,6 +2,7 @@
 -- Invitation
 delete from invitation;
 insert into invitation ("id", "code", "createdAt", "email", "expired", "numAvailUse") values (nextval('invitation_seq'), '12345', now(), 'firstUser@gmail.com', 'f', '5');
+insert into invitation ("id", "code", "createdAt", "email", "expired", "numAvailUse") values (nextval('invitation_seq'), '11111', now(), 'null@gmail.com', 'f', '2');
 
 -- User data
 delete from userdata;
