@@ -21,7 +21,11 @@
     <string name="g_label_invitation">Invitation</string>
     <string name="g_label_log_in">Log in</string>
     <string name="g_label_join">JOIN</string>
-
+    <string name="g_label_postlisting_notes">Notes</string>
+    <string name="g_label_postlisting_details">Details</string>
+    <string name="g_label_postlisting_next">Next</string>
+	<string name="g_label_free_shipping">Free Shipping</string>
+    <string name="g_label_pick_up">Pick Up</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -33,6 +37,7 @@
     <string name="g_hint_email">Email</string>
     <string name="g_hint_fname">First Name</string>
     <string name="g_hint_lname">Last Name</string>
+    <string name="g_hint_postlisting_current_value">Current value</string>
 
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
@@ -81,7 +86,7 @@
     <string name="label_f_name">First Name</string>
     <string name="label_l_name">Last Name</string>
     <string name="label_birth">Date of Birth</string>
-    <string name="label_zip">ZIP</string>
+    <string name="label_zip">Zip Code</string>
     <string name="label_county">County</string>
     <string name="label_city">City</string>
     <string name="label_area">Area</string>
@@ -352,9 +357,9 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
+    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
     <!-- Release key -->
-    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
