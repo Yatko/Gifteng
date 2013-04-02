@@ -36,7 +36,12 @@ public class ProductionDataConfig {
 
         // Automatically generate DDL
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, "update");
-
+        
+        // For more details see:
+        // http://stackoverflow.com/questions/782823/handling-datetime-values-0000-00-00-000000-in-jdbc
+        // http://stackoverflow.com/questions/11133759/0000-00-00-000000-can-not-be-represented-as-java-sql-timestamp-error
+        factoryBuilder.getProperties().put("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
+        
         // Don't show SQL
         factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
 

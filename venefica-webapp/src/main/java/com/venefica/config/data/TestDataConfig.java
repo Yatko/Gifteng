@@ -4,6 +4,8 @@
  */
 package com.venefica.config.data;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
@@ -46,6 +48,8 @@ public class TestDataConfig {
     private Boolean hibernateShowSQL = true;
     @Inject
     private Boolean hibernateFormatSQL = true;
+    @Inject
+    private Map<String, String> extraHibernateProperties = new HashMap<String, String>(0);
     @Inject
     private String jdbcDriver;
     @Inject
