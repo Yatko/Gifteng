@@ -106,6 +106,16 @@ label, .label {
     margin-top: 0;
 }
 
+.content {
+    width: 328px;
+    margin: 50px auto;
+    background: url(../img/boxBgBottom.png) center bottom no-repeat;
+    padding-bottom: 26px;
+}
+.content > div {
+    background: url(../img/boxBgMiddle.png) center bottom repeat-y;
+}
+
 .tabContent {
     text-align: left;
     padding: 7px 7px 7px 7px;
