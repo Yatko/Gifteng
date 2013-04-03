@@ -38,6 +38,7 @@
     <string name="g_hint_fname">First Name</string>
     <string name="g_hint_lname">Last Name</string>
     <string name="g_hint_postlisting_current_value">Current value</string>
+    <string name="g_hint_choose_category">Choose Category</string>
 
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
