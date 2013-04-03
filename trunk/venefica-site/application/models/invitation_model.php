@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Invitation
+ * Description of Invitation DTO
  *
  * @author gyuszi
  */
