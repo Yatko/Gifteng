@@ -2,15 +2,16 @@
 
 class Authentication extends CI_Controller {
     
-    private $initialized = false;
-    
     private static $ACTION_FORGOT_PASSWORD = "forgot";
     private static $ACTION_REQUEST_INVITATION = "request";
     private static $ACTION_VERIFY_INVITATION = "verify";
     
+    private $initialized = false;
+    
     public function view($extra_data = array()) {
         $this->init();
         
+        $data = array();
         $data['selected_tab'] = $this->getSelectedTab();
         $data['action'] = $this->getAction();
         $data['step'] = $this->getStep();
@@ -25,7 +26,7 @@ class Authentication extends CI_Controller {
     }
     
     /**
-     * Method is invoked upon login related POST.
+     * Method is invoked upon login related POST (or direct url access).
      */
     public function login() {
         $this->init();
@@ -51,59 +52,17 @@ class Authentication extends CI_Controller {
     }
     
     /**
-     * Method is invoked upon invitation related POST.
+     * Method is invoked upon invitation related POST (or direct url access).
      */
     public function invitation() {
         $this->init();
         $action = $this->getAction();
-        $step = $this->getStep();
         $extra_data = array();
         
         if ( $action == self::$ACTION_REQUEST_INVITATION ) {
-            $is_valid = $this->invitation_request($step);
-            if ( $is_valid ) {
-                if ( $step == 1 ) {
-                    $this->store_temp_invitation_email();
-                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/2');
-                } elseif ( $step == 2 ) {
-                    $this->store_temp_invitation_email();
-                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/3');
-                } else {
-                    log_message(INFO, "Invalid step ($step)!");
-                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
-                }
-            } elseif ( $_POST ) {
-                if ( $step == 1 ) {
-                    //nothing special here
-                } elseif ( $step == 2 ) {
-                    $this->store_temp_invitation_email();
-                    $extra_data['invitation_email'] = $this->input->post('invitation_email');
-                } else {
-                    log_message(INFO, "Invalid step ($step)!");
-                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
-                }
-            } else {
-                if ( $step == 1 ) {
-                    //nothing special here
-                } elseif ( $step == 2 ) {
-                    if ( $this->has_temp_invitation_email() ) {
-                        $extra_data['invitation_email'] = $this->load_temp_invitation_email();
-                    } else {
-                        redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
-                    }
-                } elseif ( $step == 3 ) {
-                    if ( $this->has_temp_invitation_email() ) {
-                        //success and thank you 
-                    } else {
-                        redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
-                    }
-                } else {
-                    log_message(INFO, "Invalid step ($step)!");
-                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
-                }
-            }
+            $is_valid = $this->process_invitation_request($extra_data);
         } else if ( $action == self::$ACTION_VERIFY_INVITATION ) {
-            $is_valid = $this->invitation_verify();
+            $is_valid = $this->process_invitation_verify($extra_data);
         } else {
             log_message(ERROR, "Invalid invitation action ($action)!");
             $is_valid = FALSE;
@@ -111,33 +70,113 @@ class Authentication extends CI_Controller {
         
         if ( $is_valid == FALSE ) {
             $this->view($extra_data);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    // invitation tab related
+    
+    private function process_invitation_request(&$extra_data) {
+        $step = $this->getStep();
+        $is_valid = $this->invitation_request($step);
+        if ( $is_valid ) {
+            if ( $step == 1 ) {
+                $email = $this->input->post('invitation_email');
+                $this->session->set_flashdata('invitation_email', $email);
+                
+                redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/2');
+            } elseif ( $step == 2 ) {
+                $email = $this->input->post('invitation_email');
+                $this->session->set_flashdata('invitation_email', $email);
+                
+                redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/3');
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+            }
+        } elseif ( $_POST ) {
+            if ( $step == 1 ) {
+                //nothing special here
+            } elseif ( $step == 2 ) {
+                $email = $this->input->post('invitation_email');
+                $this->session->set_flashdata('invitation_email', $email);
+                
+                $extra_data['invitation_email'] = $email;
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+            }
         } else {
-            //$email = $this->input->post('invitation_email');
-            
-            echo "inivitation validated";
+            if ( $step == 1 ) {
+                //nothing special here
+            } elseif ( $step == 2 ) {
+                $email = $this->session->flashdata('invitation_email');
+                if ( $email ) {
+                    $extra_data['invitation_email'] = $email;
+                } else {
+                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                }
+            } elseif ( $step == 3 ) {
+                $email = $this->session->flashdata('invitation_email');
+                if ( $email ) {
+                    //success and thank you message
+                } else {
+                    redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                }
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+            }
         }
+        return $is_valid;
     }
     
-    /*
-     * invitation tab related
-     */
-    
-    private function store_temp_invitation_email() {
-        $email = $this->input->post('invitation_email');
-        $this->session->set_flashdata('invitation_email', $email);
-    }
-    
-    private function load_temp_invitation_email() {
-        $email = $this->session->flashdata('invitation_email');
-        return $email;
-    }
-    
-    private function has_temp_invitation_email() {
-        $email = $this->load_temp_invitation_email();
-        if ( $email ) {
-            return TRUE;
+    private function process_invitation_verify(&$extra_data) {
+        $step = $this->getStep();
+        $is_valid = $this->invitation_verify($step);
+        if ( $is_valid ) {
+            if ( $step == 1 ) {
+                $code = $this->input->post('invitation_code');
+                $this->session->set_flashdata('invitation_code', $code);
+                
+                redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/2');
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+            }
+        } elseif ( $_POST ) {
+            if ( $step == 1 ) {
+                //nothing special here
+            } elseif ( $step == 2 ) {
+                $code = $this->input->post('invitation_code');
+                $this->session->set_flashdata('invitation_code', $code);
+                
+                redirect('/registration');
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+            }
+        } else {
+            if ( $step == 1 ) {
+                //nothing special here
+            } elseif ( $step == 2 ) {
+                $code = $this->session->flashdata('invitation_code');
+                if ( $code ) {
+                    $extra_data['invitation_code'] = $code;
+                } else {
+                    redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                }
+            } else {
+                log_message(INFO, "Invalid step ($step)!");
+                redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+            }
         }
-        return FALSE;
+        return $is_valid;
     }
     
     private function invitation_request($step) {
@@ -154,10 +193,14 @@ class Authentication extends CI_Controller {
         return $is_valid;
     }
     
-    private function invitation_verify() {
+    private function invitation_verify($step) {
         $this->load->library('form_validation', null, 'verify_invitation_form');
         $this->verify_invitation_form->set_error_delimiters('<div class="error">', '</div>');
-        $this->verify_invitation_form->set_rules('invitation_code', 'lang:invitation_code', 'trim|required');
+        if ( $step == 1 ) {
+            $this->verify_invitation_form->set_rules('invitation_code', 'lang:invitation_code', 'trim|required|callback_verify_invitation');
+        } elseif ( $step == 2 ) {
+            //nothing special here
+        }
         $is_valid = $this->verify_invitation_form->run();
         return $is_valid;
     }
@@ -169,6 +212,10 @@ class Authentication extends CI_Controller {
      * @return boolean
      */
     public function request_invitation($email) {
+        if ( $this->request_invitation_form->hasErrors() ) {
+            return FALSE;
+        }
+        
         $this->load->model('invitation_model');
         $this->invitation_model->email = $this->input->post('invitation_email');
         $this->invitation_model->zipCode = $this->input->post('invitation_zipcode');
@@ -179,15 +226,44 @@ class Authentication extends CI_Controller {
             $this->load->library('invitation_service');
             $this->invitation_service->requestInvitation($this->invitation_model);
         } catch ( Exception $ex ) {
+            //TODO: create language key
             $this->request_invitation_form->set_message('request_invitation', 'Cannot request invitation! '.$ex->getMessage());
             return FALSE;
         }
         return TRUE;
     }
     
-    /*
-     * login tab related
+    /**
+     * 
+     * @param string $code invitation code
+     * @return boolean
      */
+    public function verify_invitation($code) {
+        if ( $this->verify_invitation_form->hasErrors() ) {
+            return FALSE;
+        }
+        
+        try {
+            $this->load->library('invitation_service');
+            $valid = $this->invitation_service->isInvitationValid($code);
+            if ( !$valid ) {
+                //TODO: create language key
+                $this->verify_invitation_form->set_message('verify_invitation', 'Invitation is not valid!');
+                return FALSE;
+            }
+        } catch ( Exception $ex ) {
+            //TODO: create language key
+            $this->verify_invitation_form->set_message('verify_invitation', 'Cannot verify invitation! '.$ex->getMessage());
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
+    
+    
+    
+    
+    // login tab related
     
     private function login_forgot() {
         $this->load->library('form_validation', null, 'forgot_password_form');
@@ -216,20 +292,28 @@ class Authentication extends CI_Controller {
      * @return boolean
      */
     public function authorize_email_password($password) {
+        if ( $this->login_form->hasErrors() ) {
+            return FALSE;
+        }
+        
         try {
             $email = $this->input->post('login_email');
             $this->auth_service->authenticateEmail($email, $password);
             $this->usermanagement_service->storeUser($email);
         } catch ( Exception $ex ) {
+            //TODO: create language key
             $this->login_form->set_message('authorize_email_password', 'Email and/or password is incorrect! '.$ex->getMessage());
             return FALSE;
         }
         return TRUE;
     }
     
-    /*
-     * internal functions
-     */
+    
+    
+    
+    
+    
+    // internal functions
     
     private function init() {
         if ( !$this->initialized ) {
