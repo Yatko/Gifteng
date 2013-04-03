@@ -1,7 +1,14 @@
 package com.venefica.module.listings.post;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.regex.Pattern;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -14,40 +21,68 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.venefica.module.listings.MapItemizedOverlay;
+import com.venefica.module.listings.browse.BrowseCatResultWrapper;
+import com.venefica.module.listings.browse.CategoryListAdapter;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.map.ListingOverlayItem;
 import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.CategoryDto;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash
  * Activity class to collect listing details
  */
-public class GetListingDetails extends VeneficaMapActivity implements LocationListener, OnClickListener{
+public class GetListingDetails extends VeneficaMapActivity implements LocationListener, OnClickListener, OnItemSelectedListener{
 
 	/**
 	 * Edit fields to collect listing data
 	 */
 	private EditText edtTitle, edtDescription,
 			edtPrice, edtZip;
+	private Spinner spinCategory;
+	private Button btnNext;
+	/**
+	 * Field validator
+	 */
+	private InputFieldValidator vaildator;
+	/**
+	 * List adapter
+	 */
+	private CategoryListAdapter categoriesListAdapter;
+	/**
+	 * Categories list
+	 */
+	private List<CategoryDto> categories;
+	public static final int ACT_MODE_DOWNLOAD_CATEGORY = 1001;
+	
+	private int CURRENT_MODE = ACT_MODE_DOWNLOAD_CATEGORY;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -56,6 +91,18 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
+	
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_DESCRIPTION = "description";
+	public static final String KEY_CATEGORY = "category";
+	public static final String KEY_CATEGORY_ID = "category_id";
+	public static final String KEY_CURRENT_VALUE = "current_value";
+	public static final String KEY_ZIP_CODE = "zip_code";
+	public static final String KEY_FREE_SHIPPING = "free_shipping";
+	public static final String KEY_PICKUP = "pickup";
+	public static final String KEY_LATITUDE = "latitude";
+	public static final String KEY_LONGITUDE = "longitude";
+	public static final String KEY_COVER_IMAGE = "cover_image";
 	/**
      * Map 
      */
@@ -84,6 +131,21 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		edtPrice = (EditText) findViewById(R.id.edtActPostListingPriceValue);
 		edtZip = (EditText) findViewById(R.id.edtActPostListingZipCode);
 		
+		spinCategory = (Spinner) findViewById(R.id.spinActPostListingCategory);
+		categories = new ArrayList<CategoryDto>();
+		categoriesListAdapter = new CategoryListAdapter(this, categories);
+		spinCategory.setPrompt(getResources().getString(R.string.g_hint_choose_category));
+		spinCategory.setAdapter(categoriesListAdapter);
+		spinCategory.setOnItemSelectedListener(this);
+		
+		btnNext = (Button) findViewById(R.id.btnActPostListingNextToPreview);
+		btnNext.setOnClickListener(this);
+		if (WSAction.isNetworkConnected(this)) {
+			new CategoryTask().execute(ACT_MODE_DOWNLOAD_CATEGORY);
+		} else {
+			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+			showDialog(D_ERROR);
+		}
 		//Map
 		mapView = (TapControlledMapView) findViewById(R.id.mapViewActPostListing);
 		// dismiss balloon upon single tap of MapView 
@@ -247,6 +309,132 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	}
 	@Override
 	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.btnActPostListingNextToPreview && validateFields()) {
+			// hide virtual keyboard
+			InputMethodManager imm = (InputMethodManager) GetListingDetails.this
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+			Intent intent = new Intent();
+			intent.putExtra(KEY_TITLE, edtTitle.getText().toString());
+			intent.putExtra(KEY_DESCRIPTION, edtDescription.getText().toString());
+			intent.putExtra(KEY_CATEGORY, categories.get(spinCategory.getSelectedItemPosition()).getName());
+			intent.putExtra(KEY_CATEGORY_ID, categories.get(spinCategory.getSelectedItemPosition()).getId());
+			intent.putExtra(KEY_CURRENT_VALUE, edtPrice.getText().toString());
+			intent.putExtra(KEY_ZIP_CODE, edtPrice.getText().toString());
+			if (location != null) {
+				intent.putExtra(KEY_LATITUDE, location.getLatitude());
+				intent.putExtra(KEY_LONGITUDE, location.getLongitude());
+			}
+			intent.putExtra(KEY_COVER_IMAGE, 0);
+			setResult(Activity.RESULT_OK, intent);
+			finish();
+		}
+	}
+	/**
+     * Method to validate input fields
+     * @return result of validation
+     */
+    private boolean validateFields(){
+    	boolean result = true;
+    	StringBuffer message = new StringBuffer();
+    	if(vaildator == null){
+    		vaildator = new InputFieldValidator();    		
+    	}
+    	
+    	if(!vaildator.validateField(edtTitle, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_postlisting_title).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}    	
+    	if(!vaildator.validateField(edtDescription, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_postlisting_description).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.phonePatternRegx))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_postlisting_price).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_phone));
+    		message.append("\n");
+    	}    	
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
+    		result = false;
+    		message.append(edtZip.getText().toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_zipcode));
+    		message.append("\n");
+    	}
+    	if (!result) {
+			Utility.showLongToast(this, message.toString());
+		}
+		return result;    	
+    }
+	
+	/**
+	 * 
+	 * @author avinash
+	 * Class to perform download operations
+	 */
+	class CategoryTask extends AsyncTask<Integer, Integer, BrowseCatResultWrapper>{
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+//			showDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(true);
+		}
+		@Override
+		protected BrowseCatResultWrapper doInBackground(Integer... params) {
+			BrowseCatResultWrapper wrapper = new BrowseCatResultWrapper();
+			try{
+				if(wsAction == null ){
+					wsAction = new WSAction();
+				}
+				if (params[0].equals(ACT_MODE_DOWNLOAD_CATEGORY)) {
+					wrapper = wsAction.getCategories(((VeneficaApplication)getApplication()).getAuthToken());
+				}
+			}catch (IOException e) {
+				Log.e("BrowseTask::doInBackground :", e.toString());
+				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
+			} catch (XmlPullParserException e) {
+				Log.e("BrowseTask::doInBackground :", e.toString());
+			}
+			return wrapper;
+		}
+		
+		protected void onPostExecute(BrowseCatResultWrapper result) {
+//			dismissDialog(D_PROGRESS);
+			setSupportProgressBarIndeterminateVisibility(false);
+			if(result.categories == null && result.result == -1){
+				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
+				showDialog(D_ERROR);
+			}else if (result.result == Constants.RESULT_GET_CATEGORIES_SUCCESS && result.categories != null
+					&& result.categories.size() > 0) {
+				categories.clear();
+				categories.addAll(result.categories);
+				categoriesListAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> arg0, View view, int position,
+			long id) {
+		/*CategoryDto cat = categories.get(position);  
+		if(cat.getSubcategories() != null && cat.getSubcategories().size() > 0){
+			categories.clear();
+			categories.addAll(cat.getSubcategories());
+			categoriesListAdapter.notifyDataSetChanged();
+		}*/
+	}
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 }
