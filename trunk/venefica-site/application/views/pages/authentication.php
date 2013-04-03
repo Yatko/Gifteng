@@ -34,15 +34,11 @@
     <div>
         <div class="tabTitle" title="invitation"><?=lang('authentication_tab_invitation')?></div>
         <div>
-            <? if ( !isset($step) || !$step || $step == 1 ): ?>
-                <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
-                <?=form_open('/authentication/invitation/request/1')?>
-
-                <div><input name="invitation_email" value="<?=set_value('invitation_email')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_email_hint')?>" placeholder="<?=lang('authentication_invitation_email_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('authentication_invitation_request_button')?>" class="buttonBlue"></div>
-
-                <?=form_close()?>
-            <? elseif ( $step == 2 ): ?>
+            <? if ( $action == "request" && $step == 3 ): ?>
+                <div class="tabContent">
+                    <div class="textOrange"><?=lang('authentication_invitation_confirmed')?></div>
+                </div>
+            <? elseif ( $action == "request" && $step == 2 ): ?>
                 <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
                 <?=form_open('/authentication/invitation/request/2', '', array('invitation_email' => $invitation_email))?>
                 
@@ -68,28 +64,49 @@
                 <div><input type="submit" value="<?=lang('authentication_invitation_confirm_button')?>" class="buttonBlue"></div>
 
                 <?=form_close()?>
-            <? elseif ( $step == 3 ): ?>
-                <div class="tabContent">
-                    <div class="textOrange"><?=lang('authentication_invitation_confirmed')?></div>
-                </div>
+            <? else: ?>
+                <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
+                <?=form_open('/authentication/invitation/request/1')?>
+
+                <div><input name="invitation_email" value="<?=set_value('invitation_email')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_email_hint')?>" placeholder="<?=lang('authentication_invitation_email_hint')?>"></div>
+                <div><input type="submit" value="<?=lang('authentication_invitation_request_button')?>" class="buttonBlue"></div>
+
+                <?=form_close()?>
             <? endif; ?>
             
-                
-            <div><a id="requestInvitation" class="textOrange"><?=lang('authentication_invitation_invitation')?></a></div>
+            
+            <? if ( $action == "verify" && $step == 2): ?>
+                <!-- -->
+            <? else: ?>
+                <div><a id="requestInvitation" class="textOrange"><?=lang('authentication_invitation_invitation')?></a></div>
+            <? endif; ?>
             
             
             <div id="requestInvitationForm" <?=display($action, "verify")?>>
-                <?=isset($this->verify_invitation_form) ? $this->verify_invitation_form->error_string() : ""?>
-                <?=form_open('/authentication/invitation/verify')?>
                 
-                <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_code_hint')?>" placeholder="<?=lang('authentication_invitation_code_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('authentication_invitation_verify_button')?>" class="buttonOrange"></div>
+                <? if ( $action == "verify" && $step == 2): ?>
+                    <?=form_open('/authentication/invitation/verify/2', '', array('invitation_code' => $invitation_code))?>
+                    
+                    <div class="tabContent">
+                        <div class="textOrange"><?=lang('authentication_invitation_verified')?></div>
+                    </div>
+                    <div><input type="submit" value="<?=lang('authentication_join_button')?>" class="buttonBlue"></div>
+                    
+                    <?=form_close()?>
+                <? else: ?>
+                    <?=isset($this->verify_invitation_form) ? $this->verify_invitation_form->error_string() : ""?>
+                    <?=form_open('/authentication/invitation/verify/1')?>
+
+                    <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_code_hint')?>" placeholder="<?=lang('authentication_invitation_code_hint')?>"></div>
+                    <div><input type="submit" value="<?=lang('authentication_invitation_verify_button')?>" class="buttonOrange"></div>
+
+                    <?=form_close()?>
+                <? endif; ?>
                 
-                <?=form_close()?>
             </div>
         </div>
     </div>
-
+    
     <!-- login tab -->
     
     <div>
