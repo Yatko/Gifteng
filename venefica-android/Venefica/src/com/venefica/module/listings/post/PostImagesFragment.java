@@ -57,11 +57,9 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * Listener to communicate with activity
 	 */
 	public interface OnPostImagesListener{
-		public void onPickFromGallery();
-		public void onCameraPick();
 		public void onSetCoverImage();
 		public void onCameraError(int errorCode);
-		public void onNextButtonClick();
+		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images);
 	}
 	private static final int REQ_GET_IMAGE = 1002;
 	private OnPostImagesListener listener;
@@ -339,7 +337,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 			camera.takePicture(null, null, pictureCallback);
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep2){
 			if (!isFirstImage) {
-				listener.onNextButtonClick();
+				listener.onNextButtonClick(imageList, images);
 				/*gallery.setSelection(0);
 				if ( images != null && images.size() > 0) {
 					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
@@ -360,6 +358,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
+			//get image from gallery
 			if (requestCode == REQ_GET_IMAGE && data != null) {
 				try {
 					InputStream stream = getActivity().getContentResolver()
