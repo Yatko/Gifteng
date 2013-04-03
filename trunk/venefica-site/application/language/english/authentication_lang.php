@@ -21,6 +21,9 @@ $lang['authentication_invitation_invitation'] = "I have an invitation";
 $lang['authentication_invitation_code_hint'] = "Enter your invitation code";
 $lang['authentication_invitation_verify_button'] = "VERIFY INVITATION";
 
+$lang['authentication_invitation_verified'] = "Congratulation!";
+$lang['authentication_join_button'] = "JOIN";
+
 $lang['authentication_login_email_hint'] = "Email adress";
 $lang['authentication_login_password_hint'] = "Password";
 $lang['authentication_login_login_button'] = "LOG IN";
