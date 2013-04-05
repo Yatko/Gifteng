@@ -4,24 +4,25 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.listings.GalleryImageAdapter;
-import com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener;
 import com.venefica.module.main.R;
 import com.venefica.services.AdDto;
 import com.venefica.utils.VeneficaApplication;
@@ -30,17 +31,42 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Fragment class to preview listing before posting
  */
-public class PostPreviewFragment extends SherlockFragment implements ViewFactory {
+public class PostPreviewFragment extends SherlockFragment implements OnClickListener, ViewFactory {
 	
 	/**
 	 * @author avinash
 	 * Listener to communicate with activity
 	 */
 	public interface OnPostPreivewListener{
+		/**
+		 * Get captured images for preview
+		 * @return ArrayList<Bitmap>
+		 */
 		public ArrayList<Bitmap> getImages();
+		/**
+		 * Get captured image list for preview
+		 * @return ArrayList<String>
+		 */
 		public ArrayList<String> getImageList();
+		/**
+		 * get Listing data
+		 * @return AdDto
+		 */
 		public AdDto getListing();
+		/**
+		 * method to Post listing after preview
+		 */
 		public void onPostButtonClick();
+		/**
+		 * set true if preview shown
+		 * @param isPreviewVisible
+		 */
+		public void setPreviewVisible(boolean isPreviewVisible);
+		/**
+		 * get cover image position
+		 * @return int 
+		 */
+		public int getCoverImagePosition();
 	}
 	private OnPostPreivewListener listener;
 	/**
@@ -62,7 +88,7 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
 	/**
 	 * Adapter for gallery
 	 */
-	private GalleryImageAdapter galImageAdapter;
+	private GalleryImageAdapter galImageAdapter;	
 	/**
 	 * listing to post
 	 */
@@ -71,6 +97,7 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
 	 * text views
 	 */
 	private TextView txtTitle, txtDescription, txtCategory, txtCurrentvalue;
+	private Button btnPost;
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreate(android.os.Bundle)
 	 */
@@ -81,7 +108,7 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
 		images = listener.getImages();
 		listing = listener.getListing();
 		imageList = listener.getImageList();
-		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true);
+		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true, false);		
 	}
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -120,9 +147,11 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
 		txtDescription = (TextView) view.findViewById(R.id.txtActPostPreviewDescription);
 		txtDescription.setText(listing.getDescription());
 		txtCategory = (TextView) view.findViewById(R.id.txtActPostPreviewCategory);
-		txtCategory.append(":  "+listing.getCategory());
+		txtCategory.append(":  "+Html.fromHtml("<b>"+listing.getCategory()+"</b>"));
 		txtCurrentvalue = (TextView) view.findViewById(R.id.txtActPostPreviewCurrValue);
-		txtCurrentvalue.append(":  "+listing.getPrice());
+		txtCurrentvalue.append(":  "+Html.fromHtml("<b>$"+listing.getPrice()+"</b>"));
+		btnPost = (Button) view.findViewById(R.id.btnActPostPreviewPost);
+		btnPost.setOnClickListener(this);
 		return view;
 	}
 
@@ -142,6 +171,12 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
                     + " must implement OnPostPreivewListener");
         }
     }
+	@Override
+	public void onResume() {
+		super.onResume();
+		listener.setPreviewVisible(true);
+		galImageAdapter.setCoverImagePosition(listener.getCoverImagePosition());
+	}
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -166,5 +201,12 @@ public class PostPreviewFragment extends SherlockFragment implements ViewFactory
 	 */
 	private Bitmap getImageFromCache(String fileName){
 		return ((VeneficaApplication)getActivity().getApplication()).getImgManager().getBitmapFromCache(fileName);
+	}
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.btnActPostPreviewPost) {
+			listener.onPostButtonClick();
+		}
 	}
 }
