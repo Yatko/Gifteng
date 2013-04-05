@@ -39,6 +39,7 @@
     <string name="g_hint_lname">Last Name</string>
     <string name="g_hint_postlisting_current_value">Current value</string>
     <string name="g_hint_choose_category">Choose Category</string>
+    <string name="g_hint_current_location">My Loaction</string>
 
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
@@ -138,7 +139,7 @@
     <string name="label_postlisting_latitude">Latitude</string>
     <string name="label_postlisting_longitude">Longitude</string>
     <string name="label_postlisting_expireson">Expiray</string>
-    <string name="label_postlisting_post">List item</string>
+    <string name="label_postlisting_post">Post</string>
     <string name="label_listing_image">Listing photo</string>
     <string name="label_browse_cat_search_listing">Search listings</string>
     <string name="label_search_listing_search">Search</string>
@@ -250,7 +251,7 @@
     <string name="msg_postlisting_sel_image">Please select image to post listing.</string>
     <string name="msg_postlisting_sel_cover_image">Please set cover image. </string>
     <string name="msg_working_in_background">Working. Please wait....</string>
-    <string name="msg_postlisting_sel_cover_image_instruction">Long press to set as cover image.</string>
+    <string name="msg_postlisting_sel_cover_image_instruction">Please select cover image.</string>
     <string name="msg_delete_messages_success">messages deleted successfully.</string>
     <string name="msg_rating_validation">Please set rating value.</string>
     <string name="msg_post_rating_success">Rating posted successfully.</string>
@@ -358,9 +359,9 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
     <!-- Release key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
+    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
