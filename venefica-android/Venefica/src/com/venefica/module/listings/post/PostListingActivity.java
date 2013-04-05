@@ -36,6 +36,7 @@ import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.ImageDto;
+import com.venefica.services.ServicesManager.IsUserCompleteResult;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -56,12 +57,17 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 	 */
 	private AdDto listing;
 	private ImageDto coverImage;
+	private int coverImagePosition = -1;
 	private WSAction wsAction;
-	public long createdListingId;	
+	public long createdListingId = -1;	
 	/**
 	 * flag processing (working) indicates post listing process is running
 	 */
 	private boolean uploadingData = false;
+	/**
+	 * true if displaying preview fragment
+	 */
+	private boolean isPreviewShown = false;
 	/**
 	 * Constants to identify dialogs
 	 */
@@ -81,6 +87,9 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 	private static int CURRENT_MODE = ACT_MODE_POST_LISTING;
 	
 	private static int REQ_GET_LISTING_DETAILS_TO_POST = 5001;
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -102,14 +111,24 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 		fragmentTransaction.commit();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			onBackPressed();
+			if (!uploadingData) {
+				onBackPressed();
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			}			
 		}
 		return true;
 	}
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
     protected Dialog onCreateDialog(int id) {
     	//Create progress dialog
@@ -144,6 +163,9 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 		}
     	return null;
     }
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPrepareDialog(int, android.app.Dialog)
+	 */
 	@Override
     protected void onPrepareDialog(int id, Dialog dialog) {
     	if(id == D_ERROR) {
@@ -164,29 +186,58 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
-    }
-	
+    }	
 
-	@Override
-	public void onSetCoverImage() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener#onCameraError(int)
+	 */
 	@Override
 	public void onCameraError(int errorCode) {
 		ERROR_CODE = Constants.ERROR_START_CAMERA;
     	showDialog(D_ERROR);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener#onNextButtonClick(java.util.ArrayList, java.util.ArrayList)
+	 */
 	@Override
-	public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images) {
+	public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images, int coverImagePosition) {
 		this.imageList = imageList;
 		this.images = images;
+		this.coverImagePosition = coverImagePosition;
 		Intent intent = new Intent(this, GetListingDetails.class);
+		if (isPreviewShown && listing != null) {
+			intent.putExtra(GetListingDetails.KEY_TITLE, listing.getTitle());
+			intent.putExtra(GetListingDetails.KEY_DESCRIPTION, listing.getDescription());
+			intent.putExtra(GetListingDetails.KEY_CATEGORY, listing.getCategory());
+			intent.putExtra(GetListingDetails.KEY_CATEGORY_ID, listing.getCategoryId());
+			intent.putExtra(GetListingDetails.KEY_CURRENT_VALUE, listing.getPrice().toString());
+//			intent.putExtra(GetListingDetails.KEY_ZIP_CODE, listing.get);
+//			intent.putExtra(GetListingDetails.KEY_LATITUDE, listing.getLatitude());
+//			intent.putExtra(GetListingDetails.KEY_LONGITUDE, listing.getLongitude());
+			intent.putExtra(GetListingDetails.KEY_COVER_IMAGE, coverImagePosition);	
+			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);			
+		} else {
+			/*intent.putExtra(GetListingDetails.KEY_TITLE, "");
+			intent.putExtra(GetListingDetails.KEY_DESCRIPTION, "");
+			intent.putExtra(GetListingDetails.KEY_CATEGORY, categories.get(spinCategory.getSelectedItemPosition()).getName());
+			intent.putExtra(GetListingDetails.KEY_CATEGORY_ID, categories.get(spinCategory.getSelectedItemPosition()).getId());
+			intent.putExtra(GetListingDetails.KEY_CURRENT_VALUE, edtPrice.getText().toString());
+			intent.putExtra(GetListingDetails.KEY_ZIP_CODE, edtPrice.getText().toString());
+			intent.putExtra(GetListingDetails.KEY_LATITUDE, location.getLatitude());
+			intent.putExtra(GetListingDetails.KEY_LONGITUDE, location.getLongitude());
+			intent.putExtra(GetListingDetails.KEY_COVER_IMAGE, 0);*/
+			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
+		}
 		startActivityForResult(intent, REQ_GET_LISTING_DETAILS_TO_POST);
 	}
-	
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener#isBackFromPreview()
+	 */
+	@Override
+	public boolean isBackFromPreview() {		
+		return isPreviewShown;
+	}
 	/**
 	 * get images from cache
 	 * @param fileName
@@ -195,10 +246,14 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 	private Bitmap getImageFromCache(String fileName){
 		return ((VeneficaApplication)getApplication()).getImgManager().getBitmapFromCache(fileName);
 	}
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
+		isPreviewShown = false;
 		if (resultCode == Activity.RESULT_OK) {
 			//get listing data to post 
 			if (requestCode == REQ_GET_LISTING_DETAILS_TO_POST) {
@@ -225,7 +280,8 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 				listing.setWanted(false);
 				listing.setNumViews(0L);
 				listing.setRating(1.0f);
-				coverImage = new ImageDto(getImageFromCache(imageList.get(data.getInt(GetListingDetails.KEY_COVER_IMAGE))));
+//				coverImagePosition = data.getInt(GetListingDetails.KEY_COVER_IMAGE);
+				coverImage = new ImageDto(getImageFromCache(imageList.get(coverImagePosition)));
 				listing.setImage(coverImage);
 				
 				PostPreviewFragment postPreviewFragment = new PostPreviewFragment();
@@ -253,7 +309,51 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 		}
 		return result;
 	}
-	
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#getImages()
+	 */
+	@Override
+	public ArrayList<Bitmap> getImages() {		
+		return images;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#getListing()
+	 */
+	@Override
+	public AdDto getListing() {
+		return listing;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#onPostButtonClick()
+	 */
+	@Override
+	public void onPostButtonClick() {
+		if(WSAction.isNetworkConnected(PostListingActivity.this)){	
+			if (!uploadingData) {
+				if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
+					new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
+				}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+					new PostListingTask().execute(ACT_MODE_POST_LISTING);
+				}
+			} else {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			}
+			
+		} else {
+			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+			showDialog(D_ERROR);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#getImageList()
+	 */
+	@Override
+	public ArrayList<String> getImageList() {		
+		return imageList;
+	}
 	/**
 	 * 
 	 * @author avinash
@@ -318,33 +418,20 @@ public class PostListingActivity extends SherlockFragmentActivity implements OnP
 			}
 		}
 	}
-
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#setPreviewVisible(boolean)
+	 */
 	@Override
-	public ArrayList<Bitmap> getImages() {		
-		return images;
+	public void setPreviewVisible(boolean isPreviewVisible) {
+		this.isPreviewShown = isPreviewVisible;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener#getCoverImagePosition()
+	 */
 	@Override
-	public AdDto getListing() {
-		return listing;
+	public int getCoverImagePosition() {
+		return this.coverImagePosition;
 	}
-
-	@Override
-	public void onPostButtonClick() {
-		if(WSAction.isNetworkConnected(PostListingActivity.this)){			
-			if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
-				new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
-			}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
-				new PostListingTask().execute(ACT_MODE_POST_LISTING);
-			}
-		} else {
-			ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
-			showDialog(D_ERROR);
-		}
-	}
-
-	@Override
-	public ArrayList<String> getImageList() {		
-		return imageList;
-	}
+		
 }
