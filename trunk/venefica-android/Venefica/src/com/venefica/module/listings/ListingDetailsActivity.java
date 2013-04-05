@@ -232,7 +232,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}
 		});
         images = new ArrayList<ImageDto>();
-        galImageAdapter = new GalleryImageAdapter(this, images, null, false, false);
+        galImageAdapter = new GalleryImageAdapter(this, images, null, false, false, false);
         gallery.setAdapter(galImageAdapter);
         
         //Comments
