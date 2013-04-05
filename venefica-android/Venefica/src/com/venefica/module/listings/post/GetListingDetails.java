@@ -1,6 +1,7 @@
 package com.venefica.module.listings.post;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -103,6 +104,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	public static final String KEY_LATITUDE = "latitude";
 	public static final String KEY_LONGITUDE = "longitude";
 	public static final String KEY_COVER_IMAGE = "cover_image";
+	public static final String KEY_IS_BACK_FROM_PREVIEW = "back_from_preview";
+	
 	/**
      * Map 
      */
@@ -114,7 +117,15 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	private LocationManager locationManager;
 	private String locProvider;
 	private Location location;
-	
+	/**
+	 * true when back from preview
+	 */
+	private boolean isBackFromPreview = false;
+	private String selectedCategory = "";
+	/**
+	 * cover image position
+	 */
+	private int coverImagePosition = -1;
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);		
@@ -137,7 +148,15 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		spinCategory.setPrompt(getResources().getString(R.string.g_hint_choose_category));
 		spinCategory.setAdapter(categoriesListAdapter);
 		spinCategory.setOnItemSelectedListener(this);
-		
+		//set data if back from preview
+		if (getIntent().getBooleanExtra(KEY_IS_BACK_FROM_PREVIEW, false)) {
+			edtTitle.setText(getIntent().getStringExtra(GetListingDetails.KEY_TITLE));
+			selectedCategory = getIntent().getStringExtra(GetListingDetails.KEY_CATEGORY);
+			edtDescription.setText(getIntent().getStringExtra(GetListingDetails.KEY_DESCRIPTION));
+			edtPrice.setText(getIntent().getStringExtra(GetListingDetails.KEY_CURRENT_VALUE));
+			isBackFromPreview = getIntent().getBooleanExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isBackFromPreview);
+		}
+		coverImagePosition = getIntent().getIntExtra(KEY_COVER_IMAGE, coverImagePosition);
 		btnNext = (Button) findViewById(R.id.btnActPostListingNextToPreview);
 		btnNext.setOnClickListener(this);
 		if (WSAction.isNetworkConnected(this)) {
@@ -166,6 +185,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
+		
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -186,7 +206,6 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		locProvider = locationManager.getBestProvider(criteria, true);		
 
 	    if (locProvider != null) {
-	    	Log.d("GetListingDetails :", locProvider);
 	    	location = locationManager.getLastKnownLocation(locProvider);
 			onLocationChanged(location);
 	    } else {
@@ -289,7 +308,12 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	private void updateMap(Location location){
 		if (isMapShown ) {
 			GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
-			mapController.animateTo(currLoc);			
+			mapController.animateTo(currLoc);
+			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, getResources().getString(R.string.g_hint_current_location), ""
+					, -1, Constants.PHOTO_URL_PREFIX );
+			overlayItems.clear();
+			overlayItems.addOverlay(overlayItem);
+			mapView.getOverlays().add(overlayItems);
 		}	
 	}
 	/**
@@ -326,7 +350,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 				intent.putExtra(KEY_LATITUDE, location.getLatitude());
 				intent.putExtra(KEY_LONGITUDE, location.getLongitude());
 			}
-			intent.putExtra(KEY_COVER_IMAGE, 0);
+			intent.putExtra(KEY_COVER_IMAGE, coverImagePosition);
+			intent.putExtra(KEY_IS_BACK_FROM_PREVIEW, false);
 			setResult(Activity.RESULT_OK, intent);
 			finish();
 		}
@@ -399,10 +424,10 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 					wrapper = wsAction.getCategories(((VeneficaApplication)getApplication()).getAuthToken());
 				}
 			}catch (IOException e) {
-				Log.e("BrowseTask::doInBackground :", e.toString());
+				Log.e("CategoryTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
-				Log.e("BrowseTask::doInBackground :", e.toString());
+				Log.e("CategoryTask::doInBackground :", e.toString());
 			}
 			return wrapper;
 		}
@@ -418,6 +443,15 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 				categories.clear();
 				categories.addAll(result.categories);
 				categoriesListAdapter.notifyDataSetChanged();
+				for (int i = 0; i < categories.size(); i++) {
+					if (!isBackFromPreview) {
+						break;
+					}
+					if (categories.get(i).getName().equalsIgnoreCase(selectedCategory)) {
+						spinCategory.setSelection(i, true);
+						break;
+					}
+				}				
 			}
 		}
 	}
