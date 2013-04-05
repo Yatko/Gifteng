@@ -1,5 +1,6 @@
 package com.venefica.module.listings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +26,15 @@ import com.venefica.utils.VeneficaApplication;
  * Adapter class for image gallery
  */
 public class GalleryImageAdapter extends BaseAdapter {
+	/**
+	 * @author avinash
+	 * listener to show hide action mode in fragments
+	 */
+	public interface OnActionModeListener{
+		public void showActionMode(boolean show);
+		public void setActionModeTitle(String title);
+	}
+	private OnActionModeListener actionModeListener;
 	private Context context;
 
 	private static ImageView imageView;
@@ -31,16 +44,21 @@ public class GalleryImageAdapter extends BaseAdapter {
 	private boolean useDrawables;
 	private static ViewHolder holder;
 	private boolean showThumbnails;
+	private boolean useActionModes;
 
 	private int coverPosition = -1;
+	private ArrayList<Integer> selectedPositions;
 
-	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Bitmap> images, boolean useDrawables, boolean showThumbnails) {
+	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Bitmap> images,
+			boolean useDrawables, boolean showThumbnails, boolean useActionModes) {
 
 		this.context = context;
 		this.plotsImages = plotsImages;
 		this.images = images;
 		this.useDrawables = useDrawables;
 		this.showThumbnails = showThumbnails;
+		this.useActionModes = useActionModes;
+		this.selectedPositions = new ArrayList<Integer>();
 	}
 
 	/*
@@ -95,11 +113,45 @@ public class GalleryImageAdapter extends BaseAdapter {
 			}
 			holder.imageView.setVisibility(View.VISIBLE);
 			holder.txtCoverMark = (TextView) convertView.findViewById(R.id.txtPostListingCoverTicker);
-			
+			holder.chkSelected = (CheckBox) convertView.findViewById(R.id.chkPostListingImageSelect);
+			holder.chkSelected.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					//handle action mode visibility and message selection 
+					Integer id = Integer.parseInt(buttonView.getContentDescription().toString());
+					if (buttonView.isChecked() && !selectedPositions.contains(id)) {
+						selectedPositions.add(id);
+						if (selectedPositions.size() >= 1) {
+							actionModeListener.showActionMode(true);
+						}
+					} else if (!buttonView.isChecked() && selectedPositions.contains(id)) {
+						selectedPositions.remove(id);
+						selectedPositions.trimToSize();
+						if (selectedPositions.size() == 0) {
+							actionModeListener.showActionMode(false);
+						} else if (selectedPositions.size() == 1) {
+							actionModeListener.showActionMode(true);
+						}
+					}
+					//set action mode title
+					actionModeListener.setActionModeTitle(selectedPositions.size() 
+							+" "+ context.getResources().getString(R.string.label_selected));
+				}
+			});
 			convertView.setTag(holder);
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
+		}
+		if (useActionModes) {
+			holder.chkSelected.setVisibility(View.VISIBLE);
+			holder.chkSelected.setContentDescription(position+"");
+			if (selectedPositions.contains(Integer.parseInt(holder.chkSelected.getContentDescription().toString()))) {
+				holder.chkSelected.setChecked(true);
+			}
+		} else {
+			holder.chkSelected.setVisibility(View.INVISIBLE);
 		}
 		if (useDrawables) {			
 			holder.imageView.setImageBitmap(/*Utility.resizeBitmap(*/images.get(position)
@@ -129,6 +181,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 	private static class ViewHolder {
 		TextView txtCoverMark;
 		ImageView imageView;
+		CheckBox chkSelected;
 	}
 	
 	/**
@@ -143,5 +196,39 @@ public class GalleryImageAdapter extends BaseAdapter {
 	 */
 	public void resetCoverImagePosition(){
 		this.coverPosition  = -1;
+	}
+
+	/**
+	 * @return the selectedPositions
+	 */
+	public ArrayList<Integer> getSelectedPositions() {
+		return selectedPositions;
+	}
+
+	/**
+	 * @param selectedPositions the selectedPositions to set
+	 */
+	public void setSelectedPositions(ArrayList<Integer> selectedPositions) {
+		this.selectedPositions = selectedPositions;
+	}
+	/**
+	 * clear selection
+	 */
+	public void clearSelectedPositions(){
+		this.selectedPositions.clear();
+	}
+
+	/**
+	 * @return the actionModeListener
+	 */
+	public OnActionModeListener getActionModeListener() {
+		return actionModeListener;
+	}
+
+	/**
+	 * @param actionModeListener the actionModeListener to set
+	 */
+	public void setActionModeListener(OnActionModeListener actionModeListener) {
+		this.actionModeListener = actionModeListener;
 	}
 }
