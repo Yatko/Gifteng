@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,13 +21,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.venefica.module.listings.post.PostAct.PostListingTask;
 import com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener;
 import com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener;
 import com.venefica.module.main.R;
@@ -36,13 +32,12 @@ import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.ImageDto;
-import com.venefica.services.ServicesManager.IsUserCompleteResult;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 /**
  * @author avinash
- *
+ * Activity to post new listing 
  */
 public class PostListingActivity extends SherlockFragmentActivity implements OnPostImagesListener, OnPostPreivewListener{
 
