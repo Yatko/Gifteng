@@ -22,6 +22,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,11 +35,16 @@ import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher.ViewFactory;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.venefica.module.listings.GalleryImageAdapter;
-import com.venefica.module.listings.post.PostAct.PostListingTask;
+import com.venefica.module.listings.GalleryImageAdapter.OnActionModeListener;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.CameraPreview;
 import com.venefica.module.utils.Utility;
@@ -49,7 +55,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Fragment class to capture from camera and pick from gallery
  */
-public class PostImagesFragment extends SherlockFragment implements OnClickListener, ViewFactory{
+public class PostImagesFragment extends SherlockFragment implements OnClickListener, ViewFactory, OnActionModeListener{
 
 	
 	/**
@@ -57,9 +63,9 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * Listener to communicate with activity
 	 */
 	public interface OnPostImagesListener{
-		public void onSetCoverImage();
 		public void onCameraError(int errorCode);
-		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images);
+		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images, int coverImagePosition);
+		public boolean isBackFromPreview();
 	}
 	private static final int REQ_GET_IMAGE = 1002;
 	private OnPostImagesListener listener;
@@ -94,47 +100,59 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * buttons for step one
 	 */
 	private ImageButton imgBtnPickGallery, imgBtnPickCamera, imgBtnNextToStep2;
-
+	/**
+	 * true if first photo
+	 */
 	protected boolean isFirstImage = true;
-	
+	/**
+	 * ActionMode
+	 */
+	private ActionMode actionMode;
+	/**
+	 * action mode visible flag
+	 */
+	private boolean isActionModeActive = false;
+	/**
+	 * cover image position
+	 */
+	private int coverImagePosition = -1;
+	/**
+	 * root layout
+	 */
+	private View rootView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//images
 		images = new ArrayList<Bitmap>();
 		images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
-		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true);
+		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true, true);
+		galImageAdapter.setActionModeListener(this);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		//set layout for fragment
-		View view = inflater.inflate(R.layout.view_camera_post_images,
+		rootView = inflater.inflate(R.layout.view_camera_post_images,
 				container, false);
-		imgBtnPickGallery = (ImageButton) view.findViewById(R.id.imgBtnPostListingPickGallery);
+		imgBtnPickGallery = (ImageButton) rootView.findViewById(R.id.imgBtnPostListingPickGallery);
 		imgBtnPickGallery.setOnClickListener(this);
-		imgBtnPickCamera = (ImageButton) view.findViewById(R.id.imgBtnPostListingPickCamera);
+		imgBtnPickCamera = (ImageButton) rootView.findViewById(R.id.imgBtnPostListingPickCamera);
 		imgBtnPickCamera.setOnClickListener(this);
-		imgBtnNextToStep2 = (ImageButton) view.findViewById(R.id.imgBtnPostListingNextToStep2);
+		imgBtnNextToStep2 = (ImageButton) rootView.findViewById(R.id.imgBtnPostListingNextToStep2);
 		imgBtnNextToStep2.setOnClickListener(this);
 		
-		cameraPreview = (FrameLayout) view.findViewById(R.id.layViewPostListingCameraPreview);
-		imgSwitcher = (ImageSwitcher) view.findViewById(R.id.imgSwitcherActPostListing);
+		cameraPreview = (FrameLayout) rootView.findViewById(R.id.layViewPostListingCameraPreview);
+		imgSwitcher = (ImageSwitcher) rootView.findViewById(R.id.imgSwitcherActPostListing);
 		imgSwitcher.setFactory(this);
-		gallery = (Gallery) view.findViewById(R.id.galleryActPostListing);
+		gallery = (Gallery) rootView.findViewById(R.id.galleryActPostListing);
 		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int position, long id) {
-				if (images != null && images.size() > 0) {
-					/*seletedImagePosition = position;
-					if (seletedImagePosition == coverImagePosition) {
-						txtSetAsCoverImg.setVisibility(View.VISIBLE);
-					} else {
-						txtSetAsCoverImg.setVisibility(View.GONE);
-					}*/
+				if (images != null && images.size() > 0) {					
 					if (imageList != null) {
 						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position))));
 					}
@@ -154,7 +172,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		//set adapter
 		gallery.setAdapter(galImageAdapter);
 		
-		return view;
+		return rootView;
 	}
 
 	@Override
@@ -301,6 +319,9 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
     @Override
     public void onResume() {
     	super.onResume();
+    	if (listener.isBackFromPreview()) {
+			listener.onNextButtonClick(imageList, images, coverImagePosition);
+		}
     	startCamera();
     }
     
@@ -329,6 +350,94 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
         return img;
 	}	
 
+	/**
+	 * @author avinash
+	 * Class to handle action modes
+	 */
+	private final class AnActionModeOfPostImage implements ActionMode.Callback{
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			getSherlockActivity().getSupportMenuInflater().inflate(R.menu.activity_postlisting_gallery_action_modes, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			if (galImageAdapter.getSelectedPositions().size() == 1) {
+				menu.findItem(R.id.menu_post_gallery_set_cover_image).setVisible(true);
+			} else {
+				menu.findItem(R.id.menu_post_gallery_set_cover_image).setVisible(false);
+			}			
+			isActionModeActive = true;
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			int id = item.getItemId();
+			if (id == R.id.menu_post_gallery_delete) {
+				//Delete selected images
+				ArrayList<String> listToDelete = new ArrayList<String>();
+				ArrayList<Bitmap> imgsToDelete = new ArrayList<Bitmap>();
+				for (Integer position : galImageAdapter.getSelectedPositions()) {
+					listToDelete.add(imageList.get((int)position));
+					imgsToDelete.add(images.get((int)position));
+				}
+				imageList.removeAll(listToDelete);
+				images.removeAll(imgsToDelete);
+				imageList.trimToSize();
+				images.trimToSize();
+				galImageAdapter.notifyDataSetChanged();
+				gallery.invalidate();
+				galImageAdapter.clearSelectedPositions();
+				listToDelete.clear();
+				imgsToDelete.clear();
+			} else if (id == R.id.menu_post_gallery_set_cover_image) {
+				//set cover image
+				coverImagePosition = galImageAdapter.getSelectedPositions().get(0);
+	        	galImageAdapter.setCoverImagePosition(coverImagePosition);
+	        	galImageAdapter.notifyDataSetChanged();
+	        	gallery.setSelection(coverImagePosition);
+				galImageAdapter.clearSelectedPositions();				
+			}
+			if (actionMode != null) {
+				actionMode.finish();
+			}
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			isActionModeActive = false;
+		}		
+	}
+	/**
+     * Helper method to show action modes
+     * @param show boolean
+     */
+    public void showActionMode(boolean show){
+    	if (show) {
+    		if (!isActionModeActive) {    			
+    			actionMode = getSherlockActivity().startActionMode(new AnActionModeOfPostImage());
+			} else {
+				actionMode.invalidate();
+			}  		
+		} else if (actionMode != null) {
+			actionMode.finish();
+		}    	
+    }
+    
+    /**
+     * Method to set action mode title
+     * @param title CharSequence
+     */
+    @Override
+	public void setActionModeTitle(String title) {
+    	if (actionMode != null) {
+    		actionMode.setTitle(title);
+		}
+	}
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.imgBtnPostListingPickGallery) {
@@ -337,23 +446,42 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 			camera.takePicture(null, null, pictureCallback);
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep2){
 			if (!isFirstImage) {
-				listener.onNextButtonClick(imageList, images);
-				/*gallery.setSelection(0);
-				if ( images != null && images.size() > 0) {
-					imgSwitcher.setImageDrawable(new BitmapDrawable(images.get(0)));
+				if (actionMode != null) {
+					actionMode.finish();
 				}
+												
 				if (coverImagePosition == -1) {
 					showCoverImgInstructions(getResources().getString(R.string.msg_postlisting_sel_cover_image_instruction));
+				}else {
+					listener.onNextButtonClick(imageList, images, coverImagePosition);
 				}				
-				if (camera != null) {
-					camera.stopPreview();
-				}*/
 			}else {
 				Utility.showLongToast(getActivity(), getResources().getString(R.string.msg_postlisting_sel_image));
 			}			
 		}
 	}
 
+	/**
+	 * Method to show hint message to set cover image
+	 * @param message
+	 */
+	private void showCoverImgInstructions(String message){
+		int [] location = new int[2];
+		rootView.getLocationOnScreen(location);
+		
+		LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
+		View layout = inflater.inflate(R.layout.view_set_cover_image,
+		                               (ViewGroup) getSherlockActivity().findViewById(R.id.toastPostLayoutRootCoverImg));
+		
+		TextView text = (TextView) layout.findViewById(R.id.txtPostListingSetCoverMsg);
+		text.setText(message);
+		Toast toast = new Toast(getSherlockActivity().getApplicationContext());
+		toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 
+				location[1] + (gallery.getHeight()/3));
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setView(layout);
+		toast.show();
+	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -391,5 +519,5 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 				}
 			}
 		}
-	}
+	}	
 }
