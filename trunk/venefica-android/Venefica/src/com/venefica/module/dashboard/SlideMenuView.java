@@ -266,11 +266,14 @@ public class SlideMenuView extends LinearLayout {
 	}
 	public void setUserDetails(UserDto user){
 		if (user != null) {
-			((VeneficaApplication) ((SearchListingsActivity) getContext())
-					.getApplication()).getImgManager().loadImage(
-					Constants.PHOTO_URL_PREFIX + user.getAvatar().getUrl(),
-					profImgView,
-					getResources().getDrawable(R.drawable.icon_picture_white));
+			if (user.getAvatar() != null && user.getAvatar().getUrl() != null) {
+				((VeneficaApplication) ((SearchListingsActivity) getContext())
+						.getApplication()).getImgManager().loadImage(
+						Constants.PHOTO_URL_PREFIX + user.getAvatar().getUrl(),
+						profImgView,
+						getResources().getDrawable(
+								R.drawable.icon_picture_white));
+			}
 			txtUserName.setText(user.getFirstName() + " "
 					+ (user.getLastName()));
 			txtMemberInfo
@@ -278,7 +281,10 @@ public class SlideMenuView extends LinearLayout {
 							R.string.label_detail_listing_member_since)
 							.toString());
 			txtMemberInfo.append(" ");
-			txtMemberInfo.append(Utility.convertShortDateToString(user.getJoinedAt()));
+			if (user.getJoinedAt() != null) {
+				txtMemberInfo.append(Utility.convertShortDateToString(user
+						.getJoinedAt()));
+			}
 			txtAddress.setText(user.getCity() + ", " + user.getCounty());
 		}
 	}
