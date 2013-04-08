@@ -16,17 +16,16 @@ class Comment_model extends CI_Model {
     var $createdAt; //long - timestamp
     
     public function __construct($obj = null) {
-        // Call the Model constructor
-        parent::__construct();
+        log_message(DEBUG, "Initializing Comment_model");
         
         if ( $obj != null ) {
-            $this->id = $obj->id;
-            $this->text = $obj->text;
-            $this->owner = $obj->owner;
-            $this->publisherName = $obj->publisherName;
-            $this->publisherFullName = $obj->publisherFullName;
-            $this->publisherAvatarUrl = $obj->publisherAvatarUrl;
-            $this->createdAt = $obj->createdAt;
+            $this->id = getField($obj, 'id');
+            $this->text = getField($obj, 'text');
+            $this->owner = getField($obj, 'owner');
+            $this->publisherName = getField($obj, 'publisherName');
+            $this->publisherFullName = getField($obj, 'publisherFullName');
+            $this->publisherAvatarUrl = getField($obj, 'publisherAvatarUrl');
+            $this->createdAt = getField($obj, 'createdAt');
         }
     }
     
@@ -34,5 +33,12 @@ class Comment_model extends CI_Model {
         //the following is queried by the SoapClient
         if ( $key == "type" ) return "Comment";
         return parent::__get($key);
+    }
+    
+    public function getPublisherAvatarUrl() {
+        if ( $this->publisherAvatarUrl == null ) {
+            return '';
+        }
+        return SERVER_URL.$this->publisherAvatarUrl;
     }
 }

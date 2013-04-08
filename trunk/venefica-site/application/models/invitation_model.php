@@ -13,8 +13,7 @@ class Invitation_model extends CI_Model {
     var $userType; //string: GIVER, RECEIVER
     
     public function __construct() {
-        // Call the Model constructor
-        parent::__construct();
+        log_message(DEBUG, "Initializing Invitation_model");
     }
     
     public function __get($key) {
