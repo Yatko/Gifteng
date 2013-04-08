@@ -11,14 +11,14 @@ import org.quartz.JobExecutionException;
 import com.venefica.dao.AdDao;
 
 @DisallowConcurrentExecution
-public class ExpirationJob implements Job {
+public class AdExpirationJob implements Job {
 
-    private static final Log log = LogFactory.getLog(ExpirationJob.class);
-
+    private static final Log log = LogFactory.getLog(AdExpirationJob.class);
+    
     @Override
-    // @Transactional
+    //@Transactional
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.ADDAO);
+        AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.AD_DAO);
 
         try {
             log.info("Processing expired advertisements");
