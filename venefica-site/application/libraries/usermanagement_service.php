@@ -34,8 +34,8 @@ class Usermanagement_service {
      * @param string $email the user email
      * @throws Exception in case of WS invocation error
      */
-    public function storeUser($email) {
-        $user = $this->getUserByEmail($email, loadToken());
+    public function storeUser($email, $token) {
+        $user = $this->getUserByEmail($email, $token);
         storeIntoSession('user', $user);
     }
     
