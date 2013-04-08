@@ -7,6 +7,10 @@
  */
 class Usermanagement_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Usermanagement_service");
+    }
+    
     /**
      * Invokes the user registration on WS.
      * 

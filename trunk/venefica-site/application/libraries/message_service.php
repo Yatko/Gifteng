@@ -7,4 +7,8 @@
  */
 class Message_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Message_service");
+    }
+    
 }

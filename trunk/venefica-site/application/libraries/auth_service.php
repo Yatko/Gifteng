@@ -7,6 +7,10 @@
  */
 class Auth_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Auth_service");
+    }
+    
     /**
      * Check if there is valid token in the session.
      * 
@@ -34,7 +38,7 @@ class Auth_service {
             $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
             $result = $authService->authenticateEmail(array("email" => $email, "password" => $password));
             $token = $result->AuthToken;
-            storeIntoSession('token', $token);
+            storeToken($token);
             return $token;
         } catch ( Exception $ex ) {
             log_message(INFO, 'Email and/or password is incorrect! '.$ex->faultstring);

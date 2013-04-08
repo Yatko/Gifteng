@@ -7,6 +7,10 @@
  */
 class Ad_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Ad_service");
+    }
+    
     public function getAds($lastAdId, $numberAds) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
