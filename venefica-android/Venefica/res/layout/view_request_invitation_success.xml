@@ -18,11 +18,6 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/g_msg_inv_req_success"
-        android:textSize="20sp" />
-
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_start_page_share_layout" />
+        android:textSize="20sp" />    
 
 </LinearLayout>
