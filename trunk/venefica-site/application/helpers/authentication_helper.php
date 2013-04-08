@@ -13,6 +13,13 @@
 
 if ( ! function_exists('getSoapOptions')) {
     function getSoapOptions($token = null) {
+        ini_set('soap.wsdl_cache_enabled', '0');
+        if ( $token != null ) {
+            ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token);
+        }
+        return array();
+        
+        /**
         if ( $token == null ) {
             $soap_options = array('cache_wsdl' => WSDL_CACHE_NONE);
         } else {
@@ -26,6 +33,7 @@ if ( ! function_exists('getSoapOptions')) {
             );
         }
         return $soap_options;
+        /**/
     }
 }
 
