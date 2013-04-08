@@ -63,17 +63,16 @@
     <? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
         <? foreach ($ads as $ad): ?>
             <?
-            $separator = ', ';
-            $creator_img = SERVER_URL.$ad->creator->avatar->url;
-            $creator_name = $ad->creator->firstName.' '.$ad->creator->lastName;
-            $creator_joined = date('d-m-y', $ad->creator->joinedAt / 1000);
-            $creator_location = $ad->creator->city.$separator.$ad->creator->country;
+            $creator_img = $ad->getCreatorAvatarUrl();
+            $creator_name = $ad->getCreatorFullName();
+            $creator_joined = $ad->getCreatorJoinDate();
+            $creator_location = $ad->getCreatorLocation();
 
             if ( trim($creator_name) == '' ) $creator_name = '&nbsp;';
-            if ( trim($creator_location) == trim($separator) ) $creator_location = '&nbsp;';
+            if ( trim($creator_location) == '' ) $creator_location = '&nbsp;';
 
             $ad_id = $ad->id;
-            $ad_img = $ad->hasImage() ? SERVER_URL.$ad->image->url : '';
+            $ad_img = $ad->getImageUrl();
             $ad_title = $ad->title;
             $ad_description = $ad->description;
             ?>
@@ -103,7 +102,7 @@
                     <div class="messageContainer">
             <? foreach ( $ad->comments as $comment ): ?>
                 <?
-                $commentor_img = SERVER_URL.$comment->publisherAvatarUrl;
+                $commentor_img = $comment->getPublisherAvatarUrl();
                 $commentor_name = $comment->publisherFullName;
 
                 $comment_text = $comment->text;
