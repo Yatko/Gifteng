@@ -1,7 +1,8 @@
 package com.venefica.module.invitation;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.main.R;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
 
 /**
  * @author avinash
@@ -33,6 +36,7 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
 	 */
 	private Button btnReqInvite, btnHaveInvite;
 	private EditText edtEmail;
+	private InputFieldValidator vaildator;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +48,7 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
 		btnHaveInvite.setOnClickListener(this);
 		
 		edtEmail = (EditText) view.findViewById(R.id.edtActLoginReqInvEmail);
+		edtEmail.setText(Utility.getEmail(getActivity()));
 		return view;
 	}
 
@@ -63,9 +68,35 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.btnActLoginRequestInvite && onRequestInvitationListener != null) {
-			onRequestInvitationListener.onRequestInvitationClick(edtEmail.getText().toString());								
+			if (validateFields()) {
+				onRequestInvitationListener.onRequestInvitationClick(edtEmail.getText().toString());
+			}											
 		} else if (id == R.id.btnActLoginHaveInviteCode && onRequestInvitationListener != null){
 			onRequestInvitationListener.onHaveInvitationClick();
 		}
 	}
+	
+	/**
+     * Method to validate input fields
+     * @return result of validation
+     */
+    private boolean validateFields(){
+    	boolean result = true;
+    	StringBuffer message = new StringBuffer();
+    	if(vaildator == null){
+    		vaildator = new InputFieldValidator();    		
+    	}
+    	
+    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
+    		result = false;
+    		message.append(getResources().getString(R.string.g_hint_email).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_email));
+    		message.append("\n");
+    	}
+    	if (!result) {
+			Utility.showLongToast(getActivity(), message.toString());
+		}
+		return result;    	
+    }
 }
