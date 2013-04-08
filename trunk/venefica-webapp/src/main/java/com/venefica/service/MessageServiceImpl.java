@@ -113,10 +113,6 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             throw new NullPointerException("adId is null");
         }
 
-        if (lastCommentId != -1) {
-            throw new RuntimeException("Not supported!");
-        }
-
         Ad ad = adDao.get(adId);
 
         if (ad == null) {
@@ -126,8 +122,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         LinkedList<CommentDto> result = new LinkedList<CommentDto>();
 
         User currentUser = getCurrentUser();
+        List<Comment> comments = commentDao.getAdComments(adId, lastCommentId, numComments);
 
-        for (Comment comment : ad.getComments()) {
+        for (Comment comment : comments) {
             CommentDto commentDto = new CommentDto(comment, currentUser);
             result.add(commentDto);
         }
