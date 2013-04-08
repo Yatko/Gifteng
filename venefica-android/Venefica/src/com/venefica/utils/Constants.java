@@ -66,7 +66,8 @@ public class Constants
 	public static final int ERROR_RESULT_DELETE_MESSAGE = 1057;
 	public static final int ERROR_RESULT_POST_RATING = 1058;
 	public static final int RESULT_POST_RATING_SUCCESS = 1059;
-	
+	public static final int ERROR_RESULT_REQ_INVITATION = 1060;
+	public static final int RESULT_REQ_INVITATION_SUCCESS = 1061; 
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -119,6 +120,7 @@ public class Constants
 	public static final String SERVICES_AUTH_URL = SERVICES_BASE_URL + "/venefica/services/AuthService?wsdl";
 	public static final String SERVICES_AD_URL = SERVICES_BASE_URL + "/venefica/services/AdService?wsdl";
 	public static final String SERVICES_MESSAGE_URL = SERVICES_BASE_URL + "/venefica/services/MessageService?wsdl";
+	public static final String SERVICES_INVITATION_URL = SERVICES_BASE_URL + "/venefica/services/InvitationService?wsdl";
 	
 	public static final String SERVICES_NAMESPACE = "http://service.venefica.com";
 
@@ -174,5 +176,12 @@ public class Constants
 	
 	public static final int EXPIRE_AD_IN_DAYS = 60;
 			
-	
+	public static final String FONT_PTSANS_REGULAR = "fonts/pt-sans/PTS55F.ttf";
+	public static final String FONT_PTSANS_ITALIC = "fonts/pt-sans/PTS56F.ttf";
+	public static final String FONT_PTSANS_BOLD = "fonts/pt-sans/PTS75F.ttf";
+	public static final String FONT_PTSANS_BOLD_ITALIC = "fonts/pt-sans/PTS76F.ttf";
+	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
+	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
+	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
 }
