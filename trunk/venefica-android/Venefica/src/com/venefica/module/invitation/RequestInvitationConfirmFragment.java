@@ -3,6 +3,8 @@
  */
 package com.venefica.module.invitation;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,9 +12,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.main.R;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
+import com.venefica.services.InvitationDto.UserType;
 
 /**
  * @author avinash
@@ -21,10 +29,11 @@ import com.venefica.module.main.R;
 public class RequestInvitationConfirmFragment extends SherlockFragment implements OnClickListener{
 
 	/**
-	 * @author avinash Listener to communicate with activity
+	 * @author avinash 
+	 * Listener to communicate with activity
 	 */
 	public interface OnRequestInvitationConfirmClickListener {
-		public void onConfirmRequest();
+		public void onConfirmRequest(String zipCode, String source, UserType useType);
 	}
 
 	/**
@@ -36,6 +45,10 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 	 * Button
 	 */
 	private Button btnConfirmRequest;
+	private EditText edtZip;
+	private Spinner spinSource;
+	private RadioGroup radioGroup;
+	private InputFieldValidator vaildator;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -44,6 +57,10 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 				container, false);
 		btnConfirmRequest = (Button) view.findViewById(R.id.btnActLoginConfirmReq);
 		btnConfirmRequest.setOnClickListener(this);
+		
+		spinSource = (Spinner) view.findViewById(R.id.spinActInvitationKnowUs);
+		edtZip = (EditText) view.findViewById(R.id.edtActInvitationZipCode);
+		radioGroup = (RadioGroup) view.findViewById(R.id.radioGroupActInvitation);
 		return view;
 	}
 
@@ -65,7 +82,50 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.btnActLoginConfirmReq && this.listener != null) {
-			this.listener.onConfirmRequest();
-		}		
+			if (validateFields()) {
+				UserType useType = null ;
+				int selectedRadioFilter = radioGroup.getCheckedRadioButtonId();
+				switch (selectedRadioFilter) {
+				  case R.id.radioActInvitationGiving :
+					  useType = UserType.GIVER;
+       	              break;
+				  case R.id.radioActInvitationReceiving :
+					  useType = UserType.RECEIVER;
+					  break;
+				}
+				this.listener.onConfirmRequest(edtZip.getText().toString()
+						, spinSource.getSelectedItem().toString()
+						, useType);
+			}			
+		}
 	}
+	
+	/**
+     * Method to validate input fields
+     * @return result of validation
+     */
+    private boolean validateFields(){
+    	boolean result = true;
+    	StringBuffer message = new StringBuffer();
+    	if(vaildator == null){
+    		vaildator = new InputFieldValidator();    		
+    	}
+    	
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx)) || edtZip.getText().toString().length() < 6){
+    		result = false;
+    		message.append(getResources().getString(R.string.g_hint_zip).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_zipcode));
+    		message.append("\n");
+    	}
+    	if (spinSource.getSelectedItemPosition() == 0) {
+    		result = false;    		
+    		message.append(getResources().getString(R.string.g_msg_select_source));
+    		message.append("\n");
+		}
+    	if (!result) {
+			Utility.showLongToast(getActivity(), message.toString());
+		}
+		return result;    	
+    }
 }
