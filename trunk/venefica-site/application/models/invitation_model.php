@@ -7,10 +7,10 @@
  */
 class Invitation_model extends CI_Model {
     
-    var $email;
-    var $zipCode;
-    var $source;
-    var $userType;
+    var $email; //string
+    var $zipCode; //string
+    var $source; //string
+    var $userType; //string: GIVER, RECEIVER
     
     public function __construct() {
         // Call the Model constructor

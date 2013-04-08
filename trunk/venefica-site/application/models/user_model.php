@@ -7,22 +7,37 @@
  */
 class User_model extends CI_Model {
     
-    var $name;
-    var $firstName;
-    var $lastName;
-    var $email;
-    var $phoneNumber;
-    var $dateOfBirth;
-    var $country;
-    var $city;
-    var $area;
-    var $zipCode;
-    var $avatar;
-    var $joinedAt;
+    var $name; //string
+    var $firstName; //string
+    var $lastName; //string
+    var $email; //string
+    var $phoneNumber; //string
+    var $dateOfBirth; //long - timestamp
+    var $country; //string
+    var $city; //string
+    var $area; //string
+    var $zipCode; //string
+    var $avatar; //Image_model
+    var $joinedAt; //long - timestamp
 
-    public function __construct() {
+    public function __construct($obj = null) {
         // Call the Model constructor
         parent::__construct();
+        
+        if ( $obj != null ) {
+            $this->name = $obj->name;
+            $this->firstName = $obj->firstName;
+            $this->lastName = $obj->lastName;
+            $this->email = $obj->email;
+            $this->phoneNumber = getField($obj, 'phoneNumber');
+            $this->dateOfBirth = $obj->dateOfBirth;
+            $this->country = $obj->country;
+            $this->city = $obj->city;
+            $this->area = $obj->area;
+            $this->zipCode = $obj->zipCode;
+            $this->avatar = new Image_model($obj->avatar);
+            $this->joinedAt = $obj->joinedAt;
+        }
     }
     
     public function __get($key) {
