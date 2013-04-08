@@ -34,6 +34,12 @@ if ( ! function_exists('loadToken')) {
         return loadFromSession('token');
     }
 }
+if ( ! function_exists('storeToken')) {
+    function storeToken($token) {
+        log_message(INFO, 'Storing token: '.$token);
+        storeIntoSession('token', $token);
+    }
+}
 
 if ( ! function_exists('storeIntoSession')) {
     function storeIntoSession($key, $value) {
