@@ -13,8 +13,8 @@ class Ad_model extends CI_Model {
     var $title; //string
     var $description; //string
     var $price; //float
-    var $latitude; //float
-    var $longitude; //float
+    var $latitude; //double
+    var $longitude; //double
     var $image; //Image_model
     var $imageThumbnail; //Image_model
     var $images; //array of Image_model
@@ -30,7 +30,6 @@ class Ad_model extends CI_Model {
     var $canRate; //boolean
     var $creator; //User_model
     var $canMarkAsSpam; //boolean
-    
     var $comments; //array of Comment_model
     
     public function __construct($obj = null) {
@@ -47,18 +46,6 @@ class Ad_model extends CI_Model {
             $this->longitude = getField($obj, 'longitude');
             $this->image = hasField($obj, 'image') ? new Image_model($obj->image) : null;
             $this->imageThumbnail = hasField($obj, 'imageThumbnail') ? new Image_model($obj->imageThumbnail) : null;
-            if ( hasField($obj, 'images') && hasField($obj->images, 'item') && $obj->images->item != null ) {
-                $images = array();
-                if ( is_array($obj->images->item) && count($obj->images->item) > 0 ) {
-                    foreach ( $obj->images->item as $image ) {
-                        array_push($images, new Image_model($image));
-                    }
-                } else {
-                    $image = $obj->images->item;
-                    array_push($images, new Image_model($image));
-                }
-                $this->images = $images;
-            }
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
             $this->inBookmars = getField($obj, 'inBookmars');
@@ -71,6 +58,30 @@ class Ad_model extends CI_Model {
             $this->canRate = getField($obj, 'canRate');
             $this->creator = hasField($obj, 'creator') ? new User_model($obj->creator) : null;
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
+            if ( hasField($obj, 'images') && hasField($obj->images, 'item') && $obj->images->item != null ) {
+                $images = array();
+                if ( is_array($obj->images->item) && count($obj->images->item) > 0 ) {
+                    foreach ( $obj->images->item as $image ) {
+                        array_push($images, new Image_model($image));
+                    }
+                } else {
+                    $image = $obj->images->item;
+                    array_push($images, new Image_model($image));
+                }
+                $this->images = $images;
+            }
+            if ( hasField($obj, 'comments') && hasField($obj->comments, 'item') && $obj->comments->item != null ) {
+                $comments = array();
+                if ( is_array($obj->comments->item) && count($obj->comments->item) > 0 ) {
+                    foreach ( $obj->comments->item as $comment ) {
+                        array_push($comments, new Comment_model($comment));
+                    }
+                } else {
+                    $comment = $obj->comments->item;
+                    array_push($comments, new Comment_model($comment));
+                }
+                $this->comments = $comments;
+            }
         }
     }
     
