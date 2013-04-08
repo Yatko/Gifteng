@@ -114,7 +114,8 @@ public interface AdService {
 		@WebParam(name = "numberAds") int numberAds,
                 @WebParam(name = "filter") FilterDto filter,
                 @WebParam(name = "includeImages") Boolean includeImages,
-                @WebParam(name = "includeCreator") Boolean includeCreator);
+                @WebParam(name = "includeCreator") Boolean includeCreator,
+                @WebParam(name = "includeCommentsNumber") int includeCommentsNumber);
 
 	/**
 	 * Returns the ad by its id.

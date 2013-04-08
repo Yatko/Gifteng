@@ -3,12 +3,14 @@ package com.venefica.service;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
+import com.venefica.dao.CommentDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.SpamMarkDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Category;
+import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
 import com.venefica.model.SpamMark;
@@ -49,21 +51,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Inject
     private CategoryDao categoryDao;
-    
     @Inject
     private AdDao adDao;
-    
     @Inject
     private ImageDao imageDao;
-    
     @Inject
     private BookmarkDao bookmarkDao;
-    
     @Inject
     private SpamMarkDao spamMarkDao;
-    
     @Inject
     private RatingDao ratingDao;
+    @Inject
+    private CommentDao commentDao;
 
     /**
      * Creates basic categories
@@ -236,7 +235,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator) {
+    public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber) {
         List<AdDto> result = new LinkedList<AdDto>();
         List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
 
@@ -248,8 +247,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<Ad> bokmarkedAds = bookmarkDao.getBookmarkedAds(currentUser);
 
         for (Ad ad : ads) {
+            List<Comment> comments = commentDao.getAdComments(ad.getId(), -1L, includeCommentsNumber);
+            
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
+                    .setFilteredComments(comments)
                     .includeImages(includeImages != null ? includeImages : false)
                     .includeCreator(includeCreator != null ? includeCreator : false)
                     .build();
