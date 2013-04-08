@@ -50,4 +50,17 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
 
         return invitations.isEmpty() ? null : invitations.get(0);
     }
+    
+    @Override
+    public void markExpiredInvitations() {
+        // @formatter:off		
+        int numRows = createQuery(
+                "update Invitation i set i.expired = true where i.expiresAt < current_date() "
+                + "and i.expired = false").executeUpdate();
+        // @formatter:on
+
+        if (numRows > 0) {
+            log.info(numRows + " invitations marked as expired.");
+        }
+    }
 }
