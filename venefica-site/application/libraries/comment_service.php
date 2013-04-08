@@ -7,6 +7,10 @@
  */
 class Comment_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Comment_service");
+    }
+    
     public function getCommentsByAd($adId, $lastCommentId, $numComments) {
         try {
             $commentService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));

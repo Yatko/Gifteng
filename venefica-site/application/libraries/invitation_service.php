@@ -7,6 +7,10 @@
  */
 class Invitation_service {
     
+    public function __construct() {
+        log_message(DEBUG, "Initializing Invitation_service");
+    }
+    
     /**
      * Requests an invitation from the server.
      * 
@@ -46,5 +50,3 @@ class Invitation_service {
         }
     }
 }
-
-?>
