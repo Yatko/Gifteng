@@ -6,6 +6,8 @@ import com.venefica.auth.TokenEncryptor;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.InvalidInvitationException;
+import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
@@ -24,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UserManagementServiceTest extends ServiceTestBase<UserManagementService> {
 
     private static final String TEST_USER_NAME = "userManagementServiceTestUser2";
+    private static final String TEST_INVITATION_CODE = "12345";
     
     @Inject
     private UserDao userDao;
@@ -52,29 +55,45 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         assertNotNull("User object must be returned!", userDto);
     }
 
-    // register -------
+    // register
     
     @Test
-    public void registerUserTest() throws UserAlreadyExistsException {
+    public void registerUserTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
         UserDto testUserDto = createUserDto(TEST_USER_NAME);
-        client.registerUser(testUserDto, "pa$$word");
+        client.registerUser(testUserDto, "pa$$word", TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException {
+    public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
         UserDto userWithRegisteredName = createUserDto("otherUser");
         userWithRegisteredName.setName(getFirstUser().getName());
-        client.registerUser(userWithRegisteredName, "pa$$word");
+        client.registerUser(userWithRegisteredName, "pa$$word", TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void registerUserWithTheSameEmailTest() throws UserAlreadyExistsException {
+    public void registerUserWithTheSameEmailTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
         UserDto userWithRegisteredEmail = createUserDto("otherUser");
         userWithRegisteredEmail.setEmail(getFirstUser().getEmail());
-        client.registerUser(userWithRegisteredEmail, "pass$$word");
+        client.registerUser(userWithRegisteredEmail, "pass$$word", TEST_INVITATION_CODE);
     }
-
-    // update --------
+    
+    @Test(expected = InvalidInvitationException.class)
+    public void registerMultipleUsersWithTheSameInvitationTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+        String invitationCode = "11111";
+        
+        UserDto testUserDto_1 = createUserDto("test_1");
+        Long testUserId_1 = client.registerUser(testUserDto_1, "pa$$word", invitationCode);
+        assertNotNull("Test user might been created", testUserId_1);
+        
+        UserDto testUserDto_2 = createUserDto("test_2");
+        Long testUserId_2 = client.registerUser(testUserDto_2, "pa$$word", invitationCode);
+        assertNotNull("Test user might been created", testUserId_2);
+        
+        UserDto testUserDto_3 = createUserDto("test_3");
+        client.registerUser(testUserDto_3, "pa$$word", invitationCode);
+    }
+    
+    // update
     
     @Test(expected = UserAlreadyExistsException.class)
     public void updateUserWithTheSameNameTest() throws UserAlreadyExistsException {
