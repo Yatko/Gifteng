@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
-
+    
+    private static final int MAX_COMMENTS_TO_RETURN = 100;
+    
     @Override
     public Long save(Comment comment) {
         return saveEntity(comment);
@@ -26,9 +28,24 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
     }
     
     @Override
-    public List<Comment> getAdComments(Long adId) {
-        return createQuery("from Comment c where c.ad.id = :adId order by c.id desc")
-                .setParameter("adId", adId)
-                .list();
+    @SuppressWarnings("unchecked")
+    public List<Comment> getAdComments(Long adId, Long lastCommentId, int numComments) {
+        List<Comment> comments;
+
+        numComments = numComments > MAX_COMMENTS_TO_RETURN ? MAX_COMMENTS_TO_RETURN : numComments;
+
+        if (lastCommentId < 0) {
+            comments = createQuery("from Comment c where c.ad.id = :adId order by c.createdAt desc")
+                    .setParameter("adId", adId)
+                    .setMaxResults(numComments)
+                    .list();
+        } else {
+            comments = createQuery("from Comment c where c.ad.id = :adId and c.id < :lastId order by c.createdAt desc")
+                    .setParameter("adId", adId)
+                    .setParameter("lastId", lastCommentId)
+                    .setMaxResults(numComments)
+                    .list();
+        }
+        return comments;
     }
 }
