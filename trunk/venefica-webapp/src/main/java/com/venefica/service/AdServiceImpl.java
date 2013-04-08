@@ -233,6 +233,32 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         return result;
     }
+    
+    @Override
+    @Transactional
+    public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator) {
+        List<AdDto> result = new LinkedList<AdDto>();
+        List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
+
+        User currentUser = getCurrentUser();
+
+        // TODO: Optimize this
+        // Get current user's bookmarks
+        // TODO: REMOVE IT!!!!!!!!
+        List<Ad> bokmarkedAds = bookmarkDao.getBookmarkedAds(currentUser);
+
+        for (Ad ad : ads) {
+            AdDto adDto = new AdDtoBuilder(ad)
+                    .setCurrentUser(currentUser)
+                    .includeImages(includeImages != null ? includeImages : false)
+                    .includeCreator(includeCreator != null ? includeCreator : false)
+                    .build();
+            adDto.setInBookmars(bokmarkedAds.contains(ad));
+            result.add(adDto);
+        }
+
+        return result;
+    }
 
     @Override
     @Transactional
