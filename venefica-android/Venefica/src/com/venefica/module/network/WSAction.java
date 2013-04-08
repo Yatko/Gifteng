@@ -21,6 +21,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.venefica.module.invitation.InvitationResultWrapper;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.browse.SearchListingResultWrapper;
@@ -34,6 +35,7 @@ import com.venefica.services.CategoryDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
+import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
 import com.venefica.services.ServicesManager.DeleteMessageResult;
 import com.venefica.services.ServicesManager.GetAllMessagesResult;
@@ -73,6 +75,7 @@ public class WSAction {
 	private final String WS_METHOD_GET_ALL_MESSAGE = "GetAllMessages";
 	private final String WS_METHOD_HIDE_MESSAGE = "HideMessage";
 	private final String WS_METHOD_RATE_AD = "RateAd";
+	private final String WS_METHOD_REQUEST_INVITATION = "RequestInvitation";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -1176,6 +1179,48 @@ public class WSAction {
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_POST_RATING;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to request invitation
+	 * @param token
+	 * @param invitationDto
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public InvitationResultWrapper requestInvitation(String token, InvitationDto invitationDto) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_REQUEST_INVITATION;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		InvitationResultWrapper result = new InvitationResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_INVITATION_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("invitation", invitationDto);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			long id = Long.parseLong(obj.toString());
+			if (id > 0) {
+				result.result = Constants.RESULT_REQ_INVITATION_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_REQ_INVITATION;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_REQ_INVITATION;
 		}
 		return result;
 	}
