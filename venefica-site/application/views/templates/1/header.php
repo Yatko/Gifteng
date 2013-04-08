@@ -1,6 +1,6 @@
 <?php
 
-$base_path  = base_url().'assets/';
+$base_path  = base_url().'assets/'.TEMPLATES.'/';
 $js_path    = $base_path.'js/';
 $css_path   = $base_path.'css/';
 $img_path   = $base_path.'img/';
@@ -44,7 +44,7 @@ $font_path  = $base_path.'font/';
     
     <!-- infinite scroll -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="<?=$js_path?>html5.js"></script><![endif]-->
     <script src="<?=$js_path?>jquery.masonry.min.js"></script>
     <script src="<?=$js_path?>jquery.infinitescroll.min.js"></script>
     <script src="<?=$js_path?>modernizr-transitions.js"></script>
