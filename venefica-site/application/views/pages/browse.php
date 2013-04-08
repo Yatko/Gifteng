@@ -100,6 +100,7 @@
                 </div>
                 <div class="container">
                     <div class="messageContainer">
+            <? if ( isset($ad->comments) && is_array($ad->comments) && count($ad->comments) > 0 ): ?>
             <? foreach ( $ad->comments as $comment ): ?>
                 <?
                 $commentor_img = $comment->getPublisherAvatarUrl();
@@ -117,6 +118,7 @@
                     </div>
                 </div>
             <? endforeach; ?>
+            <? endif; ?>
                         <div class="showMore"></div>
                     </div>
                 </div>
