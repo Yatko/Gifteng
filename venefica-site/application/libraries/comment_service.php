@@ -17,7 +17,7 @@ class Comment_service {
             $result = $commentService->getCommentsByAd(array("adId" => $adId, "lastCommentId" => $lastCommentId, "numComments" => $numComments));
             
             $comments = array();
-            if ( $result && property_exists($result, "comment") && $result->comment ) {
+            if ( $result && hasField($result, 'comment') && $result->comment ) {
                 if ( is_array($result->comment) && count($result->comment) > 0 ) {
                     foreach ( $result->comment as $comment ) {
                         array_push($comments, new Comment_model($comment));
