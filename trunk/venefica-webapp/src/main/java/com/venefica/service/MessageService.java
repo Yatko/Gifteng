@@ -59,7 +59,7 @@ public interface MessageService {
      * @param lastCommentId the id of the last retrieved comment of -1 to return
      * all comments
      * @param numComments the maximum number of comments to return
-     * @return list of ads
+     * @return list of comments
      * @throws AdNotFoundException if an ad with the specified id not found
      */
     @WebMethod(operationName = "GetCommentsByAd")
