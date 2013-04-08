@@ -43,6 +43,7 @@ public class Invitation {
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    private String ipAddress;
     
     @Column(nullable = false)
     private boolean expired;
@@ -158,5 +159,13 @@ public class Invitation {
 
     public void setNumAvailUse(int numAvailUse) {
         this.numAvailUse = numAvailUse;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }

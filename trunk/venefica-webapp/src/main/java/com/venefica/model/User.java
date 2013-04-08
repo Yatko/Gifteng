@@ -33,7 +33,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(unique = true, updatable = false)
     private String name;
     @Column(nullable = false)
     private String password;
