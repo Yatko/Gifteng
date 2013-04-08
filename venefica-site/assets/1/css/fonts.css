@@ -1,0 +1,49 @@
+
+@font-face {
+    font-family: 'PTSansRegular';
+    src: url('../font/PTS55F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansItalic';
+    src: url('../font/PTS56F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansBold';
+    src: url('../font/PTS75F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansBoldItalic';
+    src: url('../font/PTS76F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansCaptionRegular';
+    src: url('../font/PTC55F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansCaptionBold';
+    src: url('../font/PTC75F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansNarrowRegular';
+    src: url('../font/PTN57F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSansNarrowBold';
+    src: url('../font/PTN77F-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
