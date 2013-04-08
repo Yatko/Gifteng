@@ -41,7 +41,8 @@
 $route['default_controller'] = 'index/view';
 $route['404_override'] = '';
 
-$route['browse/(:any)'] = 'browse/view/$1';
+//$route['browse/(:any)'] = 'browse/view/$1';
+$route['browse/ajax'] = 'browse/ajax';
 $route['browse'] = 'browse/view';
 
 $route['authentication/(:any)'] = 'authentication/$1';
