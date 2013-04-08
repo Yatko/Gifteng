@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Invitation service
@@ -21,7 +21,7 @@ class Invitation_service {
             $invitationId = $result->invitationId;
             return $invitationId;
         } catch ( Exception $ex ) {
-            log_message(INFO, 'Invitation request failed! '.$ex->faultstring);
+            log_message(ERROR, 'Invitation request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }

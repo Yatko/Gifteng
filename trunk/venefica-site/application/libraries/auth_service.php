@@ -26,6 +26,7 @@ class Auth_service {
      * 
      * @param string $email
      * @param string $password
+     * @return string the token
      * @throws Exception in case of WS error
      */
     public function authenticateEmail($email, $password) {
@@ -34,6 +35,7 @@ class Auth_service {
             $result = $authService->authenticateEmail(array("email" => $email, "password" => $password));
             $token = $result->AuthToken;
             storeIntoSession('token', $token);
+            return $token;
         } catch ( Exception $ex ) {
             log_message(INFO, 'Email and/or password is incorrect! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
