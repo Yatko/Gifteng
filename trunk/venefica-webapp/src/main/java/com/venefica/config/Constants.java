@@ -20,7 +20,8 @@ public interface Constants {
     public static final String CALLBACK_PATH = "callback";
     public static final String OAUTH_TOKEN_ATTRIBUTE = "oauthToken";
     
-    public static final String ADDAO = "AdDao";
+    public static final String AD_DAO = "AdDao";
+    public static final String INVITATION_DAO = "InvitationDao";
     
     public static final Set<String> OPERATIONS_FOR_SKIP_TOKEN_AUTHORIZATION = new HashSet<String>(Arrays.asList(
             //registration related
