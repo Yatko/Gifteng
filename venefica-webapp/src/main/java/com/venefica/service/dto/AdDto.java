@@ -68,6 +68,10 @@ public class AdDto extends DtoBase {
     private UserDto creator;
     // out
     private Boolean canMarkAsSpam;
+    // out
+    @XmlElementWrapper(name = "comments")
+    @XmlElement(name = "item")
+    private List<CommentDto> comments;
 
     // Required for JAX-WS
     public AdDto() {
@@ -267,5 +271,13 @@ public class AdDto extends DtoBase {
 
     public void setCanMarkAsSpam(Boolean canMarkAsSpam) {
         this.canMarkAsSpam = canMarkAsSpam;
+    }
+
+    public List<CommentDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDto> comments) {
+        this.comments = comments;
     }
 }
