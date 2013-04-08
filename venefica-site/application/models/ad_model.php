@@ -34,51 +34,42 @@ class Ad_model extends CI_Model {
     var $comments; //array of Comment_model
     
     public function __construct($obj = null) {
-        // Call the Model constructor
-        parent::__construct();
+        log_message(DEBUG, "Initializing Ad_model");
         
         if ( $obj != null ) {
-            $this->id = $obj->id;
-            $this->categoryId = $obj->categoryId;
-            $this->category = $obj->category;
-            $this->title = $obj->title;
-            $this->description = $obj->description;
-            $this->price = $obj->price;
+            $this->id = getField($obj, 'id');
+            $this->categoryId = getField($obj, 'categoryId');
+            $this->category = getField($obj, 'category');
+            $this->title = getField($obj, 'title');
+            $this->description = getField($obj, 'description');
+            $this->price = getField($obj, 'price');
             $this->latitude = getField($obj, 'latitude');
             $this->longitude = getField($obj, 'longitude');
-            if ( property_exists($obj, 'image') ) {
-                $this->image = new Image_model($obj->image);
-            }
-            if ( property_exists($obj, 'imageThumbnail') ) {
-                $this->imageThumbnail = new Image_model($obj->imageThumbnail);
-            }
-            if ( property_exists($obj, 'images') ) {
-                if ( $obj->images != null && property_exists($obj->images, 'item') && $obj->images->item != null ) {
-                    $images = array();
-                    if ( is_array($obj->images->item) && count($obj->images->item) > 0 ) {
-                        foreach ( $obj->images->item as $image ) {
-                            array_push($images, new Image_model($image));
-                        }
-                    } else {
-                        $image = $obj->images->item;
+            $this->image = hasField($obj, 'image') ? new Image_model($obj->image) : null;
+            $this->imageThumbnail = hasField($obj, 'imageThumbnail') ? new Image_model($obj->imageThumbnail) : null;
+            if ( hasField($obj, 'images') && hasField($obj->images, 'item') && $obj->images->item != null ) {
+                $images = array();
+                if ( is_array($obj->images->item) && count($obj->images->item) > 0 ) {
+                    foreach ( $obj->images->item as $image ) {
                         array_push($images, new Image_model($image));
                     }
-                    $this->images = $images;
+                } else {
+                    $image = $obj->images->item;
+                    array_push($images, new Image_model($image));
                 }
+                $this->images = $images;
             }
-            $this->createdAt = $obj->createdAt;
-            $this->owner = $obj->owner;
-            $this->inBookmars = $obj->inBookmars;
-            $this->wanted = $obj->wanted;
-            $this->expired = $obj->expired;
-            $this->expiresAt = $obj->expiresAt;
-            $this->numAvailProlongations = $obj->numAvailProlongations;
-            $this->numViews = $obj->numViews;
-            $this->rating = $obj->rating;
+            $this->createdAt = getField($obj, 'createdAt');
+            $this->owner = getField($obj, 'owner');
+            $this->inBookmars = getField($obj, 'inBookmars');
+            $this->wanted = getField($obj, 'wanted');
+            $this->expired = getField($obj, 'expired');
+            $this->expiresAt = getField($obj, 'expiresAt');
+            $this->numAvailProlongations = getField($obj, 'numAvailProlongations');
+            $this->numViews = getField($obj, 'numViews');
+            $this->rating = getField($obj, 'rating');
             $this->canRate = getField($obj, 'canRate');
-            if ( property_exists($obj, 'creator') ) {
-                $this->creator = new User_model($obj->creator);
-            }
+            $this->creator = hasField($obj, 'creator') ? new User_model($obj->creator) : null;
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
         }
     }
@@ -94,5 +85,42 @@ class Ad_model extends CI_Model {
             return TRUE;
         }
         return FALSE;
+    }
+    
+    public function getImageUrl() {
+        if ( !$this->hasImage() ) {
+            return '';
+        }
+        return SERVER_URL.$this->image->url;
+    }
+    
+    // creator related
+    
+    public function getCreatorFullName() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getFullName();
+    }
+    
+    public function getCreatorAvatarUrl() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getAvatarUrl();
+    }
+    
+    public function getCreatorJoinDate() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getJoinDate();
+    }
+    
+    public function getCreatorLocation() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getLocation();
     }
 }

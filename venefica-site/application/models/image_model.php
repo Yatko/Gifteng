@@ -11,12 +11,11 @@ class Image_model extends CI_Model {
     var $url; //string
     
     public function __construct($obj = null) {
-        // Call the Model constructor
-        parent::__construct();
+        log_message(DEBUG, "Initializing Image_model");
         
         if ( $obj != null ) {
-            $this->id = $obj->id;
-            $this->url = $obj->url;
+            $this->id = getField($obj, 'id');
+            $this->url = getField($obj, 'url');
         }
     }
     
