@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Comment;
+import java.util.List;
 
 /**
  * Data access interface for {@link Comment} entity.
@@ -24,4 +25,12 @@ public interface CommentDao {
      * @return comment or null if a comment with the specified id not found
      */
     Comment get(Long id);
+    
+    /**
+     * Returns a list of comments for the specified ad.
+     * 
+     * @param adId
+     * @return list of comments
+     */
+    List<Comment> getAdComments(Long adId);
 }
