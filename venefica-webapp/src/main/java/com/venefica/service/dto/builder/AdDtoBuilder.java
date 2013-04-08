@@ -1,14 +1,17 @@
 package com.venefica.service.dto.builder;
 
 import com.venefica.model.Ad;
+import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
 import com.venefica.service.dto.UserDto;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Simplifies DTO object constructing.
@@ -18,6 +21,7 @@ import java.util.LinkedList;
 public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     private User currentUser;
+    private List<Comment> filteredComments;
     private boolean includeCreatorFlag;
     private boolean includeImagesFlag;
     private boolean includeCanMarkAsSpamFlag;
@@ -29,6 +33,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     public AdDtoBuilder setCurrentUser(User user) {
         currentUser = user;
+        return this;
+    }
+    
+    public AdDtoBuilder setFilteredComments(List<Comment> comments) {
+        filteredComments = comments;
         return this;
     }
 
@@ -82,7 +91,18 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if (model.getThumbImage() != null) {
             adDto.setImageThumbnail(new ImageDto(model.getThumbImage()));
         }
-
+        
+        if ( filteredComments != null ) {
+            LinkedList<CommentDto> comments = new LinkedList<CommentDto>();
+            
+            for ( Comment comment : filteredComments ) {
+                CommentDto commentDto = new CommentDto(comment, currentUser);
+                comments.add(commentDto);
+            }
+            
+            adDto.setComments(comments);
+        }
+        
         if (includeImagesFlag) {
             LinkedList<ImageDto> images = new LinkedList<ImageDto>();
 
