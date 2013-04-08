@@ -12,3 +12,12 @@ if ( ! function_exists('display')) {
         return " style=\"display: $display;\"";
     }
 }
+
+if ( ! function_exists('getField')) {
+    function getField($obj, $fieldName) {
+        if ( property_exists($obj, $fieldName) ) {
+            return $obj->$fieldName;
+        }
+        return null;
+    }
+}
