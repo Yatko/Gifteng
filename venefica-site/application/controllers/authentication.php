@@ -20,9 +20,9 @@ class Authentication extends CI_Controller {
         
         $data = array_merge($data, $extra_data);
         
-        $this->load->view('templates/header');
+        $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/authentication', $data);
-        $this->load->view('templates/footer');
+        $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
     /**
@@ -298,8 +298,8 @@ class Authentication extends CI_Controller {
         
         try {
             $email = $this->input->post('login_email');
-            $this->auth_service->authenticateEmail($email, $password);
-            $this->usermanagement_service->storeUser($email);
+            $token = $this->auth_service->authenticateEmail($email, $password);
+            $this->usermanagement_service->storeUser($email, $token);
         } catch ( Exception $ex ) {
             //TODO: create language key
             $this->login_form->set_message('authorize_email_password', 'Email and/or password is incorrect! '.$ex->getMessage());

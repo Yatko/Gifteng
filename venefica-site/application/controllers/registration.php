@@ -20,9 +20,9 @@ class Registration extends CI_Controller {
         
         $data = array_merge($data, $extra_data);
         
-        $this->load->view('templates/header');
+        $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/registration', $data);
-        $this->load->view('templates/footer');
+        $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
     private function register(&$extra_data) {
