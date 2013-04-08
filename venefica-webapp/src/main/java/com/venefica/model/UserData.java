@@ -12,7 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.ForeignKey;
 
 /**
  * Contains user data. Based on user type (business or simple member) the
@@ -44,6 +46,10 @@ public abstract class UserData implements Serializable {
     private String state;
     private String area;
     private String zipCode;
+    
+    @ManyToOne
+    @ForeignKey(name = "invitation_fk")
+    private Invitation invitation;
     
     public abstract boolean isBusinessAccount();
     
@@ -140,4 +146,11 @@ public abstract class UserData implements Serializable {
         this.zipCode = zipCode;
     }
     
+    public Invitation getInvitation() {
+        return invitation;
+    }
+
+    public void setInvitation(Invitation invitation) {
+        this.invitation = invitation;
+    }
 }
