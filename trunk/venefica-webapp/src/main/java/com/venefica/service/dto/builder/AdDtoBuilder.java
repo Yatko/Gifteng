@@ -33,12 +33,20 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     }
 
     public AdDtoBuilder includeCreator() {
-        includeCreatorFlag = true;
+        return includeCreator(true);
+    }
+    
+    public AdDtoBuilder includeCreator(boolean include) {
+        includeCreatorFlag = include;
         return this;
     }
 
     public AdDtoBuilder includeImages() {
-        includeImagesFlag = true;
+        return includeImages(true);
+    }
+    
+    public AdDtoBuilder includeImages(boolean include) {
+        includeImagesFlag = include;
         return this;
     }
 
