@@ -12,7 +12,6 @@ class Browse extends CI_Controller {
         if ( $this->auth_service->isLogged() ) {
             $lastAdId = -1;
             $data['ads'] = $this->getAds($lastAdId, 30);
-            //$data['ads'] = array();
             $data['is_ajax'] = false;
             
             $this->storeLastAdId($data['ads']);
@@ -40,6 +39,8 @@ class Browse extends CI_Controller {
         $this->load->view('pages/browse', $data);
     }
     
+    // internal
+    
     private function storeLastAdId($ads) {
         if ( $ads!= null && is_array($ads) && count($ads) > 0 ) {
             $lastAd = end($ads);
@@ -56,9 +57,9 @@ class Browse extends CI_Controller {
         return $lastAd;
     }
     
-    
     private function getAds($lastAdId, $numberAds) {
         try {
+            /**
             $ads = array();
             foreach ( $this->ad_service->getAds($lastAdId, $numberAds) as $ad ) {
                 $adId = $ad->id;
@@ -68,8 +69,10 @@ class Browse extends CI_Controller {
                 array_push($ads, $ad_complete);
             }
             
-            //$ads = array(true);
             return $ads;
+            /**/
+            
+            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, 2);
         } catch ( Exception $ex ) {
             return $ex->getMessage();
         }
