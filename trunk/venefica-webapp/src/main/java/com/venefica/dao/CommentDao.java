@@ -27,10 +27,13 @@ public interface CommentDao {
     Comment get(Long id);
     
     /**
-     * Returns a list of comments for the specified ad.
+     * Returns a list of comments for the specified ad with comment id less
+     * than specified one.
      * 
      * @param adId
+     * @param lastCommentId last comment id or -1 to return comments from the beginning
+     * @param numComments the max number of comments to return
      * @return list of comments
      */
-    List<Comment> getAdComments(Long adId);
+    List<Comment> getAdComments(Long adId, Long lastCommentId, int numComments);
 }
