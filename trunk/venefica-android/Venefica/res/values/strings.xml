@@ -49,8 +49,10 @@
     <string name="g_msg_terms">By joining , you agree to our Terms of Use and Privacy policy.</string>
     <string name="g_msg_inv_req_success">Thank you for your request, we will contact you soon!</string>
     <string name="g_msg_congrats">Congratulation!</string>
+    <string name="g_msg_select_source">Please select source of information.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
+    <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
 
     <string-array name="g_array_purpose_of_registration">
         <item >How did you here out about us?</item>
