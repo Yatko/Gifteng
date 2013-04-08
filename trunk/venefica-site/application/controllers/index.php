@@ -6,8 +6,8 @@ class Index extends CI_Controller {
         //load translations
         $this->lang->load('main');
         
-        $this->load->view('templates/header');
+        $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/index');
-        $this->load->view('templates/footer');
+        $this->load->view('templates/'.TEMPLATES.'/footer');
     }
 }
