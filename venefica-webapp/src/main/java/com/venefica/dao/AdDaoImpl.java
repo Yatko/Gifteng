@@ -65,6 +65,20 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<Ad> get(Long lastAdId, int numberAds, FilterDto filter) {
+        if ( filter == null ) {
+            return get(lastAdId, numberAds);
+        }
+        
+        String searchString = filter.getSearchString();
+        List<Long> categories = filter.getCategories();
+        Long distance = filter.getDistance();
+        Double latitude = filter.getLatitude();
+        Double longitude = filter.getLongitude();
+        BigDecimal minPrice = filter.getMinPrice();
+        BigDecimal maxPrice = filter.getMaxPrice();
+        Boolean hasPhoto = filter.getHasPhoto();
+        Boolean wanted = filter.isWanted();
+        
         // Build query string
         String queryStr = "from Ad a where a.deleted = false and a.expired = false";
 
@@ -72,37 +86,31 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.id < :lastId";
         }
 
-        if (filter != null) {
-            if (filter.getSearchString() != null) {
-                queryStr += " and lower(a.title) like '%' || :searchstr || '%'";
-            }
+        if (searchString != null) {
+            queryStr += " and lower(a.title) like '%' || :searchstr || '%'";
+        }
 
-            List<Long> categories = filter.getCategories();
+        if (categories != null && !categories.isEmpty()) {
+            queryStr += " and a.category.id in (:categories)";
+        }
 
-            if (categories != null && !categories.isEmpty()) {
-                queryStr += " and a.category.id in (:categories)";
-            }
+        //queryStr += createSqlPartForPostgresql(filter);
+        queryStr += createSqlPartForMysql(filter);
 
-            //queryStr += createSqlPartForPostgresql(filter);
-            queryStr += createSqlPartForMysql(filter);
-            
-            if (filter.getMinPrice() != null
-                    && filter.getMinPrice().compareTo(BigDecimal.ZERO) >= 0) {
-                queryStr += " and a.price >= :minPrice";
-            }
+        if (isPositiveOrZero(minPrice)) {
+            queryStr += " and a.price >= :minPrice";
+        }
 
-            if (filter.getMaxPrice() != null
-                    && filter.getMaxPrice().compareTo(BigDecimal.ZERO) >= 0) {
-                queryStr += " and a.price <= :maxPrice";
-            }
+        if (isPositiveOrZero(maxPrice)) {
+            queryStr += " and a.price <= :maxPrice";
+        }
 
-            if (filter.getHasPhoto() != null && filter.getHasPhoto()) {
-                queryStr += " and a.mainImage is not null";
-            }
+        if (hasPhoto != null && hasPhoto) {
+            queryStr += " and a.mainImage is not null";
+        }
 
-            if (filter.isWanted() != null) {
-                queryStr += " and a.wanted = :wanted";
-            }
+        if (wanted != null) {
+            queryStr += " and a.wanted = :wanted";
         }
 
         queryStr += " order by a.id desc";
@@ -113,43 +121,32 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("lastId", lastAdId);
         }
 
-        if (filter != null) {
-            String searchString = filter.getSearchString();
-            List<Long> categories = filter.getCategories();
-            Long distance = filter.getDistance();
-            Double latitude = filter.getLatitude();
-            Double longitude = filter.getLongitude();
-            BigDecimal minPrice = filter.getMinPrice();
-            BigDecimal maxPrice = filter.getMaxPrice();
-            Boolean wanted = filter.isWanted();
+        if (searchString != null) {
+            query.setParameter("searchstr", searchString.toLowerCase());
+        }
 
-            if (filter.getSearchString() != null) {
-                query.setParameter("searchstr", searchString.toLowerCase());
-            }
+        if (categories != null && !categories.isEmpty()) {
+            query.setParameterList("categories", categories);
+        }
 
-            if (categories != null && !categories.isEmpty()) {
-                query.setParameterList("categories", categories);
-            }
+        if (distance != null && distance > 0 && latitude != null && longitude != null) {
+            Point curPositon = GeoUtils.createPoint(latitude, longitude);
+            //Double distanceInDecimalDegrees = distance.doubleValue() / METERS_IN_ONE_DEGREE;
+            Double distanceInDecimalDegrees = distance.doubleValue();
+            query.setParameter("curpos", curPositon, GeometryType.INSTANCE);
+            query.setParameter("maxdist", distanceInDecimalDegrees);
+        }
 
-            if (distance != null && distance > 0 && latitude != null && longitude != null) {
-                Point curPositon = GeoUtils.createPoint(latitude, longitude);
-                //Double distanceInDecimalDegrees = distance.doubleValue() / METERS_IN_ONE_DEGREE;
-                Double distanceInDecimalDegrees = distance.doubleValue();
-                query.setParameter("curpos", curPositon, GeometryType.INSTANCE);
-                query.setParameter("maxdist", distanceInDecimalDegrees);
-            }
+        if (isPositiveOrZero(minPrice)) {
+            query.setParameter("minPrice", minPrice);
+        }
 
-            if (minPrice != null && minPrice.compareTo(BigDecimal.ZERO) >= 0) {
-                query.setParameter("minPrice", minPrice);
-            }
+        if (isPositiveOrZero(maxPrice)) {
+            query.setParameter("maxPrice", maxPrice);
+        }
 
-            if (maxPrice != null && maxPrice.compareTo(BigDecimal.ZERO) >= 0) {
-                query.setParameter("maxPrice", maxPrice);
-            }
-
-            if (wanted != null) {
-                query.setParameter("wanted", wanted);
-            }
+        if (wanted != null) {
+            query.setParameter("wanted", wanted);
         }
 
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
@@ -230,6 +227,13 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 filter.getLatitude() != null &&
                 filter.getLongitude() != null
         ) {
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isPositiveOrZero(BigDecimal number) {
+        if (number != null && number.compareTo(BigDecimal.ZERO) >= 0) {
             return true;
         }
         return false;
