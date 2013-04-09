@@ -514,7 +514,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 	 */
 	private void getUserData(){
 		try {
-			user.setBusinessAcc(chkBusinessAcc.isChecked());
+//			user.setBusinessAcc(chkBusinessAcc.isChecked());
 //			user.setEmail(edtEmail.getText().toString());
 //			user.setPhoneNumber(edtPhone.getText().toString());
 			user.setFirstName(edtFirstName.getText().toString());
@@ -572,7 +572,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 					wsAction = new WSAction();
 				}
 				if (params[0].equalsIgnoreCase(MODE_REGISTER_USR+"")) {					
-					wrapper.result = wsAction.registerUser(/*edtPassword.getText().toString()*/"81064678", user);					
+					wrapper.result = wsAction.registerUser(/*edtPassword.getText().toString()*/"81064678", user,"");					
 				}else if (params[0].equalsIgnoreCase(MODE_UPDATE_PROF+"")) {
 					wrapper.result = wsAction.updateUser(((VeneficaApplication)getApplication()).getAuthToken(), user);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
@@ -615,7 +615,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 	 * @param userDto
 	 */
 	public void setUserData(UserDto userDto) {
-		chkBusinessAcc.setChecked(userDto.isBusinessAcc());
+//		chkBusinessAcc.setChecked(userDto.isBusinessAcc());
 		/*ImageDownloadManager.getImageDownloadManagerInstance()
 				.loadDrawable(Constants.PHOTO_URL_PREFIX + userData.getAvatar().getUrl(), profileImage
 						, getResources().getDrawable(R.drawable.icon_picture_white));*/
