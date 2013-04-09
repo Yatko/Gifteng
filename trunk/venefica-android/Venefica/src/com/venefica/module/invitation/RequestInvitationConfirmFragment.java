@@ -6,10 +6,12 @@ package com.venefica.module.invitation;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +50,9 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 	private EditText edtZip;
 	private Spinner spinSource;
 	private RadioGroup radioGroup;
+	/*
+	 * validator instance
+	 */
 	private InputFieldValidator vaildator;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +98,10 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
 					  useType = UserType.RECEIVER;
 					  break;
 				}
+				// hide virtual keyboard
+				InputMethodManager imm = (InputMethodManager) getActivity()
+						.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 				this.listener.onConfirmRequest(edtZip.getText().toString()
 						, spinSource.getSelectedItem().toString()
 						, useType);
