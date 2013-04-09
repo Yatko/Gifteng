@@ -72,6 +72,7 @@ public class SigninFragment extends SherlockFragment implements OnClickListener{
 		btnLogin = (Button) view.findViewById(R.id.btnActLoginForgotPassword);
 		btnLogin.setOnClickListener(this);
 		edtLogin = (EditText) view.findViewById(R.id.edtActLoginEmailPhone);
+		edtLogin.setText(Utility.getEmail(getActivity()));
 		edtPassword = (EditText) view.findViewById(R.id.edtActLoginPassword);
 		chkRemember = (CheckBox) view.findViewById(R.id.chkActLoginRememberMe);
 		return view;
