@@ -3,7 +3,6 @@ package com.venefica.module.network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -12,7 +11,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-import org.kxml2.kdom.Element;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
@@ -37,10 +35,6 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
-import com.venefica.services.ServicesManager.DeleteMessageResult;
-import com.venefica.services.ServicesManager.GetAllMessagesResult;
-import com.venefica.services.ServicesManager.RateAdResult;
-import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 
 /**
@@ -76,6 +70,7 @@ public class WSAction {
 	private final String WS_METHOD_HIDE_MESSAGE = "HideMessage";
 	private final String WS_METHOD_RATE_AD = "RateAd";
 	private final String WS_METHOD_REQUEST_INVITATION = "RequestInvitation";
+	private final String WS_METHOD_VERIFY_INVITATION = "IsInvitationValid";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -269,7 +264,7 @@ public class WSAction {
 	 * @throws XmlPullParserException
 	 */
 
-	public int registerUser(String password, UserDto user) throws IOException,
+	public int registerUser(String password, UserDto user, String invitationCode) throws IOException,
 			XmlPullParserException {
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE
 				+ WS_METHOD_REGISTER_USER;
@@ -281,6 +276,7 @@ public class WSAction {
 
 			request.addProperty("user", user);
 			request.addProperty("password", password);
+			request.addProperty("invitationCode", invitationCode);
 
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
 					SoapEnvelope.VER11);
@@ -303,11 +299,19 @@ public class WSAction {
 				result = Constants.RESULT_REGISTER_USER_SUCCESS;
 			}
 		} catch (SoapFault e) {
-			if (e.detail != null) {
+			String message = e.getMessage().toString();
+			if (message.contains("User with the specified email already exists!")) {
+				result = Constants.RESULT_REGISTER_USER_DUP_EMAIL;
+			} else if(message.contains("User with the same name already exists!")){
+				result = Constants.RESULT_REGISTER_USER_DUP_LOGIN;
+			}
+			/*if (e.detail != null) {
 				Element UserAlreadyExists = (Element) ((Element) e.detail
 						.getChild(0)).getChild(0);
 				if (UserAlreadyExists.getName().equalsIgnoreCase(
-						"UserAlreadyExists")) {
+						"User with the same name already exists!")
+						|| UserAlreadyExists.getName().equalsIgnoreCase(
+								"User with the specified email already exists!")) {
 					Element duplicatedField = (Element) UserAlreadyExists
 							.getChild(0);
 					if (duplicatedField.getName().equalsIgnoreCase(
@@ -322,7 +326,7 @@ public class WSAction {
 						}
 					}
 				}
-			}
+			}*/
 		}
 		return result;
 	}
@@ -1187,7 +1191,7 @@ public class WSAction {
 	 * Method to request invitation
 	 * @param token
 	 * @param invitationDto
-	 * @return
+	 * @return InvitationResultWrapper
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
@@ -1221,6 +1225,48 @@ public class WSAction {
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_REQ_INVITATION;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to verify invitation
+	 * @param token
+	 * @param invitationCode
+	 * @return InvitationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public InvitationResultWrapper verifyInvitation(String token, String invitationCode) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_VERIFY_INVITATION;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		InvitationResultWrapper result = new InvitationResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_INVITATION_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("code", invitationCode);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			boolean isValid = Boolean.valueOf(obj.toString());
+			if (isValid) {
+				result.result = Constants.RESULT_VIFY_INVITATION_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_VERIFY_INVITATION;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_VERIFY_INVITATION;
 		}
 		return result;
 	}
