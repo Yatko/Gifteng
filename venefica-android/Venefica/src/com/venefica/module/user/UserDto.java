@@ -16,7 +16,6 @@ import com.venefica.utils.Constants;
  */
 public class UserDto implements KvmSerializable
 {
-	private boolean businessAcc;
 	private Date dateOfBirth;
 	private String email = "";
 	private String firstName = "";
@@ -28,9 +27,7 @@ public class UserDto implements KvmSerializable
 	private String city = "";
 	private String area = "";
 	private ImageDto avatar;
-	private Date joinedAt;
-	//no services
-//	public boolean useMiles = true;
+	private Date joinedAt;	
 
 	public Object getProperty(int index)
 	{
@@ -39,30 +36,28 @@ public class UserDto implements KvmSerializable
 		switch (index)
 		{
 		case 0:
-			return businessAcc;
-		case 1:
 			return dateOfBirth.getTime();
-		case 2:
+		case 1:
 			return email;
-		case 3:
+		case 2:
 			return firstName;
-		case 4:
+		case 3:
 			return lastName;
-		case 5:
+		case 4:
 			return name;
-		case 6:
+		case 5:
 			return phoneNumber;
-		case 7:
+		case 6:
 			return zipCode;
-		case 8:
+		case 7:
 			return county;
-		case 9:
+		case 8:
 			return city;
-		case 10:
+		case 9:
 			return area;		
-		case 11:
+		case 10:
 			return avatar;
-		case 12:
+		case 11:
 			return joinedAt.getTime();
 		}
 
@@ -71,7 +66,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 13;
+		return 12;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -79,66 +74,61 @@ public class UserDto implements KvmSerializable
 		switch (index)
 		{
 		case 0:
-			info.name = "businessAcc";
-			info.type = Boolean.TYPE;
-			break;
-
-		case 1:
 			info.name = "dateOfBirth";
 			info.type = Long.class;
 			break;
 
-		case 2:
+		case 1:
 			info.name = "email";
 			info.type = String.class;
 			break;
 
-		case 3:
+		case 2:
 			info.name = "firstName";
 			info.type = String.class;
 			break;
 
-		case 4:
+		case 3:
 			info.name = "lastName";
 			info.type = String.class;
 			break;
 
-		case 5:
+		case 4:
 			info.name = "name";
 			info.type = String.class;
 			break;
 
-		case 6:
+		case 5:
 			info.name = "phoneNumber";
 			info.type = String.class;
 			break;
 
-		case 7:
+		case 6:
 			info.name = "zipCode";
 			info.type = String.class;
 			break;
 
-		case 8:
+		case 7:
 			info.name = "country";
 			info.type = String.class;
 			break;
 
-		case 9:
+		case 8:
 			info.name = "city";
 			info.type = String.class;
 			break;
 
-		case 10:
+		case 9:
 			info.name = "area";
 			info.type = String.class;
 			break;
 			
-		case 11:
+		case 10:
 			info.name = "avatar";
 			info.type = ImageDto.class;
 			break;
 			
-		case 12:
+		case 11:
 			info.name = "joinedAt";
 			info.type = Long.class;
 			break;
@@ -152,42 +142,39 @@ public class UserDto implements KvmSerializable
 		switch (index)
 		{
 		case 0:
-			businessAcc = Boolean.parseBoolean(value.toString());
-			break;
-		case 1:
 			dateOfBirth = new Date(Long.parseLong(value.toString()));
 			break;
-		case 2:
+		case 1:
 			email = String.valueOf(value);
 			break;
-		case 3:
+		case 2:
 			firstName = String.valueOf(value);
 			break;
-		case 4:
+		case 3:
 			lastName = String.valueOf(value);
 			break;
-		case 5:
+		case 4:
 			name = String.valueOf(value);
 			break;
-		case 6:
+		case 5:
 			phoneNumber = String.valueOf(value);
 			break;
-		case 7:
+		case 6:
 			zipCode = String.valueOf(value);
 			break;
-		case 8:
+		case 7:
 			county = String.valueOf(value);
 			break;
-		case 9:
+		case 8:
 			city = String.valueOf(value);
 			break;
-		case 10:
+		case 9:
 			area = String.valueOf(value);
 			break;		
-		case 11:
+		case 10:
 			avatar = (ImageDto)value;
 			break;
-		case 12:
+		case 11:
 			joinedAt = new Date(Long.parseLong(value.toString()));
 			break;
 		}
@@ -203,20 +190,6 @@ public class UserDto implements KvmSerializable
 	{
 		envelope.addMapping(null, "UserDto", this.getClass());
 		new ImageDto().registerRead(envelope);
-	}
-
-	/**
-	 * @return the businessAcc
-	 */
-	public boolean isBusinessAcc() {
-		return businessAcc;
-	}
-
-	/**
-	 * @param businessAcc the businessAcc to set
-	 */
-	public void setBusinessAcc(boolean businessAcc) {
-		this.businessAcc = businessAcc;
 	}
 
 	/**
@@ -371,21 +344,7 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setAvatar(ImageDto avatar) {
 		this.avatar = avatar;
-	}
-
-	/**
-	 * @return the useMiles
-	 */
-	/*public boolean isUseMiles() {
-		return useMiles;
-	}*/
-
-	/**
-	 * @param useMiles the useMiles to set
-	 */
-	/*public void setUseMiles(boolean useMiles) {
-		this.useMiles = useMiles;
-	}*/
+	}	
 
 	/**
 	 * @return the joinedAt
