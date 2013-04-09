@@ -6,13 +6,13 @@
     android:layout_margin="10dp" >
 
     <LinearLayout
-        android:id="@+id/layActLoginJoinName"
+        android:id="@+id/layActInvitationJoinName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:weightSum="100" >
 
         <EditText
-            android:id="@+id/edtActLoginJoinFName"
+            android:id="@+id/edtActInvitationJoinFName"
             style="?EditTextGrayBorder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:paddingRight="5dp" />
 
         <EditText
-            android:id="@+id/edtActLoginJoinLName"
+            android:id="@+id/edtActInvitationJoinLName"
             style="?EditTextGrayBorder"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -41,11 +41,11 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/edtActLoginJoinEmail"
+        android:id="@+id/edtActInvitationJoinEmail"
         style="?EditTextGrayBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layActLoginJoinName"
+        android:layout_below="@id/layActInvitationJoinName"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="10dp"
@@ -56,26 +56,27 @@
         android:paddingRight="5dp" />
 
     <EditText
-        android:id="@+id/edtActLoginJoinPassword"
+        android:id="@+id/edtActInvitationJoinPassword"
         style="?EditTextGrayBorder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edtActLoginJoinEmail"
+        android:layout_height="40dp"
+        android:layout_below="@id/edtActInvitationJoinEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="4dp"
+        android:inputType="textPassword"
         android:hint="@string/g_hint_password"
         android:paddingLeft="15dp"
         android:paddingRight="5dp" />
 
     <Button
-        android:id="@+id/btnActLoginJoin"
+        android:id="@+id/btnActInvitationJoin"
         style="?ButtonRoundCorner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/edtActLoginJoinPassword"
+        android:layout_below="@id/edtActInvitationJoinPassword"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="10dp"
@@ -85,11 +86,11 @@
         android:text="@string/g_label_join" />
 
     <TextView
-        android:id="@+id/txtActLoginJoinTerms"
+        android:id="@+id/txtActInvitationJoinTerms"
         style="?TextViewGrayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnActLoginJoin"
+        android:layout_below="@id/btnActInvitationJoin"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
