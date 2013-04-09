@@ -67,7 +67,10 @@ public class Constants
 	public static final int ERROR_RESULT_POST_RATING = 1058;
 	public static final int RESULT_POST_RATING_SUCCESS = 1059;
 	public static final int ERROR_RESULT_REQ_INVITATION = 1060;
-	public static final int RESULT_REQ_INVITATION_SUCCESS = 1061; 
+	public static final int RESULT_REQ_INVITATION_SUCCESS = 1061;
+	public static final int RESULT_VIFY_INVITATION_SUCCESS = 1062;
+	public static final int ERROR_RESULT_VERIFY_INVITATION = 1063;
+	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -183,5 +186,5 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
 }
