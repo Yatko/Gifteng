@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.user.UserDto;
+import com.venefica.module.user.UserProfileActivity;
 import com.venefica.module.utils.Utility;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -34,7 +36,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * 
  */
-public class SlideMenuView extends LinearLayout {
+public class SlideMenuView extends LinearLayout implements View.OnClickListener {
 	private static final String LOG_TAG = SlideMenuView.class.getSimpleName();
 
 	private RelativeLayout navigationMenu;
@@ -90,9 +92,9 @@ public class SlideMenuView extends LinearLayout {
         txtMemberInfo = (TextView) userView.findViewById(R.id.txtUserViewMemberInfo);
         txtAddress = (TextView) userView.findViewById(R.id.txtUserViewAddress);
         profImgView = (ImageView) userView.findViewById(R.id.imgUserViewProfileImg);
-        userView.findViewById(R.id.imgBtnUserViewFollow).setVisibility(GONE);
-        userView.findViewById(R.id.imgBtnUserViewSendMsg).setVisibility(GONE);
-        
+        userView.findViewById(R.id.imgBtnUserViewFollow).setVisibility(INVISIBLE);
+        userView.findViewById(R.id.imgBtnUserViewSendMsg).setVisibility(INVISIBLE);
+        userView.setOnClickListener(this);
 		navigationMenu = (RelativeLayout) findViewById(R.id.side_navigation_menu);
 		listView = (ListView) findViewById(R.id.side_navigation_listview);
 		listView.addHeaderView(userView);
@@ -160,6 +162,8 @@ public class SlideMenuView extends LinearLayout {
 			hideMenu();
 		} else {
 			showMenu();
+			setUserDetails(((VeneficaApplication) ((SearchListingsActivity) getContext())
+					.getApplication()).getUser());
 		}
 	}
 	
@@ -287,5 +291,12 @@ public class SlideMenuView extends LinearLayout {
 			}
 			txtAddress.setText(user.getCity() + ", " + user.getCounty());
 		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		Intent accountIntent = new Intent(getContext(), UserProfileActivity.class);
+		accountIntent.putExtra("act_mode",UserProfileActivity.ACT_MODE_VIEW_PROFILE);
+		getContext().startActivity(accountIntent);
 	}
 }
