@@ -314,10 +314,10 @@ public class InvitationActivity extends SherlockFragmentActivity
 					wrapper.result = wsAction.registerUser(password, userDto, invitationCode);					
 				}
 			}catch (IOException e) {
-				Log.e("AuthenticationTask::doInBackground :", e.toString());
+				Log.e("RegisterUserTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
-				Log.e("AuthenticationTask::doInBackground :", e.toString());
+				Log.e("RegisterUserTask::doInBackground :", e.toString());
 			}
 			return wrapper;
 		}
