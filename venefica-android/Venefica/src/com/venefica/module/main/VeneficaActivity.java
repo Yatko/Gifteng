@@ -3,6 +3,7 @@ package com.venefica.module.main;
 import android.content.Intent;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
@@ -16,11 +17,11 @@ import com.venefica.module.utils.Utility;
  * @author avinash
  * Base class for all activities in application
  */
-public abstract class VeneficaActivity extends SherlockActivity implements
-ISlideMenuCallback {
+public abstract class VeneficaActivity extends SherlockFragmentActivity /*implements
+ISlideMenuCallback*/ {
 	/**
 	 * Slide menu
-	 */
+	 *//*
 	protected SlideMenuView slideMenuView;
 	
 	@Override
@@ -79,7 +80,7 @@ ISlideMenuCallback {
 		    	startActivity(messageIntent);
 			}
     		break;
-		/*case R.id.slideMenuReviews:
+		case R.id.slideMenuReviews:
     		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
     		break;
 		case R.id.slideMenuInviteFriends:
@@ -92,7 +93,7 @@ ISlideMenuCallback {
 				accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
 		    	startActivity(accountIntent);
 			}
-	    	break;*/
+	    	break;
 		case R.id.slideMenuSettings:  
 			if(!(getApplicationContext() instanceof SettingsActivity)){
 				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -108,19 +109,19 @@ ISlideMenuCallback {
 			finish();
 		}
 	}
-	/**
+	*//**
 	 * @return the slideMenuView
-	 */
+	 *//*
 	public SlideMenuView getSlideMenuView() {
 		return slideMenuView;
 	}
 
-	/**
+	*//**
 	 * @param slideMenuView the slideMenuView to set
-	 */
+	 *//*
 	public void setSlideMenuView(SlideMenuView slideMenuView) {
 		this.slideMenuView = slideMenuView;
-	}
+	}*/
 
 	
 }
