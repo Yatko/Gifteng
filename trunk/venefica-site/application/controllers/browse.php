@@ -10,11 +10,9 @@ class Browse extends CI_Controller {
         $data = array();
         
         if ( $this->auth_service->isLogged() ) {
-            $lastAdId = -1;
+            $lastAdId = $this->getLastAdId();
             $data['ads'] = $this->getAds($lastAdId, 5);
             $data['is_ajax'] = false;
-            
-            $this->storeLastAdId($data['ads']);
         }
         
         $this->load->view('templates/'.TEMPLATES.'/header');
@@ -30,33 +28,14 @@ class Browse extends CI_Controller {
         }
         
         $data = array();
-        $lastAdId = $this->loadLastAdId();
+        $lastAdId = $this->getLastAdId();
         $data['ads'] = $this->getAds($lastAdId, 10);
         $data['is_ajax'] = true;
-        
-        $this->storeLastAdId($data['ads']);
         
         $this->load->view('pages/browse', $data);
     }
     
     // internal
-    
-    private function storeLastAdId($ads) {
-        if ( $ads!= null && is_array($ads) && count($ads) > 0 ) {
-            $lastAd = end($ads);
-            $lastAdId = $lastAd->id;
-        } else {
-            //this will restart the list
-            log_message(ERROR, 'Ads array is null or empty, using lastAdId as -1');
-            $lastAdId = -1;
-        }
-        $this->session->set_flashdata('lastAdId', $lastAdId);
-    }
-    
-    private function loadLastAdId() {
-        $lastAd = $this->session->flashdata('lastAdId');
-        return $lastAd;
-    }
     
     private function getAds($lastAdId, $numberAds) {
         try {
@@ -95,5 +74,10 @@ class Browse extends CI_Controller {
             
             $this->initialized = true;
         }
+    }
+    
+    private function getLastAdId() {
+        $lastAdId = $this->uri->segment(3, -1);
+        return $lastAdId;
     }
 }
