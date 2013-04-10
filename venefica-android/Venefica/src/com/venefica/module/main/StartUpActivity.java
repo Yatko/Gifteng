@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -22,7 +21,7 @@ import com.venefica.module.network.WSAction;
 import com.venefica.module.user.LoginActivity;
 import com.venefica.utils.Constants;
 
-public class StartUpActivity extends SherlockFragmentActivity implements OnClickListener, OnRequestInvitationListener {
+public class StartUpActivity extends VeneficaActivity implements OnClickListener, OnRequestInvitationListener {
 	/**
 	 * To call web service
 	 */
