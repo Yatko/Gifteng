@@ -26,6 +26,8 @@
     <string name="g_label_postlisting_next">Next</string>
 	<string name="g_label_free_shipping">Free Shipping</string>
     <string name="g_label_pick_up">Pick Up</string>
+    <string name="g_label_edit">Edit</string>
+    <string name="g_label_save">Save</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
