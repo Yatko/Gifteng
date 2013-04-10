@@ -18,10 +18,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.user.SigninFragment.OnSigninListener;
 import com.venefica.utils.Constants;
@@ -31,7 +31,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Class for startup activity 
  */
-public class LoginActivity extends SherlockFragmentActivity implements OnClickListener, OnSigninListener {
+public class LoginActivity extends VeneficaActivity implements OnClickListener, OnSigninListener {
 	/**
 	 * Constants to identify dialogs
 	 */
