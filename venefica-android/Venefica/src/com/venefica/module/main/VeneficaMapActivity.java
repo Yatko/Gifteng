@@ -10,7 +10,6 @@ import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.messages.MessageListActivity;
 import com.venefica.module.settings.SettingsActivity;
-import com.venefica.module.user.RegisterUserActivity;
 import com.venefica.module.utils.Utility;
 
 /**
@@ -93,7 +92,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 		    	startActivity(messageIntent);
 			}
     		break;
-		case R.id.slideMenuReviews:
+		/*case R.id.slideMenuReviews:
     		Utility.showLongToast(this, getResources().getString(R.string.msg_not_impl));
     		break;
 		case R.id.slideMenuInviteFriends:
@@ -106,7 +105,7 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 				accountIntent.putExtra("activity_mode",RegisterUserActivity.MODE_UPDATE_PROF);
 		    	startActivity(accountIntent);
 			}
-	    	break;
+	    	break;*/
 		case R.id.slideMenuSettings:  
 			if(!(getApplicationContext() instanceof SettingsActivity)){
 				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
