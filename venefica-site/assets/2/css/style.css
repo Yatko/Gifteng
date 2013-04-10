@@ -100,8 +100,6 @@ ul.webmenu li#give    {background-position:72 0;}
 
 .tagline {display:block;margin:0px auto;padding:30px;text-align:center;font-size:100%;font-style:italic;color:#cbc8c3;height:0;overflow:hidden;-webkit-transition:opacity 1s ease-out;opacity:0;}
 .tagline:hover {height:auto;opacity:1;}
-#loading {display:none;position:fixed;color:#cfcfcf;right:3px;padding:6px;top:98px;}
-#no-more {display:none;position:fixed;color:#ff0000;right:3px;padding:6px;top:98px;}
 /* STAGE */
 #stage {margin:0px auto;width:100%;padding-top:116px;text-align:center;background:url('../img/stageBackground.png') #e9e7e6;}
 div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}
@@ -135,4 +133,4 @@ div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-
 /**** Clearfix ****/
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
-.clearfix { zoom: 1; }
+.clearfix { zoom: 1; margin: 0 auto; width: 95%; }

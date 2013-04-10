@@ -11,7 +11,7 @@ class Browse extends CI_Controller {
         
         if ( $this->auth_service->isLogged() ) {
             $lastAdId = -1;
-            $data['ads'] = $this->getAds($lastAdId, 30);
+            $data['ads'] = $this->getAds($lastAdId, 5);
             $data['is_ajax'] = false;
             
             $this->storeLastAdId($data['ads']);
@@ -46,6 +46,7 @@ class Browse extends CI_Controller {
             $lastAd = end($ads);
             $lastAdId = $lastAd->id;
         } else {
+            //this will restart the list
             log_message(ERROR, 'Ads array is null or empty, using lastAdId as -1');
             $lastAdId = -1;
         }
