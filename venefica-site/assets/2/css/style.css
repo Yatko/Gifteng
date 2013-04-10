@@ -109,6 +109,7 @@ div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-
 .container {display:block;width:100%;overflow:auto;}
 .username {font-weight:800;color:#000;}
 .message {font-size:90%;}
+.id {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;}
 .location {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;text-align:right;}
 .location li {list-style-image:url('../img/icon_location.png');}
 .age {font-size:80%;}
@@ -123,14 +124,30 @@ div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-
 .profileBox .profileImage {width:38px;height:38px;background-size:38px 38px;} /*TODO background size does not work*/
 .profileBox .location {text-align:left;}
 .itemBox {display:block;overflow: auto;width:100%;}
-.itemBox .location {text-align:right;padding:6px 9px 0 9px;background: url('../img/icon_location.png') no-repeat 76% center;}
+.itemBox .id {padding:6px 9px 0px 9px;}
+.itemBox .location {text-align:right;padding:6px 9px 0px 19px;background: url('../img/icon_location.png') no-repeat 0% 50%;}
 .messageContainer {display:block;overflow:auto;border-top:3px double #e4e4e4;background-color:#fafafa;width:100%;text-decoration: none;margin-top: 3px;}
 .messageBox {display:block;overflow:auto;width:100%;padding:6px 9px;border-bottom:1px solid #e4e4e4;text-decoration:none;}
 .messageBox .profileImage {width:24px;height:24px;background-size:24px 24px;} /*TODO background size does not work*/
 .showMore {width: 100%;height:18px;padding-top:6px;background:url('../img/messageMore.png') no-repeat center #fff;}
 
 
+
+
 /**** Clearfix ****/
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; margin: 0 auto; width: 95%; }
+
+
+/* COMMON */
+
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clear {
+    clear: both;
+}

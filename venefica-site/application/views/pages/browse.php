@@ -30,7 +30,8 @@
                     selector: '#loading'
                 },
                 path: function(page) {
-                    return ['<?=base_url()?>browse/ajax'];
+                    var lastAdId = $("div.id:last").attr("id");
+                    return ['<?=base_url()?>browse/ajax/' + lastAdId];
                 },
                 prefill: true
             }, function(newElements) {
@@ -76,7 +77,6 @@
                         <div class="profileImage" style="background: url(<?=$creator_img?>); background-size:38px 38px;">
                         </div>
                         <div class="details">
-                            <div><?=$ad_id?></div>
                             <div class="username"><?=$creator_name?></div>
                             <div class="age">Giftenger since <?=$creator_joined?></div>
                             <div class="location"><?=$creator_location?></div>
@@ -88,7 +88,11 @@
                         <div class="thumbnail"><a href="#"><img src="<?=$ad_img?>" alt="img"></a></div>
                         <div class="title"><a href="#"><?=$ad_title?></a></div>
                         <div class="description"><?=$ad_description?></div>
-                        <div class="location">??? miles</div>
+                        <div>
+                            <div class="fl"><div class="id" id="<?=$ad_id?>">ID: <?=$ad_id?></div></div>
+                            <div class="fr"><div class="location">??? miles</div></div>
+                            <div class="clear"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="container">
