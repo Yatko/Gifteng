@@ -24,7 +24,7 @@
         android:id="@+id/slideMenuMessages"
         android:icon="@drawable/icon_mail"
         android:title="@string/label_dashboard_messages"/>
-    <item
+    <!-- <item
         android:id="@+id/slideMenuReviews"
         android:icon="@drawable/icon_like"
         android:title="@string/label_dashboard_reviews"/>
@@ -35,7 +35,7 @@
 	<item
         android:id="@+id/slideMenuAccount"
         android:icon="@drawable/icon_creditcard"
-        android:title="@string/label_dashboard_account"/>
+        android:title="@string/label_dashboard_account"/> -->
 	<item
         android:id="@+id/slideMenuSettings"
         android:icon="@drawable/icon_settings"
