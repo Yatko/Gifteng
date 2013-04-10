@@ -1,17 +1,16 @@
 package com.venefica.module.user;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.user.PasswordResetEmailLookupFragment.OnPasswordResetEmailLookupListener;
 import com.venefica.module.user.PasswordResetFragment.OnPasswordReset;
 
-public class PasswordResetActivity extends SherlockFragmentActivity implements OnPasswordResetEmailLookupListener, OnPasswordReset{
+public class PasswordResetActivity extends VeneficaActivity implements OnPasswordResetEmailLookupListener, OnPasswordReset{
 
 	/**
 	 * modes
