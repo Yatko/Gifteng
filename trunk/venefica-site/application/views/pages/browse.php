@@ -27,7 +27,7 @@
                     finishedMsg: 'No more pages to load.',
                     msgText: 'Loading...',
                     img: 'http://i.imgur.com/6RMhx.gif',
-                    selector: '#loading'
+                    selector: '#loadingPage'
                 },
                 path: function(page) {
                     var lastAdId = $("div.id:last").attr("id");
@@ -122,10 +122,10 @@
             </div>
         <? endforeach; ?>
     <? endif; ?>
-        
+    
     
 <? if ( !$boxContainer_exists ): ?>
 </div>
 
-<div id="loading"></div>
+<div id="loadingPage"></div>
 <? endif; ?>
