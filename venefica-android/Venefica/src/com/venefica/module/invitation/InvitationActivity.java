@@ -20,6 +20,7 @@ import com.venefica.module.invitation.RequestInvitationConfirmFragment.OnRequest
 import com.venefica.module.invitation.VerifyInvitationFragment.OnVerifyInvitationClickListener;
 import com.venefica.module.invitation.VerifyInvitationSuccessFragment.OnVerifyInvitationSuccessClickListener;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
@@ -33,7 +34,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to handle invitation functionality
  */
-public class InvitationActivity extends SherlockFragmentActivity 
+public class InvitationActivity extends VeneficaActivity 
 	implements OnRequestInvitationConfirmClickListener, OnVerifyInvitationClickListener,
 		OnJoinGiftingFragmentListener, OnVerifyInvitationSuccessClickListener{
 	
