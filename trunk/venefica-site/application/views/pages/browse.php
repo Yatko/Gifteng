@@ -10,52 +10,45 @@
     ?>
     
     <script langauge="javascript">
-        $(document).ready(function() {
-            $('#boxContainer').masonry({
+        $(function() {
+            var $container = $('#boxContainer');
+            $container.imagesLoaded(function() {
+                $container.masonry({
+                    itemSelector: '.box',
+                    columnWidth: 0
+                });
+            });
+            $container.infinitescroll({
+                navSelector: "#nextPage:last",
+                nextSelector: "a#nextPage:last",
                 itemSelector: '.box',
-                columnWidth: 0
+                //debug: true,
+                loading: {
+                    finishedMsg: 'No more pages to load.',
+                    msgText: 'Loading...',
+                    img: 'http://i.imgur.com/6RMhx.gif',
+                    selector: '#loading'
+                },
+                path: function(page) {
+                    return ['<?=base_url()?>browse/ajax'];
+                },
+                prefill: true
+            }, function(newElements) {
+                var $newElems = $(newElements).css({opacity: 0});
+                $newElems.imagesLoaded(function(){
+                    $newElems.animate({opacity: 1});
+                    $container.masonry('appended', $newElems, true); 
+                });
             });
-            
-            $(window).scroll(OnScroll);
-            OnScroll();
         });
-        
-        function OnScroll() {
-            $('#loading').hide();
-            $('#no-more').hide();
-            
-            if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
-                $('#loading').css("top", "800");
-                $('#loading').show();
-            }
-            if ($(window).scrollTop() + $(window).height() === $(document).height()) {
-                $('#loading').hide();
-                $('#no-more').hide();
-                
-                ajax_call();
-            }
-        }
-        
-        function ajax_call() {
-            $.ajax({
-                type: "POST",
-                url: "<?=base_url()?>browse/ajax",
-                data: null,
-                success: function(res) {
-                    $content = $(res);
-                    $("#boxContainer").append($content).masonry('appended', $content, false);
-                }
-            });
-        }
     </script>
 <? endif; ?>
 
 
+<!-- this is required by the infinite scroll javascript library -->
+<a id="nextPage" href="#"></a>
 
 <? if ( !$boxContainer_exists ): ?>
-<div id='loading' >Loading ...</div>
-<div id='no-more' >No more ...</div>
-
 <div id="boxContainer" class="transitions-enabled infinite-scroll clearfix">
 <? endif; ?>
 
@@ -129,4 +122,6 @@
     
 <? if ( !$boxContainer_exists ): ?>
 </div>
+
+<div id="loading"></div>
 <? endif; ?>
