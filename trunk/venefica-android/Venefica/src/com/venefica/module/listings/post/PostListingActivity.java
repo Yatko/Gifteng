@@ -22,12 +22,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener;
 import com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
@@ -39,7 +39,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to post new listing 
  */
-public class PostListingActivity extends SherlockFragmentActivity implements OnPostImagesListener, OnPostPreivewListener{
+public class PostListingActivity extends VeneficaActivity implements OnPostImagesListener, OnPostPreivewListener{
 
 	/**
 	 * fragment to handle camera and gallery
