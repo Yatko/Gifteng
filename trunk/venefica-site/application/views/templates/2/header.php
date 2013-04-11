@@ -16,26 +16,39 @@ $font_path  = $base_path.'font/';
     <meta charset="utf-8"/>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta name="description" content="Gifteng - make the world a giving place" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
     <link rel="shortcut icon" href="<?=$img_path?>favicon.ico" >
     
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic'>
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700'>
     
     <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>style.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>extra.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>masonry.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>coda-slider.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>prettyCheckboxes.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=$css_path?>chosen.css" />
     
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>jquery-migrate-1.1.1.min.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>jquery-easing.1.2.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>jquery-easing-compatibility.1.2.js"></script>
+    <!-- sliding tabs -->
+    <script type="text/javascript" src="<?=$js_path?>jquery.coda-slider-3.0.min.js"></script>
+    <!-- placeholder for textboxes -->
+    <script type="text/javascript" src="<?=$js_path?>textbox-hint.js"></script>
+    <!-- radio and checkbox beautifier -->
+    <script type="text/javascript" src="<?=$js_path?>prettyCheckboxes.js"></script>
+    <!-- multi selection/chooser -->
+    <script type="text/javascript" src="<?=$js_path?>chosen.jquery.min.js"></script>
     <!-- infinite scroll -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <!--[if lt IE 9]><script src="<?=$js_path?>html5.js"></script><![endif]-->
-    <script src="<?=$js_path?>jquery.masonry.min.js"></script>
-    <script src="<?=$js_path?>jquery.infinitescroll.min.js"></script>
-    <script src="<?=$js_path?>modernizr-transitions.js"></script>
+    <!--[if lt IE 9]><script type="text/javascript" src="<?=$js_path?>html5.js"></script><![endif]-->
+    <script type="text/javascript" src="<?=$js_path?>jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>jquery.infinitescroll.min.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>modernizr-transitions.js"></script>
     
-    
-    <script src="<?=$js_path?>common.js"></script>
+    <script type="text/javascript" src="<?=$js_path?>common.js"></script>
     
     
     <!--
@@ -51,11 +64,13 @@ $font_path  = $base_path.'font/';
     <div id="header">
         <div id="top"><h1 class="gifteng" title="Gifteng">Gifteng</h1></div>
         <div id="navigator">
-            <div class="left">About</div>
-            <div class="left"><a href="<?=base_url()?>browse"><strong>&Xi;</strong></a></div>
-            <div class="left"><strong>&hearts;</strong></div>
+            <div class="left"><a href="<?=base_url()?>index">About</a></div>
+            <div class="left"><a href="<?=base_url()?>browse"><span class="categories"></span></a></div>
+            <div class="left"><span class="search"></span></div>
             <div class="right"><a href="<?=base_url()?>authentication">Sign in</a></div>
-            <div class="right"><strong>&clubs;</strong></div>
+            <div class="right"><span class="location"></span></div>
+            <div class="right"><span class="give"></span></div>
+            <div class="logo"><img src="<?=$img_path?>logo.png" /></div>
         </div>
         <div class="tagline">- make the world a giving place -</div>
     </div>
