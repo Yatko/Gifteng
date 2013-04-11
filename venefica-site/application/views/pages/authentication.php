@@ -33,7 +33,7 @@
     
     <div>
         <div class="tabTitle" title="invitation"><?=lang('authentication_tab_invitation')?></div>
-        <div>
+        <div class="form"><div class="container">
             <? if ( $action == "request" && $step == 3 ): ?>
                 <div class="tabContent">
                     <div class="textOrange"><?=lang('authentication_invitation_confirmed')?></div>
@@ -69,7 +69,7 @@
                 <?=form_open('/authentication/invitation/request/1')?>
 
                 <div><input name="invitation_email" value="<?=set_value('invitation_email')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_email_hint')?>" placeholder="<?=lang('authentication_invitation_email_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('authentication_invitation_request_button')?>" class="buttonBlue"></div>
+                <div><input type="submit" value="<?=lang('authentication_invitation_request_button')?>" class="green buttonBlue"></div>
 
                 <?=form_close()?>
             <? endif; ?>
@@ -78,7 +78,7 @@
             <? if ( $action == "verify" && $step == 2): ?>
                 <!-- -->
             <? else: ?>
-                <div><a id="requestInvitation" class="textOrange"><?=lang('authentication_invitation_invitation')?></a></div>
+                <div><a id="requestInvitation" class="red textOrange"><?=lang('authentication_invitation_invitation')?></a></div>
             <? endif; ?>
             
             
@@ -90,7 +90,7 @@
                     <div class="tabContent">
                         <div class="textOrange"><?=lang('authentication_invitation_verified')?></div>
                     </div>
-                    <div><input type="submit" value="<?=lang('authentication_join_button')?>" class="buttonBlue"></div>
+                    <div><input type="submit" value="<?=lang('authentication_join_button')?>" class="green buttonBlue"></div>
                     
                     <?=form_close()?>
                 <? else: ?>
@@ -98,20 +98,20 @@
                     <?=form_open('/authentication/invitation/verify/1')?>
 
                     <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('authentication_invitation_code_hint')?>" placeholder="<?=lang('authentication_invitation_code_hint')?>"></div>
-                    <div><input type="submit" value="<?=lang('authentication_invitation_verify_button')?>" class="buttonOrange"></div>
+                    <div><input type="submit" value="<?=lang('authentication_invitation_verify_button')?>" class="red buttonOrange"></div>
 
                     <?=form_close()?>
                 <? endif; ?>
                 
             </div>
-        </div>
+        </div></div>
     </div>
     
     <!-- login tab -->
     
     <div>
         <div class="tabTitle" title="login"><?=lang('authentication_tab_login')?></div>
-        <div>
+        <div class="form"><div class="container">
             <? if ( $is_logged && $user ): ?>
                 <?=sprintf(lang('authentication_login_welcome'), $user->name)?>
             <? else: ?>
@@ -120,7 +120,7 @@
             
                 <div><input name="login_email" value="<?=set_value('login_email')?>" type="text" class="textbox" title="<?=lang('authentication_login_email_hint')?>" placeholder="<?=lang('authentication_login_email_hint')?>"></div>
                 <div><input name="login_password" type="password" class="textbox" title="<?=lang('authentication_login_password_hint')?>" placeholder="<?=lang('authentication_login_password_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('authentication_login_login_button')?>" class="buttonBlue"></div>
+                <div><input type="submit" value="<?=lang('authentication_login_login_button')?>" class="green buttonBlue"></div>
                 <div class="tabContent">
                     <div class="fl"><a id="forgotPassword" class="link"><?=lang('authentication_login_forgot_password')?></a></div>
                     <div class="fr">
@@ -139,11 +139,11 @@
                     
                     <div class="tabContent"><?=lang('authentication_forgot_password_message')?></div>
                     <div><input name="forgot_password_email" value="<?=set_value('forgot_password_email')?>" type="text" class="textbox" title="<?=lang('authentication_forgot_password_email_hint')?>" placeholder="<?=lang('authentication_forgot_password_email_hint')?>"></div>
-                    <div><input type="submit" value="<?=lang('authentication_forgot_password_button')?>" class="buttonBlue"></div>
+                    <div><input type="submit" value="<?=lang('authentication_forgot_password_button')?>" class="red buttonBlue"></div>
                     
                     <?=form_close()?>
                 </div>
             <? endif; ?>
-        </div>
+        </div></div>
     </div>
 </div>

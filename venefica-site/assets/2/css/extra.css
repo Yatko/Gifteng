@@ -1,0 +1,111 @@
+img {
+    border: none;
+}
+a, .link {
+    outline: none; /* remove the dotted outlines when clicking links/tabs */
+    text-decoration: none;
+    cursor: pointer;
+}
+input {
+    outline: none; /* removes the focus border */
+    border: none;
+    border: 0;
+}
+input.blur {
+    color: #999;
+    font-style: italic;
+}
+ul {
+    list-style: none;
+}
+form {
+    margin: 0 auto;
+    text-align: center;
+}
+label, .label {
+    position: relative;
+    top: -3px;
+}
+:focus { outline:none; }
+::-moz-focus-inner { border:0; }
+
+
+
+
+/* GIFTENG CSS */
+h1 {margin:0;padding:0;}
+.gifteng {display:block;position:relative;font-size:2.4em;color:#606060;font-weight:bold;}
+.gifteng:before, .gifteng:after {content: attr(title);position:absolute;color:rgba(255,255,255,.1);}
+.gifteng:before { top: 2px; left: 1px }
+.gifteng:after  { top: 2px; left: 2px }
+
+
+/* CLEAR FIX */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { zoom: 1; margin: 0 auto; width: 95%; }
+
+
+/* COMMON */
+.fl {float: left;}
+.fr {float: right;}
+.clear {clear: both;}
+
+
+/* ADS */
+.id {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;}
+.itemBox .id {padding:6px 9px 0px 9px;}
+/* override */
+.itemBox .location {text-align:right;padding:6px 9px 0px 19px;background: url('../img/icon_location.png') no-repeat 0% 50%;}
+
+
+
+
+.error {
+    color: red;
+    margin: 10px auto;
+    margin-top: 0;
+}
+.content {
+    /*
+    width: 328px;
+    margin: 50px auto;
+    background: url(../img/boxBgBottom.png) center bottom no-repeat;
+    padding-bottom: 26px;
+    */
+}
+.content > div {
+    /*
+    background: url(../img/boxBgMiddle.png) center bottom repeat-y;
+    */
+}
+.tabContent {
+    text-align: left;
+    padding: 7px 7px 7px 7px;
+}
+.tabTitle {
+    display: none;
+}
+
+
+
+
+/* INPUT ELEMENTS */
+.textbox {
+    /*
+    background: url(../img/textboxBg.png) center center no-repeat;
+    width: 256px;
+    height: 47px;
+    padding: 0 10px 0 10px;
+    margin-bottom: 5px;
+    */
+}
+.checkbox {
+    position: relative;
+    top: 0px;
+    overflow: hidden;
+}
+.inlineRadio {
+    display: inline;
+    text-align: center;
+}
