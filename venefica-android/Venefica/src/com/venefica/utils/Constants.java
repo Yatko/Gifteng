@@ -70,11 +70,14 @@ public class Constants
 	public static final int RESULT_REQ_INVITATION_SUCCESS = 1061;
 	public static final int RESULT_VIFY_INVITATION_SUCCESS = 1062;
 	public static final int ERROR_RESULT_VERIFY_INVITATION = 1063;
-	
+	public static final int RESULT_CHANGE_PASSWORD_SUCCESS = 1064;
+	public static final int ERROR_RESULT_INVALID_OLD_PASSWORD = 1065;
+	public static final int ERROR_RESULT_CHANGE_PASSWORD = 1066;
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
 	public static final DateFormat timeFormat = DateFormat.getTimeInstance();
+	public static final DateFormat dateMMDDYYYYFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 	
 	//Location settings
 	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
@@ -186,5 +189,6 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+		
 }
