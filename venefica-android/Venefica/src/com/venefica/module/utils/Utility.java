@@ -156,7 +156,14 @@ public class Utility {
 	public static String convertShortDateToString(Date date){
 		return Constants.dateFormat.format(date);
 	}
-	
+	/**
+	 * Convert short date to string in MMDDYYYY format
+	 * @param date
+	 * @return string Date
+	 */
+	public static String convertDateToString(Date date){
+		return Constants.dateMMDDYYYYFormat.format(date);
+	}
 	/**
 	 * Get service transport type
 	 * @param url
