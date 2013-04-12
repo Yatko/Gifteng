@@ -28,6 +28,13 @@
     <string name="g_label_pick_up">Pick Up</string>
     <string name="g_label_edit">Edit</string>
     <string name="g_label_save">Save</string>
+    <string name="g_label_basic_info">Personal Info :</string>
+    <string name="g_label_contact_info">Contact Info :</string>
+    <string name="g_label_male">Male</string>
+    <string name="g_label_female">Female</string>
+    <string name="g_label_gender">Gender :</string>
+    <string name="g_label_change_picture">Change Picture</string>
+    <string name="g_label_change_password">Change Password</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -52,9 +59,14 @@
     <string name="g_msg_inv_req_success">Thank you for your request, we will contact you soon!</string>
     <string name="g_msg_congrats">Congratulation!</string>
     <string name="g_msg_select_source">Please select source of information.</string>
+    <string name="g_msg_pwd_not_match">does not match</string>
+    <string name="g_msg_change_pwd_success">Password changed successfully.</string>
+    
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
+    <string name="g_error_change_pwd">Unable to change password. Please try again later.</string>
+    <string name="g_error_invalid_old_pwd">Unable to change password. Old Password is not valid.</string>
 
     <string-array name="g_array_purpose_of_registration">
         <item >How did you here out about us?</item>
@@ -219,7 +231,7 @@
     <string name="msg_reg_user_duplicate_phone">User with the specified phone number already exists.</string>
     <string name="msg_reg_user_duplicate_login">User with the same login already exists.</string>
     <string name="msg_reg_user_registration_success">User registered successfully. Please check email to complete registration.</string>
-    <string name="msg_update_user_success">User updated successfully.</string>
+    <string name="msg_update_user_success">Profile information updated successfully.</string>
     <string name="msg_progress">Loading. Please wait...</string>
     <string name="msg_validation_fname_lname">Use letters only.</string>
     <string name="msg_validation_county_city_area">Use letters only.</string>
