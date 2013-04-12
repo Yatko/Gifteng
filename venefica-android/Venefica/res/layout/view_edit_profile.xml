@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/layActProfileUpdate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="16dp"
+        android:layout_marginBottom="10dp" >
+
+        <!-- Profile Img -->
+
+        <ImageView
+            android:id="@+id/imgActProfileProfileImg"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/black"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_picture_white" />
+
+        <TextView
+            android:id="@+id/txtActProfileMemberFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/imgActProfileProfileImg"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/imgActProfileProfileImg"
+            android:gravity="center_vertical"
+            android:text="@string/label_detail_listing_member_since" />
+
+        <!-- Change Image -->
+
+        <Button
+            android:id="@+id/btnActProfileChangeImg"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@id/txtActProfileMemberFrom"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/imgActProfileProfileImg"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:gravity="left|center_vertical"
+            android:text="@string/g_label_change_picture"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp" />
+        <!-- Change password -->
+
+        <Button
+            android:id="@+id/btnActProfileChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@id/btnActProfileChangeImg"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/imgActProfileProfileImg"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:gravity="left|center_vertical"
+            android:text="@string/g_label_change_password"
+            android:textColor="@color/light_gray"
+            android:textSize="14sp" />
+        
+        <!-- Basic Info -->
+
+        <TextView
+            android:id="@+id/txtActProfileBasicInfo"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgActProfileProfileImg"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/g_label_basic_info"
+            android:textSize="15sp"
+            android:textStyle="bold|normal" />
+
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/divActProfile01"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/txtActProfileBasicInfo"
+            android:background="#DADADA" />
+        <!-- F NAME -->
+
+        <TextView
+            android:id="@+id/txtActProfileFName"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divActProfile01"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_f_name"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileFName"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileFName"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
+            android:hint="@string/label_f_name"
+            android:inputType="textPersonName" />
+
+        <!-- L NAME -->
+
+        <TextView
+            android:id="@+id/txtActProfileLName"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileFName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_l_name"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileLName"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileLName"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_l_name"
+            android:inputType="textPersonName" />
+
+        <!-- DOB -->
+
+        <TextView
+            android:id="@+id/txtActProfileBirthDate"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileLName"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_birth"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileBirthDate"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileBirthDate"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_birth"
+            android:inputType="date"
+            android:focusable="false" />
+        <!-- Gender Info -->
+
+        <TextView
+            android:id="@+id/txtActProfileGender"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileBirthDate"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/g_label_gender"
+            android:textSize="15sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupActProfileGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtActProfileGender"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioActProfileMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/g_label_male" />
+
+            <RadioButton
+                android:id="@+id/radioActProfileFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/g_label_female" />
+        </RadioGroup>
+        <!-- Contact Info -->
+
+        <TextView
+            android:id="@+id/txtActProfileContactInfo"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radioGroupActProfileGender"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/g_label_contact_info"
+            android:textSize="15sp"
+            android:textStyle="bold|normal" />
+
+        <!-- Divider line -->
+
+        <TextView
+            android:id="@+id/divActProfile02"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/txtActProfileContactInfo"
+            android:background="#DADADA" />
+        <!-- Email -->
+
+        <TextView
+            android:id="@+id/txtActProfileEmail"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divActProfile02"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_email"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileEmail"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileEmail"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
+            android:hint="@string/label_email"
+            android:inputType="textEmailAddress" />
+
+        <!-- Phone -->
+
+        <TextView
+            android:id="@+id/txtActProfilePhone"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileEmail"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_phone"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfilePhone"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfilePhone"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_phone"
+            android:inputType="phone" />
+
+        <!-- ZIP -->
+
+        <TextView
+            android:id="@+id/txtActProfileZip"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfilePhone"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_zip"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileZip"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileZip"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_zip"
+            android:inputType="number"
+            android:maxLength="6" />
+
+        <!-- County -->
+
+        <TextView
+            android:id="@+id/txtActProfileCounty"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileZip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_county"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileCounty"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileCounty"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_county"
+            android:inputType="text" />
+
+        <!-- City -->
+
+        <TextView
+            android:id="@+id/txtActProfileCity"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileCounty"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_city"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileCity"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileCity"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_city"
+            android:inputType="text" />
+
+        <!-- Area -->
+
+        <TextView
+            android:id="@+id/txtActProfileArea"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileCity"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_area"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileArea"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileArea"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_area"
+            android:inputType="text" />
+    </RelativeLayout>
+
+</ScrollView>
