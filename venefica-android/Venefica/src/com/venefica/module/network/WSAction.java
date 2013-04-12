@@ -35,6 +35,8 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
+import com.venefica.services.ServicesManager.ChangePasswordResult;
+import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 
 /**
@@ -71,6 +73,7 @@ public class WSAction {
 	private final String WS_METHOD_RATE_AD = "RateAd";
 	private final String WS_METHOD_REQUEST_INVITATION = "RequestInvitation";
 	private final String WS_METHOD_VERIFY_INVITATION = "IsInvitationValid";
+	private final String WS_METHOD_CHANGE_PASSWORD = "ChangePassword";
 	
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
@@ -154,7 +157,7 @@ public class WSAction {
 			}
 		} catch (SoapFault e) {
 			String message = e.getMessage();
-			if (message.contains("Wrong user name or password!")) {
+			if (message.contains("Wrong user or password!")) {
 				wrapper.result = Constants.ERROR_USER_UNAUTHORISED;
 			}
 		}
@@ -304,29 +307,7 @@ public class WSAction {
 				result = Constants.RESULT_REGISTER_USER_DUP_EMAIL;
 			} else if(message.contains("User with the same name already exists!")){
 				result = Constants.RESULT_REGISTER_USER_DUP_LOGIN;
-			}
-			/*if (e.detail != null) {
-				Element UserAlreadyExists = (Element) ((Element) e.detail
-						.getChild(0)).getChild(0);
-				if (UserAlreadyExists.getName().equalsIgnoreCase(
-						"User with the same name already exists!")
-						|| UserAlreadyExists.getName().equalsIgnoreCase(
-								"User with the specified email already exists!")) {
-					Element duplicatedField = (Element) UserAlreadyExists
-							.getChild(0);
-					if (duplicatedField.getName().equalsIgnoreCase(
-							"duplicatedField")) {
-						String message = (String) duplicatedField.getChild(0);
-						if (message.equalsIgnoreCase("EMAIL")) {
-							result = Constants.RESULT_REGISTER_USER_DUP_EMAIL;
-						} else if (message.equalsIgnoreCase("PHONE")) {
-							result = Constants.RESULT_REGISTER_USER_DUP_PHONE;
-						} else if (message.equalsIgnoreCase("NAME")) {
-							result = Constants.RESULT_REGISTER_USER_DUP_LOGIN;
-						}
-					}
-				}
-			}*/
+			}			
 		}
 		return result;
 	}
@@ -1267,6 +1248,51 @@ public class WSAction {
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_VERIFY_INVITATION;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to change password
+	 * @param token
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public UserRegistrationResultWrapper changePassword(String token, String oldPassword, String newPassword) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_CHANGE_PASSWORD;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("oldPassword", oldPassword);
+			request.addProperty("newPassword", newPassword);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AUTH_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			if(envelope.getResponse() == null){
+				result.result = Constants.RESULT_CHANGE_PASSWORD_SUCCESS;
+			}		
+		}catch (SoapFault e){
+			String message = e.getMessage().toString();
+			if (message.contains("Old passwod is wrong!")) {
+				result.result = Constants.ERROR_RESULT_INVALID_OLD_PASSWORD;
+			} else {
+				result.result = Constants.ERROR_RESULT_CHANGE_PASSWORD;
+			}
 		}
 		return result;
 	}
