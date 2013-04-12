@@ -1289,8 +1289,8 @@ public class ServicesManager
 
 		return result;
 	}*/
-	@Deprecated
-	/*public GetAdByIdResult GetAdById(String token, long adId)
+	/*@Deprecated
+	public GetAdByIdResult GetAdById(String token, long adId)
 	{
 		final String SOAP_METHOD = GET_AD_BY_ID_METHOD;
 
@@ -1358,7 +1358,7 @@ public class ServicesManager
 		return result;
 	}*/
 
-	public ChangePasswordResult ChangePassword(String token, String oldPassword, String newPassword)
+	/*public ChangePasswordResult ChangePassword(String token, String oldPassword, String newPassword)
 	{
 		final String SOAP_METHOD = CHANGES_PASSWORD_METHOD;
 
@@ -1413,7 +1413,7 @@ public class ServicesManager
 		}
 
 		return result;
-	}
+	}*/
 	@Deprecated
 	public BookmarkAdResult BookmarkAd(String token, long adId)
 	{
