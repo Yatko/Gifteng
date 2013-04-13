@@ -4,6 +4,7 @@
  */
 package com.venefica.config.data;
 
+import com.venefica.config.Constants;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -30,13 +31,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class TestDataConfig {
 
-    /**
-     * Should be redefined as the standard definition in the hibernate
-     * package seems to be erroneous.
-     */
-    //private static final String HBM2DDL_IMPORT_FILES = "hibernate.hbm2ddl.import.files";
-    
-    private static final String MODEL_PACKAGE = "com.venefica.model";
+    @Inject
+    private String jdbcDriver;
+    @Inject
+    private String jdbcUrl;
+    @Inject
+    private String jdbcUsername;
+    @Inject
+    private String jdbcPassword;
     
     @Inject
     private String hibernateDialect;
@@ -49,16 +51,8 @@ public class TestDataConfig {
     @Inject
     private Boolean hibernateFormatSQL = true;
     @Inject
-    private Map<String, String> extraHibernateProperties = new HashMap<String, String>(0);
-    @Inject
-    private String jdbcDriver;
-    @Inject
-    private String jdbcUrl;
-    @Inject
-    private String jdbcUsername;
-    @Inject
-    private String jdbcPassword;
-
+    private Map<String, String> hibernateProperties = new HashMap<String, String>(0);
+    
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -72,15 +66,19 @@ public class TestDataConfig {
     @Bean
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
-                .scanPackages(MODEL_PACKAGE);
+                .scanPackages(Constants.MODEL_PACKAGE);
 
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
-
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
-        //factoryBuilder.getProperties().put(HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
         factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);
         factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, hibernateFormatSQL);
+        
+        for ( Map.Entry<String, String> entry : hibernateProperties.entrySet() ) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            factoryBuilder.getProperties().put(key, value);
+        }
 
         return factoryBuilder.buildSessionFactory();
     }

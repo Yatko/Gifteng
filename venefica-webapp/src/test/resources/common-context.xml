@@ -37,12 +37,9 @@
     <bean id="baseUrl" class="java.lang.String">
         <constructor-arg value="http://localhost:8082/" />
     </bean>
-
-
-
-    <bean id="hibernateDialect" class="java.lang.String">
-        <constructor-arg value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
-    </bean>
+    
+    
+    
     <bean id="jdbcDriver" class="java.lang.String">
         <constructor-arg value="com.mysql.jdbc.Driver" />
     </bean>
@@ -54,6 +51,9 @@
     </bean>
     <bean id="jdbcPassword" class="java.lang.String">
         <constructor-arg value="" />
+    </bean>
+    <bean id="hibernateDialect" class="java.lang.String">
+        <constructor-arg value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
     </bean>
     <bean id="hibernateHbmToDdlAuto" class="java.lang.String">
         <constructor-arg value="create" />
@@ -68,15 +68,51 @@
     <bean id="hibernateFormatSQL" class="java.lang.Boolean">
         <constructor-arg value="false" />
     </bean>
-    <util:map id="extraHibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
+    <util:map id="hibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
         <entry key="hibernate.connection.zeroDateTimeBehavior" value="convertToNull" />
     </util:map>
-
-
+    
+    
+    <bean id="smtpPort" class="java.lang.Integer">
+        <constructor-arg value="25" />
+    </bean>
+    <bean id="smtpPortSSL" class="java.lang.Integer">
+        <constructor-arg value="465" />
+    </bean>
+    <bean id="charset" class="java.lang.String">
+        <constructor-arg value="UTF-8" />
+    </bean>
+    <bean id="imagesBaseUrl" class="java.lang.String">
+        <constructor-arg value="http://veneficalabs.com/" />
+    </bean>
+    <bean id="hostName" class="java.lang.String">
+        <constructor-arg value="smtp.googlemail.com" />
+    </bean>
+    <bean id="username" class="java.lang.String">
+        <constructor-arg value="gyuszi@veneficalabs.com" />
+    </bean>
+    <bean id="password" class="java.lang.String">
+        <constructor-arg value="Bestseller2012" />
+    </bean>
+    <bean id="useSSL" class="java.lang.Boolean">
+        <constructor-arg value="true" />
+    </bean>
+    <bean id="fromEmailAddress" class="java.lang.String">
+        <constructor-arg value="do-not-reply@veneficalabs.com" />
+    </bean>
+    <bean id="fromName" class="java.lang.String">
+        <constructor-arg value="Venefica LABS" />
+    </bean>
+    <bean id="undeliveredEmailAddress" class="java.lang.String">
+        <constructor-arg value="support@veneficalabs.com" />
+    </bean>
+    
+    
     <!-- import java-based configurations -->
     <bean class="com.venefica.config.data.TestDataConfig" />
+    <bean class="com.venefica.config.email.TestEmailConfig" />
 
-
+    
     
     <bean id="abstractLoggingInterceptor" abstract="true">
         <property name="prettyLogging" value="true"/>
