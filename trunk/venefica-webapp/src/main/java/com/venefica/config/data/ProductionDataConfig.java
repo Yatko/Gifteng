@@ -1,9 +1,11 @@
 package com.venefica.config.data;
 
+import com.venefica.config.Constants;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -19,32 +21,23 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ImportResource("classpath:jdbc.xml")
 public class ProductionDataConfig {
 
-    private static final String ModelPackage = "com.venefica.model";
-    
     @Inject
     DataSource dataSource;
+    
+    @Inject
+    private Map<String, String> hibernateProperties = new HashMap<String, String>(0);
 
     @Bean
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource)
-                .scanPackages(ModelPackage);
+                .scanPackages(Constants.MODEL_PACKAGE);
 
-        // Support GIS functions
-        factoryBuilder.getProperties().put(AvailableSettings.DIALECT,
-                //"org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect"
-                "org.hibernate.spatial.dialect.mysql.MySQLSpatialInnoDBDialect");
-
-        // Automatically generate DDL
-        factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, "update");
+        for ( Map.Entry<String, String> entry : hibernateProperties.entrySet() ) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            factoryBuilder.getProperties().put(key, value);
+        }
         
-        // For more details see:
-        // http://stackoverflow.com/questions/782823/handling-datetime-values-0000-00-00-000000-in-jdbc
-        // http://stackoverflow.com/questions/11133759/0000-00-00-000000-can-not-be-represented-as-java-sql-timestamp-error
-        factoryBuilder.getProperties().put("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
-        
-        // Don't show SQL
-        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
-
         return factoryBuilder.buildSessionFactory();
     }
 

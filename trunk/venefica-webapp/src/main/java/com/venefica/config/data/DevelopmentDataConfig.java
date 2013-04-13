@@ -1,5 +1,6 @@
 package com.venefica.config.data;
 
+import com.venefica.config.Constants;
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
@@ -16,9 +17,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Profile(value = "development")
 @EnableTransactionManagement
 public class DevelopmentDataConfig {
-
-    private static final String ModelPackage = "com.venefica.model";
-
+    
+    private final String hibernateDialect = "org.hibernate.spatial.dialect.postgis.PostgisDialect";
+    private final String hibernateHbmToDdlAuto = "update";
+    private final Boolean hibernateShowSQL = true;
+    private final Boolean hibernateFormatSQL = true;
+    
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -32,18 +36,15 @@ public class DevelopmentDataConfig {
     @Bean
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
-                .scanPackages(ModelPackage);
+                .scanPackages(Constants.MODEL_PACKAGE);
 
         // Support PostGIS functions
-        factoryBuilder.getProperties().put(AvailableSettings.DIALECT,
-                "org.hibernate.spatial.dialect.postgis.PostgisDialect");
-
+        factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         // Automatically generate DDL
-        factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, "update");
-
+        factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
         // Show SQL
-        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, true);
-        factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, true);
+        factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);
+        factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, hibernateFormatSQL);
 
         return factoryBuilder.buildSessionFactory();
     }
