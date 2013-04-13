@@ -18,6 +18,7 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.junit.Before;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -78,6 +79,10 @@ public abstract class ServiceTestBase<T> {
 
         client = (T) factory.create();
         cxfClient = ClientProxy.getClient(client);
+        
+        HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
+        httpConduit.getClient().setReceiveTimeout(120000);
+        httpConduit.getClient().setConnectionTimeout(120000);
     }
 
     @Before
