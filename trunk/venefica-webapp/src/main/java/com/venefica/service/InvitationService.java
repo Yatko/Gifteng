@@ -5,6 +5,7 @@
 package com.venefica.service;
 
 import com.venefica.service.dto.InvitationDto;
+import com.venefica.service.fault.InvitationException;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -27,7 +28,7 @@ public interface InvitationService {
      */
     @WebMethod(operationName = "RequestInvitation")
     @WebResult(name = "invitationId")
-    Long requestInvitation(@WebParam(name = "invitation") InvitationDto invitationDto);
+    Long requestInvitation(@WebParam(name = "invitation") InvitationDto invitationDto) throws InvitationException;
     
     /**
      * Checks if the invitation identified with the given code exists and is valid.
