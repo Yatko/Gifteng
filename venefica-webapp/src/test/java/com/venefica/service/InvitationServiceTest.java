@@ -8,6 +8,7 @@ import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
 import com.venefica.model.UserType;
 import com.venefica.service.dto.InvitationDto;
+import com.venefica.service.fault.InvitationException;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -35,9 +36,9 @@ public class InvitationServiceTest extends ServiceTestBase<InvitationService> {
     }
     
     @Test
-    public void requestInvitationTest() {
+    public void requestInvitationTest() throws InvitationException {
         InvitationDto invitationDto = new InvitationDto();
-        invitationDto.setEmail("xxx@gmail.com");
+        invitationDto.setEmail("figyuszi@gmail.com");
         invitationDto.setSource("other");
         invitationDto.setUserType(UserType.GIVER);
         invitationDto.setZipCode("00000");
