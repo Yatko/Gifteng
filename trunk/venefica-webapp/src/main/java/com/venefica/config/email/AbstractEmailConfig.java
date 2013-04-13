@@ -20,9 +20,9 @@ public abstract class AbstractEmailConfig {
     private static final String DEFAULT_BASE_URL = "http://veneficalabs.com/";
     
     @Inject
-    private int smtpPort = DEFAULT_SMTP_PORT;
+    private Integer smtpPort = DEFAULT_SMTP_PORT;
     @Inject
-    private int smtpPortSSL = DEFAULT_SMTP_PORT_SSL;
+    private Integer smtpPortSSL = DEFAULT_SMTP_PORT_SSL;
     @Inject
     private String charset = Constants.DEFAULT_CHARSET;
     @Inject
@@ -32,7 +32,7 @@ public abstract class AbstractEmailConfig {
     @Inject
     private String password;
     @Inject
-    private boolean useSSL;
+    private Boolean useSSL;
     @Inject
     private String fromEmailAddress;
     @Inject
