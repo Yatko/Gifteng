@@ -1,4 +1,4 @@
-package com.venefica.service;
+package com.venefica.common;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;

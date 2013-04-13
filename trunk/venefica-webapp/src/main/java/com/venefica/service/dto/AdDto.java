@@ -2,7 +2,7 @@ package com.venefica.service.dto;
 
 import com.venefica.model.Ad;
 import com.venefica.model.User;
-import com.venefica.service.GeoUtils;
+import com.venefica.common.GeoUtils;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;

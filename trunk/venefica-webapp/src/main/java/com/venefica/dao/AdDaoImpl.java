@@ -1,7 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Ad;
-import com.venefica.service.GeoUtils;
+import com.venefica.common.GeoUtils;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
