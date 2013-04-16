@@ -73,6 +73,7 @@ public class Ad {
     @ForeignKey(name = "ad_image_ad_fk", inverseName = "ad_image_image_fk")
     private List<Image> images;
     
+    @Column(columnDefinition = "Geometry")
     @Type(type = "org.hibernate.spatial.GeometryType")
     private Point location;
     
