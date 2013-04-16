@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textStyle="bold" 
-                    android:layout_weight="85"/>
+                    android:layout_weight="75"/>
 
                 <ImageButton
                     android:id="@+id/imgBtnUserViewSendMsg"
@@ -52,7 +52,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@color/transparent"
                     android:src="@drawable/icon_mail" 
-                    android:layout_weight="15"/>
+                    android:layout_weight="25"/>
             </TableRow>
 
             <TableRow
