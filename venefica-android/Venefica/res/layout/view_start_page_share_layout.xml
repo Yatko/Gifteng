@@ -59,7 +59,7 @@
         <ImageButton
             android:id="@+id/imgBtnActLoginShareChat"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_marginRight="10dp"
             android:layout_weight="25"
             android:src="@drawable/icon_monolog" />
@@ -67,7 +67,7 @@
         <ImageButton
             android:id="@+id/imgBtnActLoginShareTweeter"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="10dp"
             android:layout_weight="25"
@@ -76,7 +76,7 @@
         <ImageButton
             android:id="@+id/imgBtnActLoginShareFacebook"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="10dp"
             android:layout_weight="25"
@@ -85,7 +85,7 @@
         <ImageButton
             android:id="@+id/imgBtnActLoginShareMail"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_marginLeft="5dp"
             android:layout_weight="25"
             android:src="@drawable/icon_mail" />
