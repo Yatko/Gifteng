@@ -26,6 +26,7 @@
             <config-file>src/test/resources/MessageServiceTest-context.xml</config-file>
             <config-file>src/test/resources/UserManagementServiceTest-context.xml</config-file>
             <config-file>src/test/resources/common-context.xml</config-file>
+            <config-file>src/main/resources/main.xml</config-file>
         </config-files>
         <config-file-groups>
             <config-file-group name="Test resources">
