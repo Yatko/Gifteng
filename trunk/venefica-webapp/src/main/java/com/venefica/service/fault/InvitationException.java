@@ -17,7 +17,15 @@ import javax.xml.ws.WebFault;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InvitationException extends Exception {
     
+    @SuppressWarnings("unused")
+    private int errorCode;
+    
     public InvitationException(String message) {
         super(message);
+    }
+    
+    public InvitationException(int errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
     }
 }

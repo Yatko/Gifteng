@@ -6,6 +6,7 @@ package com.venefica.service;
 
 import com.venefica.common.EmailSender;
 import com.venefica.common.MailChimpSender;
+import com.venefica.common.MailException;
 import com.venefica.config.Constants;
 import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
@@ -23,7 +24,6 @@ import javax.inject.Inject;
 import javax.jws.WebService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.mail.EmailException;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -119,12 +119,12 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
                 String plainMessage = mergeVelocityTemplate(INVITATION_REQUEST_PLAIN_MESSAGE_TEMPLATE, code);
 
                 emailSender.sendHtmlEmail(subject, htmlMessage, plainMessage, invitationDto.getEmail());
-            } catch ( EmailException ex ) {
+            } catch ( MailException ex ) {
                 logger.error("Email exception", ex);
-                throw new InvitationException("Could not send invitation mail!");
-            } catch ( RuntimeException ex ) {
+                throw new InvitationException(ex.getErrorCode(), "Could not send invitation mail!");
+            } catch ( Exception ex ) {
                 logger.error("Runtime exception", ex);
-                throw new InvitationException(ex.getMessage());
+                throw new InvitationException(MailException.GENERAL_ERROR, ex.getMessage());
             }
         }
         if ( mailChimpSender.isEnabled() ) {
@@ -137,14 +137,15 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
                 }
                 
                 Map<String, Object> vars = new HashMap<String, Object>(0);
+                vars.put("COUNTRY", invitationDto.getCountry());
                 vars.put("ZIPCODE", invitationDto.getZipCode());
                 vars.put("USERTYPE", invitationDto.getUserType().name());
                 vars.put("SOURCE", source);
                 
                 mailChimpSender.listSubscribe(invitationDto.getEmail(), vars);
-            } catch ( EmailException ex ) {
+            } catch ( MailException ex ) {
                 logger.error("MailChimp exception", ex);
-                throw new InvitationException("Could not list subscribe to MailChimp!");
+                throw new InvitationException(ex.getErrorCode(), "Could not list subscribe to MailChimp!");
             }
         }
         

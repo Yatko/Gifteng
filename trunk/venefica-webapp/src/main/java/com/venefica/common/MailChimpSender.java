@@ -4,14 +4,12 @@
  */
 package com.venefica.common;
 
-import java.util.HashMap;
 import java.util.Map;
 import mailjimp.dom.enums.EmailType;
 import mailjimp.service.IMailJimpService;
 import mailjimp.service.MailJimpException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -37,7 +35,7 @@ public class MailChimpSender {
         return enabled;
     }
     
-    public void listSubscribe(String emailAddress, Map<String, Object> vars) throws EmailException {
+    public void listSubscribe(String emailAddress, Map<String, Object> vars) throws MailException {
         if ( !enabled ) {
             logger.info("MailChimp usage is not enabled!");
             return;
@@ -51,8 +49,11 @@ public class MailChimpSender {
                 logger.info("MailChimp listSubscribe() failed");
             }
         } catch (MailJimpException ex) {
-            logger.error("MailChimp error", ex);
-            throw new EmailException("MailChimp error", ex);
+            logger.error("MailChimp error (code: " + ex.getStatusCode() + ")", ex);
+            if ( ex.getStatusCode() == 214 ) {
+                throw new MailException(MailException.ALREADY_SUBSCRIBED, ex);
+            }
+            throw new MailException(MailException.GENERAL_ERROR, ex);
         }
     }
 

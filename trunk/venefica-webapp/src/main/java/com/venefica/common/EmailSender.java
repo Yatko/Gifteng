@@ -50,10 +50,10 @@ public class EmailSender {
      * @param textMessage plain text message (in case that the recipient does
      * not support html)
      * @param toEmailAddress recipient email address
-     * @throws EmailException can be thrown in multiple cases: wrong email address,
+     * @throws MailException can be thrown in multiple cases: wrong email address,
      * invalid message
      */
-    public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws EmailException {
+    public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws MailException {
         if ( !enabled ) {
             logger.info("Email sending is not enabled!");
             return;
@@ -70,14 +70,34 @@ public class EmailSender {
         email.setSslSmtpPort(Integer.toString(smtpPortSSL));
         email.setAuthenticator(new DefaultAuthenticator(username, password));
         email.setSSLOnConnect(useSSL);
-        email.setFrom(fromEmailAddress, fromName, charset);
-        email.setBounceAddress(undeliveredEmailAddress);
         email.setCharset(charset);
-        email.addTo(toEmailAddress);
-        email.setSubject(subject);
-        email.setHtmlMsg(htmlMessage);
-        email.setTextMsg(textMessage);
-        email.send();
+        email.setBounceAddress(undeliveredEmailAddress);
+        try {
+            email.setFrom(fromEmailAddress, fromName, charset);
+        } catch ( EmailException ex ) {
+            logger.error("Invalid 'from' (" + fromEmailAddress + ") address", ex);
+            throw new MailException(MailException.INVALID_FROM_ADDRESS, ex);
+        }
+        try {
+            email.addTo(toEmailAddress);
+        } catch ( EmailException ex ) {
+            logger.error("Invalid 'to' (" + toEmailAddress + ") address", ex);
+            throw new MailException(MailException.INVALID_TO_ADDRESS, ex);
+        }
+        try {
+            email.setSubject(subject);
+            email.setHtmlMsg(htmlMessage);
+            email.setTextMsg(textMessage);
+        } catch ( EmailException ex ) {
+            logger.error("Erronous email message", ex);
+            throw new MailException(MailException.INVALID_EMAIL_MESSAGE, ex);
+        }
+        try {
+            email.send();
+        } catch ( EmailException ex ) {
+            logger.error("Cannot send email", ex);
+            throw new MailException(MailException.EMAIL_SEND_ERROR, ex);
+        }
     }
 
     public void setSmtpPort(int smtpPort) {

@@ -35,6 +35,7 @@ public class Invitation {
     @Column(unique = true, nullable = false)
     private String code;
     
+    private String country;
     private String zipCode;
     private String source;
     private String otherSource;
@@ -176,5 +177,13 @@ public class Invitation {
 
     public void setOtherSource(String otherSource) {
         this.otherSource = otherSource;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
