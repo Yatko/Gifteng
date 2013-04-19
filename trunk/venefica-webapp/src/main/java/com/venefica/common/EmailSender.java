@@ -32,6 +32,15 @@ public class EmailSender {
     private String fromName;
     private String undeliveredEmailAddress;
     private String imagesBaseUrl;
+    private boolean enabled;
+    
+    /**
+     * Returns the enabled status of this service.
+     * @return 
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
     
     /**
      * Send a html message to the given address.
@@ -45,6 +54,11 @@ public class EmailSender {
      * invalid message
      */
     public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws EmailException {
+        if ( !enabled ) {
+            logger.info("Email sending is not enabled!");
+            return;
+        }
+        
         ImageHtmlEmail email = new ImageHtmlEmail();
         try {
             email.setDataSourceResolver(new DataSourceUrlResolver(new URL(imagesBaseUrl)));
@@ -109,5 +123,8 @@ public class EmailSender {
     public void setImagesBaseUrl(String imagesBaseUrl) {
         this.imagesBaseUrl = imagesBaseUrl;
     }
-    
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
