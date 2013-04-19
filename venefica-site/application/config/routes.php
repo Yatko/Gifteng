@@ -48,6 +48,9 @@ $route['browse'] = 'browse/view';
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication'] = 'authentication/view';
 
+$route['invitation/(:any)'] = 'invitation/$1';
+$route['invitation'] = 'invitation/view';
+
 $route['registration/(:any)'] = 'registration/$1';
 $route['registration'] = 'registration/view';
 

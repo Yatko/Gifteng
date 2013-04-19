@@ -10,6 +10,7 @@ class Invitation_model extends CI_Model {
     var $email; //string
     var $zipCode; //string
     var $source; //string
+    var $otherSource; //string
     var $userType; //string: GIVER, RECEIVER
     
     public function __construct() {
@@ -27,6 +28,7 @@ class Invitation_model extends CI_Model {
             ."email=".$this->email.", "
             ."zipCode=".$this->zipCode.", "
             ."source=".$this->source.", "
+            ."otherSource=".$this->otherSource.", "
             ."userType=".$this->userType.""
             ."]";
     }

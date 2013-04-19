@@ -52,6 +52,7 @@ class Registration extends CI_Controller {
     
     public function register_user($password) {
         if ( $this->registration_form->hasErrors() ) {
+            $this->registration_form->set_message('register_user', 'Cannot register user!');
             return FALSE;
         }
         
