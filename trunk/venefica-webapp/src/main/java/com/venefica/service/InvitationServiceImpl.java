@@ -5,13 +5,17 @@
 package com.venefica.service;
 
 import com.venefica.common.EmailSender;
+import com.venefica.common.MailChimpSender;
 import com.venefica.config.Constants;
 import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
+import static com.venefica.service.AbstractService.logger;
 import com.venefica.service.dto.InvitationDto;
 import com.venefica.service.fault.InvitationException;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 //import java.util.UUID;
@@ -51,6 +55,8 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
     private InvitationDao invitationDao;
     @Inject
     private EmailSender emailSender;
+    @Inject
+    private MailChimpSender mailChimpSender;
     
     private VelocityEngine velocityEngine;
     
@@ -106,18 +112,40 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
         
         Long invitationId = invitationDao.save(invitation);
         
-        try {
-            String subject = mergeVelocityTemplate(INVITATION_REQUEST_SUBJECT_TEMPLATE, code);
-            String htmlMessage = mergeVelocityTemplate(INVITATION_REQUEST_HTML_MESSAGE_TEMPLATE, code);
-            String plainMessage = mergeVelocityTemplate(INVITATION_REQUEST_PLAIN_MESSAGE_TEMPLATE, code);
-            
-            emailSender.sendHtmlEmail(subject, htmlMessage, plainMessage, invitationDto.getEmail());
-        } catch ( EmailException ex ) {
-            logger.error("Email exception", ex);
-            throw new InvitationException("Could not send invitation mail!");
-        } catch ( RuntimeException ex ) {
-            logger.error("Runtime exception", ex);
-            throw new InvitationException(ex.getMessage());
+        if ( emailSender.isEnabled() ) {
+            try {
+                String subject = mergeVelocityTemplate(INVITATION_REQUEST_SUBJECT_TEMPLATE, code);
+                String htmlMessage = mergeVelocityTemplate(INVITATION_REQUEST_HTML_MESSAGE_TEMPLATE, code);
+                String plainMessage = mergeVelocityTemplate(INVITATION_REQUEST_PLAIN_MESSAGE_TEMPLATE, code);
+
+                emailSender.sendHtmlEmail(subject, htmlMessage, plainMessage, invitationDto.getEmail());
+            } catch ( EmailException ex ) {
+                logger.error("Email exception", ex);
+                throw new InvitationException("Could not send invitation mail!");
+            } catch ( RuntimeException ex ) {
+                logger.error("Runtime exception", ex);
+                throw new InvitationException(ex.getMessage());
+            }
+        }
+        if ( mailChimpSender.isEnabled() ) {
+            try {
+                String source;
+                if ( invitationDto.getOtherSource() != null && !invitationDto.getOtherSource().trim().isEmpty() ) {
+                    source = invitationDto.getOtherSource();
+                } else {
+                    source = invitationDto.getSource();
+                }
+                
+                Map<String, Object> vars = new HashMap<String, Object>(0);
+                vars.put("ZIPCODE", invitationDto.getZipCode());
+                vars.put("USERTYPE", invitationDto.getUserType().name());
+                vars.put("SOURCE", source);
+                
+                mailChimpSender.listSubscribe(invitationDto.getEmail(), vars);
+            } catch ( EmailException ex ) {
+                logger.error("MailChimp exception", ex);
+                throw new InvitationException("Could not list subscribe to MailChimp!");
+            }
         }
         
         return invitationId;
