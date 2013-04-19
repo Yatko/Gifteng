@@ -63,21 +63,21 @@
 
 <div class="form">
     <div class="container">
-        <div id="wistia_vhti7jwll8" class="wistia_embed" style="width:400px;height:227px;" data-video-width="400" data-video-height="227">&nbsp;</div>
+        <div id="wistia_4b9homs4ka" class="wistia_embed" style="width:400px;height:225px;" data-video-width="400" data-video-height="225">&nbsp;</div>
         <script charset="ISO-8859-1" src="http://fast.wistia.com/static/concat/E-v1.js"></script>
         <script>
-        wistiaEmbed = Wistia.embed("vhti7jwll8", {
-            version: "v1",
-            videoWidth: 400,
-            videoHeight: 227,
-            volumeControl: true,
-        });
+            wistiaEmbed = Wistia.embed("4b9homs4ka", {
+                version: "v1",
+                videoWidth: 400,
+                videoHeight: 225,
+                volumeControl: true
+            });
         </script>
     </div>
 </div>
 
 <div class="form">
-    <div class="container" style="width: 300px; min-height: 229px;">
+    <div class="container" style="width: 300px; min-height: 225px;">
         <div class="container" id="login">
             
             <?=form_open('/invitation/request/1')?>
