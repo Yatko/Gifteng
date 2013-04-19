@@ -16,7 +16,9 @@
 
     <context:annotation-config />
     <context:component-scan base-package="com.venefica.dao" />
-
+    <context:property-placeholder location="classpath:application.properties" />
+    
+    
     <!-- Resource can be found in library: cxf-rt-core-2.6.0.jar -->
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <!-- Resource can be found in library: cxf-rt-transports-http-2.6.0.jar -->
@@ -72,7 +74,7 @@
         <entry key="hibernate.connection.zeroDateTimeBehavior" value="convertToNull" />
     </util:map>
     
-    
+    <!--
     <bean id="smtpPort" class="java.lang.Integer">
         <constructor-arg value="25" />
     </bean>
@@ -106,13 +108,33 @@
     <bean id="undeliveredEmailAddress" class="java.lang.String">
         <constructor-arg value="support@veneficalabs.com" />
     </bean>
+    <bean id="enabled" class="java.lang.Boolean">
+        <constructor-arg value="false" />
+    </bean>
+    -->
     
     
     <!-- import java-based configurations -->
     <bean class="com.venefica.config.data.TestDataConfig" />
-    <bean class="com.venefica.config.email.TestEmailConfig" />
+    <bean class="com.venefica.config.email.EmailConfig" />
+
 
     
+    
+    
+    <!-- MailChimp configurations -->
+    <bean id="listId" class="java.lang.String">
+        <constructor-arg value="${mj.listId}" />
+    </bean>
+    <bean id="doubleOpt" class="java.lang.Boolean">
+        <constructor-arg value="${mj.doubleOpt}" />
+    </bean>
+    
+    <!-- MailChimp integration -->
+    <import resource="classpath:mailjimp-spring-config.xml" />
+    
+    
+        
     
     <bean id="abstractLoggingInterceptor" abstract="true">
         <property name="prettyLogging" value="true"/>
@@ -120,7 +142,7 @@
     <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor"/>
     <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" parent="abstractLoggingInterceptor"/>
     
-
+    
     <cxf:bus>
         <cxf:inInterceptors>
             <ref bean="messageSignatureInterceptor" />

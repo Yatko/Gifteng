@@ -3,6 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
     
+    <!--
+    Currently is disabled !!!
+    -->
+    
+    <!--
     <bean id="smtpPort" class="java.lang.Integer">
         <constructor-arg value="25" />
     </bean>
@@ -36,5 +41,9 @@
     <bean id="undeliveredEmailAddress" class="java.lang.String">
         <constructor-arg value="support@veneficalabs.com" />
     </bean>
+    <bean id="enabled" class="java.lang.Boolean">
+        <constructor-arg value="true" />
+    </bean>
+    -->
     
 </beans>
