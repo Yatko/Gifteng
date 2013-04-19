@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
@@ -33,6 +34,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 @ComponentScan(basePackages = "com.venefica", excludeFilters = {@Filter(Configuration.class)})
 @PropertySource("/application.properties")
+@ImportResource("classpath:main.xml")
 public class MainConfig {
 
     private static final int AD_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60; // default: 1 minut 
