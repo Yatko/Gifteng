@@ -7,8 +7,10 @@ package com.venefica.config.data;
 import com.venefica.config.Constants;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
@@ -31,26 +33,29 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class TestDataConfig {
 
-    @Inject
+    protected static final Log logger = LogFactory.getLog(TestDataConfig.class);
+    
+    @Resource
     private String jdbcDriver;
-    @Inject
+    @Resource
     private String jdbcUrl;
-    @Inject
+    @Resource
     private String jdbcUsername;
-    @Inject
+    @Resource
     private String jdbcPassword;
     
-    @Inject
+    @Resource
     private String hibernateDialect;
-    @Inject
+    @Resource
     private String hibernateHbmToDdlAuto = "update";
-    @Inject
+    @Resource
     private String hibernateHbmToDdlImportFiles = "import.sql";
-    @Inject
+    @Resource
     private Boolean hibernateShowSQL = true;
-    @Inject
+    @Resource
     private Boolean hibernateFormatSQL = true;
-    @Inject
+    
+    @Resource
     private Map<String, String> hibernateProperties = new HashMap<String, String>(0);
     
     @Bean
@@ -74,10 +79,15 @@ public class TestDataConfig {
         factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);
         factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, hibernateFormatSQL);
         
-        for ( Map.Entry<String, String> entry : hibernateProperties.entrySet() ) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            factoryBuilder.getProperties().put(key, value);
+        if ( !hibernateProperties.isEmpty() ) {
+            for ( Map.Entry<String, String> entry : hibernateProperties.entrySet() ) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                factoryBuilder.getProperties().put(key, value);
+                logger.debug("Setting property for hibernate session factory initialization (" + key + "=" + value + ")");
+            }
+        } else {
+            logger.warn("Properties are empty when creating hibernate session factory");
         }
 
         return factoryBuilder.buildSessionFactory();
