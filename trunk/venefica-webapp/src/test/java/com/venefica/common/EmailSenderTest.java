@@ -5,7 +5,6 @@
 package com.venefica.common;
 
 import javax.inject.Inject;
-import org.apache.commons.mail.EmailException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ public class EmailSenderTest {
     
     @Test
     @Ignore
-    public void sendHtmlEmailTest() throws EmailException {
+    public void sendHtmlEmailTest() throws MailException {
         emailSender.sendHtmlEmail("Mail subject", "HTML message", "PLAIN message", "figyuszi@gmail.com");
     }
 }
