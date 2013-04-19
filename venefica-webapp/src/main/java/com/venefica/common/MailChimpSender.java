@@ -5,6 +5,8 @@
 package com.venefica.common;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import mailjimp.dom.enums.EmailType;
 import mailjimp.service.IMailJimpService;
 import mailjimp.service.MailJimpException;
@@ -49,11 +51,20 @@ public class MailChimpSender {
                 logger.info("MailChimp listSubscribe() failed");
             }
         } catch (MailJimpException ex) {
-            logger.error("MailChimp error (code: " + ex.getStatusCode() + ")", ex);
-            if ( ex.getStatusCode() == 214 ) {
-                throw new MailException(MailException.ALREADY_SUBSCRIBED, ex);
+            logger.error("MailChimp error (status code: " + ex.getStatusCode() + ")", ex);
+            
+            int errorCode = MailException.GENERAL_ERROR;
+            String message = ex.getMessage();
+            Pattern pattern = Pattern.compile("Code: (.*?)\\.");
+            Matcher matcher = pattern.matcher(message);
+            if ( matcher.find() ) {
+                String code = matcher.group(1);
+                if ( code.equals("214") ) {
+                    errorCode = MailException.ALREADY_SUBSCRIBED;
+                }
             }
-            throw new MailException(MailException.GENERAL_ERROR, ex);
+            
+            throw new MailException(errorCode, ex);
         }
     }
 
