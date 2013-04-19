@@ -8,9 +8,15 @@ $(document).ready(function() {
     
     //chosen selectbox
     $(".chzn-select").chosen({
-        no_results_text: "No results matched"
+        no_results_text: "No results matched",
+        disable_search: true,
+        allow_single_deselect: false
     });
     
     //textbox hint
     $('input[title != ""]').hint();
+    
+    $('#about').click(function() {
+        $("#navigator2").slideToggle(350, "backinout");
+    });
 });
