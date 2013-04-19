@@ -20,6 +20,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.xml.ws.soap.MTOM;
 
 
 /**
@@ -29,6 +30,7 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
  */
 @WebService(name = "AdService", targetNamespace = Namespace.SERVICE)
 @SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
+@MTOM(enabled = false, threshold = 1024)
 public interface AdService {
 
 	/**
