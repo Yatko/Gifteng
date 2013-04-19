@@ -24,6 +24,8 @@ public class InvitationDto extends DtoBase {
     // in
     private String source;
     // in
+    private String otherSource;
+    // in
     private UserType userType;
 
     public InvitationDto() {
@@ -33,6 +35,7 @@ public class InvitationDto extends DtoBase {
         invitation.setEmail(email);
         invitation.setZipCode(zipCode);
         invitation.setSource(source);
+        invitation.setOtherSource(otherSource);
         invitation.setUserType(userType);
     }
     
@@ -66,6 +69,14 @@ public class InvitationDto extends DtoBase {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getOtherSource() {
+        return otherSource;
+    }
+
+    public void setOtherSource(String otherSource) {
+        this.otherSource = otherSource;
     }
     
 }
