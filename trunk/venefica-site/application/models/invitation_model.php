@@ -8,6 +8,7 @@
 class Invitation_model extends CI_Model {
     
     var $email; //string
+    var $country; //string
     var $zipCode; //string
     var $source; //string
     var $otherSource; //string
@@ -26,6 +27,7 @@ class Invitation_model extends CI_Model {
     public function toString() {
         return "Invitation ["
             ."email=".$this->email.", "
+            ."country=".$this->country.", "
             ."zipCode=".$this->zipCode.", "
             ."source=".$this->source.", "
             ."otherSource=".$this->otherSource.", "

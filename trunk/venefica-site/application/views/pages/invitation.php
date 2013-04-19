@@ -1,11 +1,26 @@
+<?
+
+$country_condition = 'United States';
+$source_condition = 'other';
+
+?>
+
 <script langauge="javascript">
     $(function() {
         $("#requestInvitation").click(function() {
             $("#requestInvitationForm").slideToggle(350, "backinout");
         });
+        $("#invitation_country").chosen().change(function() {
+            var selected = $(this).val();
+            if ( selected === "<?=$country_condition?>" ) {
+                $("#invitationZipcodeUS").show();
+            } else {
+                $("#invitationZipcodeUS").hide();
+            }
+        });
         $("#invitation_source").chosen().change(function() {
             var selected = $(this).val();
-            if ( selected === "other" ) {
+            if ( selected === "<?=$source_condition?>" ) {
                 $("#invitationSourceOther").show();
             } else {
                 $("#invitationSourceOther").hide();
@@ -27,7 +42,19 @@
         
         <div class="formBox">
             <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
-            <div><input name="invitation_zipcode" value="<?=set_value('invitation_zipcode')?>" type="text" class="textbox" title="<?=lang('invitation_zipcode_hint')?>" placeholder="<?=lang('invitation_zipcode_hint')?>"></div>
+            <div>
+                <select data-placeholder="<?=lang('invitation_country_hint')?>" name="invitation_country" id="invitation_country" class="chzn-select">
+                    <option value=""></option>
+                    <? foreach ( lang('invitation_country_list') as $country ): ?>
+                    <option value="<?=$country?>" <?=set_select('invitation_country', $country)?>><?=$country?></option> 
+                    <? endforeach; ?>
+                </select>
+            </div>
+            
+            <div id="invitationZipcodeUS" <?=display($invitation_country, $country_condition)?>>
+                <input name="invitation_zipcode" value="<?=set_value('invitation_zipcode')?>" type="text" class="textbox" title="<?=lang('invitation_zipcode_hint')?>" placeholder="<?=lang('invitation_zipcode_hint')?>">
+            </div>
+            
             <div>
                 <select data-placeholder="<?=lang('invitation_source_hint')?>" name="invitation_source" id="invitation_source" class="chzn-select">
                     <option value=""></option>
@@ -39,7 +66,7 @@
                     <option value="other" <?=set_select('invitation_source', 'other')?>><?=lang('invitation_source_other')?></option>
                 </select>
             </div>
-            <div id="invitationSourceOther" <?=display($invitation_source, "other")?>>
+            <div id="invitationSourceOther" <?=display($invitation_source, $source_condition)?>>
                 <input name="invitation_source_other" value="<?=set_value('invitation_source_other')?>" type="text" class="textbox" title="<?=lang('invitation_source_other_hint')?>" placeholder="<?=lang('invitation_source_other_hint')?>">
             </div>
             <div><?=lang('invitation_usertype_message')?></div>

@@ -67,10 +67,12 @@ class Invitation extends CI_Controller {
             if ( $step == 1 ) {
                 //nothing special here
             } elseif ( $step == 2 ) {
+                $country = $this->input->post('invitation_country');
                 $source = $this->input->post('invitation_source');
                 $email = $this->input->post('invitation_email');
                 $this->session->set_flashdata('invitation_email', $email);
                 
+                $extra_data['invitation_country'] = $country;
                 $extra_data['invitation_source'] = $source;
                 $extra_data['invitation_email'] = $email;
             } else {
@@ -83,6 +85,7 @@ class Invitation extends CI_Controller {
             } elseif ( $step == 2 ) {
                 $email = $this->session->flashdata('invitation_email');
                 if ( $email ) {
+                    $extra_data['invitation_country'] = '';
                     $extra_data['invitation_source'] = '';
                     $extra_data['invitation_email'] = $email;
                 } else {
@@ -152,7 +155,8 @@ class Invitation extends CI_Controller {
         if ( $step == 1 ) {
             $this->request_invitation_form->set_rules('invitation_email', 'lang:invitation_email', 'trim|required|valid_email');
         } elseif ( $step == 2 ) {
-            $this->request_invitation_form->set_rules('invitation_zipcode', 'lang:invitation_zipcode', 'trim|required');
+            $this->request_invitation_form->set_rules('invitation_country', 'lang:invitation_country', 'trim|required');
+            $this->request_invitation_form->set_rules('invitation_zipcode', 'lang:invitation_zipcode', 'trim');
             $this->request_invitation_form->set_rules('invitation_source', 'lang:invitation_source', 'trim|required');
             $this->request_invitation_form->set_rules('invitation_source_other', 'lang:invitation_source_other', 'trim');
             $this->request_invitation_form->set_rules('invitation_usertype', 'lang:invitation_usertype', 'trim|required');
@@ -188,6 +192,7 @@ class Invitation extends CI_Controller {
         
         $this->load->model('invitation_model');
         $this->invitation_model->email = $this->input->post('invitation_email');
+        $this->invitation_model->country = $this->input->post('invitation_country');
         $this->invitation_model->zipCode = $this->input->post('invitation_zipcode');
         $this->invitation_model->source = $this->input->post('invitation_source');
         $this->invitation_model->otherSource = $this->input->post('invitation_source_other');
@@ -198,7 +203,15 @@ class Invitation extends CI_Controller {
             $this->invitation_service->requestInvitation($this->invitation_model);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Cannot request invitation: '.$ex->getMessage());
-            $this->request_invitation_form->set_message('request_invitation', lang('invitation_request_failed'));
+            
+            $code = $ex->getCode() != null ? $ex->getCode() : Invitation_service::$GENERAL_ERROR;
+            $errorMessage = lang('invitation_request_failed');
+            
+            if ( $code == Invitation_service::$ALREADY_SUBSCRIBED ) {
+                $errorMessage = lang('invitation_request_failed_already_subscribed');
+            }
+            
+            $this->request_invitation_form->set_message('request_invitation', $errorMessage);
             return FALSE;
         }
         return TRUE;
