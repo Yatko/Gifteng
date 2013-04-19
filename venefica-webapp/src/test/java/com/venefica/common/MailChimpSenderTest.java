@@ -8,7 +8,6 @@ import com.venefica.model.UserType;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.mail.EmailException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ public class MailChimpSenderTest {
     
     @Test
     @Ignore
-    public void listSubscribeTest() throws EmailException {
+    public void listSubscribeTest() throws MailException {
         String emailAddress = "figyuszi@gmail.com";
         //String emailAddress = "agotaifulop@yahoo.com";
         Map<String, Object> vars = new HashMap<String, Object>(0);
