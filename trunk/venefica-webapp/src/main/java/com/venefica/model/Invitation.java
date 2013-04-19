@@ -37,6 +37,7 @@ public class Invitation {
     
     private String zipCode;
     private String source;
+    private String otherSource;
     @Enumerated(EnumType.STRING)
     private UserType userType;
     
@@ -167,5 +168,13 @@ public class Invitation {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public String getOtherSource() {
+        return otherSource;
+    }
+
+    public void setOtherSource(String otherSource) {
+        this.otherSource = otherSource;
     }
 }
