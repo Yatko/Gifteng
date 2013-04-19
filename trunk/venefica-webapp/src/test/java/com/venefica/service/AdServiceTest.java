@@ -178,6 +178,18 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         Long imgId = client.addImageToAd(ad.getId(), img);
         assertNotNull("Image id must be returned!", imgId);
     }
+    
+    @Test
+    public void addLargeImageTest() throws AdNotFoundException, ImageValidationException {
+        authenticateClientAsFirstUser();
+        byte[] data = new byte[1024 * 1024];
+        for ( int i = 0; i < data.length; i++ ) {
+            data[i] = 0x01;
+        }
+        ImageDto img = new ImageDto(ImageType.JPEG, data);
+        Long imgId = client.addImageToAd(ad.getId(), img);
+        assertNotNull("Image id must be returned!", imgId);
+    }
 
     @Test(expected = ImageValidationException.class)
     public void addInvalidImageTest() throws AdNotFoundException, ImageValidationException {
