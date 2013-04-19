@@ -7,6 +7,15 @@
  */
 class Invitation_service {
     
+    public static $GENERAL_ERROR            = 0;
+    //email sending related errors
+    public static $INVALID_FROM_ADDRESS     = 1;
+    public static $INVALID_TO_ADDRESS       = 2;
+    public static $INVALID_EMAIL_MESSAGE    = 3;
+    public static $EMAIL_SEND_ERROR         = 4;
+    //MailJimp related errors
+    public static $ALREADY_SUBSCRIBED       = 11;
+
     public function __construct() {
         log_message(DEBUG, "Initializing Invitation_service");
     }
@@ -25,8 +34,17 @@ class Invitation_service {
             $invitationId = $result->invitationId;
             return $invitationId;
         } catch ( Exception $ex ) {
+            $errorCode = Invitation_service::$GENERAL_ERROR;
+            if (
+                hasField($ex, 'detail') &&
+                hasField($ex->detail, 'InvitationError') &&
+                hasField($ex->detail->InvitationError, 'errorCode')
+            ) {
+                $errorCode = $ex->detail->InvitationError->errorCode;
+            }
+            
             log_message(ERROR, 'Invitation request failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
+            throw new Exception($ex->faultstring, $errorCode);
         }
     }
     

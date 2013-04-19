@@ -78,13 +78,13 @@
 
 <div class="form">
     <div class="container" style="width: 300px; min-height: 225px;">
-        <div class="container" id="login">
+        <div class="container" id="login" style="padding-top:30px;">
             
             <?=form_open('/invitation/request/1')?>
             
-            <div class="formBox">
-                <div><input name="invitation_email" type="text" class="textbox" title="<?=lang('index_invitation_email_hint')?>" placeholder="<?=lang('index_invitation_email_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('index_invitation_request_button')?>" class="green"></div>
+            <div>
+                <div class="loginBox"><input name="invitation_email" type="text" class="textbox" title="<?=lang('index_invitation_email_hint')?>" placeholder="<?=lang('index_invitation_email_hint')?>"></div>
+                <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_request_button')?>" class="green"></div>
             </div>
 
             <?=form_close()?>
@@ -122,7 +122,8 @@
 </h1></div>
 
 <div class="container">
-    <img src="assets/<?=TEMPLATES?>/img/facebook.png"/>
-    <img src="assets/<?=TEMPLATES?>/img/twitter.png"/>
-    <img src="assets/<?=TEMPLATES?>/img/email.png"/>
+    <div class="share facebook"></div>
+    <div class="share twitter"></div>
+    <div class="share email"></div>
+    <div class="share linkedin"></div>
 </div>
