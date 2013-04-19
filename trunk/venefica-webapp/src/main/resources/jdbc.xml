@@ -14,23 +14,6 @@
         <property name="password" value="labs9901" />
     </bean>
     
-    <util:map id="hibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="hibernate.hbm2ddl.auto" value="update" />
-        <entry key="hibernate.show_sql" value="true" />
-        <!--
-        Support GIS functions
-        <entry key="hibernate.dialect" value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
-        -->
-        <entry key="hibernate.dialect" value="org.hibernate.spatial.dialect.mysql.MySQLSpatialInnoDBDialect" />
-        <!--
-        For more details see:
-        http://stackoverflow.com/questions/782823/handling-datetime-values-0000-00-00-000000-in-jdbc
-        http://stackoverflow.com/questions/11133759/0000-00-00-000000-can-not-be-represented-as-java-sql-timestamp-error
-        -->
-        <entry key="hibernate.connection.zeroDateTimeBehavior" value="convertToNull" />
-    </util:map>
-    
-    
     
     <!-- currently just a temporary solution to set the system properties -->
     <!--
