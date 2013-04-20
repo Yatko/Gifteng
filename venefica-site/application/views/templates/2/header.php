@@ -4,7 +4,6 @@ $base_path  = base_url().'assets/'.TEMPLATES.'/';
 $js_path    = $base_path.'js/';
 $css_path   = $base_path.'css/';
 $img_path   = $base_path.'img/';
-//$font_path  = $base_path.'font/';
 
 ?>
 
@@ -59,18 +58,15 @@ $img_path   = $base_path.'img/';
 </head>
 <body>
     <div id="header">
+        <? /** ?>
         <div id="top"><h1 class="gifteng" title="Gifteng">Gifteng</h1></div>
         <div id="navigator">
             <div class="left"><a id="about"><?=lang('main_menu_about')?></a></div>
-            <? /** ?>
             <div class="left"><a href="<?=base_url()?>browse"><span class="categories"></span></a></div>
-            <? /**/ ?>
             <div class="left"><span class="categories"></span></div>
             <div class="left"><span class="search"></span></div>
-            <? /** ?>
             <div class="right"><a href="<?=base_url()?>invitation">Invitation</a></div>
             <div class="right"><a href="<?=base_url()?>authentication">Sign in</a></div>
-            <? /**/ ?>
             <div class="right"><span class="location"></span></div>
             <div class="right"><span class="give"></span></div>
             <div class="logo"><img src="<?=$img_path?>logo.png" /></div>
@@ -88,7 +84,14 @@ $img_path   = $base_path.'img/';
             </ul>	
         </div>
         
-        <div class="tagline"><?=lang('main_slogan')?></div>
+        <!--<div class="tagline"><?=lang('main_slogan')?></div>-->
+        <? /**/ ?>
+        
+        <a href="<?=base_url()?>index"><div class="logo"></div></a>
+        
+        <div id="navigator">
+            <div class="right"><a href="<?=base_url()?>authentication">Sign in</a></div>
+        </div>
     </div>
     
     <div id="stage">
