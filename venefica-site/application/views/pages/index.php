@@ -1,4 +1,4 @@
-<? /** ?>
+<? /**/ ?>
 <script langauge="javascript">
     $(function() {
         //the form wrapper (includes all forms)
@@ -57,6 +57,20 @@
 </script>
 <? /**/ ?>
 
+<script langauge="javascript">
+    function fbs_click(width, height) {
+        //Allow for borders.
+        var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+        //Allow for title and status bars.
+        var topPosition = (window.screen.height / 2) - ((height / 2) + 50);
+        var windowFeatures = "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no";
+        var u = location.href;
+        var t = document.title;
+        window.open('http://www.facebook.com/sharer.php?u=' + encodeURIComponent(u) + '&t=' + encodeURIComponent(t), 'sharer', windowFeatures);
+        return false;
+    }
+</script>
+
 <div class="container"><h2>
     <?=lang('index_welcome')?>
 </h2></div>
@@ -80,34 +94,34 @@
     <div class="container" style="width: 300px; min-height: 225px;">
         <div class="container" id="login" style="padding-top:30px;">
             
+            <? /** ?>
             <?=form_open('/invitation/request/1')?>
-            
             <div>
                 <div class="loginBox"><input name="invitation_email" type="text" class="textbox" title="<?=lang('index_invitation_email_hint')?>" placeholder="<?=lang('index_invitation_email_hint')?>"></div>
                 <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_request_button')?>" class="green"></div>
             </div>
-
             <?=form_close()?>
+            <? /**/ ?>
             
-            <? /** ?>
+            <? /**/ ?>
             <div id="form_wrapper" class="form_wrapper">
-                <?=form_open('#', 'id="requestInvitation" class="request active"')?>
-                <div class="formBox">
-                    <div><input name="invitation_email" value="" type="text" class="textbox" title="Email adress" placeholder="Email adress"></div>
-                    <div><input type="submit" value="REQUEST AN INVITATION" class="green"></div>
+                <?=form_open('/invitation/request/1', 'id="requestInvitation" class="request active"')?>
+                <div>
+                    <div class="loginBox"><input name="invitation_email" type="text" class="textbox" title="<?=lang('index_invitation_email_hint')?>" placeholder="<?=lang('index_invitation_email_hint')?>"></div>
+                    <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_request_button')?>" class="green"></div>
                 </div>
                 <div class="contentBox">
-                    <div><a rel="verify" class="red linkform">I have an invitation</a></div>
+                    <div><a rel="verify" class="red linkform"><?=lang('invitation_invitation_invitation')?></a></div>
                 </div>
                 <?=form_close()?>
                 
-                <?=form_open('#', 'id="verifyInvitation" class="verify"')?>
-                <div class="formBox">
-                    <div><input name="invitation_code" value="" type="text" class="textbox" title="Enter your invitation code" placeholder="Enter your invitation code"></div>
-                    <div><input type="submit" value="VERIFY INVITATION" class="red"></div>
+                <?=form_open('/invitation/verify/1', 'id="verifyInvitation" class="verify"')?>
+                <div>
+                    <div class="loginBox"><input name="invitation_code" value="" type="text" class="textbox" title="<?=lang('index_invitation_code_hint')?>" placeholder="<?=lang('index_invitation_code_hint')?>"></div>
+                    <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_verify_button')?>" class="red"></div>
                 </div>
                 <div class="contentBox">
-                    <div><a rel="request" class="red linkform">Request an invitation</a></div>
+                    <div><a rel="request" class="red linkform"><?=lang('invitation_invitation_request')?></a></div>
                 </div>
                 <?=form_close()?>
             </div>
@@ -122,8 +136,8 @@
 </h1></div>
 
 <div class="container">
-    <div class="share facebook"></div>
-    <div class="share twitter"></div>
-    <div class="share email"></div>
-    <div class="share linkedin"></div>
+    <a href="http://www.facebook.com/share.php?u=http://gifteng.com" onClick="return fbs_click(400, 300);" target="_blank" title="Share on facebook"><div class="share facebook"></div></a>
+    <a href="http://twitter.com/share?text=-%20make%20the%20world%20a%20giving%20place%20-&url=http://www.gifteng.com" target="_blank" title="Gifteng on twitter"><div class="share twitter"></div></a>
+    <a href="#" target="_blank" title=""><div class="share email"></div></a>
+    <!--<a href="http://linkedin.com/in/gifteng" target="_blank" title="Gifteng on LinkedIn"><div class="share linkedin"></div></a>-->
 </div>
