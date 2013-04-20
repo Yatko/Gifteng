@@ -1,6 +1,6 @@
 <?php
 
-$base_path  = base_url().'assets/';
+$base_path  = base_url().'assets/'.TEMPLATES.'/';
 $js_path    = $base_path.'js/';
 $css_path   = $base_path.'css/';
 $img_path   = $base_path.'img/';
