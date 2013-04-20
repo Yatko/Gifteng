@@ -82,6 +82,15 @@ h1 {margin:0;padding:0;}
 }
 
 
+#header .logo {
+    position: fixed;
+    left: 50%;
+    margin-left: -50px !important;
+    width: 100px;
+    height: 52px;
+    background: url(../img/logo.png) no-repeat top center;
+}
+
 
 /* INPUT ELEMENTS */
 .textbox {
