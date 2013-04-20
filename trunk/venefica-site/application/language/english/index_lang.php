@@ -5,3 +5,9 @@ $lang['index_slogan'] = "&middot;&nbsp; make the world a giving place &nbsp;&mid
 
 $lang['index_invitation_email_hint'] = "Email adress";
 $lang['index_invitation_request_button'] = "REQUEST AN INVITATION";
+
+$lang['invitation_invitation_invitation'] = "I have an invitation";
+$lang['invitation_invitation_request'] = "Request an invitation";
+
+$lang['index_invitation_code_hint'] = "Enter your invitation code";
+$lang['index_invitation_verify_button'] = "VERIFY INVITATION";
