@@ -1,6 +1,6 @@
 /* CSS Document */
 
-html, body{height:100%;font-family:'PT Sans', serif;font-size: 12px;margin:0px;}
+html, body{height:100%;font-family:'Lato', sans-serif;font-size: 12px;margin:0px;}
 
 /* apply a natural box layout model to all elements */
 * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -11,7 +11,7 @@ h1 {
         text-align: center;
         font-size: 180%;
         font-style:italic;
-        font-weight: 100;
+        font-weight: 300;
         color:#7b7b79;
         margin:32px !important;
         }
@@ -38,6 +38,7 @@ div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-
 .form {display:inline-block;width:auto;margin:9px;padding:21px;background-color:#fff;border-radius:3px;box-shadow:0px 2px 3px #cbc8c3;vertical-align:top;text-align:left;color: #4d4d4d;}
 .transparentForm {display:inline-block;width:auto;margin:9px;padding:21px;vertical-align:top;text-align:left;color: #4d4d4d;}
 .container {display:block;width:100%;overflow:auto;}
+.label {color:#a6a6a6; font-weight:400;font-size: 136%;}
 .username {font-weight:800;color:#000;}
 .message {font-size:90%;}
 .location {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;text-align:right;}
@@ -82,7 +83,7 @@ input { display: block;
         width: 100%;
         -moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;
         font-size:136%;
-        font-weight:100;
+        font-weight:200;
         text-decoration:none;
         margin-bottom: 12px;
         }
@@ -171,7 +172,8 @@ input[type=submit] {
 #navigator .left:hover, .right:hover {color:#fff;background: #3cd6d3;}
 #navigator .left:active, .right:active {color:#fff;background: #3cd6d3;}
 
-#navigator a {color:#fff;}
+#navigator a {color:#008b96;}
+#navigator a:hover, a:active {color:#fff;}
 #navigator span {background:url(../img/navigator.png) no-repeat;width:24px; height:24px;display:block;}
 #navigator .categories {background-position:0 0;}
 #navigator .search {background-position:-24px 0;}

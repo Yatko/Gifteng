@@ -22,6 +22,25 @@ class Venefica_Form_validation extends CI_Form_validation {
         }
         return FALSE;
     }
+    
+    /**
+     * Sets a general form error. This error is not coupled with any field.
+     * 
+     * @param string $error
+     */
+    public function setError($error) {
+        $this->_error_array['xxx'] = $error;
+    }
+    
+    /**
+     * Sets a form field value.
+     *  
+     * @param string $field
+     * @param string $value
+     */
+    public function setFieldValue($field, $value) {
+        $this->_field_data[$field]['postdata'] = $value;
+    }
 }
 
 ?>

@@ -34,7 +34,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
     });
 </script>
 
-<div class="form"><div class="container">
+<div class="form"><div class="container containerDefaultSize">
     
     <? if ( $action == "request" ): ?>
         <? if ( $step == 3 ): ?>
@@ -44,9 +44,8 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                 </div>
             </div>
         <? elseif ( $step == 2 ): ?>
-            <?=form_open('/invitation/request/2', '', array('invitation_email' => $invitation_email))?>
-
-            <div class="formBox">
+            <div>
+                <?=form_open('/invitation/request/2', '', array('invitation_email' => $invitation_email))?>
                 <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
                 <div>
                     <select data-placeholder="<?=lang('invitation_country_hint')?>" name="invitation_country" id="invitation_country" class="chzn-select">
@@ -57,7 +56,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                     </select>
                 </div>
 
-                <div id="invitationZipcodeUS" <?=display($invitation_country, $country_condition)?>>
+                <div id="invitationZipcodeUS" class="loginBox" <?=display($invitation_country, $country_condition)?>>
                     <input name="invitation_zipcode" value="<?=set_value('invitation_zipcode')?>" type="text" class="textbox" title="<?=lang('invitation_zipcode_hint')?>" placeholder="<?=lang('invitation_zipcode_hint')?>">
                 </div>
 
@@ -72,55 +71,48 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                         <option value="other" <?=set_select('invitation_source', 'other')?>><?=lang('invitation_source_other')?></option>
                     </select>
                 </div>
-                <div id="invitationSourceOther" <?=display($invitation_source, $source_condition)?>>
+                <div id="invitationSourceOther" class="loginBox" <?=display($invitation_source, $source_condition)?>>
                     <input name="invitation_source_other" value="<?=set_value('invitation_source_other')?>" type="text" class="textbox" title="<?=lang('invitation_source_other_hint')?>" placeholder="<?=lang('invitation_source_other_hint')?>">
                 </div>
-                <div><?=lang('invitation_usertype_message')?></div>
-                <div>
+                <div class="label" style="text-align:left;margin:6px;font-weight:200;"><?=lang('invitation_usertype_message')?></div>
+                <div class="label" style="text-align:center;margin:6px 6px 32px 6px;">
                     <input type="radio" name="invitation_usertype" id="giver_usertype" value="GIVER" <?=set_radio('invitation_usertype', 'GIVER')?> class="radionInline" />
                     <label for="giver_usertype"><?=lang('invitation_usertype_giver')?></label>
                     <input type="radio" name="invitation_usertype" id="receiver_usertype" value="RECEIVER" <?=set_radio('invitation_usertype', 'RECEIVER')?> class="radionInline" />
                     <label for="receiver_usertype"><?=lang('invitation_usertype_receiver')?></label>
                 </div>
                 <div class="clear"></div>
-                <div><input type="submit" value="<?=lang('invitation_confirm_button')?>" class="green"></div>
+                <div class="loginBox"><input type="submit" value="<?=lang('invitation_confirm_button')?>" class="green"></div>
+                <?=form_close()?>
             </div>
-
-            <?=form_close()?>
         <? else: ?>
-            <?=form_open('/invitation/request/1')?>
-
-            <div class="formBox">
+            <div>
+                <?=form_open('/invitation/request/1')?>
                 <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
                 <div><input name="invitation_email" value="<?=set_value('invitation_email')?>" type="text" class="textbox" title="<?=lang('invitation_email_hint')?>" placeholder="<?=lang('invitation_email_hint')?>"></div>
                 <div><input type="submit" value="<?=lang('invitation_request_button')?>" class="green"></div>
+                <?=form_close()?>
             </div>
-
-            <?=form_close()?>
         <? endif; ?>
     <? endif; ?>
     
     
     <? if ( $action == "verify" ): ?>
         <? if ( $step == 2): ?>
-            <?=form_open('/invitation/verify/2', '', array('invitation_code' => $invitation_code))?>
-            
-            <div class="formBox">
+            <div>
+                <?=form_open('/invitation/verify/2', '', array('invitation_code' => $invitation_code))?>
                 <div class="red"><?=lang('invitation_verified')?></div>
-                <div><input type="submit" value="<?=lang('invitation_join_button')?>" class="green"></div>
+                <div class="loginBox"><input type="submit" value="<?=lang('invitation_join_button')?>" class="green"></div>
+                <?=form_close()?>
             </div>
-
-            <?=form_close()?>
         <? else: ?>
-            <?=form_open('/invitation/verify/1')?>
-            
-            <div class="formBox">
+            <div>
+                <?=form_open('/invitation/verify/1')?>
                 <?=isset($this->verify_invitation_form) ? $this->verify_invitation_form->error_string() : ""?>
-                <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('invitation_code_hint')?>" placeholder="<?=lang('invitation_code_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('invitation_verify_button')?>" class="red"></div>
+                <div class="loginBox"><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('invitation_code_hint')?>" placeholder="<?=lang('invitation_code_hint')?>"></div>
+                <div class="loginBox"><input type="submit" value="<?=lang('invitation_verify_button')?>" class="red"></div>
+                <?=form_close()?>
             </div>
-
-            <?=form_close()?>
         <? endif; ?>
     <? endif; ?>
     

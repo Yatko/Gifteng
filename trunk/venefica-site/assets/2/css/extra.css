@@ -61,7 +61,11 @@ h1 {margin:0;padding:0;}
 
 
 .formBox {
-    display:block;width:100%;padding:24px;text-decoration:none;text-align:center;
+    display:block;
+    width:100%;
+    padding:24px;
+    text-decoration:none;
+    text-align:center;
 }
 .contentBox {
     display:block;width:100%;text-decoration:none;text-align:center;
@@ -71,7 +75,7 @@ h1 {margin:0;padding:0;}
 }
 
 .error {
-    color: red;
+    color: #cc6666;
     margin: 10px auto;
     margin-top: 0;
     text-align: center;
@@ -79,6 +83,13 @@ h1 {margin:0;padding:0;}
 
 .container {
     overflow:visible;
+}
+.containerDefaultSize {
+    width: 300px;
+    min-height: 225px;
+}
+.containerDefaultSize > div {
+     padding-top: 30px;
 }
 
 
@@ -120,9 +131,9 @@ form.active {
 
 
 
-/* chosen */
+/* CHOSEN */
 .chzn-select {
-    width: 305px;
+    width: 300px;
 }
 .chzn-container {
     text-align:left;
@@ -140,20 +151,9 @@ form.active {
     border-radius:          0 0 3px 3px !important;
 }
 .chzn-container-single .chzn-single {
-    /**/
     height: auto !important;
-    /**/
-    
-    /*background-image: none !important;*/
-    
     padding: 12px 24px !important;
-    /*padding-left: 24px !important;*/
-    
-    /**
-    height: 47px !important;
-    line-height: 47px !important;
-    /**/
-    color: #CDCDCD !important;
+    color: #a6a6a6 !important;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7) !important;
     
     -webkit-box-shadow: inset 0 1px 0 #eee,#fff 0 1px 0 !important;
@@ -172,7 +172,7 @@ form.active {
     background-image: linear-gradient(to bottom, #faf9f8 5%, #faf9f8 100%) !important;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#faf9f8', endColorstr='#faf9f8',GradientType=0) !important;
     font-size: 136% !important;
-    font-weight: 100 !important;
+    font-weight: 400 !important;
 }
 .chzn-container-single .chzn-single abbr {
     top: 20px !important;
@@ -185,28 +185,15 @@ form.active {
     background-position: -42px -10px !important;
 }
 .chzn-container-single .chzn-single div {
-    /**/
     width: 32px !important;
     padding: 10px 0 0 0 !important;
-    /**/
 }
 .chzn-container-single .chzn-single div b {
-    /*background: url('../img/chosen-sprite.png') no-repeat 0px 15px !important;*/
     background: url('../img/navigator.png') no-repeat -96px 0px !important;
     width: 24px !important;
     height: 24px !important;
 }
 .chzn-container-single .chzn-search input {
-    /**
-    background: #fff url('../img/chosen-sprite.png') no-repeat 100% -20px !important;
-    background: url('../img/chosen-sprite.png') no-repeat 100% -20px, -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff)) !important;
-    background: url('../img/chosen-sprite.png') no-repeat 100% -20px, -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%) !important;
-    background: url('../img/chosen-sprite.png') no-repeat 100% -20px, -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%) !important;
-    background: url('../img/chosen-sprite.png') no-repeat 100% -20px, -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%) !important;
-    background: url('../img/chosen-sprite.png') no-repeat 100% -20px, linear-gradient(#eeeeee 1%, #ffffff 15%) !important;
-    font-family: 'PT Sans', serif;
-    /**/
-    
     background: url('../img/navigator.png') no-repeat 100% -48px !important;
     margin: 1px 0 !important;
     padding: 12px 24px !important;
@@ -244,16 +231,6 @@ form.active {
   }
 }
 .chzn-container .chzn-results .highlighted {
-    /**
-    background-color: #3CD6D3 !important;
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3CD6D3', endColorstr='#00BEBE', GradientType=0 ) !important;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(20%, #3CD6D3), color-stop(90%, #00BEBE)) !important;
-    background-image: -webkit-linear-gradient(top, #3CD6D3 20%, #00BEBE 90%) !important;
-    background-image: -moz-linear-gradient(top, #3CD6D3 20%, #00BEBE 90%) !important;
-    background-image: -o-linear-gradient(top, #3CD6D3 20%, #00BEBE 90%) !important;
-    background-image: linear-gradient(#3CD6D3 20%, #00BEBE 90%) !important;
-    /**/
-    
     background-color: #3cd6d3 !important;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3cd6d3', endColorstr='#00bebe',GradientType=0) !important;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3cd6d3), color-stop(1, #00bebe)) !important;
@@ -274,7 +251,10 @@ form.active {
     border: 1px solid #e4e4e4 !important;
 }
 .chzn-container-active .chzn-single-with-drop div b {
-    /*background-position: -18px 15px !important;*/
     background-position: -120px 0px !important;
+}
+
+.fade {
+    color:#dedede !important;
 }
 /**/

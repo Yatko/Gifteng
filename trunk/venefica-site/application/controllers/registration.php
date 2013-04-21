@@ -32,6 +32,11 @@ class Registration extends CI_Controller {
         $this->registration_form->set_rules('registration_lastname', 'lang:registration_lastname', 'trim|required|alpha');
         $this->registration_form->set_rules('registration_email', 'lang:registration_email', 'trim|required|valid_email');
         $this->registration_form->set_rules('registration_password', 'lang:registration_password', 'required|callback_register_user');
+        
+        $this->registration_form->set_message('alpha', lang('validation_alpha'));
+        $this->registration_form->set_message('required', lang('validation_required'));
+        $this->registration_form->set_message('valid_email', lang('validation_valid_email'));
+        
         $is_valid = $this->registration_form->run();
         if ( $is_valid ) {
             redirect('/browse');
@@ -52,7 +57,8 @@ class Registration extends CI_Controller {
     
     public function register_user($password) {
         if ( $this->registration_form->hasErrors() ) {
-            $this->registration_form->set_message('register_user', 'Cannot register user!');
+            //$this->registration_form->set_message('register_user', 'Cannot register user!');
+            $this->registration_form->set_message('register_user', '');
             return FALSE;
         }
         
@@ -67,8 +73,8 @@ class Registration extends CI_Controller {
             $this->load->library('usermanagement_service');
             $this->usermanagement_service->registerUser($this->user_model, $password, $code);
         } catch ( Exception $ex ) {
-            //TODO: create language key
-            $this->registration_form->set_message('register_user', 'User registration failed! '.$ex->getMessage());
+            log_message(ERROR, 'User registration failed! '.$ex->getMessage());
+            $this->registration_form->set_message('register_user', lang('registration_failed'));
             return FALSE;
         }
         return TRUE;
