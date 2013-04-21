@@ -47,7 +47,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
             <div>
                 <?=form_open('/invitation/request/2', '', array('invitation_email' => $invitation_email))?>
                 <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
-                <div>
+                <div class="loginBox">
                     <select data-placeholder="<?=lang('invitation_country_hint')?>" name="invitation_country" id="invitation_country" class="chzn-select">
                         <option value=""></option>
                         <? foreach ( lang('invitation_country_list') as $country ): ?>
@@ -60,7 +60,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                     <input name="invitation_zipcode" value="<?=set_value('invitation_zipcode')?>" type="text" class="textbox" title="<?=lang('invitation_zipcode_hint')?>" placeholder="<?=lang('invitation_zipcode_hint')?>">
                 </div>
 
-                <div>
+                <div class="loginBox">
                     <select data-placeholder="<?=lang('invitation_source_hint')?>" name="invitation_source" id="invitation_source" class="chzn-select">
                         <option value=""></option>
                         <option value="Google" <?=set_select('invitation_source', 'Google')?>><?=lang('invitation_source_google')?></option>
