@@ -73,6 +73,10 @@ h1 {margin:0;padding:0;}
 .formBox div {
     padding: 0 0 5px 0;
 }
+.loginBox {
+    overflow:visible !important;
+}
+
 
 .error {
     color: #cc6666;
@@ -137,6 +141,7 @@ form.active {
 }
 .chzn-container {
     text-align:left;
+    margin-bottom: 12px;
 }
 .chzn-container .chzn-drop {
     width: 305px !important;
