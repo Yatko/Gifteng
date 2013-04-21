@@ -18,12 +18,15 @@ $lang['invitation_usertype_receiver'] = "Receiving";
 $lang['invitation_confirm_button'] = "CONFIRM REQUEST";
 $lang['invitation_confirmed'] = "Thank you for your request,<br>we will contact you soon!";
 $lang['invitation_invitation'] = "I have an invitation";
-$lang['invitation_code_hint'] = "Enter your invitation code";
+$lang['invitation_code_hint'] = "Invitation Code";
 $lang['invitation_verify_button'] = "VERIFY INVITATION";
 
+$lang['invitation_request_failed_empty_form'] = "Please fill out the form.";
+$lang['invitation_request_failed_incorrect_zipcode'] = "Zip code needs to be five character.";
+$lang['invitation_request_failed_choose_one'] = "Please select one.";
 $lang['invitation_request_failed'] = "Cannot request invitation!";
-$lang['invitation_request_failed_already_subscribed'] = "Invitation already requested!";
-$lang['invitation_verify_invalid'] = "Invitation is not valid!";
+$lang['invitation_request_failed_already_subscribed'] = "You can only request one invitation. Please allow us some time to send you the invite.";
+$lang['invitation_verify_invalid'] = "Sorry, we don't recognize this invitation code.";
 $lang['invitation_verify_failed'] = "Cannot verify invitation!";
 
 $lang['invitation_verified'] = "Congratulation!";
@@ -61,9 +64,9 @@ $lang['invitation_country_list'] = array(
 #
 #invitation form fields
 #
-$lang['invitation_email'] = "Email";
-$lang['invitation_code'] = "Invitation code";
-$lang['invitation_country'] = "Country";
+$lang['invitation_email'] = "email address";
+$lang['invitation_code'] = "invitation code";
+$lang['invitation_country'] = "country";
 $lang['invitation_zipcode'] = "ZIP code";
-$lang['invitation_source'] = "Source";
-$lang['invitation_usertype'] = "User type";
+$lang['invitation_source'] = "inspiration";
+$lang['invitation_usertype'] = "use of Gifteng";
