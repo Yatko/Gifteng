@@ -139,7 +139,7 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
                 Map<String, Object> vars = new HashMap<String, Object>(0);
                 vars.put("COUNTRY", invitationDto.getCountry());
                 vars.put("ZIPCODE", invitationDto.getZipCode());
-                vars.put("USERTYPE", invitationDto.getUserType().name());
+                vars.put("USERTYPE", invitationDto.getUserType().getDescription());
                 vars.put("SOURCE", source);
                 
                 mailChimpSender.listSubscribe(invitationDto.getEmail(), vars);
