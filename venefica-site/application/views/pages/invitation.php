@@ -39,8 +39,19 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
     <? if ( $action == "request" ): ?>
         <? if ( $step == 3 ): ?>
             <div class="contentBox">
-                <div class="textOrange">
-                    <a href="<?=base_url()?>index" class="red"><?=lang('invitation_confirmed')?></a>
+                <div class="container">
+                    <div class="textOrange">
+                        <a href="<?=base_url()?>index" class="red"><?=lang('invitation_confirmed')?></a>
+                    </div>
+                </div>
+                <div class="container">
+                    <div  class="label">
+                        <?=lang('invitation_confirmed_share')?>
+                    </div>
+                    <a href="http://facebook.com/gifteng" target="_blank" title="Gifteng on facebook"><div class="share facebook"></div></a>
+                    <a href="http://twitter.com/gifteng" target="_blank" title="Gifteng on twitter"><div class="share twitter"></div></a>
+                    <!-- <a href="#" target="_blank" title=""><div class="share email"></div></a> -->
+                    <a href="http://linkedin.com/in/gifteng" target="_blank" title="Gifteng on LinkedIn"><div class="share linkedin"></div></a>
                 </div>
             </div>
         <? elseif ( $step == 2 ): ?>
@@ -66,7 +77,8 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                         <option value="Google" <?=set_select('invitation_source', 'Google')?>><?=lang('invitation_source_google')?></option>
                         <option value="Facebook" <?=set_select('invitation_source', 'Facebook')?>><?=lang('invitation_source_facebook')?></option>
                         <option value="Twitter" <?=set_select('invitation_source', 'Twitter')?>><?=lang('invitation_source_twitter')?></option>
-                        <option value="Indiegogo" <?=set_select('invitation_source', 'Indiegogo')?>><?=lang('invitation_source_indiegogo')?></option>
+                        <!--<option value="Indiegogo" <?=set_select('invitation_source', 'Indiegogo')?>><?=lang('invitation_source_indiegogo')?></option>-->
+                        <option value="Kickstarter" <?=set_select('invitation_source', 'Kickstarter')?>><?=lang('invitation_source_kickstarter')?></option>
                         <option value="friend" <?=set_select('invitation_source', 'friend')?>><?=lang('invitation_source_friend')?></option>
                         <option value="other" <?=set_select('invitation_source', 'other')?>><?=lang('invitation_source_other')?></option>
                     </select>
