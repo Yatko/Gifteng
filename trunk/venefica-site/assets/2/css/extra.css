@@ -91,9 +91,7 @@ h1 {margin:0;padding:0;}
 .containerDefaultSize {
     width: 300px;
     min-height: 225px;
-}
-.containerDefaultSize > div {
-     padding-top: 30px;
+    padding-top: 30px;
 }
 
 
@@ -160,12 +158,10 @@ h1 {margin:0;padding:0;}
 /* FORM WRAPPER */
 .form_wrapper form {
     display: none;
-}
-form.active {
-    display:block;
-}
-.form_wrapper form {
     width: 300px;
+}
+.form_wrapper form.active {
+    display:block;
 }
 
 
