@@ -1,3 +1,6 @@
+<div class="indexOuter"><div class="indexInner">
+
+<? /**/ ?>
 <div class="container"><h2>
     <?=lang('index_welcome')?>
 </h2></div>
@@ -21,8 +24,8 @@
     <div id="form_wrapper" class="form_wrapper">
         <?=form_open('/invitation/request/1', 'id="requestInvitation" class="request active"')?>
         <div>
-            <div class="loginBox"><input name="invitation_email" type="text" class="textbox" title="<?=lang('index_invitation_email_hint')?>" placeholder="<?=lang('index_invitation_email_hint')?>"></div>
-            <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_request_button')?>" class="green"></div>
+            <div class="loginBox"><input name="invitation_email" type="text" class="textbox" title="<?=lang('invitation_email_hint')?>" placeholder="<?=lang('invitation_email_hint')?>"></div>
+            <div class="loginBox"><input type="submit" value="<?=lang('invitation_request_button')?>" class="green"></div>
         </div>
         <div class="contentBox">
             <div><a rel="verify" class="red linkform"><?=lang('invitation_invitation_invitation')?></a></div>
@@ -31,8 +34,8 @@
 
         <?=form_open('/invitation/verify/1', 'id="verifyInvitation" class="verify"')?>
         <div>
-            <div class="loginBox"><input name="invitation_code" value="" type="text" class="textbox" title="<?=lang('index_invitation_code_hint')?>" placeholder="<?=lang('index_invitation_code_hint')?>"></div>
-            <div class="loginBox"><input type="submit" value="<?=lang('index_invitation_verify_button')?>" class="red"></div>
+            <div class="loginBox"><input name="invitation_code" value="" type="text" class="textbox" title="<?=lang('invitation_code_hint')?>" placeholder="<?=lang('invitation_code_hint')?>"></div>
+            <div class="loginBox"><input type="submit" value="<?=lang('invitation_verify_button')?>" class="red"></div>
         </div>
         <div class="contentBox">
             <div><a rel="request" class="red linkform"><?=lang('invitation_invitation_request')?></a></div>
@@ -51,3 +54,6 @@
     <!-- <a href="#" target="_blank" title=""><div class="share email"></div></a> -->
     <a href="http://linkedin.com/in/gifteng" target="_blank" title="Gifteng on LinkedIn"><div class="share linkedin"></div></a>
 </div>
+<? /**/ ?>
+
+</div></div>
