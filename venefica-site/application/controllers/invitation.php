@@ -184,15 +184,19 @@ class Invitation extends CI_Controller {
                     $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
                     $this->request_invitation_form->setError(lang('invitation_request_failed_incorrect_zipcode'));
                     $is_valid = false;
-                } else if (
-                    !$this->request_invitation_form->required($this->input->post('invitation_source')) ||
-                    !$this->request_invitation_form->required($this->input->post('invitation_usertype'))
-                ) {
+                } else if ( !$this->request_invitation_form->required($this->input->post('invitation_source')) ) {
                     $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
                     $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
                     $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
                     $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
-                    $this->request_invitation_form->setError(lang('invitation_request_failed_choose_one'));
+                    $this->request_invitation_form->setError(lang('invitation_request_failed_choose_source'));
+                    $is_valid = false;
+                } else if ( !$this->request_invitation_form->required($this->input->post('invitation_usertype')) ) {
+                    $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
+                    $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
+                    $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
+                    $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
+                    $this->request_invitation_form->setError(lang('invitation_request_failed_choose_usertype'));
                     $is_valid = false;
                 }
             }
