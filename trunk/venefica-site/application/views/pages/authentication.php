@@ -31,7 +31,7 @@ if ( $action == '' ) {
             
             <?=form_open('/authentication/forgot', 'id="forgot" class="forgot ' . ($action == 'forgot' ? 'active' : '') . '"')?>
             <?=isset($this->forgot_password_form) ? $this->forgot_password_form->error_string() : ""?>
-            <div><?=lang('forgot_password_message')?></div>
+            <div class="label"><?=lang('forgot_password_message')?></div>
             <div class="loginBox"><input name="forgot_password_email" value="<?=set_value('forgot_password_email')?>" type="text" class="textbox" title="<?=lang('forgot_password_email_hint')?>" placeholder="<?=lang('forgot_password_email_hint')?>"></div>
             <div class="loginBox"><input type="submit" value="<?=lang('forgot_password_button')?>" class="red"></div>
             <?=form_close()?>
