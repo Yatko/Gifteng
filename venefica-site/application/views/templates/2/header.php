@@ -47,14 +47,13 @@ $img_path   = $base_path.'img/';
     
     <script type="text/javascript" src="<?=$js_path?>common.js"></script>
     
-    <? /** ?>
-    <meta property="og:site_name" content="gifteng"/>
+    
+    <meta property="og:site_name" content="Gifteng ♥"/>
     <meta property="og:url" content="http://gifteng.com/"/>
-    <meta property="og:title" content="Interesting. Man. Things. "/>
-    <meta property="og:description" content="A social image bookmarking community specifically catered to the male population. "/>
-    <meta property="og:image" content="http://manteresting.com/uploads/data/manheader.png"/>
-    <meta property="og:type" content="manterestingtwo:&lt;meta property=&quot;og:type&quot; content=&quot;manterestingtwo:nail&quot; /&gt;"/>
-    <? /**/ ?>
+    <meta property="og:title" content="Gifteng ♥"/>
+    <meta property="og:description" content="- make the world a giving place -"/>
+    <meta property="og:image" content="<?=$img_path?>gifteng.png"/>
+    <meta property="og:type" content="website"/>
 </head>
 <body>
     <div id="header">
