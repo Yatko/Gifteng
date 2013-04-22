@@ -29,7 +29,9 @@ $(function() {
     var $currentForm = $form_wrapper.children('form.active');
     //the change form links
     var $linkform = $form_wrapper.find('.linkform');
-
+    var maxWidth = 0;
+    var maxHeight = 0;
+    
     //get width and height of each form and store them for later						
     $form_wrapper.children('form').each(function(i) {
         var $theForm = $(this);
@@ -37,16 +39,24 @@ $(function() {
         if ( !$theForm.hasClass('active') ) {
             $theForm.hide();
         }
+        var w = $theForm.width();
+        var h = $theForm.height();
+        if ( w > maxWidth ) {
+            maxWidth = w;
+        }
+        if ( h > maxHeight ) {
+            maxHeight = h;
+        }
         $theForm.data({
-            width: $theForm.width(),
-            height: $theForm.height()
+            width: w,
+            height: h
         });
     });
 
     //set width and height of wrapper (same of current form)
     $form_wrapper.css({
-        width: $currentForm.data('width') + 'px',
-        height: $currentForm.data('height') + 'px'
+        width: maxWidth + 'px',
+        height: maxHeight + 'px'
     });
 
     //clicking a link (change form event) in the form
@@ -64,8 +74,8 @@ $(function() {
             $currentForm= $form_wrapper.children('form.' + target);
             //animate the wrapper
             $form_wrapper.stop().animate({
-                width: $currentForm.data('width') + 'px',
-                height: $currentForm.data('height') + 'px'
+                //width: $currentForm.data('width') + 'px',
+                //height: $currentForm.data('height') + 'px'
             }, 150, function() {
                 //new form gets class active
                 $currentForm.addClass('active');
