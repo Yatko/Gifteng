@@ -10,6 +10,17 @@ package com.venefica.model;
  */
 public enum UserType {
 
-    GIVER,
-    RECEIVER,
+    GIVER("Giving"),
+    RECEIVER("Receiving"),
+    ;
+    
+    private String description;
+    
+    UserType(String description) {
+        this.description = description;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
 }
