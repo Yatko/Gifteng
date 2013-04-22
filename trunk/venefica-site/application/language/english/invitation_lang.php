@@ -22,6 +22,8 @@ $lang['invitation_invitation'] = "I have an invitation";
 $lang['invitation_code_hint'] = "Invitation Code";
 $lang['invitation_verify_button'] = "VERIFY INVITATION";
 
+$lang['invitation_confirmed_share'] = '';
+
 $lang['invitation_request_failed_empty_form'] = "Please fill out the form.";
 $lang['invitation_request_failed_incorrect_zipcode'] = "Zip code needs to be five character.";
 $lang['invitation_request_failed_choose_source'] = "How did you hear about us?";
