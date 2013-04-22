@@ -9,6 +9,7 @@ $lang['invitation_source_google'] = "Google";
 $lang['invitation_source_facebook'] = "Facebook";
 $lang['invitation_source_twitter'] = "Twitter";
 $lang['invitation_source_indiegogo'] = "Indiegogo";
+$lang['invitation_source_kickstarter'] = "Kickstarter";
 $lang['invitation_source_friend'] = "From a friend";
 $lang['invitation_source_other'] = "Other";
 $lang['invitation_source_other_hint'] = "Please specify";
