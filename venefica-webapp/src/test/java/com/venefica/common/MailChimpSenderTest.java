@@ -38,7 +38,7 @@ public class MailChimpSenderTest {
         vars.put("INVITATION", "1234");
         vars.put("ZIPCODE", "00501");
         vars.put("SOURCE", "Other");
-        vars.put("USERTYPE", UserType.GIVER);
+        vars.put("USERTYPE", UserType.GIVER.getDescription());
         
         mailChimpSender.listSubscribe(emailAddress, vars);
     }
