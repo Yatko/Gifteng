@@ -48,8 +48,12 @@ public abstract class AbstractService {
     //    return securityContextHolder.getContext().getUser();
     //}
 
+    protected Long getCurrentUserId() {
+        return securityContextHolder.getContext().getUserId();
+    }
+    
     protected User getCurrentUser() {
-        Long currentUserId = securityContextHolder.getContext().getUserId();
+        Long currentUserId = getCurrentUserId();
         return userDao.get(currentUserId);
     }
     
