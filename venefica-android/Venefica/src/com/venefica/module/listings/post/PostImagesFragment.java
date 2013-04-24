@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -48,6 +49,7 @@ import com.venefica.module.listings.GalleryImageAdapter.OnActionModeListener;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.CameraPreview;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -63,9 +65,27 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * Listener to communicate with activity
 	 */
 	public interface OnPostImagesListener{
+		/**
+		 * called on camera start error
+		 * @param errorCode
+		 */
 		public void onCameraError(int errorCode);
+		/**
+		 * Send images data to activity on next button click
+		 * @param imageList
+		 * @param images
+		 * @param coverImagePosition
+		 */
 		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images, int coverImagePosition);
+		/**
+		 * @return true if user returns/back from preview fragment
+		 */
 		public boolean isBackFromPreview();
+		/** 
+		 * Get images to update/delete in update listing mode
+		 * @return ArrayList<ImageDto>
+		 */
+		public List<ImageDto> getImagesToUpdate();
 	}
 	private static final int REQ_GET_IMAGE = 1002;
 	private OnPostImagesListener listener;
@@ -120,13 +140,22 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * root layout
 	 */
 	private View rootView;
+	
+	/**
+	 * images to update
+	 */
+	private List<ImageDto> imageDtos;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//images
+		imageDtos = new ArrayList<ImageDto>();
 		images = new ArrayList<Bitmap>();
-		images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
-		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true, true);
+		imageList = new ArrayList<String>();
+		if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_POST_LISTING) {
+			images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));			
+		}
+		galImageAdapter = new GalleryImageAdapter(getActivity(), imageDtos, images, true, true, true);
 		galImageAdapter.setActionModeListener(this);
 	}
 	
@@ -146,17 +175,25 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		cameraPreview = (FrameLayout) rootView.findViewById(R.id.layViewPostListingCameraPreview);
 		imgSwitcher = (ImageSwitcher) rootView.findViewById(R.id.imgSwitcherActPostListing);
 		imgSwitcher.setFactory(this);
+		
 		gallery = (Gallery) rootView.findViewById(R.id.galleryActPostListing);
 		gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
+			public void onItemSelected(AdapterView<?> arg0, View view,
 					int position, long id) {
-				if (images != null && images.size() > 0) {					
+				/*if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+					if (position >= imageDtos.size()) {
+						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position - imageDtos.size()))));						
+					} else {
+						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(Constants.PHOTO_URL_PREFIX + imageDtos.get(position).getUrl())));
+					}
+				}else if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_POST_LISTING 
+						&& images != null && images.size() > 0) {					
 					if (imageList != null) {
 						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position))));
 					}
-				}
+				}*/
 			}
 
 			@Override
@@ -316,6 +353,16 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, REQ_GET_IMAGE);
     }
+    
+    @Override
+    public void onStart() {
+    	super.onStart();
+    	if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+			imageDtos.clear();
+			imageDtos.addAll(listener.getImagesToUpdate());
+			galImageAdapter.notifyDataSetChanged();
+    	}
+    }
     @Override
     public void onResume() {
     	super.onResume();
@@ -377,29 +424,56 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			int id = item.getItemId();
 			if (id == R.id.menu_post_gallery_delete) {
-				//Delete selected images
-				ArrayList<String> listToDelete = new ArrayList<String>();
-				ArrayList<Bitmap> imgsToDelete = new ArrayList<Bitmap>();
-				for (Integer position : galImageAdapter.getSelectedPositions()) {
-					listToDelete.add(imageList.get((int)position));
-					imgsToDelete.add(images.get((int)position));
+				if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_POST_LISTING) {
+					//Delete selected images
+					ArrayList<String> listToDelete = new ArrayList<String>();
+					ArrayList<Bitmap> imgsToDelete = new ArrayList<Bitmap>();
+					for (Integer position : galImageAdapter
+							.getSelectedPositions()) {
+						listToDelete.add(imageList.get((int) position));
+						imgsToDelete.add(images.get((int) position));
+					}
+					imageList.removeAll(listToDelete);
+					images.removeAll(imgsToDelete);
+					imageList.trimToSize();
+					images.trimToSize();
+					listToDelete.clear();
+					imgsToDelete.clear();
+				} else if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+					ArrayList<ImageDto> dtoListToDelete = new ArrayList<ImageDto>();
+					ArrayList<String> listToDelete = new ArrayList<String>();
+					ArrayList<Bitmap> imgsToDelete = new ArrayList<Bitmap>();
+					for (Integer position : galImageAdapter
+							.getSelectedPositions()) {
+						if ((int)position >= imageDtos.size()) {
+							listToDelete.add(imageList.get(((int) position) - imageDtos.size()));
+							imgsToDelete.add(images.get(((int) position) - imageDtos.size()));							
+						} else {
+							dtoListToDelete.add(imageDtos.get((int) position));
+						}
+					}
+					imageDtos.removeAll(dtoListToDelete);
+					imageList.removeAll(listToDelete);
+					images.removeAll(imgsToDelete);
+					imageList.trimToSize();
+					images.trimToSize();					
+					listToDelete.clear();
+					listToDelete.clear();
+					imgsToDelete.clear();
 				}
-				imageList.removeAll(listToDelete);
-				images.removeAll(imgsToDelete);
-				imageList.trimToSize();
-				images.trimToSize();
+				if (imageDtos.size() == 0 && imageList.size() == 0 && images.size() == 0 ) {
+					images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
+				}
 				galImageAdapter.notifyDataSetChanged();
 				gallery.invalidate();
 				galImageAdapter.clearSelectedPositions();
-				listToDelete.clear();
-				imgsToDelete.clear();
-			} else if (id == R.id.menu_post_gallery_set_cover_image) {
-				//set cover image
+			} else if (id == R.id.menu_post_gallery_set_cover_image) {				
+				//set cover image in post new mode
 				coverImagePosition = galImageAdapter.getSelectedPositions().get(0);
 	        	galImageAdapter.setCoverImagePosition(coverImagePosition);
 	        	galImageAdapter.notifyDataSetChanged();
 	        	gallery.setSelection(coverImagePosition);
-				galImageAdapter.clearSelectedPositions();				
+				galImageAdapter.clearSelectedPositions();
 			}
 			if (actionMode != null) {
 				actionMode.finish();
@@ -445,12 +519,14 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		} else if (view.getId() == R.id.imgBtnPostListingPickCamera){
 			camera.takePicture(null, null, pictureCallback);
 		} else if (view.getId() == R.id.imgBtnPostListingNextToStep2){
-			if (!isFirstImage) {
+			if ((!isFirstImage  || PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING)
+					&& (imageDtos.size() > 0 || (imageList.size() > 0 && images.size() > 0))) {
 				if (actionMode != null) {
 					actionMode.finish();
 				}
 												
-				if (coverImagePosition == -1) {
+				if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_POST_LISTING
+						&& coverImagePosition == -1) {
 					showCoverImgInstructions(getResources().getString(R.string.msg_postlisting_sel_cover_image_instruction));
 				}else {
 					listener.onNextButtonClick(imageList, images, coverImagePosition);

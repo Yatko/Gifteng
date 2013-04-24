@@ -1,6 +1,7 @@
 package com.venefica.module.listings.post;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -25,6 +26,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.listings.GalleryImageAdapter;
 import com.venefica.module.main.R;
 import com.venefica.services.AdDto;
+import com.venefica.services.ImageDto;
+import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 /**
@@ -67,6 +70,11 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 		 * @return int 
 		 */
 		public int getCoverImagePosition();
+		/**
+		 * get listing's existing images to update
+		 * @return
+		 */
+		public List<ImageDto> getImageDtosToUpdate();
 	}
 	private OnPostPreivewListener listener;
 	/**
@@ -98,6 +106,10 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 	 */
 	private TextView txtTitle, txtDescription, txtCategory, txtCurrentvalue;
 	private Button btnPost;
+	/**
+	 * images to update
+	 */
+	private List<ImageDto> imageDtos;
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreate(android.os.Bundle)
 	 */
@@ -108,7 +120,8 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 		images = listener.getImages();
 		listing = listener.getListing();
 		imageList = listener.getImageList();
-		galImageAdapter = new GalleryImageAdapter(getActivity(), null, images, true, true, false);		
+		imageDtos = listener.getImageDtosToUpdate();
+		galImageAdapter = new GalleryImageAdapter(getActivity(), imageDtos, images, true, true, false);		
 	}
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -128,7 +141,14 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int position, long id) {
-				if (images != null && images.size() > 0) {					
+				if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+					if (position >= imageDtos.size()) {
+						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position - imageDtos.size()))));						
+					} else {
+						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(Constants.PHOTO_URL_PREFIX + imageDtos.get(position).getUrl())));
+					}
+				}else if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_POST_LISTING 
+						&&images != null && images.size() > 0) {					
 					if (imageList != null) {
 						imgSwitcher.setImageDrawable(new BitmapDrawable(getImageFromCache(imageList.get(position))));
 					}
@@ -176,6 +196,7 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 		super.onResume();
 		listener.setPreviewVisible(true);
 		galImageAdapter.setCoverImagePosition(listener.getCoverImagePosition());
+		galImageAdapter.notifyDataSetChanged();
 	}
 	@Override
 	public void onDestroy() {
