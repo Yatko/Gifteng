@@ -38,8 +38,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 
     @Override
     @Transactional
-    public void changePassword(String oldPassword, String newPassword)
-            throws AuthorizationException {
+    public void changePassword(String oldPassword, String newPassword) throws AuthorizationException {
         if (oldPassword == null) {
             throw new NullPointerException("oldPassword is null");
         }
@@ -47,9 +46,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             throw new NullPointerException("newPassword is null");
         }
 
-        User currentUser = securityContextHolder.getContext().getUser();
-
-        User user = userDao.get(currentUser.getId());
+        User user = getCurrentUser();
 
         if (user.getPassword().equals(oldPassword)) {
             user.setPassword(newPassword);
