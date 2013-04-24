@@ -214,56 +214,56 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
     	if(vaildator == null){
     		vaildator = new InputFieldValidator();    		
     	}
-    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
+    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.EMAIL_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_email).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_email));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtPhone, Pattern.compile(InputFieldValidator.phonePatternRegx))){
+    	if(!vaildator.validateField(edtPhone, Pattern.compile(InputFieldValidator.PHONE_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_phone).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_phone));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtFirstName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
+    	if(!vaildator.validateField(edtFirstName, Pattern.compile(InputFieldValidator.USER_NAME_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_f_name).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtLastName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
+    	if(!vaildator.validateField(edtLastName, Pattern.compile(InputFieldValidator.USER_NAME_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_l_name).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtZipCode, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
+    	if(!vaildator.validateField(edtZipCode, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_zip).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_zipcode));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtCounty, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	if(!vaildator.validateField(edtCounty, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_county).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtCity, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	if(!vaildator.validateField(edtCity, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_city).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtArea, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	if(!vaildator.validateField(edtArea, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_area).toString());
     		message.append("- ");

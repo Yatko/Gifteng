@@ -87,7 +87,7 @@ public class RequestInvitationFragment extends SherlockFragment implements OnCli
     		vaildator = new InputFieldValidator();    		
     	}
     	
-    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
+    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.EMAIL_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_email).toString());
     		message.append("- ");

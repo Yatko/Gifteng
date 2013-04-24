@@ -120,7 +120,7 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
     		vaildator = new InputFieldValidator();    		
     	}
     	
-    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx)) || edtZip.getText().toString().length() < 6){
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX)) || edtZip.getText().toString().length() < 6){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_zip).toString());
     		message.append("- ");

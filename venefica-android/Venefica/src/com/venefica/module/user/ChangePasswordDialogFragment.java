@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.venefica.module.listings.post.GetListingDetails;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
@@ -100,21 +99,21 @@ public class ChangePasswordDialogFragment extends SherlockDialogFragment impleme
     	if(vaildator == null){
     		vaildator = new InputFieldValidator();    		
     	}    	
-    	if(!vaildator.validateField(edtOldPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+    	if(!vaildator.validateField(edtOldPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_password).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.hint_user_password_pattern));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtNewPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+    	if(!vaildator.validateField(edtNewPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_new_password).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.hint_user_password_pattern));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtConfPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))){
+    	if(!vaildator.validateField(edtConfPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_conf_password).toString());
     		message.append("- ");
