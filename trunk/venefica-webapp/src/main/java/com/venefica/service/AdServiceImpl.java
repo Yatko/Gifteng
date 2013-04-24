@@ -115,7 +115,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             category = new Category(localPlacesCategory, categoryName);
             categoryDao.save(category);
         }
-
     }
 
     @Override
@@ -528,11 +527,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public Long bookmarkAd(Long adId) throws AdNotFoundException {
-        Long currentUserId = securityContextHolder.getContext().getUserId();
+        Long currentUserId = getCurrentUserId();
         Bookmark bookmark = bookmarkDao.get(currentUserId, adId);
 
         if (bookmark == null) {
-            User currentUser = userDao.get(currentUserId);
+            User currentUser = getCurrentUser();
             Ad ad = adDao.get(adId);
 
             if (ad == null) {
@@ -565,7 +564,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     public void removeBookmark(Long adId) throws BookmarkNotFoundException {
-        Long currentUserId = securityContextHolder.getContext().getUserId();
+        Long currentUserId = getCurrentUserId();
         Bookmark bookmark = bookmarkDao.get(currentUserId, adId);
 
         if (bookmark == null) {
