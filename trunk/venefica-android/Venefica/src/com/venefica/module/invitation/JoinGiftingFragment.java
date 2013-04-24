@@ -111,28 +111,28 @@ public class JoinGiftingFragment extends SherlockFragment implements OnClickList
     	if(vaildator == null){
     		vaildator = new InputFieldValidator();    		
     	}
-    	if(!vaildator.validateField(edtFName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
+    	if(!vaildator.validateField(edtFName, Pattern.compile(InputFieldValidator.USER_NAME_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_fname).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtLName, Pattern.compile(InputFieldValidator.userNamePatternRegx))){
+    	if(!vaildator.validateField(edtLName, Pattern.compile(InputFieldValidator.USER_NAME_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_lname).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.emailPatternRegx))){
+    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.EMAIL_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_email).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_email));
     		message.append("\n");
     	} 
-    	if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx))
+    	if(!vaildator.validateField(edtPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))
     			|| edtPassword.getText().toString().length() < 6){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_password).toString());

@@ -134,9 +134,9 @@ public class SigninFragment extends SherlockFragment implements OnClickListener{
 	 * @return validation result
 	 */
 	private boolean validateInput(){
-		if((validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.phonePatternRegx)) 
-				|| (validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.emailPatternRegx)))
-				&& validator.validateField(edtPassword, Pattern.compile(InputFieldValidator.charNumPatternRegx)))){
+		if((validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.PHONE_PATTERN_REGX)) 
+				|| (validator.validateField(edtLogin, Pattern.compile(InputFieldValidator.EMAIL_PATTERN_REGX)))
+				&& validator.validateField(edtPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX)))){
 			return true;
 		}
 		return false;
