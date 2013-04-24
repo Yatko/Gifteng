@@ -68,11 +68,10 @@ public class GalleryImageAdapter extends BaseAdapter {
 	 */
 	public int getCount() {
 		if (useDrawables) {
-			return this.images.size();
+			return (this.plotsImages.size() + this.images.size());
 		} else {
 			return this.plotsImages.size();
 		}
-		
 	}
 
 	/*
@@ -153,21 +152,22 @@ public class GalleryImageAdapter extends BaseAdapter {
 		} else {
 			holder.chkSelected.setVisibility(View.INVISIBLE);
 		}
-		if (useDrawables) {			
-			holder.imageView.setImageBitmap(/*Utility.resizeBitmap(*/images.get(position)
-					/*, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT)*/);			
+		if (useDrawables) {
+			if (showThumbnails && position >= plotsImages.size()) {
+				holder.imageView.setImageBitmap(images.get(position - plotsImages.size()));
+			} else if (this.context instanceof PostListingActivity){
+				((VeneficaApplication) ((PostListingActivity)this.context).getApplication())
+				.getImgManager().loadImage(plotsImages.get(position) != null 
+				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
+						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
+			}	
 		} else {			
 			if(this.context instanceof ListingDetailsActivity){
 				((VeneficaApplication) ((ListingDetailsActivity)this.context).getApplication())
 				.getImgManager().loadImage(plotsImages.get(position) != null 
 				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
 						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
-			} else if (this.context instanceof PostListingActivity){
-				((VeneficaApplication) ((PostListingActivity)this.context).getApplication())
-				.getImgManager().loadImage(plotsImages.get(position) != null 
-				? Constants.PHOTO_URL_PREFIX + plotsImages.get(position).getUrl():"", 
-						holder.imageView, this.context.getResources().getDrawable(R.drawable.icon_picture_white));
-			}			
+			} 		
 		}	
 		if (coverPosition == position) {
 			holder.txtCoverMark.setVisibility(View.VISIBLE);
