@@ -61,7 +61,8 @@
     <string name="g_msg_select_source">Please select source of information.</string>
     <string name="g_msg_pwd_not_match">does not match</string>
     <string name="g_msg_change_pwd_success">Password changed successfully.</string>
-    
+    <string name="g_msg_listing_update_terms_conditions">If you edit this gift you agree that we need to approve it again before it goes back live.</string>
+    <string name="g_msg_validation_price">Please enter price in 00.0 format.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
@@ -183,7 +184,7 @@
     <string name="label_menu_end">End</string>
     <string name="label_menu_delete">Delete</string>
     <string name="label_menu_bookmark">Bookmark</string>
-    <string name="label_update">Update</string>
+    <string name="label_update_listing">Update Listing</string>
     <string name="label_search">Search</string>
     <string name="label_share">share</string>
     <string name="label_search_setting">Search Settings</string>
@@ -375,9 +376,9 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
+    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
     <!-- Release key -->
-    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
