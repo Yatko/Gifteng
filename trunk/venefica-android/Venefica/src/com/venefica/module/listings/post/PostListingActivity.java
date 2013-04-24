@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -24,8 +25,10 @@ import android.util.Log;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener;
 import com.venefica.module.listings.post.PostPreviewFragment.OnPostPreivewListener;
+import com.venefica.module.listings.post.UpdateListingDialogFragment.UpdateListingDialogListener;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
@@ -39,12 +42,13 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to post new listing 
  */
-public class PostListingActivity extends VeneficaActivity implements OnPostImagesListener, OnPostPreivewListener{
+public class PostListingActivity extends VeneficaActivity implements OnPostImagesListener, OnPostPreivewListener, UpdateListingDialogListener{
 
 	/**
-	 * fragment to handle camera and gallery
+	 * fragments 
 	 */
 	private PostImagesFragment imgFragment;
+	private UpdateListingDialogFragment updateListingDialogFragment;
 	private ArrayList<String> imageList;
 	private ArrayList<Bitmap> images;
 	/**
@@ -66,11 +70,12 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	/**
 	 * Constants to identify dialogs
 	 */
-	private final int D_PROGRESS = 1, D_ERROR = 2, D_DATE = 3;	
+	private final int D_PROGRESS = 1, D_ERROR = 2;	
 	/**
 	 * Current error code.
 	 */
 	private int ERROR_CODE;
+	public long selectedListingId;
 	/**
 	 * Activity MODE
 	 */	
@@ -100,10 +105,18 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 		//set mode
 		CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_POST_LISTING);
 		//add fragment as per mode
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();		
-		imgFragment = new PostImagesFragment();
-		fragmentTransaction.add(R.id.layPostlistingMain, imgFragment);
-		fragmentTransaction.commit();
+		
+		if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
+			selectedListingId = getIntent().getLongExtra("ad_id", 0);
+			updateListingDialogFragment = new UpdateListingDialogFragment();
+			updateListingDialogFragment.show(getSupportFragmentManager(), "fragment_update_listing");
+		} else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
+			FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+			imgFragment = new PostImagesFragment();
+			fragmentTransaction.add(R.id.layPostlistingMain, imgFragment);
+			fragmentTransaction.commit();
+		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -201,7 +214,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 		this.images = images;
 		this.coverImagePosition = coverImagePosition;
 		Intent intent = new Intent(this, GetListingDetails.class);
-		if (isPreviewShown && listing != null) {
+		if ( listing != null) {
 			intent.putExtra(GetListingDetails.KEY_TITLE, listing.getTitle());
 			intent.putExtra(GetListingDetails.KEY_DESCRIPTION, listing.getDescription());
 			intent.putExtra(GetListingDetails.KEY_CATEGORY, listing.getCategory());
@@ -211,17 +224,10 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 //			intent.putExtra(GetListingDetails.KEY_LATITUDE, listing.getLatitude());
 //			intent.putExtra(GetListingDetails.KEY_LONGITUDE, listing.getLongitude());
 			intent.putExtra(GetListingDetails.KEY_COVER_IMAGE, coverImagePosition);	
-			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);			
-		} else {
-			/*intent.putExtra(GetListingDetails.KEY_TITLE, "");
-			intent.putExtra(GetListingDetails.KEY_DESCRIPTION, "");
-			intent.putExtra(GetListingDetails.KEY_CATEGORY, categories.get(spinCategory.getSelectedItemPosition()).getName());
-			intent.putExtra(GetListingDetails.KEY_CATEGORY_ID, categories.get(spinCategory.getSelectedItemPosition()).getId());
-			intent.putExtra(GetListingDetails.KEY_CURRENT_VALUE, edtPrice.getText().toString());
-			intent.putExtra(GetListingDetails.KEY_ZIP_CODE, edtPrice.getText().toString());
-			intent.putExtra(GetListingDetails.KEY_LATITUDE, location.getLatitude());
-			intent.putExtra(GetListingDetails.KEY_LONGITUDE, location.getLongitude());
-			intent.putExtra(GetListingDetails.KEY_COVER_IMAGE, 0);*/
+			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
+			intent.putExtra(GetListingDetails.KEY_IS_UPDATE_MODE
+					, CURRENT_MODE == ACT_MODE_UPDATE_LISTING ? true : false);
+		} else {			
 			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
 		}
 		startActivityForResult(intent, REQ_GET_LISTING_DETAILS_TO_POST);
@@ -275,10 +281,21 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setWanted(false);
 				listing.setNumViews(0L);
 				listing.setRating(1.0f);
-//				coverImagePosition = data.getInt(GetListingDetails.KEY_COVER_IMAGE);
-				coverImage = new ImageDto(getImageFromCache(imageList.get(coverImagePosition)));
+				if (coverImagePosition == -1 && CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
+//					coverImage = new ImageDto(getImageFromCache(Constants.PHOTO_URL_PREFIX + listing.getImage().getUrl()));
+				} else if (coverImagePosition >= getImagesToUpdate().size()) {
+					coverImage = new ImageDto(getImageFromCache(imageList.get(coverImagePosition - getImagesToUpdate().size())));
+				} else {
+					coverImage = new ImageDto(getImageFromCache(Constants.PHOTO_URL_PREFIX + getImagesToUpdate().get(coverImagePosition).getUrl()));
+				}				
 				listing.setImage(coverImage);
-				
+				/*ArrayList<ImageDto> imagesToPost = new ArrayList<ImageDto>();
+				for (String imageName : imageList) {
+					Bitmap img = getImageFromCache(imageName);
+					imagesToPost.add(new ImageDto(img));
+					img.recycle();
+				}
+				listing.setImages(imagesToPost);*/
 				PostPreviewFragment postPreviewFragment = new PostPreviewFragment();
 				getSupportFragmentManager().beginTransaction().replace(R.id.layPostlistingMain, postPreviewFragment).addToBackStack(null).commit();
 			}
@@ -302,6 +319,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			result = wsAction.addImageToAd(token, listingId, img);
 			img.recycle();
 		}
+		result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
 		return result;
 	}
 	/* (non-Javadoc)
@@ -371,14 +389,14 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				}
 				if (params[0].equals(ACT_MODE_POST_LISTING)) {
 					wrapper = wsAction.postListing(((VeneficaApplication)getApplication()).getAuthToken(), listing);
-				}/*else if (params[0].equals(ACT_MODE_GET_LISTING)) {
+				} else if (params[0].equals(ACT_MODE_GET_LISTING)) {
 					ListingDetailsResultWrapper detailsWrapper = wsAction.getListingById(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId);
 					wrapper.listing = detailsWrapper.listing;
 					wrapper.result = detailsWrapper.result;
-				}else if (params[0].equals(ACT_MODE_UPDATE_LISTING)) {
-					wrapper = wsAction.updateListing(((VeneficaApplication)getApplication()).getAuthToken(), getListingDetails(selectedListing));
-				}else*/ if (params[0].equals(ACT_MODE_UPLOAD_IMAGES)) {
+				} else if (params[0].equals(ACT_MODE_UPDATE_LISTING)) {
+					wrapper = wsAction.updateListing(((VeneficaApplication)getApplication()).getAuthToken(), listing);
+				} else if (params[0].equals(ACT_MODE_UPLOAD_IMAGES)) {
 					wrapper = uploadImages(((VeneficaApplication)getApplication()).getAuthToken(), createdListingId, wsAction);
 				}
 			}catch (IOException e) {
@@ -398,16 +416,29 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			if(result.data == null && result.result == -1 && result.listing == null){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
-			}/*else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
-				setListingDetails(result.listing);
-			}*/else if (result.result ==  Constants.RESULT_POST_LISTING_SUCCESS && !result.data.equals("")) {
+			} else if (result.result == Constants.RESULT_GET_LISTING_DETAILS_SUCCESS && result.listing != null) {
+				listing = result.listing;
+				//show camera view with existing images at bottom
+				FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+				imgFragment = new PostImagesFragment();
+				fragmentTransaction.add(R.id.layPostlistingMain, imgFragment);
+				fragmentTransaction.commit();
+			} else if (result.result ==  Constants.RESULT_POST_LISTING_SUCCESS && !result.data.equals("")) {
 				createdListingId = Long.parseLong(result.data);
 				coverImage = null;
 				new PostListingTask().execute(ACT_MODE_UPLOAD_IMAGES);
-			}else if (result.result ==  Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS) {
-				ERROR_CODE = Constants.RESULT_POST_LISTING_SUCCESS;
+			} else if (result.result ==  Constants.RESULT_UPDATE_LISTING_SUCCESS) {
+				createdListingId = listing.getId();
+				coverImage = null;
+				new PostListingTask().execute(ACT_MODE_UPLOAD_IMAGES);
+			} else if (result.result ==  Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS) {
+				if (CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
+					ERROR_CODE = Constants.RESULT_UPDATE_LISTING_SUCCESS;
+				} else if (CURRENT_MODE == ACT_MODE_POST_LISTING){
+					ERROR_CODE = Constants.RESULT_POST_LISTING_SUCCESS;
+				}				
 				showDialog(D_ERROR);
-			}else if (result.result != -1) {
+			} else if (result.result != -1) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);				
 			}
@@ -427,6 +458,44 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	@Override
 	public int getCoverImagePosition() {
 		return this.coverImagePosition;
+	}
+
+	@Override
+	public void onUpdate() {
+		updateListingDialogFragment.dismiss();
+		//get details
+		new PostListingTask().execute(ACT_MODE_GET_LISTING);
+	}
+
+	@Override
+	public void onCancel() {
+		updateListingDialogFragment.dismiss();
+		onBackPressed();
+	}
+
+	/**
+	 * @return the cURRENT_MODE
+	 */
+	public static int getCURRENT_MODE() {
+		return CURRENT_MODE;
+	}	
+
+	@Override
+	public List<ImageDto> getImagesToUpdate() {
+		if (listing != null) {
+			if (listing.getImages() != null) {
+				return listing.getImages();
+			} else {			
+				return new ArrayList<ImageDto>();
+			}
+		} else {
+			return new ArrayList<ImageDto>();
+		}		
+	}
+
+	@Override
+	public List<ImageDto> getImageDtosToUpdate() {
+		return getImagesToUpdate() ;
 	}
 		
 }

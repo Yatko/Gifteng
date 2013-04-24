@@ -100,6 +100,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	public static final String KEY_LONGITUDE = "longitude";
 	public static final String KEY_COVER_IMAGE = "cover_image";
 	public static final String KEY_IS_BACK_FROM_PREVIEW = "back_from_preview";
+	public static final String KEY_IS_UPDATE_MODE = "update_mode";
 	
 	/**
      * Map 
@@ -144,7 +145,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		spinCategory.setAdapter(categoriesListAdapter);
 		spinCategory.setOnItemSelectedListener(this);
 		//set data if back from preview
-		if (getIntent().getBooleanExtra(KEY_IS_BACK_FROM_PREVIEW, false)) {
+		if (getIntent().getBooleanExtra(KEY_IS_BACK_FROM_PREVIEW, false) 
+				|| getIntent().getBooleanExtra(KEY_IS_UPDATE_MODE, false)) {
 			edtTitle.setText(getIntent().getStringExtra(GetListingDetails.KEY_TITLE));
 			selectedCategory = getIntent().getStringExtra(GetListingDetails.KEY_CATEGORY);
 			edtDescription.setText(getIntent().getStringExtra(GetListingDetails.KEY_DESCRIPTION));
@@ -362,28 +364,28 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
     		vaildator = new InputFieldValidator();    		
     	}
     	
-    	if(!vaildator.validateField(edtTitle, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	if(!vaildator.validateField(edtTitle, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_postlisting_title).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}    	
-    	if(!vaildator.validateField(edtDescription, Pattern.compile(InputFieldValidator.countyCityAreaPatternRegx))){
+    	if(!vaildator.validateField(edtDescription, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_postlisting_description).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.phonePatternRegx))){
+    	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.PRICE_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_postlisting_price).toString());
     		message.append("- ");
-    		message.append(getResources().getString(R.string.msg_validation_phone));
+    		message.append(getResources().getString(R.string.g_msg_validation_price));
     		message.append("\n");
     	}    	
-    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.zipCodePatternRegx))){
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))){
     		result = false;
     		message.append(edtZip.getText().toString());
     		message.append("- ");
@@ -439,7 +441,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 				categories.addAll(result.categories);
 				categoriesListAdapter.notifyDataSetChanged();
 				for (int i = 0; i < categories.size(); i++) {
-					if (!isBackFromPreview) {
+					if (selectedCategory.equals("")) {
 						break;
 					}
 					if (categories.get(i).getName().equalsIgnoreCase(selectedCategory)) {
