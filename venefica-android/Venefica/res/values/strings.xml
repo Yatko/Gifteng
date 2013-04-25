@@ -162,8 +162,8 @@
     <string name="label_search_listing_search">Search</string>
     <string name="label_browse_cat_bookmarks">View bookmarks</string>
     <string name="label_browse_cat_browse">Search by category</string>
-    <string name="label_my_listing_title">My listings</string>
-    <string name="label_bookmark_listing_title">Bookmarks</string>
+    <string name="label_my_listing_title">Giving</string>
+    <string name="label_bookmark_listing_title">Favourited</string>
     <string name="label_detail_listing_price">Price</string>
     <string name="label_detail_listing_category">Category</string>
     <string name="label_detail_listing_photos">Photos</string>
