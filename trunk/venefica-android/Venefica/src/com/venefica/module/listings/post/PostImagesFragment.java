@@ -18,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.media.ExifInterface;
@@ -266,10 +265,11 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 			}else if(exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")){
 				image= rotate(image, 180);
 			}
-			putImageInCache(Bitmap.createScaledBitmap(image, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
-			if (isFirstImage) {
+			if (isFirstImage || imageList.size() == 0) {
 				images.clear();
 			}
+			putImageInCache(Bitmap.createScaledBitmap(image, Constants.IMAGE_MAX_SIZE_X, Constants.IMAGE_MAX_SIZE_Y, false));
+			
 			images.add(Bitmap.createScaledBitmap(image, Constants.IMAGE_THUMBNAILS_WIDTH, Constants.IMAGE_THUMBNAILS_HEIGHT, false));
 			galImageAdapter.notifyDataSetChanged();
 			image.recycle();			
@@ -574,7 +574,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 					opts.inSampleSize = 2;
 					Bitmap bitmap = BitmapFactory.decodeStream(stream, rect,
 							opts);
-					if (isFirstImage) {
+					if (isFirstImage || imageList.size() == 0) {
 						images.clear();
 					}
 					putImageInCache(Bitmap.createScaledBitmap(bitmap,
