@@ -1,5 +1,6 @@
 package com.venefica.model;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
@@ -35,6 +38,9 @@ public class Rating {
     
     @Column(name = "valuee")
     private int value;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ratedAt;
 
     public Rating() {
         value = 0;
@@ -77,5 +83,13 @@ public class Rating {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public Date getRatedAt() {
+        return ratedAt;
+    }
+
+    public void setRatedAt(Date ratedAt) {
+        this.ratedAt = ratedAt;
     }
 }
