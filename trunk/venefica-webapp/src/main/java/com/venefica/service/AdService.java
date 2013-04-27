@@ -13,6 +13,7 @@ import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
+import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -83,6 +84,16 @@ public interface AdService {
     @WebResult(name = "ad")
     List<AdDto> getMyAds();
 
+    /**
+     * Returns a list of all ads created by the given user.
+     * 
+     * @return list of ads
+     * @throws UserNotFoundException is thrown when the user with the specified id is not found
+     */
+    @WebMethod(operationName = "GetUserAds")
+    @WebResult(name = "ad")
+    List<AdDto> getUserAds(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
     /**
      * Returns a list of ads with id is less than specified one which fit the filter.
      * 
@@ -243,6 +254,33 @@ public interface AdService {
     @WebResult(name = "ad")
     List<AdDto> getBookmarkedAds();
 
+    /**
+     * Creates a new entry for the given ad into the current (logged) users
+     * favorites.
+     * 
+     * @param adId the id of the ad
+     * @throws AdNotFoundException if the ad with the specified id not found
+     */
+    @WebMethod(operationName = "MarkAsFavorite")
+    void markAsFavorite(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
+    
+    /**
+     * Removes an existing entry from the users favorites.
+     * 
+     * @param adId the ad id
+     * @throws AdNotFoundException if the ad with the specified id not found
+     */
+    @WebMethod(operationName = "UnmarkAsFavorite")
+    void unmarkAsFavorite(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
+    
+    /**
+     * 
+     * @return the users favorite ads
+     */
+    @WebMethod(operationName = "GetFavorites")
+    @WebResult(name = "ad")
+    List<AdDto> getFavorites(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
     /**
      * Marks the ad as spam.
      * 

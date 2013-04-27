@@ -2,6 +2,7 @@ package com.venefica.model;
 
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class Ad {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     
+    //used as giving/receiving
     private boolean wanted;
     
     @Column(nullable = false)
@@ -97,18 +99,18 @@ public class Ad {
     private Date soldAt;
     
     private long numViews;
+    @OneToMany(mappedBy = "ad")
+    private List<Viewer> viewers;
     
     private float rating;
-    
     @OneToMany(mappedBy = "ad")
     @OrderBy
     private List<Rating> ratings;
     
+    private boolean spam;
     @OneToMany(mappedBy = "ad")
     @OrderBy
     private List<SpamMark> spamMarks;
-    
-    private boolean spam;
     
     private boolean reviewed;
     
@@ -118,13 +120,12 @@ public class Ad {
     @OrderBy
     private List<Comment> comments;
 
-    // private List<Viewers> viewers;
-    
     public Ad() {
         images = new LinkedList<Image>();
         ratings = new LinkedList<Rating>();
         spamMarks = new LinkedList<SpamMark>();
         comments = new LinkedList<Comment>();
+        viewers = new ArrayList<Viewer>(0);
         createdAt = new Date();
         rating = 0.0f;
         numViews = 0;
@@ -145,7 +146,19 @@ public class Ad {
         expiresAt = DateUtils.addDays(new Date(), days);
         return true;
     }
-
+    
+    public boolean isAlreadyViewedBy(User user) {
+        if ( viewers == null || viewers.isEmpty() ) {
+            return false;
+        }
+        for ( Viewer viewer : viewers ) {
+            if ( viewer.getUser().getId().equals(user.getId()) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -389,5 +402,13 @@ public class Ad {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Viewer> getViewers() {
+        return viewers;
+    }
+
+    public void setViewers(List<Viewer> viewers) {
+        this.viewers = viewers;
     }
 }
