@@ -12,6 +12,7 @@ import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
@@ -69,8 +70,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public UserDto getUser() throws UserNotFoundException {
         try {
-            Long currentUserId = securityContextHolder.getContext().getUserId();
-            User user = userDao.get(currentUserId);
+            User user = getCurrentUser();
             return new UserDto(user);
         } catch (NumberFormatException e) {
             logger.error("Getting user failed", e);
@@ -116,7 +116,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
     @Override
     public boolean isUserComplete() {
-        User user = securityContextHolder.getContext().getUser();
+        User user = getCurrentUser();
         return user.isComplete();
     }
 
@@ -124,8 +124,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public boolean updateUser(UserDto userDto) throws UserAlreadyExistsException {
         try {
-            Long currentUserId = securityContextHolder.getContext().getUserId();
-            User user = userDao.get(currentUserId);
+            User user = getCurrentUser();
 
             User userWithTheSameName = userDao.findUserByName(userDto.getName());
 
@@ -151,6 +150,62 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
     }
 
+    @Override
+    @Transactional
+    public void follow(Long userId) throws UserNotFoundException {
+        User user = getCurrentUser();
+        User following = userDao.get(userId);
+        
+        if ( following == null ) {
+            throw new UserNotFoundException("Cannot find the given following (userId: " + userId + ") user.");
+        }
+        
+        user.addFollowing(following);
+    }
+    
+    @Override
+    @Transactional
+    public void unfollow(Long userId) throws UserNotFoundException {
+        User user = getCurrentUser();
+        User following = userDao.get(userId);
+        
+        if ( following == null ) {
+            throw new UserNotFoundException("Cannot find the given following (userId: " + userId + ") user.");
+        }
+        
+        user.removeFollowing(following);
+    }
+    
+    @Override
+    @Transactional
+    public List<UserDto> getFollowers() {
+        List<UserDto> result = new LinkedList<UserDto>();
+        User user = getCurrentUser();
+        
+        if ( user.getFollowers() != null ) {
+            for ( User follower : user.getFollowers() ) {
+                result.add(new UserDto(follower));
+            }
+        }
+        
+        return result;
+    }
+    
+    @Override
+    @Transactional
+    public List<UserDto> getFollowings() {
+        List<UserDto> result = new LinkedList<UserDto>();
+        User user = getCurrentUser();
+        
+        if ( user.getFollowings() != null ) {
+            for ( User following : user.getFollowings()) {
+                result.add(new UserDto(following));
+            }
+        }
+        
+        return result;
+    }
+    
     @Override
     public Set<String> getConnectedSocialNetworks() {
         MultiValueMap<String, Connection<?>> allConnections = connectionRepository

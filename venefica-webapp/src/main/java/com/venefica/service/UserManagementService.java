@@ -5,6 +5,7 @@ import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.List;
 import java.util.Set;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -52,7 +53,7 @@ public interface UserManagementService {
             throws UserAlreadyExistsException;
 
     /**
-     * Retrieves information about the user.
+     * Retrieves information about the current (logged) user.
      *
      * @return user object
      * @throws UserNotFoundException is thrown when a user with the specified
@@ -106,6 +107,32 @@ public interface UserManagementService {
     @WebResult(name = "complete")
     public boolean isUserComplete();
 
+    /**
+     * Adds the given user into the actual ones followers list.
+     * 
+     * @param userId the user identifier
+     * @throws UserNotFoundException the given user could not be found
+     */
+    @WebMethod(operationName = "Follow")
+    public void follow(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
+    /**
+     * Removes the given user from the followers list of the actual one.
+     * 
+     * @param userId the user identifier
+     * @throws UserNotFoundException the given user could not be found
+     */
+    @WebMethod(operationName = "Unfollow")
+    public void unfollow(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
+    @WebMethod(operationName = "GetFollowers")
+    @WebResult(name = "follower")
+    public List<UserDto> getFollowers();
+    
+    @WebMethod(operationName = "GetFollowings")
+    @WebResult(name = "following")
+    public List<UserDto> getFollowings();
+    
     /**
      * Returns a list of social network names connected to the current user
      * account.
