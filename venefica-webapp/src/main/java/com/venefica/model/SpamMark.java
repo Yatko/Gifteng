@@ -1,11 +1,14 @@
 package com.venefica.model;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
@@ -31,7 +34,10 @@ public class SpamMark {
     @ManyToOne
     @ForeignKey(name = "spammark_witness_fk")
     private User witness;
-
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date markedAt;
+    
     // WARNING: required by hibernate
     public SpamMark() {
     }
@@ -64,5 +70,13 @@ public class SpamMark {
 
     public void setAd(Ad ad) {
         this.ad = ad;
+    }
+
+    public Date getMarkedAt() {
+        return markedAt;
+    }
+
+    public void setMarkedAt(Date markedAt) {
+        this.markedAt = markedAt;
     }
 }
