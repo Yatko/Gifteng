@@ -127,11 +127,11 @@ public interface UserManagementService {
     
     @WebMethod(operationName = "GetFollowers")
     @WebResult(name = "follower")
-    public List<UserDto> getFollowers();
+    public List<UserDto> getFollowers(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
     @WebMethod(operationName = "GetFollowings")
     @WebResult(name = "following")
-    public List<UserDto> getFollowings();
+    public List<UserDto> getFollowings(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
     /**
      * Returns a list of social network names connected to the current user

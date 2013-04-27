@@ -178,9 +178,12 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public List<UserDto> getFollowers() {
+    public List<UserDto> getFollowers(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
-        User user = getCurrentUser();
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
+        }
         
         if ( user.getFollowers() != null ) {
             for ( User follower : user.getFollowers() ) {
@@ -193,9 +196,12 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public List<UserDto> getFollowings() {
+    public List<UserDto> getFollowings(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
-        User user = getCurrentUser();
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
+        }
         
         if ( user.getFollowings() != null ) {
             for ( User following : user.getFollowings()) {
