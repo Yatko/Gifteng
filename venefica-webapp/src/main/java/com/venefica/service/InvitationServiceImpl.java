@@ -7,6 +7,7 @@ package com.venefica.service;
 import com.venefica.common.EmailSender;
 import com.venefica.common.MailChimpSender;
 import com.venefica.common.MailException;
+import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
@@ -22,7 +23,6 @@ import javax.annotation.PostConstruct;
 //import java.util.UUID;
 import javax.inject.Inject;
 import javax.jws.WebService;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -94,7 +94,7 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
         String code;
         int generationTried = 0;
         while ( true ) {
-            code = generateCode();
+            code = RandomGenerator.generateNumeric(CODE_LENGTH);
             generationTried++;
             if ( invitationDao.findByCode(code) == null ) {
                 //the generated code does not exists, found an unused (free) one
@@ -169,12 +169,6 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
     
     // internal helpers
     
-    private String generateCode() {
-        //String code = UUID.randomUUID().toString();
-        String code = RandomStringUtils.randomNumeric(CODE_LENGTH);
-        return code;
-    }
-
     private String mergeVelocityTemplate(String templateName, String invitationCode) {
         if ( velocityEngine == null ) {
             throw new RuntimeException("Velocity engine is not initialized");
