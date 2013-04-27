@@ -7,6 +7,7 @@ import com.venefica.dao.CommentDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.SpamMarkDao;
+import com.venefica.dao.ViewerDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Category;
@@ -15,6 +16,7 @@ import com.venefica.model.Image;
 import com.venefica.model.Rating;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
+import com.venefica.model.Viewer;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
@@ -31,6 +33,8 @@ import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
+import com.venefica.service.fault.UserNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +67,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private RatingDao ratingDao;
     @Inject
     private CommentDao commentDao;
+    @Inject
+    private ViewerDao viewerDao;
 
     /**
      * Creates basic categories
@@ -264,15 +270,31 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getMyAds() {
-        User currentUser = getCurrentUser();
+        try {
+            Long userId = getCurrentUserId();
+            return getUserAds(userId);
+        } catch ( UserNotFoundException ex ) {
+            logger.error("User (current/logged) not found", ex);
+            return new ArrayList<AdDto>();
+        }
+    }
+    
+    @Override
+    @Transactional
+    public List<AdDto> getUserAds(Long userId) throws UserNotFoundException {
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("User with id '" + userId + "' not found");
+        }
+        
+        List<Ad> ads = adDao.getByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
-        List<Ad> ads = adDao.getByUser(currentUser.getId());
-
+        
         for (Ad ad : ads) {
-            AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(currentUser).build();
+            AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(user).build();
             result.add(adDto);
         }
-
+        
         return result;
     }
 
@@ -286,9 +308,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new AdNotFoundException("Ad with id = " + adId + " not found!");
         }
 
-        if (!ad.getCreator().equals(currentUser)) {
+        if (!ad.getCreator().equals(currentUser) && !ad.isAlreadyViewedBy(currentUser)) {
             ad.visit();
         }
+        
+        Viewer viewer = new Viewer(ad, currentUser);
+        viewerDao.save(viewer);
 
         // @formatter:off
         AdDto adDto = new AdDtoBuilder(ad)
@@ -576,18 +601,68 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     @Transactional
+    public void markAsFavorite(Long adId) throws AdNotFoundException {
+        if (adId == null) {
+            throw new NullPointerException("adId is null!");
+        }
+        
+        Ad ad = adDao.get(adId);
+        if (ad == null) {
+            throw new AdNotFoundException(adId);
+        }
+        
+        User currentUser = getCurrentUser();
+        currentUser.addFavorite(ad);
+    }
+    
+    @Override
+    @Transactional
+    public void unmarkAsFavorite(Long adId) throws AdNotFoundException {
+        if (adId == null) {
+            throw new NullPointerException("adId is null!");
+        }
+        
+        Ad ad = adDao.get(adId);
+        if (ad == null) {
+            throw new AdNotFoundException(adId);
+        }
+        
+        User currentUser = getCurrentUser();
+        currentUser.removeFavorite(ad);
+    }
+    
+    @Override
+    @Transactional
+    public List<AdDto> getFavorites(Long userId) throws UserNotFoundException {
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("User with id '" + userId + "' not found");
+        }
+        
+        List<AdDto> result = new LinkedList<AdDto>();
+        if ( user.getFavorites() != null ) {
+            for ( Ad ad : user.getFavorites() ) {
+                AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(user).build();
+                result.add(adDto);
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    @Transactional
     public void markAsSpam(Long adId) throws AdNotFoundException {
         if (adId == null) {
             throw new NullPointerException("adId is null!");
         }
 
-        User currentUser = getCurrentUser();
         Ad ad = adDao.get(adId);
-
         if (ad == null) {
             throw new AdNotFoundException(adId);
         }
 
+        User currentUser = getCurrentUser();
+        
         // Don't allow to mark twice as the same user
         for (SpamMark mark : ad.getSpamMarks()) {
             if (mark.getWitness().equals(currentUser)) {
@@ -611,13 +686,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new NullPointerException("adId is null!");
         }
 
-        User currentUser = getCurrentUser();
         Ad ad = adDao.get(adId);
-
         if (ad == null) {
             throw new AdNotFoundException(adId);
         }
 
+        User currentUser = getCurrentUser();
         SpamMark markToRemove = null;
 
         for (SpamMark mark : ad.getSpamMarks()) {
