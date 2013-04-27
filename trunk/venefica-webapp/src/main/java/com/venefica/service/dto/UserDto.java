@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UserDto extends DtoBase {
     
+    // out
+    private Long id;
     // in, out
     private String name;
     // in, out
@@ -52,6 +54,7 @@ public class UserDto extends DtoBase {
      * @param user domain object
      */
     public UserDto(User user) {
+        id = user.getId();
         name = user.getName();
         firstName = ((MemberUserData) user.getUserData()).getFirstName();
         lastName = ((MemberUserData) user.getUserData()).getLastName();
@@ -106,6 +109,14 @@ public class UserDto extends DtoBase {
         user.setUserData(new MemberUserData());
         update(user, imageDao);
         return user;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
