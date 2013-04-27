@@ -11,6 +11,7 @@ import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
+import java.util.List;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -119,6 +120,96 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         client.updateUser(userDto);
     }
 
+    // follow
+    
+    @Test
+    public void followTest() throws UserNotFoundException {
+        //1 follows 2
+        authenticateClientAsFirstUser();
+        client.follow(SECOND_USER_ID);
+        
+        List<UserDto> followings_1 = client.getFollowings();
+        List<UserDto> followers_1 = client.getFollowers();
+        
+        assertNotNull(followings_1);
+        assertEquals(1, followings_1.size());
+        assertNull(followers_1);
+        
+        //3 follows 2
+        authenticateClientAsThirdUser();
+        client.follow(SECOND_USER_ID);
+        
+        List<UserDto> followings_3 = client.getFollowings();
+        List<UserDto> followers_3 = client.getFollowers();
+        
+        assertNotNull(followings_3);
+        assertEquals(1, followings_3.size());
+        assertNull(followers_3);
+        
+        //2 details
+        authenticateClientAsSecondUser();
+        
+        List<UserDto> followings_2 = client.getFollowings();
+        List<UserDto> followers_2 = client.getFollowers();
+        
+        assertNotNull(followers_2);
+        assertEquals(2, followers_2.size());
+        assertNull(followings_2);
+    }
+    
+    @Test
+    public void followAlreadyFollowedUserTest() throws UserNotFoundException {
+        authenticateClientAsFirstUser();
+        client.follow(SECOND_USER_ID);
+        client.follow(SECOND_USER_ID);
+        client.follow(SECOND_USER_ID);
+        
+        List<UserDto> followings_1 = client.getFollowings();
+        List<UserDto> followers_1 = client.getFollowers();
+        
+        assertEquals(1, followings_1.size());
+        assertNull(followers_1);
+    }
+    
+    @Test(expected = UserNotFoundException.class)
+    public void followUnexistingUserTest() throws UserNotFoundException {
+        authenticateClientAsFirstUser();
+        client.follow(Long.MAX_VALUE);
+    }
+    
+    // unfollow
+    
+    @Test
+    public void unfollowTest() throws UserNotFoundException {
+        authenticateClientAsFirstUser();
+        client.follow(SECOND_USER_ID);
+        
+        List<UserDto> before_followings_1 = client.getFollowings();
+        assertNotNull(before_followings_1);
+        assertEquals(1, before_followings_1.size());
+        
+        client.unfollow(SECOND_USER_ID);
+        
+        List<UserDto> after_followings_1 = client.getFollowings();
+        assertNull(after_followings_1);
+    }
+    
+    @Test
+    public void unfollowAlreadyUnfollowedUserTest() throws UserNotFoundException {
+        authenticateClientAsFirstUser();
+        client.unfollow(SECOND_USER_ID);
+        client.unfollow(SECOND_USER_ID);
+        
+        List<UserDto> followings_1 = client.getFollowings();
+        assertNull(followings_1);
+    }
+    
+    @Test(expected = UserNotFoundException.class)
+    public void unfollowUnexistingUserTest() throws UserNotFoundException {
+        authenticateClientAsFirstUser();
+        client.unfollow(Long.MAX_VALUE);
+    }
+    
     // helpers
     
     private static UserDto createUserDto(String name) {
