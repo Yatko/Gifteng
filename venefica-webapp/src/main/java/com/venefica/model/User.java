@@ -1,13 +1,19 @@
 package com.venefica.model;
 
+import com.venefica.common.RandomGenerator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -28,6 +34,8 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "local_user")
 public class User {
 
+    private static final int DEFAULT_PASSWORD_LENGTH = 5;
+    
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,6 +57,19 @@ public class User {
     @ForeignKey(name = "userdata_fk")
     private UserData userData;
     
+    //see: http://stackoverflow.com/questions/8830279/hibernate-onetomany-relationship-mapping
+    //see: http://stackoverflow.com/questions/13708271/self-referencing-manytomany-with-hibernate-and-annotations
+    
+    @ManyToMany
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ForeignKey(name = "local_user_follower_fk")
+    private Set<User> followers;
+    
+    @ManyToMany
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    @ForeignKey(name = "local_user_following_fk")
+    private Set<User> followings;
+    
     @OneToMany(mappedBy = "from")
     @OrderBy
     private List<Message> sentMessages;
@@ -57,14 +78,21 @@ public class User {
     @OrderBy
     private List<Message> receivedMessages;
     
+    @OneToMany
+    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "ad_id"))
+    private Set<Ad> favorites;
+    
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
 
     public User() {
-        password = generatePassword();
+        password = RandomGenerator.generateNumeric(DEFAULT_PASSWORD_LENGTH);
+        followers = new HashSet<User>(0);
+        followings = new HashSet<User>(0);
         sentMessages = new LinkedList<Message>();
         receivedMessages = new LinkedList<Message>();
+        favorites = new HashSet<Ad>(0);
     }
 
     public User(String name, String email) {
@@ -76,10 +104,6 @@ public class User {
     public boolean isComplete() {
         return name != null && password != null && email != null
                 && userData != null && userData.isComplete();
-    }
-    
-    private String generatePassword() {
-        return "12345"; // TODO: Generate difficult password!!!
     }
     
     public String getFullName() {
@@ -128,6 +152,54 @@ public class User {
     
     public boolean isBusinessAcc() {
         return userData.isBusinessAccount();
+    }
+    
+    public void addFollower(User user) {
+        initFollowers();
+        followers.add(user);
+    }
+    
+    public void removeFollower(User user) {
+        initFollowers();
+        followers.remove(user);
+    }
+    
+    public void addFollowing(User user) {
+        initFollowings();
+        followings.add(user);
+    }
+    
+    public void removeFollowing(User user) {
+        initFollowings();
+        followings.remove(user);
+    }
+    
+    private void initFollowers() {
+        if ( followers == null ) {
+            followers = new HashSet<User>(0);
+        }
+    }
+    
+    private void initFollowings() {
+        if ( followings == null ) {
+            followings = new HashSet<User>(0);
+        }
+    }
+    
+    public void addFavorite(Ad ad) {
+        initFavorites();
+        favorites.add(ad);
+    }
+    
+    public void removeFavorite(Ad ad) {
+        initFavorites();
+        favorites.remove(ad);
+    }
+    
+    private void initFavorites() {
+        if ( favorites == null ) {
+            favorites = new HashSet<Ad>(0);
+        }
     }
     
     @Override
@@ -220,5 +292,29 @@ public class User {
 
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
+    }
+    
+    public Set<User> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(Set<User> followings) {
+        this.followings = followings;
+    }
+
+    public Set<Ad> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<Ad> favorites) {
+        this.favorites = favorites;
     }
 }
