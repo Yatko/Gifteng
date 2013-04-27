@@ -128,8 +128,8 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         authenticateClientAsFirstUser();
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> followings_1 = client.getFollowings();
-        List<UserDto> followers_1 = client.getFollowers();
+        List<UserDto> followings_1 = client.getFollowings(FIRST_USER_ID);
+        List<UserDto> followers_1 = client.getFollowers(FIRST_USER_ID);
         
         assertNotNull(followings_1);
         assertEquals(1, followings_1.size());
@@ -139,8 +139,8 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         authenticateClientAsThirdUser();
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> followings_3 = client.getFollowings();
-        List<UserDto> followers_3 = client.getFollowers();
+        List<UserDto> followings_3 = client.getFollowings(THIRD_USER_ID);
+        List<UserDto> followers_3 = client.getFollowers(THIRD_USER_ID);
         
         assertNotNull(followings_3);
         assertEquals(1, followings_3.size());
@@ -149,8 +149,8 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         //2 details
         authenticateClientAsSecondUser();
         
-        List<UserDto> followings_2 = client.getFollowings();
-        List<UserDto> followers_2 = client.getFollowers();
+        List<UserDto> followings_2 = client.getFollowings(SECOND_USER_ID);
+        List<UserDto> followers_2 = client.getFollowers(SECOND_USER_ID);
         
         assertNotNull(followers_2);
         assertEquals(2, followers_2.size());
@@ -164,8 +164,8 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         client.follow(SECOND_USER_ID);
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> followings_1 = client.getFollowings();
-        List<UserDto> followers_1 = client.getFollowers();
+        List<UserDto> followings_1 = client.getFollowings(FIRST_USER_ID);
+        List<UserDto> followers_1 = client.getFollowers(FIRST_USER_ID);
         
         assertEquals(1, followings_1.size());
         assertNull(followers_1);
@@ -184,13 +184,13 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         authenticateClientAsFirstUser();
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> before_followings_1 = client.getFollowings();
+        List<UserDto> before_followings_1 = client.getFollowings(FIRST_USER_ID);
         assertNotNull(before_followings_1);
         assertEquals(1, before_followings_1.size());
         
         client.unfollow(SECOND_USER_ID);
         
-        List<UserDto> after_followings_1 = client.getFollowings();
+        List<UserDto> after_followings_1 = client.getFollowings(FIRST_USER_ID);
         assertNull(after_followings_1);
     }
     
@@ -200,7 +200,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         client.unfollow(SECOND_USER_ID);
         client.unfollow(SECOND_USER_ID);
         
-        List<UserDto> followings_1 = client.getFollowings();
+        List<UserDto> followings_1 = client.getFollowings(FIRST_USER_ID);
         assertNull(followings_1);
     }
     
