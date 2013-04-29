@@ -2,9 +2,12 @@ package com.venefica.service;
 
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
+import com.venefica.dao.ReviewDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.model.Invitation;
+import com.venefica.model.Review;
 import com.venefica.model.User;
+import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -32,6 +35,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private InvitationDao invitationDao;
     @Inject
     protected UserDataDao userDataDao;
+    @Inject
+    protected ReviewDao reviewDao;
     
     @Override
     @Transactional
@@ -209,6 +214,38 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             }
         }
         
+        return result;
+    }
+    
+    @Override
+    public void addReview(ReviewDto reviewDto) throws UserNotFoundException {
+        Long userId = reviewDto.getTo().getId();
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
+        }
+        
+        Review review = new Review();
+        review.setFrom(getCurrentUser());
+        review.setUser(user);
+        review.setText(reviewDto.getText());
+        reviewDao.save(review);
+    }
+    
+    @Override
+    @Transactional
+    public List<ReviewDto> getReviews(Long userId) throws UserNotFoundException {
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
+        }
+        
+        List<ReviewDto> result = new LinkedList<ReviewDto>();
+        if ( user.getReviews() != null && !user.getReviews().isEmpty() ) {
+            for ( Review review : user.getReviews() ) {
+                result.add(new ReviewDto(review));
+            }
+        }
         return result;
     }
     

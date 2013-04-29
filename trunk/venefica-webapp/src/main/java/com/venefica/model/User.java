@@ -82,6 +82,10 @@ public class User {
     @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "ad_id"))
     private Set<Ad> favorites;
     
+    @OneToMany(mappedBy = "user")
+    @OrderBy
+    private List<Review> reviews;
+    
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
@@ -316,5 +320,13 @@ public class User {
 
     public void setFavorites(Set<Ad> favorites) {
         this.favorites = favorites;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

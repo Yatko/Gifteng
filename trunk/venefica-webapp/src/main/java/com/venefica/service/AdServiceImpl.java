@@ -140,7 +140,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User currentUser = getCurrentUser();
 
         Ad ad = new Ad();
-        adDto.update(ad, currentUser);
+        adDto.update(ad);
 
         // ++ TODO: create ad validator
         if (adDto.getCategoryId() == null) {
@@ -457,7 +457,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
 
         // WARNING: This update must be performed within an active transaction!
-        adDto.update(ad, currentUser);
+        adDto.update(ad);
 
         ad.setCategory(category);
 
