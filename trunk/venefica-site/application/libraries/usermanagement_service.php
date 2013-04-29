@@ -12,6 +12,25 @@ class Usermanagement_service {
     }
     
     /**
+     * Request user by its user name;
+     * 
+     * @param string $name
+     * @return User_model
+     * @throws Exception
+     */
+    public function getUserByName($name) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getUserByName(array("name" => $name));
+            $user = $result->user;
+            return User_model::convertUser($user);
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
      * Invokes the user registration on WS.
      * 
      * @param User_model $user
@@ -23,10 +42,131 @@ class Usermanagement_service {
     public function registerUser($user, $password, $code) {
         try {
             $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
-            $result = $userService->registerUser(array("user" => $user, "password" => $password, "invitationCode" => $code));
+            $result = $userService->registerUser(array(
+                "user" => $user,
+                "password" => $password,
+                "invitationCode" => $code
+            ));
             return $result->userId;
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Follow the given user.
+     * 
+     * @param long $userId
+     * @throws Exception if user not found or WS error
+     */
+    public function follow($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->follow(array("userId" => $userId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Unfollow the given user.
+     * 
+     * @param long $userId
+     * @throws Exception if user not found or WS error
+     */
+    public function unfollow($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->follow(array("userId" => $userId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Requests the followers list - the ones that logged/current user is following.
+     * 
+     * @param long $userId
+     * @return list of User_model
+     * @throws Exception
+     */
+    public function getFollowers($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getFollowers(array("userId" => $userId));
+            
+            $users = array();
+            if ( hasField($result, 'follower') && $result->follower ) {
+                $users = User_model::convertUsers($result->follower);
+            }
+            return $users;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "User followers request failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Returns the followings list.
+     * 
+     * @param long $userId
+     * @return list of User_model
+     * @throws Exception
+     */
+    public function getFollowings($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getFollowings(array("userId" => $userId));
+            
+            $users = array();
+            if ( hasField($result, 'following') && $result->following ) {
+                $users = User_model::convertUsers($result->following);
+            }
+            return $users;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "User followings request failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Creates a review. The review object should contains the reviewed user data.
+     * 
+     * @param Review_model $review
+     * @throws Exception
+     */
+    public function addReview($review) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->addReview(array("review" => $review));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "Review creation failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Requests all the reviews for the specified user.
+     * 
+     * @param long $userId
+     * @return list of Review_model
+     * @throws Exception
+     */
+    public function getReviews($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getReviews(array("userId" => $userId));
+            
+            $reviews = array();
+            if ( hasField($result, 'review') && $result->review ) {
+                $reviews = Review_model::convertReviews($result->review);
+            }
+            return $reviews;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "User reviews request failed! " . $ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -36,6 +176,7 @@ class Usermanagement_service {
      * under 'user' key.
      * 
      * @param string $email the user email
+     * @param string $token
      * @throws Exception in case of WS invocation error
      */
     public function storeUser($email, $token) {
@@ -52,14 +193,14 @@ class Usermanagement_service {
         return loadFromSession('user');
     }
 
-
     /* internal functions */
     
     private function getUserByEmail($email, $token) {
         try {
             $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions($token));
             $result = $userService->getUserByEmail(array("email" => $email));
-            return $result->user;
+            $user = $result->user;
+            return User_model::convertUser($user);
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);

@@ -12,7 +12,7 @@ class Authentication extends CI_Controller {
         $data = array();
         $data['action'] = $this->getAction();
         $data['step'] = $this->getStep();
-        $data['is_logged'] = $this->auth_service->isLogged();
+        $data['is_logged'] = isLogged();
         $data['user'] = $this->usermanagement_service->loadUser();
         
         $data = array_merge($data, $extra_data);
@@ -53,6 +53,14 @@ class Authentication extends CI_Controller {
         if ( $is_valid == FALSE ) {
             $this->view();
         }
+    }
+    
+    public function logout() {
+        $this->init();
+        
+        destroySession();
+        
+        redirect('/authentication/login');
     }
     
     private function login_forgot() {
@@ -162,6 +170,9 @@ class Authentication extends CI_Controller {
             
             $this->load->library('auth_service');
             $this->load->library('usermanagement_service');
+            
+            $this->load->model('image_model');
+            $this->load->model('user_model');
             
             $this->initialized = true;
         }

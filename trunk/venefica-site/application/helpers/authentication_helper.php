@@ -37,6 +37,22 @@ if ( ! function_exists('getSoapOptions')) {
     }
 }
 
+
+if ( ! function_exists('isLogged')) {
+    /**
+     * Check if there is valid token in the session.
+     * 
+     * @return boolean
+     */
+    function isLogged() {
+        if ( loadToken() ) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+}
+
+
 if ( ! function_exists('loadToken')) {
     function loadToken() {
         return loadFromSession('token');
@@ -62,5 +78,13 @@ if ( ! function_exists('loadFromSession')) {
         $CI =& get_instance();
         $CI->load->library('session');
         return $CI->session->userdata($key);
+    }
+}
+
+if ( ! function_exists('destroySession')) {
+    function destroySession() {
+        $CI =& get_instance();
+        $CI->load->library('session');
+        return $CI->session->sess_destroy();
     }
 }

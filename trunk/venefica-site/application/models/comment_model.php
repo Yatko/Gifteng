@@ -41,4 +41,23 @@ class Comment_model extends CI_Model {
         }
         return SERVER_URL.$this->publisherAvatarUrl;
     }
+    
+    // static helpers
+    
+    public static function convertComments($commentsResult) {
+        $comments = array();
+        if ( is_array($commentsResult) && count($commentsResult) > 0 ) {
+            foreach ( $commentsResult as $comment ) {
+                array_push($comments, Comment_model::convertComment($comment));
+            }
+        } else {
+            $comment = $commentsResult;
+            array_push($comments, Comment_model::convertComment($comment));
+        }
+        return $comments;
+    }
+    
+    public static function convertComment($comment) {
+        return new Comment_model($comment);
+    }
 }

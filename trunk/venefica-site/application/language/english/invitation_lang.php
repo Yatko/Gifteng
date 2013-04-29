@@ -1,15 +1,10 @@
 <?php
 
-$lang['invitation_email_hint'] = "Email adress";
+$lang['invitation_email_hint'] = "Email address";
 $lang['invitation_request_button'] = "REQUEST AN INVITATION";
 $lang['invitation_country_hint'] = "Choose a Country...";
 $lang['invitation_zipcode_hint'] = "Your ZIP code";
 $lang['invitation_source_hint'] = "How did you hear about us?";
-$lang['invitation_source_google'] = "Google";
-$lang['invitation_source_facebook'] = "Facebook";
-$lang['invitation_source_twitter'] = "Twitter";
-$lang['invitation_source_indiegogo'] = "Indiegogo";
-$lang['invitation_source_kickstarter'] = "Kickstarter";
 $lang['invitation_source_friend'] = "From a friend";
 $lang['invitation_source_other'] = "Other";
 $lang['invitation_source_other_hint'] = "Please specify";
@@ -35,6 +30,14 @@ $lang['invitation_verify_failed'] = "Cannot verify invitation!";
 
 $lang['invitation_verified'] = "Congratulation!";
 $lang['invitation_join_button'] = "JOIN";
+
+$lang['invitation_source_list'] = array(
+    'Google',
+    'Facebook',
+    'Twitter',
+    'Indiegogo',
+    //'Kickstarter'
+);
 
 $lang['invitation_country_list'] = array(
     'United States', 'United Kingdom',
@@ -62,7 +65,7 @@ $lang['invitation_country_list'] = array(
     'Vanuatu', 'Venezuela, Bolivarian Republic of', 'Viet Nam', 'Virgin Islands, British', 'Virgin Islands, U.S.',
     'Wallis and Futuna', 'Western Sahara',
     'Yemen',
-    'Zambia', 'Zimbabwe'
+    'Zambia', 'Zimbabwe',
 );
 
 #

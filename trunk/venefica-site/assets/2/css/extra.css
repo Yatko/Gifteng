@@ -78,6 +78,22 @@ h1 {margin:0;padding:0;}
 }
 
 
+.profile .profileImage {
+    background-size: 80px 80px !important;
+    width: 80px;
+    height: 80px;
+}
+.profile .statistics {
+    padding:6px 9px;
+}
+.profile .statistics > div {
+    margin: 4px;
+}
+.profile .statistics .giving {
+    font-size: 13px;
+}
+
+
 .error {
     color: #cc6666;
     margin: 10px auto;
