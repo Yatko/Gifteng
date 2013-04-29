@@ -31,4 +31,23 @@ class Image_model extends CI_Model {
             ."url=".$this->url.""
             ."]";
     }
+    
+    // static helpers
+    
+    public static function convertImages($imagesResult) {
+        $images = array();
+        if ( is_array($imagesResult) && count($imagesResult) > 0 ) {
+            foreach ( $imagesResult as $image ) {
+                array_push($images, Image_model::convertImage($image));
+            }
+        } else {
+            $image = $imagesResult;
+            array_push($images, Image_model::convertImage($image));
+        }
+        return $images;
+    }
+    
+    public static function convertImage($image) {
+        return new Image_model($image);
+    }
 }

@@ -7,6 +7,7 @@
  */
 class User_model extends CI_Model {
     
+    var $id; //string
     var $name; //string
     var $firstName; //string
     var $lastName; //string
@@ -19,11 +20,12 @@ class User_model extends CI_Model {
     var $zipCode; //string
     var $avatar; //Image_model
     var $joinedAt; //long - timestamp
-
+    
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing User_model");
         
         if ( $obj != null ) {
+            $this->id = getField($obj, 'id');
             $this->name = getField($obj, 'name');
             $this->firstName = getField($obj, 'firstName');
             $this->lastName = getField($obj, 'lastName');
@@ -34,8 +36,10 @@ class User_model extends CI_Model {
             $this->city = getField($obj, 'city');
             $this->area = getField($obj, 'area');
             $this->zipCode = getField($obj, 'zipCode');
-            $this->avatar = hasField($obj, 'avatar') ? new Image_model($obj->avatar) : null;
             $this->joinedAt = getField($obj, 'joinedAt');
+            if ( hasField($obj, 'avatar') ) {
+                $this->avatar = Image_model::convertImage($obj->avatar);
+            }
         }
     }
     
@@ -57,7 +61,7 @@ class User_model extends CI_Model {
     }
     
     public function getJoinDate() {
-        return date('d-m-y', $this->joinedAt / 1000);
+        return date(DATE_FORMAT, $this->joinedAt / 1000);
     }
     
     public function getLocation() {
@@ -84,5 +88,24 @@ class User_model extends CI_Model {
             ."avatar=".$this->avatar.", "
             ."joinedAt=".$this->joinedAt.""
             ."]";
+    }
+    
+    // static helpers
+    
+    public static function convertUsers($usersResult) {
+        $users = array();
+        if ( is_array($usersResult) && count($usersResult) > 0 ) {
+            foreach ( $usersResult as $user ) {
+                array_push($users, User_model::convertUser($user));
+            }
+        } else {
+            $user = $usersResult;
+            array_push($users, User_model::convertUser($user));
+        }
+        return $users;
+    }
+    
+    public static function convertUser($user) {
+        return new User_model($user);
     }
 }

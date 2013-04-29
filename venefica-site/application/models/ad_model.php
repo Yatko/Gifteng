@@ -44,8 +44,6 @@ class Ad_model extends CI_Model {
             $this->price = getField($obj, 'price');
             $this->latitude = getField($obj, 'latitude');
             $this->longitude = getField($obj, 'longitude');
-            $this->image = hasField($obj, 'image') ? new Image_model($obj->image) : null;
-            $this->imageThumbnail = hasField($obj, 'imageThumbnail') ? new Image_model($obj->imageThumbnail) : null;
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
             $this->inBookmars = getField($obj, 'inBookmars');
@@ -56,31 +54,21 @@ class Ad_model extends CI_Model {
             $this->numViews = getField($obj, 'numViews');
             $this->rating = getField($obj, 'rating');
             $this->canRate = getField($obj, 'canRate');
-            $this->creator = hasField($obj, 'creator') ? new User_model($obj->creator) : null;
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
+            if ( hasField($obj, 'creator') ) {
+                $this->creator = User_model::convertUser($obj->creator);
+            }
+            if ( hasField($obj, 'image') ) {
+                $this->image = Image_model::convertImage($obj->image);
+            }
+            if ( hasField($obj, 'imageThumbnail') ) {
+                $this->imageThumbnail = Image_model::convertImage($obj->imageThumbnail);
+            }
             if ( hasField($obj, 'images') && hasField($obj->images, 'item') && $obj->images->item != null ) {
-                $images = array();
-                if ( is_array($obj->images->item) && count($obj->images->item) > 0 ) {
-                    foreach ( $obj->images->item as $image ) {
-                        array_push($images, new Image_model($image));
-                    }
-                } else {
-                    $image = $obj->images->item;
-                    array_push($images, new Image_model($image));
-                }
-                $this->images = $images;
+                $this->images = Image_model::convertImages($obj->images->item);
             }
             if ( hasField($obj, 'comments') && hasField($obj->comments, 'item') && $obj->comments->item != null ) {
-                $comments = array();
-                if ( is_array($obj->comments->item) && count($obj->comments->item) > 0 ) {
-                    foreach ( $obj->comments->item as $comment ) {
-                        array_push($comments, new Comment_model($comment));
-                    }
-                } else {
-                    $comment = $obj->comments->item;
-                    array_push($comments, new Comment_model($comment));
-                }
-                $this->comments = $comments;
+                $this->comments = Comment_model::convertComments($obj->comments->item);
             }
         }
     }
@@ -133,5 +121,24 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->creator->getLocation();
+    }
+    
+    // static helpers
+    
+    public static function convertAds($adsResult) {
+        $ads = array();
+        if ( is_array($adsResult) && count($adsResult) > 0 ) {
+            foreach ( $adsResult as $ad ) {
+                array_push($ads, Ad_model::convertAd($ad));
+            }
+        } else {
+            $ad = $adsResult;
+            array_push($ads, Ad_model::convertAd($ad));
+        }
+        return $ads;
+    }
+    
+    public static function convertAd($ad) {
+        return new Ad_model($ad);
     }
 }

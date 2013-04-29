@@ -4,15 +4,21 @@ class Browse extends CI_Controller {
     
     private $initialized = false;
     
+    private static $STARTING_AD_NUM = 5;
+    private static $CONTINUING_AD_NUM = 10;
+    
     public function view($category = null) {
         $this->init();
         
         $data = array();
+        $data['isLogged'] = isLogged();
+        $data['is_ajax'] = false;
         
-        if ( $this->auth_service->isLogged() ) {
+        if ( isLogged() ) {
             $lastAdId = $this->getLastAdId();
-            $data['ads'] = $this->getAds($lastAdId, 5);
-            $data['is_ajax'] = false;
+            $ads = $this->getAds($lastAdId, Browse::$STARTING_AD_NUM);
+            
+            $data['ads'] = $ads;
         }
         
         $this->load->view('templates/'.TEMPLATES.'/header');
@@ -23,14 +29,17 @@ class Browse extends CI_Controller {
     public function ajax() {
         $this->init();
         
-        if ( !$this->auth_service->isLogged() ) {
+        if ( !isLogged() ) {
             return;
         }
         
-        $data = array();
         $lastAdId = $this->getLastAdId();
-        $data['ads'] = $this->getAds($lastAdId, 10);
+        $ads = $this->getAds($lastAdId, Browse::$CONTINUING_AD_NUM);
+        
+        $data = array();
+        $data['isLogged'] = isLogged();
         $data['is_ajax'] = true;
+        $data['ads'] = $ads;
         
         $this->load->view('pages/browse', $data);
     }
@@ -77,6 +86,7 @@ class Browse extends CI_Controller {
     }
     
     private function getLastAdId() {
+        //default value is -1
         $lastAdId = $this->uri->segment(3, -1);
         return $lastAdId;
     }

@@ -13,6 +13,19 @@ if ( ! function_exists('display')) {
     }
 }
 
+if ( ! function_exists('safe_content')) {
+    function safe_content($str) {
+        $str = strip_tags($str);
+        return $str;
+    }
+}
+if ( ! function_exists('safe_parameter')) {
+    function safe_parameter($str) {
+        $str = strip_slashes($str);
+        return $str;
+    }
+}
+
 if ( ! function_exists('getField')) {
     function getField($obj, $fieldName) {
         if ( $obj == null || $fieldName == null ) {

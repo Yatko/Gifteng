@@ -45,6 +45,10 @@ $route['404_override'] = '';
 $route['browse/ajax/(:any)'] = 'browse/ajax/$1';
 $route['browse'] = 'browse/view';
 
+$route['profile/ajax/(:any)'] = 'profile/ajax/$1';
+$route['profile/(:any)'] = 'profile/view/$1';
+$route['profile'] = 'profile/view';
+
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication'] = 'authentication/view';
 

@@ -13,8 +13,6 @@ class Invitation extends CI_Controller {
         $data = array();
         $data['action'] = $this->getAction();
         $data['step'] = $this->getStep();
-        $data['is_logged'] = $this->auth_service->isLogged();
-        $data['user'] = $this->usermanagement_service->loadUser();
         
         $data = array_merge($data, $extra_data);
         
@@ -308,9 +306,6 @@ class Invitation extends CI_Controller {
             //load translations
             $this->lang->load('main');
             $this->lang->load('invitation');
-            
-            $this->load->library('auth_service');
-            $this->load->library('usermanagement_service');
             
             $this->initialized = true;
         }

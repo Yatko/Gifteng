@@ -74,11 +74,9 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                 <div class="loginBox">
                     <select data-placeholder="<?=lang('invitation_source_hint')?>" name="invitation_source" id="invitation_source" class="chzn-select">
                         <option value=""></option>
-                        <option value="Google" <?=set_select('invitation_source', 'Google')?>><?=lang('invitation_source_google')?></option>
-                        <option value="Facebook" <?=set_select('invitation_source', 'Facebook')?>><?=lang('invitation_source_facebook')?></option>
-                        <option value="Twitter" <?=set_select('invitation_source', 'Twitter')?>><?=lang('invitation_source_twitter')?></option>
-                        <!--<option value="Indiegogo" <?=set_select('invitation_source', 'Indiegogo')?>><?=lang('invitation_source_indiegogo')?></option>-->
-                        <option value="Kickstarter" <?=set_select('invitation_source', 'Kickstarter')?>><?=lang('invitation_source_kickstarter')?></option>
+                        <? foreach ( lang('invitation_source_list') as $source ): ?>
+                        <option value="<?=$source?>" <?=set_select('invitation_source', $source)?>><?=$source?></option> 
+                        <? endforeach; ?>
                         <option value="friend" <?=set_select('invitation_source', 'friend')?>><?=lang('invitation_source_friend')?></option>
                         <option value="other" <?=set_select('invitation_source', 'other')?>><?=lang('invitation_source_other')?></option>
                     </select>

@@ -1,6 +1,6 @@
 <?php
 
-$lang['login_email_hint'] = "Email adress";
+$lang['login_email_hint'] = "Email address";
 $lang['login_password_hint'] = "Password";
 $lang['login_login_button'] = "LOG IN";
 

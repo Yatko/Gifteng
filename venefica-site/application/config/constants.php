@@ -11,6 +11,7 @@ define('DEBUG', 'debug');
 define('INFO',  'info');
 define('ERROR', 'error');
 
+define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
 define('TEMPLATES', 2);
 
 

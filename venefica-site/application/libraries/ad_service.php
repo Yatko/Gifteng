@@ -11,6 +11,39 @@ class Ad_service {
         log_message(DEBUG, "Initializing Ad_service");
     }
     
+    /**
+     * Requests ads for the given user. If the user is invalud user not found
+     * exception will be thrown by ws.
+     * 
+     * @param long $userId
+     * @return array of Ad_model
+     * @throws Exception
+     */
+    public function getUserAds($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getUserAds(array("userId" => $userId));
+            
+            $ads = array();
+            if ( hasField($result, 'ad') && $result->ad ) {
+                $ads = Ad_model::convertAds($result->ad);
+            }
+            return $ads;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User ads (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Gets a list of listings. The order of listing is by its id, the $lastAdId
+     * parameter specifies this start point and the $numberAds the limit.
+     * 
+     * @param long $lastAdId
+     * @param int $numberAds
+     * @return array of Ad_model
+     * @throws Exception
+     */
     public function getAds($lastAdId, $numberAds) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
@@ -21,7 +54,7 @@ class Ad_service {
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {
-                $ads = $this->populateAds($result->ad);
+                $ads = Ad_model::convertAds($result->ad);
             }
             return $ads;
         } catch ( Exception $ex ) {
@@ -30,6 +63,15 @@ class Ad_service {
         }
     }
     
+    /**
+     * Gets a list of listings that satifies filter.
+     * 
+     * @param long $lastAdId
+     * @param int $numberAds
+     * @param Filter_model $filter
+     * @return array of Ad_model
+     * @throws Exception
+     */
     public function getAdsEx($lastAdId, $numberAds, $filter = null) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
@@ -41,7 +83,7 @@ class Ad_service {
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {
-                $ads = $this->populateAds($result->ad);
+                $ads = Ad_model::convertAds($result->ad);
             }
             return $ads;
         } catch ( Exception $ex ) {
@@ -50,6 +92,19 @@ class Ad_service {
         }
     }
     
+    /**
+     * Gets a list of listings that satifies filter. The include flag specifies
+     * extra data to include into response.
+     * 
+     * @param long $lastAdId
+     * @param int $numberAds
+     * @param Filter_model $filter
+     * @param boolean $includeImages
+     * @param boolean $includeCreator
+     * @param boolean $includeCommentsNumber
+     * @return array of Ad_model
+     * @throws Exception
+     */
     public function getAdsExDetail($lastAdId, $numberAds, $filter, $includeImages, $includeCreator, $includeCommentsNumber) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
@@ -64,7 +119,7 @@ class Ad_service {
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {
-                $ads = $this->populateAds($result->ad);
+                $ads = Ad_model::convertAds($result->ad);
             }
             return $ads;
         } catch ( Exception $ex ) {
@@ -73,14 +128,44 @@ class Ad_service {
         }
     }
     
+    /**
+     * Return the listing by its id.
+     * 
+     * @param long $adId
+     * @return Ad_model
+     * @throws Exception
+     */
     public function getAdById($adId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
             $result = $adService->getAdById(array("adId" => $adId));
-            $ad = new Ad_model($result->ad);
+            $ad = Ad_model::convertAd($result->ad);
             return $ad;
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Ad (id: '.$adId.') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Requests the list of favorited ads by the given user.
+     * 
+     * @param long $userId
+     * @return array of Ad_model
+     * @throws Exception
+     */
+    public function getFavorites($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getFavorites(array("userId" => $userId));
+            
+            $ads = array();
+            if ( hasField($result, 'ad') && $result->ad ) {
+                $ads = Ad_model::convertAds($result->ad);
+            }
+            return $ads;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User ads (userId: ' . $userId . ') request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -91,6 +176,7 @@ class Ad_service {
             $result = $adService->getAllCategories();
             $categories = $result->category;
             
+            //TODO:
             print_r($categories);
             
             return $categories;
@@ -99,20 +185,4 @@ class Ad_service {
             throw new Exception($ex->faultstring);
         }
     }
-    
-    // internal methods
-    
-    private function populateAds($adsResult) {
-        $ads = array();
-        if ( is_array($adsResult) && count($adsResult) > 0 ) {
-            foreach ( $adsResult as $ad ) {
-                array_push($ads, new Ad_model($ad));
-            }
-        } else {
-            $ad = $adsResult;
-            array_push($ads, new Ad_model($ad));
-        }
-        return $ads;
-    }
-    
 }

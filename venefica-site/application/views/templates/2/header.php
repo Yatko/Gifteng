@@ -54,6 +54,16 @@ $img_path   = $base_path.'img/';
     <meta property="og:description" content="- make the world a giving place -"/>
     <meta property="og:image" content="<?=$img_path?>gifteng.png"/>
     <meta property="og:type" content="website"/>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-40348949-1', 'gifteng.com');
+        ga('send', 'pageview');
+    </script>
 </head>
 <body>
     <div id="header">
@@ -89,7 +99,28 @@ $img_path   = $base_path.'img/';
         <a href="<?=base_url()?>index"><div class="logo"></div></a>
         
         <div id="navigator">
-            <div class="right"><a href="<?=base_url()?>authentication">Sign in</a></div>
+            <div class="left"><a id="about"><?=lang('main_menu_about')?></a></div>
+            <div class="left"><a href="<?=base_url()?>browse"><span class="categories"></span></a></div>
+            <div class="left"><span class="search"></span></div>
+            <? if( isLogged() ): ?>
+                <div class="right"><a href="<?=base_url()?>authentication/logout">Sign out</a></div>
+            <? else: ?>
+                <div class="right"><a href="<?=base_url()?>authentication/login">Sign in</a></div>
+            <? endif; ?>
+            <div class="right"><span class="location"></span></div>
+            <div class="right"><span class="give"></span></div>
+        </div>
+        
+        <div id="navigator2" style="display: none;"> 
+            <ul id="nav2">
+                <li><a href="<?=base_url()?>profile"><?=lang('main_submenu_profile')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_help')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_jobs')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_business')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_privacy')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_policy')?></a></li>
+                <li><a href="#"><?=lang('main_submenu_contact')?></a></li>
+            </ul>	
         </div>
     </div>
     

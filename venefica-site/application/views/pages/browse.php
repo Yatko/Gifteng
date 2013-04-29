@@ -54,7 +54,9 @@
 <? endif; ?>
 
     
-    <? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
+    <? if( !$isLogged ): ?>
+        You NEED to log in!
+    <? elseif ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
         <? foreach ($ads as $ad): ?>
             <?
             $creator_img = $ad->getCreatorAvatarUrl();
@@ -74,10 +76,9 @@
             <div class="box">
                 <div class="container">
                     <div class="profileBox">
-                        <div class="profileImage" style="background: url(<?=$creator_img?>); background-size:38px 38px;">
-                        </div>
+                        <div class="profileImage" style="background: url(<?=$creator_img?>);"></div>
                         <div class="details">
-                            <div class="username"><?=$creator_name?></div>
+                            <div class="username"><?=safe_content($creator_name)?></div>
                             <div class="age">Giftenger since <?=$creator_joined?></div>
                             <div class="location"><?=$creator_location?></div>
                         </div>
@@ -85,9 +86,9 @@
                 </div>
                 <div class="container">
                     <div class="itemBox">
-                        <div class="thumbnail"><a href="#"><img src="<?=$ad_img?>" alt="img"></a></div>
-                        <div class="title"><a href="#"><?=$ad_title?></a></div>
-                        <div class="description"><?=$ad_description?></div>
+                        <div class="thumbnail"><a href="#"><img src="<?=$ad_img?>" alt="<?=safe_parameter($ad_title)?>"></a></div>
+                        <div class="title"><a href="#"><?=safe_content($ad_title)?></a></div>
+                        <div class="description"><?=safe_content($ad_description)?></div>
                         <div>
                             <div class="fl"><div class="id" id="<?=$ad_id?>">ID: <?=$ad_id?></div></div>
                             <div class="fr"><div class="location">??? miles</div></div>
@@ -107,11 +108,10 @@
                 ?>
 
                 <div class="messageBox">
-                    <div class="profileImage" style="background: url(<?=$commentor_img?>);background-size:38px 38px;">
-                    </div>
+                    <div class="profileImage" style="background: url(<?=$commentor_img?>);"></div>
                     <div class="details">
-                        <span class="username"><?=$commentor_name?></span>&nbsp;
-                        <span class="message"><?=$comment_text?></span>
+                        <span class="username"><?=safe_content($commentor_name)?></span>&nbsp;
+                        <span class="message"><?=safe_content($comment_text)?></span>
                     </div>
                 </div>
             <? endforeach; ?>
