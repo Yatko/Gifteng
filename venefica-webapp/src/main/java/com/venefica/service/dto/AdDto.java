@@ -1,7 +1,6 @@
 package com.venefica.service.dto;
 
 import com.venefica.model.Ad;
-import com.venefica.model.User;
 import com.venefica.common.GeoUtils;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
@@ -77,7 +76,7 @@ public class AdDto extends DtoBase {
     public AdDto() {
     }
 
-    public void update(Ad ad, User currentUser) {
+    public void update(Ad ad) {
         ad.setTitle(title);
         ad.setDescription(description);
         ad.setPrice(price);

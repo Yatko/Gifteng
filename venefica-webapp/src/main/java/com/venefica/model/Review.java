@@ -5,6 +5,7 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,52 +17,48 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 
 /**
- * Ad viewer.
- * 
+ *
  * @author gyuszi
  */
 @Entity
-@Table(name = "viewer")
-public class Viewer {
+@Table(name = "review")
+public class Review {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @ManyToOne(optional = false)
-    @ForeignKey(name = "viewer_ad_fk")
-    private Ad ad;
+    @ForeignKey(name = "reviewer_usr_fk")
+    private User from;
     
     @ManyToOne(optional = false)
-    @ForeignKey(name = "viewer_usr_fk")
+    @ForeignKey(name = "reviewed_usr_fk")
     private User user;
     
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date viewedAt;
+    @Basic(optional = false)
+    private String text;
     
-    public Viewer() {
-    }
-
-    public Viewer(Ad ad, User user) {
-        this.ad = ad;
-        this.user = user;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reviewedAt;
+    
+    public Review() {
     }
 
     public Long getId() {
         return id;
     }
 
-    @SuppressWarnings("unused")
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Ad getAd() {
-        return ad;
+    public User getFrom() {
+        return from;
     }
 
-    public void setAd(Ad ad) {
-        this.ad = ad;
+    public void setFrom(User from) {
+        this.from = from;
     }
 
     public User getUser() {
@@ -72,11 +69,19 @@ public class Viewer {
         this.user = user;
     }
 
-    public Date getViewedAt() {
-        return viewedAt;
+    public String getText() {
+        return text;
     }
 
-    public void setViewedAt(Date viewedAt) {
-        this.viewedAt = viewedAt;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Date getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(Date reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 }

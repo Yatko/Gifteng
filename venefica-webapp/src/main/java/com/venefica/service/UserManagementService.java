@@ -1,5 +1,6 @@
 package com.venefica.service;
 
+import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -132,6 +133,13 @@ public interface UserManagementService {
     @WebMethod(operationName = "GetFollowings")
     @WebResult(name = "following")
     public List<UserDto> getFollowings(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
+    @WebMethod(operationName = "AddReview")
+    public void addReview(@WebParam(name = "review") ReviewDto reviewDto) throws UserNotFoundException;
+    
+    @WebMethod(operationName = "GetReviews")
+    @WebResult(name = "review")
+    public List<ReviewDto> getReviews(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
     /**
      * Returns a list of social network names connected to the current user
