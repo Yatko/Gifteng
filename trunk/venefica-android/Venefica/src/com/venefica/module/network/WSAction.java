@@ -74,7 +74,8 @@ public class WSAction {
 	private final String WS_METHOD_REQUEST_INVITATION = "RequestInvitation";
 	private final String WS_METHOD_VERIFY_INVITATION = "IsInvitationValid";
 	private final String WS_METHOD_CHANGE_PASSWORD = "ChangePassword";
-	
+	private final String WS_METHOD_FOLLOW_USER = "Follow";
+	private final String WS_METHOD_UNFOLLOW_USER = "Unfollow";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -1293,6 +1294,89 @@ public class WSAction {
 			} else {
 				result.result = Constants.ERROR_RESULT_CHANGE_PASSWORD;
 			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to follow user
+	 * @param token
+	 * @param userId
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper followUser(String token, Long userId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_FOLLOW_USER;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			if (obj == null) {
+				result.result = Constants.RESULT_FOLLOW_USER_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_FOLLOW_USER;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_FOLLOW_USER;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to unfollow user
+	 * @param token
+	 * @param userId
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper unfollowUser(String token, Long userId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_UNFOLLOW_USER;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			boolean isValid = Boolean.valueOf(obj.toString());
+			if (isValid) {
+				result.result = Constants.RESULT_UNFOLLOW_USER_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_UNFOLLOW_USER;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_UNFOLLOW_USER;
 		}
 		return result;
 	}
