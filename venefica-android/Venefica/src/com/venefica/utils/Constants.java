@@ -73,6 +73,11 @@ public class Constants
 	public static final int RESULT_CHANGE_PASSWORD_SUCCESS = 1064;
 	public static final int ERROR_RESULT_INVALID_OLD_PASSWORD = 1065;
 	public static final int ERROR_RESULT_CHANGE_PASSWORD = 1066;
+	public static final int RESULT_FOLLOW_USER_SUCCESS = 1067;
+	public static final int ERROR_RESULT_FOLLOW_USER = 1068;
+	public static final int RESULT_UNFOLLOW_USER_SUCCESS = 1069;
+	public static final int ERROR_RESULT_UNFOLLOW_USER = 1070;	
+	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -189,6 +194,6 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
 		
 }
