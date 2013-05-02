@@ -28,7 +28,7 @@ public class UserDto implements KvmSerializable
 	private String area = "";
 	private ImageDto avatar;
 	private Date joinedAt;	
-
+	private Long id;
 	public Object getProperty(int index)
 	{
 		//final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -59,6 +59,8 @@ public class UserDto implements KvmSerializable
 			return avatar;
 		case 11:
 			return joinedAt.getTime();
+		case 12:
+			return id;
 		}
 
 		return null;
@@ -66,7 +68,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 12;
+		return 13;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -132,6 +134,10 @@ public class UserDto implements KvmSerializable
 			info.name = "joinedAt";
 			info.type = Long.class;
 			break;
+		case 12:
+			info.name = "id";
+			info.type = Long.class;
+			break;
 		default:
 			break;
 		}
@@ -176,6 +182,9 @@ public class UserDto implements KvmSerializable
 			break;
 		case 11:
 			joinedAt = new Date(Long.parseLong(value.toString()));
+			break;
+		case 12:
+			id = Long.valueOf(value.toString());
 			break;
 		}
 	}
@@ -358,5 +367,19 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setJoinedAt(Date joinedAt) {
 		this.joinedAt = joinedAt;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 }
