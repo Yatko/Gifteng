@@ -1,6 +1,7 @@
 package com.venefica.module.listings;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -61,7 +66,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to show detail Listing  
  */
-public class ListingDetailsActivity extends VeneficaMapActivity implements android.view.View.OnClickListener{
+public class ListingDetailsActivity extends VeneficaMapActivity implements android.view.View.OnClickListener, LocationListener{
 	/**
 	 * Gallery to images
 	 */
@@ -106,6 +111,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     public static final int ACT_MODE_DOWNLOAD_COMMENTS = 4009;
     public static final int ACT_MODE_SEND_MESSAGE  = 4010;
 	public static final int ACT_MODE_ADD_COMMENT = 4011;
+	public static final int ACT_MODE_FOLLOW_USER = 4012;
+	public static final int ACT_MODE_UNFOLLOW_USER = 4013;
     /**
      * Current mode
      */
@@ -156,6 +163,16 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	private final int viewHeightMin = 150, viewHeightMax = 250; // in pixels
 	
 	private ImageButton imgBtnMore;
+	/**
+	 * to get current location for distance calculation
+	 */
+	private LocationManager locationManager;
+	private String locProvider;
+	private Location location;
+	/**
+	 * text view on pop up
+	 */
+	private TextView txtMiles, txtLeft, txtDays;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -198,6 +215,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		View popupView = inflater.inflate(R.layout.view_listing_details_popup, null);
 		popupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT,  
 	                     LayoutParams.WRAP_CONTENT); 
+		txtMiles = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpMiles);
+        txtLeft = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpBidsRem);
+        txtDays = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpDaysRem);
 		//Map
 		mapView = (TapControlledMapView) mapContainer.findViewById(R.id.mapviewActListingDetails);
 		// dismiss balloon upon single tap of MapView 
@@ -253,12 +273,31 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         laySend = (LinearLayout) findViewById(R.id.layActListingDetailsSend);
         
         imgBtnMore = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpMore);
-        imgBtnMore.setOnClickListener(this);
+        imgBtnMore.setOnClickListener(this);        
+        
     }
-    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	// get locaton service
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		criteria.setCostAllowed(false);
+		locProvider = locationManager.getBestProvider(criteria, true);		
+
+	    if (locProvider != null) {
+	    	location = locationManager.getLastKnownLocation(locProvider);
+			onLocationChanged(location);
+	    } else {
+	    	ERROR_CODE = Constants.ERROR_ENABLE_LOCATION_PROVIDER;
+	    	showDialog(D_ERROR);	        
+	    }
+    }
     @Override
     protected void onResume() {
     	super.onResume();
+    	locationManager.requestLocationUpdates(locProvider, 400, 1, this);
     	//Get listing details
     	new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
     }
@@ -374,7 +413,17 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				message = (String) getResources().getText(R.string.msg_add_comment_success);
 				//Download comments
 				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
-			}  		
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_FOLLOW_USER || ERROR_CODE == Constants.ERROR_RESULT_UNFOLLOW_USER){
+				message = (String) getResources().getText(R.string.g_error);
+			}else if(ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_follow_success);
+			}else if(ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_unfollow_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_GET_LOCATION){
+				message = (String) getResources().getText(R.string.error_postlisting_get_location);
+			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
+				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
+			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
@@ -437,8 +486,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	}
 	@Override
 	protected void onStop() {
-//		ImageDownloadManager.getImageDownloadManagerInstance().reset();
 		super.onStop();
+		locationManager.removeUpdates(this);
 	}
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -542,6 +591,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}else if (params[0].equals(ACT_MODE_ADD_COMMENT)) {
 					wrapper = wsAction.addCommentToListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, selectedListingId, getComment());
+				}else if (params[0].equals(ACT_MODE_FOLLOW_USER)) {
+					wrapper = wsAction.followUser(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getCreator().getId());
+				}else if (params[0].equals(ACT_MODE_UNFOLLOW_USER)) {
+					wrapper = wsAction.unfollowUser(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getCreator().getId());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -566,6 +621,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				listing = result.listing;
 				//Download comments
 				new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_COMMENTS);
+				if (location != null) {
+					onLocationChanged(location);
+				}
+				if (listing != null && listing.getExpiresAt() != null) {
+					showDaysRemainingToExpiary(listing.getExpiresAt());
+				}
 			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS /*&& result.comments != null*/){
 				if (result.comments != null) {
 					comments.clear();
@@ -655,7 +716,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}
 			}						
 		} else if (id == R.id.imgBtnUserViewFollow) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+			new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);
+			/*if (listing.getCreator().) {
+				
+			} else if(){
+
+			}*/
+//			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 		} else if (id == R.id.btnActListingDetailsFlag) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 		} else if (id == R.id.btnActListingDetailsGetIt) {
@@ -693,5 +760,52 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		comment.setText("");
 		comments.add(comment);
 		return comments;
+	}
+	@Override
+	public void onLocationChanged(Location location) {
+		if (location != null) {
+			this.location = location;
+			showDistance(location);
+		}
+	}
+	@Override
+	public void onProviderDisabled(String provider) {
+		Utility.showLongToast(this, provider + getResources().getString(R.string.msg_postlisting_provider_disabled));
+	}
+	@Override
+	public void onProviderEnabled(String provider) {
+		Utility.showLongToast(this, provider + getResources().getString(R.string.msg_postlisting_provider_selected));
+	}
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Helper method to show distance from current location on popup in miles
+	 * @param location
+	 */
+	private void showDistance(Location location){
+		if (listing != null && location != null) {
+			Location location2 = new Location(location);
+			location2.setLatitude(listing.getLatitude());
+			location2.setLongitude(listing.getLongitude());
+			float distance = location.distanceTo(location2);
+			if (txtMiles != null) {
+				DecimalFormat df = new DecimalFormat("#.##");
+				txtMiles.setText(df.format(distance * 0.00062137119));
+			}
+		}		
+	}
+	
+	/**
+	 * show days to expire on popup
+	 * @param expiaryDate
+	 */
+	private void showDaysRemainingToExpiary(Date expiaryDate){
+		int diffInDays = (int)( (expiaryDate.getTime() - System.currentTimeMillis()) 
+                / (1000 * 60 * 60 * 24) );
+		txtDays.setText(diffInDays +" " + getResources().getString(R.string.g_label_days));
 	}
 }
