@@ -37,9 +37,13 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @TestExecutionListeners({DumpErrorTestExecutionListener.class, TransactionalTestExecutionListener.class})
 public abstract class ServiceTestBase<T> {
 
-    public static final Long FIRST_USER_ID = new Long(1);
-    public static final Long SECOND_USER_ID = new Long(2);
-    public static final Long THIRD_USER_ID = new Long(3);
+    public static final Long FIRST_USER_ID = 1L;
+    public static final Long SECOND_USER_ID = 2L;
+    public static final Long THIRD_USER_ID = 3L;
+    
+    public static final String FIRST_USER_NAME = "first";
+    public static final String SECOND_USER_NAME = "second";
+    public static final String THIRD_USER_NAME = "third";
     
     protected final Class<? extends T> serviceClass;
     protected T client;
@@ -79,6 +83,9 @@ public abstract class ServiceTestBase<T> {
 
         client = (T) factory.create();
         cxfClient = ClientProxy.getClient(client);
+        
+        //cxfClient.getRequestContext().put("schema-validation-enabled", "true");
+        //cxfClient.getResponseContext().put("schema-validation-enabled", "true");
         
         HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
         httpConduit.getClient().setReceiveTimeout(120000);
