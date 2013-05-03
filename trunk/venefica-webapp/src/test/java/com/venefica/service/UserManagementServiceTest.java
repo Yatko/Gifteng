@@ -129,33 +129,47 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         authenticateClientAsFirstUser();
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> followings_1 = client.getFollowings(FIRST_USER_ID);
         List<UserDto> followers_1 = client.getFollowers(FIRST_USER_ID);
+        List<UserDto> followings_1 = client.getFollowings(FIRST_USER_ID);
         
-        assertNotNull(followings_1);
-        assertEquals(1, followings_1.size());
         assertNull(followers_1);
+        assertEquals(1, followings_1.size());
         
         //3 follows 2
         authenticateClientAsThirdUser();
         client.follow(SECOND_USER_ID);
         
-        List<UserDto> followings_3 = client.getFollowings(THIRD_USER_ID);
         List<UserDto> followers_3 = client.getFollowers(THIRD_USER_ID);
+        List<UserDto> followings_3 = client.getFollowings(THIRD_USER_ID);
         
-        assertNotNull(followings_3);
-        assertEquals(1, followings_3.size());
         assertNull(followers_3);
+        assertEquals(1, followings_3.size());
         
         //2 details
         authenticateClientAsSecondUser();
         
-        List<UserDto> followings_2 = client.getFollowings(SECOND_USER_ID);
         List<UserDto> followers_2 = client.getFollowers(SECOND_USER_ID);
+        List<UserDto> followings_2 = client.getFollowings(SECOND_USER_ID);
         
-        assertNotNull(followers_2);
         assertEquals(2, followers_2.size());
         assertNull(followings_2);
+        
+        // 1 from the perspective of 2
+        UserDto user_1 = client.getUserByName(FIRST_USER_NAME);
+        assertTrue(user_1.isInFollowers() == true);
+        assertTrue(user_1.isInFollowings() == false);
+        
+        // 3 from the perspective of 2
+        UserDto user_3 = client.getUserByName(THIRD_USER_NAME);
+        assertTrue(user_3.isInFollowers() == true);
+        assertTrue(user_3.isInFollowings() == false);
+        
+        authenticateClientAsFirstUser();
+        
+        // 2 from the perspective of 1
+        UserDto user_2 = client.getUserByName(SECOND_USER_NAME);
+        assertTrue(user_2.isInFollowers() == false);
+        assertTrue(user_2.isInFollowings() == true);
     }
     
     @Test
