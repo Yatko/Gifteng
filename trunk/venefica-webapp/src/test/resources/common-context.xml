@@ -23,6 +23,7 @@
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <!-- Resource can be found in library: cxf-rt-transports-http-2.6.0.jar -->
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+    
 
     <bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
         <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
