@@ -8,12 +8,12 @@
     <name>Venefica web application</name>
     
     <properties>
-        <java.version>1.6</java.version>
+        <!--<java.version>1.6</java.version>-->
         <org.apache.cxf.version>2.6.0</org.apache.cxf.version>
         <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
         <org.hibernate.version>4.1.3.Final</org.hibernate.version>
         <org.quartz>2.1.5</org.quartz>
-        <tomcat.manager.url>http://192.168.1.150:8081/manager</tomcat.manager.url>
+        <!--<tomcat.manager.url>http://192.168.1.150:8081/manager</tomcat.manager.url>-->
         <!--<skip.tests>false</skip.tests>-->
     </properties>
     
@@ -34,10 +34,9 @@
             <version>${org.springframework.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${org.springframework.version}</version>
-            <scope>test</scope>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>3.1.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
@@ -47,7 +46,7 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-facebook</artifactId>
-            <version>1.0.1.RELEASE</version>
+            <version>1.0.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
@@ -55,14 +54,16 @@
             <version>1.0.2.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-twitter</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>1.0.3.RELEASE</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
@@ -70,12 +71,7 @@
             <version>1.0.2.RELEASE</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${org.hibernate.version}</version>
-        </dependency>
-	
+        
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
@@ -87,7 +83,18 @@
             <version>1.7</version>
         </dependency>
         
-        <!-- WARNING postgis-jdbc 1.5.3 is not available in standard repo -->  
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
+        </dependency>
+        
+        <!-- WARNING postgis-jdbc 1.5.3 is not available in standard repo -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${org.hibernate.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
