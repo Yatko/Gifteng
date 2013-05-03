@@ -23,6 +23,14 @@
         <jaxws:inInterceptors>
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>
+        <!--
+        <jaxws:properties>
+            <entry key="schema-validation-enabled" value="true" />
+            <entry key="jaxb-validation-event-handler">
+                <bean class="com.venefica.service.ValidationEventHandler" />
+            </entry>
+        </jaxws:properties>
+        -->
     </jaxws:endpoint>
     
 </beans>
