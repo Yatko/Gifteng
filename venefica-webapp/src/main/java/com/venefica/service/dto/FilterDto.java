@@ -27,6 +27,7 @@ public class FilterDto {
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
     private Boolean wanted;
+    private Boolean includeOwned;
 
     // WARNING: required for JAX-WS
     public FilterDto() {
@@ -102,5 +103,13 @@ public class FilterDto {
 
     public void setWanted(Boolean wanted) {
         this.wanted = wanted;
+    }
+
+    public Boolean getIncludeOwned() {
+        return includeOwned;
+    }
+
+    public void setIncludeOwned(Boolean includeOwned) {
+        this.includeOwned = includeOwned;
     }
 }
