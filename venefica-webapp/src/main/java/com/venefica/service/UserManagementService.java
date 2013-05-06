@@ -1,6 +1,5 @@
 package com.venefica.service;
 
-import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -24,6 +23,10 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 @SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
 public interface UserManagementService {
 
+    //************************************
+    //* user crud (create/update/delete) *
+    //************************************
+    
     /**
      * Registers new local user not connected to any social network.
      *
@@ -52,7 +55,21 @@ public interface UserManagementService {
     @WebResult(name = "complete")
     public boolean updateUser(@WebParam(name = "user") UserDto userDto)
             throws UserAlreadyExistsException;
+    
+    /**
+     * Returns true if all required information is gathered for the current
+     * user.
+     */
+    @WebMethod(operationName = "IsUserComplete")
+    @WebResult(name = "complete")
+    public boolean isUserComplete();
 
+    
+    
+    //***************
+    //* user search *
+    //***************
+    
     /**
      * Retrieves information about the current (logged) user.
      *
@@ -100,14 +117,12 @@ public interface UserManagementService {
     @WebResult(name = "user")
     public UserDto getUserByPhone(@WebParam(name = "phone") String phone) throws UserNotFoundException;
 
-    /**
-     * Returns true if all required information is gathered for the current
-     * user.
-     */
-    @WebMethod(operationName = "IsUserComplete")
-    @WebResult(name = "complete")
-    public boolean isUserComplete();
-
+    
+    
+    //***************
+    //* user follow *
+    //***************
+    
     /**
      * Adds the given user into the actual ones followers list.
      * 
@@ -126,20 +141,33 @@ public interface UserManagementService {
     @WebMethod(operationName = "Unfollow")
     public void unfollow(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
+    /**
+     * Returns the list of users that are following the given one.
+     * 
+     * @param userId
+     * @return list of followers
+     * @throws UserNotFoundException if the given user could not be found
+     */
     @WebMethod(operationName = "GetFollowers")
     @WebResult(name = "follower")
     public List<UserDto> getFollowers(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
+    /**
+     * Returns a list of users that the given one is following.
+     * 
+     * @param userId
+     * @return list of followings
+     * @throws UserNotFoundException if the given user could not be found
+     */
     @WebMethod(operationName = "GetFollowings")
     @WebResult(name = "following")
     public List<UserDto> getFollowings(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
-    @WebMethod(operationName = "AddReview")
-    public void addReview(@WebParam(name = "review") ReviewDto reviewDto) throws UserNotFoundException;
     
-    @WebMethod(operationName = "GetReviews")
-    @WebResult(name = "review")
-    public List<ReviewDto> getReviews(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
+    //******************
+    //* social network *
+    //******************
     
     /**
      * Returns a list of social network names connected to the current user
