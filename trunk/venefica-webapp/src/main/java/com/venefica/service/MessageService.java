@@ -26,6 +26,10 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 @SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
 public interface MessageService {
 
+    //**************
+    //* commenting *
+    //**************
+    
     /**
      * Adds comment (question, answer, etc.) to the ad.
      *
@@ -37,9 +41,10 @@ public interface MessageService {
      */
     @WebMethod(operationName = "AddCommentToAd")
     @WebResult(name = "commentId")
-    Long addCommentToAd(@WebParam(name = "adId") Long adId,
-            @WebParam(name = "comment") CommentDto commentDto) throws AdNotFoundException,
-            CommentValidationException;
+    Long addCommentToAd(
+            @WebParam(name = "adId") Long adId,
+            @WebParam(name = "comment") CommentDto commentDto)
+            throws AdNotFoundException, CommentValidationException;
 
     /**
      * Updates the comment in the database.
@@ -68,6 +73,12 @@ public interface MessageService {
             @WebParam(name = "lastCommentId") Long lastCommentId,
             @WebParam(name = "numComments") int numComments) throws AdNotFoundException;
 
+    
+    
+    //*********
+    //* share *
+    //*********
+    
     /**
      * Places the message on the walls of the connected social networks.
      *
@@ -76,6 +87,12 @@ public interface MessageService {
     @WebMethod(operationName = "ShareOnSocialNetworks")
     void shareOnSocialNetworks(@WebParam(name = "message") String message);
 
+    
+    
+    //*************
+    //* messaging *
+    //*************
+    
     /**
      * Sends the message to the specified user.
      *
