@@ -23,9 +23,11 @@ public class BusinessUserData  extends UserData {
     private Boolean verified;
 
     public BusinessUserData() {
+        super();
     }
     
     public BusinessUserData(String businessName) {
+        this();
         this.businessName = businessName;
     }
     

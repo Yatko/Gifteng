@@ -41,6 +41,7 @@ public class MemberUserData extends UserData {
     private boolean callsAllowed;
     
     public MemberUserData() {
+        super();
     }
     
     public MemberUserData(String firstName, String lastName) {
@@ -56,9 +57,9 @@ public class MemberUserData extends UserData {
     
     @Override
     public boolean isComplete() {
-        return firstName != null && lastName != null
-                && getPhoneNumber() != null && dateOfBirth != null
-                && getCountry() != null && getCity() != null;
+        return firstName != null && lastName != null && phoneNumber != null
+                && dateOfBirth != null
+                && address != null && address.getCountry() != null && address.getCity() != null;
         // TODO: place other checks here!!
     }
     
