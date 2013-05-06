@@ -42,6 +42,10 @@ public class UserDto extends DtoBase {
     private ImageDto avatar;
     // out
     private Date joinedAt;
+    // out
+    private boolean inFollowers;
+    // out
+    private boolean inFollowings;
 
     // TODO: add necessary fields
     // Required for JAX-WS
@@ -214,4 +218,20 @@ public class UserDto extends DtoBase {
     //public void setJoinedAt(Date joinedAt) {
     //    this.joinedAt = joinedAt;
     //}
+
+    public boolean isInFollowers() {
+        return inFollowers;
+    }
+
+    public void setInFollowers(boolean inFollowers) {
+        this.inFollowers = inFollowers;
+    }
+
+    public boolean isInFollowings() {
+        return inFollowings;
+    }
+
+    public void setInFollowings(boolean inFollowings) {
+        this.inFollowings = inFollowings;
+    }
 }
