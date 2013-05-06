@@ -1,11 +1,14 @@
 package com.venefica.model;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
@@ -32,6 +35,9 @@ public class Bookmark {
     @ForeignKey(name = "bookmark_ad_fk")
     private Ad ad;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date bookmarkedAt;
+    
     // Required for hibernate
     public Bookmark() {
     }
@@ -64,5 +70,13 @@ public class Bookmark {
 
     public void setAd(Ad ad) {
         this.ad = ad;
+    }
+
+    public Date getBookmarkedAt() {
+        return bookmarkedAt;
+    }
+
+    public void setBookmarkedAt(Date bookmarkedAt) {
+        this.bookmarkedAt = bookmarkedAt;
     }
 }
