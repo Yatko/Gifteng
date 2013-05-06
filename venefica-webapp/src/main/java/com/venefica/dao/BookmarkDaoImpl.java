@@ -3,6 +3,7 @@ package com.venefica.dao;
 import com.venefica.model.Ad;
 import com.venefica.model.Bookmark;
 import com.venefica.model.User;
+import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,6 +35,7 @@ public class BookmarkDaoImpl extends DaoBase<Bookmark> implements BookmarkDao {
 
     @Override
     public Long save(Bookmark bookmark) {
+        bookmark.setBookmarkedAt(new Date());
         return saveEntity(bookmark);
     }
 

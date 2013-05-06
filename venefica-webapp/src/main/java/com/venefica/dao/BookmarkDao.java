@@ -25,7 +25,7 @@ public interface BookmarkDao {
      *
      * @param userId id of the user who created the bookmark
      * @param adId id of the ad
-     * @return bookmark object of null if the bookmark not found.
+     * @return bookmark object or null if the bookmark not found.
      */
     Bookmark get(Long userId, Long adId);
 
