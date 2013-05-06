@@ -18,10 +18,11 @@ public enum ActivityType {
     CREATE_AD,
     UPDATE_AD,
     END_AD,
+    PUBLISH_AD,
     DELETE_AD,
     RELIST_AD,
     BOOKMARK_AD, //create bookmark
-    UNBOOKMARK_AD, //remove bookmark
+    REMOVE_BOOKMARK_AD, //remove bookmark
     MARK_AD, //spam
     UNMARK_AD, //spam
     RATE_AD, //do we need this?
@@ -36,4 +37,6 @@ public enum ActivityType {
     UPDATE_MESSAGE,
     DELETE_MESSAGE,
     
+    //there will come more types
+    ;
 }
