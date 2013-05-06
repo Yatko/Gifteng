@@ -2,6 +2,7 @@ package com.venefica.service.dto;
 
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -19,18 +20,20 @@ public class ImageDto extends DtoBase {
     // out
     private Long id;
     // in
+    @NotNull
     private ImageType imgType;
     // in
+    @NotNull
     private byte[] data;
     // out
     private String url;
 
-    // required for JAX-WS
-    public ImageDto() {
-    }
-
     public static String imageUrl(Image image) {
         return image != null ? BASE_PATH + "img" + image.getId().toString() : null;
+    }
+    
+    // required for JAX-WS
+    public ImageDto() {
     }
 
     /**
@@ -44,13 +47,10 @@ public class ImageDto extends DtoBase {
         this.id = image.getId();
         this.url = imageUrl(image);
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    
+    public ImageDto(ImageType imgType, byte[] data) {
+        this.imgType = imgType;
+        this.data = data;
     }
 
     public boolean isValid() {
@@ -65,10 +65,13 @@ public class ImageDto extends DtoBase {
         image.setImgType(imgType);
         image.setData(data);
     }
+    
+    public Long getId() {
+        return id;
+    }
 
-    public ImageDto(ImageType imgType, byte[] data) {
-        this.imgType = imgType;
-        this.data = data;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ImageType getImgType() {
