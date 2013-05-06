@@ -6,19 +6,24 @@ package com.venefica.service.dto;
 
 import com.venefica.model.Review;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 /**
  *
  * @author gyuszi
  */
-public class ReviewDto {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ReviewDto extends DtoBase {
     
     // in, out
+    @NotNull
+    private Long adId;
+    // in, out
+    private Boolean positive;
+    // in, out
     private String text;
-    // out
-    private UserDto from;
-    // in
-    private UserDto to;
     // out
     private Date reviewedAt;
 
@@ -31,9 +36,8 @@ public class ReviewDto {
      * @param review domain object
      */
     public ReviewDto(Review review) {
+        positive = review.getPositive();
         text = review.getText();
-        from = new UserDto(review.getFrom());
-        to = new UserDto(review.getUser());
         reviewedAt = review.getReviewedAt();
     }
     
@@ -45,14 +49,6 @@ public class ReviewDto {
         this.text = text;
     }
 
-    public UserDto getFrom() {
-        return from;
-    }
-
-    public void setFrom(UserDto from) {
-        this.from = from;
-    }
-
     public Date getReviewedAt() {
         return reviewedAt;
     }
@@ -61,11 +57,19 @@ public class ReviewDto {
         this.reviewedAt = reviewedAt;
     }
 
-    public UserDto getTo() {
-        return to;
+    public Boolean getPositive() {
+        return positive;
     }
 
-    public void setTo(UserDto to) {
-        this.to = to;
+    public void setPositive(Boolean positive) {
+        this.positive = positive;
+    }
+
+    public Long getAdId() {
+        return adId;
+    }
+
+    public void setAdId(Long adId) {
+        this.adId = adId;
     }
 }
