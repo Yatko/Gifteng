@@ -5,19 +5,23 @@
 package com.venefica.model;
 
 import java.util.Date;
-import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 
 /**
- *
+ * Reviews can be (and should be) created after a successful product (ad, gift)
+ * pickup. Only the selected request owner can leave reviews.
+ * 
+ * TODO: very similar functionality with the Rating.
+ * 
  * @author gyuszi
  */
 @Entity
@@ -28,15 +32,14 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "reviewer_usr_fk")
-    private User from;
+    @OneToOne(optional = false)
+    @ForeignKey(name = "review_request_fk")
+    private Request request;
     
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "reviewed_usr_fk")
-    private User user;
+    @Column(nullable = false)
+    private Boolean positive; //positive or negative review
     
-    @Basic(optional = false)
+    @Column(length = 1000, nullable = false)
     private String text;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -53,22 +56,6 @@ public class Review {
         this.id = id;
     }
 
-    public User getFrom() {
-        return from;
-    }
-
-    public void setFrom(User from) {
-        this.from = from;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getText() {
         return text;
     }
@@ -83,5 +70,21 @@ public class Review {
 
     public void setReviewedAt(Date reviewedAt) {
         this.reviewedAt = reviewedAt;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
+    public Boolean getPositive() {
+        return positive;
+    }
+
+    public void setPositive(Boolean positive) {
+        this.positive = positive;
     }
 }
