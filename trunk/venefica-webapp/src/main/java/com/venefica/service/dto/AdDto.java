@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,11 +27,14 @@ public class AdDto extends DtoBase {
     // out
     private String category;
     // in,out
+    @NotNull
     private String title;
     // in,out
     private String description;
     // in,out
     private BigDecimal price;
+    // in,out
+    private Integer quantity;
     // in,out
     private Double latitude;
     // in,out
@@ -53,6 +57,10 @@ public class AdDto extends DtoBase {
     private boolean wanted;
     // out
     private boolean expired;
+    // out
+    private boolean requested; //there is a valid request for this ad by the current user
+//    // out
+//    private boolean favorited; //is in the user favorite list
     // in, out
     private Date expiresAt;
     // out
@@ -80,6 +88,7 @@ public class AdDto extends DtoBase {
         ad.setTitle(title);
         ad.setDescription(description);
         ad.setPrice(price);
+        ad.setQuantity(quantity);
         ad.setWanted(wanted);
 
         if (latitude != null && longitude != null) {
@@ -279,4 +288,28 @@ public class AdDto extends DtoBase {
     public void setComments(List<CommentDto> comments) {
         this.comments = comments;
     }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
+    }
+
+//    public boolean isFavorited() {
+//        return favorited;
+//    }
+//
+//    public void setFavorited(boolean favorited) {
+//        this.favorited = favorited;
+//    }
 }
