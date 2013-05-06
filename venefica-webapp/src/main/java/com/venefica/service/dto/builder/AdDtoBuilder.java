@@ -78,6 +78,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setTitle(model.getTitle());
         adDto.setDescription(model.getDescription());
         adDto.setPrice(model.getPrice());
+        adDto.setQuantity(model.getQuantity());
 
         if (model.getLocation() != null) {
             adDto.setLatitude(model.getLocation().getY());
