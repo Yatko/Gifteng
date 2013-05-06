@@ -2,12 +2,9 @@ package com.venefica.service;
 
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
-import com.venefica.dao.ReviewDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.model.Invitation;
-import com.venefica.model.Review;
 import com.venefica.model.User;
-import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -35,8 +32,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private InvitationDao invitationDao;
     @Inject
     protected UserDataDao userDataDao;
-    @Inject
-    protected ReviewDao reviewDao;
+    
+    //************************************
+    //* user crud (create/update/delete) *
+    //************************************
     
     @Override
     @Transactional
@@ -70,55 +69,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         return userDao.save(user);
     }
-
-    @Override
-    @Transactional
-    public UserDto getUser() throws UserNotFoundException {
-        try {
-            User user = getCurrentUser();
-            return new UserDto(user);
-        } catch (NumberFormatException e) {
-            logger.error("Getting user failed", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    @Transactional
-    public UserDto getUserByName(String name) throws UserNotFoundException {
-        User user = userDao.findUserByName(name);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with name '" + name + "' not found!");
-        }
-
-        return new UserDto(user);
-    }
     
-    @Override
-    @Transactional
-    public UserDto getUserByEmail(String email) throws UserNotFoundException {
-        User user = userDao.findUserByEmail(email);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with email '" + email + "' not found!");
-        }
-
-        return new UserDto(user);
-    }
-    
-    @Override
-    @Transactional
-    public UserDto getUserByPhone(String phone) throws UserNotFoundException {
-        User user = userDao.findUserByPhoneNumber(phone);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with phone number '" + phone + "' not found!");
-        }
-
-        return new UserDto(user);
-    }
-
     @Override
     public boolean isUserComplete() {
         User user = getCurrentUser();
@@ -154,6 +105,89 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new RuntimeException(e);
         }
     }
+    
+    
+    
+    //***************
+    //* user search *
+    //***************
+
+    @Override
+    @Transactional
+    public UserDto getUser() throws UserNotFoundException {
+        User user = getCurrentUser();
+        
+        if ( user == null ) {
+            Long userId = getCurrentUserId();
+            logger.error("Getting user (userId: " + userId + ") failed");
+            throw new UserNotFoundException("User with ID '" + userId + "' not found!");
+        }
+        
+        return new UserDto(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDto getUserByName(String name) throws UserNotFoundException {
+        User user = userDao.findUserByName(name);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with name '" + name + "' not found!");
+        }
+
+        User currentUser = getCurrentUser();
+        
+        UserDto userDto = new UserDto(user);
+        if ( !currentUser.equals(user) ) {
+            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
+            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+        }
+        return userDto;
+    }
+    
+    @Override
+    @Transactional
+    public UserDto getUserByEmail(String email) throws UserNotFoundException {
+        User user = userDao.findUserByEmail(email);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with email '" + email + "' not found!");
+        }
+
+        User currentUser = getCurrentUser();
+        
+        UserDto userDto = new UserDto(user);
+        if ( !currentUser.equals(user) ) {
+            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
+            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+        }
+        return userDto;
+    }
+    
+    @Override
+    @Transactional
+    public UserDto getUserByPhone(String phone) throws UserNotFoundException {
+        User user = userDao.findUserByPhoneNumber(phone);
+
+        if (user == null) {
+            throw new UserNotFoundException("User with phone number '" + phone + "' not found!");
+        }
+
+        User currentUser = getCurrentUser();
+        
+        UserDto userDto = new UserDto(user);
+        if ( !currentUser.equals(user) ) {
+            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
+            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+        }
+        return userDto;
+    }
+
+    
+    
+    //***************
+    //* user follow *
+    //***************
 
     @Override
     @Transactional
@@ -217,37 +251,11 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         return result;
     }
     
-    @Override
-    public void addReview(ReviewDto reviewDto) throws UserNotFoundException {
-        Long userId = reviewDto.getTo().getId();
-        User user = userDao.get(userId);
-        if ( user == null ) {
-            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
-        }
-        
-        Review review = new Review();
-        review.setFrom(getCurrentUser());
-        review.setUser(user);
-        review.setText(reviewDto.getText());
-        reviewDao.save(review);
-    }
     
-    @Override
-    @Transactional
-    public List<ReviewDto> getReviews(Long userId) throws UserNotFoundException {
-        User user = userDao.get(userId);
-        if ( user == null ) {
-            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
-        }
-        
-        List<ReviewDto> result = new LinkedList<ReviewDto>();
-        if ( user.getReviews() != null && !user.getReviews().isEmpty() ) {
-            for ( Review review : user.getReviews() ) {
-                result.add(new ReviewDto(review));
-            }
-        }
-        return result;
-    }
+    
+    //******************
+    //* social network *
+    //******************
     
     @Override
     public Set<String> getConnectedSocialNetworks() {
@@ -270,5 +278,15 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     public void disconnectFromNetwork(String networkName) {
         connectionRepository.removeConnections(networkName);
+    }
+    
+    // internal helpers
+    
+    private boolean inFollowers(Set<User> followers, User user) {
+        return followers.contains(user);
+    }
+    
+    private boolean inFollowings(Set<User> followings, User user) {
+        return followings.contains(user);
     }
 }
