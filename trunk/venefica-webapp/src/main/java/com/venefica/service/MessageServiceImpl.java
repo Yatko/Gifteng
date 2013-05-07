@@ -48,6 +48,10 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Inject
     private MessageDao messageDao;
     
+    //**************
+    //* commenting *
+    //**************
+    
     @Override
     @Transactional
     public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException,
@@ -131,6 +135,12 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
         return result;
     }
+    
+    
+    
+    //*************
+    //* messaging *
+    //*************
 
     @Override
     @Transactional
@@ -244,31 +254,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
                     "You are neither recipient nor sender to hide the message!");
         }
     }
-
-    @Override
-    public void shareOnSocialNetworks(String message) {
-        // Facebook
-        Facebook facebook = getSocialNetworkApi(Facebook.class);
-
-        if (facebook != null) {
-            facebook.feedOperations().updateStatus(message);
-        }
-
-        // Twitter
-        Twitter twitter = getSocialNetworkApi(Twitter.class);
-
-        if (twitter != null) {
-            twitter.timelineOperations().updateStatus(message);
-        }
-
-        // VKontakte
-        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
-
-        if (vkontakte != null) {
-            vkontakte.wallOperations().post(message);
-        }
-    }
-
+    
     @Override
     @Transactional
     public void deleteMessage(Long messageId) throws MessageNotFoundException,
@@ -286,5 +272,32 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         }
 
         messageDao.deleteMessage(message);
+    }
+    
+    
+    
+    //*********
+    //* share *
+    //*********
+
+    @Override
+    public void shareOnSocialNetworks(String message) {
+        // Facebook
+        Facebook facebook = getSocialNetworkApi(Facebook.class);
+        if (facebook != null) {
+            facebook.feedOperations().updateStatus(message);
+        }
+
+        // Twitter
+        Twitter twitter = getSocialNetworkApi(Twitter.class);
+        if (twitter != null) {
+            twitter.timelineOperations().updateStatus(message);
+        }
+
+        // VKontakte
+        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
+        if (vkontakte != null) {
+            vkontakte.wallOperations().post(message);
+        }
     }
 }

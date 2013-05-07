@@ -75,20 +75,6 @@ public interface MessageService {
 
     
     
-    //*********
-    //* share *
-    //*********
-    
-    /**
-     * Places the message on the walls of the connected social networks.
-     *
-     * @param message text of the message
-     */
-    @WebMethod(operationName = "ShareOnSocialNetworks")
-    void shareOnSocialNetworks(@WebParam(name = "message") String message);
-
-    
-    
     //*************
     //* messaging *
     //*************
@@ -155,4 +141,18 @@ public interface MessageService {
     @WebMethod(operationName = "DeleteMessage")
     void deleteMessage(@WebParam(name = "messageId") Long messageId)
             throws MessageNotFoundException, AuthorizationException;
+    
+    
+    
+    //*********
+    //* share *
+    //*********
+    
+    /**
+     * Places the message on the walls of the connected social networks.
+     *
+     * @param message text of the message
+     */
+    @WebMethod(operationName = "ShareOnSocialNetworks")
+    void shareOnSocialNetworks(@WebParam(name = "message") String message);
 }
