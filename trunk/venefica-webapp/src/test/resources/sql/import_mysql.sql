@@ -27,11 +27,21 @@ insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('n
 
 -- Categories
 delete from `category`;
-insert into `category` (`name`, `hidden`) values ('test category', '0');
+insert into `category` (`name`, `hidden`) values ('local places', '0');
+insert into `category` (`name`, `hidden`) values ('buy/sell/trade', '0');
+insert into `category` (`name`, `hidden`) values ('automotive', '0');
+insert into `category` (`name`, `hidden`) values ('musician', '0');
+insert into `category` (`name`, `hidden`) values ('rentals', '0');
+insert into `category` (`name`, `hidden`) values ('real estate', '0');
+insert into `category` (`name`, `hidden`) values ('jobs', '0');
+insert into `category` (`name`, `hidden`, `parent_id`) values ('events', '0', '1');
+insert into `category` (`name`, `hidden`, `parent_id`) values ('bars/clubs', '0', '1');
+insert into `category` (`name`, `hidden`, `parent_id`) values ('restaurants', '0', '1');
+insert into `category` (`name`, `hidden`, `parent_id`) values ('salons/nails/spas', '0', '1');
 
 -- Ads
 delete from `ad`;
-insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `wanted`, `reviewed`, `spam`, `numavailprolongations`, `rating`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', '0', 1, 0.0);
+insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `wanted`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `selected`, `sent`, `received`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', '0', 1, 0.0, '0', '0', '0');
 
 -- Bookmarks
 delete from `bookmark`;

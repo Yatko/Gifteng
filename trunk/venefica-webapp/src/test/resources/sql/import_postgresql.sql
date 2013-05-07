@@ -27,11 +27,21 @@ insert into local_user ("id", "name", "password", "email") values (nextval('user
 
 -- Categories
 delete from category;
-insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'test category', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'local places', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'buy/sell/trade', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'automotive', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'musician', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'rentals', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'real estate', 'f');
+insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'jobs', 'f');
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'events', 'f', '1');
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'bars/clubs', 'f', '1');
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'restaurants', 'f', '1');
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'salons/nails/spas', 'f', '1');
 
 -- Ads
 delete from ad;
-insert into ad ("id", "creator_id", "category_id", "title", "createdAt", "expired", "deleted", "sold", "numviews", "wanted", "reviewed", "spam", "numavailprolongations", "rating") values (nextval('ad_seq'), 1, 1, 'test ad', now(), 'f', 'f', 'f', 0, 'f', 'f', 'f', 1, 0.0);
+insert into ad ("id", "creator_id", "category_id", "title", "createdAt", "expired", "deleted", "sold", "numviews", "wanted", "reviewed", "spam", "numavailprolongations", "rating", "selected", "sent", "received") values (nextval('ad_seq'), 1, 1, 'test ad', now(), 'f', 'f', 'f', 0, 'f', 'f', 'f', 1, 0.0, 'f', 'f', 'f');
 
 -- Bookmarks
 delete from bookmark;
