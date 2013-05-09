@@ -113,6 +113,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	public static final int ACT_MODE_ADD_COMMENT = 4011;
 	public static final int ACT_MODE_FOLLOW_USER = 4012;
 	public static final int ACT_MODE_UNFOLLOW_USER = 4013;
+	public static final int ACT_MODE_MARK_AS_SPAM = 4014;
+	public static final int ACT_MODE_UNMARK_AS_SPAM = 4015;
+	public static final int ERROR_CONF_UNMARK_AS_SPAM = 4016;
+	public static final int ERROR_CONF_MARK_AS_SPAM = 4017;
     /**
      * Current mode
      */
@@ -348,7 +352,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					//Delete when code id confirm to delete
 					if (ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS /*&& selectedListing != null*/) {
 						new ListingDetailsTask().execute(ACT_MODE_REMOVE_BOOKMARK);
-					}						
+					} else if (ERROR_CODE == ERROR_CONF_MARK_AS_SPAM) {
+						new ListingDetailsTask().execute(ACT_MODE_MARK_AS_SPAM);
+					} else if (ERROR_CODE == ERROR_CONF_UNMARK_AS_SPAM){
+						new ListingDetailsTask().execute(ACT_MODE_UNMARK_AS_SPAM);
+					}
 					dismissDialog(D_CONFIRM);					
 				}
 			});
@@ -367,8 +375,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
-    	if(id == D_ERROR) {
-    		String message = "";
+    	String message = "";
+    	if(id == D_ERROR) {    		
     		//Display error message as per the error code
     		if (ERROR_CODE == Constants.ERROR_NETWORK_UNAVAILABLE) {
     			message = (String) getResources().getText(R.string.error_network_01);
@@ -423,9 +431,23 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				message = (String) getResources().getText(R.string.error_postlisting_get_location);
 			}else if(ERROR_CODE == Constants.ERROR_ENABLE_LOCATION_PROVIDER){
 				message = (String) getResources().getText(R.string.msg_postlisting_enable_provider);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_MARK_AS_SPAM){
+				message = (String) getResources().getText(R.string.g_error);
+			}else if(ERROR_CODE == Constants.RESULT_MARK_AS_SPAM_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_mark_spam_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_UNMARK_AS_SPAM){
+				message = (String) getResources().getText(R.string.g_error);
+			}else if(ERROR_CODE == Constants.RESULT_UNMARK_AS_SPAM_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_unmark_spam_success);
 			}
-    		((AlertDialog) dialog).setMessage(message);
-		}    	
+		} else if(id == D_CONFIRM){
+			if(ERROR_CODE == ERROR_CONF_MARK_AS_SPAM){
+				message = (String) getResources().getText(R.string.g_msg_mark_spam_conf);
+			}else if(ERROR_CODE == ERROR_CONF_UNMARK_AS_SPAM){
+				message = (String) getResources().getText(R.string.g_msg_unmark_spam_conf);
+			}
+		}
+    	((AlertDialog) dialog).setMessage(message);
     }
     /**
      * Set details on screen
@@ -597,6 +619,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}else if (params[0].equals(ACT_MODE_UNFOLLOW_USER)) {
 					wrapper = wsAction.unfollowUser(((VeneficaApplication)getApplication()).getAuthToken()
 							, listing.getCreator().getId());
+				}else if (params[0].equals(ACT_MODE_MARK_AS_SPAM)) {
+					wrapper = wsAction.markListingAsSpam(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getId());
+				}else if (params[0].equals(ACT_MODE_UNMARK_AS_SPAM)) {
+					wrapper = wsAction.unmarkListingAsSpam(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getId());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -723,8 +751,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 
 			}*/
 //			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
-		} else if (id == R.id.btnActListingDetailsFlag) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+		} else if (id == R.id.btnActListingDetailsFlag && listing != null) {
+			if (listing.isCanMarkAsSpam()) {
+				ERROR_CODE = ERROR_CONF_MARK_AS_SPAM;				
+			} else {
+				ERROR_CODE = ERROR_CONF_UNMARK_AS_SPAM;
+			}
+			showDialog(D_CONFIRM);
 		} else if (id == R.id.btnActListingDetailsGetIt) {
 			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
 		} else if (id == R.id.btnListingDetailsPopUpMore) {
