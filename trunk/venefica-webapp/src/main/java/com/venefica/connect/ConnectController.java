@@ -50,21 +50,20 @@ public class ConnectController {
     private ConnectSupport connectSupport;
     
     private String connectErrorUrl = "/connect/error";
-    
     private String connectOkUrl = "/connect/ok";
 
-    /**
-     * Sets URL of application's connect error page.
-     *
-     * @param connectErrorUrl the connect error URL
-     */
-    public void setConnectErrorUrl(String connectErrorUrl) {
-        this.connectErrorUrl = connectErrorUrl;
-    }
+//    /**
+//     * Sets URL of application's connect error page.
+//     *
+//     * @param connectErrorUrl the connect error URL
+//     */
+//    public void setConnectErrorUrl(String connectErrorUrl) {
+//        this.connectErrorUrl = connectErrorUrl;
+//    }
 
-    public void setConnectOkUrl(String connectOkUrl) {
-        this.connectOkUrl = connectOkUrl;
-    }
+//    public void setConnectOkUrl(String connectOkUrl) {
+//        this.connectOkUrl = connectOkUrl;
+//    }
 
     /**
      * Process a connect request by commencing the process of establishing a
