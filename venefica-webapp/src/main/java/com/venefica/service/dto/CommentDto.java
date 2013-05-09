@@ -4,6 +4,7 @@ import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.User;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -18,6 +19,7 @@ public class CommentDto extends DtoBase {
     // in, out
     private Long id;
     // in, out
+    @NotNull
     private String text;
     // out
     private boolean owner;
