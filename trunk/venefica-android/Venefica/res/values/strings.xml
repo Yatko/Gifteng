@@ -36,6 +36,10 @@
     <string name="g_label_change_picture">Change Picture</string>
     <string name="g_label_change_password">Change Password</string>
     <string name="g_label_days"> days</string>
+    <string name="g_label_following">Following</string>
+    <string name="g_label_followers">Followers</string>
+    <string name="g_label_reviews">Reviews</string>
+    <string name="g_label_review_by">Review by</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -66,6 +70,10 @@
     <string name="g_msg_validation_price">Please enter price in 00.0 format.</string>
     <string name="g_msg_follow_success">User added to following list.</string>
     <string name="g_msg_unfollow_success">User removed from following list.</string>
+    <string name="g_msg_mark_spam_conf">Are you sure you want to mark it as spam?</string>
+    <string name="g_msg_unmark_spam_conf">Are you sure you want to revoke spam mark?</string>
+    <string name="g_msg_mark_spam_success">Listing marked as spam.</string>
+    <string name="g_msg_unmark_spam_success">Spam marked removed successfully.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
@@ -181,7 +189,7 @@
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
     <string name="label_detail_listing_get_it">buy now!</string>
-    <string name="label_detail_listing_member_since">Member since </string>
+    <string name="label_detail_listing_member_since">Giftenger since </string>
     <string name="label_detail_listing_score">Score</string>
     <string name="label_menu_relist">Relist</string>
     <string name="label_menu_update">Update</string>
