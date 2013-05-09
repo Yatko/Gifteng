@@ -77,7 +77,16 @@ public class Constants
 	public static final int ERROR_RESULT_FOLLOW_USER = 1068;
 	public static final int RESULT_UNFOLLOW_USER_SUCCESS = 1069;
 	public static final int ERROR_RESULT_UNFOLLOW_USER = 1070;	
-	
+	public static final int RESULT_GET_FOLLOWINGS_SUCCESS = 1071;
+	public static final int ERROR_RESULT_GET_FOLLOWINGS = 1072;	
+	public static final int RESULT_GET_FOLLOWERS_SUCCESS = 1073;
+	public static final int ERROR_RESULT_GET_FOLLOWERS = 1074;
+	public static final int RESULT_GET_REVIEWS_SUCCESS = 1075;
+	public static final int ERROR_RESULT_GET_REVIEWS = 1076;
+	public static final int RESULT_MARK_AS_SPAM_SUCCESS = 1077;
+	public static final int ERROR_RESULT_MARK_AS_SPAM = 1078;
+	public static final int RESULT_UNMARK_AS_SPAM_SUCCESS = 1079;
+	public static final int ERROR_RESULT_UNMARK_AS_SPAM = 1080;
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -194,6 +203,7 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
-		
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+	
+			
 }
