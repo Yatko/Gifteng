@@ -26,6 +26,10 @@ public class ReviewDto extends DtoBase {
     private String text;
     // out
     private Date reviewedAt;
+    // out
+    private Long reviewedUserId;
+    // out
+    private Long reviewerUserId;
 
     public ReviewDto() {
     }
@@ -39,6 +43,9 @@ public class ReviewDto extends DtoBase {
         positive = review.getPositive();
         text = review.getText();
         reviewedAt = review.getReviewedAt();
+        adId = review.getRequest().getAd().getId();
+        reviewedUserId = review.getRequest().getAd().getCreator().getId();
+        reviewerUserId = review.getRequest().getUser().getId();
     }
     
     public String getText() {
@@ -71,5 +78,21 @@ public class ReviewDto extends DtoBase {
 
     public void setAdId(Long adId) {
         this.adId = adId;
+    }
+
+    public Long getReviewerUserId() {
+        return reviewerUserId;
+    }
+
+    public void setReviewerUserId(Long reviewerUserId) {
+        this.reviewerUserId = reviewerUserId;
+    }
+
+    public Long getReviewedUserId() {
+        return reviewedUserId;
+    }
+
+    public void setReviewedUserId(Long reviewedUserId) {
+        this.reviewedUserId = reviewedUserId;
     }
 }
