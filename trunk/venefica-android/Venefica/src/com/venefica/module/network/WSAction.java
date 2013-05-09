@@ -35,6 +35,7 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
+import com.venefica.services.ReviewDto;
 import com.venefica.services.ServicesManager.ChangePasswordResult;
 import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
@@ -76,6 +77,11 @@ public class WSAction {
 	private final String WS_METHOD_CHANGE_PASSWORD = "ChangePassword";
 	private final String WS_METHOD_FOLLOW_USER = "Follow";
 	private final String WS_METHOD_UNFOLLOW_USER = "Unfollow";
+	private final String WS_METHOD_GET_FOLLOWING = "GetFollowings";
+	private final String WS_METHOD_GET_FOLLOWERS = "GetFollowers";
+	private final String WS_METHOD_GET_REVIEWS = "GetReviews";
+	private final String WS_METHOD_MARK_AS_SPAM = "MarkAsSpam";
+	private final String WS_METHOD_UNMARK_AS_SPAM = "UnmarkAsSpam";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -1377,6 +1383,265 @@ public class WSAction {
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_UNFOLLOW_USER;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to get followings
+	 * @param token
+	 * @param userId
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	/*@SuppressWarnings("unchecked")
+	public UserRegistrationResultWrapper getFollowings(String token, Long userId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_GET_FOLLOWING;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			if (obj == null) {
+				result.result = Constants.ERROR_NO_DATA;
+			}else if (obj instanceof UserDto){
+				result.followings = new ArrayList<UserDto>();
+				result.followings.add((UserDto)obj);
+				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
+			} else {
+				result.followings = (List<UserDto>) obj;
+				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_FOLLOWINGS;
+		}
+		return result;
+	}*/
+	
+	/**
+	 * Method to get followers
+	 * @param token
+	 * @param userId
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	/*public UserRegistrationResultWrapper getFollowers(String token, Long userId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_GET_FOLLOWERS;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+		
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			envelope.dotNet = true;
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object obj = envelope.getResponse();
+			if (obj == null) {
+				result.result = Constants.ERROR_NO_DATA;
+			}else if (obj instanceof UserDto){
+				result.followers = new ArrayList<UserDto>();
+				result.followers.add((UserDto)obj);
+				result.result = Constants.RESULT_GET_FOLLOWERS_SUCCESS;
+			} else {
+				result.followers = (List<UserDto>) obj;
+				result.result = Constants.RESULT_GET_FOLLOWERS_SUCCESS;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_FOLLOWERS;
+		}
+		return result;
+	}*/
+	public UserRegistrationResultWrapper getFollowings(String token, long userId) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_FOLLOWING;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_FOLLOWING);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.ERROR_NO_DATA;
+			} else if (response instanceof CommentDto){
+				result.followings = new ArrayList<UserDto>();
+				result.followings.add((UserDto)response);
+				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
+			}else{
+				result.followings = (List<UserDto>)response;
+				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_FOLLOWINGS;			
+		}
+		return result;
+	}
+	/**
+	 * Method to get reviews
+	 * @param token
+	 * @param userId
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public UserRegistrationResultWrapper getReviews(String token, long userId) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_REVIEWS;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_REVIEWS);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.ERROR_NO_DATA;
+			} else if (response instanceof CommentDto){
+				result.reviews = new ArrayList<ReviewDto>();
+				result.reviews.add((ReviewDto)response);
+				result.result = Constants.RESULT_GET_REVIEWS_SUCCESS;
+			}else{
+				result.reviews = (List<ReviewDto>)response;
+				result.result = Constants.RESULT_GET_REVIEWS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_REVIEWS;			
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to mark ad as spam
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper markListingAsSpam(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_MARK_AS_SPAM;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_MARK_AS_SPAM_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_MARK_AS_SPAM;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_MARK_AS_SPAM;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to unmark ad as spam
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper unmarkListingAsSpam(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_UNMARK_AS_SPAM;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_UNMARK_AS_SPAM_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_UNMARK_AS_SPAM;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_UNMARK_AS_SPAM;
 		}
 		return result;
 	}
