@@ -43,6 +43,9 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 	public static int ACT_MODE_UPDATE_PROF = 4003;
 	public static int ACT_MODE_GET_USER = 4004;
 	public static int ACT_MODE_CHANGE_PASSWORD = 4005;
+	public static int ACT_MODE_GET_FOLLOWINGS = 4006;
+	public static int ACT_MODE_GET_FOLLOWERS = 4007;
+	public static int ACT_MODE_GET_REVIEWS = 4008;
 	private int ACT_MODE;
 	/**
 	 * Current error code.
@@ -96,6 +99,9 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 		viewProfileDetailsFragment = new ViewProfileDetailsFragment();
 		fragmentTransaction.add(R.id.layActUserProfieRoot, viewProfileDetailsFragment);
 		fragmentTransaction.commit();
+//		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
+//		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
+		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
 	}
 	
 	@Override
@@ -243,6 +249,15 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
 				} else if (params[0].equals(ACT_MODE_CHANGE_PASSWORD)) {
 					wrapper = wsAction.changePassword(((VeneficaApplication)getApplication()).getAuthToken(), oldPassword, newPassword);
+				} else if (params[0].equals(ACT_MODE_GET_FOLLOWINGS)) {
+					wrapper = wsAction.getFollowings(((VeneficaApplication)getApplication()).getAuthToken()
+							, ((VeneficaApplication)getApplication()).getUser().getId());
+				} /*else if (params[0].equals(ACT_MODE_GET_FOLLOWERS)) {
+					wrapper = wsAction.getFollowers(((VeneficaApplication)getApplication()).getAuthToken()
+							, ((VeneficaApplication)getApplication()).getUser().getId());
+				}*/ else if (params[0].equals(ACT_MODE_GET_REVIEWS)) {
+					wrapper = wsAction.getReviews(((VeneficaApplication)getApplication()).getAuthToken()
+							, ((VeneficaApplication)getApplication()).getUser().getId());
 				}
 			}catch (IOException e) {
 				Log.e("UpdateUserTask::doInBackground :", e.toString());
@@ -262,6 +277,12 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 			} else if (result.userDto != null) {
 				((VeneficaApplication)getApplication()).setUser(result.userDto);
 				viewProfileDetailsFragment.setUserDto(result.userDto);
+			} else if (result.followings != null && result.result == Constants.RESULT_GET_FOLLOWINGS_SUCCESS) {
+				viewProfileDetailsFragment.setFollowings(result.followings);
+			} else if (result.followers != null && result.result == Constants.RESULT_GET_FOLLOWERS_SUCCESS) {
+				viewProfileDetailsFragment.setFollowers(result.followers);
+			} else if (result.reviews != null && result.result == Constants.RESULT_GET_REVIEWS_SUCCESS) {
+				viewProfileDetailsFragment.setFollowers(result.followers);
 			} else if (result.result != -1) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
