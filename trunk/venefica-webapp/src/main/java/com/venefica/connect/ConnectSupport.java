@@ -116,6 +116,7 @@ public class ConnectSupport {
     }
 
     // internal helpers
+    
     private String buildOAuth1Url(OAuth1ConnectionFactory<?> connectionFactory,
             NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
         OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
