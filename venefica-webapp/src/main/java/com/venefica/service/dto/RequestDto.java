@@ -4,6 +4,8 @@
  */
 package com.venefica.service.dto;
 
+import com.venefica.model.Request;
+import com.venefica.model.RequestStatus;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -21,8 +23,16 @@ public class RequestDto extends DtoBase {
     private UserDto user;
     // out
     private Date requestedAt;
+    // out
+    private RequestStatus status;
 
     public RequestDto() {
+    }
+    
+    public RequestDto(Request request) {
+        this.id = request.getId();
+        this.requestedAt = request.getRequestedAt();
+        this.status = request.getStatus();
     }
     
     public Long getId() {
@@ -47,6 +57,14 @@ public class RequestDto extends DtoBase {
 
     public void setRequestedAt(Date requestedAt) {
         this.requestedAt = requestedAt;
+    }
+
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
     
 }
