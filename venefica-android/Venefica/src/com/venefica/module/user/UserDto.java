@@ -29,6 +29,8 @@ public class UserDto implements KvmSerializable
 	private ImageDto avatar;
 	private Date joinedAt;	
 	private Long id;
+	private boolean inFollowers;
+    private boolean inFollowings;
 	public Object getProperty(int index)
 	{
 		//final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -61,6 +63,10 @@ public class UserDto implements KvmSerializable
 			return joinedAt.getTime();
 		case 12:
 			return id;
+		case 13:
+			return inFollowers;
+		case 14:
+			return inFollowings;
 		}
 
 		return null;
@@ -68,7 +74,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 13;
+		return 15;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -138,6 +144,14 @@ public class UserDto implements KvmSerializable
 			info.name = "id";
 			info.type = Long.class;
 			break;
+		case 13:
+			info.name = "inFollowers";
+			info.type = Boolean.class;
+			break;
+		case 14:
+			info.name = "inFollowings";
+			info.type = Boolean.class;
+			break;
 		default:
 			break;
 		}
@@ -185,6 +199,12 @@ public class UserDto implements KvmSerializable
 			break;
 		case 12:
 			id = Long.valueOf(value.toString());
+			break;
+		case 13:
+			inFollowers = Boolean.parseBoolean(value.toString());
+			break;
+		case 14:
+			inFollowings = Boolean.parseBoolean(value.toString());
 			break;
 		}
 	}
@@ -381,5 +401,33 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the inFollowers
+	 */
+	public boolean isInFollowers() {
+		return inFollowers;
+	}
+
+	/**
+	 * @param inFollowers the inFollowers to set
+	 */
+	public void setInFollowers(boolean inFollowers) {
+		this.inFollowers = inFollowers;
+	}
+
+	/**
+	 * @return the inFollowings
+	 */
+	public boolean isInFollowings() {
+		return inFollowings;
+	}
+
+	/**
+	 * @param inFollowings the inFollowings to set
+	 */
+	public void setInFollowings(boolean inFollowings) {
+		this.inFollowings = inFollowings;
 	}
 }
