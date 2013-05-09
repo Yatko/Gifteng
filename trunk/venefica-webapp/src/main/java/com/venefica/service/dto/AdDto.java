@@ -58,6 +58,10 @@ public class AdDto extends DtoBase {
     // out
     private boolean expired;
     // out
+    private boolean sent;
+    // out
+    private boolean received;
+    // out
     private boolean requested; //there is a valid request for this ad by the current user
 //    // out
 //    private boolean favorited; //is in the user favorite list
@@ -312,4 +316,20 @@ public class AdDto extends DtoBase {
 //    public void setFavorited(boolean favorited) {
 //        this.favorited = favorited;
 //    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
 }
