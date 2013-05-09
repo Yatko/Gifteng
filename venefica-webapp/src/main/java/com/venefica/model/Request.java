@@ -40,8 +40,8 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date requestedAt;
     
-//    @Enumerated(EnumType.STRING)
-//    private RequestStatus status;
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
     
     public Request() {
     }
@@ -90,11 +90,11 @@ public class Request {
         this.requestedAt = requestedAt;
     }
 
-//    public RequestStatus getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(RequestStatus status) {
-//        this.status = status;
-//    }
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
 }
