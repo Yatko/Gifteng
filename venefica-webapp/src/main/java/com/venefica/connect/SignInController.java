@@ -53,14 +53,14 @@ public class SignInController {
     
     private String signInErrorUrl = "/signin/error";
     
-    /**
-     * Sets URL of application's sign-in error page.
-     *
-     * @param signInErrorUrl the sign-in error URL
-     */
-    public void setSignInErrorUrl(String signInErrorUrl) {
-        this.signInErrorUrl = signInErrorUrl;
-    }
+//    /**
+//     * Sets URL of application's sign-in error page.
+//     *
+//     * @param signInErrorUrl the sign-in error URL
+//     */
+//    public void setSignInErrorUrl(String signInErrorUrl) {
+//        this.signInErrorUrl = signInErrorUrl;
+//    }
 
     /**
      * Process a sign in request by commencing the process of establishing a
@@ -146,6 +146,10 @@ public class SignInController {
             return new RedirectView(buildErrorURL(ERROR_REASON_MULTIPLE_USERS));
         }
     }
+    
+//    private RedirectView redirect(String url) {
+//        return new RedirectView(url, true);
+//    }
     
     private String buildErrorURL(String reason) {
         return URIBuilder.fromUri(signInErrorUrl).queryParam(ERROR_CODE, reason).build().toString();
