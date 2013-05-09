@@ -46,15 +46,20 @@ public class SocialConfig {
      */
     @Bean
     public ConnectionFactoryLocator connectionFactoryLocator() {
+        String facebookClientId = environment.getProperty("facebook.clientId");
+        String facebookClientSecret = environment.getProperty("facebook.clientSecret");
+        
+        String twitterConsumerKey = environment.getProperty("twitter.consumerKey");
+        String twitterConsumerSecret = environment.getProperty("twitter.consumerSecret");
+        
+        String vkontakteClientId = environment.getProperty("vkontakte.clientId");
+        String vkontakteClientSecret = environment.getProperty("vkontakte.clientSecret");
+        
         ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
-        registry.addConnectionFactory(new FacebookConnectionFactory(environment
-                .getProperty("facebook.clientId"), environment.getProperty("facebook.clientSecret")));
-        registry.addConnectionFactory(new TwitterConnectionFactory(environment
-                .getProperty("twitter.consumerKey"), environment
-                .getProperty("twitter.consumerSecret")));
-        registry.addConnectionFactory(new VKontakteConnectionFactory(environment
-                .getProperty("vkontakte.clientId"), environment
-                .getProperty("vkontakte.clientSecret")));
+        registry.addConnectionFactory(new FacebookConnectionFactory(facebookClientId, facebookClientSecret));
+        registry.addConnectionFactory(new TwitterConnectionFactory(twitterConsumerKey, twitterConsumerSecret));
+        registry.addConnectionFactory(new VKontakteConnectionFactory(vkontakteClientId, vkontakteClientSecret));
+        
         return registry;
     }
 
