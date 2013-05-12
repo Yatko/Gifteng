@@ -48,9 +48,17 @@ public interface RequestDao {
     List<Request> getByAd(Long adId);
     
     /**
-     * Removes request from the database.
-     *
-     * @param request the request to remove
+     * Returns the available requests for the given user.
+     * 
+     * @param userId
+     * @return list of requests
      */
-    void delete(Request request);
+    List<Request> getByUser(Long userId);
+    
+//    /**
+//     * Removes request from the database.
+//     *
+//     * @param request the request to remove
+//     */
+//    void delete(Request request);
 }
