@@ -100,6 +100,8 @@ public class AdDto extends DtoBase {
             ad.setLocation(newLocation);
         }
     }
+    
+    // getter/setter
 
     public Long getId() {
         return id;

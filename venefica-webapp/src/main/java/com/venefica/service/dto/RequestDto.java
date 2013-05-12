@@ -20,6 +20,8 @@ public class RequestDto extends DtoBase {
     // out
     private Long id;
     // out
+    private Long adId;
+    // out
     private UserDto user;
     // out
     private Date requestedAt;
@@ -31,6 +33,8 @@ public class RequestDto extends DtoBase {
     
     public RequestDto(Request request) {
         this.id = request.getId();
+        this.adId = request.getAd().getId();
+        this.user = new UserDto(request.getUser());
         this.requestedAt = request.getRequestedAt();
         this.status = request.getStatus();
     }
@@ -65,6 +69,14 @@ public class RequestDto extends DtoBase {
 
     public void setStatus(RequestStatus status) {
         this.status = status;
+    }
+
+    public Long getAdId() {
+        return adId;
+    }
+
+    public void setAdId(Long adId) {
+        this.adId = adId;
     }
     
 }
