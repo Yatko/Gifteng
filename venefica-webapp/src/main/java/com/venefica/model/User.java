@@ -57,17 +57,21 @@ public class User {
     @ForeignKey(name = "userdata_fk")
     private UserData userData;
     
+    @OneToOne
+    @ForeignKey(name = "userpoint_fk")
+    private UserPoint userPoint;
+    
     //see: http://stackoverflow.com/questions/8830279/hibernate-onetomany-relationship-mapping
     //see: http://stackoverflow.com/questions/13708271/self-referencing-manytomany-with-hibernate-and-annotations
     
     @ManyToMany
-    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @ForeignKey(name = "local_user_follower_fk")
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "following_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ForeignKey(name = "local_user_following_fk")
     private Set<User> followers;
     
     @ManyToMany
-    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    @ForeignKey(name = "local_user_following_fk")
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
+    @ForeignKey(name = "local_user_follower_fk")
     private Set<User> followings;
     
     @OneToMany(mappedBy = "from")
@@ -78,13 +82,13 @@ public class User {
     @OrderBy
     private List<Message> receivedMessages;
     
-    @OneToMany
-    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "ad_id"))
-    private Set<Ad> favorites;
+//    @OneToMany
+//    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "ad_id"))
+//    private Set<Ad> favorites;
     
-    @OneToMany(mappedBy = "user")
-    @OrderBy
-    private List<Review> reviews;
+//    @OneToMany(mappedBy = "user")
+//    @OrderBy
+//    private List<Review> reviews;
     
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
@@ -96,7 +100,7 @@ public class User {
         followings = new HashSet<User>(0);
         sentMessages = new LinkedList<Message>();
         receivedMessages = new LinkedList<Message>();
-        favorites = new HashSet<Ad>(0);
+//        favorites = new HashSet<Ad>(0);
     }
 
     public User(String name, String email) {
@@ -119,19 +123,19 @@ public class User {
     }
     
     public String getCountry() {
-        return userData != null ? userData.getCountry() : null;
+        return userData != null && userData.getAddress() != null ? userData.getAddress().getCountry() : null;
     }
     
     public String getCity() {
-        return userData != null ? userData.getCity() : null;
+        return userData != null && userData.getAddress() != null ? userData.getAddress().getCity() : null;
     }
     
     public String getArea() {
-        return userData != null ? userData.getArea() : null;
+        return userData != null && userData.getAddress() != null ? userData.getAddress().getArea() : null;
     }
     
     public String getZipCode() {
-        return userData != null ? userData.getZipCode() : null;
+        return userData != null && userData.getAddress() != null ? userData.getAddress().getZipCode() : null;
     }
     
     public void setPhoneNumber(String phoneNumber) {
@@ -139,19 +143,19 @@ public class User {
     }
     
     public void setCountry(String country) {
-        this.userData.setCountry(country);
+        this.userData.getAddress().setCountry(country);
     }
     
     public void setCity(String city) {
-        this.userData.setCity(city);
+        this.userData.getAddress().setCity(city);
     }
     
     public void setArea(String area) {
-        this.userData.setArea(area);
+        this.userData.getAddress().setArea(area);
     }
     
     public void setZipCode(String zipCode) {
-        this.userData.setZipCode(zipCode);
+        this.userData.getAddress().setZipCode(zipCode);
     }
     
     public boolean isBusinessAcc() {
@@ -190,21 +194,21 @@ public class User {
         }
     }
     
-    public void addFavorite(Ad ad) {
-        initFavorites();
-        favorites.add(ad);
-    }
-    
-    public void removeFavorite(Ad ad) {
-        initFavorites();
-        favorites.remove(ad);
-    }
-    
-    private void initFavorites() {
-        if ( favorites == null ) {
-            favorites = new HashSet<Ad>(0);
-        }
-    }
+//    public void addFavorite(Ad ad) {
+//        initFavorites();
+//        favorites.add(ad);
+//    }
+//    
+//    public void removeFavorite(Ad ad) {
+//        initFavorites();
+//        favorites.remove(ad);
+//    }
+//    
+//    private void initFavorites() {
+//        if ( favorites == null ) {
+//            favorites = new HashSet<Ad>(0);
+//        }
+//    }
     
     @Override
     public boolean equals(Object obj) {
@@ -314,19 +318,27 @@ public class User {
         this.followings = followings;
     }
 
-    public Set<Ad> getFavorites() {
-        return favorites;
+//    public Set<Ad> getFavorites() {
+//        return favorites;
+//    }
+//
+//    public void setFavorites(Set<Ad> favorites) {
+//        this.favorites = favorites;
+//    }
+
+//    public List<Review> getReviews() {
+//        return reviews;
+//    }
+//
+//    public void setReviews(List<Review> reviews) {
+//        this.reviews = reviews;
+//    }
+
+    public UserPoint getUserPoint() {
+        return userPoint;
     }
 
-    public void setFavorites(Set<Ad> favorites) {
-        this.favorites = favorites;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setUserPoint(UserPoint userPoint) {
+        this.userPoint = userPoint;
     }
 }
