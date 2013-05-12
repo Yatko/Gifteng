@@ -20,6 +20,8 @@ class User_model extends CI_Model {
     var $zipCode; //string
     var $avatar; //Image_model
     var $joinedAt; //long - timestamp
+    var $inFollowers; //boolean
+    var $inFollowings; //boolean
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing User_model");
@@ -37,6 +39,8 @@ class User_model extends CI_Model {
             $this->area = getField($obj, 'area');
             $this->zipCode = getField($obj, 'zipCode');
             $this->joinedAt = getField($obj, 'joinedAt');
+            $this->inFollowers = getField($obj, 'inFollowers');
+            $this->inFollowings = getField($obj, 'inFollowings');
             if ( hasField($obj, 'avatar') ) {
                 $this->avatar = Image_model::convertImage($obj->avatar);
             }
@@ -61,6 +65,9 @@ class User_model extends CI_Model {
     }
     
     public function getJoinDate() {
+        if ( $this->joinedAt == null ) {
+            return '';
+        }
         return date(DATE_FORMAT, $this->joinedAt / 1000);
     }
     
@@ -86,7 +93,9 @@ class User_model extends CI_Model {
             ."area=".$this->area.", "
             ."zipCode=".$this->zipCode.", "
             ."avatar=".$this->avatar.", "
-            ."joinedAt=".$this->joinedAt.""
+            ."joinedAt=".$this->joinedAt.", "
+            ."inFollowers=".$this->inFollowers.", "
+            ."inFollowings=".$this->inFollowings.""
             ."]";
     }
     

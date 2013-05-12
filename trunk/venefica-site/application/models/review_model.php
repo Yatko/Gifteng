@@ -7,22 +7,26 @@
  */
 class Review_model extends CI_Model {
     
+    var $adId; //long
+    var $positive; //boolean
     var $text; //string
-    var $from; //User_model
-    var $to; //User_model
     var $reviewedAt; //long - timestamp
+    var $reviewedUser; //User_model
+    var $reviewerUser; //User_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Review_model");
         
         if ( $obj != null ) {
+            $this->adId = getField($obj, 'adId');
+            $this->positive = getField($obj, 'positive');
             $this->text = getField($obj, 'text');
             $this->reviewedAt = getField($obj, 'reviewedAt');
-            if ( hasField($obj, 'from') ) {
-                $this->from = User_model::convertUser($obj->from);
+            if ( hasField($obj, 'reviewedUser') ) {
+                $this->reviewedUser = User_model::convertUser($obj->reviewedUser);
             }
-            if ( hasField($obj, 'to') ) {
-                $this->to = User_model::convertUser($obj->to);
+            if ( hasField($obj, 'reviewerUser') ) {
+                $this->reviewerUser = User_model::convertUser($obj->reviewerUser);
             }
         }
     }
@@ -34,35 +38,38 @@ class Review_model extends CI_Model {
     }
     
     public function getReviewDate() {
+        if ( $this->reviewedAt == null ) {
+            return '';
+        }
         return date(DATE_FORMAT, $this->reviewedAt / 1000);
     }
     
     public function getFromAvatarUrl() {
-        if ( $this->from == null ) {
+        if ( $this->reviewerUser == null ) {
             return '';
         }
-        return $this->from->getAvatarUrl();
+        return $this->reviewerUser->getAvatarUrl();
     }
     
     public function getFromFullName() {
-        if ( $this->from == null ) {
+        if ( $this->reviewerUser == null ) {
             return '';
         }
-        return $this->from->getFullName();
+        return $this->reviewerUser->getFullName();
     }
     
     public function getToAvatarUrl() {
-        if ( $this->to == null ) {
+        if ( $this->reviewedUser == null ) {
             return '';
         }
-        return $this->to->getAvatarUrl();
+        return $this->reviewedUser->getAvatarUrl();
     }
     
     public function getToFullName() {
-        if ( $this->to == null ) {
+        if ( $this->reviewedUser == null ) {
             return '';
         }
-        return $this->to->getFullName();
+        return $this->reviewedUser->getFullName();
     }
     
     // static helpers
