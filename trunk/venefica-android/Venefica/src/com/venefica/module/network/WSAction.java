@@ -1443,7 +1443,7 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	/*public UserRegistrationResultWrapper getFollowers(String token, Long userId) throws IOException, XmlPullParserException{
+	public UserRegistrationResultWrapper getFollowers(String token, Long userId) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_GET_FOLLOWERS;
 
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
@@ -1480,7 +1480,7 @@ public class WSAction {
 			result.result = Constants.ERROR_RESULT_GET_FOLLOWERS;
 		}
 		return result;
-	}*/
+	}
 	public UserRegistrationResultWrapper getFollowings(String token, long userId) throws IOException, XmlPullParserException{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_FOLLOWING;
 		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
