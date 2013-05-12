@@ -39,9 +39,13 @@ public class Request {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date requestedAt;
-    
+
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
+    
+    private boolean deleted;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedAt;
     
     public Request() {
     }
@@ -56,6 +60,18 @@ public class Request {
 
         return id != null && id.equals(other.id);
     }
+    
+    public void markAsDeleted() {
+        deleted = true;
+        deletedAt = new Date();
+    }
+
+    public void unmarkAsDeleted() {
+        deleted = false;
+        deletedAt = null;
+    }
+    
+    // getter/setter
 
     public Long getId() {
         return id;
@@ -96,5 +112,21 @@ public class Request {
 
     public void setStatus(RequestStatus status) {
         this.status = status;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

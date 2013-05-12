@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 //import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -33,7 +35,6 @@ import org.hibernate.annotations.Type;
 @Entity
 //@SequenceGenerator(name = "ad_gen", sequenceName = "ad_seq", allocationSize = 1)
 @Table(name = "ad")
-//@Inheritance(strategy = InheritanceType.JOINED)
 public class Ad {
 
     private static final int DEFAULT_AVAIL_PROLONGATIONS = 1;
@@ -44,13 +45,6 @@ public class Ad {
     private Long id;
     
     @ManyToOne(optional = false)
-    @ForeignKey(name = "ad_creator_fk")
-    private User creator;
-    @ManyToOne
-    @ForeignKey(name = "ad_buyer_fk")
-    private User buyer;
-    
-    @ManyToOne(optional = false)
     @ForeignKey(name = "ad_category_fk")
     private Category category;
     
@@ -59,11 +53,12 @@ public class Ad {
     @Column(length = 1000)
     private String description;
     
-    private BigDecimal price;
+    private Integer quantity;
+    private BigDecimal price; //original price, current value
     
     @ManyToOne
     @ForeignKey(name = "ad_mainimg_fk")
-    private Image mainImage;
+    private Image mainImage; //cover image
     
     @ManyToOne
     @ForeignKey(name = "ad_thumbimg_fk")
@@ -78,12 +73,17 @@ public class Ad {
     @Type(type = "org.hibernate.spatial.GeometryType")
     private Point location;
     
+    @Embedded
+    private Address address;
+    
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "ad_creator_fk")
+    private User creator;
     
-    //used as giving/receiving
-    private boolean wanted;
+    private boolean wanted; //not used in the gifteng project
     
     @Column(nullable = false)
     private boolean expired;
@@ -94,9 +94,25 @@ public class Ad {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
+    //TODO: not sure if these are needed
     private boolean sold;
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldAt;
+    
+    private boolean selected;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date selectedAt;
+    @OneToOne
+    @ForeignKey(name = "request_fk")
+    private Request selectedRequest; //buyer (receiver, winner)
+    
+    private boolean sent; //product/gift marked as sent (by the seller/owner/giver)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date sentAt;
+    
+    private boolean received; //product/gift marked as received (by the buyer/receiver)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date receivedAt;
     
     private long numViews;
     @OneToMany(mappedBy = "ad")
@@ -112,13 +128,17 @@ public class Ad {
     @OrderBy
     private List<SpamMark> spamMarks;
     
-    private boolean reviewed;
+    private boolean reviewed; //reviewed by an admin
     
-    private int numAvailProlongations;
+    private int numAvailProlongations; //decrementing at relist ad
     
     @OneToMany(mappedBy = "ad")
     @OrderBy
     private List<Comment> comments;
+    
+    @OneToMany(mappedBy = "ad")
+    @OrderBy
+    private List<Request> requests;
 
     public Ad() {
         images = new LinkedList<Image>();
@@ -152,12 +172,60 @@ public class Ad {
             return false;
         }
         for ( Viewer viewer : viewers ) {
-            if ( viewer.getUser().getId().equals(user.getId()) ) {
+            if ( viewer.getUser().equals(user) ) {
                 return true;
             }
         }
         return false;
     }
+    
+    public void markAsDeleted() {
+        deleted = true;
+        deletedAt = new Date();
+    }
+
+    public void unmarkAsDeleted() {
+        deleted = false;
+        deletedAt = null;
+    }
+    
+    public void markAsSelected(Request request) {
+        selected = true;
+        selectedAt = new Date();
+        selectedRequest = request;
+    }
+    
+    public void unmarkAsSelected() {
+        selected = false;
+        selectedAt = null;
+        selectedRequest = null;
+    }
+    
+    public void markAsSold() {
+        sold = true;
+        soldAt = new Date();
+    }
+
+    public void unmarkAsSold() {
+        sold = false;
+        soldAt = null;
+    }
+    
+    public void addImage(Image image) {
+        if ( images == null ) {
+            images = new LinkedList<Image>();
+        }
+        images.add(image);
+    }
+    
+    public void removeImage(Image image) {
+        if ( images == null ) {
+            images = new LinkedList<Image>();
+        }
+        images.remove(image);
+    }
+    
+    // getter/setter
     
     public Long getId() {
         return id;
@@ -176,12 +244,12 @@ public class Ad {
         this.creator = creator;
     }
 
-    public User getBuyer() {
-        return buyer;
+    public Request getSelectedRequest() {
+        return selectedRequest;
     }
 
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
+    public void setSelectedRequest(Request selectedRequest) {
+        this.selectedRequest = selectedRequest;
     }
 
     public Category getCategory() {
@@ -272,16 +340,6 @@ public class Ad {
         this.expiresAt = expiresAt;
     }
 
-    public void markAsDeleted() {
-        deleted = true;
-        deletedAt = new Date();
-    }
-
-    public void unmarkAsDeleted() {
-        deleted = false;
-        deletedAt = null;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }
@@ -312,16 +370,6 @@ public class Ad {
 
     public void setSoldAt(Date soldAt) {
         this.soldAt = soldAt;
-    }
-
-    public void markAsSold() {
-        sold = true;
-        soldAt = new Date();
-    }
-
-    public void unmarkAsSold() {
-        sold = false;
-        soldAt = null;
     }
 
     public long getNumViews() {
@@ -410,5 +458,77 @@ public class Ad {
 
     public void setViewers(List<Viewer> viewers) {
         this.viewers = viewers;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public Date getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(Date sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public Date getReceivedAt() {
+        return receivedAt;
+    }
+
+    public void setReceivedAt(Date receivedAt) {
+        this.receivedAt = receivedAt;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public Date getSelectedAt() {
+        return selectedAt;
+    }
+
+    public void setSelectedAt(Date selectedAt) {
+        this.selectedAt = selectedAt;
     }
 }
