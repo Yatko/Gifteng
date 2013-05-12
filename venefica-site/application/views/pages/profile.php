@@ -23,7 +23,7 @@
         <div class="statistics">
             <div class="fl giving">Giving<br><?=$givings_num?></div>
             <div class="fl receiving">Receiving<br><?=$receivings_num?></div>
-            <div class="fl favorite">Favorited<br><?=$favorites_num?></div>
+            <div class="fl favorite">Favorited<br><?=$bookmarks_num?></div>
             <div class="fl follower">Followers<br><?=$followers_num?></div>
             <div class="fl following">Followings<br><?=$followings_num?></div>
             <div class="fl review">Reviews<br><?=$reviews_num?></div>
