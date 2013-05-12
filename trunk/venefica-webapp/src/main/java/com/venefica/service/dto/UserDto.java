@@ -115,6 +115,8 @@ public class UserDto extends DtoBase {
         return user;
     }
     
+    // getter/setter
+    
     public Long getId() {
         return id;
     }

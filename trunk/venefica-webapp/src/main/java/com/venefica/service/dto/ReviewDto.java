@@ -27,9 +27,9 @@ public class ReviewDto extends DtoBase {
     // out
     private Date reviewedAt;
     // out
-    private Long reviewedUserId;
+    private UserDto reviewedUser;
     // out
-    private Long reviewerUserId;
+    private UserDto reviewerUser;
 
     public ReviewDto() {
     }
@@ -44,8 +44,8 @@ public class ReviewDto extends DtoBase {
         text = review.getText();
         reviewedAt = review.getReviewedAt();
         adId = review.getRequest().getAd().getId();
-        reviewedUserId = review.getRequest().getAd().getCreator().getId();
-        reviewerUserId = review.getRequest().getUser().getId();
+        reviewedUser = new UserDto(review.getRequest().getAd().getCreator());
+        reviewerUser = new UserDto(review.getRequest().getUser());
     }
     
     public String getText() {
@@ -80,19 +80,19 @@ public class ReviewDto extends DtoBase {
         this.adId = adId;
     }
 
-    public Long getReviewerUserId() {
-        return reviewerUserId;
+    public UserDto getReviewerUser() {
+        return reviewerUser;
     }
 
-    public void setReviewerUserId(Long reviewerUserId) {
-        this.reviewerUserId = reviewerUserId;
+    public void setReviewerUser(UserDto reviewerUser) {
+        this.reviewerUser = reviewerUser;
     }
 
-    public Long getReviewedUserId() {
-        return reviewedUserId;
+    public UserDto getReviewedUser() {
+        return reviewedUser;
     }
 
-    public void setReviewedUserId(Long reviewedUserId) {
-        this.reviewedUserId = reviewedUserId;
+    public void setReviewedUserId(UserDto reviewedUser) {
+        this.reviewedUser = reviewedUser;
     }
 }
