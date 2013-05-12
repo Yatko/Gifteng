@@ -50,11 +50,11 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
         if (lastAdId < 0) {
-            ads = createQuery("from Ad a order by a.createdAt desc")
+            ads = createQuery("from Ad a where a.deleted = false order by a.createdAt desc")
                     .setMaxResults(numberAds)
                     .list();
         } else {
-            ads = createQuery("from Ad a where a.id < :lastId order by a.createdAt desc")
+            ads = createQuery("from Ad a where a.deleted = false and a.id < :lastId order by a.createdAt desc")
                     .setParameter("lastId", lastAdId)
                     .setMaxResults(numberAds)
                     .list();
