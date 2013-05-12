@@ -12,10 +12,13 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.builder.AdDtoBuilder;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.AdValidationException;
 import com.venefica.service.fault.AlreadyRatedException;
+import com.venefica.service.fault.AlreadyRequestedException;
+import com.venefica.service.fault.AlreadyReviewedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.CategoryNotFoundException;
@@ -23,6 +26,9 @@ import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
+import com.venefica.service.fault.InvalidRequestException;
+import com.venefica.service.fault.RequestNotFoundException;
+import com.venefica.service.fault.UserNotFoundException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
@@ -32,6 +38,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.lang.time.DateUtils;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +80,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         ad = adDao.get(FIRST_AD_ID);
         assertNotNull("Fixture ad not found!", ad);
     }
+    
+    //**********************
+    //* categories related *
+    //**********************
 
     @Test
     public void checkBasicCategoriesTest() {
@@ -108,6 +119,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertTrue("No categories returned!", categories != null && categories.size() > 0);
     }
 
+    //***********************************
+    //* ad cruds (create/update/delete) *
+    //***********************************
+    
     @Test
     public void placeAdTest() throws CategoryNotFoundException, AdValidationException {
         authenticateClientAsFirstUser();
@@ -154,6 +169,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             // it's OK
         }
     }
+    
+    //*************************
+    //* ads listing/filtering *
+    //*************************
 
     @Test
     public void getAdsTest() {
@@ -170,6 +189,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         authenticateClientAsFirstUser();
         client.getAdById(new Long(-1));
     }
+    
+    //***********************************
+    //* ad cruds (create/update/delete) *
+    //***********************************
     
     @Test
     public void addImageTest() throws AdNotFoundException, ImageValidationException {
@@ -351,6 +374,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertNotNull(ad_);
         assertTrue("Ad not updated!", adDto.getTitle().equals(ad_.getTitle()));
     }
+    
+    //***************
+    //* ad bookmark *
+    //***************
 
     @Test
     public void bookmarkAdTest() throws AdNotFoundException {
@@ -390,6 +417,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertTrue("There must be at least one ad in the list!", !bookmarkedAds.isEmpty());
     }
 
+    //*************************
+    //* ads listing/filtering *
+    //*************************
+    
     @Test
     public void getAdsExTest() {
         authenticateClientAsFirstUser();
@@ -415,6 +446,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         boolean active = TransactionSynchronizationManager.isActualTransactionActive();
         assertTrue("Transaction is not active", active);
     }
+    
+    //****************
+    //* ad spam mark *
+    //****************
     
     @Test
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -483,6 +518,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertTrue("Ad must not be marked as deleted!", !updatedAd.isDeleted());
     }
 
+    //***********************
+    //* ad lifecycle change *
+    //***********************
+    
     @Test(expected = AdNotFoundException.class)
     public void endUnexistingAdTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
@@ -508,6 +547,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertNotNull("Ad must contain the date of expiration!", updatedAd.getExpiresAt());
     }
 
+    //***********************************
+    //* ad cruds (create/update/delete) *
+    //***********************************
+    
     @Test(expected = AdNotFoundException.class)
     public void deleteUnexistingAdTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
@@ -531,6 +574,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertNotNull("Ad must contain the date of removal", updatedAd.getDeletedAt());
     }
 
+    //***********************
+    //* ad lifecycle change *
+    //***********************
+    
     @Test(expected = AdNotFoundException.class)
     public void relistUnexistingAdTest() throws AdNotFoundException, AuthorizationException,
             InvalidAdStateException {
@@ -577,6 +624,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertTrue("ExpiresAt date must be in future!", (new Date()).before(updatedAd.getExpiresAt()));
     }
 
+    //*************************
+    //* ads listing/filtering *
+    //*************************
+    
     @Test
     public void getMyAdsTest() {
         authenticateClientAsFirstUser();
@@ -588,6 +639,40 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         ads = client.getMyAds();
         assertTrue(ads == null);
     }
+    
+    //***********
+    //* reviews *
+    //***********
+    
+    @Test
+    public void testAddReview() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyReviewedException, AlreadyRequestedException, UserNotFoundException {
+        authenticateClientAsSecondUser();
+        Long requestId = client.requestAd(FIRST_AD_ID);
+        
+        authenticateClientAsFirstUser();
+        client.selectRequest(requestId);
+        
+        authenticateClientAsSecondUser();
+        ReviewDto reviewDto = new ReviewDto();
+        reviewDto.setAdId(FIRST_AD_ID);
+        reviewDto.setPositive(true);
+        reviewDto.setText("Delivery on time");
+        client.addReview(reviewDto);
+        
+        List<ReviewDto> sentReviews_1 = client.getSentReviews(FIRST_USER_ID);
+        List<ReviewDto> receivedReviews_1 = client.getReceivedReviews(FIRST_USER_ID);
+        List<ReviewDto> sentReviews_2 = client.getSentReviews(SECOND_USER_ID);
+        List<ReviewDto> receivedReviews_2 = client.getReceivedReviews(SECOND_USER_ID);
+        
+        assertTrue(sentReviews_1 == null || sentReviews_1.isEmpty());
+        assertEquals(1, receivedReviews_1.size());
+        assertEquals(1, sentReviews_2.size());
+        assertTrue(receivedReviews_2 == null || receivedReviews_2.isEmpty());
+    }
+    
+    //*************
+    //* ad rating *
+    //*************
 
     @Test(expected = AdNotFoundException.class)
     public void rateUnexistingAd() throws AdNotFoundException, InvalidRateOperationException,
@@ -630,6 +715,8 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             // OK
         }
     }
+    
+    // internal helpers
     
     private void makeAdActive() {
         TransactionStatus status = beginNewTransaction();

@@ -5,7 +5,7 @@ import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
-import com.venefica.service.dto.ReviewDto;
+//import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -225,23 +225,23 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         client.unfollow(Long.MAX_VALUE);
     }
     
-    // review
-    
-    @Test
-    public void addReviewTest() throws UserNotFoundException {
-        authenticateClientAsFirstUser();
-        
-        ReviewDto reviewDto = new ReviewDto();
-        reviewDto.setTo(new UserDto(getSecondUser()));
-        reviewDto.setText("Trustful person");
-        client.addReview(reviewDto);
-        
-        List<ReviewDto> reviews_1 = client.getReviews(FIRST_USER_ID);
-        assertTrue(reviews_1 == null || reviews_1.isEmpty());
-        
-        List<ReviewDto> reviews_2 = client.getReviews(SECOND_USER_ID);
-        assertEquals(1, reviews_2.size());
-    }
+//    // review
+//    
+//    @Test
+//    public void addReviewTest() throws UserNotFoundException {
+//        authenticateClientAsFirstUser();
+//        
+//        ReviewDto reviewDto = new ReviewDto();
+//        reviewDto.setTo(new UserDto(getSecondUser()));
+//        reviewDto.setText("Trustful person");
+//        client.addReview(reviewDto);
+//        
+//        List<ReviewDto> reviews_1 = client.getReviews(FIRST_USER_ID);
+//        assertTrue(reviews_1 == null || reviews_1.isEmpty());
+//        
+//        List<ReviewDto> reviews_2 = client.getReviews(SECOND_USER_ID);
+//        assertEquals(1, reviews_2.size());
+//    }
     
     // helpers
     
