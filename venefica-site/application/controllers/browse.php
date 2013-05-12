@@ -53,7 +53,7 @@ class Browse extends CI_Controller {
             foreach ( $this->ad_service->getAds($lastAdId, $numberAds) as $ad ) {
                 $adId = $ad->id;
                 $ad_complete = $this->ad_service->getAdById($adId);
-                $ad_complete->comments = $this->comment_service->getCommentsByAd($adId, -1, 2);
+                $ad_complete->comments = $this->message_service->getCommentsByAd($adId, -1, 2);
 
                 array_push($ads, $ad_complete);
             }
@@ -74,7 +74,7 @@ class Browse extends CI_Controller {
             
             $this->load->library('auth_service');
             $this->load->library('ad_service');
-            $this->load->library('comment_service');
+            //$this->load->library('message_service');
             
             $this->load->model('image_model');
             $this->load->model('ad_model');

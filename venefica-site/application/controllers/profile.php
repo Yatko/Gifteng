@@ -8,17 +8,16 @@ class Profile extends CI_Controller {
         $this->init();
         
         $user = null;
-        $ads = null;
         $receivings = null;
         $givings = null;
-        $favorites = null;
+        $bookmarks = null;
         $followers = null;
         $followings = null;
         $reviews = null;
         
         $givings_num = 0;
         $receivings_num = 0;
-        $favorites_num = 0;
+        $bookmarks_num = 0;
         $followers_num = 0;
         $followings_num = 0;
         $reviews_num = 0;
@@ -34,23 +33,17 @@ class Profile extends CI_Controller {
             }
             
             try {
-                $ads = $this->ad_service->getUserAds($user->id);
-                if ( $ads ) {
-                    $receivings = array();
-                    $givings = array();
-                    foreach ( $ads as $ad ) {
-                        if ( $ad->wanted === TRUE ) {
-                            array_push($receivings, $ad);
-                        } else {
-                            array_push($givings, $ad);
-                        }
-                    }
-                }
+                $receivings = $this->ad_service->getUserRequestedAds($user->id);
             } catch ( Exception $ex ) {
             }
             
             try {
-                $favorites = $this->ad_service->getFavorites($user->id);
+                $givings = $this->ad_service->getUserAds($user->id);
+            } catch ( Exception $ex ) {
+            }
+            
+            try {
+                $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
             } catch ( Exception $ex ) {
             }
             
@@ -64,7 +57,7 @@ class Profile extends CI_Controller {
             }
             
             try {
-                $reviews = $this->usermanagement_service->getReviews($user->id);
+                $reviews = $this->ad_service->getReceivedReviews($user->id);
             } catch ( Exception $ex ) {
             }
         }
@@ -75,8 +68,8 @@ class Profile extends CI_Controller {
         if ( $givings ) {
             $givings_num = count($givings);
         }
-        if ( $favorites ) {
-            $favorites_num = count($favorites);
+        if ( $bookmarks ) {
+            $bookmarks_num = count($bookmarks);
         }
         if ( $followers ) {
             $followers_num = count($followers);
@@ -92,7 +85,6 @@ class Profile extends CI_Controller {
         $data['isLogged'] = isLogged();
         $data['is_ajax'] = false;
         $data['user'] = $user;
-        $data['ads'] = $ads;
         $data['receivings'] = $receivings;
         $data['givings'] = $givings;
         $data['followers'] = $followers;
@@ -101,7 +93,7 @@ class Profile extends CI_Controller {
         
         $data['givings_num'] = $givings_num;
         $data['receivings_num'] = $receivings_num;
-        $data['favorites_num'] = $favorites_num;
+        $data['bookmarks_num'] = $bookmarks_num;
         $data['followers_num'] = $followers_num;
         $data['followings_num'] = $followings_num;
         $data['reviews_num'] = $reviews_num;
