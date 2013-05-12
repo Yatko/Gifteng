@@ -131,7 +131,8 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
         if (includeCanMarkAsSpamFlag) {
             boolean canMarkAsSpam = true;
-
+            
+            //cannot mark own ad
             for (SpamMark spamMark : model.getSpamMarks()) {
                 if (spamMark.getWitness().equals(currentUser)) {
                     canMarkAsSpam = false;
@@ -145,6 +146,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if (includeCanRateFlag) {
             boolean canRate = true;
 
+            //cannot rate own ad
             for (Rating rating : model.getRatings()) {
                 if (rating.getUser().equals(currentUser)) {
                     canRate = false;
