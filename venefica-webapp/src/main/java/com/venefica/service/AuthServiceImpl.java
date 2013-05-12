@@ -6,6 +6,7 @@ import com.venefica.auth.TokenEncryptor;
 import com.venefica.model.User;
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
+import java.util.Date;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
         }
     }
     
+    @Transactional
     private String authenticate(User user, String password) throws AuthenticationException {
         if (user == null) {
             throw new AuthenticationException("Wrong user!");
@@ -63,7 +65,12 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
         try {
             if (user.getPassword().equals(password)) {
                 Token token = new Token(user.getId());
-                return tokenEncryptor.encrypt(token);
+                String encryptedToken = tokenEncryptor.encrypt(token);
+                
+                user.setLastLoginAt(new Date());
+                userDao.update(user);
+                
+                return encryptedToken;
             }
         } catch (TokenEncryptionException e) {
             throw new AuthenticationException("Internal error!");
