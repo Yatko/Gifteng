@@ -11,24 +11,9 @@ class Usermanagement_service {
         log_message(DEBUG, "Initializing Usermanagement_service");
     }
     
-    /**
-     * Request user by its user name;
-     * 
-     * @param string $name
-     * @return User_model
-     * @throws Exception
-     */
-    public function getUserByName($name) {
-        try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $userService->getUserByName(array("name" => $name));
-            $user = $result->user;
-            return User_model::convertUser($user);
-        } catch ( Exception $ex ) {
-            log_message(ERROR, $ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+    //************************************
+    //* user crud (create/update/delete) *
+    //************************************
     
     /**
      * Invokes the user registration on WS.
@@ -53,6 +38,33 @@ class Usermanagement_service {
             throw new Exception($ex->faultstring);
         }
     }
+    
+    //***************
+    //* user search *
+    //***************
+    
+    /**
+     * Request user by its user name;
+     * 
+     * @param string $name
+     * @return User_model
+     * @throws Exception
+     */
+    public function getUserByName($name) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getUserByName(array("name" => $name));
+            $user = $result->user;
+            return User_model::convertUser($user);
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    //***************
+    //* user follow *
+    //***************
     
     /**
      * Follow the given user.
@@ -132,44 +144,9 @@ class Usermanagement_service {
         }
     }
     
-    /**
-     * Creates a review. The review object should contains the reviewed user data.
-     * 
-     * @param Review_model $review
-     * @throws Exception
-     */
-    public function addReview($review) {
-        try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $userService->addReview(array("review" => $review));
-        } catch ( Exception $ex ) {
-            log_message(ERROR, "Review creation failed! " . $ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
     
-    /**
-     * Requests all the reviews for the specified user.
-     * 
-     * @param long $userId
-     * @return list of Review_model
-     * @throws Exception
-     */
-    public function getReviews($userId) {
-        try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $userService->getReviews(array("userId" => $userId));
-            
-            $reviews = array();
-            if ( hasField($result, 'review') && $result->review ) {
-                $reviews = Review_model::convertReviews($result->review);
-            }
-            return $reviews;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, "User reviews request failed! " . $ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+    
+    
     
     /**
      * Gets the user from the server by the given email and stores into session

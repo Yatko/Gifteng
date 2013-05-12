@@ -11,8 +11,12 @@ class Ad_service {
         log_message(DEBUG, "Initializing Ad_service");
     }
     
+    //*************************
+    //* ads listing/filtering *
+    //*************************
+    
     /**
-     * Requests ads for the given user. If the user is invalud user not found
+     * Requests ads for the given user. If the user is invalid user not found
      * exception will be thrown by ws.
      * 
      * @param long $userId
@@ -23,6 +27,30 @@ class Ad_service {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
             $result = $adService->getUserAds(array("userId" => $userId));
+            
+            $ads = array();
+            if ( hasField($result, 'ad') && $result->ad ) {
+                $ads = Ad_model::convertAds($result->ad);
+            }
+            return $ads;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User ads (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Gets the ads for the given user requests. If the user is invalid user not found
+     * exception will be thrown by ws.
+     * 
+     * @param long $userId
+     * @return array of Ad_model
+     * @throws Exception
+     */
+    public function getUserRequestedAds($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getUserRequestedAds(array("userId" => $userId));
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {
@@ -147,17 +175,150 @@ class Ad_service {
         }
     }
     
+    //***************
+    //* ad requests *
+    //***************
+    
     /**
-     * Requests the list of favorited ads by the given user.
+     * Creates a new request on the given ad.
+     * 
+     * @param long $adId
+     * @return long the request id
+     * @throws Exception
+     */
+    public function requestAd($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->requestAd(array("adId" => $adId));
+            $requestId = $result->requestId;
+            return $requestId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Request ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Cancels (removes) an existing request.
+     * 
+     * @param long $requestId
+     * @throws Exception
+     */
+    public function cancelRequest($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->cancelRequest(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Cancel request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Selects the given request as the choosed one (as the 'winner').
+     * 
+     * @param long $requestId
+     * @throws Exception
+     */
+    public function selectRequest($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->selectRequest(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Select request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @return array of Request_model
+     * @throws Exception
+     */
+    public function getRequests($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getRequests(array("adId" => $adId));
+            
+            $requests = array();
+            if ( hasField($result, 'request') && $result->request ) {
+                $requests = Request_model::convertRequests($result->request);
+            }
+            return $requests;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $userId
+     * @return array of Request_model
+     * @throws Exception
+     */
+    public function getRequestsForUser($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getRequestsForUser(array("userId" => $userId));
+            
+            $requests = array();
+            if ( hasField($result, 'request') && $result->request ) {
+                $requests = Request_model::convertRequests($result->request);
+            }
+            return $requests;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $requestId
+     * @throws Exception
+     */
+    public function markAsSent($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->markAsSent(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Mark request as sent (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $requestId
+     * @throws Exception
+     */
+    public function markAsReceived($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->markAsReceived(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Mark request as received (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    //***************
+    //* ad bookmark *
+    //***************
+    
+    /**
+     * Requests the list of bookmarked ads by the given user.
      * 
      * @param long $userId
      * @return array of Ad_model
      * @throws Exception
      */
-    public function getFavorites($userId) {
+    public function getBookmarkedAds($userId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getFavorites(array("userId" => $userId));
+            $result = $adService->getBookmarkedAdsForUser(array("userId" => $userId));
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {
@@ -165,11 +326,79 @@ class Ad_service {
             }
             return $ads;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'User ads (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            log_message(ERROR, 'User bookmarked ads (userId: ' . $userId . ') request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
     
+    //***********
+    //* reviews *
+    //***********
+    
+    /**
+     * 
+     * @param Review_model $review
+     * @throws Exception
+     */
+    public function addReview($review) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->addReview(array("review" => $review));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Add review failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $userId
+     * @return array of Review_model
+     * @throws Exception
+     */
+    public function getReceivedReviews($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getReceivedReviews(array("userId" => $userId));
+            
+            $reviews = array();
+            if ( hasField($result, 'review') && $result->review ) {
+                $reviews = Review_model::convertReviews($result->review);
+            }
+            return $reviews;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User received reviews (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $userId
+     * @return array of Review_model
+     * @throws Exception
+     */
+    public function getSentReviews($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getSentReviews(array("userId" => $userId));
+            
+            $reviews = array();
+            if ( hasField($result, 'review') && $result->review ) {
+                $reviews = Review_model::convertReviews($result->review);
+            }
+            return $reviews;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User sent reviews (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    //**********************
+    //* categories related *
+    //**********************
+    
+    //TODO: not yet finished
     public function getAllCategories() {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
