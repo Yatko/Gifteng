@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
     <action>
-        <actionName>CUSTOM-Install - skip tests</actionName>
-        <displayName>Install - skip tests</displayName>
+        <actionName>CUSTOM-env=local - skip tests</actionName>
+        <displayName>env=local - skip tests</displayName>
         <goals>
             <goal>clean</goal>
             <goal>install</goal>
         </goals>
         <properties>
+            <env>local</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=venefica - skip tests</actionName>
+        <displayName>env=venefica - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>venefica</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=jelastic - skip tests</actionName>
+        <displayName>env=jelastic - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>jelastic</env>
             <skipTests>true</skipTests>
         </properties>
     </action>

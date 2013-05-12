@@ -15,6 +15,7 @@
         <org.quartz>2.1.5</org.quartz>
         <!--<tomcat.manager.url>http://192.168.1.150:8081/manager</tomcat.manager.url>-->
         <!--<skip.tests>false</skip.tests>-->
+        <env>local</env> <!-- default config -->
     </properties>
     
     <dependencies>
@@ -257,6 +258,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <testResources>
@@ -264,6 +266,12 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
+        
+        <filters>
+            <filter>assembly/config-${env}.properties</filter>
+        </filters>
+        
+        
         
         <plugins>
             <plugin>
