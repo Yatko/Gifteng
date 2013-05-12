@@ -42,6 +42,13 @@ class Comment_model extends CI_Model {
         return SERVER_URL.$this->publisherAvatarUrl;
     }
     
+    public function getCreateDate() {
+        if ( $this->createdAt == null ) {
+            return '';
+        }
+        return date(DATE_FORMAT, $this->createdAt / 1000);
+    }
+    
     // static helpers
     
     public static function convertComments($commentsResult) {

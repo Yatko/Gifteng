@@ -13,6 +13,7 @@ class Ad_model extends CI_Model {
     var $title; //string
     var $description; //string
     var $price; //float
+    var $quantity; //int
     var $latitude; //double
     var $longitude; //double
     var $image; //Image_model
@@ -23,6 +24,9 @@ class Ad_model extends CI_Model {
     var $inBookmars; //boolean
     var $wanted; //boolean
     var $expired; //boolean
+    var $sent; //boolean
+    var $received; //boolean
+    var $requested; //boolean
     var $expiresAt; //long - timestamp
     var $numAvailProlongations; //int
     var $numViews; //int
@@ -42,6 +46,7 @@ class Ad_model extends CI_Model {
             $this->title = getField($obj, 'title');
             $this->description = getField($obj, 'description');
             $this->price = getField($obj, 'price');
+            $this->quantity = getField($obj, 'quantity');
             $this->latitude = getField($obj, 'latitude');
             $this->longitude = getField($obj, 'longitude');
             $this->createdAt = getField($obj, 'createdAt');
@@ -49,6 +54,9 @@ class Ad_model extends CI_Model {
             $this->inBookmars = getField($obj, 'inBookmars');
             $this->wanted = getField($obj, 'wanted');
             $this->expired = getField($obj, 'expired');
+            $this->sent = getField($obj, 'sent');
+            $this->received = getField($obj, 'received');
+            $this->requested = getField($obj, 'requested');
             $this->expiresAt = getField($obj, 'expiresAt');
             $this->numAvailProlongations = getField($obj, 'numAvailProlongations');
             $this->numViews = getField($obj, 'numViews');
@@ -78,6 +86,8 @@ class Ad_model extends CI_Model {
         if ( $key == "type" ) return "Ad";
         return parent::__get($key);
     }
+    
+    // image related
     
     public function hasImage() {
         if ( $this->image != null ) {
@@ -121,6 +131,22 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->creator->getLocation();
+    }
+    
+    // ad related
+    
+    public function getCreateDate() {
+        if ( $this->createdAt == null ) {
+            return '';
+        }
+        return date(DATE_FORMAT, $this->createdAt / 1000);
+    }
+    
+    public function getExpireDate() {
+        if ( $this->expiresAt == null ) {
+            return '';
+        }
+        return date(DATE_FORMAT, $this->expiresAt / 1000);
     }
     
     // static helpers
