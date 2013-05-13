@@ -55,6 +55,15 @@ public interface RequestDao {
      */
     List<Request> getByUser(Long userId);
     
+    /**
+     * Returns a list of requests that were made for ads created by the
+     * given user.
+     * 
+     * @param userId
+     * @return list of requests
+     */
+    List<Request> getForUser(Long userId);
+    
 //    /**
 //     * Removes request from the database.
 //     *

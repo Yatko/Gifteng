@@ -36,10 +36,10 @@ public interface ReviewDao {
     List<Review> getReceivedForUser(Long userId);
     
     /**
-     * Gets all created reviews for the given user.
+     * Gets all created reviews by the given user.
      * 
      * @param userId
      * @return list of reviews
      */
-    List<Review> getSentForUser(Long userId);
+    List<Review> getSentByUser(Long userId);
 }

@@ -58,6 +58,15 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
         // @formatter:off
     }
     
+    @Override
+    public List<Request> getForUser(Long userId) {
+        // @formatter:off
+        return createQuery("from Request r where r.deleted = false and r.ad.creator.id = :userId")
+                .setParameter("userId", userId)
+                .list();
+        // @formatter:off
+    }
+    
 //    @Override
 //    public void delete(Request request) {
 //        deleteEntity(request);

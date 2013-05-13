@@ -41,7 +41,7 @@ public class ReviewDaoImpl extends DaoBase<Review> implements ReviewDao {
     }
     
     @Override
-    public List<Review> getSentForUser(Long userId) {
+    public List<Review> getSentByUser(Long userId) {
         // @formatter:off
         return createQuery("from Review r where r.request.user.id = :userId")
                 .setParameter("userId", userId)

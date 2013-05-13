@@ -471,7 +471,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getUserRequestedAds(Long userId) throws UserNotFoundException {
-        List<RequestDto> requests = getRequestsForUser(userId);
+        List<RequestDto> requests = getRequestsByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
         
         for ( RequestDto requestDto : requests ) {
@@ -645,7 +645,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<RequestDto> getRequestsForUser(Long userId) throws UserNotFoundException {
+    public List<RequestDto> getRequestsByUser(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
         List<Request> requests = requestDao.getByUser(userId);
         List<RequestDto> result = new LinkedList<RequestDto>();
@@ -662,6 +662,23 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     default: {
                         //expired requests should not be returned
                     }
+                }
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    @Transactional
+    public List<RequestDto> getRequestsForUserWithoutReview(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Request> requests = requestDao.getForUser(userId);
+        List<RequestDto> result = new LinkedList<RequestDto>();
+        
+        if ( requests != null && !requests.isEmpty() ) {
+            for ( Request request : requests ) {
+                if ( request.getStatus() == RequestStatus.ACCEPTED && request.getReview() == null ) {
+                    result.add(new RequestDto(request));
                 }
             }
         }
@@ -912,7 +929,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public List<ReviewDto> getSentReviews(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
-        List<Review> reviews = reviewDao.getSentForUser(user.getId());
+        List<Review> reviews = reviewDao.getSentByUser(user.getId());
         List<ReviewDto> result = new LinkedList<ReviewDto>();
         
         if ( reviews != null && !reviews.isEmpty() ) {

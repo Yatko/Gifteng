@@ -354,9 +354,19 @@ public interface AdService {
      * @return
      * @throws UserNotFoundException 
      */
-    @WebMethod(operationName = "GetRequestsForUser")
+    @WebMethod(operationName = "GetRequestsByUser")
     @WebResult(name = "request")
-    List<RequestDto> getRequestsForUser(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    List<RequestDto> getRequestsByUser(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    
+    /**
+     * 
+     * @param userId
+     * @return list of requests that were selected, but no review was given
+     * @throws UserNotFoundException 
+     */
+    @WebMethod(operationName = "GetRequestsForUserWithoutReview")
+    @WebResult(name = "request")
+    List<RequestDto> getRequestsForUserWithoutReview(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
     /**
      * Marks by the giver (seller or owner) the status of the request.

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,6 +47,9 @@ public class Request {
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
+    
+    @OneToOne(mappedBy = "request")
+    private Review review;
     
     public Request() {
     }
@@ -128,5 +132,13 @@ public class Request {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 }
