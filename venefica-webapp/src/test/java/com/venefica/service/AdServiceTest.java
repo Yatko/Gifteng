@@ -12,6 +12,7 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.RequestDto;
 import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.builder.AdDtoBuilder;
 import com.venefica.service.fault.AdNotFoundException;
@@ -646,11 +647,18 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     @Test
     public void testAddReview() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyReviewedException, AlreadyRequestedException, UserNotFoundException {
+        authenticateClientAsThirdUser();
+        client.requestAd(FIRST_AD_ID);
+        
         authenticateClientAsSecondUser();
         Long requestId = client.requestAd(FIRST_AD_ID);
         
         authenticateClientAsFirstUser();
         client.selectRequest(requestId);
+        
+        List<RequestDto> unreviewedRequestsBefore = client.getRequestsForUserWithoutReview(FIRST_USER_ID);
+        assertEquals(1, unreviewedRequestsBefore.size());
+        assertEquals(SECOND_USER_ID, unreviewedRequestsBefore.get(0).getUser().getId());
         
         authenticateClientAsSecondUser();
         ReviewDto reviewDto = new ReviewDto();
@@ -663,7 +671,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<ReviewDto> receivedReviews_1 = client.getReceivedReviews(FIRST_USER_ID);
         List<ReviewDto> sentReviews_2 = client.getSentReviews(SECOND_USER_ID);
         List<ReviewDto> receivedReviews_2 = client.getReceivedReviews(SECOND_USER_ID);
+        List<RequestDto> unreviewedRequestsAfter = client.getRequestsForUserWithoutReview(FIRST_USER_ID);
         
+        assertTrue(unreviewedRequestsAfter == null || unreviewedRequestsAfter.isEmpty());
         assertTrue(sentReviews_1 == null || sentReviews_1.isEmpty());
         assertEquals(1, receivedReviews_1.size());
         assertEquals(1, sentReviews_2.size());
