@@ -755,7 +755,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             for (Ad ad : bookmarkedAds) {
                 AdDto adDto = new AdDtoBuilder(ad)
                         .setCurrentUser(user)
-                        .includeCreator(true)
+                        .includeCreator(true) //TODO: maybe this is not needed
                         .build();
                 adDto.setInBookmars(true);
                 result.add(adDto);
