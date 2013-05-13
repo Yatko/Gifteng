@@ -258,10 +258,32 @@ class Ad_service {
      * @return array of Request_model
      * @throws Exception
      */
-    public function getRequestsForUser($userId) {
+    public function getRequestsByUser($userId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getRequestsForUser(array("userId" => $userId));
+            $result = $adService->getRequestsByUser(array("userId" => $userId));
+            
+            $requests = array();
+            if ( hasField($result, 'request') && $result->request ) {
+                $requests = Request_model::convertRequests($result->request);
+            }
+            return $requests;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $userId
+     * @return array of Request_model
+     * @throws Exception
+     */
+    public function getRequestsForUserWithoutReview($userId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getRequestsForUserWithoutReview(array("userId" => $userId));
             
             $requests = array();
             if ( hasField($result, 'request') && $result->request ) {
