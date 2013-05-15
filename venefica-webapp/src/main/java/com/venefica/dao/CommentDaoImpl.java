@@ -35,12 +35,12 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
         numComments = numComments > MAX_COMMENTS_TO_RETURN ? MAX_COMMENTS_TO_RETURN : numComments;
 
         if (lastCommentId < 0) {
-            comments = createQuery("from Comment c where c.ad.id = :adId order by c.createdAt desc")
+            comments = createQuery("from " + getDomainClassName() + " c where c.ad.id = :adId order by c.createdAt desc")
                     .setParameter("adId", adId)
                     .setMaxResults(numComments)
                     .list();
         } else {
-            comments = createQuery("from Comment c where c.ad.id = :adId and c.id < :lastId order by c.createdAt desc")
+            comments = createQuery("from " + getDomainClassName() + " c where c.ad.id = :adId and c.id < :lastId order by c.createdAt desc")
                     .setParameter("adId", adId)
                     .setParameter("lastId", lastCommentId)
                     .setMaxResults(numComments)
