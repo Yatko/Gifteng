@@ -26,7 +26,7 @@ public class BookmarkDaoImpl extends DaoBase<Bookmark> implements BookmarkDao {
     @Override
     public Bookmark get(Long userId, Long adId) {
         // @formatter:off
-        return (Bookmark) createQuery("from Bookmark b where b.user.id = :userId and b.ad.id = :adId")
+        return (Bookmark) createQuery("from " + getDomainClassName() + " b where b.user.id = :userId and b.ad.id = :adId")
                 .setParameter("userId", userId)
                 .setParameter("adId", adId)
                 .uniqueResult();
@@ -48,7 +48,7 @@ public class BookmarkDaoImpl extends DaoBase<Bookmark> implements BookmarkDao {
     @SuppressWarnings("unchecked")
     public List<Ad> getBookmarkedAds(User user) {
         return createQuery(
-                "select b.ad from Bookmark b where b.user = :user order by b.id desc")
+                "select b.ad from " + getDomainClassName() + " b where b.user = :user order by b.id desc")
                 .setParameter("user", user)
                 .list();
     }
