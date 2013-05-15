@@ -25,7 +25,7 @@ public class ReviewDaoImpl extends DaoBase<Review> implements ReviewDao {
     @Override
     public Review getByRequest(Long requestId) {
         // @formatter:off
-        return (Review) createQuery("from Review r where r.request.id = :requestId")
+        return (Review) createQuery("from " + getDomainClassName() + " r where r.request.id = :requestId")
                 .setParameter("requestId", requestId)
                 .uniqueResult();
         // @formatter:off
@@ -34,7 +34,7 @@ public class ReviewDaoImpl extends DaoBase<Review> implements ReviewDao {
     @Override
     public List<Review> getReceivedForUser(Long userId) {
         // @formatter:off
-        return createQuery("from Review r where r.request.ad.creator.id = :userId")
+        return createQuery("from " + getDomainClassName() + " r where r.request.ad.creator.id = :userId")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off
@@ -43,7 +43,7 @@ public class ReviewDaoImpl extends DaoBase<Review> implements ReviewDao {
     @Override
     public List<Review> getSentByUser(Long userId) {
         // @formatter:off
-        return createQuery("from Review r where r.request.user.id = :userId")
+        return createQuery("from " + getDomainClassName() + " r where r.request.user.id = :userId")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off
