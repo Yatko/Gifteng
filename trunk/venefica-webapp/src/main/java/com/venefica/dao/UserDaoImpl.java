@@ -25,7 +25,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public User findUserByName(String name) {
-        List<User> users = createQuery("from User where name=:name")
+        List<User> users = createQuery("from " + getDomainClassName() + " u where u.name=:name")
                 .setParameter("name", name)
                 .list();
 
@@ -34,7 +34,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public User findUserByEmail(String email) {
-        List<User> users = createQuery("from User where email=:email")
+        List<User> users = createQuery("from " + getDomainClassName() + " u where u.email=:email")
                 .setParameter("email", email)
                 .list();
 
@@ -43,7 +43,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public User findUserByPhoneNumber(String phoneNumber) {
-        List<User> users = createQuery("from User where phoneNumber=:phoneNumber")
+        List<User> users = createQuery("from " + getDomainClassName() + " u where u.phoneNumber=:phoneNumber")
                 .setParameter("phoneNumber", phoneNumber)
                 .list();
 
@@ -63,7 +63,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public boolean removeByName(String name) {
-        int numUserDeleted = createQuery("delete from User u where u.name = :name")
+        int numUserDeleted = createQuery("delete from " + getDomainClassName() + " u where u.name = :name")
                 .setParameter("name", name)
                 .executeUpdate();
 
@@ -72,7 +72,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public boolean removeByEmail(String email) {
-        int numUserDeleted = createQuery("delete from User u where u.email = :email")
+        int numUserDeleted = createQuery("delete from " + getDomainClassName() + " u where u.email = :email")
                 .setParameter("email", email)
                 .executeUpdate();
 
@@ -81,7 +81,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public Long getMaxUserId() {
-        Long maxId = (Long) createQuery("select max(u.id) from User u").uniqueResult();
+        Long maxId = (Long) createQuery("select max(u.id) from " + getDomainClassName() + " u").uniqueResult();
         return maxId != null ? maxId : 0;
     }
 }
