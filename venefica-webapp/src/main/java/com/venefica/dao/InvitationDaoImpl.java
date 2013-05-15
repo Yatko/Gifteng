@@ -44,7 +44,7 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
 
     @Override
     public Invitation findByCode(String code) {
-        List<Invitation> invitations = createQuery("from Invitation where code=:code")
+        List<Invitation> invitations = createQuery("from " + getDomainClassName() + " i where i.code=:code")
                 .setParameter("code", code)
                 .list();
 
@@ -55,7 +55,7 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
     public void markExpiredInvitations() {
         // @formatter:off		
         int numRows = createQuery(
-                "update Invitation i set i.expired = true where i.expiresAt < current_date() "
+                "update " + getDomainClassName() + " i set i.expired = true where i.expiresAt < current_date() "
                 + "and i.expired = false").executeUpdate();
         // @formatter:on
 
