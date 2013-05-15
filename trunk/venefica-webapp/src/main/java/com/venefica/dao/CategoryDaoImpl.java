@@ -21,10 +21,10 @@ public class CategoryDaoImpl extends DaoBase<Category> implements CategoryDao {
         List<Category> categories;
 
         if (parentCategoryId == null) {
-            categories = createQuery("from Category c where c.parent is null")
+            categories = createQuery("from " + getDomainClassName() + " c where c.parent is null")
                     .list();
         } else {
-            categories = createQuery("from Category c where c.parent.id = :parentId")
+            categories = createQuery("from " + getDomainClassName() + " c where c.parent.id = :parentId")
                     .setParameter("parentId", parentCategoryId)
                     .list();
         }
@@ -34,7 +34,7 @@ public class CategoryDaoImpl extends DaoBase<Category> implements CategoryDao {
 
     @Override
     public Category findByName(String name) {
-        List<Category> categories = createQuery("from Category c where c.name = :name")
+        List<Category> categories = createQuery("from " + getDomainClassName() + " c where c.name = :name")
                 .setParameter("name", name)
                 .list();
 
@@ -48,7 +48,7 @@ public class CategoryDaoImpl extends DaoBase<Category> implements CategoryDao {
 
     @Override
     public boolean hasCategories() {
-        Long numCategories = (Long) createQuery("select count(*) from Category").uniqueResult();
+        Long numCategories = (Long) createQuery("select count(*) from " + getDomainClassName() + "").uniqueResult();
 
         return numCategories > 0;
     }
