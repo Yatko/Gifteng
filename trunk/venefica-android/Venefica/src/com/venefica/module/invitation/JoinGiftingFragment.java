@@ -82,7 +82,7 @@ public class JoinGiftingFragment extends SherlockFragment implements OnClickList
 				userDto.setLastName(edtLName.getText().toString());
 				userDto.setEmail(edtEmail.getText().toString());
 				
-				userDto.setName(/*edtEmail.getText().toString()*/"");
+				userDto.setName(edtEmail.getText().toString());
 				userDto.setDateOfBirth(Calendar.getInstance().getTime());
 				userDto.setJoinedAt(Calendar.getInstance().getTime());
 				userDto.setPhoneNumber("");
