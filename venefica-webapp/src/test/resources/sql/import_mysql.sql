@@ -41,7 +41,7 @@ insert into `category` (`name`, `hidden`, `parent_id`) values ('salons/nails/spa
 
 -- Ads
 delete from `ad`;
-insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `wanted`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `selected`, `sent`, `received`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', '0', 1, 0.0, '0', '0', '0');
+insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `sent`, `received`, `quantity`, `numexpire`, `status`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', '0', '1', '0', 'ACTIVE');
 
 -- Bookmarks
 delete from `bookmark`;
