@@ -2,6 +2,8 @@ package com.venefica.dao;
 
 import com.venefica.model.Ad;
 import com.venefica.common.GeoUtils;
+import com.venefica.model.AdStatus;
+import com.venefica.model.AdType;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
@@ -50,11 +52,11 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
         if (lastAdId < 0) {
-            ads = createQuery("from Ad a where a.deleted = false order by a.createdAt desc")
+            ads = createQuery("from " + getDomainClassName() + " a where a.deleted = false order by a.createdAt desc")
                     .setMaxResults(numberAds)
                     .list();
         } else {
-            ads = createQuery("from Ad a where a.deleted = false and a.id < :lastId order by a.createdAt desc")
+            ads = createQuery("from " + getDomainClassName() + " a where a.deleted = false and a.id < :lastId order by a.createdAt desc")
                     .setParameter("lastId", lastAdId)
                     .setMaxResults(numberAds)
                     .list();
@@ -77,10 +79,11 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         BigDecimal minPrice = filter.getMinPrice();
         BigDecimal maxPrice = filter.getMaxPrice();
         Boolean hasPhoto = filter.getHasPhoto();
-        Boolean wanted = filter.isWanted();
+//        Boolean wanted = filter.isWanted();
+        AdType type = filter.getType();
         
         // Build query string
-        String queryStr = "from Ad a where a.deleted = false and a.expired = false";
+        String queryStr = "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false";
 
         if (lastAdId >= 0) {
             queryStr += " and a.id < :lastId";
@@ -109,8 +112,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.mainImage is not null";
         }
 
-        if (wanted != null) {
-            queryStr += " and a.wanted = :wanted";
+//        if (wanted != null) {
+//            queryStr += " and a.wanted = :wanted";
+//        }
+        
+        if (type != null) {
+            queryStr += " and a.type = :type";
         }
 
         queryStr += " order by a.id desc";
@@ -145,8 +152,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("maxPrice", maxPrice);
         }
 
-        if (wanted != null) {
-            query.setParameter("wanted", wanted);
+//        if (wanted != null) {
+//            query.setParameter("wanted", wanted);
+//        }
+        
+        if (type != null) {
+            query.setParameter("type", type);
         }
 
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
@@ -162,8 +173,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     public void markExpiredAds() {
         // @formatter:off		
         int numRows = createQuery(
-                "update Ad a set a.expired = true where a.expiresAt < current_date() "
-                + "and a.expired = false").executeUpdate();
+                "update " + getDomainClassName() + " a "
+                + "set a.expired = :expired, a.numExpire = a.numExpire + 1, a.status = :status "
+                + "where a.expiresAt < current_date() and a.expired = false")
+                .setParameter("expired", true)
+                .setParameter("status", AdStatus.EXPIRED)
+                .executeUpdate();
         // @formatter:on
 
         if (numRows > 0) {
@@ -174,7 +189,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<Ad> getByUser(Long userId) {
-        return createQuery("from Ad a where a.creator.id = :userid and a.deleted = false order by a.id desc")
+        return createQuery("from " + getDomainClassName() + " a where a.creator.id = :userid and a.deleted = false order by a.id desc")
                 .setParameter("userid", userId)
                 .list();
     }
