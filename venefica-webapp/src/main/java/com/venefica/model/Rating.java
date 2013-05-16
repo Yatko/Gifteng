@@ -14,7 +14,8 @@ import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
 /**
- * Advertisement rating.
+ * Advertisement rating. After a successful product (ad, gift) pickup/delivery
+ * reviews can be left by both parties - requestor and ad owner.
  *
  * @author Sviatoslav Grebenchukov
  */
@@ -33,9 +34,15 @@ public class Rating {
     private Ad ad;
     
     @ManyToOne
-    @ForeignKey(name = "rating_usr_fk")
-    private User user;
+    @ForeignKey(name = "rating_from_usr_fk")
+    private User from;
     
+    @ManyToOne
+    @ForeignKey(name = "rating_to_usr_fk")
+    private User to;
+    
+    @Column(length = 1000, nullable = false)
+    private String text;
     @Column(name = "valuee")
     private int value;
     
@@ -46,9 +53,11 @@ public class Rating {
         value = 0;
     }
 
-    public Rating(Ad ad, User user, int value) {
+    public Rating(Ad ad, User from, User to, String text, int value) {
         this.ad = ad;
-        this.user = user;
+        this.from = from;
+        this.to = to;
+        this.text = text;
         this.value = value;
     }
 
@@ -69,12 +78,28 @@ public class Rating {
         this.ad = ad;
     }
 
-    public User getUser() {
-        return user;
+    public User getFrom() {
+        return from;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setFrom(User from) {
+        this.from = from;
+    }
+    
+    public User getTo() {
+        return to;
+    }
+
+    public void setTo(User to) {
+        this.to = to;
+    }
+    
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public int getValue() {

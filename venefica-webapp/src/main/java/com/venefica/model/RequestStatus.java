@@ -7,6 +7,8 @@ package com.venefica.model;
 /**
  * The 'lifecycle' of an ad request.
  * 
+ * PENDING - the starter status of a request
+ * 
  * @author gyuszi
  */
 public enum RequestStatus {

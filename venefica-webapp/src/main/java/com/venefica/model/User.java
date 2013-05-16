@@ -1,6 +1,7 @@
 package com.venefica.model;
 
 import com.venefica.common.RandomGenerator;
+import com.venefica.config.Constants;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,8 +35,6 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "local_user")
 public class User {
 
-    private static final int DEFAULT_PASSWORD_LENGTH = 5;
-    
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -82,25 +81,16 @@ public class User {
     @OrderBy
     private List<Message> receivedMessages;
     
-//    @OneToMany
-//    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "ad_id"))
-//    private Set<Ad> favorites;
-    
-//    @OneToMany(mappedBy = "user")
-//    @OrderBy
-//    private List<Review> reviews;
-    
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
 
     public User() {
-        password = RandomGenerator.generateNumeric(DEFAULT_PASSWORD_LENGTH);
+        password = RandomGenerator.generateNumeric(Constants.USER_DEFAULT_PASSWORD_LENGTH);
         followers = new HashSet<User>(0);
         followings = new HashSet<User>(0);
         sentMessages = new LinkedList<Message>();
         receivedMessages = new LinkedList<Message>();
-//        favorites = new HashSet<Ad>(0);
     }
 
     public User(String name, String email) {
@@ -193,22 +183,6 @@ public class User {
             followings = new HashSet<User>(0);
         }
     }
-    
-//    public void addFavorite(Ad ad) {
-//        initFavorites();
-//        favorites.add(ad);
-//    }
-//    
-//    public void removeFavorite(Ad ad) {
-//        initFavorites();
-//        favorites.remove(ad);
-//    }
-//    
-//    private void initFavorites() {
-//        if ( favorites == null ) {
-//            favorites = new HashSet<Ad>(0);
-//        }
-//    }
     
     @Override
     public boolean equals(Object obj) {
@@ -317,22 +291,6 @@ public class User {
     public void setFollowings(Set<User> followings) {
         this.followings = followings;
     }
-
-//    public Set<Ad> getFavorites() {
-//        return favorites;
-//    }
-//
-//    public void setFavorites(Set<Ad> favorites) {
-//        this.favorites = favorites;
-//    }
-
-//    public List<Review> getReviews() {
-//        return reviews;
-//    }
-//
-//    public void setReviews(List<Review> reviews) {
-//        this.reviews = reviews;
-//    }
 
     public UserPoint getUserPoint() {
         return userPoint;

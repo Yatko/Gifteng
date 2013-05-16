@@ -1,5 +1,6 @@
 package com.venefica.model;
 
+import com.venefica.config.Constants;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +19,6 @@ import javax.persistence.Id;
 //import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -37,8 +39,6 @@ import org.hibernate.annotations.Type;
 @Table(name = "ad")
 public class Ad {
 
-    private static final int DEFAULT_AVAIL_PROLONGATIONS = 1;
-    
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ad_gen")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,7 +53,7 @@ public class Ad {
     @Column(length = 1000)
     private String description;
     
-    private Integer quantity;
+    private Integer quantity; //specifies how many requests can be selected also
     private BigDecimal price; //original price, current value
     
     @ManyToOne
@@ -83,8 +83,9 @@ public class Ad {
     @ForeignKey(name = "ad_creator_fk")
     private User creator;
     
-    private boolean wanted; //not used in the gifteng project
+//    private boolean wanted; //not used in the gifteng project
     
+    private int numExpire; //how many times expired
     @Column(nullable = false)
     private boolean expired;
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,13 +99,6 @@ public class Ad {
     private boolean sold;
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldAt;
-    
-    private boolean selected;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date selectedAt;
-    @OneToOne
-    @ForeignKey(name = "request_fk")
-    private Request selectedRequest; //buyer (receiver, winner)
     
     private boolean sent; //product/gift marked as sent (by the seller/owner/giver)
     @Temporal(TemporalType.TIMESTAMP)
@@ -128,7 +122,9 @@ public class Ad {
     @OrderBy
     private List<SpamMark> spamMarks;
     
-    private boolean reviewed; //reviewed by an admin
+    private boolean reviewed; //reviewed by a power-user (admin)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reviewedAt; //last review date
     
     private int numAvailProlongations; //decrementing at relist ad
     
@@ -139,6 +135,14 @@ public class Ad {
     @OneToMany(mappedBy = "ad")
     @OrderBy
     private List<Request> requests;
+    
+    private Boolean freeShipping;
+    private Boolean pickUp;
+    
+    @Enumerated(EnumType.STRING)
+    private AdStatus status;
+    @Enumerated(EnumType.STRING)
+    private AdType type;
 
     public Ad() {
         images = new LinkedList<Image>();
@@ -149,22 +153,33 @@ public class Ad {
         createdAt = new Date();
         rating = 0.0f;
         numViews = 0;
-        numAvailProlongations = DEFAULT_AVAIL_PROLONGATIONS;
+        numExpire = 0;
+        numAvailProlongations = Constants.AD_MAX_ALLOWED_PROLONGATION;
     }
 
     public void visit() {
         numViews++;
     }
 
-    public boolean prolong(int days) {
+    public boolean canProlong() {
         if (numAvailProlongations <= 0) {
             return false;
         }
-
-        numAvailProlongations--;
+        return true;
+    }
+    
+    public void prolong(int days) {
         expired = false;
         expiresAt = DateUtils.addDays(new Date(), days);
-        return true;
+        numAvailProlongations--;
+    }
+    
+    public void select() {
+        quantity--;
+    }
+    
+    public void unselect() {
+        quantity++;
     }
     
     public boolean isAlreadyViewedBy(User user) {
@@ -187,18 +202,6 @@ public class Ad {
     public void unmarkAsDeleted() {
         deleted = false;
         deletedAt = null;
-    }
-    
-    public void markAsSelected(Request request) {
-        selected = true;
-        selectedAt = new Date();
-        selectedRequest = request;
-    }
-    
-    public void unmarkAsSelected() {
-        selected = false;
-        selectedAt = null;
-        selectedRequest = null;
     }
     
     public void markAsSold() {
@@ -242,14 +245,6 @@ public class Ad {
 
     public void setCreator(User creator) {
         this.creator = creator;
-    }
-
-    public Request getSelectedRequest() {
-        return selectedRequest;
-    }
-
-    public void setSelectedRequest(Request selectedRequest) {
-        this.selectedRequest = selectedRequest;
     }
 
     public Category getCategory() {
@@ -396,13 +391,13 @@ public class Ad {
         this.ratings = ratings;
     }
 
-    public boolean isWanted() {
-        return wanted;
-    }
-
-    public void setWanted(boolean wanted) {
-        this.wanted = wanted;
-    }
+//    public boolean isWanted() {
+//        return wanted;
+//    }
+//
+//    public void setWanted(boolean wanted) {
+//        this.wanted = wanted;
+//    }
 
     public List<SpamMark> getSpamMarks() {
         return spamMarks;
@@ -516,19 +511,51 @@ public class Ad {
         this.receivedAt = receivedAt;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public AdStatus getStatus() {
+        return status;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setStatus(AdStatus status) {
+        this.status = status;
     }
 
-    public Date getSelectedAt() {
-        return selectedAt;
+    public Date getReviewedAt() {
+        return reviewedAt;
     }
 
-    public void setSelectedAt(Date selectedAt) {
-        this.selectedAt = selectedAt;
+    public void setReviewedAt(Date reviewedAt) {
+        this.reviewedAt = reviewedAt;
+    }
+
+    public Boolean getFreeShipping() {
+        return freeShipping;
+    }
+
+    public void setFreeShipping(Boolean freeShipping) {
+        this.freeShipping = freeShipping;
+    }
+
+    public Boolean getPickUp() {
+        return pickUp;
+    }
+
+    public void setPickUp(Boolean pickUp) {
+        this.pickUp = pickUp;
+    }
+
+    public AdType getType() {
+        return type;
+    }
+
+    public void setType(AdType type) {
+        this.type = type;
+    }
+
+    public int getNumExpire() {
+        return numExpire;
+    }
+
+    public void setNumExpire(int numExpire) {
+        this.numExpire = numExpire;
     }
 }
