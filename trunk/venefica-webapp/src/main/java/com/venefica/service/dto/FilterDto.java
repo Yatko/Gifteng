@@ -1,5 +1,6 @@
 package com.venefica.service.dto;
 
+import com.venefica.model.AdType;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,7 +27,8 @@ public class FilterDto {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
-    private Boolean wanted;
+//    private Boolean wanted;
+    private AdType type;
     private Boolean includeOwned;
 
     // WARNING: required for JAX-WS
@@ -97,13 +99,13 @@ public class FilterDto {
         this.hasPhoto = hasPhoto;
     }
 
-    public Boolean isWanted() {
-        return wanted;
-    }
-
-    public void setWanted(Boolean wanted) {
-        this.wanted = wanted;
-    }
+//    public Boolean isWanted() {
+//        return wanted;
+//    }
+//
+//    public void setWanted(Boolean wanted) {
+//        this.wanted = wanted;
+//    }
 
     public Boolean getIncludeOwned() {
         return includeOwned;
@@ -111,5 +113,13 @@ public class FilterDto {
 
     public void setIncludeOwned(Boolean includeOwned) {
         this.includeOwned = includeOwned;
+    }
+
+    public AdType getType() {
+        return type;
+    }
+
+    public void setType(AdType type) {
+        this.type = type;
     }
 }

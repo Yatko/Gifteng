@@ -6,6 +6,7 @@ import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,6 +35,8 @@ public class AdDto extends DtoBase {
     // in,out
     private BigDecimal price;
     // in,out
+    @Min(1)
+    @NotNull
     private Integer quantity;
     // in,out
     private Double latitude;
@@ -53,8 +56,8 @@ public class AdDto extends DtoBase {
     private boolean owner;
     // out
     private boolean inBookmars;
-    // in, out
-    private boolean wanted;
+//    // in, out
+//    private boolean wanted;
     // out
     private boolean expired;
     // out
@@ -63,8 +66,6 @@ public class AdDto extends DtoBase {
     private boolean received;
     // out
     private boolean requested; //there is a valid request for this ad by the current user
-//    // out
-//    private boolean favorited; //is in the user favorite list
     // in, out
     private Date expiresAt;
     // out
@@ -79,6 +80,10 @@ public class AdDto extends DtoBase {
     private UserDto creator;
     // out
     private Boolean canMarkAsSpam;
+    // in, out
+    private Boolean freeShipping;
+    // in, out
+    private Boolean pickUp;
     // out
     @XmlElementWrapper(name = "comments")
     @XmlElement(name = "item")
@@ -93,7 +98,9 @@ public class AdDto extends DtoBase {
         ad.setDescription(description);
         ad.setPrice(price);
         ad.setQuantity(quantity);
-        ad.setWanted(wanted);
+        //ad.setWanted(wanted);
+        ad.setFreeShipping(freeShipping);
+        ad.setPickUp(pickUp);
 
         if (latitude != null && longitude != null) {
             Point newLocation = GeoUtils.createPoint(latitude, longitude);
@@ -215,13 +222,13 @@ public class AdDto extends DtoBase {
         this.inBookmars = inBookmars;
     }
 
-    public boolean isWanted() {
-        return wanted;
-    }
-
-    public void setWanted(boolean wanted) {
-        this.wanted = wanted;
-    }
+//    public boolean isWanted() {
+//        return wanted;
+//    }
+//
+//    public void setWanted(boolean wanted) {
+//        this.wanted = wanted;
+//    }
 
     public boolean isExpired() {
         return expired;
@@ -311,14 +318,6 @@ public class AdDto extends DtoBase {
         this.requested = requested;
     }
 
-//    public boolean isFavorited() {
-//        return favorited;
-//    }
-//
-//    public void setFavorited(boolean favorited) {
-//        this.favorited = favorited;
-//    }
-
     public boolean isSent() {
         return sent;
     }
@@ -333,5 +332,21 @@ public class AdDto extends DtoBase {
 
     public void setReceived(boolean received) {
         this.received = received;
+    }
+
+    public Boolean getFreeShipping() {
+        return freeShipping;
+    }
+
+    public void setFreeShipping(Boolean freeShipping) {
+        this.freeShipping = freeShipping;
+    }
+
+    public Boolean getPickUp() {
+        return pickUp;
+    }
+
+    public void setPickUp(Boolean pickUp) {
+        this.pickUp = pickUp;
     }
 }
