@@ -45,11 +45,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
         // Check for existing users
         if (userDao.findUserByName(user.getName()) != null) {
-            throw new UserAlreadyExistsException(UserField.NAME,
-                    "User with the same name already exists!");
+            throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
         } else if (userDao.findUserByEmail(user.getEmail()) != null) {
-            throw new UserAlreadyExistsException(UserField.EMAIL,
-                    "User with the specified email already exists!");
+            throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
         } else if ( invitationCode == null ) {
             throw new InvalidInvitationException("Invitation code cannot be empty!");
         }
@@ -79,31 +77,23 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public boolean updateUser(UserDto userDto) throws UserAlreadyExistsException {
-        try {
-            User user = getCurrentUser();
+        User user = getCurrentUser();
+        User userWithTheSameName = userDao.findUserByName(userDto.getName());
 
-            User userWithTheSameName = userDao.findUserByName(userDto.getName());
-
-            if (userWithTheSameName != null && !userWithTheSameName.getId().equals(user.getId())) {
-                throw new UserAlreadyExistsException(UserField.NAME,
-                        "User with the same name already exists!");
-            }
-
-            User userWithTheSameEmail = userDao.findUserByEmail(userDto.getEmail());
-
-            if (userWithTheSameEmail != null && !userWithTheSameEmail.getId().equals(user.getId())) {
-                throw new UserAlreadyExistsException(UserField.EMAIL,
-                        "User with the same email already exists!");
-            }
-            
-            userDto.update(user, imageDao);
-            userDataDao.update(user.getUserData());
-            
-            return user.isComplete();
-        } catch (NumberFormatException e) {
-            logger.error("Update user failed", e);
-            throw new RuntimeException(e);
+        if (userWithTheSameName != null && !userWithTheSameName.getId().equals(user.getId())) {
+            throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
         }
+
+        User userWithTheSameEmail = userDao.findUserByEmail(userDto.getEmail());
+
+        if (userWithTheSameEmail != null && !userWithTheSameEmail.getId().equals(user.getId())) {
+            throw new UserAlreadyExistsException(UserField.EMAIL, "User with the same email already exists!");
+        }
+
+        userDto.update(user, imageDao);
+        userDataDao.update(user.getUserData());
+
+        return user.isComplete();
     }
     
     
@@ -129,12 +119,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public UserDto getUserByName(String name) throws UserNotFoundException {
-        User user = userDao.findUserByName(name);
-
-        if (user == null) {
-            throw new UserNotFoundException("User with name '" + name + "' not found!");
-        }
-
+        User user = validateUser(name);
         User currentUser = getCurrentUser();
         
         UserDto userDto = new UserDto(user);
@@ -219,10 +204,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public List<UserDto> getFollowers(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
-        User user = userDao.get(userId);
-        if ( user == null ) {
-            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
-        }
+        User user = validateUser(userId);
         
         if ( user.getFollowers() != null ) {
             for ( User follower : user.getFollowers() ) {
@@ -237,10 +219,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public List<UserDto> getFollowings(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
-        User user = userDao.get(userId);
-        if ( user == null ) {
-            throw new UserNotFoundException("Cannot find user (userId: " + userId + ") user.");
-        }
+        User user = validateUser(userId);
         
         if ( user.getFollowings() != null ) {
             for ( User following : user.getFollowings()) {
@@ -259,9 +238,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     public Set<String> getConnectedSocialNetworks() {
-        MultiValueMap<String, Connection<?>> allConnections = connectionRepository
-                .findAllConnections();
-
+        MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
         HashSet<String> result = new HashSet<String>();
 
         for (String network : allConnections.keySet()) {
@@ -271,7 +248,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
                 result.add(network);
             }
         }
-
         return result;
     }
 

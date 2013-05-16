@@ -4,13 +4,12 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.RatingDto;
 import com.venefica.service.dto.RequestDto;
-import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.AdValidationException;
 import com.venefica.service.fault.AlreadyRatedException;
 import com.venefica.service.fault.AlreadyRequestedException;
-import com.venefica.service.fault.AlreadyReviewedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.ImageNotFoundException;
@@ -257,6 +256,7 @@ public interface AdService {
     //***********************
     //* ad lifecycle change *
     //***********************
+    
     //
     // Note: these are not complete as the delete is also a lifecycle change, so
     // needs a little bit of rethinking
@@ -307,7 +307,7 @@ public interface AdService {
      */
     @WebMethod(operationName = "RequestAd")
     @WebResult(name = "requestId")
-    Long requestAd(@WebParam(name = "adId") Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException;
+    Long requestAd(@WebParam(name = "adId") Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException;
     
     /**
      * Cancels (removes) an existing request. Only the receiver
@@ -319,7 +319,7 @@ public interface AdService {
      * does not match
      */
     @WebMethod(operationName = "CancelRequest")
-    void cancelRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException;
+    void cancelRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException;
     
     /**
      * Selects the given request as the choosed one (as the 'winner').
@@ -331,7 +331,7 @@ public interface AdService {
      * @throws RequestNotFoundException if the given request could not be found
      */
     @WebMethod(operationName = "SelectRequest")
-    void selectRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException;
+    void selectRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException;
     
     /**
      * Returns available requests for the given ad.
@@ -361,12 +361,12 @@ public interface AdService {
     /**
      * 
      * @param userId
-     * @return list of requests that were selected, but no review was given
+     * @return list of requests that were selected, but no rating was given
      * @throws UserNotFoundException 
      */
-    @WebMethod(operationName = "GetRequestsForUserWithoutReview")
+    @WebMethod(operationName = "GetRequestsForUserWithoutRating")
     @WebResult(name = "request")
-    List<RequestDto> getRequestsForUserWithoutReview(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    List<RequestDto> getRequestsForUserWithoutRating(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
     
     /**
      * Marks by the giver (seller or owner) the status of the request.
@@ -444,40 +444,6 @@ public interface AdService {
     
     
     
-//    //***************
-//    //* ad favorite *
-//    //***************
-//    
-//    /**
-//     * Creates a new entry for the given ad into the current (logged) users
-//     * favorites.
-//     * 
-//     * @param adId the id of the ad
-//     * @throws AdNotFoundException if the ad with the specified id not found
-//     */
-//    @WebMethod(operationName = "MarkAsFavorite")
-//    void markAsFavorite(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
-//    
-//    /**
-//     * Removes an existing entry from the users favorites.
-//     * 
-//     * @param adId the ad id
-//     * @throws AdNotFoundException if the ad with the specified id not found
-//     */
-//    @WebMethod(operationName = "UnmarkAsFavorite")
-//    void unmarkAsFavorite(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
-//    
-//    /**
-//     * 
-//     * @return the users favorite ads
-//     */
-//    @WebMethod(operationName = "GetFavorites")
-//    @WebResult(name = "ad")
-//    List<AdDto> getFavorites(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
-    
-    
-    
-    
     //****************
     //* ad spam mark *
     //****************
@@ -502,44 +468,6 @@ public interface AdService {
 
     
     
-    //***********
-    //* reviews *
-    //***********
-    
-    /**
-     * Creates a new review.
-     * 
-     * @param reviewDto
-     * @throws UserNotFoundException 
-     */
-    @WebMethod(operationName = "AddReview")
-    void addReview(@WebParam(name = "review") @NotNull ReviewDto reviewDto)
-            throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyReviewedException;
-    
-    /**
-     * Returns a list of received reviews for the given user.
-     * 
-     * @param userId
-     * @return list of reviews
-     * @throws UserNotFoundException if the given user could not be found
-     */
-    @WebMethod(operationName = "GetReceivedReviews")
-    @WebResult(name = "review")
-    List<ReviewDto> getReceivedReviews(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
-    
-    /**
-     * Returns a list of reviews that were created by the given user.
-     * 
-     * @param userId
-     * @return list of reviews
-     * @throws UserNotFoundException if the given user could not be found
-     */
-    @WebMethod(operationName = "GetSentReviews")
-    @WebResult(name = "review")
-    List<ReviewDto> getSentReviews(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
-    
-    
-    
     //*************
     //* ad rating *
     //*************
@@ -547,8 +475,7 @@ public interface AdService {
     /**
      * Add a rating to the ad.
      * 
-     * @param adId id of the ad
-     * @param ratingValue value of rating
+     * @param ratingDto
      * @return new calculated rating
      * @throws AdNotFoundException if the ad with the specified id not found
      * @throws InvalidRateOprationException if user tries to rate his own ad
@@ -557,8 +484,28 @@ public interface AdService {
      */
     @WebMethod(operationName = "RateAd")
     @WebResult(name = "rating")
-    float rateAd(
-            @WebParam(name = "adId") @NotNull Long adId,
-            @WebParam(name = "ratingValue") int ratingValue)
-            throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException;
+    float rateAd(@WebParam(name = "rating") @NotNull RatingDto ratingDto)
+            throws AdNotFoundException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException;
+    
+    /**
+     * Returns a list of received ratings for the given user.
+     * 
+     * @param userId
+     * @return list of ratings
+     * @throws UserNotFoundException if the given user could not be found
+     */
+    @WebMethod(operationName = "GetReceivedRatings")
+    @WebResult(name = "rating")
+    List<RatingDto> getReceivedRatings(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    
+    /**
+     * Returns a list of ratings that were created by the given user.
+     * 
+     * @param userId
+     * @return list of ratings
+     * @throws UserNotFoundException if the given user could not be found
+     */
+    @WebMethod(operationName = "GetSentRatings")
+    @WebResult(name = "rating")
+    List<RatingDto> getSentRatings(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
 }
