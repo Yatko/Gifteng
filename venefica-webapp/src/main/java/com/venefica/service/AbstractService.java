@@ -5,8 +5,12 @@
 package com.venefica.service;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
+import com.venefica.dao.AdDao;
 import com.venefica.dao.UserDao;
+import com.venefica.model.Ad;
 import com.venefica.model.User;
+import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.UserNotFoundException;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +37,8 @@ public abstract class AbstractService {
     @Resource
     private WebServiceContext jaxwsContext;
     
+    @Inject
+    protected AdDao adDao;
     @Inject
     protected UserDao userDao;
     
@@ -88,6 +94,46 @@ public abstract class AbstractService {
 
         logger.info("IP ADDRESS: " + ipAddress);
         return ipAddress; 
+    }
+    
+    
+    
+    // common validators
+    
+    protected User validateUser(Long userId) throws UserNotFoundException {
+        if (userId == null) {
+            throw new NullPointerException("userId is null!");
+        }
+        
+        User user = userDao.get(userId);
+        if ( user == null ) {
+            throw new UserNotFoundException("User with id '" + userId + "' not found");
+        }
+        return user;
+    }
+    
+    protected User validateUser(String name) throws UserNotFoundException {
+        if (name == null) {
+            throw new NullPointerException("name is null!");
+        }
+        
+        User user = userDao.findUserByName(name);
+        if ( user == null ) {
+            throw new UserNotFoundException("User with name '" + name + "' not found");
+        }
+        return user;
+    }
+    
+    protected Ad validateAd(Long adId) throws AdNotFoundException {
+        if (adId == null) {
+            throw new NullPointerException("adId is null!");
+        }
+        
+        Ad ad = adDao.get(adId);
+        if (ad == null) {
+            throw new AdNotFoundException(adId);
+        }
+        return ad;
     }
     
 }

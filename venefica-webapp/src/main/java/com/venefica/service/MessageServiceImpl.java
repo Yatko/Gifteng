@@ -1,6 +1,5 @@
 package com.venefica.service;
 
-import com.venefica.dao.AdDao;
 import com.venefica.dao.CommentDao;
 import com.venefica.dao.MessageDao;
 import com.venefica.model.Ad;
@@ -40,11 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MessageServiceImpl extends AbstractService implements MessageService {
 
     @Inject
-    private AdDao adDao;
-    
-    @Inject
     private CommentDao commentDao;
-    
     @Inject
     private MessageDao messageDao;
     
@@ -54,27 +49,10 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException,
-            CommentValidationException {
-        if (adId == null) {
-            throw new NullPointerException("adId is null!");
-        }
-        if (commentDto == null) {
-            throw new NullPointerException("commentDto is null!");
-        }
-
-        Ad ad = adDao.get(adId);
-
-        if (ad == null) {
-            throw new AdNotFoundException(adId);
-        }
-
-        // ++ TODO: create comment validator
-        if (commentDto.getText() == null) {
-            throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
-        }
-        // ++
-
+    public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException, CommentValidationException {
+        validateCommentDto(commentDto);
+        Ad ad = validateAd(adId);
+        
         Comment comment = new Comment(ad, getCurrentUser(), commentDto.getText());
         commentDao.save(comment);
 
@@ -85,24 +63,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public void updateComment(CommentDto commentDto) throws CommentNotFoundException,
-            CommentValidationException {
-        if (commentDto == null) {
-            throw new NullPointerException("commentDto is null!");
-        }
-
-        Long commentId = commentDto.getId();
-        Comment comment = commentDao.get(commentId);
-
-        if (comment == null) {
-            throw new CommentNotFoundException(commentId);
-        }
-
-        // ++ TODO: create comment validator
-        if (commentDto.getText() == null) {
-            throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
-        }
-        // ++
+    public void updateComment(CommentDto commentDto) throws CommentNotFoundException, CommentValidationException {
+        validateCommentDto(commentDto);
+        Comment comment = validateComment(commentDto.getId());
 
         // WARNING! This update must be performed within an active transaction!
         commentDto.update(comment);
@@ -111,18 +74,8 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments)
-            throws AdNotFoundException {
-        if (adId == null) {
-            throw new NullPointerException("adId is null");
-        }
-
-        Ad ad = adDao.get(adId);
-
-        if (ad == null) {
-            throw new AdNotFoundException(adId);
-        }
-
+    public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments) throws AdNotFoundException {
+        Ad ad = validateAd(adId);
         LinkedList<CommentDto> result = new LinkedList<CommentDto>();
 
         User currentUser = getCurrentUser();
@@ -144,28 +97,13 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException,
-            MessageValidationException {
-        if (messageDto == null) {
-            throw new NullPointerException("message is null!");
-        }
-
-        User to = userDao.findUserByName(messageDto.getToName());
-
-        if (to == null) {
-            throw new UserNotFoundException("User with name = '" + messageDto.getToName()
-                    + "' not found!");
-        }
-
-        if (messageDto.getText() == null) {
-            throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
-        }
-
+    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, MessageValidationException {
+        validateMessageDto(messageDto);
+        User to = validateUser(messageDto.getToName());
         User currentUser = getCurrentUser();
 
         if (currentUser.getName().equals(to.getName())) {
-            throw new MessageValidationException(MessageField.TO,
-                    "You can't send messages to yourself!");
+            throw new MessageValidationException(MessageField.TO, "You can't send messages to yourself!");
         }
 
         Message message = new Message(messageDto.getText());
@@ -177,27 +115,13 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public void updateMessage(MessageDto messageDto) throws MessageNotFoundException,
-            AuthorizationException, MessageValidationException {
-
-        if (messageDto == null) {
-            throw new NullPointerException("messageDto is null!");
-        }
-
-        Message message = messageDao.get(messageDto.getId());
-
-        if (message == null) {
-            throw new MessageNotFoundException(messageDto.getId());
-        }
-
+    public void updateMessage(MessageDto messageDto) throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+        validateMessageDto(messageDto);
+        Message message = validateMessage(messageDto.getId());
         User currentUser = getCurrentUser();
 
         if (!message.getFrom().equals(currentUser)) {
             throw new AuthorizationException("Only owner can update the message!");
-        }
-
-        if (messageDto.getText() == null) {
-            throw new MessageValidationException(MessageField.TEXT, "Empty messages are not allowed!");
         }
 
         // Only text can be updated!
@@ -237,12 +161,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Override
     @Transactional
     public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
-        Message message = messageDao.get(messageId);
-
-        if (message == null) {
-            throw new MessageNotFoundException(messageId);
-        }
-
+        Message message = validateMessage(messageId);
         User currentUser = getCurrentUser();
 
         if (message.getTo().equals(currentUser)) {
@@ -250,21 +169,14 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         } else if (message.getFrom().equals(currentUser)) {
             message.setHiddenBySender(true);
         } else {
-            throw new AuthorizationException(
-                    "You are neither recipient nor sender to hide the message!");
+            throw new AuthorizationException("You are neither recipient nor sender to hide the message!");
         }
     }
     
     @Override
     @Transactional
-    public void deleteMessage(Long messageId) throws MessageNotFoundException,
-            AuthorizationException {
-        Message message = messageDao.get(messageId);
-
-        if (message == null) {
-            throw new MessageNotFoundException(messageId);
-        }
-
+    public void deleteMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
+        Message message = validateMessage(messageId);
         User currentUser = getCurrentUser();
 
         if (!message.getTo().equals(currentUser) && !message.getFrom().equals(currentUser)) {
@@ -298,6 +210,48 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
         if (vkontakte != null) {
             vkontakte.wallOperations().post(message);
+        }
+    }
+    
+    // internal helpers
+    
+    private Message validateMessage(Long messageId) throws MessageNotFoundException {
+        Message message = messageDao.get(messageId);
+        if (message == null) {
+            throw new MessageNotFoundException(messageId);
+        }
+        return message;
+    }
+    
+    private Comment validateComment(Long commentId) throws CommentNotFoundException {
+        Comment comment = commentDao.get(commentId);
+        if (comment == null) {
+            throw new CommentNotFoundException(commentId);
+        }
+        return comment;
+    }
+    
+    
+    
+    private void validateCommentDto(CommentDto commentDto) throws CommentValidationException {
+        if (commentDto == null) {
+            throw new NullPointerException("commentDto is null!");
+        }
+        
+        // ++ TODO: create comment validator
+        if (commentDto.getText() == null) {
+            throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
+        }
+        // ++
+    }
+    
+    private void validateMessageDto(MessageDto messageDto) throws MessageValidationException {
+        if (messageDto == null) {
+            throw new NullPointerException("message is null!");
+        }
+
+        if (messageDto.getText() == null) {
+            throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
         }
     }
 }

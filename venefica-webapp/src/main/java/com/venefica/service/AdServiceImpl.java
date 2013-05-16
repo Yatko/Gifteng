@@ -1,16 +1,17 @@
 package com.venefica.service;
 
-import com.venefica.dao.AdDao;
+import com.venefica.config.Constants;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.CommentDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.RequestDao;
-import com.venefica.dao.ReviewDao;
 import com.venefica.dao.SpamMarkDao;
 import com.venefica.dao.ViewerDao;
 import com.venefica.model.Ad;
+import com.venefica.model.AdStatus;
+import com.venefica.model.AdType;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Category;
 import com.venefica.model.Comment;
@@ -18,7 +19,6 @@ import com.venefica.model.Image;
 import com.venefica.model.Rating;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
-import com.venefica.model.Review;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.model.Viewer;
@@ -26,15 +26,14 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.RatingDto;
 import com.venefica.service.dto.RequestDto;
-import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.builder.AdDtoBuilder;
 import com.venefica.service.fault.AdField;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.AdValidationException;
 import com.venefica.service.fault.AlreadyRatedException;
 import com.venefica.service.fault.AlreadyRequestedException;
-import com.venefica.service.fault.AlreadyReviewedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.ImageField;
@@ -60,15 +59,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AdService")
 public class AdServiceImpl extends AbstractService implements AdService {
 
-    private static final int PROLONGATION_PERIOD_DAYS = 31;
-    private static final int EXPIRATION_PERIOD_DAYS = 31 * 2;
-    private static final int MAX_SPAM_MARKS = 3;
-    private static final int MAX_REQUESTS = 3;
-    
     @Inject
     private CategoryDao categoryDao;
-    @Inject
-    private AdDao adDao;
     @Inject
     private ImageDao imageDao;
     @Inject
@@ -83,61 +75,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private ViewerDao viewerDao;
     @Inject
     private RequestDao requestDao;
-    @Inject
-    protected ReviewDao reviewDao;
-
-//    /**
-//     * Creates basic categories
-//     */
-//    @javax.annotation.PostConstruct
-//    @Transactional
-//    public void init() {
-//        if (categoryDao.hasCategories()) {
-//            return;
-//        }
-//
-//        // TODO: Clean up the CODE!
-//        String[] categoryNames = new String[]{
-//            "local places",
-//            "buy/sell/trade",
-//            "automotive",
-//            "musician",
-//            "rentals",
-//            "real estate",
-//            "jobs"
-//        };
-//
-//        for (String categoryName : categoryNames) {
-//            Category category = categoryDao.findByName(categoryName);
-//
-//            if (category != null) {
-//                continue;
-//            }
-//
-//            category = new Category(null, categoryName);
-//            categoryDao.save(category);
-//        }
-//
-//        // create local places subcategories
-//        Category localPlacesCategory = categoryDao.findByName("local places");
-//        String[] localPlacesSubcategories = new String[]{
-//            "events",
-//            "bars/clubs",
-//            "restaurants",
-//            "salons/nails/spas"
-//        };
-//
-//        for (String categoryName : localPlacesSubcategories) {
-//            Category category = categoryDao.findByName(categoryName);
-//
-//            if (category != null) {
-//                continue;
-//            }
-//
-//            category = new Category(localPlacesCategory, categoryName);
-//            categoryDao.save(category);
-//        }
-//    }
 
     
     
@@ -168,6 +105,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User currentUser = getCurrentUser();
 
         Ad ad = new Ad();
+        ad.setStatus(AdStatus.ACTIVE);
+        ad.setType(currentUser.isBusinessAcc() ? AdType.BUSINESS : AdType.MEMBER);
         ad.setSent(false);
         ad.setReceived(false);
         
@@ -215,7 +154,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if (adDto.getExpiresAt() != null) {
             ad.setExpiresAt(adDto.getExpiresAt());
         } else {
-            Date expiresAt = DateUtils.addDays(new Date(), EXPIRATION_PERIOD_DAYS);
+            Date expiresAt = DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
             ad.setExpiresAt(expiresAt);
         }
 
@@ -433,7 +372,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .build();
             adDto.setInBookmars(inBookmarks(bokmarkedAds, ad));
             adDto.setRequested(requested(currentUser, ad));
-//            adDto.setFavorited(favorited(currentUser, ad));
             
             result.add(adDto);
         }
@@ -510,7 +448,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         adDto.setInBookmars(inBookmarks(currentUser, ad));
         adDto.setRequested(requested(currentUser, ad));
-//        adDto.setFavorited(favorited(currentUser, ad));
         
         return adDto;
     }
@@ -532,12 +469,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
 
         if (ad.isDeleted() /* || ad.isSold() || ad.isSpam() */) {
-            throw new InvalidAdStateException("Ad can't be relisted!");
+            throw new InvalidAdStateException("Ad can't be relisted as is deleted!");
         }
-
-        if (ad.isExpired()) {
-            //relist possible if ad is expired
-            ad.prolong(PROLONGATION_PERIOD_DAYS);
+        
+        if ( ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
+            //only EXPIRED or SELECTED status ads can be relisted
+            if ( ad.canProlong() ) {
+                //relist ad
+                ad.prolong(Constants.AD_PROLONGATION_PERIOD_DAYS);
+                ad.setStatus(AdStatus.ACTIVE);
+            } else {
+                throw new InvalidAdStateException("Ad can't be relisted anymore!");
+            }
+        } else {
+            throw new InvalidAdStateException("Ad can't be relisted as its state (" + ad.getStatus() + ") is not as expected!");
         }
     }
 
@@ -566,10 +511,17 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public Long requestAd(Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException {
+    public Long requestAd(Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException {
         Ad ad = validateAd(adId);
         User user = getCurrentUser();
         Long userId = getCurrentUserId();
+        
+        if (ad.getStatus() == AdStatus.ACTIVE) {
+            //continue
+        } else {
+            //only ACTIVE status ads can be requested
+            throw new InvalidAdStateException("Ad can't be requested as its state (" + ad.getStatus() + ") is not as expected!");
+        }
         
         Request request = requestDao.get(userId, adId);
         if ( request != null ) {
@@ -577,56 +529,62 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         if ( ad.getCreator().equals(user) ) {
-            throw new InvalidRequestException("Cannot request owned.");
+            throw new InvalidRequestException("Cannot request owned ads.");
         }
-        if ( ad.isSelected() ) {
-            throw new InvalidRequestException("Cannot request after selected.");
-        }
-        if ( ad.getRequests() != null && ad.getRequests().size() - 1 > MAX_REQUESTS ) {
+        if ( ad.getRequests() != null && ad.getRequests().size() - 1 > Constants.REQUEST_MAX_ALLOWED ) {
             throw new InvalidRequestException("Max request limit reached.");
+        }
+        if ( ad.getQuantity() <= 0 ) {
+            throw new InvalidRequestException("No more available.");
         }
         
         request = new Request();
         request.setAd(ad);
         request.setUser(user);
         request.setStatus(RequestStatus.PENDING);
-        return requestDao.save(request);
+        Long requestId = requestDao.save(request);
+        
+        
+        if ( ad.getType() == AdType.BUSINESS ) {
+            //auto select request for business ads
+            selectRequest(request, ad.getCreator());
+        }
+        
+        return requestId;
     }
     
     @Override
     @Transactional
-    public void cancelRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
+    public void cancelRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException {
         User user = getCurrentUser();
         Request request = validateRequest(requestId);
+        Ad ad = request.getAd();
         
-        if ( !request.getUser().equals(user) ) {
+        if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
+            //continue
+        } else {
+            throw new InvalidAdStateException("Ad can't be requested as its state (" + ad.getStatus() + ") is not as expected!");
+        }
+        
+        if ( ad.getCreator().equals(user) || request.getUser().equals(user) ) {
+            //continue
+        } else {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
         
+        request.unmarkAsSelected();
         request.markAsDeleted();
         
-        Ad ad = request.getAd();
-        if ( ad.getSelectedRequest() != null && ad.getSelectedRequest().equals(request) ) {
-            ad.unmarkAsSelected();
-        }
+        ad.unselect(); //incrememt available quantity
     }
     
     @Override
     @Transactional
-    public void selectRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
+    public void selectRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException {
         Request request = validateRequest(requestId);
         User user = getCurrentUser();
         
-        request.setStatus(RequestStatus.ACCEPTED);
-        
-        Ad ad = request.getAd();
-        
-        if ( !ad.getCreator().equals(user) ) {
-            throw new InvalidRequestException("Only owner can select a requestor!");
-        }
-        
-        ad.markAsSelected(request);
-        adDao.save(ad);
+        selectRequest(request, user);
     }
     
     @Override
@@ -670,15 +628,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<RequestDto> getRequestsForUserWithoutReview(Long userId) throws UserNotFoundException {
+    public List<RequestDto> getRequestsForUserWithoutRating(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
         List<Request> requests = requestDao.getForUser(userId);
         List<RequestDto> result = new LinkedList<RequestDto>();
         
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
-                if ( request.getStatus() == RequestStatus.ACCEPTED && request.getReview() == null ) {
-                    result.add(new RequestDto(request));
+                if ( request.getStatus() == RequestStatus.ACCEPTED ) {
+                    Long fromUserId = request.getUser().getId();
+                    Long adId = request.getAd().getId();
+                    Rating rating = ratingDao.get(fromUserId, adId);
+                    if ( rating == null ) {
+                        result.add(new RequestDto(request));
+                    }
                 }
             }
         }
@@ -698,6 +661,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         ad.setSent(true);
         ad.setSentAt(new Date());
+        ad.setStatus(AdStatus.SENT);
     }
     
     @Override
@@ -713,6 +677,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         ad.setReceived(true);
         ad.setReceivedAt(new Date());
+        ad.setStatus(AdStatus.RECEIVED);
     }
     
     
@@ -783,42 +748,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     
     
-//    //***************
-//    //* ad favorite *
-//    //***************
-//    
-//    @Override
-//    @Transactional
-//    public void markAsFavorite(Long adId) throws AdNotFoundException {
-//        Ad ad = validateAd(adId);
-//        User currentUser = getCurrentUser();
-//        currentUser.addFavorite(ad);
-//    }
-//    
-//    @Override
-//    @Transactional
-//    public void unmarkAsFavorite(Long adId) throws AdNotFoundException {
-//        Ad ad = validateAd(adId);
-//        User currentUser = getCurrentUser();
-//        currentUser.removeFavorite(ad);
-//    }
-//    
-//    @Override
-//    @Transactional
-//    public List<AdDto> getFavorites(Long userId) throws UserNotFoundException {
-//        User user = validateUser(userId);
-//        List<AdDto> result = new LinkedList<AdDto>();
-//        if ( user.getFavorites() != null ) {
-//            for ( Ad ad : user.getFavorites() ) {
-//                AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(user).build();
-//                result.add(adDto);
-//            }
-//        }
-//        return result;
-//    }
-    
-    
-    
     //****************
     //* ad spam mark *
     //****************
@@ -836,7 +765,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
         }
 
-        if (ad.getSpamMarks().size() + 1 >= MAX_SPAM_MARKS) {
+        if (ad.getSpamMarks().size() + 1 >= Constants.SPAMMARK_MAX_ALLOWED) {
             ad.markAsSpam();
             ad.markAsDeleted();
         }
@@ -863,7 +792,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             ad.getSpamMarks().remove(markToRemove);
 
             // restore ad
-            if (ad.getSpamMarks().size() < MAX_SPAM_MARKS) {
+            if (ad.getSpamMarks().size() < Constants.SPAMMARK_MAX_ALLOWED) {
                 ad.unmarkAsDeleted();
                 ad.unmarkAsSpam();
             }
@@ -874,103 +803,63 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     
     
-    //***********
-    //* reviews *
-    //***********
-
-    @Override
-    @Transactional
-    public void addReview(ReviewDto reviewDto) throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyReviewedException {
-        User currentUser = getCurrentUser();
-        Ad ad = validateAd(reviewDto.getAdId());
-        Long userId = currentUser.getId();
-        
-        Request request = requestDao.get(userId, ad.getId());
-        if ( request == null ) {
-            throw new RequestNotFoundException("There is no request for user (userId: " + userId + ")");
-        }
-        
-        if ( !ad.isSelected() ) {
-            throw new InvalidRequestException("There is no selected request for this ad (id: " + ad.getId() + ").");
-        }
-        if ( !request.equals(ad.getSelectedRequest()) ) {
-            throw new InvalidRequestException("The users request is not selected.");
-        }
-        
-        Long requestId = request.getId();
-        Review review = reviewDao.getByRequest(requestId);
-        if ( review != null ) {
-            throw new AlreadyReviewedException("Request (id: " + requestId + ") already reviewed.");
-        }
-        
-        review = new Review();
-        review.setPositive(reviewDto.getPositive());
-        review.setText(reviewDto.getText());
-        review.setRequest(request);
-        reviewDao.save(review);
-    }
-    
-    @Override
-    @Transactional
-    public List<ReviewDto> getReceivedReviews(Long userId) throws UserNotFoundException {
-        User user = validateUser(userId);
-        List<Review> reviews = reviewDao.getReceivedForUser(user.getId());
-        List<ReviewDto> result = new LinkedList<ReviewDto>();
-        
-        if ( reviews != null && !reviews.isEmpty() ) {
-            for ( Review review : reviews ) {
-                result.add(new ReviewDto(review));
-            }
-        }
-        return result;
-    }
-    
-    @Override
-    @Transactional
-    public List<ReviewDto> getSentReviews(Long userId) throws UserNotFoundException {
-        User user = validateUser(userId);
-        List<Review> reviews = reviewDao.getSentByUser(user.getId());
-        List<ReviewDto> result = new LinkedList<ReviewDto>();
-        
-        if ( reviews != null && !reviews.isEmpty() ) {
-            for ( Review review : reviews ) {
-                result.add(new ReviewDto(review));
-            }
-        }
-        return result;
-    }
-    
     //*************
     //* ad rating *
     //*************
     
     @Override
     @Transactional
-    public float rateAd(Long adId, int ratingValue) throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException {
-        Ad ad = validateAd(adId);
-        User currentUser = getCurrentUser();
+    public float rateAd(RatingDto ratingDto) throws AdNotFoundException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException {
+        Ad ad = validateAd(ratingDto.getAdId());
+        User from = getCurrentUser();
+        User to = validateUser(ratingDto.getToUserId());
+        String text = ratingDto.getText();
+        int ratingValue = ratingDto.getValue();
         
-        if (ad.getCreator().equals(currentUser)) {
-            throw new InvalidRateOperationException("You can't rate your own ads!");
+        if ( ad.getStatus() == AdStatus.SENT || ad.getStatus() == AdStatus.RECEIVED ) {
+            //continue
+        } else {
+            throw new InvalidAdStateException("Ad can't be selected as its state (" + ad.getStatus() + ") is not as expected!");
         }
-
+        
         if (ratingValue != -1 && ratingValue != 1) {
             throw new InvalidRateOperationException("Only '1' or '-1' can be used as rating values!");
         }
 
         for (Rating r : ad.getRatings()) {
-            if (r.getUser().equals(currentUser)) {
+            if (r.getFrom().equals(from)) {
                 throw new AlreadyRatedException("You've already rated this ad!");
             }
         }
+        
+        if (ad.getCreator().equals(from) || ad.getCreator().equals(to)) {
+            Long adId = ad.getId();
+            Long userId;
+            if (ad.getCreator().equals(to)) {
+                userId = from.getId();
+            } else {
+                userId = to.getId();
+            }
+            
+            Request request = requestDao.get(userId, adId);
+            if ( request == null ) {
+                throw new InvalidRateOperationException("There is no request for user (userId: " + userId + ") on this ad (adId: " + adId + ")");
+            }
+            if ( request.getStatus() != RequestStatus.ACCEPTED ) {
+                throw new InvalidRateOperationException("The request is not selected on this ad (adId: " + adId + ")");
+            }
+        } else {
+            throw new InvalidRateOperationException("Invalid user to rate.");
+        }
+        
 
-        Rating rating = new Rating(ad, currentUser, ratingValue);
+        Rating rating = new Rating(ad, from, to, text, ratingValue);
         ratingDao.save(rating);
+        
         ad.getRatings().add(rating);
 
-        float totalRating = 0.0f;
-
         // recalculate ad rating
+        float totalRating = 0.0f;
         for (Rating r : ad.getRatings()) {
             totalRating += r.getValue();
         }
@@ -978,22 +867,40 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.setRating(totalRating);
         return totalRating;
     }
+    
+    @Override
+    @Transactional
+    public List<RatingDto> getReceivedRatings(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Rating> ratings = ratingDao.getReceivedForUser(user.getId());
+        List<RatingDto> result = new LinkedList<RatingDto>();
+        
+        if ( ratings != null && !ratings.isEmpty() ) {
+            for ( Rating rating : ratings ) {
+                result.add(new RatingDto(rating));
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    @Transactional
+    public List<RatingDto> getSentRatings(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Rating> ratings = ratingDao.getSentByUser(user.getId());
+        List<RatingDto> result = new LinkedList<RatingDto>();
+        
+        if ( ratings != null && !ratings.isEmpty() ) {
+            for ( Rating rating : ratings ) {
+                result.add(new RatingDto(rating));
+            }
+        }
+        return result;
+    }
 
     
     
     // internal helpers
-    
-    private Ad validateAd(Long adId) throws AdNotFoundException {
-        if (adId == null) {
-            throw new NullPointerException("adId is null!");
-        }
-        
-        Ad ad = adDao.get(adId);
-        if (ad == null) {
-            throw new AdNotFoundException(adId);
-        }
-        return ad;
-    }
     
     private Request validateRequest(Long requestId) throws RequestNotFoundException {
         if (requestId == null) {
@@ -1005,18 +912,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new RequestNotFoundException(requestId);
         }
         return request;
-    }
-    
-    private User validateUser(Long userId) throws UserNotFoundException {
-        if (userId == null) {
-            throw new NullPointerException("userId is null!");
-        }
-        
-        User user = userDao.get(userId);
-        if ( user == null ) {
-            throw new UserNotFoundException("User with id '" + userId + "' not found");
-        }
-        return user;
     }
     
     private Image validateImage(Long imageId) throws ImageNotFoundException {
@@ -1089,14 +984,29 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return false;
     }
     
-//    private boolean favorited(User user, Ad ad) {
-//        if ( user.getFavorites() != null && !user.getFavorites().isEmpty() ) {
-//            for ( Ad favorit : user.getFavorites()) {
-//                if ( favorit.getId().equals(ad.getId()) ) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
+    
+    
+    private void selectRequest(Request request, User selector) throws InvalidRequestException, InvalidAdStateException {
+        Ad ad = request.getAd();
+        
+        if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED ) {
+            //continue
+        } else {
+            throw new InvalidAdStateException("Ad can't be selected as its state (" + ad.getStatus() + ") is not as expected!");
+        }
+        if ( !ad.getCreator().equals(selector) ) {
+            throw new InvalidRequestException("Only owner can select a requestor!");
+        }
+        if ( request.isSelected() ) {
+            throw new InvalidRequestException("Request already selected");
+        }
+        
+        request.setStatus(RequestStatus.ACCEPTED);
+        request.markAsSelected();
+        
+        ad.select(); //decrementing available quantity
+        ad.setStatus(AdStatus.SELECTED);
+        ad.setExpiresAt(new Date()); //reset the expiration date
+    }
+    
 }
