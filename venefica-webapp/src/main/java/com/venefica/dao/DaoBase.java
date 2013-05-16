@@ -43,13 +43,19 @@ public class DaoBase<D> {
         return sessionFactory.openSession();
     }
 
+    /**
+     * Creates a HQL query.
+     * 
+     * @param queryString
+     * @return 
+     */
     protected Query createQuery(String queryString) {
         return getCurrentSession().createQuery(queryString);
     }
 
-    protected Query createFilter(Object collection, String queryString) {
-        return getCurrentSession().createFilter(collection, queryString);
-    }
+//    protected Query createFilter(Object collection, String queryString) {
+//        return getCurrentSession().createFilter(collection, queryString);
+//    }
 
     protected D getEntity(Serializable id) {
         return (D) getCurrentSession().get(domainClass, id);
