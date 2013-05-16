@@ -116,7 +116,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
 
         adDto.setCreatedAt(model.getCreatedAt());
-        adDto.setWanted(model.isWanted());
+        //adDto.setWanted(model.isWanted());
         adDto.setExpired(model.isExpired());
         adDto.setExpiresAt(model.getExpiresAt());
         adDto.setNumAvailProlongations(model.getNumAvailProlongations());
@@ -146,9 +146,9 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if (includeCanRateFlag) {
             boolean canRate = true;
 
-            //cannot rate own ad
+            //cannot rate already rated ads
             for (Rating rating : model.getRatings()) {
-                if (rating.getUser().equals(currentUser)) {
+                if (rating.getFrom().equals(currentUser)) {
                     canRate = false;
                     break;
                 }
