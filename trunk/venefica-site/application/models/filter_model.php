@@ -15,7 +15,7 @@ class Filter_model extends CI_Model {
     var $minPrice; //float
     var $maxPrice; //float
     var $hasPhoto; //boolean
-    var $wanted; //boolean
+    var $type; //MEMBER, BUSINESS
     var $includeOwned; //boolean
     
     public function __construct() {

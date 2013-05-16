@@ -13,14 +13,14 @@ class Profile extends CI_Controller {
         $bookmarks = null;
         $followers = null;
         $followings = null;
-        $reviews = null;
+        $ratings = null;
         
         $givings_num = 0;
         $receivings_num = 0;
         $bookmarks_num = 0;
         $followers_num = 0;
         $followings_num = 0;
-        $reviews_num = 0;
+        $ratings_num = 0;
         
         if ( isLogged() ) {
             try {
@@ -57,7 +57,7 @@ class Profile extends CI_Controller {
             }
             
             try {
-                $reviews = $this->ad_service->getReceivedReviews($user->id);
+                $ratings = $this->ad_service->getReceivedRatings($user->id);
             } catch ( Exception $ex ) {
             }
         }
@@ -77,8 +77,8 @@ class Profile extends CI_Controller {
         if ( $followings ) {
             $followings_num = count($followings);
         }
-        if ( $reviews ) {
-            $reviews_num = count($reviews);
+        if ( $ratings ) {
+            $ratings_num = count($ratings);
         }
         
         $data = array();
@@ -89,14 +89,14 @@ class Profile extends CI_Controller {
         $data['givings'] = $givings;
         $data['followers'] = $followers;
         $data['followings'] = $followings;
-        $data['reviews'] = $reviews;
+        $data['ratings'] = $ratings;
         
         $data['givings_num'] = $givings_num;
         $data['receivings_num'] = $receivings_num;
         $data['bookmarks_num'] = $bookmarks_num;
         $data['followers_num'] = $followers_num;
         $data['followings_num'] = $followings_num;
-        $data['reviews_num'] = $reviews_num;
+        $data['ratings_num'] = $ratings_num;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/profile', $data);
@@ -132,7 +132,7 @@ class Profile extends CI_Controller {
             $this->load->model('image_model');
             $this->load->model('ad_model');
             $this->load->model('user_model');
-            $this->load->model('review_model');
+            $this->load->model('rating_model');
             
             $this->initialized = true;
         }

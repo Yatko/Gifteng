@@ -22,6 +22,7 @@ class User_model extends CI_Model {
     var $joinedAt; //long - timestamp
     var $inFollowers; //boolean
     var $inFollowings; //boolean
+    var $gender; //MALE, FEMALE
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing User_model");
@@ -41,6 +42,7 @@ class User_model extends CI_Model {
             $this->joinedAt = getField($obj, 'joinedAt');
             $this->inFollowers = getField($obj, 'inFollowers');
             $this->inFollowings = getField($obj, 'inFollowings');
+            $this->gender = getField($obj, 'gender');
             if ( hasField($obj, 'avatar') ) {
                 $this->avatar = Image_model::convertImage($obj->avatar);
             }

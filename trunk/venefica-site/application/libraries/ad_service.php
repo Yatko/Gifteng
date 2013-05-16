@@ -269,7 +269,7 @@ class Ad_service {
             }
             return $requests;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            log_message(ERROR, 'Requests of user (userId: ' . $userId . ') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -280,10 +280,10 @@ class Ad_service {
      * @return array of Request_model
      * @throws Exception
      */
-    public function getRequestsForUserWithoutReview($userId) {
+    public function getRequestsForUserWithoutRating($userId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getRequestsForUserWithoutReview(array("userId" => $userId));
+            $result = $adService->getRequestsForUserWithoutRating(array("userId" => $userId));
             
             $requests = array();
             if ( hasField($result, 'request') && $result->request ) {
@@ -291,7 +291,7 @@ class Ad_service {
             }
             return $requests;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            log_message(ERROR, 'Requests user without rating (userId: ' . $userId . ') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -353,21 +353,23 @@ class Ad_service {
         }
     }
     
-    //***********
-    //* reviews *
-    //***********
+    //*************
+    //* ad rating *
+    //*************
     
     /**
      * 
-     * @param Review_model $review
+     * @param Rating_model $rating
+     * @return float
      * @throws Exception
      */
-    public function addReview($review) {
+    public function rateAd($rating) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $adService->addReview(array("review" => $review));
+            $result = $adService->rateAd(array("rating" => $rating));
+            return $result->rating;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Add review failed! '.$ex->faultstring);
+            log_message(ERROR, 'Add rating failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -375,21 +377,21 @@ class Ad_service {
     /**
      * 
      * @param long $userId
-     * @return array of Review_model
+     * @return array of Rating_model
      * @throws Exception
      */
-    public function getReceivedReviews($userId) {
+    public function getReceivedRatings($userId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getReceivedReviews(array("userId" => $userId));
+            $result = $adService->getReceivedRatings(array("userId" => $userId));
             
-            $reviews = array();
-            if ( hasField($result, 'review') && $result->review ) {
-                $reviews = Review_model::convertReviews($result->review);
+            $ratings = array();
+            if ( hasField($result, 'rating') && $result->rating ) {
+                $ratings = Rating_model::convertRatings($result->rating);
             }
-            return $reviews;
+            return $ratings;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'User received reviews (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            log_message(ERROR, 'User received ratings (userId: ' . $userId . ') request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
@@ -397,25 +399,25 @@ class Ad_service {
     /**
      * 
      * @param long $userId
-     * @return array of Review_model
+     * @return array of Rating_model
      * @throws Exception
      */
-    public function getSentReviews($userId) {
+    public function getSentRatings($userId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getSentReviews(array("userId" => $userId));
+            $result = $adService->getSentRatings(array("userId" => $userId));
             
-            $reviews = array();
-            if ( hasField($result, 'review') && $result->review ) {
-                $reviews = Review_model::convertReviews($result->review);
+            $ratings = array();
+            if ( hasField($result, 'rating') && $result->rating ) {
+                $ratings = Rating_model::convertRatings($result->rating);
             }
-            return $reviews;
+            return $ratings;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'User sent reviews (userId: ' . $userId . ') request failed! '.$ex->faultstring);
+            log_message(ERROR, 'User sent ratings (userId: ' . $userId . ') request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
-    
+
     //**********************
     //* categories related *
     //**********************

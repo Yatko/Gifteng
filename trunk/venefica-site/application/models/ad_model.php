@@ -22,7 +22,6 @@ class Ad_model extends CI_Model {
     var $createdAt; //long - timestamp
     var $owner; //boolean
     var $inBookmars; //boolean
-    var $wanted; //boolean
     var $expired; //boolean
     var $sent; //boolean
     var $received; //boolean
@@ -34,6 +33,8 @@ class Ad_model extends CI_Model {
     var $canRate; //boolean
     var $creator; //User_model
     var $canMarkAsSpam; //boolean
+    var $freeShipping; //boolean
+    var $pickUp; //boolean
     var $comments; //array of Comment_model
     
     public function __construct($obj = null) {
@@ -52,7 +53,6 @@ class Ad_model extends CI_Model {
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
             $this->inBookmars = getField($obj, 'inBookmars');
-            $this->wanted = getField($obj, 'wanted');
             $this->expired = getField($obj, 'expired');
             $this->sent = getField($obj, 'sent');
             $this->received = getField($obj, 'received');
@@ -63,6 +63,8 @@ class Ad_model extends CI_Model {
             $this->rating = getField($obj, 'rating');
             $this->canRate = getField($obj, 'canRate');
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
+            $this->freeShipping = getField($obj, 'freeShipping');
+            $this->pickUp = getField($obj, 'pickUp');
             if ( hasField($obj, 'creator') ) {
                 $this->creator = User_model::convertUser($obj->creator);
             }
