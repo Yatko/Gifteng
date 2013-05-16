@@ -1,5 +1,6 @@
 package com.venefica.auth;
 
+import com.venefica.config.Constants;
 import java.io.Serializable;
 import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
@@ -12,7 +13,6 @@ import org.apache.commons.lang.time.DateUtils;
 public class Token implements Serializable {
 
     private static final long serialVersionUID = -5601354813824855907L;
-    private static final int EXPIRES_IN_DAYS = 14;
     
     private Long userId;
     private Date expiresAt;
@@ -23,7 +23,7 @@ public class Token implements Serializable {
     }
 
     public Token(Long userId) {
-        this(userId, DateUtils.addDays(new Date(), EXPIRES_IN_DAYS));
+        this(userId, DateUtils.addDays(new Date(), Constants.TOKEN_EXPIRES_IN_DAYS));
     }
 
     public Long getUserId() {
