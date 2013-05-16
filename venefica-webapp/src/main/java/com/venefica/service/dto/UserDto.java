@@ -1,6 +1,7 @@
 package com.venefica.service.dto;
 
 import com.venefica.dao.ImageDao;
+import com.venefica.model.Gender;
 import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
@@ -46,6 +47,8 @@ public class UserDto extends DtoBase {
     private boolean inFollowers;
     // out
     private boolean inFollowings;
+    // in, out
+    private Gender gender;
 
     // TODO: add necessary fields
     // Required for JAX-WS
@@ -62,6 +65,7 @@ public class UserDto extends DtoBase {
         name = user.getName();
         firstName = ((MemberUserData) user.getUserData()).getFirstName();
         lastName = ((MemberUserData) user.getUserData()).getLastName();
+        gender = ((MemberUserData) user.getUserData()).getGender();
 
         email = user.getEmail();
         phoneNumber = user.getPhoneNumber();
@@ -91,6 +95,7 @@ public class UserDto extends DtoBase {
         ((MemberUserData) user.getUserData()).setDateOfBirth(dateOfBirth);
         ((MemberUserData) user.getUserData()).setLastName(lastName);
         ((MemberUserData) user.getUserData()).setFirstName(firstName);
+        ((MemberUserData) user.getUserData()).setGender(gender);
 
         // Handle avatar image
         if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
@@ -235,5 +240,13 @@ public class UserDto extends DtoBase {
 
     public void setInFollowings(boolean inFollowings) {
         this.inFollowings = inFollowings;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }
