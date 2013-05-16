@@ -26,7 +26,7 @@
             <div class="fl favorite">Favorited<br><?=$bookmarks_num?></div>
             <div class="fl follower">Followers<br><?=$followers_num?></div>
             <div class="fl following">Followings<br><?=$followings_num?></div>
-            <div class="fl review">Reviews<br><?=$reviews_num?></div>
+            <div class="fl review">Reviews<br><?=$ratings_num?></div>
             <div class="clear"></div>
         </div>
         
@@ -97,15 +97,15 @@
         </div>
         <? endif; ?>
         
-        <? if( $reviews_num > 0 ): ?>
+        <? if( $ratings_num > 0 ): ?>
         <div class="review">
             <div class="title">Reviews</div>
-            <? foreach( $reviews as $review ): ?>
+            <? foreach( $ratings as $rating ): ?>
                 <?
-                $from_user_img = $review->getFromAvatarUrl();
-                $from_user_name = $review->getFromFullName();
-                $review_date = $review->getReviewDate();
-                $review_text = $review->text;
+                $from_user_img = $rating->getFromAvatarUrl();
+                $from_user_name = $rating->getFromFullName();
+                $rating_date = $rating->getRateDate();
+                $rating_text = $rating->text;
                 
                 if ( trim($from_user_name) == '' ) $from_user_name = '&nbsp;';
                 ?>
@@ -114,10 +114,10 @@
                     <div class="profileImage" style="background: url(<?=$from_user_img?>);"></div>
                     <div class="details">
                         <div class="username"><?=safe_content($from_user_name)?></div>
-                        <div class="age"><?=$review_date?></div>
+                        <div class="age"><?=$rating_date?></div>
                     </div>
                     <div class="details">
-                        <div><?=safe_content($review_text)?></div>
+                        <div><?=safe_content($rating_text)?></div>
                     </div>
                 </div>
             <? endforeach; ?>
