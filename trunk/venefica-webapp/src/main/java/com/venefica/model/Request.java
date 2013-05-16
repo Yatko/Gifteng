@@ -48,8 +48,12 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
-    @OneToOne(mappedBy = "request")
-    private Review review;
+    private boolean selected;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date selectedAt;
+    
+//    @OneToOne(mappedBy = "request")
+//    private Review review;
     
     public Request() {
     }
@@ -73,6 +77,16 @@ public class Request {
     public void unmarkAsDeleted() {
         deleted = false;
         deletedAt = null;
+    }
+    
+    public void markAsSelected() {
+        selected = true;
+        selectedAt = new Date();
+    }
+
+    public void unmarkAsSelected() {
+        selected = false;
+        selectedAt = null;
     }
     
     // getter/setter
@@ -134,11 +148,27 @@ public class Request {
         this.deletedAt = deletedAt;
     }
 
-    public Review getReview() {
-        return review;
+//    public Review getReview() {
+//        return review;
+//    }
+//
+//    public void setReview(Review review) {
+//        this.review = review;
+//    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
-    public void setReview(Review review) {
-        this.review = review;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public Date getSelectedAt() {
+        return selectedAt;
+    }
+
+    public void setSelectedAt(Date selectedAt) {
+        this.selectedAt = selectedAt;
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.venefica.model;
 
+import com.venefica.config.Constants;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,8 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "invitation")
 public class Invitation {
-    
-    private static final int DEFAULT_AVAIL_USE = 5;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,7 +55,7 @@ public class Invitation {
 
     public Invitation() {
         createdAt = new Date();
-        numAvailUse = DEFAULT_AVAIL_USE;
+        numAvailUse = Constants.INVITATION_MAX_ALLOWED_USE;
     }
     
     public Invitation(String code) {
