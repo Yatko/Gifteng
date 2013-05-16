@@ -37,9 +37,6 @@ import org.springframework.core.env.Environment;
 @ImportResource("classpath:main.xml")
 public class MainConfig {
 
-    private static final int AD_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60; // default: 1 minut 
-    private static final int INVITATION_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60 * 60; // default: 1 hour
-    
     private static final String AD_JOB_KEY = "adExpirationJob";
     private static final String AD_TRIGGER_KEY = "adExpirationTrigger";
     
@@ -99,7 +96,7 @@ public class MainConfig {
         return newTrigger()
                 .withIdentity(AD_TRIGGER_KEY, JOB_GROUP)
                 .withSchedule(simpleSchedule()
-                .withIntervalInSeconds(AD_EXPIRATION_INTERVAL_CHECK_SECS)
+                .withIntervalInSeconds(Constants.AD_EXPIRATION_INTERVAL_CHECK_SECS)
                 .repeatForever())
                 .build();
         // @formatter:on
@@ -124,7 +121,7 @@ public class MainConfig {
         return newTrigger()
                 .withIdentity(INVITATION_TRIGGER_KEY, JOB_GROUP)
                 .withSchedule(simpleSchedule()
-                .withIntervalInSeconds(INVITATION_EXPIRATION_INTERVAL_CHECK_SECS)
+                .withIntervalInSeconds(Constants.INVITATION_EXPIRATION_INTERVAL_CHECK_SECS)
                 .repeatForever())
                 .build();
         // @formatter:on
