@@ -41,7 +41,7 @@ insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_
 
 -- Ads
 delete from ad;
-insert into ad ("id", "creator_id", "category_id", "title", "createdAt", "expired", "deleted", "sold", "numviews", "wanted", "reviewed", "spam", "numavailprolongations", "rating", "selected", "sent", "received") values (nextval('ad_seq'), 1, 1, 'test ad', now(), 'f', 'f', 'f', 0, 'f', 'f', 'f', 1, 0.0, 'f', 'f', 'f');
+insert into ad ("id", "creator_id", "category_id", "title", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "sent", "received", "quantity", "numexpire", "status") values (nextval('ad_seq'), 1, 1, 'test ad', now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 'f', 'f', 1, 0, 'ACTIVE');
 
 -- Bookmarks
 delete from bookmark;
