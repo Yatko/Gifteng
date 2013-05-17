@@ -21,4 +21,14 @@ public class RandomGenerator {
     public static String generateNumeric(int length) {
         return RandomStringUtils.randomNumeric(length);
     }
+    
+    /**
+     * Generates a random text using alphanumeric characters.
+     * 
+     * @param length the length of the code
+     * @return the generated code
+     */
+    public static String generateAlphanumeric(int length) {
+        return RandomStringUtils.randomAlphanumeric(length);
+    }
 }
