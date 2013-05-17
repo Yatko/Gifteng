@@ -16,6 +16,12 @@ import com.venefica.utils.Constants;
  */
 public class UserDto implements KvmSerializable
 {
+	enum Gender {
+
+	    MALE,
+	    FEMALE,
+	    ;
+	}
 	private Date dateOfBirth;
 	private String email = "";
 	private String firstName = "";
@@ -31,6 +37,7 @@ public class UserDto implements KvmSerializable
 	private Long id;
 	private boolean inFollowers;
     private boolean inFollowings;
+    private Gender gender;
 	public Object getProperty(int index)
 	{
 		//final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -67,6 +74,11 @@ public class UserDto implements KvmSerializable
 			return inFollowers;
 		case 14:
 			return inFollowings;
+		case 15:
+			if (gender != null)
+				return gender.name();
+			else
+				return null;
 		}
 
 		return null;
@@ -74,7 +86,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 15;
+		return 16;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -152,6 +164,10 @@ public class UserDto implements KvmSerializable
 			info.name = "inFollowings";
 			info.type = Boolean.class;
 			break;
+		case 15:
+			info.name = "gender";
+			info.type = String.class;
+			break;
 		default:
 			break;
 		}
@@ -205,6 +221,9 @@ public class UserDto implements KvmSerializable
 			break;
 		case 14:
 			inFollowings = Boolean.parseBoolean(value.toString());
+			break;
+		case 15:
+			gender = Gender.valueOf(value.toString());
 			break;
 		}
 	}
@@ -429,5 +448,19 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setInFollowings(boolean inFollowings) {
 		this.inFollowings = inFollowings;
+	}
+
+	/**
+	 * @return the gender
+	 */
+	public Gender getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 }
