@@ -25,13 +25,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.main.R;
+import com.venefica.module.user.UserDto.Gender;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.ImageDto;
+import com.venefica.services.InvitationDto.UserType;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -64,6 +67,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 	 */
 	private Button btnSelProfileImg, btnResetPassword;
 	private ImageView imageView;
+	private RadioGroup genderRadioGroup;
 	/**
 	 * Field validator
 	 */
@@ -113,6 +117,8 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
         
         txtMemberSince = (TextView)view.findViewById(R.id.txtActProfileMemberFrom);
         imageView = (ImageView) view.findViewById(R.id.imgActProfileProfileImg);
+        
+        genderRadioGroup = (RadioGroup) view.findViewById(R.id.radioGroupActProfileGender);
         //display data
         setUserData(userDto);
 		return view;
@@ -136,8 +142,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 	 * @param userDto
 	 */
 	public void setUserData(UserDto userDto){
-		try {
-			txtMemberSince.append(" ");
+		try {			
 			if (userDto.getAvatar() != null
 					&& userDto.getAvatar().getUrl() != null) {
 				((VeneficaApplication) getActivity().getApplication())
@@ -148,6 +153,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 								getResources().getDrawable(
 										R.drawable.icon_picture_white));
 			}
+			txtMemberSince.append(" ");
 			if (userDto.getJoinedAt() != null) {
 				txtMemberSince.append(Utility.convertShortDateToString(userDto
 						.getJoinedAt()));
@@ -166,6 +172,11 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 			edtCounty.setText(userDto.getCounty());
 			edtCity.setText(userDto.getCity());
 			edtArea.setText(userDto.getArea());
+			if (userDto.getGender() == Gender.MALE) {
+				genderRadioGroup.check(R.id.radioActProfileMale);
+			}else {
+				genderRadioGroup.check(R.id.radioActProfileFemale);
+			}			
 		} catch (Exception e) {
 			Log.e("EditProfileFragment::setUserData: ", e.toString());
 		}
@@ -190,7 +201,15 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 			userDto.setZipCode(edtZipCode.getText().toString());
 			userDto.setCity(edtCity.getText().toString());
 			userDto.setCounty(edtCounty.getText().toString());
-			userDto.setArea(edtArea.getText().toString());			
+			userDto.setArea(edtArea.getText().toString());
+			switch (genderRadioGroup.getCheckedRadioButtonId()) {
+			  case R.id.radioActProfileMale :
+				  userDto.setGender(Gender.MALE);
+   	              break;
+			  case R.id.radioActProfileFemale :
+				  userDto.setGender(Gender.FEMALE);
+				  break;
+			}
 		} catch (ParseException e) {
 			Log.e("EditProfileFragment::getUserData: ", e.toString());
 		}		
