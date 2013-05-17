@@ -117,6 +117,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	public static final int ACT_MODE_UNMARK_AS_SPAM = 4015;
 	public static final int ERROR_CONF_UNMARK_AS_SPAM = 4016;
 	public static final int ERROR_CONF_MARK_AS_SPAM = 4017;
+	public static final int ACT_MODE_REQUEST_AD = 4018;
+	public static final int ACT_MODE_CANCEL_REQUEST_AD = 4019;
     /**
      * Current mode
      */
@@ -177,6 +179,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 * text view on pop up
 	 */
 	private TextView txtMiles, txtLeft, txtDays;
+	/**
+	 * request button layout
+	 */
+	private LinearLayout layRequest;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -213,7 +219,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		btnFlag = (ImageButton) findViewById(R.id.btnActListingDetailsFlag);
 		btnFlag.setOnClickListener(this);
 		//Getit
-		btnGetIt = (Button) findViewById(R.id.btnActListingDetailsGetIt);
+		btnGetIt = (Button) findViewById(R.id.btnActListingDetailsRequest);
 		btnGetIt.setOnClickListener(this);
 		//Details popup		
 		View popupView = inflater.inflate(R.layout.view_listing_details_popup, null);
@@ -278,7 +284,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         
         imgBtnMore = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpMore);
         imgBtnMore.setOnClickListener(this);        
-        
+        layRequest = (LinearLayout) findViewById(R.id.layActListingDetailsRequestItem);
     }
     @Override
     protected void onStart() {
@@ -401,11 +407,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				listing.setInBookmars(true);
 			}else if (ERROR_CODE == Constants.ERROR_RESULT_BOOKMARKS_LISTING) {
 				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_failed);
-			}else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
+			}/*else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
 				message = (String) getResources().getText(R.string.msg_bookmark_confirm_delete)
-						/*+" " +selectedListing.getTitle() +" ?"*/;
-			}else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
+						+" " +selectedListing.getTitle() +" ?";
+			}*/else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
 				message = (String) getResources().getText(R.string.msg_bookmark_delete_success);
+				listing.setInBookmars(false);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_REMOVE_BOOKMARKS){
 				message = (String) getResources().getText(R.string.error_remove_bookmarks);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_SEND_MESSAGE){
@@ -435,16 +442,28 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				message = (String) getResources().getText(R.string.g_error);
 			}else if(ERROR_CODE == Constants.RESULT_MARK_AS_SPAM_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_mark_spam_success);
+				listing.setCanMarkAsSpam(false);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_UNMARK_AS_SPAM){
 				message = (String) getResources().getText(R.string.g_error);
 			}else if(ERROR_CODE == Constants.RESULT_UNMARK_AS_SPAM_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_unmark_spam_success);
+				listing.setCanMarkAsSpam(true);
+			}else if(ERROR_CODE == Constants.RESULT_REQUEST_AD_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_request_ad_success);
+			}else if(ERROR_CODE == Constants.RESULT_REQUEST_AD_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_cancel_request_ad_success);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_REQUEST_AD || ERROR_CODE == Constants.ERROR_RESULT_CANCEL_REQUEST){
+				message = (String) getResources().getText(R.string.g_error);
+			}else if (ERROR_CODE == Constants.ERROR_AD_NO_MORE_AVAILABLE) {
+				message = (String) getResources().getText(R.string.g_error_ad_no_more_available);
 			}
 		} else if(id == D_CONFIRM){
 			if(ERROR_CODE == ERROR_CONF_MARK_AS_SPAM){
 				message = (String) getResources().getText(R.string.g_msg_mark_spam_conf);
 			}else if(ERROR_CODE == ERROR_CONF_UNMARK_AS_SPAM){
 				message = (String) getResources().getText(R.string.g_msg_unmark_spam_conf);
+			}else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
+				message = (String) getResources().getText(R.string.msg_bookmark_confirm_delete);
 			}
 		}
     	((AlertDialog) dialog).setMessage(message);
@@ -454,14 +473,29 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
      * @param listing
      */
 	private void setDetails(AdDto listing) {
+		if (!listing.isOwner()) {
+			layRequest.setVisibility(ViewGroup.VISIBLE);			
+		} else {
+			listing.setCreator(((VeneficaApplication) getApplication()).getUser());
+		}
 		//Show on map
 		updateMap(listing.getLatitude(), listing.getLongitude()
 				, listing.getTitle(), listing.getDescription(), listing.getId()
 				, listing.getImage()!= null? listing.getImage().getUrl(): "");
-		//set user info
-		((VeneficaApplication)getApplication()).getImgManager()
-				.loadImage(Constants.PHOTO_URL_PREFIX + listing.getCreator().getAvatar().getUrl(), profImgView
-				, getResources().getDrawable(R.drawable.icon_picture_white));
+		if (listing.getCreator() != null && listing.getCreator().getAvatar() != null) {
+			//set user info
+			((VeneficaApplication) getApplication()).getImgManager().loadImage(
+					Constants.PHOTO_URL_PREFIX
+							+ listing.getCreator().getAvatar().getUrl(),
+					profImgView,
+					getResources().getDrawable(R.drawable.icon_picture_white));
+		}
+		
+		/*if (listing.isRequested()) {
+			btnGetIt.setText(getResources().getString(R.string.g_label_cancel_request));
+		} else {*/
+			btnGetIt.setText(getResources().getString(R.string.label_detail_listing_get_it));
+//		}
 		images.clear();
 //		images.add(listing.getImage());
 		images.addAll(listing.getImages());
@@ -625,6 +659,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}else if (params[0].equals(ACT_MODE_UNMARK_AS_SPAM)) {
 					wrapper = wsAction.unmarkListingAsSpam(((VeneficaApplication)getApplication()).getAuthToken()
 							, listing.getId());
+				}else if (params[0].equals(ACT_MODE_REQUEST_AD)) {
+					wrapper = wsAction.requestListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getId());
+				}else if (params[0].equals(ACT_MODE_CANCEL_REQUEST_AD)) {
+					wrapper = wsAction.cancelRequestForListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, listing.getId());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -654,6 +694,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}
 				if (listing != null && listing.getExpiresAt() != null) {
 					showDaysRemainingToExpiary(listing.getExpiresAt());
+					showItemsRemaining(listing.getQuantity());
 				}
 			}else if(result.result == Constants.RESULT_GET_COMMENTS_SUCCESS /*&& result.comments != null*/){
 				if (result.comments != null) {
@@ -744,13 +785,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}
 			}						
 		} else if (id == R.id.imgBtnUserViewFollow) {
-			new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);
-			/*if (listing.getCreator().) {
-				
-			} else if(){
-
-			}*/
-//			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+			new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);			
 		} else if (id == R.id.btnActListingDetailsFlag && listing != null) {
 			if (listing.isCanMarkAsSpam()) {
 				ERROR_CODE = ERROR_CONF_MARK_AS_SPAM;				
@@ -758,8 +793,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				ERROR_CODE = ERROR_CONF_UNMARK_AS_SPAM;
 			}
 			showDialog(D_CONFIRM);
-		} else if (id == R.id.btnActListingDetailsGetIt) {
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+		} else if (id == R.id.btnActListingDetailsRequest) {
+			if (listing.isRequested()) {
+				Utility.showLongToast(this, getResources().getString(R.string.g_msg_request_placed_already));
+//				new ListingDetailsTask().execute(ACT_MODE_CANCEL_REQUEST_AD);
+			} else {
+				new ListingDetailsTask().execute(ACT_MODE_REQUEST_AD);
+			}			
 		} else if (id == R.id.btnListingDetailsPopUpMore) {
 			//start rating activity
 			Intent reviewIntent = new Intent(this, RatingActivity.class);
@@ -840,5 +880,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		int diffInDays = (int)( (expiaryDate.getTime() - System.currentTimeMillis()) 
                 / (1000 * 60 * 60 * 24) );
 		txtDays.setText(diffInDays +" " + getResources().getString(R.string.g_label_days));
+	}
+	
+	/**
+	 * show remaining gifts quantity on popup
+	 * @param itemsRemaining
+	 */
+	private void showItemsRemaining(int itemsRemaining){
+		txtLeft.setText(listing.getQuantity()+"");
 	}
 }
