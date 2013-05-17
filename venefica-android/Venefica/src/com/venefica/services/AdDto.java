@@ -33,7 +33,7 @@ public class AdDto implements KvmSerializable
 	private ImageDto imageThumbnail;
 	private boolean inBookmars;
 	private Date expiresAt;
-	private boolean wanted;
+//	private boolean wanted;
 	private long numViews;
 	private UserDto creator;
 	private boolean expired;
@@ -42,7 +42,12 @@ public class AdDto implements KvmSerializable
 	private float rating;
 	private boolean canRate;
 	private List<ImageDto> images;
-
+	private boolean sent;
+    private boolean received;
+    private boolean requested;
+    private Boolean freeShipping;
+    private Boolean pickUp;
+    private int quantity;
 	public AdDto()
 	{
 
@@ -81,24 +86,36 @@ public class AdDto implements KvmSerializable
 				return inBookmars;
 			case 13:
 				return expiresAt != null ? expiresAt.getTime() : 0;
+//			case 14:
+//				return wanted;
 			case 14:
-				return wanted;
-			case 15:
 				return numViews;
-			case 16:
+			case 15:
 				return creator;
-			case 17:
+			case 16:
 				return expired;
-			case 18:
+			case 17:
 				return numAvailProlongations;
-			case 19:
+			case 18:
 				return canMarkAsSpam;
-			case 20:
+			case 19:
 				return String.valueOf(rating);
-			case 21:
+			case 20:
 				return canRate;
-			case 22:
+			case 21:
 				return null; //images no send
+			case 22:
+				return sent;
+			case 23:
+				return received;
+			case 24:
+				return requested;
+			case 25:
+				return freeShipping;
+			case 26:
+				return pickUp;
+			case 27:
+				return quantity;
 		}
 
 		return null;
@@ -106,7 +123,7 @@ public class AdDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 23;
+		return 28;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -183,51 +200,74 @@ public class AdDto implements KvmSerializable
 				info.type = Long.class;
 				break;
 
-			case 14:
-				info.name = "wanted";
-				info.type = Boolean.class;
-				break;
+//			case 14:
+//				info.name = "wanted";
+//				info.type = Boolean.class;
+//				break;
 
-			case 15:
+			case 14:
 				info.name = "numViews";
 				info.type = Long.class;
 				break;
 
-			case 16:
+			case 15:
 				info.name = "creator";
 				info.type = UserDto.class;
 				break;
 
-			case 17:
+			case 16:
 				info.name = "expired";
 				info.type = Boolean.class;
 				break;
 
-			case 18:
+			case 17:
 				info.name = "numAvailProlongations";
 				info.type = Integer.class;
 				break;
 
-			case 19:
+			case 18:
 				info.name = "canMarkAsSpam";
 				info.type = Boolean.class;
 				break;
 
-			case 20:
+			case 19:
 				info.name = "rating";
 				info.type = Float.class;
 				break;
 
-			case 21:
+			case 20:
 				info.name = "canRate";
 				info.type = Boolean.class;
 				break;
 
-			case 22:
+			case 21:
 				info.name = "images";
 				info.type = new Vector<ImageDto>().getClass();
 				break;
-
+			case 22:
+				info.name = "sent";
+				info.type = Boolean.class;
+				break;
+			case 23:
+				info.name = "received";
+				info.type = Boolean.class;
+				break;
+			case 24:
+				info.name = "requested";
+				info.type = Boolean.class;
+				break;
+			case 25:
+				info.name = "freeShipping";
+				info.type = Boolean.class;
+				break;
+			case 26:
+				info.name = "pickUp";
+				info.type = Boolean.class;
+				break;
+			case 27:
+				info.name = "quantity";
+				info.type = Integer.class;
+				break;
 			default:
 				break;
 		}
@@ -282,37 +322,55 @@ public class AdDto implements KvmSerializable
 				case 13:
 					expiresAt = new Date(Long.parseLong(value.toString()));
 					break;
+//				case 14:
+//					wanted = Boolean.parseBoolean(value.toString());
+//					break;
 				case 14:
-					wanted = Boolean.parseBoolean(value.toString());
-					break;
-				case 15:
 					numViews = Long.valueOf(value.toString());
 					break;
-				case 16:
+				case 15:
 					creator = (UserDto)value;
 					break;
-				case 17:
+				case 16:
 					expired = Boolean.parseBoolean(value.toString());
 					break;
-				case 18:
+				case 17:
 					numAvailProlongations = Integer.valueOf(value.toString());
 					break;
-				case 19:
+				case 18:
 					canMarkAsSpam = Boolean.parseBoolean(value.toString());
 					break;
-				case 20:
+				case 19:
 					rating = Float.valueOf(value.toString());
 					break;
-				case 21:
+				case 20:
 					canRate = Boolean.parseBoolean(value.toString());
 					break;
-				case 22:
+				case 21:
 					images = (Vector<ImageDto>)value;
 					
 					/*if(images == null)
 						images = new ArrayList<ImageDto>();
 					
 					images.add((ImageDto)value);*/
+					break;
+				case 22:
+					sent = Boolean.parseBoolean(value.toString());
+					break;
+				case 23:
+					received = Boolean.parseBoolean(value.toString());
+					break;
+				case 24:
+					requested = Boolean.parseBoolean(value.toString());
+					break;
+				case 25:
+					freeShipping = Boolean.parseBoolean(value.toString());
+					break;
+				case 26:
+					pickUp = Boolean.parseBoolean(value.toString());
+					break;
+				case 27:
+					quantity = Integer.valueOf(value.toString());
 					break;
 			}
 		}
@@ -535,17 +593,17 @@ public class AdDto implements KvmSerializable
 	/**
 	 * @return the wanted
 	 */
-	public boolean isWanted() {
+	/*public boolean isWanted() {
 		return wanted;
 	}
 
-	/**
+	*//**
 	 * @param wanted the wanted to set
-	 */
+	 *//*
 	public void setWanted(boolean wanted) {
 		this.wanted = wanted;
 	}
-
+*/
 	/**
 	 * @return the numViews
 	 */
@@ -656,5 +714,101 @@ public class AdDto implements KvmSerializable
 	 */
 	public void setImages(List<ImageDto> images) {
 		this.images = images;
+	}
+
+
+	/**
+	 * @return the sent
+	 */
+	public boolean isSent() {
+		return sent;
+	}
+
+
+	/**
+	 * @param sent the sent to set
+	 */
+	public void setSent(boolean sent) {
+		this.sent = sent;
+	}
+
+
+	/**
+	 * @return the received
+	 */
+	public boolean isReceived() {
+		return received;
+	}
+
+
+	/**
+	 * @param received the received to set
+	 */
+	public void setReceived(boolean received) {
+		this.received = received;
+	}
+
+
+	/**
+	 * @return the requested
+	 */
+	public boolean isRequested() {
+		return requested;
+	}
+
+
+	/**
+	 * @param requested the requested to set
+	 */
+	public void setRequested(boolean requested) {
+		this.requested = requested;
+	}
+
+
+	/**
+	 * @return the freeShipping
+	 */
+	public Boolean getFreeShipping() {
+		return freeShipping;
+	}
+
+
+	/**
+	 * @param freeShipping the freeShipping to set
+	 */
+	public void setFreeShipping(Boolean freeShipping) {
+		this.freeShipping = freeShipping;
+	}
+
+
+	/**
+	 * @return the pickUp
+	 */
+	public Boolean getPickUp() {
+		return pickUp;
+	}
+
+
+	/**
+	 * @param pickUp the pickUp to set
+	 */
+	public void setPickUp(Boolean pickUp) {
+		this.pickUp = pickUp;
+	}
+
+
+	/**
+	 * @return the quantity
+	 */
+	public int getQuantity() {
+		return quantity;
+	}
+
+
+	/**
+	 * @param quantity the quantity to set
+	 */
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 }
