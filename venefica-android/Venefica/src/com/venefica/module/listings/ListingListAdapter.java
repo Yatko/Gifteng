@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -73,6 +75,16 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			holder.imgBtnShare.setOnClickListener(this);
 			holder.imgView = (ImageView) convertView.findViewById(R.id.imgListingTileBg);
 			holder.imgView.setOnClickListener(this);
+			
+			holder.txtUserName = (TextView) convertView.findViewById(R.id.txtUserViewUserName);
+			holder.txtMemberInfo = (TextView) convertView.findViewById(R.id.txtUserViewMemberInfo);
+			holder.txtAddress = (TextView) convertView.findViewById(R.id.txtUserViewAddress);
+			holder.profImgView = (ImageView) convertView.findViewById(R.id.imgUserViewProfileImg);
+			holder.btnSendMsg = (ImageButton) convertView.findViewById(R.id.imgBtnUserViewSendMsg);
+			holder.btnSendMsg.setVisibility(View.INVISIBLE);
+	        holder.btnFollow = (Button) convertView.findViewById(R.id.imgBtnUserViewFollow);
+	        holder.btnFollow.setOnClickListener(this);
+	        holder.btnFollow.setVisibility(View.INVISIBLE);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -92,7 +104,42 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			((VeneficaApplication) ((SearchListingsActivity)context).getApplication())
 				.getImgManager().loadImage("", holder.imgView, context.getResources().getDrawable(R.drawable.icon_picture_white));
 		}
-		
+		if (listings.get(position).getCreator() != null) {
+			//user info
+			holder.txtUserName.setText(listings.get(position).getCreator()
+					.getFirstName()
+					+ " " + listings.get(position).getCreator().getLastName());
+			holder.txtMemberInfo.setText(context.getResources()
+					.getText(R.string.label_detail_listing_member_since)
+					.toString());
+			holder.txtMemberInfo.append(" ");
+			holder.txtMemberInfo.append(Utility
+					.convertShortDateToString((listings.get(position)
+							.getCreator().getJoinedAt())));
+			holder.txtAddress
+					.setText((listings.get(position).getCreator().getCity()
+							+ ", " + (listings.get(position).getCreator()
+							.getCounty())));
+			if (this.listings.get(position).getCreator().getAvatar() != null) {
+				((VeneficaApplication) ((SearchListingsActivity) context)
+						.getApplication()).getImgManager().loadImage(
+						Constants.PHOTO_URL_PREFIX
+								+ this.listings.get(position).getCreator()
+										.getAvatar().getUrl(),
+						holder.profImgView,
+						context.getResources().getDrawable(
+								R.drawable.icon_picture_white));
+			} else {
+				((VeneficaApplication) ((SearchListingsActivity) context)
+						.getApplication()).getImgManager().loadImage(
+						"",
+						holder.profImgView,
+						context.getResources().getDrawable(
+								R.drawable.icon_picture_white));
+			}
+		} else {
+			convertView.findViewById(R.id.layActSearchListingDetails).setVisibility(ViewGroup.GONE);
+		}
 		if (position == getCount()-3) {
 			Log.d("last Item", ""+position);
 			if(this.context instanceof SearchListingsActivity){
@@ -104,8 +151,13 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 	
 	static class ViewHolder{
 		TextView txtTitle, txtPrice;
-		ImageButton imgBtnShare;
-		ImageView imgView;
+		/**
+	     * Text view to show user details
+	     */
+	    TextView txtUserName, txtMemberInfo, txtAddress;
+		ImageButton imgBtnShare, btnSendMsg;
+		Button btnFollow;
+		ImageView imgView, profImgView;
 	}
 
 	@Override
@@ -129,6 +181,8 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			}
 			intent.putExtra("act_mode", mode);
 			context.startActivity(intent);
+		} else if (v.getId() == R.id.imgBtnUserViewFollow) {
+			
 		}
 	}
 
