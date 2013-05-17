@@ -52,16 +52,14 @@
         android:id="@+id/layActSearchListingsTile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black" >
+        android:background="@color/light_gray" >
 
         <GridView
             android:id="@+id/listActSearchListings"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:dividerHeight="2sp"
             android:horizontalSpacing="@dimen/image_thumbnail_spacing"
-            android:numColumns="2"
+            android:numColumns="1"
             android:verticalSpacing="@dimen/image_thumbnail_spacing" />
 
         <LinearLayout
