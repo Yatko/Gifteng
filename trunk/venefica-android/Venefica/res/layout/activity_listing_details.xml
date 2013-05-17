@@ -10,15 +10,17 @@
         android:id="@+id/listListingDetailsComments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="2sp"/>
+        android:dividerHeight="2sp" />
 
     <!-- Action buttons Flag, buy now and Watch -->
 
     <LinearLayout
+        android:id="@+id/layActListingDetailsRequestItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/transparent_black"
+        android:visibility="invisible"
         android:weightSum="100" >
 
         <!-- Flag -->
@@ -37,7 +39,7 @@
             android:src="@drawable/icon_flag_white" />
 
         <Button
-            android:id="@+id/btnActListingDetailsGetIt"
+            android:id="@+id/btnActListingDetailsRequest"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
