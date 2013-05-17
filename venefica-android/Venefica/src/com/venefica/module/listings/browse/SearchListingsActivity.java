@@ -155,7 +155,7 @@ ISlideMenuCallback, LocationListener{
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -514,7 +514,7 @@ ISlideMenuCallback, LocationListener{
 				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), Constants.PREF_DEF_VAL_MAX_PRICE))));
 		filter.setMinPrice(new BigDecimal(
 				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_min), Constants.PREF_DEF_VAL_MIN_PRICE))));
-		filter.setWanted(false);
+//		filter.setWanted(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
 		Long cat = prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
