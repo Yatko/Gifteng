@@ -34,10 +34,8 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
     
     @Inject
     private ThreadSecurityContextHolder securityContextHolder;
-    
     @Inject
     private UserDao userDao;
-    
     @Inject
     private TokenEncryptor tokenEncryptor;
 
