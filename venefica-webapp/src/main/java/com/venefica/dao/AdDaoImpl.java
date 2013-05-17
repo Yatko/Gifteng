@@ -174,9 +174,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         // @formatter:off		
         int numRows = createQuery(
                 "update " + getDomainClassName() + " a "
-                + "set a.expired = :expired, a.numExpire = a.numExpire + 1, a.status = :status "
-                + "where a.expiresAt < current_date() and a.expired = false")
-                .setParameter("expired", true)
+                + "set a.expired = true, a.numExpire = a.numExpire + 1, a.status = :status "
+                + "where a.expiresAt < current_date() and a.expired = false and a.deleted = false and a.sold = false")
                 .setParameter("status", AdStatus.EXPIRED)
                 .executeUpdate();
         // @formatter:on
