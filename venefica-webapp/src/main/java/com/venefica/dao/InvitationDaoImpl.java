@@ -56,7 +56,8 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
         // @formatter:off		
         int numRows = createQuery(
                 "update " + getDomainClassName() + " i set i.expired = true where i.expiresAt < current_date() "
-                + "and i.expired = false").executeUpdate();
+                + "and i.expired = false")
+                .executeUpdate();
         // @formatter:on
 
         if (numRows > 0) {
