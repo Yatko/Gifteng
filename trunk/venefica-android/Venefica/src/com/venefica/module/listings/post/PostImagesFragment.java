@@ -75,7 +75,8 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		 * @param images
 		 * @param coverImagePosition
 		 */
-		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images, int coverImagePosition);
+		public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images
+				, int coverImagePosition, ArrayList<Long> imagesTodeleteFromServer);
 		/**
 		 * @return true if user returns/back from preview fragment
 		 */
@@ -85,6 +86,11 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		 * @return ArrayList<ImageDto>
 		 */
 		public List<ImageDto> getImagesToUpdate();
+		/**
+		 * Update existing images on delete
+		 * @param imageDtos
+		 */
+		public void setImagesToUpdate(List<ImageDto> imageDtos);
 	}
 	private static final int REQ_GET_IMAGE = 1002;
 	private OnPostImagesListener listener;
@@ -111,6 +117,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 	 * image list
 	 */
 	private ArrayList<String> imageList;
+	private ArrayList<Long> imagesTodeleteFromServer;
 	/**
 	 * Adapter for gallery
 	 */
@@ -367,7 +374,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
     public void onResume() {
     	super.onResume();
     	if (listener.isBackFromPreview()) {
-			listener.onNextButtonClick(imageList, images, coverImagePosition);
+			listener.onNextButtonClick(imageList, images, coverImagePosition, imagesTodeleteFromServer);
 		}
     	startCamera();
     }
@@ -450,6 +457,10 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 							imgsToDelete.add(images.get(((int) position) - imageDtos.size()));							
 						} else {
 							dtoListToDelete.add(imageDtos.get((int) position));
+							if (imagesTodeleteFromServer == null) {
+								imagesTodeleteFromServer = new ArrayList<Long>();
+							}
+							imagesTodeleteFromServer.add(imageDtos.get((int) position).getId());
 						}
 					}
 					imageDtos.removeAll(dtoListToDelete);
@@ -460,6 +471,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 					listToDelete.clear();
 					listToDelete.clear();
 					imgsToDelete.clear();
+					listener.setImagesToUpdate(imageDtos);
 				}
 				if (imageDtos.size() == 0 && imageList.size() == 0 && images.size() == 0 ) {
 					images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
@@ -529,7 +541,7 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 						&& coverImagePosition == -1) {
 					showCoverImgInstructions(getResources().getString(R.string.msg_postlisting_sel_cover_image_instruction));
 				}else {
-					listener.onNextButtonClick(imageList, images, coverImagePosition);
+					listener.onNextButtonClick(imageList, images, coverImagePosition, imagesTodeleteFromServer);
 				}				
 			}else {
 				Utility.showLongToast(getActivity(), getResources().getString(R.string.msg_postlisting_sel_image));
