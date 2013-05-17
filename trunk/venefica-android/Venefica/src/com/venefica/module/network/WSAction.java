@@ -62,7 +62,7 @@ public class WSAction {
 	private final String WS_METHOD_DELETE_AD = "DeleteAd";
 	private final String WS_METHOD_GET_BOOKMARKED_ADS = "GetBookmarkedAds";
 	private final String WS_METHOD_REMOVE_BOOKMARK = "RemoveBookmark";
-	private final String WS_METHOD_GET_ADS = "GetAdsEx";
+	private final String WS_METHOD_GET_ADS = "GetAdsExDetail";
 	private final String WS_METHOD_UPDATE_AD = "UpdateAd";
 	private final String WS_METHOD_BOOKMARK = "BookmarkAd";
 	private final String WS_METHOD_GET_COMMENTS_BY_AD = "GetCommentsByAd";
@@ -82,6 +82,9 @@ public class WSAction {
 	private final String WS_METHOD_GET_REVIEWS = "GetReviews";
 	private final String WS_METHOD_MARK_AS_SPAM = "MarkAsSpam";
 	private final String WS_METHOD_UNMARK_AS_SPAM = "UnmarkAsSpam";
+	private final String WS_METHOD_REQUEST_AD = "RequestAd";
+	private final String WS_METHOD_CANCEL_REQUEST = "CancelRequest";
+	private final String WS_METHOD_DELETE_IMAGES = "DeleteImagesFromAd";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -754,6 +757,9 @@ public class WSAction {
 			request.addProperty("lastAdId", lastAdId);
 			request.addProperty("numberAds", numberAds);
 			request.addProperty("filter", filter);
+			request.addProperty("includeImages", false);
+			request.addProperty("includeCreator", true);
+			request.addProperty("includeCommentsNumber", 0);
 
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
@@ -1387,53 +1393,6 @@ public class WSAction {
 		return result;
 	}
 	
-	/**
-	 * Method to get followings
-	 * @param token
-	 * @param userId
-	 * @return result UserRegistrationResultWrapper
-	 * @throws IOException
-	 * @throws XmlPullParserException
-	 */
-	/*@SuppressWarnings("unchecked")
-	public UserRegistrationResultWrapper getFollowings(String token, Long userId) throws IOException, XmlPullParserException{
-		final String SOAP_METHOD = WS_METHOD_GET_FOLLOWING;
-
-		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
-		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
-		
-		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
-		try{
-			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
-
-			request.addProperty("userId", userId);
-
-			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-			envelope.setOutputSoapObject(request);
-			envelope.dotNet = true;
-
-			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
-			headerList.add(new HeaderProperty("authToken", token));
-
-			androidHttpTransport.debug = true;
-			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
-			Object obj = envelope.getResponse();
-			if (obj == null) {
-				result.result = Constants.ERROR_NO_DATA;
-			}else if (obj instanceof UserDto){
-				result.followings = new ArrayList<UserDto>();
-				result.followings.add((UserDto)obj);
-				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
-			} else {
-				result.followings = (List<UserDto>) obj;
-				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
-			}
-			
-		}catch (SoapFault e){
-			result.result = Constants.ERROR_RESULT_GET_FOLLOWINGS;
-		}
-		return result;
-	}*/
 	
 	/**
 	 * Method to get followers
@@ -1481,6 +1440,14 @@ public class WSAction {
 		}
 		return result;
 	}
+	/**
+	 * Method to get followings
+	 * @param token
+	 * @param userId
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
 	public UserRegistrationResultWrapper getFollowings(String token, long userId) throws IOException, XmlPullParserException{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_FOLLOWING;
 		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
@@ -1504,7 +1471,7 @@ public class WSAction {
 			Object response = envelope.getResponse();
 			if (response == null) {
 				result.result = Constants.ERROR_NO_DATA;
-			} else if (response instanceof CommentDto){
+			} else if (response instanceof UserDto){
 				result.followings = new ArrayList<UserDto>();
 				result.followings.add((UserDto)response);
 				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
@@ -1548,7 +1515,7 @@ public class WSAction {
 			Object response = envelope.getResponse();
 			if (response == null) {
 				result.result = Constants.ERROR_NO_DATA;
-			} else if (response instanceof CommentDto){
+			} else if (response instanceof ReviewDto){
 				result.reviews = new ArrayList<ReviewDto>();
 				result.reviews.add((ReviewDto)response);
 				result.result = Constants.RESULT_GET_REVIEWS_SUCCESS;
@@ -1642,6 +1609,127 @@ public class WSAction {
 			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_UNMARK_AS_SPAM;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to place request for listing
+	 * @param token
+	 * @param adId
+	 * @return request ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper requestListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_REQUEST_AD;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			long id = Long.parseLong(envelope.getResponse().toString());
+			if (id > 0) {
+				result.result = Constants.RESULT_REQUEST_AD_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_REQUEST_AD;
+			}
+			
+		}catch (SoapFault e){
+			if (e.toString().contains("No more available.") || e.toString().contains("Max request limit reached.")) {
+				result.result = Constants.ERROR_AD_NO_MORE_AVAILABLE;
+			} else {
+				result.result = Constants.ERROR_RESULT_REQUEST_AD;
+			}			
+		}
+		return result;
+	}
+	
+	/**Method to place cancel request for listing by requester
+	 * @param token
+	 * @param adId
+	 * @return result ListingDetailsResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public ListingDetailsResultWrapper cancelRequestForListing(String token, long adId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_CANCEL_REQUEST;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_CANCEL_REQUEST_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_CANCEL_REQUEST;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_CANCEL_REQUEST;
+		}
+		return result;
+	}
+	
+	public PostListingResultWrapper deleteImagesFromListing(String token, long adId, ArrayList<Long> imagesToDelete) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_DELETE_IMAGES;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		PostListingResultWrapper result = new PostListingResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("adId", adId);
+			request.addProperty("imageIds", imagesToDelete);
+			
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_DELETE_IMAGES_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_DELETE_IMAGES;
+			}			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_DELETE_IMAGES;
 		}
 		return result;
 	}
