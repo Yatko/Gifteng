@@ -86,7 +86,7 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
 	private void initView() {
 		LayoutInflater.from(getContext()).inflate(R.layout.side_navigation, this, true);
 		userView = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.view_user_details, null, false);
-		userView.setPadding(0, (int) getResources().getDimension(R.dimen.abs__action_bar_default_height), 0, 0);
+//		userView.setPadding(0, (int) getResources().getDimension(R.dimen.abs__action_bar_default_height), 0, 0);
 		 //user details
         txtUserName = (TextView) userView.findViewById(R.id.txtUserViewUserName);
         txtMemberInfo = (TextView) userView.findViewById(R.id.txtUserViewMemberInfo);
