@@ -40,6 +40,7 @@
     <string name="g_label_followers">Followers</string>
     <string name="g_label_reviews">Reviews</string>
     <string name="g_label_review_by">Review by</string>
+    <string name="g_label_cancel_request">Cancel Request</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -74,12 +75,17 @@
     <string name="g_msg_unmark_spam_conf">Are you sure you want to revoke spam mark?</string>
     <string name="g_msg_mark_spam_success">Listing marked as spam.</string>
     <string name="g_msg_unmark_spam_success">Spam marked removed successfully.</string>
+    <string name="g_msg_request_ad_success">Gift request placed successfully.</string>
+    <string name="g_msg_cancel_request_ad_success">Gift request cancelled.</string>
+    <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
+    
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
     <string name="g_error_change_pwd">Unable to change password. Please try again later.</string>
     <string name="g_error_invalid_old_pwd">Unable to change password. Old Password is not valid.</string>
     <string name="g_error">Unable to process request. Please try again later.</string>
+    <string name="g_error_ad_no_more_available">Requested gift no more available.</string>
 
     <string-array name="g_array_purpose_of_registration">
         <item >How did you here out about us?</item>
@@ -188,7 +194,7 @@
     <string name="label_detail_listing_seller">Seller</string>
     <string name="label_detail_listing_make_vote">Vote Item</string>
     <string name="label_detail_listing_make_offer">Make offer</string>
-    <string name="label_detail_listing_get_it">buy now!</string>
+    <string name="label_detail_listing_get_it">Request Item</string>
     <string name="label_detail_listing_member_since">Giftenger since </string>
     <string name="label_detail_listing_score">Score</string>
     <string name="label_menu_relist">Relist</string>
@@ -264,7 +270,7 @@
     <string name="msg_end_listing_success">Listing ended successfully.</string>
     <string name="msg_relist_listing_success">Listing relisted successfully.</string>
     <string name="msg_delete_listing_success">Listing deleted successfully.</string>
-    <string name="msg_bookmark_confirm_delete">Are you sure you wish to remove </string>
+    <string name="msg_bookmark_confirm_delete">Are you sure you wish to remove from favourites.</string>
     <string name="msg_bookmark_delete_success">Bookmark removed successfully.</string>
     <string name="msg_postlisting_update_success">Listing updated successfully.</string>
     <string name="msg_app_exit">Are you sure, you want to logout?</string>
