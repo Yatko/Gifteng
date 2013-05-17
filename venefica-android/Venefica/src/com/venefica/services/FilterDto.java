@@ -29,9 +29,9 @@ public class FilterDto implements KvmSerializable
 	private BigDecimal maxPrice;
 	private boolean hasPhoto;
 
-	private boolean wanted = false;
+//	private boolean wanted = false;
 	private String searchString;
-
+	private Boolean includeOwned;
 	public FilterDto()
 	{
 		rev = staticRev++;
@@ -55,10 +55,12 @@ public class FilterDto implements KvmSerializable
 				return maxPrice != null ? maxPrice.toString() : null;
 			case 6:
 				return hasPhoto;
+//			case 7:
+//				return wanted;
 			case 7:
-				return wanted;
-			case 8:
 				return searchString;
+			case 8:
+				return includeOwned;
 		}
 
 		return null;
@@ -108,16 +110,18 @@ public class FilterDto implements KvmSerializable
 				info.type = Boolean.TYPE;
 				break;
 				
-			case 7:
-				info.name = "wanted";
-				info.type = Boolean.class;
-				break;
+//			case 7:
+//				info.name = "wanted";
+//				info.type = Boolean.class;
+//				break;
 
-			case 8:
+			case 7:
 				info.name = "searchString";
 				info.type = String.class;
 				break;
-
+			case 8:
+				info.name = "includeOwned";
+				info.type = Boolean.class;
 			default:
 				break;
 		}
@@ -151,12 +155,15 @@ public class FilterDto implements KvmSerializable
 				case 6:
 					hasPhoto = Boolean.valueOf(value.toString());
 					break;
+//				case 7:
+//					wanted = Boolean.valueOf(value.toString());
+//					break;
 				case 7:
-					wanted = Boolean.valueOf(value.toString());
-					break;
-				case 8:
 					searchString = value.toString();
 					break;
+				case 8:
+					includeOwned = Boolean.valueOf(value.toString());
+					break; 
 			}
 		}
 		catch (Exception e)
@@ -276,16 +283,16 @@ public class FilterDto implements KvmSerializable
 	/**
 	 * @return the wanted
 	 */
-	public boolean isWanted() {
+	/*public boolean isWanted() {
 		return wanted;
 	}
 
-	/**
+	*//**
 	 * @param wanted the wanted to set
-	 */
+	 *//*
 	public void setWanted(boolean wanted) {
 		this.wanted = wanted;
-	}
+	}*/
 
 	/**
 	 * @return the searchString
@@ -299,5 +306,19 @@ public class FilterDto implements KvmSerializable
 	 */
 	public void setSearchString(String searchString) {
 		this.searchString = searchString;
+	}
+
+	/**
+	 * @return the includeOwned
+	 */
+	public Boolean getIncludeOwned() {
+		return includeOwned;
+	}
+
+	/**
+	 * @param includeOwned the includeOwned to set
+	 */
+	public void setIncludeOwned(Boolean includeOwned) {
+		this.includeOwned = includeOwned;
 	}
 }
