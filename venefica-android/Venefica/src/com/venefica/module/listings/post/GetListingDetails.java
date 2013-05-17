@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -64,6 +65,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			edtPrice, edtZip;
 	private Spinner spinCategory;
 	private Button btnNext;
+	private CheckBox chePickUp, chkFreeShipping;
 	/**
 	 * Field validator
 	 */
@@ -144,6 +146,9 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		spinCategory.setPrompt(getResources().getString(R.string.g_hint_choose_category));
 		spinCategory.setAdapter(categoriesListAdapter);
 		spinCategory.setOnItemSelectedListener(this);
+		
+		chePickUp = (CheckBox) findViewById(R.id.chkActPostListingPickUp);
+		chkFreeShipping = (CheckBox) findViewById(R.id.chkActPostListingFreeShipping);
 		//set data if back from preview
 		if (getIntent().getBooleanExtra(KEY_IS_BACK_FROM_PREVIEW, false) 
 				|| getIntent().getBooleanExtra(KEY_IS_UPDATE_MODE, false)) {
@@ -152,6 +157,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			edtDescription.setText(getIntent().getStringExtra(GetListingDetails.KEY_DESCRIPTION));
 			edtPrice.setText(getIntent().getStringExtra(GetListingDetails.KEY_CURRENT_VALUE));
 			isBackFromPreview = getIntent().getBooleanExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isBackFromPreview);
+			chePickUp.setChecked(getIntent().getBooleanExtra(GetListingDetails.KEY_PICKUP, true));
+			chkFreeShipping.setChecked(getIntent().getBooleanExtra(GetListingDetails.KEY_FREE_SHIPPING, true));
 		}
 		coverImagePosition = getIntent().getIntExtra(KEY_COVER_IMAGE, coverImagePosition);
 		btnNext = (Button) findViewById(R.id.btnActPostListingNextToPreview);
@@ -349,6 +356,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			}
 			intent.putExtra(KEY_COVER_IMAGE, coverImagePosition);
 			intent.putExtra(KEY_IS_BACK_FROM_PREVIEW, false);
+			intent.putExtra(KEY_FREE_SHIPPING, chkFreeShipping.isChecked());
+			intent.putExtra(KEY_PICKUP, chePickUp.isChecked());
 			setResult(Activity.RESULT_OK, intent);
 			finish();
 		}

@@ -51,6 +51,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	private UpdateListingDialogFragment updateListingDialogFragment;
 	private ArrayList<String> imageList;
 	private ArrayList<Bitmap> images;
+	private ArrayList<Long> imagesTodeleteFromServer;
 	/**
 	 * listing to post
 	 */
@@ -209,10 +210,12 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	 * @see com.venefica.module.listings.post.PostImagesFragment.OnPostImagesListener#onNextButtonClick(java.util.ArrayList, java.util.ArrayList)
 	 */
 	@Override
-	public void onNextButtonClick(ArrayList<String> imageList, ArrayList<Bitmap> images, int coverImagePosition) {
+	public void onNextButtonClick(ArrayList<String> imageList
+			, ArrayList<Bitmap> images, int coverImagePosition, ArrayList<Long> imagesTodeleteFromServer) {
 		this.imageList = imageList;
 		this.images = images;
 		this.coverImagePosition = coverImagePosition;
+		this.imagesTodeleteFromServer = imagesTodeleteFromServer;
 		Intent intent = new Intent(this, GetListingDetails.class);
 		if ( listing != null) {
 			intent.putExtra(GetListingDetails.KEY_TITLE, listing.getTitle());
@@ -227,6 +230,8 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
 			intent.putExtra(GetListingDetails.KEY_IS_UPDATE_MODE
 					, CURRENT_MODE == ACT_MODE_UPDATE_LISTING ? true : false);
+			intent.putExtra(GetListingDetails.KEY_FREE_SHIPPING, listing.getFreeShipping());
+			intent.putExtra(GetListingDetails.KEY_PICKUP, listing.getPickUp());
 		} else {			
 			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
 		}
@@ -270,6 +275,8 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setPrice(new BigDecimal(data.getString(GetListingDetails.KEY_CURRENT_VALUE)));
 				listing.setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
 				listing.setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
+				listing.setFreeShipping(data.getBoolean(GetListingDetails.KEY_FREE_SHIPPING));
+				listing.setPickUp(data.getBoolean(GetListingDetails.KEY_PICKUP));
 				
 				listing.setCanMarkAsSpam(true);
 				listing.setCanRate(true);
@@ -278,7 +285,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setInBookmars(false);
 				listing.setNumAvailProlongations(0);
 				listing.setOwner(true);
-				listing.setWanted(false);
+//				listing.setWanted(false);
 				listing.setNumViews(0L);
 				listing.setRating(1.0f);
 				if (coverImagePosition == -1 && CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
@@ -289,13 +296,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 					coverImage = new ImageDto(getImageFromCache(Constants.PHOTO_URL_PREFIX + getImagesToUpdate().get(coverImagePosition).getUrl()));
 				}				
 				listing.setImage(coverImage);
-				/*ArrayList<ImageDto> imagesToPost = new ArrayList<ImageDto>();
-				for (String imageName : imageList) {
-					Bitmap img = getImageFromCache(imageName);
-					imagesToPost.add(new ImageDto(img));
-					img.recycle();
-				}
-				listing.setImages(imagesToPost);*/
+				
 				PostPreviewFragment postPreviewFragment = new PostPreviewFragment();
 				getSupportFragmentManager().beginTransaction().replace(R.id.layPostlistingMain, postPreviewFragment).addToBackStack(null).commit();
 			}
@@ -319,7 +320,14 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			result = wsAction.addImageToAd(token, listingId, img);
 			img.recycle();
 		}
-		result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
+		/*if (imagesTodeleteFromServer != null) {
+			result = wsAction.deleteImagesFromListing(token, listingId,
+					imagesTodeleteFromServer);
+		}
+		
+		if (result.result == Constants.RESULT_DELETE_IMAGES_SUCCESS) {*/
+			result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
+//		}
 		return result;
 	}
 	/* (non-Javadoc)
@@ -482,20 +490,23 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 
 	@Override
 	public List<ImageDto> getImagesToUpdate() {
-		if (listing != null) {
-			if (listing.getImages() != null) {
-				return listing.getImages();
-			} else {			
-				return new ArrayList<ImageDto>();
-			}
-		} else {
+//		if (listing != null && listing.getImages() != null) {
+			return listing.getImages();			
+		/*} else {
 			return new ArrayList<ImageDto>();
-		}		
+		}*/		
 	}
 
 	@Override
 	public List<ImageDto> getImageDtosToUpdate() {
 		return getImagesToUpdate() ;
+	}
+
+	@Override
+	public void setImagesToUpdate(List<ImageDto> imageDtos) {
+		if (imageDtos != null && imageDtos.size() > 0) {
+			listing.setImages(imageDtos);
+		}
 	}
 		
 }
