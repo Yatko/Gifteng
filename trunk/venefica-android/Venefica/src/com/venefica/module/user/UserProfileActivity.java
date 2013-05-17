@@ -99,7 +99,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 		viewProfileDetailsFragment = new ViewProfileDetailsFragment();
 		fragmentTransaction.add(R.id.layActUserProfieRoot, viewProfileDetailsFragment);
 		fragmentTransaction.commit();
-//		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
+		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
 //		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
 		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
 	}
@@ -252,10 +252,10 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 				} else if (params[0].equals(ACT_MODE_GET_FOLLOWINGS)) {
 					wrapper = wsAction.getFollowings(((VeneficaApplication)getApplication()).getAuthToken()
 							, ((VeneficaApplication)getApplication()).getUser().getId());
-				} /*else if (params[0].equals(ACT_MODE_GET_FOLLOWERS)) {
+				} else if (params[0].equals(ACT_MODE_GET_FOLLOWERS)) {
 					wrapper = wsAction.getFollowers(((VeneficaApplication)getApplication()).getAuthToken()
-							, ((VeneficaApplication)getApplication()).getUser().getId());
-				}*/ else if (params[0].equals(ACT_MODE_GET_REVIEWS)) {
+							, ((VeneficaApplication)getApplication()).getUser().getId());							
+				} else if (params[0].equals(ACT_MODE_GET_REVIEWS)) {
 					wrapper = wsAction.getReviews(((VeneficaApplication)getApplication()).getAuthToken()
 							, ((VeneficaApplication)getApplication()).getUser().getId());
 				}
