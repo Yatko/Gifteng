@@ -87,6 +87,13 @@ public class Constants
 	public static final int ERROR_RESULT_MARK_AS_SPAM = 1078;
 	public static final int RESULT_UNMARK_AS_SPAM_SUCCESS = 1079;
 	public static final int ERROR_RESULT_UNMARK_AS_SPAM = 1080;
+	public static final int RESULT_REQUEST_AD_SUCCESS = 1081;
+	public static final int ERROR_RESULT_REQUEST_AD = 1082;
+	public static final int RESULT_CANCEL_REQUEST_SUCCESS = 1083;
+	public static final int ERROR_RESULT_CANCEL_REQUEST = 1084;
+	public static final int RESULT_DELETE_IMAGES_SUCCESS = 1085;
+	public static final int ERROR_RESULT_DELETE_IMAGES = 1086;
+	public static final int ERROR_AD_NO_MORE_AVAILABLE = 1087;	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -127,20 +134,21 @@ public class Constants
 	public static final String SERVER_PORT = USE_SSL_SERVICES_TRANSPORT ? "8843" : "8080";
 //	public static final String SERVER_URL = "h2.yatko.com";
 //	public static final String SERVER_URL = "192.168.0.100";
-	public static final String SERVER_URL = "s1.veneficalabs.com";
+//	public static final String SERVER_URL = "s1.veneficalabs.com/venefica/services";
+	public static final String SERVER_URL = "gifteng.jelastic.servint.net"; //dev server
 	public static final String SERVICES_PROTOCOL = USE_SSL_SERVICES_TRANSPORT ? "https://" : "http://";
-	public static final String SERVICES_BASE_URL = SERVICES_PROTOCOL + SERVER_URL + ":" + SERVER_PORT;
+	public static final String SERVICES_BASE_URL = SERVICES_PROTOCOL + SERVER_URL /*+ ":" + SERVER_PORT*/;//commented for new dev server
 
 	//URLs on the service methods
 	/*public static final String SERVICES_USER_URL = SERVICES_BASE_URL + "/venefica-webapp/services/UserManagementService?wsdl";
 	public static final String SERVICES_AUTH_URL = SERVICES_BASE_URL + "/venefica-webapp/services/AuthService?wsdl";
 	public static final String SERVICES_AD_URL = SERVICES_BASE_URL + "/venefica-webapp/services/AdService?wsdl";
 	public static final String SERVICES_MESSAGE_URL = SERVICES_BASE_URL + "/venefica-webapp/services/MessageService?wsdl";*/
-	public static final String SERVICES_USER_URL = SERVICES_BASE_URL + "/venefica/services/UserManagementService?wsdl";
-	public static final String SERVICES_AUTH_URL = SERVICES_BASE_URL + "/venefica/services/AuthService?wsdl";
-	public static final String SERVICES_AD_URL = SERVICES_BASE_URL + "/venefica/services/AdService?wsdl";
-	public static final String SERVICES_MESSAGE_URL = SERVICES_BASE_URL + "/venefica/services/MessageService?wsdl";
-	public static final String SERVICES_INVITATION_URL = SERVICES_BASE_URL + "/venefica/services/InvitationService?wsdl";
+	public static final String SERVICES_USER_URL = SERVICES_BASE_URL + "/gifteng/services/UserManagementService?wsdl";
+	public static final String SERVICES_AUTH_URL = SERVICES_BASE_URL + "/gifteng/services/AuthService?wsdl";
+	public static final String SERVICES_AD_URL = SERVICES_BASE_URL + "/gifteng/services/AdService?wsdl";
+	public static final String SERVICES_MESSAGE_URL = SERVICES_BASE_URL + "/gifteng/services/MessageService?wsdl";
+	public static final String SERVICES_INVITATION_URL = SERVICES_BASE_URL + "/gifteng/services/InvitationService?wsdl";
 	
 	public static final String SERVICES_NAMESPACE = "http://service.venefica.com";
 
@@ -163,7 +171,8 @@ public class Constants
 	public static final String CONNECT_TO_VK_URL = SERVICES_BASE_URL + "/venefica-webapp/connect/vkontakte?display=touch";
 */
 	/*public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/venefica-webapp";*/
-	public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/venefica";
+//	public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/venefica";//old server
+	public static final String PHOTO_URL_PREFIX = SERVICES_BASE_URL + "/gifteng";
 	
 
 	public static final String PRODUCT_ID_PARAM_NAME = "productId";
@@ -203,7 +212,6 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
-	
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
 			
 }
