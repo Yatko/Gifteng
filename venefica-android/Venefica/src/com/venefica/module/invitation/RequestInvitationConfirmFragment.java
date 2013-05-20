@@ -23,6 +23,7 @@ import com.venefica.module.main.R;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.InvitationDto.UserType;
+import com.venefica.utils.Constants;
 
 /**
  * @author avinash
@@ -120,7 +121,8 @@ public class RequestInvitationConfirmFragment extends SherlockFragment implement
     		vaildator = new InputFieldValidator();    		
     	}
     	
-    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX)) || edtZip.getText().toString().length() < 6){
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX)) 
+    			|| edtZip.getText().toString().length() < Constants.ZIP_CODE_LENGTH){
     		result = false;
     		message.append(getResources().getString(R.string.g_hint_zip).toString());
     		message.append("- ");
