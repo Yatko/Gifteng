@@ -17,7 +17,7 @@
         android:layout_marginTop="15dp"
         android:hint="@string/g_hint_zip"
         android:inputType="number"
-        android:maxLength="6"
+        android:maxLength="5"
         android:paddingLeft="15dp"
         android:paddingRight="5dp" />
 
