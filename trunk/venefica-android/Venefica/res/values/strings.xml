@@ -254,7 +254,7 @@
     <string name="msg_progress">Loading. Please wait...</string>
     <string name="msg_validation_fname_lname">Use letters only.</string>
     <string name="msg_validation_county_city_area">Use letters only.</string>
-    <string name="msg_validation_zipcode">Zip must be 6 numbers.</string>
+    <string name="msg_validation_zipcode">Zip must be 5 numbers.</string>
     <string name="msg_validation_email">Use standard email.</string>
     <string name="msg_validation_phone">Use numbers only.</string>
     <string name="msg_validation_date_higher">Please select date higher than current date.</string>
