@@ -394,7 +394,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
     		message.append(getResources().getString(R.string.g_msg_validation_price));
     		message.append("\n");
     	}    	
-    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))){
+    	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))
+    			|| edtZip.getText().toString().length() < Constants.ZIP_CODE_LENGTH){
     		result = false;
     		message.append(edtZip.getText().toString());
     		message.append("- ");
