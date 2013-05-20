@@ -303,7 +303,7 @@
             android:layout_marginBottom="7dp"
             android:hint="@string/label_zip"
             android:inputType="number"
-            android:maxLength="6" />
+            android:maxLength="5" />
 
         <!-- County -->
 
