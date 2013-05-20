@@ -82,7 +82,7 @@
                 android:layout_weight="35"
                 android:hint="@string/label_zip"
                 android:inputType="number"
-                android:maxLength="6" />
+                android:maxLength="5" />
 
             <TextView
                 android:id="@+id/txtActPostListingCity"
