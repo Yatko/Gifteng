@@ -261,7 +261,8 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
     		message.append(getResources().getString(R.string.msg_validation_fname_lname));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtZipCode, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))){
+    	if(!vaildator.validateField(edtZipCode, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))
+    			 || edtZipCode.getText().toString().length() < Constants.ZIP_CODE_LENGTH){
     		result = false;
     		message.append(getResources().getString(R.string.label_zip).toString());
     		message.append("- ");
