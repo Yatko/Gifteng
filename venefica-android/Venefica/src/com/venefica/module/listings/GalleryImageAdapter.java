@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
@@ -48,6 +47,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 
 	private int coverPosition = -1;
 	private ArrayList<Integer> selectedPositions;
+	private ArrayList<Long> deletePositions;
 
 	public GalleryImageAdapter(Context context, List<ImageDto> plotsImages, List<Bitmap> images,
 			boolean useDrawables, boolean showThumbnails, boolean useActionModes) {
@@ -67,11 +67,12 @@ public class GalleryImageAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getCount()
 	 */
 	public int getCount() {
-		if (useDrawables) {
+		if (useDrawables && this.plotsImages != null && this.images != null) {
 			return (this.plotsImages.size() + this.images.size());
-		} else {
+		} else if (this.plotsImages != null){
 			return this.plotsImages.size();
 		}
+		return 0;
 	}
 
 	/*
@@ -111,7 +112,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 				holder.imageView = (ImageView) convertView.findViewById(R.id.imgListingDetailSwitcherImage);
 			}
 			holder.imageView.setVisibility(View.VISIBLE);
-			holder.txtCoverMark = (TextView) convertView.findViewById(R.id.txtPostListingCoverTicker);
+			holder.txtCoverMark = (ImageView) convertView.findViewById(R.id.txtPostListingCoverTicker);
 			holder.chkSelected = (CheckBox) convertView.findViewById(R.id.chkPostListingImageSelect);
 			holder.chkSelected.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
@@ -171,6 +172,11 @@ public class GalleryImageAdapter extends BaseAdapter {
 		}	
 		if (coverPosition == position) {
 			holder.txtCoverMark.setVisibility(View.VISIBLE);
+			holder.txtCoverMark.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_monitor));
+		} else if (deletePositions!= null && position < plotsImages.size()
+				&& deletePositions.contains(plotsImages.get(position).getId())) {
+			holder.txtCoverMark.setVisibility(View.VISIBLE);
+			holder.txtCoverMark.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_trash));
 		}else {
 			holder.txtCoverMark.setVisibility(View.GONE);
 		}
@@ -179,7 +185,7 @@ public class GalleryImageAdapter extends BaseAdapter {
 	}
 
 	private static class ViewHolder {
-		TextView txtCoverMark;
+		ImageView txtCoverMark;
 		ImageView imageView;
 		CheckBox chkSelected;
 	}
@@ -230,5 +236,19 @@ public class GalleryImageAdapter extends BaseAdapter {
 	 */
 	public void setActionModeListener(OnActionModeListener actionModeListener) {
 		this.actionModeListener = actionModeListener;
+	}
+
+	/**
+	 * @return the deletePositions
+	 */
+	public ArrayList<Long> getDeletePositions() {
+		return deletePositions;
+	}
+
+	/**
+	 * @param deletePositions the deletePositions to set
+	 */
+	public void setDeletePositions(ArrayList<Long> deletePositions) {
+		this.deletePositions = deletePositions;
 	}
 }
