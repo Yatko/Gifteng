@@ -100,6 +100,8 @@ public class Constants
 	public static final DateFormat timeFormat = DateFormat.getTimeInstance();
 	public static final DateFormat dateMMDDYYYYFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 	
+	public static final int ZIP_CODE_LENGTH = 5;
+	
 	//Location settings
 	public static final long LOCATION_UPDATE_PERIOD = 2* 60 * 1000; 
 	public static final float LOCATION_UPDATE_MIN_DISTANCE = 1000;//meters
