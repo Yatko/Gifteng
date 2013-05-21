@@ -52,6 +52,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	private ArrayList<String> imageList;
 	private ArrayList<Bitmap> images;
 	private ArrayList<Long> imagesTodeleteFromServer;
+	
 	/**
 	 * listing to post
 	 */
@@ -285,7 +286,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setInBookmars(false);
 				listing.setNumAvailProlongations(0);
 				listing.setOwner(true);
-//				listing.setWanted(false);
+				listing.setQuantity(1);
 				listing.setNumViews(0L);
 				listing.setRating(1.0f);
 				if (coverImagePosition == -1 && CURRENT_MODE == ACT_MODE_UPDATE_LISTING) {
@@ -320,14 +321,14 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			result = wsAction.addImageToAd(token, listingId, img);
 			img.recycle();
 		}
-		/*if (imagesTodeleteFromServer != null) {
+		if (imagesTodeleteFromServer != null) {
 			result = wsAction.deleteImagesFromListing(token, listingId,
 					imagesTodeleteFromServer);
 		}
 		
-		if (result.result == Constants.RESULT_DELETE_IMAGES_SUCCESS) {*/
+		if (result.result == Constants.RESULT_DELETE_IMAGES_SUCCESS) {
 			result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
-//		}
+		}
 		return result;
 	}
 	/* (non-Javadoc)
@@ -490,23 +491,20 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 
 	@Override
 	public List<ImageDto> getImagesToUpdate() {
-//		if (listing != null && listing.getImages() != null) {
+		if (listing != null && listing.getImages() != null) {
 			return listing.getImages();			
-		/*} else {
+		} else {
 			return new ArrayList<ImageDto>();
-		}*/		
+		}		
 	}
 
 	@Override
 	public List<ImageDto> getImageDtosToUpdate() {
 		return getImagesToUpdate() ;
-	}
-
-	@Override
-	public void setImagesToUpdate(List<ImageDto> imageDtos) {
-		if (imageDtos != null && imageDtos.size() > 0) {
-			listing.setImages(imageDtos);
-		}
-	}
+	}	
 		
+	@Override
+	public ArrayList<Long> getImagesTodeleteFromServer() {
+		return this.imagesTodeleteFromServer;
+	}
 }

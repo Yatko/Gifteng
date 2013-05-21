@@ -86,11 +86,11 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 		 * @return ArrayList<ImageDto>
 		 */
 		public List<ImageDto> getImagesToUpdate();
-		/**
-		 * Update existing images on delete
-		 * @param imageDtos
+		
+		/** get image ids to delete from server
+		 * @return ArrayList<Long>
 		 */
-		public void setImagesToUpdate(List<ImageDto> imageDtos);
+		public ArrayList<Long> getImagesTodeleteFromServer();
 	}
 	private static final int REQ_GET_IMAGE = 1002;
 	private OnPostImagesListener listener;
@@ -365,6 +365,10 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
     public void onStart() {
     	super.onStart();
     	if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+    		imagesTodeleteFromServer = listener.getImagesTodeleteFromServer();
+    		if (imagesTodeleteFromServer != null) {
+    			galImageAdapter.setDeletePositions(imagesTodeleteFromServer);
+			}
 			imageDtos.clear();
 			imageDtos.addAll(listener.getImagesToUpdate());
 			galImageAdapter.notifyDataSetChanged();
@@ -447,31 +451,28 @@ public class PostImagesFragment extends SherlockFragment implements OnClickListe
 					listToDelete.clear();
 					imgsToDelete.clear();
 				} else if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
-					ArrayList<ImageDto> dtoListToDelete = new ArrayList<ImageDto>();
-					ArrayList<String> listToDelete = new ArrayList<String>();
-					ArrayList<Bitmap> imgsToDelete = new ArrayList<Bitmap>();
 					for (Integer position : galImageAdapter
 							.getSelectedPositions()) {
+						int index = 0;
 						if ((int)position >= imageDtos.size()) {
-							listToDelete.add(imageList.get(((int) position) - imageDtos.size()));
-							imgsToDelete.add(images.get(((int) position) - imageDtos.size()));							
+							index = ((int) position) - imageDtos.size();
+							imageList.remove(index);
+							images.remove(index);
 						} else {
-							dtoListToDelete.add(imageDtos.get((int) position));
 							if (imagesTodeleteFromServer == null) {
 								imagesTodeleteFromServer = new ArrayList<Long>();
 							}
-							imagesTodeleteFromServer.add(imageDtos.get((int) position).getId());
+							if (!imagesTodeleteFromServer.contains(imageDtos.get(
+										(int) position).getId())) {
+								imagesTodeleteFromServer.add(imageDtos.get(
+										(int) position).getId());
+							}
+							galImageAdapter.setDeletePositions(imagesTodeleteFromServer);
+						
 						}
 					}
-					imageDtos.removeAll(dtoListToDelete);
-					imageList.removeAll(listToDelete);
-					images.removeAll(imgsToDelete);
 					imageList.trimToSize();
-					images.trimToSize();					
-					listToDelete.clear();
-					listToDelete.clear();
-					imgsToDelete.clear();
-					listener.setImagesToUpdate(imageDtos);
+					images.trimToSize();
 				}
 				if (imageDtos.size() == 0 && imageList.size() == 0 && images.size() == 0 ) {
 					images.add(BitmapFactory.decodeResource(getResources(), R.drawable.icon_camera));
