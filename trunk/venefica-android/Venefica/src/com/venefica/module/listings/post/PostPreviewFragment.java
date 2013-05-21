@@ -75,6 +75,7 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 		 * @return
 		 */
 		public List<ImageDto> getImageDtosToUpdate();
+		public ArrayList<Long> getImagesTodeleteFromServer();
 	}
 	private OnPostPreivewListener listener;
 	/**
@@ -94,6 +95,10 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 	 */
 	private ArrayList<String> imageList;
 	/**
+	 * image ids to delete from server
+	 */
+	private ArrayList<Long> imagesTodeleteFromServer;
+	/**
 	 * Adapter for gallery
 	 */
 	private GalleryImageAdapter galImageAdapter;	
@@ -104,7 +109,7 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 	/**
 	 * text views
 	 */
-	private TextView txtTitle, txtDescription, txtCategory, txtCurrentvalue;
+	private TextView txtTitle, txtDescription, txtCategory, txtCurrentvalue, txtPickUp, txtFreeShipping;
 	private Button btnPost;
 	/**
 	 * images to update
@@ -172,9 +177,28 @@ public class PostPreviewFragment extends SherlockFragment implements OnClickList
 		txtCurrentvalue.append(":  "+Html.fromHtml("<b>$"+listing.getPrice()+"</b>"));
 		btnPost = (Button) view.findViewById(R.id.btnActPostPreviewPost);
 		btnPost.setOnClickListener(this);
+		txtPickUp = (TextView) view.findViewById(R.id.txtActPostPreviewPickup);
+		if (!listing.getPickUp()) {
+			txtPickUp.setVisibility(View.INVISIBLE);
+		}		
+		txtFreeShipping = (TextView) view.findViewById(R.id.txtActPostPreviewFreeShipping);
+		if (!listing.getFreeShipping()) {
+			txtFreeShipping.setVisibility(View.INVISIBLE);
+		}
 		return view;
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (PostListingActivity.getCURRENT_MODE() == PostListingActivity.ACT_MODE_UPDATE_LISTING) {
+    		imagesTodeleteFromServer = listener.getImagesTodeleteFromServer();
+    		if (imagesTodeleteFromServer != null) {
+    			galImageAdapter.setDeletePositions(imagesTodeleteFromServer);
+			}
+			galImageAdapter.notifyDataSetChanged();
+    	}
+	}
 	/* (non-Javadoc)
 	 * @see com.actionbarsherlock.app.SherlockFragment#onAttach(android.app.Activity)
 	 */
