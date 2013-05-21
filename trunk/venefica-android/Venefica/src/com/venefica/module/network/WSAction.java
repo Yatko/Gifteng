@@ -36,8 +36,6 @@ import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
 import com.venefica.services.ReviewDto;
-import com.venefica.services.ServicesManager.ChangePasswordResult;
-import com.venefica.services.ServicesManager.SoapRequestResult;
 import com.venefica.utils.Constants;
 
 /**
@@ -167,7 +165,7 @@ public class WSAction {
 			}
 		} catch (SoapFault e) {
 			String message = e.getMessage();
-			if (message.contains("Wrong user or password!")) {
+			if (message.contains("Wrong user")) {
 				wrapper.result = Constants.ERROR_USER_UNAUTHORISED;
 			}
 		}
@@ -1700,6 +1698,15 @@ public class WSAction {
 		return result;
 	}
 	
+	/**
+	 * Method to delete images from Ad
+	 * @param token
+	 * @param adId
+	 * @param imagesToDelete
+	 * @return result PostListingResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
 	public PostListingResultWrapper deleteImagesFromListing(String token, long adId, ArrayList<Long> imagesToDelete) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_DELETE_IMAGES;
 
@@ -1710,8 +1717,9 @@ public class WSAction {
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
 			request.addProperty("adId", adId);
-			request.addProperty("imageIds", imagesToDelete);
-			
+			for (int i = 0; i < imagesToDelete.size(); i++) {
+				request.addProperty("imageIds", imagesToDelete.get(i));
+			}
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
 			envelope.setOutputSoapObject(request);
