@@ -24,7 +24,7 @@
         android:scaleType="centerCrop"
         android:visibility="gone" />
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/txtPostListingCoverTicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,8 +34,17 @@
         android:gravity="right"
         android:text="*"
         android:textColor="@color/light_blue"
-        android:textSize="40sp" />
-
+        android:textSize="40sp" /> -->
+        
+	<ImageView
+        android:id="@+id/txtPostListingCoverTicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+		android:layout_alignRight="@id/imgPostListingSwitcherImage"
+        android:background="@color/transparent"
+        android:gravity="right"
+        android:visibility="gone" />
     <CheckBox
         android:id="@+id/chkPostListingImageSelect"
         android:layout_width="wrap_content"
