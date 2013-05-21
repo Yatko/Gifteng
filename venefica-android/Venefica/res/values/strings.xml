@@ -41,6 +41,7 @@
     <string name="g_label_reviews">Reviews</string>
     <string name="g_label_review_by">Review by</string>
     <string name="g_label_cancel_request">Cancel Request</string>
+    <string name="g_label_choose_email">Choose an Email client</string>
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -78,6 +79,9 @@
     <string name="g_msg_request_ad_success">Gift request placed successfully.</string>
     <string name="g_msg_cancel_request_ad_success">Gift request cancelled.</string>
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
+    <string name="g_facebook_share">https://www.facebook.com/gifteng</string>
+    <string name="g_twitter_share">https://twitter.com/gifteng</string>
+    <string name="g_geftang_url">https://www.gifteng.com</string>
     
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
