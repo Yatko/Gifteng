@@ -36,4 +36,40 @@ class Auth_service {
             throw new Exception($ex->faultstring);
         }
     }
+    
+    /**
+     * 
+     * @param type $newPassword
+     * @param type $code forgot password request identifier code
+     * @throws Exception
+     */
+    public function changeForgottenPassword($newPassword, $code) {
+        try {
+            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
+            $authService->changeForgottenPassword(array(
+                "newPassword" => $newPassword,
+                "code" => $code
+            ));
+        } catch ( Exception $ex ) {
+            log_message(INFO, 'Change forgotten password failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * Sends a forgot password request to the server. The server generates a link
+     * that will enable to chnage user password.
+     * 
+     * @param type $email
+     * @throws Exception incorrect email or in case of WS error
+     */
+    public function forgotPasswordEmail($email) {
+        try {
+            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
+            $authService->forgotPasswordEmail(array("email" => $email));
+        } catch ( Exception $ex ) {
+            log_message(INFO, 'Email is incorrect! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
 }
