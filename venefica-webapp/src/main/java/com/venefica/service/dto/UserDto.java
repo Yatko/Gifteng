@@ -32,14 +32,6 @@ public class UserDto extends DtoBase {
     // in, out
     private Date dateOfBirth;
     // in, out
-    private String country;
-    // in, out
-    private String city;
-    // in, out
-    private String area;
-    // in, out
-    private String zipCode;
-    // in, out
     private ImageDto avatar;
     // out
     private Date joinedAt;
@@ -49,7 +41,9 @@ public class UserDto extends DtoBase {
     private boolean inFollowings;
     // in, out
     private Gender gender;
-
+    // in, out
+    private AddressDto address;
+    
     // TODO: add necessary fields
     // Required for JAX-WS
     public UserDto() {
@@ -63,20 +57,17 @@ public class UserDto extends DtoBase {
     public UserDto(User user) {
         id = user.getId();
         name = user.getName();
+        email = user.getEmail();
+        phoneNumber = user.getPhoneNumber();
+        joinedAt = user.getJoinedAt();
+        
         firstName = ((MemberUserData) user.getUserData()).getFirstName();
         lastName = ((MemberUserData) user.getUserData()).getLastName();
         gender = ((MemberUserData) user.getUserData()).getGender();
-
-        email = user.getEmail();
-        phoneNumber = user.getPhoneNumber();
-
         dateOfBirth = ((MemberUserData) user.getUserData()).getDateOfBirth();
-        country = user.getCountry();
-        city = user.getCity();
-        area = user.getArea();
-        zipCode = user.getZipCode();
-        joinedAt = user.getJoinedAt();
+
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
+        address = user.getAddress() != null ? new AddressDto(user.getAddress()) : null;
     }
 
     /**
@@ -88,10 +79,7 @@ public class UserDto extends DtoBase {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
-        user.setCountry(country);
-        user.setCity(city);
-        user.setArea(area);
-        user.setZipCode(zipCode);
+        
         ((MemberUserData) user.getUserData()).setDateOfBirth(dateOfBirth);
         ((MemberUserData) user.getUserData()).setLastName(lastName);
         ((MemberUserData) user.getUserData()).setFirstName(firstName);
@@ -110,6 +98,10 @@ public class UserDto extends DtoBase {
 
             // Set new avatar image
             user.setAvatar(avatarImage);
+        }
+        
+        if ( address != null ) {
+            user.setAddress(address.getAddress());
         }
     }
 
@@ -178,38 +170,6 @@ public class UserDto extends DtoBase {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public ImageDto getAvatar() {
         return avatar;
     }
@@ -248,5 +208,13 @@ public class UserDto extends DtoBase {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public AddressDto getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDto address) {
+        this.address = address;
     }
 }

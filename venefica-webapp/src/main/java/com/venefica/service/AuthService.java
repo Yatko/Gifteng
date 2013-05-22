@@ -2,6 +2,8 @@ package com.venefica.service;
 
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
+import com.venefica.service.fault.GeneralException;
+import com.venefica.service.fault.UserNotFoundException;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -74,4 +76,22 @@ public interface AuthService {
     @WebMethod(operationName = "ChangePassword")
     public void changePassword(@WebParam(name = "oldPassword") String oldPassword,
             @WebParam(name = "newPassword") String newPassword) throws AuthorizationException;
+    
+    /**
+     * Change password into the given new one via forgot password request.
+     * 
+     * @param newPassword
+     * @param code the forgot password request code
+     * @throws GeneralException in case the code is invalid
+     */
+    @WebMethod(operationName = "ChangeForgottenPassword")
+    public void changeForgottenPassword(@WebParam(name = "newPassword") String newPassword,
+            @WebParam(name = "code") String code) throws UserNotFoundException, GeneralException;
+    
+    /**
+     * 
+     * @param email 
+     */
+    @WebMethod(operationName = "ForgotPasswordEmail")
+    public void forgotPasswordEmail(@WebParam(name = "email") String email) throws UserNotFoundException, GeneralException;
 }
