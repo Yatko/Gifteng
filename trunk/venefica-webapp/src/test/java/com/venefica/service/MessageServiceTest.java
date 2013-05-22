@@ -175,6 +175,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto();
         messageDto.setId(new Long(-1));
+        messageDto.setText("test");
 
         client.updateMessage(messageDto);
     }

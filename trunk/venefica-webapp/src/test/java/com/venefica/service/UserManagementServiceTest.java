@@ -5,6 +5,7 @@ import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
+import com.venefica.service.dto.AddressDto;
 //import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.InvalidInvitationException;
@@ -246,6 +247,9 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     // helpers
     
     private static UserDto createUserDto(String name) {
+        AddressDto address = new AddressDto();
+        address.setZipCode("123");
+        
         UserDto userDto = new UserDto();
         userDto.setName(name);
         userDto.setFirstName("First name");
@@ -253,7 +257,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         userDto.setEmail(name + "@mail.ru");
         userDto.setPhoneNumber("123" + name.hashCode());
         userDto.setDateOfBirth(new Date());
-        userDto.setZipCode("123");
+        userDto.setAddress(address);
         return userDto;
     }
 }

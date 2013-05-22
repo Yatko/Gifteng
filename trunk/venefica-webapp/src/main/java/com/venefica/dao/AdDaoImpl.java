@@ -7,6 +7,7 @@ import com.venefica.model.AdType;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
     @Override
     public Long save(Ad ad) {
+        ad.setCreatedAt(new Date());
         return saveEntity(ad);
     }
     

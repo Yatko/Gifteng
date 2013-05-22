@@ -4,14 +4,27 @@
  */
 package com.venefica.common;
 
+import com.venefica.config.Constants;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.ImageHtmlEmail;
 import org.apache.commons.mail.resolver.DataSourceUrlResolver;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.MethodInvocationException;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.apache.velocity.exception.TemplateInitException;
+import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
  *
@@ -20,6 +33,8 @@ import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 public class EmailSender {
     
     private static final Log logger = LogFactory.getLog(EmailSender.class);
+    
+    private static final String TEMPLATES_FOLDER = "templates/";
     
     private int smtpPort;
     private int smtpPortSSL;
@@ -34,12 +49,58 @@ public class EmailSender {
     private String imagesBaseUrl;
     private boolean enabled;
     
+    private VelocityEngine velocityEngine;
+    
+    @PostConstruct
+    public void init() {
+        try {
+            Properties props = new Properties();
+            props.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
+            props.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+            props.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
+            props.setProperty(RuntimeConstants.RESOURCE_LOADER, "class");
+            props.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            props.setProperty(RuntimeConstants.INPUT_ENCODING, Constants.DEFAULT_CHARSET);
+            props.setProperty(RuntimeConstants.OUTPUT_ENCODING, Constants.DEFAULT_CHARSET);
+            
+            for ( String name : props.stringPropertyNames() ) {
+                String value = props.getProperty(name);
+                logger.debug("Setting property for velocity initialization (" + name + "=" + value + ")");
+            }
+            
+            velocityEngine = new VelocityEngine(props);
+            velocityEngine.init();
+            logger.info("Velocity engine initialized");
+        } catch ( Exception ex ) {
+            logger.error(ex.getClass().getSimpleName() + " thrown when trying to initialize the velocity engine", ex);
+        }
+    }
+    
     /**
      * Returns the enabled status of this service.
      * @return 
      */
     public boolean isEnabled() {
         return enabled;
+    }
+    
+    /**
+     * Generates the content (subject, html message, plain text message)
+     * of the given templates and sends html mail to the provided address.
+     * 
+     * @param subjectTemplate velocity template name for mail subject
+     * @param htmlMessageTemplate velocity template name for mail html mail message
+     * @param plainMessageTemplate velocity template name for mail plain text message
+     * @param email email address
+     * @param vars velocity context variables
+     * @throws MailException 
+     */
+    public void sendHtmlEmailByTemplates(String subjectTemplate, String htmlMessageTemplate, String plainMessageTemplate, String email, Map<String, Object> vars) throws MailException {
+        String subject = mergeVelocityTemplate(TEMPLATES_FOLDER + subjectTemplate, vars);
+        String htmlMessage = mergeVelocityTemplate(TEMPLATES_FOLDER + htmlMessageTemplate, vars);
+        String plainMessage = mergeVelocityTemplate(TEMPLATES_FOLDER + plainMessageTemplate, vars);
+        
+        sendHtmlEmail(subject, htmlMessage, plainMessage, email);
     }
     
     /**
@@ -99,7 +160,41 @@ public class EmailSender {
             throw new MailException(MailException.EMAIL_SEND_ERROR, ex);
         }
     }
+    
+    public String mergeVelocityTemplate(String templateName, Map<String, Object> vars) {
+        if ( velocityEngine == null ) {
+            throw new RuntimeException("Velocity engine is not initialized");
+        }
+        
+        try {
+            Template template = velocityEngine.getTemplate(templateName);
+            VelocityContext context = new VelocityContext();
+            if ( vars != null && !vars.isEmpty() ) {
+                for ( Map.Entry<String, Object> entry : vars.entrySet() ) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    context.put(key, value);
+                }
+            }
 
+            StringWriter sw = new StringWriter();
+            template.merge(context, sw);
+            return sw.toString();
+        } catch ( ResourceNotFoundException ex ) {
+            throw new RuntimeException("Resource (" + templateName + ") not found", ex);
+        } catch ( ParseErrorException ex ) {
+            throw new RuntimeException("Syntax error! Problem parsing resource (" + templateName + ")", ex);
+        } catch ( MethodInvocationException ex ) {
+            throw new RuntimeException("Invocation error on resource (" + templateName + ")", ex);
+        } catch ( TemplateInitException ex ) {
+            throw new RuntimeException("Initialization error of resource (" + templateName + ")", ex);
+        } catch ( Exception ex ) {
+            throw new RuntimeException("Exception thrown on resource (" + templateName + "): " + ex.getMessage(), ex);
+        }
+    }
+
+    // setters
+    
     public void setSmtpPort(int smtpPort) {
         this.smtpPort = smtpPort;
     }

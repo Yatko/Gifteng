@@ -51,6 +51,7 @@ public class EmailConfig {
         emailService.setUndeliveredEmailAddress(undeliveredEmailAddress);
         emailService.setImagesBaseUrl(imagesBaseUrl);
         emailService.setEnabled(enabled);
+        emailService.init();
         return emailService;
     }
     
