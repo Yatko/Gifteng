@@ -130,6 +130,7 @@ class Profile extends CI_Controller {
             $this->load->library('usermanagement_service');
             
             $this->load->model('image_model');
+            $this->load->model('address_model');
             $this->load->model('ad_model');
             $this->load->model('user_model');
             $this->load->model('rating_model');

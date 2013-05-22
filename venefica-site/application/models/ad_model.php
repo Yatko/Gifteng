@@ -11,11 +11,10 @@ class Ad_model extends CI_Model {
     var $categoryId; //long
     var $category; //string
     var $title; //string
+    var $subtitle; //string
     var $description; //string
     var $price; //float
     var $quantity; //int
-    var $latitude; //double
-    var $longitude; //double
     var $image; //Image_model
     var $imageThumbnail; //Image_model
     var $images; //array of Image_model
@@ -36,6 +35,7 @@ class Ad_model extends CI_Model {
     var $freeShipping; //boolean
     var $pickUp; //boolean
     var $comments; //array of Comment_model
+    var $address; //Address_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Ad_model");
@@ -45,11 +45,10 @@ class Ad_model extends CI_Model {
             $this->categoryId = getField($obj, 'categoryId');
             $this->category = getField($obj, 'category');
             $this->title = getField($obj, 'title');
+            $this->subtitle = getField($obj, 'subtitle');
             $this->description = getField($obj, 'description');
             $this->price = getField($obj, 'price');
             $this->quantity = getField($obj, 'quantity');
-            $this->latitude = getField($obj, 'latitude');
-            $this->longitude = getField($obj, 'longitude');
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
             $this->inBookmars = getField($obj, 'inBookmars');
@@ -79,6 +78,9 @@ class Ad_model extends CI_Model {
             }
             if ( hasField($obj, 'comments') && hasField($obj->comments, 'item') && $obj->comments->item != null ) {
                 $this->comments = Comment_model::convertComments($obj->comments->item);
+            }
+            if ( hasField($obj, 'address') ) {
+                $this->address = Address_model::convertAddress($obj->address);
             }
         }
     }

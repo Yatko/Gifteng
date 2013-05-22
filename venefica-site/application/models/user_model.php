@@ -14,15 +14,12 @@ class User_model extends CI_Model {
     var $email; //string
     var $phoneNumber; //string
     var $dateOfBirth; //long - timestamp
-    var $country; //string
-    var $city; //string
-    var $area; //string
-    var $zipCode; //string
     var $avatar; //Image_model
     var $joinedAt; //long - timestamp
     var $inFollowers; //boolean
     var $inFollowings; //boolean
     var $gender; //MALE, FEMALE
+    var $address; //Address_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing User_model");
@@ -35,16 +32,15 @@ class User_model extends CI_Model {
             $this->email = getField($obj, 'email');
             $this->phoneNumber = getField($obj, 'phoneNumber');
             $this->dateOfBirth = getField($obj, 'dateOfBirth');
-            $this->country = getField($obj, 'country');
-            $this->city = getField($obj, 'city');
-            $this->area = getField($obj, 'area');
-            $this->zipCode = getField($obj, 'zipCode');
             $this->joinedAt = getField($obj, 'joinedAt');
             $this->inFollowers = getField($obj, 'inFollowers');
             $this->inFollowings = getField($obj, 'inFollowings');
             $this->gender = getField($obj, 'gender');
             if ( hasField($obj, 'avatar') ) {
                 $this->avatar = Image_model::convertImage($obj->avatar);
+            }
+            if ( hasField($obj, 'address') ) {
+                $this->address = Address_model::convertAddress($obj->address);
             }
         }
     }
@@ -74,12 +70,10 @@ class User_model extends CI_Model {
     }
     
     public function getLocation() {
-        $separator = ', ';
-        $ret = $this->city.$separator.$this->country;
-        if ( trim($ret) == trim($separator) ) {
-            $ret = '';
+        if ( $this->address == null ) {
+            return '';
         }
-        return $ret;
+        return $this->address->getLocation();
     }
     
     public function toString() {
@@ -90,10 +84,6 @@ class User_model extends CI_Model {
             ."email=".$this->email.", "
             ."phoneNumber=".$this->phoneNumber.", "
             ."dateOfBirth=".$this->dateOfBirth.", "
-            ."country=".$this->country.", "
-            ."city=".$this->city.", "
-            ."area=".$this->area.", "
-            ."zipCode=".$this->zipCode.", "
             ."avatar=".$this->avatar.", "
             ."joinedAt=".$this->joinedAt.", "
             ."inFollowers=".$this->inFollowers.", "
