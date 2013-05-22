@@ -1,8 +1,6 @@
 package com.venefica.service.dto;
 
 import com.venefica.model.Ad;
-import com.venefica.common.GeoUtils;
-import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +29,8 @@ public class AdDto extends DtoBase {
     @NotNull
     private String title;
     // in,out
+    private String subtitle;
+    // in,out
     private String description;
     // in,out
     private BigDecimal price;
@@ -38,10 +38,6 @@ public class AdDto extends DtoBase {
     @Min(1)
     @NotNull
     private Integer quantity;
-    // in,out
-    private Double latitude;
-    // in,out
-    private Double longitude;
     // in, out
     private ImageDto image;
     // in, out
@@ -88,6 +84,8 @@ public class AdDto extends DtoBase {
     @XmlElementWrapper(name = "comments")
     @XmlElement(name = "item")
     private List<CommentDto> comments;
+    // in, out
+    private AddressDto address;
 
     // Required for JAX-WS
     public AdDto() {
@@ -95,17 +93,15 @@ public class AdDto extends DtoBase {
 
     public void update(Ad ad) {
         ad.setTitle(title);
+        ad.setSubtitle(subtitle);
         ad.setDescription(description);
         ad.setPrice(price);
         ad.setQuantity(quantity);
         //ad.setWanted(wanted);
         ad.setFreeShipping(freeShipping);
         ad.setPickUp(pickUp);
-
-        if (latitude != null && longitude != null) {
-            Point newLocation = GeoUtils.createPoint(latitude, longitude);
-            ad.setLocation(newLocation);
-        }
+        ad.setAddress(address != null ? address.getAddress() : null);
+        ad.setLocation(address != null ? address.getLocation() : null);
     }
     
     // getter/setter
@@ -156,22 +152,6 @@ public class AdDto extends DtoBase {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
     }
 
     public ImageDto getImage() {
@@ -348,5 +328,21 @@ public class AdDto extends DtoBase {
 
     public void setPickUp(Boolean pickUp) {
         this.pickUp = pickUp;
+    }
+
+    public AddressDto getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressDto address) {
+        this.address = address;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 }
