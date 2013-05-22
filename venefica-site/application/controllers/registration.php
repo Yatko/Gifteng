@@ -50,7 +50,7 @@ class Registration extends CI_Controller {
             if ( $code ) {
                 $extra_data['invitation_code'] = $code;
             } else {
-                redirect('/authentication/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
             }
         }
     }
