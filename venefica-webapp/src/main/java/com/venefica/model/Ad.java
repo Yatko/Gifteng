@@ -48,8 +48,10 @@ public class Ad {
     @ForeignKey(name = "ad_category_fk")
     private Category category;
     
-    @Column(length = 100, nullable = false)
+    @Column(length = 500, nullable = false)
     private String title;
+    @Column(length = 500)
+    private String subtitle;
     @Column(length = 1000)
     private String description;
     
@@ -72,7 +74,6 @@ public class Ad {
     @Column(columnDefinition = "Geometry")
     @Type(type = "org.hibernate.spatial.GeometryType")
     private Point location;
-    
     @Embedded
     private Address address;
     
@@ -84,6 +85,9 @@ public class Ad {
     private User creator;
     
 //    private boolean wanted; //not used in the gifteng project
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date availableAt; //beginning of the offer (available since)
     
     private int numExpire; //how many times expired
     @Column(nullable = false)
@@ -557,5 +561,21 @@ public class Ad {
 
     public void setNumExpire(int numExpire) {
         this.numExpire = numExpire;
+    }
+
+    public Date getAvailableAt() {
+        return availableAt;
+    }
+
+    public void setAvailableAt(Date availableAt) {
+        this.availableAt = availableAt;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 }

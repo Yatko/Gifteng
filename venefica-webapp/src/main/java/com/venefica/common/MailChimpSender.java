@@ -4,6 +4,7 @@
  */
 package com.venefica.common;
 
+import com.venefica.service.fault.GeneralException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,13 @@ public class MailChimpSender {
         return enabled;
     }
     
+    /**
+     * Subscribes the given email address to a predefined MailChimp list.
+     * 
+     * @param emailAddress
+     * @param vars variables that are used on generated email
+     * @throws MailException 
+     */
     public void listSubscribe(String emailAddress, Map<String, Object> vars) throws MailException {
         if ( !enabled ) {
             logger.info("MailChimp usage is not enabled!");
@@ -53,7 +61,7 @@ public class MailChimpSender {
         } catch (MailJimpException ex) {
             logger.error("MailChimp error (status code: " + ex.getStatusCode() + ")", ex);
             
-            int errorCode = MailException.GENERAL_ERROR;
+            int errorCode = GeneralException.GENERAL_ERROR;
             String message = ex.getMessage();
             Pattern pattern = Pattern.compile("Code: (.*?)\\.");
             Matcher matcher = pattern.matcher(message);

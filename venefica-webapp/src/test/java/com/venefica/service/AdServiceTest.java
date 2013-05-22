@@ -10,6 +10,7 @@ import com.venefica.model.Bookmark;
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
@@ -31,6 +32,7 @@ import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -135,8 +137,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setTitle("Test");
         adDto.setDescription("Test description");
         adDto.setPrice(new BigDecimal(5.0));
-        adDto.setLatitude(new Double(5.0));
-        adDto.setLongitude(new Double(1.0));
+        adDto.setAddress(new AddressDto(new Double(5.0), new Double(1.0)));
         adDto.setImage(new ImageDto(ImageType.JPEG, new byte[]{0x01, 0x02, 0x03}));
 
         Long adId = client.placeAd(adDto);
@@ -308,6 +309,22 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
         Image image = imageDao.get(imageId);
         assertTrue("Image not deleted!", image == null);
+    }
+    
+    @Test
+    public void deleteImagesFromAdTest() throws AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException {
+        authenticateClientAsFirstUser();
+        
+        Long imageId_1 = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[] {0x01, 0x02, 0x03}));
+        Long imageId_2 = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[] {0x01, 0x02, 0x03}));
+        
+        client.deleteImagesFromAd(FIRST_AD_ID, Arrays.asList(imageId_1, imageId_2));
+
+        Image image_1 = imageDao.get(imageId_1);
+        assertTrue("Image 1 not deleted!", image_1 == null);
+        
+        Image image_2 = imageDao.get(imageId_2);
+        assertTrue("Image 2 not deleted!", image_2 == null);
     }
 
     @Test(expected = AdNotFoundException.class)

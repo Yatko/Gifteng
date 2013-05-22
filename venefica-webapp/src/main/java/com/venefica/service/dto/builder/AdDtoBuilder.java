@@ -7,6 +7,7 @@ import com.venefica.model.Rating;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
 import com.venefica.service.dto.UserDto;
@@ -81,8 +82,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setQuantity(model.getQuantity());
 
         if (model.getLocation() != null) {
-            adDto.setLatitude(model.getLocation().getY());
-            adDto.setLongitude(model.getLocation().getX());
+            adDto.setAddress(new AddressDto(model.getLocation()));
         }
 
         if (model.getMainImage() != null) {

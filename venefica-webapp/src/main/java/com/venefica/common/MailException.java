@@ -10,7 +10,6 @@ package com.venefica.common;
  */
 public class MailException extends Exception {
     
-    public static final int GENERAL_ERROR           = 0;
     //email sending related errors
     public static final int INVALID_FROM_ADDRESS    = 1;
     public static final int INVALID_TO_ADDRESS      = 2;

@@ -9,7 +9,6 @@
     <context:property-placeholder location="classpath:application.properties" />
     
     <import resource="jdbc.xml" />
-    <!--<import resource="email.xml" />-->
     
     <!-- MailChimp integration -->
     <import resource="classpath:mailjimp-spring-config.xml" />

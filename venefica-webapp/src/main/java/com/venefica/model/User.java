@@ -112,40 +112,16 @@ public class User {
         return userData != null ? userData.getPhoneNumber() : null;
     }
     
-    public String getCountry() {
-        return userData != null && userData.getAddress() != null ? userData.getAddress().getCountry() : null;
-    }
-    
-    public String getCity() {
-        return userData != null && userData.getAddress() != null ? userData.getAddress().getCity() : null;
-    }
-    
-    public String getArea() {
-        return userData != null && userData.getAddress() != null ? userData.getAddress().getArea() : null;
-    }
-    
-    public String getZipCode() {
-        return userData != null && userData.getAddress() != null ? userData.getAddress().getZipCode() : null;
-    }
-    
     public void setPhoneNumber(String phoneNumber) {
         this.userData.setPhoneNumber(phoneNumber);
     }
     
-    public void setCountry(String country) {
-        this.userData.getAddress().setCountry(country);
+    public Address getAddress() {
+        return userData != null ? userData.getAddress() : null;
     }
     
-    public void setCity(String city) {
-        this.userData.getAddress().setCity(city);
-    }
-    
-    public void setArea(String area) {
-        this.userData.getAddress().setArea(area);
-    }
-    
-    public void setZipCode(String zipCode) {
-        this.userData.getAddress().setZipCode(zipCode);
+    public void setAddress(Address address) {
+        this.userData.setAddress(address);
     }
     
     public boolean isBusinessAcc() {
