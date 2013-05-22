@@ -64,14 +64,14 @@ class Registration extends CI_Controller {
         
         $code = $this->input->post('invitation_code');
         
-        $this->load->model('user_model');
-        $this->user_model->firstName = $this->input->post('registration_firstname');
-        $this->user_model->lastName = $this->input->post('registration_lastname');
-        $this->user_model->email = $this->input->post('registration_email');
+        $user = new User_model();
+        $user->firstName = $this->input->post('registration_firstname');
+        $user->lastName = $this->input->post('registration_lastname');
+        $user->email = $this->input->post('registration_email');
         
         try {
             $this->load->library('usermanagement_service');
-            $this->usermanagement_service->registerUser($this->user_model, $password, $code);
+            $this->usermanagement_service->registerUser($user, $password, $code);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'User registration failed! '.$ex->getMessage());
             $this->registration_form->set_message('register_user', lang('registration_failed'));
@@ -87,6 +87,10 @@ class Registration extends CI_Controller {
             //load translations
             $this->lang->load('main');
             $this->lang->load('registration');
+            
+            $this->load->model('image_model');
+            $this->load->model('address_model');
+            $this->load->model('user_model');
             
             $this->initialized = true;
         }

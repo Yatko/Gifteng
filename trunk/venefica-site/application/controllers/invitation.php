@@ -244,17 +244,17 @@ class Invitation extends CI_Controller {
             return FALSE;
         }
         
-        $this->load->model('invitation_model');
-        $this->invitation_model->email = $this->input->post('invitation_email');
-        $this->invitation_model->country = $this->input->post('invitation_country');
-        $this->invitation_model->zipCode = $this->input->post('invitation_zipcode');
-        $this->invitation_model->source = $this->input->post('invitation_source');
-        $this->invitation_model->otherSource = $this->input->post('invitation_source_other');
-        $this->invitation_model->userType = $this->input->post('invitation_usertype');
+        $invitation = new Invitation_model();
+        $invitation->email = $this->input->post('invitation_email');
+        $invitation->country = $this->input->post('invitation_country');
+        $invitation->zipCode = $this->input->post('invitation_zipcode');
+        $invitation->source = $this->input->post('invitation_source');
+        $invitation->otherSource = $this->input->post('invitation_source_other');
+        $invitation->userType = $this->input->post('invitation_usertype');
 
         try {
             $this->load->library('invitation_service');
-            $this->invitation_service->requestInvitation($this->invitation_model);
+            $this->invitation_service->requestInvitation($invitation);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Cannot request invitation: '.$ex->getMessage());
             
@@ -306,6 +306,8 @@ class Invitation extends CI_Controller {
             //load translations
             $this->lang->load('main');
             $this->lang->load('invitation');
+            
+            $this->load->model('invitation_model');
             
             $this->initialized = true;
         }

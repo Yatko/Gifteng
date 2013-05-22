@@ -261,6 +261,7 @@ class Authentication extends CI_Controller {
             $this->load->library('usermanagement_service');
             
             $this->load->model('image_model');
+            $this->load->model('address_model');
             $this->load->model('user_model');
             
             $this->initialized = true;
