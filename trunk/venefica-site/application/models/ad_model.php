@@ -153,6 +153,13 @@ class Ad_model extends CI_Model {
         return date(DATE_FORMAT, $this->expiresAt / 1000);
     }
     
+    public function getLocation() {
+        if ( $this->address == null ) {
+            return '';
+        }
+        return $this->address->getLocation();
+    }
+    
     // static helpers
     
     public static function convertAds($adsResult) {
