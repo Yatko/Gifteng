@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
+import com.venefica.module.user.ProfileDetailActivity;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserProfileActivity;
 import com.venefica.module.utils.Utility;
@@ -289,14 +290,16 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
 				txtMemberInfo.append(Utility.convertShortDateToString(user
 						.getJoinedAt()));
 			}
-			txtAddress.setText(user.getCity() + ", " + user.getCounty());
+			txtAddress.setText(user.getAddress().getCity() + ", " + user.getAddress().getCounty());
 		}
 	}
 
 	@Override
 	public void onClick(View view) {
-		Intent accountIntent = new Intent(getContext(), UserProfileActivity.class);
-		accountIntent.putExtra("act_mode",UserProfileActivity.ACT_MODE_VIEW_PROFILE);
+//		Intent accountIntent = new Intent(getContext(), UserProfileActivity.class);
+//		accountIntent.putExtra("act_mode",UserProfileActivity.ACT_MODE_VIEW_PROFILE);
+		Intent accountIntent = new Intent(getContext(), ProfileDetailActivity.class);
+		accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
 		getContext().startActivity(accountIntent);
 	}
 }
