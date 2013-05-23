@@ -42,6 +42,8 @@
     <string name="g_label_review_by">Review by</string>
     <string name="g_label_cancel_request">Cancel Request</string>
     <string name="g_label_choose_email">Choose an Email client</string>
+    <string name="g_label_unfollow">Unfollow</string>
+    
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
