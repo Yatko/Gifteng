@@ -80,6 +80,30 @@ public interface AdService {
     Long placeAd(@WebParam(name = "ad") @NotNull AdDto adDto) throws AdValidationException;
     
     /**
+     * Updates the ad. Only ad creator can update ad.
+     * 
+     * @param adDto updated ad.
+     * @throws AdNotFoundException is throw when the updating ad not found.
+     * @throws AuthorizationException is thrown when a user different from
+     * the creator is trying to update the ad
+     */
+    @WebMethod(operationName = "UpdateAd")
+    void updateAd(@WebParam(name = "ad") @NotNull AdDto adDto)
+            throws AdNotFoundException, AdValidationException, AuthorizationException;
+    
+    /**
+     * Deletes the ad with the specified id. Only ad creator can delete ad.
+     * 
+     * @param adId id of the ad
+     * @throws AdNotFoundException is thrown when the ending ad not found.
+     * @throws AuthorizationException is thrown when a user different from
+     * the creator is trying to delete the ad
+     */
+    @WebMethod(operationName = "DeleteAd")
+    void deleteAd(@WebParam(name = "adId") @NotNull Long adId)
+            throws AdNotFoundException, AuthorizationException;
+    
+    /**
      * Ads an image to the specified ad. The image data is stored in the
      * database as LOB.
      * 
@@ -134,30 +158,6 @@ public interface AdService {
             @WebParam(name = "imageIds") List<Long> imageIds)
             throws AdNotFoundException, AuthorizationException, ImageNotFoundException;
 
-    /**
-     * Updates the ad. Only ad creator can update ad.
-     * 
-     * @param adDto updated ad.
-     * @throws AdNotFoundException is throw when the updating ad not found.
-     * @throws AuthorizationException is thrown when a user different from
-     * the creator is trying to update the ad
-     */
-    @WebMethod(operationName = "UpdateAd")
-    void updateAd(@WebParam(name = "ad") @NotNull AdDto adDto)
-            throws AdNotFoundException, AdValidationException, AuthorizationException;
-    
-    /**
-     * Deletes the ad with the specified id. Only ad creator can delete ad.
-     * 
-     * @param adId id of the ad
-     * @throws AdNotFoundException is thrown when the ending ad not found.
-     * @throws AuthorizationException is thrown when a user different from
-     * the creator is trying to delete the ad
-     */
-    @WebMethod(operationName = "DeleteAd")
-    void deleteAd(@WebParam(name = "adId") @NotNull Long adId)
-            throws AdNotFoundException, AuthorizationException;
-    
     
     
     //*************************
