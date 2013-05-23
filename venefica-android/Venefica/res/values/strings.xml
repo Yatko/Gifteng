@@ -24,7 +24,7 @@
     <string name="g_label_postlisting_notes">Notes</string>
     <string name="g_label_postlisting_details">Details</string>
     <string name="g_label_postlisting_next">Next</string>
-	<string name="g_label_free_shipping">Free Shipping</string>
+    <string name="g_label_free_shipping">Free Shipping</string>
     <string name="g_label_pick_up">Pick Up</string>
     <string name="g_label_edit">Edit</string>
     <string name="g_label_save">Save</string>
@@ -82,7 +82,7 @@
     <string name="g_facebook_share">https://www.facebook.com/gifteng</string>
     <string name="g_twitter_share">https://twitter.com/gifteng</string>
     <string name="g_geftang_url">https://www.gifteng.com</string>
-    
+
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
@@ -92,12 +92,12 @@
     <string name="g_error_ad_no_more_available">Requested gift no more available.</string>
 
     <string-array name="g_array_purpose_of_registration">
-        <item >How did you here out about us?</item>
-        <item >Google</item>
-        <item >Facebook</item>
-        <item >Twitter</item>
-        <item >From A Friend</item>
-        <item >Other</item>
+        <item>How did you here out about us?</item>
+        <item>Google</item>
+        <item>Facebook</item>
+        <item>Twitter</item>
+        <item>From A Friend</item>
+        <item>Other</item>
     </string-array>
     <!-- Venefica -->
     <!-- Labels -->
@@ -407,5 +407,7 @@
     <string name="title_activity_start_up">StartUpActivity</string>
     <string name="title_activity_invitation">InvitationActivity</string>
     <string name="title_activity_password_reset">PasswordResetActivity</string>
+    <string name="title_activity_profile_detail">ProfileDetailActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
