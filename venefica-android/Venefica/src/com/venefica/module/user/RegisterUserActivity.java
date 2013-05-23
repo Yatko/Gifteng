@@ -42,6 +42,7 @@ import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -541,10 +542,12 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 			}else{
 				user.setDateOfBirth(calendar.getTime());
 			}
-			user.setZipCode(edtZipCode.getText().toString());
-			user.setCity(edtCity.getText().toString());
-			user.setCounty(edtCounty.getText().toString());
-			user.setArea(edtArea.getText().toString());
+			AddressDto addressDto = new AddressDto();
+			addressDto.setZipCode(edtZipCode.getText().toString());
+			addressDto.setCity(edtCity.getText().toString());
+			addressDto.setCounty(edtCounty.getText().toString());
+			addressDto.setArea(edtArea.getText().toString());
+			user.setAddress(addressDto);
 			if(profileBitmap != null){
 				user.setAvatar(new ImageDto(profileBitmap));
 			}
@@ -635,10 +638,12 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 		if (userDto.getDateOfBirth() != null) {
 			edtDateOfBirth.setText(Constants.dateFormat.format(userDto.getDateOfBirth()));
 		}	
-		edtZipCode.setText(userDto.getZipCode());
-		edtCounty.setText(userDto.getCounty());
-		edtCity.setText(userDto.getCity());
-		edtArea.setText(userDto.getArea());		
+		if (userDto.getAddress() != null) {
+			edtZipCode.setText(userDto.getAddress().getZipCode());
+			edtCounty.setText(userDto.getAddress().getCounty());
+			edtCity.setText(userDto.getAddress().getCity());
+			edtArea.setText(userDto.getAddress().getArea());
+		}		
 	}
 	@Override
 	public void onClick(View v) {
