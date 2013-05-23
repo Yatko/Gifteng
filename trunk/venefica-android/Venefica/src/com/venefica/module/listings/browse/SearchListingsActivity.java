@@ -563,8 +563,8 @@ ISlideMenuCallback, LocationListener{
 		if (isMapShown) {
 			overlayItems.clear();
 			for (AdDto adDto : listings) {				
-				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getLatitude() * 1E6)
-						, (int)(adDto.getLongitude() * 1E6)), adDto.getTitle()
+				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getAddress().getLatitude() * 1E6)
+						, (int)(adDto.getAddress().getLongitude() * 1E6)), adDto.getTitle()
 						, adDto.getDescription(), adDto.getId()
 						, Constants.PHOTO_URL_PREFIX + adDto.getImage().getUrl()));
 			}
