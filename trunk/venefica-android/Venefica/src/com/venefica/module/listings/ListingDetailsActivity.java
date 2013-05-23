@@ -475,9 +475,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	private void setDetails(AdDto listing) {
 		if (!listing.isOwner()) {
 			layRequest.setVisibility(ViewGroup.VISIBLE);			
-		} else {
+		} /*else {
 			listing.setCreator(((VeneficaApplication) getApplication()).getUser());
-		}
+		}*/
 		//Show on map
 		updateMap(listing.getAddress().getLatitude(), listing.getAddress().getLongitude()
 				, listing.getTitle(), listing.getDescription(), listing.getId()
@@ -506,7 +506,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		txtMemberInfo.append(Utility.convertShortDateToString(listing.getCreator().getJoinedAt()));
 		if (listing.getCreator().getAddress() != null) {
 			txtAddress.setText(listing.getCreator().getAddress().getCity() +", "+listing.getCreator().getAddress().getCounty());
-		}	
+		}
+		if (listing.getCreator().isInFollowings()) {
+			btnFollow.setText(getResources().getString(R.string.label_follow));
+		} else {
+			btnFollow.setText(getResources().getString(R.string.g_label_unfollow));
+		}
 		
 		//set listing details
 		StringBuffer text = new StringBuffer();
@@ -787,7 +792,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				}
 			}						
 		} else if (id == R.id.imgBtnUserViewFollow) {
-			new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);			
+			if (listing.getCreator().isInFollowings()) {
+				new ListingDetailsTask().execute(ACT_MODE_UNFOLLOW_USER);
+			} else {
+				new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);
+			}			
 		} else if (id == R.id.btnActListingDetailsFlag && listing != null) {
 			if (listing.isCanMarkAsSpam()) {
 				ERROR_CODE = ERROR_CONF_MARK_AS_SPAM;				
