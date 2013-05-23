@@ -23,8 +23,8 @@ public class AdDto implements KvmSerializable
 	private String title = "";
 	private String description = "";
 	private BigDecimal price = new BigDecimal(0.0f);
-	private double latitude;
-	private double longitude;
+//	private double latitude;
+//	private double longitude;
 	private ImageDto image;
 	/** takes milliseconds */
 	private String createdAt = "";
@@ -48,6 +48,9 @@ public class AdDto implements KvmSerializable
     private Boolean freeShipping;
     private Boolean pickUp;
     private int quantity;
+    private String subtitle;
+    private AddressDto address;
+    private List<CommentDto> comments;
 	public AdDto()
 	{
 
@@ -70,52 +73,58 @@ public class AdDto implements KvmSerializable
 				return description;
 			case 5:
 				return String.valueOf(price);
+//			case 6:
+//				return String.valueOf(latitude);
+//			case 7:
+//				return String.valueOf(longitude);
 			case 6:
-				return String.valueOf(latitude);
-			case 7:
-				return String.valueOf(longitude);
-			case 8:
 				return image;
-			case 9:
+			case 7:
 				return createdAt;
-			case 10:
+			case 8:
 				return owner;
-			case 11:
+			case 9:
 				return imageThumbnail;
-			case 12:
+			case 10:
 				return inBookmars;
-			case 13:
+			case 11:
 				return expiresAt != null ? expiresAt.getTime() : 0;
 //			case 14:
 //				return wanted;
-			case 14:
+			case 12:
 				return numViews;
-			case 15:
+			case 13:
 				return creator;
-			case 16:
+			case 14:
 				return expired;
-			case 17:
+			case 15:
 				return numAvailProlongations;
-			case 18:
+			case 16:
 				return canMarkAsSpam;
-			case 19:
+			case 17:
 				return String.valueOf(rating);
-			case 20:
+			case 18:
 				return canRate;
-			case 21:
+			case 19:
 				return null; //images no send
-			case 22:
+			case 20:
 				return sent;
-			case 23:
+			case 21:
 				return received;
-			case 24:
+			case 22:
 				return requested;
-			case 25:
+			case 23:
 				return freeShipping;
-			case 26:
+			case 24:
 				return pickUp;
-			case 27:
+			case 25:
 				return quantity;
+			case 26:
+				return subtitle;
+			case 27:
+				return address;
+			case 28:
+				return comments;
 		}
 
 		return null;
@@ -123,7 +132,7 @@ public class AdDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 28;
+		return 29;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -160,42 +169,42 @@ public class AdDto implements KvmSerializable
 				info.type = BigDecimal.class;
 				break;
 
+//			case 6:
+//				info.name = "latitude";
+//				info.type = Double.TYPE;
+//				break;
+//
+//			case 7:
+//				info.name = "longitude";
+//				info.type = Double.TYPE;
+//				break;
+
 			case 6:
-				info.name = "latitude";
-				info.type = Double.TYPE;
-				break;
-
-			case 7:
-				info.name = "longitude";
-				info.type = Double.TYPE;
-				break;
-
-			case 8:
 				info.name = "image";
 				info.type = ImageDto.class;
 				break;
 
-			case 9:
+			case 7:
 				info.name = "createdAt";
 				info.type = String.class;
 				break;
 
-			case 10:
+			case 8:
 				info.name = "owner";
 				info.type = Boolean.class;
 				break;
 
-			case 11:
+			case 9:
 				info.name = "imageThumbnail";
 				info.type = ImageDto.class;
 				break;
 
-			case 12:
+			case 10:
 				info.name = "inBookmars";
 				info.type = Boolean.class;
 				break;
 
-			case 13:
+			case 11:
 				info.name = "expiresAt";
 				info.type = Long.class;
 				break;
@@ -205,68 +214,80 @@ public class AdDto implements KvmSerializable
 //				info.type = Boolean.class;
 //				break;
 
-			case 14:
+			case 12:
 				info.name = "numViews";
 				info.type = Long.class;
 				break;
 
-			case 15:
+			case 13:
 				info.name = "creator";
 				info.type = UserDto.class;
 				break;
 
-			case 16:
+			case 14:
 				info.name = "expired";
 				info.type = Boolean.class;
 				break;
 
-			case 17:
+			case 15:
 				info.name = "numAvailProlongations";
 				info.type = Integer.class;
 				break;
 
-			case 18:
+			case 16:
 				info.name = "canMarkAsSpam";
 				info.type = Boolean.class;
 				break;
 
-			case 19:
+			case 17:
 				info.name = "rating";
 				info.type = Float.class;
 				break;
 
-			case 20:
+			case 18:
 				info.name = "canRate";
 				info.type = Boolean.class;
 				break;
 
-			case 21:
+			case 19:
 				info.name = "images";
 				info.type = new Vector<ImageDto>().getClass();
 				break;
-			case 22:
+			case 20:
 				info.name = "sent";
 				info.type = Boolean.class;
 				break;
-			case 23:
+			case 21:
 				info.name = "received";
 				info.type = Boolean.class;
 				break;
-			case 24:
+			case 22:
 				info.name = "requested";
 				info.type = Boolean.class;
 				break;
-			case 25:
+			case 23:
 				info.name = "freeShipping";
 				info.type = Boolean.class;
 				break;
-			case 26:
+			case 24:
 				info.name = "pickUp";
 				info.type = Boolean.class;
 				break;
-			case 27:
+			case 25:
 				info.name = "quantity";
 				info.type = Integer.class;
+				break;
+			case 26:
+				info.name = "subtitle";
+				info.type = String.class;
+				break;
+			case 27:
+				info.name = "address";
+				info.type = AddressDto.class;
+				break;
+			case 28:
+				info.name = "comments";
+				info.type = new Vector<CommentDto>().getClass();
 				break;
 			default:
 				break;
@@ -298,55 +319,55 @@ public class AdDto implements KvmSerializable
 				case 5:
 					price = BigDecimal.valueOf(Double.valueOf(String.valueOf(value)));
 					break;
+//				case 6:
+//					latitude = Double.valueOf(value.toString());
+//					break;
+//				case 7:
+//					longitude = Double.valueOf(value.toString());
+//					break;
 				case 6:
-					latitude = Double.valueOf(value.toString());
-					break;
-				case 7:
-					longitude = Double.valueOf(value.toString());
-					break;
-				case 8:
 					image = (ImageDto)value;
 					break;
-				case 9:
+				case 7:
 					createdAt = String.valueOf(value);
 					break;
-				case 10:
+				case 8:
 					owner = Boolean.parseBoolean(value.toString());
 					break;
-				case 11:
+				case 9:
 					imageThumbnail = (ImageDto)value;
 					break;
-				case 12:
+				case 10:
 					inBookmars = Boolean.parseBoolean(value.toString());
 					break;
-				case 13:
+				case 11:
 					expiresAt = new Date(Long.parseLong(value.toString()));
 					break;
 //				case 14:
 //					wanted = Boolean.parseBoolean(value.toString());
 //					break;
-				case 14:
+				case 12:
 					numViews = Long.valueOf(value.toString());
 					break;
-				case 15:
+				case 13:
 					creator = (UserDto)value;
 					break;
-				case 16:
+				case 14:
 					expired = Boolean.parseBoolean(value.toString());
 					break;
-				case 17:
+				case 15:
 					numAvailProlongations = Integer.valueOf(value.toString());
 					break;
-				case 18:
+				case 16:
 					canMarkAsSpam = Boolean.parseBoolean(value.toString());
 					break;
-				case 19:
+				case 17:
 					rating = Float.valueOf(value.toString());
 					break;
-				case 20:
+				case 18:
 					canRate = Boolean.parseBoolean(value.toString());
 					break;
-				case 21:
+				case 19:
 					images = (Vector<ImageDto>)value;
 					
 					/*if(images == null)
@@ -354,28 +375,35 @@ public class AdDto implements KvmSerializable
 					
 					images.add((ImageDto)value);*/
 					break;
-				case 22:
+				case 20:
 					sent = Boolean.parseBoolean(value.toString());
 					break;
-				case 23:
+				case 21:
 					received = Boolean.parseBoolean(value.toString());
 					break;
-				case 24:
+				case 22:
 					requested = Boolean.parseBoolean(value.toString());
 					break;
-				case 25:
+				case 23:
 					freeShipping = Boolean.parseBoolean(value.toString());
 					break;
-				case 26:
+				case 24:
 					pickUp = Boolean.parseBoolean(value.toString());
 					break;
-				case 27:
+				case 25:
 					quantity = Integer.valueOf(value.toString());
 					break;
+				case 26:
+					subtitle = String.valueOf(value);
+					break;
+				case 27:
+					address = (AddressDto)value;
+					break;
+				case 28:
+					comments = (List<CommentDto>)value;
+					break;
 			}
-		}
-		catch (Exception e)
-		{
+		}catch (Exception e){
 			Log.d("AdDto.setProperty Exception:", e.getLocalizedMessage());
 		}
 	}
@@ -385,6 +413,8 @@ public class AdDto implements KvmSerializable
 		envelope.addMapping(Constants.SERVICES_NAMESPACE, this.getClass().getName(), this.getClass());
 		new ImageDto().register(envelope);
 		new UserDto().register(envelope);
+		new AddressDto().register(envelope);
+		new CommentDto().register(envelope);
 	}
 
 	public void registerRead(SoapSerializationEnvelope envelope)
@@ -392,6 +422,8 @@ public class AdDto implements KvmSerializable
 		envelope.addMapping(null, "AdDto", this.getClass());
 		new ImageDto().registerRead(envelope);
 		new UserDto().registerRead(envelope);
+		new AddressDto().registerRead(envelope);
+		new CommentDto().registerRead(envelope);
 	}
 
 	/**
@@ -480,31 +512,31 @@ public class AdDto implements KvmSerializable
 
 	/**
 	 * @return the latitude
-	 */
+	 *//*
 	public double getLatitude() {
 		return latitude;
 	}
 
-	/**
+	*//**
 	 * @param latitude the latitude to set
-	 */
+	 *//*
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	/**
+	*//**
 	 * @return the longitude
-	 */
+	 *//*
 	public double getLongitude() {
 		return longitude;
 	}
 
-	/**
+	*//**
 	 * @param longitude the longitude to set
-	 */
+	 *//*
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-	}
+	}*/
 
 	/**
 	 * @return the image
@@ -810,5 +842,53 @@ public class AdDto implements KvmSerializable
 	 */
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+
+	/**
+	 * @return the subtitle
+	 */
+	public String getSubtitle() {
+		return subtitle;
+	}
+
+
+	/**
+	 * @param subtitle the subtitle to set
+	 */
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
+
+
+	/**
+	 * @return the address
+	 */
+	public AddressDto getAddress() {
+		return address;
+	}
+
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(AddressDto address) {
+		this.address = address;
+	}
+
+
+	/**
+	 * @return the comments
+	 */
+	public List<CommentDto> getComments() {
+		return comments;
+	}
+
+
+	/**
+	 * @param comments the comments to set
+	 */
+	public void setComments(List<CommentDto> comments) {
+		this.comments = comments;
 	}
 }
