@@ -171,6 +171,8 @@ public class User {
         return id != null && id.equals(other.id);
     }
 
+    // getters/setters
+    
     public Long getId() {
         return id;
     }
