@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
-import com.venefica.services.ReviewDto;
+import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -28,12 +28,12 @@ import android.widget.TextView;
 public class ReviewsExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
-	private ArrayList<ReviewDto> reviewsList;
+	private ArrayList<RatingDto> reviewsList;
 	private ReviewViewHolder reviewViewHolder;
 	/**
 	 * Constructor
 	 */
-	public ReviewsExpandableListAdapter(Context context, ArrayList<ReviewDto> reviews) {
+	public ReviewsExpandableListAdapter(Context context, ArrayList<RatingDto> reviews) {
 		this.context = context;
 		this.reviewsList = reviews;
 	}
@@ -68,21 +68,21 @@ public class ReviewsExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = inflater.inflate(R.layout.view_reviews_list_item, null);
 		}
 		if (groupPosition == 0) {
-			reviewViewHolder.txtUserName.setText(reviewsList.get(childPosition).getFrom().getFirstName() + " "
-					+ (reviewsList.get(childPosition).getFrom().getLastName())) ;
+			reviewViewHolder.txtUserName.setText(reviewsList.get(childPosition).getFromUser().getFirstName() + " "
+					+ (reviewsList.get(childPosition).getFromUser().getLastName())) ;
 //			reviewViewHolder.txtReview.setText(context.getResources().getText(
 //					R.string.label_detail_listing_member_since).toString());
 //			reviewViewHolder.txtMemberInfo.append(" ");
-			if (reviewsList.get(childPosition).getReviewedAt() != null) {
+			if (reviewsList.get(childPosition).getRatedAt() != null) {
 				reviewViewHolder.txtReviwAt.append(
-						Utility.convertShortDateToString(reviewsList.get(childPosition).getReviewedAt()));
+						Utility.convertShortDateToString(reviewsList.get(childPosition).getRatedAt()));
 			}
-			if (reviewsList.get(childPosition).getFrom().getAvatar() != null
-					&& reviewsList.get(childPosition).getFrom().getAvatar().getUrl() != null) {
+			if (reviewsList.get(childPosition).getFromUser().getAvatar() != null
+					&& reviewsList.get(childPosition).getFromUser().getAvatar().getUrl() != null) {
 				((VeneficaApplication) ((UserProfileActivity)this.context).getApplication())
 						.getImgManager().loadImage(
 								Constants.PHOTO_URL_PREFIX
-										+ reviewsList.get(childPosition).getFrom().getAvatar().getUrl(),
+										+ reviewsList.get(childPosition).getFromUser().getAvatar().getUrl(),
 								reviewViewHolder.imgProfile,
 								context.getResources().getDrawable(
 										R.drawable.icon_picture_white));
@@ -156,7 +156,7 @@ public class ReviewsExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean hasStableIds() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -165,7 +165,7 @@ public class ReviewsExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	private static class ReviewViewHolder{
