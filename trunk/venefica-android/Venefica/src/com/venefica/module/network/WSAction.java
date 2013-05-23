@@ -29,6 +29,7 @@ import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.AddressDto;
 import com.venefica.services.CategoryDto;
 import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
@@ -764,7 +765,8 @@ public class WSAction {
 			envelope.setOutputSoapObject(request);
 			new AdDto().registerRead(envelope);
 			new FilterDto().register(envelope);
-
+			new AddressDto().register(envelope);
+			
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
