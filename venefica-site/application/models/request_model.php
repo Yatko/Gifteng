@@ -9,7 +9,7 @@ class Request_model extends CI_Model {
     var $adId; //long
     var $user; //User_model
     var $requestedAt; //long - timestamp
-    var $status; //string: PENDING, EXPIRED, ACCEPTED
+    var $status; //enum: PENDING, EXPIRED, ACCEPTED
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Request_model");
