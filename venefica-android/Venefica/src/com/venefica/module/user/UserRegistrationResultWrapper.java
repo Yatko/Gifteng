@@ -5,7 +5,7 @@ package com.venefica.module.user;
 
 import java.util.List;
 
-import com.venefica.services.ReviewDto;
+import com.venefica.services.RatingDto;
 
 /**
  * Wrapper class for user registration result data
@@ -18,5 +18,5 @@ public class UserRegistrationResultWrapper {
 	public String data = null;
 	public List<UserDto> followings;
 	public List<UserDto> followers;
-	public List<ReviewDto> reviews;
+	public List<RatingDto> reviews;
 }
