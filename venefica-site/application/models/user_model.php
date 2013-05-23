@@ -18,7 +18,7 @@ class User_model extends CI_Model {
     var $joinedAt; //long - timestamp
     var $inFollowers; //boolean
     var $inFollowings; //boolean
-    var $gender; //MALE, FEMALE
+    var $gender; //enum: MALE, FEMALE
     var $address; //Address_model
     
     public function __construct($obj = null) {
