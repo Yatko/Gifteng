@@ -23,6 +23,7 @@ import com.venefica.module.main.R;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
 
 /**
@@ -86,10 +87,11 @@ public class JoinGiftingFragment extends SherlockFragment implements OnClickList
 				userDto.setDateOfBirth(Calendar.getInstance().getTime());
 				userDto.setJoinedAt(Calendar.getInstance().getTime());
 				userDto.setPhoneNumber("");
-				userDto.setZipCode("");
-				userDto.setCity("");
-				userDto.setCounty("");
-				userDto.setArea("");
+				userDto.setAddress(new AddressDto());
+//				userDto.setZipCode("");
+//				userDto.setCity("");
+//				userDto.setCounty("");
+//				userDto.setArea("");
 				userDto.setAvatar(new ImageDto(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher)));
 				
 				// hide virtual keyboard
