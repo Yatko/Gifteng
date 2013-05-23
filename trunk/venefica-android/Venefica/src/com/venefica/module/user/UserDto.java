@@ -7,6 +7,7 @@ import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 
@@ -28,16 +29,17 @@ public class UserDto implements KvmSerializable
 	private String lastName = "";
 	private String name = "";
 	private String phoneNumber = "";
-	private String zipCode = "";
-	private String county = "";
-	private String city = "";
-	private String area = "";
+//	private String zipCode = "";
+//	private String county = "";
+//	private String city = "";
+//	private String area = "";
 	private ImageDto avatar;
 	private Date joinedAt;	
 	private Long id;
 	private boolean inFollowers;
     private boolean inFollowings;
     private Gender gender;
+    private AddressDto address;
 	public Object getProperty(int index)
 	{
 		//final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,29 +58,31 @@ public class UserDto implements KvmSerializable
 			return name;
 		case 5:
 			return phoneNumber;
+//		case 6:
+//			return zipCode;
+//		case 7:
+//			return county;
+//		case 8:
+//			return city;
+//		case 9:
+//			return area;		
 		case 6:
-			return zipCode;
-		case 7:
-			return county;
-		case 8:
-			return city;
-		case 9:
-			return area;		
-		case 10:
 			return avatar;
-		case 11:
+		case 7:
 			return joinedAt.getTime();
-		case 12:
+		case 8:
 			return id;
-		case 13:
+		case 9:
 			return inFollowers;
-		case 14:
+		case 10:
 			return inFollowings;
-		case 15:
+		case 11:
 			if (gender != null)
 				return gender.name();
 			else
 				return null;
+		case 12:
+			return address;
 		}
 
 		return null;
@@ -86,7 +90,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 16;
+		return 13;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -123,50 +127,54 @@ public class UserDto implements KvmSerializable
 			info.type = String.class;
 			break;
 
-		case 6:
-			info.name = "zipCode";
-			info.type = String.class;
-			break;
-
-		case 7:
-			info.name = "country";
-			info.type = String.class;
-			break;
-
-		case 8:
-			info.name = "city";
-			info.type = String.class;
-			break;
-
-		case 9:
-			info.name = "area";
-			info.type = String.class;
-			break;
+//		case 6:
+//			info.name = "zipCode";
+//			info.type = String.class;
+//			break;
+//
+//		case 7:
+//			info.name = "country";
+//			info.type = String.class;
+//			break;
+//
+//		case 8:
+//			info.name = "city";
+//			info.type = String.class;
+//			break;
+//
+//		case 9:
+//			info.name = "area";
+//			info.type = String.class;
+//			break;
 			
-		case 10:
+		case 6:
 			info.name = "avatar";
 			info.type = ImageDto.class;
 			break;
 			
-		case 11:
+		case 7:
 			info.name = "joinedAt";
 			info.type = Long.class;
 			break;
-		case 12:
+		case 8:
 			info.name = "id";
 			info.type = Long.class;
 			break;
-		case 13:
+		case 9:
 			info.name = "inFollowers";
 			info.type = Boolean.class;
 			break;
-		case 14:
+		case 10:
 			info.name = "inFollowings";
 			info.type = Boolean.class;
 			break;
-		case 15:
+		case 11:
 			info.name = "gender";
 			info.type = String.class;
+			break;
+		case 12:
+			info.name = "address";
+			info.type = AddressDto.class;
 			break;
 		default:
 			break;
@@ -195,35 +203,38 @@ public class UserDto implements KvmSerializable
 		case 5:
 			phoneNumber = String.valueOf(value);
 			break;
+//		case 6:
+//			zipCode = String.valueOf(value);
+//			break;
+//		case 7:
+//			county = String.valueOf(value);
+//			break;
+//		case 8:
+//			city = String.valueOf(value);
+//			break;
+//		case 9:
+//			area = String.valueOf(value);
+//			break;		
 		case 6:
-			zipCode = String.valueOf(value);
-			break;
-		case 7:
-			county = String.valueOf(value);
-			break;
-		case 8:
-			city = String.valueOf(value);
-			break;
-		case 9:
-			area = String.valueOf(value);
-			break;		
-		case 10:
 			avatar = (ImageDto)value;
 			break;
-		case 11:
+		case 7:
 			joinedAt = new Date(Long.parseLong(value.toString()));
 			break;
-		case 12:
+		case 8:
 			id = Long.valueOf(value.toString());
 			break;
-		case 13:
+		case 9:
 			inFollowers = Boolean.parseBoolean(value.toString());
 			break;
-		case 14:
+		case 10:
 			inFollowings = Boolean.parseBoolean(value.toString());
 			break;
-		case 15:
+		case 11:
 			gender = Gender.valueOf(value.toString());
+			break;
+		case 12:
+			address = (AddressDto)value;
 			break;
 		}
 	}
@@ -232,12 +243,14 @@ public class UserDto implements KvmSerializable
 	{
 		envelope.addMapping(Constants.SERVICES_NAMESPACE, this.getClass().getName(), this.getClass());
 		new ImageDto().register(envelope);
+		new AddressDto().register(envelope);
 	}
 
 	public void registerRead(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(null, "UserDto", this.getClass());
 		new ImageDto().registerRead(envelope);
+		new AddressDto().registerRead(envelope);
 	}
 
 	/**
@@ -324,61 +337,61 @@ public class UserDto implements KvmSerializable
 		this.phoneNumber = phoneNumber;
 	}
 
-	/**
-	 * @return the zipCode
-	 */
-	public String getZipCode() {
-		return zipCode;
-	}
-
-	/**
-	 * @param zipCode the zipCode to set
-	 */
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
-	}
-
-	/**
-	 * @return the county
-	 */
-	public String getCounty() {
-		return county;
-	}
-
-	/**
-	 * @param county the county to set
-	 */
-	public void setCounty(String country) {
-		this.county = country;
-	}
-
-	/**
-	 * @return the city
-	 */
-	public String getCity() {
-		return city;
-	}
-
-	/**
-	 * @param city the city to set
-	 */
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	/**
-	 * @return the area
-	 */
-	public String getArea() {
-		return area;
-	}
-
-	/**
-	 * @param area the area to set
-	 */
-	public void setArea(String area) {
-		this.area = area;
-	}
+//	/**
+//	 * @return the zipCode
+//	 */
+//	public String getZipCode() {
+//		return zipCode;
+//	}
+//
+//	/**
+//	 * @param zipCode the zipCode to set
+//	 */
+//	public void setZipCode(String zipCode) {
+//		this.zipCode = zipCode;
+//	}
+//
+//	/**
+//	 * @return the county
+//	 */
+//	public String getCounty() {
+//		return county;
+//	}
+//
+//	/**
+//	 * @param county the county to set
+//	 */
+//	public void setCounty(String country) {
+//		this.county = country;
+//	}
+//
+//	/**
+//	 * @return the city
+//	 */
+//	public String getCity() {
+//		return city;
+//	}
+//
+//	/**
+//	 * @param city the city to set
+//	 */
+//	public void setCity(String city) {
+//		this.city = city;
+//	}
+//
+//	/**
+//	 * @return the area
+//	 */
+//	public String getArea() {
+//		return area;
+//	}
+//
+//	/**
+//	 * @param area the area to set
+//	 */
+//	public void setArea(String area) {
+//		this.area = area;
+//	}
 
 	/**
 	 * @return the avatar
@@ -462,5 +475,19 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public AddressDto getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(AddressDto address) {
+		this.address = address;
 	}
 }
