@@ -33,6 +33,7 @@ import com.venefica.module.main.R;
 import com.venefica.module.user.UserDto.Gender;
 import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto.UserType;
 import com.venefica.utils.Constants;
@@ -168,10 +169,12 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 				edtDateOfBirth.setText(Utility.convertDateToString(userDto
 						.getDateOfBirth()));
 			}
-			edtZipCode.setText(userDto.getZipCode());
-			edtCounty.setText(userDto.getCounty());
-			edtCity.setText(userDto.getCity());
-			edtArea.setText(userDto.getArea());
+			if (userDto.getAddress() != null) {
+				edtZipCode.setText(userDto.getAddress().getZipCode());
+				edtCounty.setText(userDto.getAddress().getCounty());
+				edtCity.setText(userDto.getAddress().getCity());
+				edtArea.setText(userDto.getAddress().getArea());
+			}
 			if (userDto.getGender() == Gender.MALE) {
 				genderRadioGroup.check(R.id.radioActProfileMale);
 			}else {
@@ -198,10 +201,12 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 			}else{
 				userDto.setDateOfBirth(Calendar.getInstance().getTime());
 			}
-			userDto.setZipCode(edtZipCode.getText().toString());
-			userDto.setCity(edtCity.getText().toString());
-			userDto.setCounty(edtCounty.getText().toString());
-			userDto.setArea(edtArea.getText().toString());
+			AddressDto addressDto = new AddressDto();
+			addressDto.setZipCode(edtZipCode.getText().toString());
+			addressDto.setCity(edtCity.getText().toString());
+			addressDto.setCounty(edtCounty.getText().toString());
+			addressDto.setArea(edtArea.getText().toString());
+			userDto.setAddress(addressDto);
 			switch (genderRadioGroup.getCheckedRadioButtonId()) {
 			  case R.id.radioActProfileMale :
 				  userDto.setGender(Gender.MALE);
