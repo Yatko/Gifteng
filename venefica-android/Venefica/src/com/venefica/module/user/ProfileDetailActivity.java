@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
@@ -29,7 +30,7 @@ import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.BadgeView;
 import com.venefica.module.utils.Utility;
-import com.venefica.services.ReviewDto;
+import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -78,7 +79,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	private ProfileExpandableListAdapter userExpandableListAdapter;
 	
 	private ExpandableListView reviewExpandableListView;
-	private ArrayList<ReviewDto> userReviewList;
+	private ArrayList<RatingDto> userReviewList;
 	private ReviewsExpandableListAdapter reviewsExpandableListAdapter;
 	
 	private ArrayList<ProfileGroup> profileGroups;
@@ -97,7 +98,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
         setContentView(R.layout.activity_profile_detail);
 		ACT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_VIEW_PROFILE);
 		
-		userReviewList = new ArrayList<ReviewDto>();
+		userReviewList = new ArrayList<RatingDto>();
 		profileGroups = new ArrayList<ProfileGroup>();
 		userExpandableListAdapter = new ProfileExpandableListAdapter(this, profileGroups);
 		
@@ -110,6 +111,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		userExpandableListView = (ExpandableListView) findViewById(R.id.expListViewActUserProfie);
 		userExpandableListView.setAdapter(userExpandableListAdapter);		
 		
+		findViewById(R.id.imgBtnUserViewFollow).setVisibility(View.GONE);
 		// user details
 		txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
 		txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
@@ -124,8 +126,8 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		// badgeView.setTextSize(12);
 		badgeView.toggle();
 		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
-//		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
-//		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
+		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
+		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
 		
 		setUserDto(((VeneficaApplication) getApplication()).getUser());
 
@@ -162,8 +164,11 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	@Override
 	public boolean onOptionsItemSelected(
 			com.actionbarsherlock.view.MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
+		int itemId = item.getItemId();
+    	if (itemId == android.R.id.home) {
+    		onBackPressed();
+    	}
+		return true;
 	}
 
 	@Override
@@ -217,6 +222,10 @@ public class ProfileDetailActivity extends VeneficaActivity {
     			message = (String) getResources().getText(R.string.error_network_01);
 			} else if(ERROR_CODE == Constants.ERROR_NETWORK_CONNECT){
 				message = (String) getResources().getText(R.string.error_network_02);
+			} else if (ERROR_CODE == Constants.ERROR_RESULT_GET_FOLLOWERS
+					&& ERROR_CODE == Constants.ERROR_RESULT_GET_FOLLOWINGS
+					&& ERROR_CODE == Constants.ERROR_RESULT_GET_REVIEWS) {
+				message = (String) getResources().getText(R.string.g_error);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -288,7 +297,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	 */
 	public void setFollowings(List<UserDto> followingsList) {				
 		ProfileGroup profileGroup1 = new ProfileGroup(); 
-		profileGroup1.setGroupName(getResources().getString(R.string.g_label_followers));
+		profileGroup1.setGroupName(getResources().getString(R.string.g_label_following));
 		profileGroup1.setUsers(followingsList);
 		profileGroups.add(profileGroup1);
 		userExpandableListAdapter.notifyDataSetChanged();		
@@ -309,7 +318,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	 * Method to update reviews
 	 * @param reviewsList
 	 */
-	public void setReviews(List<ReviewDto> reviewsList) {
+	public void setReviews(List<RatingDto> reviewsList) {
 		reviewsList.clear();
 		reviewsList.addAll(reviewsList);
 		reviewsExpandableListAdapter.notifyDataSetChanged();
