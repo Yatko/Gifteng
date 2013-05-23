@@ -3,6 +3,7 @@ package com.venefica.module.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -54,20 +55,23 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 
 	private ExpandableListView userExpandableListView;
 	private ProfileExpandableListAdapter userExpandableListAdapter;
-	private ArrayList<UserDto> userFollowingList;
-	private ArrayList<UserDto> userFollowerList;
+//	private ArrayList<UserDto> userFollowingList;
+//	private ArrayList<UserDto> userFollowerList;
 	
 	private ExpandableListView reviewExpandableListView;
 	private ArrayList<ReviewDto> userReviewList;
 	private ReviewsExpandableListAdapter reviewsExpandableListAdapter;
+	
+	private ArrayList<ProfileGroup> profileGroups;
+	private boolean isAttached = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		userFollowingList = new ArrayList<UserDto>();
-		userFollowerList = new ArrayList<UserDto>();
+//		userFollowingList = new ArrayList<UserDto>();
+//		userFollowerList = new ArrayList<UserDto>();
 		userReviewList = new ArrayList<ReviewDto>();
-		userExpandableListAdapter = new ProfileExpandableListAdapter(getActivity(), userFollowingList
-				, userFollowerList, userReviewList);
+		profileGroups = new ArrayList<ProfileGroup>();
+		userExpandableListAdapter = new ProfileExpandableListAdapter(getActivity(), profileGroups);
 		
 		reviewsExpandableListAdapter = new ReviewsExpandableListAdapter(getActivity(), userReviewList);
 	}
@@ -104,6 +108,16 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 		return view;
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		isAttached = true;
+	}
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		isAttached = false;
+	}
 	/**
 	 * Set user info
 	 * 
@@ -111,7 +125,7 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 	 */
 	public void setUserDto(UserDto userDto) {
 		this.userDto = userDto;
-		if (userDto != null) {
+		if (userDto != null && isAttached) {
 			txtUserName.setText(userDto.getFirstName() + " "
 					+ (userDto.getLastName()));
 			txtMemberInfo.setText(getResources().getText(
@@ -121,7 +135,9 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 				txtMemberInfo.append(Utility.convertShortDateToString(userDto
 						.getJoinedAt()));
 			}
-			txtAddress.setText(userDto.getCity() + ", " + userDto.getCounty());
+			if (userDto.getAddress() != null) {
+				txtAddress.setText(userDto.getAddress().getCity() + ", " + userDto.getAddress().getCounty());
+			}			
 			if (userDto.getAvatar() != null
 					&& userDto.getAvatar().getUrl() != null) {
 				((VeneficaApplication) getActivity().getApplication())
@@ -140,9 +156,20 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 	 * @param followingsList
 	 */
 	public void setFollowings(List<UserDto> followingsList) {
-		userFollowingList.clear();
-		userFollowingList.addAll(followingsList);
-		userExpandableListAdapter.notifyDataSetChanged();
+		if(isAttached){
+	//		userFollowingList.clear();
+	//		userFollowingList.addAll(followingsList);
+			/*ProfileGroup profileGroup = new ProfileGroup(); 
+			profileGroup.setGroupName(getActivity().getResources().getString(R.string.g_label_following));
+			profileGroup.setUsers(followingsList);
+			profileGroups.add(profileGroup);*/
+			
+			ProfileGroup profileGroup1 = new ProfileGroup(); 
+			profileGroup1.setGroupName(getActivity().getResources().getString(R.string.g_label_followers));
+			profileGroup1.setUsers(followingsList);
+			profileGroups.add(profileGroup1);
+			userExpandableListAdapter.notifyDataSetChanged();
+		}
 	}
 
 	/**
@@ -150,17 +177,25 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 	 * @param followersList
 	 */
 	public void setFollowers(List<UserDto> followersList) {
-		userFollowerList.clear();
-		userFollowerList.addAll(followersList);
-		userExpandableListAdapter.notifyDataSetChanged();
+		if(isAttached){
+	//		userFollowerList.clear();
+	//		userFollowerList.addAll(followersList);
+			ProfileGroup profileGroup = new ProfileGroup(); 
+			profileGroup.setGroupName(getActivity().getResources().getString(R.string.g_label_followers));
+			profileGroup.setUsers(followersList);
+			profileGroups.add(profileGroup);
+			userExpandableListAdapter.notifyDataSetChanged();
+		}
 	}
 	/**
 	 * Method to update reviews
 	 * @param reviewsList
 	 */
 	public void setReviews(List<ReviewDto> reviewsList) {
-		reviewsList.clear();
-		reviewsList.addAll(reviewsList);
-		reviewsExpandableListAdapter.notifyDataSetChanged();
+		if(isAttached){
+			reviewsList.clear();
+			reviewsList.addAll(reviewsList);
+			reviewsExpandableListAdapter.notifyDataSetChanged();
+		}
 	}
 }
