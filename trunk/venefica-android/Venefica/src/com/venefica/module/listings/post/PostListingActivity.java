@@ -34,6 +34,7 @@ import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -268,14 +269,15 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				
 				if (listing == null) {
 					listing = new AdDto();
+					listing.setAddress(new AddressDto());
 				}		
 				listing.setTitle(data.getString(GetListingDetails.KEY_TITLE));
 				listing.setCategory(data.getString(GetListingDetails.KEY_CATEGORY));
 				listing.setDescription(data.getString(GetListingDetails.KEY_DESCRIPTION));
 				listing.setCategoryId(data.getLong(GetListingDetails.KEY_CATEGORY_ID));
 				listing.setPrice(new BigDecimal(data.getString(GetListingDetails.KEY_CURRENT_VALUE)));
-				listing.setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
-				listing.setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
+				listing.getAddress().setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
+				listing.getAddress().setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
 				listing.setFreeShipping(data.getBoolean(GetListingDetails.KEY_FREE_SHIPPING));
 				listing.setPickUp(data.getBoolean(GetListingDetails.KEY_PICKUP));
 				
