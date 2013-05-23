@@ -12,7 +12,7 @@ class Invitation_model extends CI_Model {
     var $zipCode; //string
     var $source; //string
     var $otherSource; //string
-    var $userType; //string: GIVER, RECEIVER
+    var $userType; //enum: GIVER, RECEIVER
     
     public function __construct() {
         log_message(DEBUG, "Initializing Invitation_model");
