@@ -479,7 +479,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			listing.setCreator(((VeneficaApplication) getApplication()).getUser());
 		}
 		//Show on map
-		updateMap(listing.getLatitude(), listing.getLongitude()
+		updateMap(listing.getAddress().getLatitude(), listing.getAddress().getLongitude()
 				, listing.getTitle(), listing.getDescription(), listing.getId()
 				, listing.getImage()!= null? listing.getImage().getUrl(): "");
 		if (listing.getCreator() != null && listing.getCreator().getAvatar() != null) {
@@ -504,7 +504,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		txtMemberInfo.setText(getResources().getText(R.string.label_detail_listing_member_since).toString());
 		txtMemberInfo.append(" ");
 		txtMemberInfo.append(Utility.convertShortDateToString(listing.getCreator().getJoinedAt()));
-		txtAddress.setText(listing.getCreator().getCity() +", "+listing.getCreator().getCounty());
+		if (listing.getCreator().getAddress() != null) {
+			txtAddress.setText(listing.getCreator().getAddress().getCity() +", "+listing.getCreator().getAddress().getCounty());
+		}	
 		
 		//set listing details
 		StringBuffer text = new StringBuffer();
@@ -862,8 +864,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	private void showDistance(Location location){
 		if (listing != null && location != null) {
 			Location location2 = new Location(location);
-			location2.setLatitude(listing.getLatitude());
-			location2.setLongitude(listing.getLongitude());
+			location2.setLatitude(listing.getAddress().getLatitude());
+			location2.setLongitude(listing.getAddress().getLongitude());
 			float distance = location.distanceTo(location2);
 			if (txtMiles != null) {
 				DecimalFormat df = new DecimalFormat("#.##");
