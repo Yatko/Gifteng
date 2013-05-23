@@ -101,7 +101,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 		fragmentTransaction.commit();
 		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
 //		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
-		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
+//		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
 	}
 	
 	@Override
