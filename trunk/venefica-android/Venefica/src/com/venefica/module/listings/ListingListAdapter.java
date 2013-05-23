@@ -116,10 +116,12 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			holder.txtMemberInfo.append(Utility
 					.convertShortDateToString((listings.get(position)
 							.getCreator().getJoinedAt())));
-			holder.txtAddress
-					.setText((listings.get(position).getCreator().getCity()
-							+ ", " + (listings.get(position).getCreator()
-							.getCounty())));
+			if (listings.get(position).getCreator().getAddress() != null) {
+				holder.txtAddress.setText((listings.get(position).getCreator()
+						.getAddress().getCity()
+						+ ", " + (listings.get(position).getCreator()
+						.getAddress().getCounty())));
+			}
 			if (this.listings.get(position).getCreator().getAvatar() != null) {
 				((VeneficaApplication) ((SearchListingsActivity) context)
 						.getApplication()).getImgManager().loadImage(
