@@ -36,7 +36,7 @@ import com.venefica.services.FilterDto;
 import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
-import com.venefica.services.ReviewDto;
+import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 
 /**
@@ -1417,6 +1417,8 @@ public class WSAction {
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			envelope.dotNet = true;
+			new UserDto().registerRead(envelope);
+			new AddressDto().register(envelope);
 
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -1461,6 +1463,8 @@ public class WSAction {
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
 			envelope.setOutputSoapObject(request);
+			new UserDto().registerRead(envelope);
+			new AddressDto().register(envelope);
 			
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -1505,6 +1509,7 @@ public class WSAction {
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
 			envelope.setOutputSoapObject(request);
+			new RatingDto().registerRead(envelope);
 			
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -1515,12 +1520,12 @@ public class WSAction {
 			Object response = envelope.getResponse();
 			if (response == null) {
 				result.result = Constants.ERROR_NO_DATA;
-			} else if (response instanceof ReviewDto){
-				result.reviews = new ArrayList<ReviewDto>();
-				result.reviews.add((ReviewDto)response);
+			} else if (response instanceof RatingDto){
+				result.reviews = new ArrayList<RatingDto>();
+				result.reviews.add((RatingDto)response);
 				result.result = Constants.RESULT_GET_REVIEWS_SUCCESS;
 			}else{
-				result.reviews = (List<ReviewDto>)response;
+				result.reviews = (List<RatingDto>)response;
 				result.result = Constants.RESULT_GET_REVIEWS_SUCCESS;
 			}
 		}catch (SoapFault e){
