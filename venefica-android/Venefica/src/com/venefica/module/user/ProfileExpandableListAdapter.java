@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
-import com.venefica.services.ReviewDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -26,7 +26,7 @@ import android.widget.TextView;
  * @author avinash
  * Adapter for Reviews, Following and Follower
  */
-public class ProfileExpandableListAdapter extends BaseExpandableListAdapter {
+public class ProfileExpandableListAdapter extends BaseExpandableListAdapter implements OnClickListener {
 
 	private Context context;
 	private ArrayList<ProfileGroup> profileGroups;
@@ -57,74 +57,49 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter {
 //			userDetailViewHolder.txtAddress = (TextView) convertView.findViewById(R.id.txtUserViewAddress);
 			userDetailViewHolder.profileImg = (ImageView) convertView.findViewById(R.id.imgUserViewProfileImg);
 			userDetailViewHolder.btnFollow = (Button) convertView.findViewById(R.id.imgBtnUserViewFollow);
+			userDetailViewHolder.btnFollow.setOnClickListener(this);
 	        convertView.findViewById(R.id.imgBtnUserViewSendMsg).setVisibility(View.INVISIBLE);
+	        convertView.setTag(userDetailViewHolder);
+
+		} else {
+			userDetailViewHolder = (UserDetailViewHolder) convertView.getTag();
 		}
-		
-//		if (groupPosition == 0) {
-			userDetailViewHolder.userName.setText(profileGroups.get(groupPosition).getUsers().get(childPosition).getFirstName() + " "
-					+ (profileGroups.get(groupPosition).getUsers().get(childPosition).getLastName())) ;
-			userDetailViewHolder.txtMemberInfo.setText(context.getResources().getText(
-					R.string.label_detail_listing_member_since).toString());
-			userDetailViewHolder.txtMemberInfo.append(" ");
-			if (profileGroups.get(groupPosition).getUsers().get(childPosition).getJoinedAt() != null) {
-				userDetailViewHolder.txtMemberInfo.append(
-						Utility.convertShortDateToString(profileGroups.get(groupPosition).getUsers().get(childPosition)
-						.getJoinedAt()));
-			}
-			if (profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar() != null
-					&& profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar().getUrl() != null) {
-				((VeneficaApplication) ((UserProfileActivity)this.context).getApplication())
-						.getImgManager().loadImage(
-								Constants.PHOTO_URL_PREFIX
-										+ profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar().getUrl(),
-								userDetailViewHolder.profileImg,
-								context.getResources().getDrawable(
-										R.drawable.icon_picture_white));
-			}
-			
-		/*} else if (groupPosition == 1) {
-			userDetailViewHolder.userName.setText(userFollowerList.get(childPosition).getFirstName() + " "
-					+ (userFollowerList.get(childPosition).getLastName())) ;
-			userDetailViewHolder.txtMemberInfo.setText(context.getResources().getText(
-					R.string.label_detail_listing_member_since).toString());
-			userDetailViewHolder.txtMemberInfo.append(" ");
-			if (userFollowerList.get(childPosition).getJoinedAt() != null) {
-				userDetailViewHolder.txtMemberInfo.append(Utility.convertShortDateToString(userFollowerList.get(childPosition)
-						.getJoinedAt()));
-			}
-			
-			if (userFollowerList.get(childPosition).getAvatar() != null
-					&& userFollowerList.get(childPosition).getAvatar().getUrl() != null) {
-				((VeneficaApplication) ((UserProfileActivity)this.context).getApplication())
-						.getImgManager().loadImage(
-								Constants.PHOTO_URL_PREFIX
-										+ userFollowerList.get(childPosition).getAvatar().getUrl(),
-								userDetailViewHolder.profileImg,
-								context.getResources().getDrawable(
-										R.drawable.icon_picture_white));
-			}
-		}*/
+		//set details
+		userDetailViewHolder.userName.setText(profileGroups.get(groupPosition).getUsers().get(childPosition).getFirstName() + " "
+				+ (profileGroups.get(groupPosition).getUsers().get(childPosition).getLastName())) ;
+		userDetailViewHolder.txtMemberInfo.setText(context.getResources().getText(
+				R.string.label_detail_listing_member_since).toString());
+		userDetailViewHolder.txtMemberInfo.append(" ");
+		if (profileGroups.get(groupPosition).getUsers().get(childPosition).getJoinedAt() != null) {
+			userDetailViewHolder.txtMemberInfo.append(
+					Utility.convertShortDateToString(profileGroups.get(groupPosition).getUsers().get(childPosition)
+					.getJoinedAt()));
+		}
+		if (profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar() != null
+				&& profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar().getUrl() != null) {
+			((VeneficaApplication) ((ProfileDetailActivity)this.context).getApplication())
+					.getImgManager().loadImage(
+							Constants.PHOTO_URL_PREFIX
+									+ profileGroups.get(groupPosition).getUsers().get(childPosition).getAvatar().getUrl(),
+							userDetailViewHolder.profileImg,
+							context.getResources().getDrawable(
+									R.drawable.icon_picture_white));
+		}
+		if (profileGroups.get(groupPosition).getUsers().get(childPosition).isInFollowings()) {
+			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.label_follow));
+		} else {
+			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.g_label_unfollow));
+		}
 		return convertView;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		/*int size = 0;
-		if (groupPosition == 0) {
-			size =  userFollowingList.size();
-		} else if (groupPosition == 1 && userFollowerList != null) {
-			size = userFollowerList.size();
-		}*/
 		return profileGroups.get(groupPosition).getUsers().size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		/*if (groupPosition == 0) {
-			return userFollowingList;
-		} else if (groupPosition == 1 ) {
-			return userFollowerList;
-		}*/
 		return profileGroups.get(groupPosition);
 	}
 
@@ -151,11 +126,6 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter {
 		groupView = (TextView) convertView.findViewById(R.id.txtActProfileGroupName);
 		//set group title as per result count
 		StringBuffer titleText = new StringBuffer();
-		/*if (groupPosition == 0) {
-			titleText.append(context.getResources().getString(R.string.g_label_following));
-		} else if (groupPosition == 1) {
-			titleText.append(context.getResources().getString(R.string.g_label_followers));
-		}*/
 		if(profileGroups.get(groupPosition).getGroupName().equalsIgnoreCase(context.getResources().getString(R.string.g_label_following))){
 			titleText.append(context.getResources().getString(R.string.g_label_following));
 		} else if (profileGroups.get(groupPosition).getGroupName().equalsIgnoreCase(context.getResources().getString(R.string.g_label_followers))){
@@ -182,7 +152,18 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter {
 		ImageView profileImg;
 		TextView userName;
 		TextView txtMemberInfo;
-		ImageButton imgButtonMsg;
 		Button btnFollow;
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.imgBtnUserViewFollow:
+			
+			break;
+
+		default:
+			break;
+		}
 	}
 }
