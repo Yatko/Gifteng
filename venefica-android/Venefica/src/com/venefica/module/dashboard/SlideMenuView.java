@@ -300,6 +300,8 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
 //		accountIntent.putExtra("act_mode",UserProfileActivity.ACT_MODE_VIEW_PROFILE);
 		Intent accountIntent = new Intent(getContext(), ProfileDetailActivity.class);
 		accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
+		accountIntent.putExtra("user_name", ((VeneficaApplication) ((SearchListingsActivity) getContext())
+					.getApplication()).getUser().getName());
 		getContext().startActivity(accountIntent);
 	}
 }
