@@ -13,18 +13,23 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
@@ -34,7 +39,7 @@ import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
-public class ProfileDetailActivity extends VeneficaActivity {
+public class ProfileDetailActivity extends VeneficaActivity implements OnClickListener {
 
 	private int ACT_MODE;
 	/**
@@ -52,12 +57,15 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	/**
 	 * modes
 	 */
-	public static int ACT_MODE_VIEW_PROFILE = 4001;
-	public static int ACT_MODE_GET_USER = 4004;
-	public static int ACT_MODE_CHANGE_PASSWORD = 4005;
-	public static int ACT_MODE_GET_FOLLOWINGS = 4006;
-	public static int ACT_MODE_GET_FOLLOWERS = 4007;
-	public static int ACT_MODE_GET_REVIEWS = 4008;
+	public static final int ACT_MODE_VIEW_PROFILE = 4001;
+	public static final int ACT_MODE_GET_USER = 4004;
+	public static final int ACT_MODE_CHANGE_PASSWORD = 4005;
+	public static final int ACT_MODE_GET_FOLLOWINGS = 4006;
+	public static final int ACT_MODE_GET_FOLLOWERS = 4007;
+	public static final int ACT_MODE_GET_REVIEWS = 4008;
+	public static final int ACT_MODE_FOLLOW_USER = 4009;
+	public static final int ACT_MODE_UNFOLLOW_USER = 4010;
+	
 	/**
 	 * To call web service
 	 */
@@ -66,14 +74,20 @@ public class ProfileDetailActivity extends VeneficaActivity {
 	 * Calendar for current date
 	 */
 	private Calendar calendar = Calendar.getInstance();
+	/**
+	 * user to view profile
+	 */
 	private UserDto user;
+	private String userName;
 	/**
 	 * view to show user details
 	 */
 	private TextView txtUserName, txtMemberInfo, txtAddress;
 	private ImageView profImgView;
-	private ImageButton imgButtonMsg;
-	private BadgeView badgeView;
+	private ImageButton imgButtonEdit;
+	private Button btnFollow;
+//	private BadgeView badgeView;
+	private FrameLayout layUserDetails;
 
 	private ExpandableListView userExpandableListView;
 	private ProfileExpandableListAdapter userExpandableListAdapter;
@@ -97,6 +111,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
         setSupportProgressBarIndeterminateVisibility(false);
         setContentView(R.layout.activity_profile_detail);
 		ACT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_VIEW_PROFILE);
+		userName = getIntent().getStringExtra("user_name");
 		
 		userReviewList = new ArrayList<RatingDto>();
 		profileGroups = new ArrayList<ProfileGroup>();
@@ -111,66 +126,34 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		userExpandableListView = (ExpandableListView) findViewById(R.id.expListViewActUserProfie);
 		userExpandableListView.setAdapter(userExpandableListAdapter);		
 		
-		findViewById(R.id.imgBtnUserViewFollow).setVisibility(View.GONE);
 		// user details
+		layUserDetails = (FrameLayout) findViewById(R.id.layActUserProfieUserDetails);
+		layUserDetails.setOnClickListener(this);
 		txtUserName = (TextView) findViewById(R.id.txtUserViewUserName);
 		txtMemberInfo = (TextView) findViewById(R.id.txtUserViewMemberInfo);
 		txtAddress = (TextView) findViewById(R.id.txtUserViewAddress);
 		profImgView = (ImageView) findViewById(R.id.imgUserViewProfileImg);
 		
-		imgButtonMsg = (ImageButton) findViewById(R.id.imgBtnUserViewSendMsg);
-		badgeView = new BadgeView(this, imgButtonMsg);
-		badgeView.setText("2");
-		badgeView.setTextColor(Color.BLUE);
-		badgeView.setBadgeBackgroundColor(Color.YELLOW);
-		// badgeView.setTextSize(12);
-		badgeView.toggle();
-		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
-		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
-		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
-		
-		setUserDto(((VeneficaApplication) getApplication()).getUser());
-
-	}
-
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	/*@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}*/
-
-	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_user_profile, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		if (ACT_MODE == ACT_MODE_VIEW_PROFILE) {
-			menu.findItem(R.id.menu_edit_profile).setEnabled(true);
-			menu.findItem(R.id.menu_save_profile).setEnabled(false);
-		} /*else if (ACT_MODE == ACT_MODE_EDIT_PROFILE){
-			menu.findItem(R.id.menu_edit_profile).setEnabled(false);
-			menu.findItem(R.id.menu_save_profile).setEnabled(true);
-		}*/		
-		return true;
+		imgButtonEdit = (ImageButton) findViewById(R.id.imgBtnUserViewSendMsg);
+		imgButtonEdit.setOnClickListener(this);
+		btnFollow = (Button) findViewById(R.id.imgBtnUserViewFollow);
+		btnFollow.setOnClickListener(this);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	protected void onStart() {
+		super.onStart();
+		new UserProfileTask().execute(ACT_MODE_GET_USER);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
     	if (itemId == android.R.id.home) {
     		onBackPressed();
     	}
-		return true;
+    	return true;
 	}
-
+	
 	@Override
     protected Dialog onCreateDialog(int id) {
     	//Create progress dialog
@@ -223,9 +206,19 @@ public class ProfileDetailActivity extends VeneficaActivity {
 			} else if(ERROR_CODE == Constants.ERROR_NETWORK_CONNECT){
 				message = (String) getResources().getText(R.string.error_network_02);
 			} else if (ERROR_CODE == Constants.ERROR_RESULT_GET_FOLLOWERS
-					&& ERROR_CODE == Constants.ERROR_RESULT_GET_FOLLOWINGS
-					&& ERROR_CODE == Constants.ERROR_RESULT_GET_REVIEWS) {
+					|| ERROR_CODE == Constants.ERROR_RESULT_GET_FOLLOWINGS
+					|| ERROR_CODE == Constants.ERROR_RESULT_GET_REVIEWS
+					|| ERROR_CODE == Constants.ERROR_RESULT_FOLLOW_USER 
+					|| ERROR_CODE == Constants.ERROR_RESULT_UNFOLLOW_USER) {
 				message = (String) getResources().getText(R.string.g_error);
+			} else if(ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_follow_success);
+				user.setInFollowings(true);
+				setUserDto(user);
+			} else if(ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS){
+				message = (String) getResources().getText(R.string.g_msg_unfollow_success);
+				user.setInFollowings(false);
+				setUserDto(user);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -238,7 +231,7 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-//				showDialog(D_PROGRESS);
+			isWorking = true;
 			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
@@ -249,17 +242,29 @@ public class ProfileDetailActivity extends VeneficaActivity {
 					wsAction = new WSAction();
 				}
 				if (params[0].equals(ACT_MODE_GET_USER)) {
-					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken(), userName);
 				}else if (params[0].equals(ACT_MODE_GET_FOLLOWINGS)) {
 					wrapper = wsAction.getFollowings(((VeneficaApplication)getApplication()).getAuthToken()
-							, ((VeneficaApplication)getApplication()).getUser().getId());
+							, user.getId());
 				} else if (params[0].equals(ACT_MODE_GET_FOLLOWERS)) {
 					wrapper = wsAction.getFollowers(((VeneficaApplication)getApplication()).getAuthToken()
-							, ((VeneficaApplication)getApplication()).getUser().getId());							
+							, user.getId());							
 				} else if (params[0].equals(ACT_MODE_GET_REVIEWS)) {
-					wrapper = wsAction.getReviews(((VeneficaApplication)getApplication()).getAuthToken()
-							, ((VeneficaApplication)getApplication()).getUser().getId());
-				}
+					wrapper = wsAction.getReceivedRatings(((VeneficaApplication)getApplication()).getAuthToken()
+							, user.getId());
+				} else if (params[0].equals(ACT_MODE_FOLLOW_USER)) {
+					ListingDetailsResultWrapper res = wsAction.followUser(((VeneficaApplication)getApplication()).getAuthToken()
+							, user.getId());
+					wrapper.result = res.result;
+				} else if (params[0].equals(ACT_MODE_UNFOLLOW_USER)) {
+					ListingDetailsResultWrapper res = wsAction.unfollowUser(((VeneficaApplication)getApplication()).getAuthToken()
+							, user.getId());
+					wrapper.result = res.result;
+				}/*else if (params[0].equals(ACT_MODE_SEND_MESSAGE)) {
+					ListingDetailsResultWrapper res = wsAction.sendMessageTo(((VeneficaApplication)getApplication()).getAuthToken()
+							, getMessage());
+					wrapper.result = res.result;
+				}*/
 			}catch (IOException e) {
 				Log.e("UpdateUserTask::doInBackground :", e.toString());
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
@@ -272,25 +277,31 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		protected void onPostExecute(UserRegistrationResultWrapper result) {
 			super.onPostExecute(result);
 			setSupportProgressBarIndeterminateVisibility(false);
+			isWorking = false;
 			if(result.userDto == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
 			} else if (result.userDto != null) {
-				((VeneficaApplication)getApplication()).setUser(result.userDto);
 				user = result.userDto;
+				setUserDto(result.userDto);
+				getDataForUser();				
 			} else if (result.followings != null && result.result == Constants.RESULT_GET_FOLLOWINGS_SUCCESS) {
 				setFollowings(result.followings);
 			} else if (result.followers != null && result.result == Constants.RESULT_GET_FOLLOWERS_SUCCESS) {
 				setFollowers(result.followers);
 			} else if (result.reviews != null && result.result == Constants.RESULT_GET_REVIEWS_SUCCESS) {
 				setReviews(result.reviews);
-			} else if (result.result != -1) {
+			} else if (result.result != -1 && result.result != Constants.ERROR_NO_DATA) {
 				ERROR_CODE = result.result;
 				showDialog(D_ERROR);
 			}
 		}
 	}
 	
+	private void clearAll(){
+		profileGroups.clear();
+		userExpandableListAdapter.notifyDataSetChanged();
+	}
 	/**
 	 * Method to update followings list
 	 * @param followingsList
@@ -301,6 +312,13 @@ public class ProfileDetailActivity extends VeneficaActivity {
 		profileGroup1.setUsers(followingsList);
 		profileGroups.add(profileGroup1);
 		userExpandableListAdapter.notifyDataSetChanged();		
+	}
+
+	public void getDataForUser() {
+		clearAll();
+		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
+		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
+		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
 	}
 
 	/**
@@ -343,7 +361,20 @@ public class ProfileDetailActivity extends VeneficaActivity {
 			}
 			if (userDto.getAddress() != null) {
 				txtAddress.setText(userDto.getAddress().getCity() + ", " + userDto.getAddress().getCounty());
-			}			
+			}
+			if (userDto.getId() == ((VeneficaApplication) getApplication()).getUser().getId()) {
+				imgButtonEdit.setVisibility(View.VISIBLE);
+				imgButtonEdit.setImageDrawable(getResources().getDrawable(R.drawable.icon_edit));
+				btnFollow.setVisibility(View.INVISIBLE);
+			} else {
+				if (userDto.isInFollowings()) {
+					btnFollow.setText(getResources().getText(R.string.g_label_unfollow));
+				} else {
+					btnFollow.setText(getResources().getText(R.string.label_follow));
+				}
+				btnFollow.setVisibility(View.VISIBLE);
+				imgButtonEdit.setVisibility(View.GONE);
+			}
 			if (userDto.getAvatar() != null
 					&& userDto.getAvatar().getUrl() != null) {
 				((VeneficaApplication) getApplication())
@@ -353,6 +384,30 @@ public class ProfileDetailActivity extends VeneficaActivity {
 								profImgView,
 								getResources().getDrawable(
 										R.drawable.icon_picture_white));
+			}
+		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		if (!isWorking) {
+			switch (id) {
+			case R.id.imgBtnUserViewFollow:
+				if (user.isInFollowings()) {
+					new UserProfileTask().execute(ACT_MODE_UNFOLLOW_USER);
+				} else {
+					new UserProfileTask().execute(ACT_MODE_FOLLOW_USER);
+				}
+				break;
+
+			case R.id.imgBtnUserViewSendMsg:
+				Intent accountIntent = new Intent(this,
+						UserProfileActivity.class);
+				accountIntent.putExtra("act_mode",
+						UserProfileActivity.ACT_MODE_EDIT_PROFILE);
+				startActivity(accountIntent);
+				break;
 			}
 		}
 	}
