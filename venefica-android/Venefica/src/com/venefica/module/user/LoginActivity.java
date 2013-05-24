@@ -261,7 +261,7 @@ public class LoginActivity extends VeneficaActivity implements OnClickListener, 
 					wrapper = wsAction.checkUserRegistration(params[1]);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
 					wrapper = new UserRegistrationResultWrapper();
-					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken(),"");
 					if (wrapper.userDto == null) {//change after modifying Dto
 						wrapper = null;
 					}
