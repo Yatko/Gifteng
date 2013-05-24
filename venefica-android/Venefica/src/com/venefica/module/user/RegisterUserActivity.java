@@ -579,7 +579,7 @@ public class RegisterUserActivity extends VeneficaActivity implements OnClickLis
 				}else if (params[0].equalsIgnoreCase(MODE_UPDATE_PROF+"")) {
 					wrapper.result = wsAction.updateUser(((VeneficaApplication)getApplication()).getAuthToken(), user);
 				}else if (params[0].equalsIgnoreCase(MODE_GET_USER+"")) {
-					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken(),"");
 				}
 			}catch (IOException e) {
 				Log.e("AuthenticationTask::doInBackground :", e.toString());
