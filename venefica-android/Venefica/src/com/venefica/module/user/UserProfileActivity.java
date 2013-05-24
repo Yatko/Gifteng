@@ -93,15 +93,16 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.activity_user_profile);
-		ACT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_VIEW_PROFILE);
+		ACT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_EDIT_PROFILE);
 		
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+		/*FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		viewProfileDetailsFragment = new ViewProfileDetailsFragment();
 		fragmentTransaction.add(R.id.layActUserProfieRoot, viewProfileDetailsFragment);
-		fragmentTransaction.commit();
-		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWINGS);
-//		new UserProfileTask().execute(ACT_MODE_GET_FOLLOWERS);
-//		new UserProfileTask().execute(ACT_MODE_GET_REVIEWS);
+		fragmentTransaction.commit();*/
+		
+		editProfileFragment = new EditProfileFragment();
+		getSupportFragmentManager().beginTransaction().add(R.id.layActUserProfieRoot, editProfileFragment).commit();
+		isEditFragDisplayed = true;
 	}
 	
 	@Override
@@ -113,10 +114,10 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (ACT_MODE == ACT_MODE_VIEW_PROFILE) {
-			menu.findItem(R.id.menu_edit_profile).setEnabled(true);
+//			menu.findItem(R.id.menu_edit_profile).setEnabled(true);
 			menu.findItem(R.id.menu_save_profile).setEnabled(false);
 		} else if (ACT_MODE == ACT_MODE_EDIT_PROFILE){
-			menu.findItem(R.id.menu_edit_profile).setEnabled(false);
+//			menu.findItem(R.id.menu_edit_profile).setEnabled(false);
 			menu.findItem(R.id.menu_save_profile).setEnabled(true);
 		}		
 		return true;
@@ -139,12 +140,12 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
     		    	showDialog(D_ERROR);	 
     		    }
 			}			
-		} else if (itemId == R.id.menu_edit_profile) {
+		}/* else if (itemId == R.id.menu_edit_profile) {
 			ACT_MODE = ACT_MODE_EDIT_PROFILE;
 			editProfileFragment = new EditProfileFragment();
 			getSupportFragmentManager().beginTransaction().replace(R.id.layActUserProfieRoot, editProfileFragment).addToBackStack(null).commit();
 			isEditFragDisplayed = true;
-		}
+		}*/
 		return true;
 	}
 	
@@ -232,7 +233,6 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-//				showDialog(D_PROGRESS);
 			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
@@ -246,7 +246,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 					wrapper.result = wsAction.updateUser(((VeneficaApplication)getApplication()).getAuthToken()
 							, editProfileFragment.getUserDataToUpdate());
 				} else if (params[0].equals(ACT_MODE_GET_USER)) {
-					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken());
+					wrapper.userDto = wsAction.getUser(((VeneficaApplication)getApplication()).getAuthToken(),"");
 				} else if (params[0].equals(ACT_MODE_CHANGE_PASSWORD)) {
 					wrapper = wsAction.changePassword(((VeneficaApplication)getApplication()).getAuthToken(), oldPassword, newPassword);
 				} else if (params[0].equals(ACT_MODE_GET_FOLLOWINGS)) {
@@ -256,7 +256,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 					wrapper = wsAction.getFollowers(((VeneficaApplication)getApplication()).getAuthToken()
 							, ((VeneficaApplication)getApplication()).getUser().getId());							
 				} else if (params[0].equals(ACT_MODE_GET_REVIEWS)) {
-					wrapper = wsAction.getReviews(((VeneficaApplication)getApplication()).getAuthToken()
+					wrapper = wsAction.getReceivedRatings(((VeneficaApplication)getApplication()).getAuthToken()
 							, ((VeneficaApplication)getApplication()).getUser().getId());
 				}
 			}catch (IOException e) {
@@ -276,7 +276,6 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 				showDialog(D_ERROR);
 			} else if (result.userDto != null) {
 				((VeneficaApplication)getApplication()).setUser(result.userDto);
-				viewProfileDetailsFragment.setUserDto(result.userDto);
 			} else if (result.followings != null && result.result == Constants.RESULT_GET_FOLLOWINGS_SUCCESS) {
 				viewProfileDetailsFragment.setFollowings(result.followings);
 			} else if (result.followers != null && result.result == Constants.RESULT_GET_FOLLOWERS_SUCCESS) {
@@ -303,11 +302,11 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
     }
 	@Override
 	public void onBackPressed() {
-		if (isEditFragDisplayed) {
+		/*if (isEditFragDisplayed) {
 			isEditFragDisplayed = false;
 			ACT_MODE = ACT_MODE_VIEW_PROFILE;
 			new UserProfileTask().execute(ACT_MODE_GET_USER); 
-		}
+		}*/
 		super.onBackPressed();
 	}
 
