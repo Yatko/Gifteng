@@ -79,9 +79,15 @@ public class RatingActivity extends VeneficaActivity {
 		adId = getIntent().getExtras().getLong("ad_id");
 		
 		imgProfile = (ImageView) findViewById(R.id.imgActRatingProfile);
-		((VeneficaApplication)getApplication())
-			.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + ((VeneficaApplication)getApplication()).getUser().getAvatar().getUrl(),
-					imgProfile, getResources().getDrawable(R.drawable.icon_user));
+		if (((VeneficaApplication) getApplication()).getUser().getAvatar() != null
+				&& ((VeneficaApplication) getApplication()).getUser().getAvatar().getUrl() != null) {
+			((VeneficaApplication) getApplication()).getImgManager().loadImage(
+					Constants.PHOTO_URL_PREFIX
+							+ ((VeneficaApplication) getApplication())
+									.getUser().getAvatar().getUrl(),
+					imgProfile,
+					getResources().getDrawable(R.drawable.icon_user));
+		}
 		ratingBar = (RatingBar) findViewById(R.id.ratBarActRating);
 		ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 			
