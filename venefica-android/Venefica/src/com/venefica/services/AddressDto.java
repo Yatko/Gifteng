@@ -3,10 +3,7 @@
  */
 package com.venefica.services;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
@@ -14,7 +11,6 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 import android.util.Log;
 
-import com.venefica.module.user.UserDto;
 import com.venefica.utils.Constants;
 
 /**
@@ -31,8 +27,8 @@ public class AddressDto implements KvmSerializable {
     private String state;
     private String area;
     private String zipCode;
-    private Double latitude;
-    private Double longitude;
+    private Double latitude = 0.0;
+    private Double longitude = 0.0;
 	/* (non-Javadoc)
 	 * @see org.ksoap2.serialization.KvmSerializable#getProperty(int)
 	 */
