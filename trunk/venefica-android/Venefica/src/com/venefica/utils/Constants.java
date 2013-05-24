@@ -137,9 +137,9 @@ public class Constants
 //	public static final String SERVER_URL = "h2.yatko.com";
 //	public static final String SERVER_URL = "192.168.0.100";
 //	public static final String SERVER_URL = "s1.veneficalabs.com/venefica/services";
-	public static final String SERVER_URL = "gifteng.jelastic.servint.net"; //dev server
+	public static final String SERVER_URL = "veneficalabs.com"; //dev server
 	public static final String SERVICES_PROTOCOL = USE_SSL_SERVICES_TRANSPORT ? "https://" : "http://";
-	public static final String SERVICES_BASE_URL = SERVICES_PROTOCOL + SERVER_URL /*+ ":" + SERVER_PORT*/;//commented for new dev server
+	public static final String SERVICES_BASE_URL = SERVICES_PROTOCOL + SERVER_URL + ":" + SERVER_PORT;//commented for new dev server
 
 	//URLs on the service methods
 	/*public static final String SERVICES_USER_URL = SERVICES_BASE_URL + "/venefica-webapp/services/UserManagementService?wsdl";
