@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -47,6 +48,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
@@ -54,6 +56,7 @@ import com.venefica.module.map.ListingOverlayItem;
 import com.venefica.module.map.OnSingleTapListener;
 import com.venefica.module.map.TapControlledMapView;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.user.ProfileDetailActivity;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
 import com.venefica.services.CommentDto;
@@ -183,6 +186,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 * request button layout
 	 */
 	private LinearLayout layRequest;
+	private FrameLayout layUserDetails;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -202,6 +206,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         CURRENT_MODE = getIntent().getExtras().getInt("act_mode");
         selectedListingId = getIntent().getExtras().getLong("ad_id");
         //user details
+        layUserDetails = (FrameLayout) mapContainer.findViewById(R.id.layActListingDetailUserDetails);
+		layUserDetails.setOnClickListener(this);
         txtUserName = (TextView) mapContainer.findViewById(R.id.txtUserViewUserName);
         txtMemberInfo = (TextView) mapContainer.findViewById(R.id.txtUserViewMemberInfo);
         txtAddress = (TextView) mapContainer.findViewById(R.id.txtUserViewAddress);
@@ -407,10 +413,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				listing.setInBookmars(true);
 			}else if (ERROR_CODE == Constants.ERROR_RESULT_BOOKMARKS_LISTING) {
 				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_failed);
-			}/*else if(ERROR_CODE == Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS){
-				message = (String) getResources().getText(R.string.msg_bookmark_confirm_delete)
-						+" " +selectedListing.getTitle() +" ?";
-			}*/else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
+			}else if(ERROR_CODE == Constants.RESULT_REMOVE_BOOKMARKS_SUCCESS){
 				message = (String) getResources().getText(R.string.msg_bookmark_delete_success);
 				listing.setInBookmars(false);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_REMOVE_BOOKMARKS){
@@ -508,9 +511,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			txtAddress.setText(listing.getCreator().getAddress().getCity() +", "+listing.getCreator().getAddress().getCounty());
 		}
 		if (listing.getCreator().isInFollowings()) {
-			btnFollow.setText(getResources().getString(R.string.label_follow));
-		} else {
 			btnFollow.setText(getResources().getString(R.string.g_label_unfollow));
+		} else {
+			btnFollow.setText(getResources().getString(R.string.label_follow));
 		}
 		
 		//set listing details
@@ -816,6 +819,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			Intent reviewIntent = new Intent(this, RatingActivity.class);
 			reviewIntent.putExtra("ad_id", selectedListingId);
 			startActivity(reviewIntent);
+		} else if (id == R.id.layActListingDetailUserDetails && listing!= null) {
+			Intent accountIntent = new Intent(ListingDetailsActivity.this, ProfileDetailActivity.class);
+			accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
+			accountIntent.putExtra("user_name", listing.getCreator().getName());
+			startActivity(accountIntent);
 		}
 	}
 	
