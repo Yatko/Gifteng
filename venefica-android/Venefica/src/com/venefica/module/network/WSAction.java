@@ -50,6 +50,7 @@ public class WSAction {
 	private final String WS_METHOD_AUTHENTICATE = "Authenticate";
 	private final String WS_METHOD_IS_USER_REGISTERED = "IsUserComplete";
 	private final String WS_METHOD_GET_USER = "GetUser";
+	private final String WS_METHOD_GET_USER_BY_NAME = "GetUserByName";
 	private final String WS_METHOD_UPDATE_USER = "UpdateUser";
 	private final String WS_METHOD_GET_ALL_CATEGORIES = "GetAllCategories";
 	private final String WS_METHOD_REGISTER_USER = "RegisterUser";
@@ -78,7 +79,7 @@ public class WSAction {
 	private final String WS_METHOD_UNFOLLOW_USER = "Unfollow";
 	private final String WS_METHOD_GET_FOLLOWING = "GetFollowings";
 	private final String WS_METHOD_GET_FOLLOWERS = "GetFollowers";
-	private final String WS_METHOD_GET_REVIEWS = "GetReviews";
+	private final String WS_METHOD_GET_RECEIVED_REVIEWS = "GetReceivedRatings";
 	private final String WS_METHOD_MARK_AS_SPAM = "MarkAsSpam";
 	private final String WS_METHOD_UNMARK_AS_SPAM = "UnmarkAsSpam";
 	private final String WS_METHOD_REQUEST_AD = "RequestAd";
@@ -235,6 +236,7 @@ public class WSAction {
 			envelope.setOutputSoapObject(request);
 			new UserDto().register(envelope);
 			new ImageDto().register(envelope);
+			new AddressDto().register(envelope);
 
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -329,15 +331,23 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public UserDto getUser(String token) throws IOException,
+	public UserDto getUser(String token, String name) throws IOException,
 			XmlPullParserException {
-		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_USER;
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE ;
+				if (name.equalsIgnoreCase("")) {
+					SOAP_ACTION.concat(WS_METHOD_GET_USER);
+				} else {
+					SOAP_ACTION.concat(WS_METHOD_GET_USER_BY_NAME);
+				}
 		UserDto user = null;
 
 		try {
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE,
-					WS_METHOD_GET_USER);
-
+					name.equalsIgnoreCase("")? WS_METHOD_GET_USER :WS_METHOD_GET_USER_BY_NAME);
+			if (!name.equalsIgnoreCase("")) {
+				request.addProperty("name", name);
+			}
+			
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
 					SoapEnvelope.VER11);
 			envelope.dotNet = true;
@@ -345,7 +355,8 @@ public class WSAction {
 			envelope.setOutputSoapObject(request);
 			new UserDto().registerRead(envelope);
 			new ImageDto().registerRead(envelope);
-
+			new AddressDto().registerRead(envelope);
+			
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
 
@@ -813,6 +824,7 @@ public class WSAction {
 			envelope.dotNet = true;
 			envelope.setOutputSoapObject(request);
 			listing.register(envelope);
+			new AddressDto().register(envelope);
 
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -1381,8 +1393,7 @@ public class WSAction {
 			androidHttpTransport.debug = true;
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object obj = envelope.getResponse();
-			boolean isValid = Boolean.valueOf(obj.toString());
-			if (isValid) {
+			if (obj == null) {
 				result.result = Constants.RESULT_UNFOLLOW_USER_SUCCESS;
 			} else {
 				result.result = Constants.ERROR_RESULT_UNFOLLOW_USER;
@@ -1496,13 +1507,13 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public UserRegistrationResultWrapper getReviews(String token, long userId) throws IOException, XmlPullParserException{
-		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_REVIEWS;
+	public UserRegistrationResultWrapper getReceivedRatings(String token, long userId) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_RECEIVED_REVIEWS;
 		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
 
-		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_USER_URL);
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
 		try{
-			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_REVIEWS);
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_RECEIVED_REVIEWS);
 
 			request.addProperty("userId", userId);
 
