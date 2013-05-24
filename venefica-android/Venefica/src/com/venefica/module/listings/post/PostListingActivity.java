@@ -323,9 +323,11 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			result = wsAction.addImageToAd(token, listingId, img);
 			img.recycle();
 		}
-		if (imagesTodeleteFromServer != null) {
+		if (imagesTodeleteFromServer != null && imagesTodeleteFromServer.size() > 0) {
 			result = wsAction.deleteImagesFromListing(token, listingId,
 					imagesTodeleteFromServer);
+		} else {
+			result.result = Constants.RESULT_ADD_IMAGE_TO_AD_SUCCESS;
 		}
 		
 		if (result.result == Constants.RESULT_DELETE_IMAGES_SUCCESS) {
