@@ -35,7 +35,6 @@ import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AddressDto;
 import com.venefica.services.ImageDto;
-import com.venefica.services.InvitationDto.UserType;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -61,7 +60,8 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 	 * Input fields for user data.
 	 */
 	private EditText edtEmail, edtPhone, 
-		edtFirstName, edtLastName, edtDateOfBirth, edtZipCode, edtCounty, edtCity, edtArea;
+		edtFirstName, edtLastName, edtDateOfBirth, edtZipCode, edtCounty, edtCity, edtArea,
+		edtAddress1, edtAddress2, edtState, edtCountry;
 	private TextView txtMemberSince;
 	/**
 	 * Buttons for profile selection and signup
@@ -101,7 +101,10 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 		edtCounty = (EditText) view.findViewById(R.id.edtActProfileCounty);
 		edtCity = (EditText) view.findViewById(R.id.edtActProfileCity);
 		edtArea = (EditText) view.findViewById(R.id.edtActProfileArea);        
-        
+		edtAddress1  = (EditText) view.findViewById(R.id.edtActProfileAddress1);
+		edtAddress2 = (EditText) view.findViewById(R.id.edtActProfileAddress2);
+		edtState = (EditText) view.findViewById(R.id.edtActProfileState);
+		edtCountry = (EditText) view.findViewById(R.id.edtActProfileCountry);;
 		edtDateOfBirth.setOnTouchListener(new View.OnTouchListener() {
 			
 			public boolean onTouch(View v, MotionEvent event) {
@@ -174,6 +177,10 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 				edtCounty.setText(userDto.getAddress().getCounty());
 				edtCity.setText(userDto.getAddress().getCity());
 				edtArea.setText(userDto.getAddress().getArea());
+				edtAddress1.setText(userDto.getAddress().getAddress1());
+				edtAddress2.setText(userDto.getAddress().getAddress2());
+				edtState.setText(userDto.getAddress().getState());
+				edtCountry.setText(userDto.getAddress().getCountry());
 			}
 			if (userDto.getGender() == Gender.MALE) {
 				genderRadioGroup.check(R.id.radioActProfileMale);
@@ -206,6 +213,10 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 			addressDto.setCity(edtCity.getText().toString());
 			addressDto.setCounty(edtCounty.getText().toString());
 			addressDto.setArea(edtArea.getText().toString());
+			addressDto.setAddress1(edtAddress1.getText().toString());
+			addressDto.setAddress2(edtAddress2.getText().toString());
+			addressDto.setState(edtState.getText().toString());
+			addressDto.setCountry(edtCountry.getText().toString());
 			userDto.setAddress(addressDto);
 			switch (genderRadioGroup.getCheckedRadioButtonId()) {
 			  case R.id.radioActProfileMale :
@@ -291,6 +302,34 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
     	if(!vaildator.validateField(edtArea, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
     		result = false;
     		message.append(getResources().getString(R.string.label_area).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtAddress1, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_addr1).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtAddress2, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_addr2).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtState, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_state).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtCountry, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_country).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
