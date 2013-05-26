@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:layout_gravity="center">
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
 
     <RelativeLayout
         android:id="@+id/layActProfileUpdate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:paddingBottom="16dp"
-        android:layout_marginBottom="10dp" >
+        android:gravity="center"
+        android:paddingBottom="16dp" >
 
         <!-- Profile Img -->
 
@@ -72,7 +72,7 @@
             android:text="@string/g_label_change_password"
             android:textColor="@color/light_gray"
             android:textSize="14sp" />
-        
+
         <!-- Basic Info -->
 
         <TextView
@@ -167,9 +167,9 @@
             android:layout_height="@dimen/edit_text_height"
             android:layout_below="@id/txtActProfileBirthDate"
             android:layout_marginBottom="7dp"
+            android:focusable="false"
             android:hint="@string/label_birth"
-            android:inputType="date"
-            android:focusable="false" />
+            android:inputType="date" />
         <!-- Gender Info -->
 
         <TextView
@@ -305,10 +305,10 @@
             android:inputType="number"
             android:maxLength="5" />
 
-        <!-- County -->
+        <!-- Address 1 -->
 
         <TextView
-            android:id="@+id/txtActProfileCounty"
+            android:id="@+id/txtActProfileAddress1"
             style="?TextViewGrayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -316,27 +316,73 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="@string/label_county"
+            android:text="@string/label_addr1"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edtActProfileCounty"
+            android:id="@+id/edtActProfileAddress1"
             style="?EditTextGrayBorder"
             android:layout_width="match_parent"
             android:layout_height="@dimen/edit_text_height"
-            android:layout_below="@id/txtActProfileCounty"
+            android:layout_below="@id/txtActProfileAddress1"
             android:layout_marginBottom="7dp"
-            android:hint="@string/label_county"
+            android:hint="@string/label_addr1"
             android:inputType="text" />
+        <!-- Address 2 -->
 
-        <!-- City -->
+        <TextView
+            android:id="@+id/txtActProfileAddress2"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileAddress1"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_addr2"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileAddress2"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileAddress2"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_addr2"
+            android:inputType="text" />
+        
+        <!-- Area -->
+
+        <TextView
+            android:id="@+id/txtActProfileArea"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileAddress2"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_area"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileArea"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileArea"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_area"
+            android:inputType="text" />
+        <!-- city -->
 
         <TextView
             android:id="@+id/txtActProfileCity"
             style="?TextViewGrayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edtActProfileCounty"
+            android:layout_below="@id/edtActProfileArea"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
@@ -352,11 +398,10 @@
             android:layout_marginBottom="7dp"
             android:hint="@string/label_city"
             android:inputType="text" />
-
-        <!-- Area -->
+        <!-- County -->
 
         <TextView
-            android:id="@+id/txtActProfileArea"
+            android:id="@+id/txtActProfileCounty"
             style="?TextViewGrayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -364,17 +409,63 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="@string/label_area"
+            android:text="@string/label_county"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/edtActProfileArea"
+            android:id="@+id/edtActProfileCounty"
             style="?EditTextGrayBorder"
             android:layout_width="match_parent"
             android:layout_height="@dimen/edit_text_height"
-            android:layout_below="@id/txtActProfileArea"
+            android:layout_below="@id/txtActProfileCounty"
             android:layout_marginBottom="7dp"
-            android:hint="@string/label_area"
+            android:hint="@string/label_county"
+            android:inputType="text" />
+        <!-- State -->
+
+        <TextView
+            android:id="@+id/txtActProfileState"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileCounty"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_state"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileState"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileState"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_state"
+            android:inputType="text" />
+        <!-- Country -->
+
+        <TextView
+            android:id="@+id/txtActProfileCountry"
+            style="?TextViewGrayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edtActProfileState"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/label_country"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edtActProfileCountry"
+            style="?EditTextGrayBorder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edit_text_height"
+            android:layout_below="@id/txtActProfileCountry"
+            android:layout_marginBottom="7dp"
+            android:hint="@string/label_country"
             android:inputType="text" />
     </RelativeLayout>
 
