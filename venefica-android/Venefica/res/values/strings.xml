@@ -130,7 +130,10 @@
     <string name="label_l_name">Last Name</string>
     <string name="label_birth">Date of Birth</string>
     <string name="label_zip">Zip Code</string>
+    <string name="label_addr1">Address 1</string>
+    <string name="label_addr2">Address 2</string>
     <string name="label_county">County</string>
+    <string name="label_country">Country</string>
     <string name="label_city">City</string>
     <string name="label_area">Area</string>
     <string name="label_state">State</string>
