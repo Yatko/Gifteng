@@ -48,7 +48,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
-import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
