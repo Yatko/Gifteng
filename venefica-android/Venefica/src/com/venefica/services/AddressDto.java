@@ -19,14 +19,14 @@ import com.venefica.utils.Constants;
  */
 public class AddressDto implements KvmSerializable {
 
-	private String address1;
-    private String address2;
-    private String city;
-    private String county;
-    private String country;
-    private String state;
-    private String area;
-    private String zipCode;
+	private String address1 = "";
+    private String address2 = "";
+    private String city = "";
+    private String county = "";
+    private String country = "";
+    private String state = "";
+    private String area = "";
+    private String zipCode = "";
     private Double latitude = 0.0;
     private Double longitude = 0.0;
 	/* (non-Javadoc)
