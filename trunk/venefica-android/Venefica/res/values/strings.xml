@@ -81,9 +81,8 @@
     <string name="g_msg_request_ad_success">Gift request placed successfully.</string>
     <string name="g_msg_cancel_request_ad_success">Gift request cancelled.</string>
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
-    <string name="g_facebook_share">https://www.facebook.com/gifteng</string>
-    <string name="g_twitter_share">https://twitter.com/gifteng</string>
-    <string name="g_geftang_url">https://www.gifteng.com</string>
+    <string name="g_msg_reset_pwd_success">Password changed successfully.</string>
+    
 
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
@@ -92,7 +91,13 @@
     <string name="g_error_invalid_old_pwd">Unable to change password. Old Password is not valid.</string>
     <string name="g_error">Unable to process request. Please try again later.</string>
     <string name="g_error_ad_no_more_available">Requested gift no more available.</string>
+    <string name="g_error_reset_pwd_invalid_code">Reset password failed. Invalid code.</string>
+    <string name="g_error_reset_pwd_code_expired">Reset password failed. Code expired.</string>
+    <string name="g_error_reset_pwd_used_code">Reset password failed. Code already used.</string>
 
+	<string name="g_facebook_share">https://www.facebook.com/gifteng</string>
+    <string name="g_twitter_share">https://twitter.com/gifteng</string>
+    <string name="g_geftang_url">https://www.gifteng.com</string>
     <string-array name="g_array_purpose_of_registration">
         <item>How did you here out about us?</item>
         <item>Google</item>
