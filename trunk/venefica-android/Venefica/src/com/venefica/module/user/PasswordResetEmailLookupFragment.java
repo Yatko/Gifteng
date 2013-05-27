@@ -3,6 +3,8 @@
  */
 package com.venefica.module.user;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.main.R;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
 
 /**
  * @author avinash
@@ -32,6 +36,8 @@ public class PasswordResetEmailLookupFragment extends SherlockFragment implement
 	
 	private Button btnContinue;
 	private EditText edtEmail;
+
+	private InputFieldValidator vaildator;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class PasswordResetEmailLookupFragment extends SherlockFragment implement
 		btnContinue = (Button) view.findViewById(R.id.btnActLoginContinue);
 		btnContinue.setOnClickListener(this);
 		edtEmail = (EditText) view.findViewById(R.id.edtActLoginResetPwdEmail);
+		edtEmail.setText(Utility.getEmail(getActivity()));
 		return view;
 	}
 	@Override
@@ -57,8 +64,32 @@ public class PasswordResetEmailLookupFragment extends SherlockFragment implement
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		if (id == R.id.btnActLoginContinue && this.emailLookupListener != null) {
+		if (id == R.id.btnActLoginContinue && this.emailLookupListener != null && validateFields()) {
 			this.emailLookupListener.onContinueButtonClick(edtEmail.getText().toString());
 		}
 	}
+	
+	/**
+     * Method to validate input fields for registration
+     * @return result of validation
+     */
+	public boolean validateFields(){
+    	boolean result = true;
+    	StringBuffer message = new StringBuffer();
+    	if(vaildator == null){
+    		vaildator = new InputFieldValidator();    		
+    	}
+    	if(!vaildator.validateField(edtEmail, Pattern.compile(InputFieldValidator.EMAIL_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.label_email).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.msg_validation_email));
+    		message.append("\n");
+    	}
+    	
+    	if (!result) {
+			Utility.showLongToast(getActivity(), message.toString()); 
+		}
+		return result;    	
+    } 
 }
