@@ -93,7 +93,15 @@ public class Constants
 	public static final int ERROR_RESULT_CANCEL_REQUEST = 1084;
 	public static final int RESULT_DELETE_IMAGES_SUCCESS = 1085;
 	public static final int ERROR_RESULT_DELETE_IMAGES = 1086;
-	public static final int ERROR_AD_NO_MORE_AVAILABLE = 1087;	
+	public static final int ERROR_AD_NO_MORE_AVAILABLE = 1087;
+	public static final int RESULT_VERIFY_EMAIL_SUCCESS = 1088;
+	public static final int ERROR_RESULT_VERIFY_EMAIL = 1089;
+	public static final int ERROR_RESULT_RESET_PASSWORD = 1090;
+	public static final int RESULT_RESET_PASSWORD_SUCCESS = 1091;
+	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_NOT_FOUND = 1092;
+	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_EXPIRED = 1093;
+	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_USED = 1094;	
+	
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -214,6 +222,7 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_REGULAR = "fonts/pt-sans/PTC55F.ttf";
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
-	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";	
+	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+	
 			
 }
