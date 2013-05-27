@@ -3,6 +3,8 @@
  */
 package com.venefica.module.user;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,9 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.main.R;
+import com.venefica.module.utils.InputFieldValidator;
+import com.venefica.module.utils.Utility;
+import com.venefica.utils.Constants;
 
 /**
  * @author avinash
@@ -32,6 +37,8 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 	
 	private Button btnResetPassword;
 	private EditText edtNewPassword, edtConfPassword;
+
+	private InputFieldValidator vaildator;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -59,8 +66,46 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		if (id == R.id.btnActLoginResetPasswd) {
+		if (id == R.id.btnActLoginResetPasswd && validateFields()) {
 			onPasswordReset.onResetPasswordButtonClick(edtConfPassword.getText().toString());
 		}
 	}
+	
+	/**
+     * Method to validate input fields for registration
+     * @return result of validation
+     */
+	public boolean validateFields(){
+    	boolean result = true;
+    	StringBuffer message = new StringBuffer();
+    	if(vaildator == null){
+    		vaildator = new InputFieldValidator();    		
+    	}
+    	if(!vaildator.validateField(edtNewPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.g_hint_new_password).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.hint_user_password_pattern));
+    		message.append("\n");
+    	}
+    	if(!vaildator.validateField(edtConfPassword, Pattern.compile(InputFieldValidator.CHAR_NUM_PATTERN_REGX))){
+    		result = false;
+    		message.append(getResources().getString(R.string.g_hint_conf_password).toString());
+    		message.append("- ");
+    		message.append(getResources().getString(R.string.hint_user_password_pattern));
+    		message.append("\n");
+    	}
+    	if (!edtNewPassword.getText().toString().trim().equals(edtConfPassword.getText()
+				.toString().trim())) {
+			result = false;
+			message.append(getResources().getString(R.string.g_hint_new_password).toString());
+			message.append("- ");
+			message.append(getResources().getString(R.string.g_hint_conf_password).toString());
+			message.append(" "+getResources().getString(R.string.g_msg_pwd_not_match).toString());
+		}
+    	if (!result) {
+			Utility.showLongToast(getActivity(), message.toString()); 
+		}
+		return result;    	
+    } 
 }
