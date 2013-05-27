@@ -16,7 +16,7 @@ public class UserRegistrationResultWrapper {
 	public int result = -1;
 	public UserDto userDto = null;
 	public String data = null;
-	public List<UserDto> followings;
-	public List<UserDto> followers;
-	public List<RatingDto> reviews;
+	public List<UserDto> followings  = null;
+	public List<UserDto> followers = null;
+	public List<RatingDto> reviews = null;
 }
