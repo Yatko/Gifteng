@@ -85,6 +85,8 @@ public class WSAction {
 	private final String WS_METHOD_REQUEST_AD = "RequestAd";
 	private final String WS_METHOD_CANCEL_REQUEST = "CancelRequest";
 	private final String WS_METHOD_DELETE_IMAGES = "DeleteImagesFromAd";
+	private final String WS_METHOD_FORGOT_PASSWORD_VERIFY_EMAIL = "ForgotPasswordEmail";
+	private final String WS_METHOD_FORGOT_PASSWORD_RESET = "ChangeForgottenPassword";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -1756,6 +1758,100 @@ public class WSAction {
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_DELETE_IMAGES;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to verify email
+	 * @param token String
+	 * @param email String
+	 * @return result UserRegistrationResultWrapper
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public UserRegistrationResultWrapper verifyForgotPasswordEmail(String token, String email) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_FORGOT_PASSWORD_VERIFY_EMAIL;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("email", email);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AUTH_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_VERIFY_EMAIL_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_VERIFY_EMAIL;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_VERIFY_EMAIL;
+		}
+		return result;
+	}
+	
+	/** 
+	 * Method to rest password
+	 * @param token
+	 * @param newPassword
+	 * @param code
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public UserRegistrationResultWrapper changeForgottenPassword(String token, String newPassword, String code) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_FORGOT_PASSWORD_RESET;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		UserRegistrationResultWrapper result = new UserRegistrationResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("newPassword", newPassword);
+			request.addProperty("code", code);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AUTH_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_RESET_PASSWORD_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_RESET_PASSWORD;
+			}
+			
+		}catch (SoapFault e){
+			if (e.getMessage().contains("exists")) {
+				result.result = Constants.ERROR_RESULT_RESET_PASSWORD_CODE_NOT_FOUND;
+			} else if (e.getMessage().contains("expired")) {
+				result.result = Constants.ERROR_RESULT_RESET_PASSWORD_CODE_EXPIRED;
+			} else if (e.getMessage().contains("used")) {
+				result.result = Constants.ERROR_RESULT_RESET_PASSWORD_CODE_USED;
+			} else {
+				result.result = Constants.ERROR_RESULT_RESET_PASSWORD;
+			}			
 		}
 		return result;
 	}
