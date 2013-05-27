@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!-- Login -->
     <EditText
         android:id="@+id/edtActLoginEmailPhone"
         style="?EditTextGrayBorder"
@@ -21,6 +22,7 @@
         android:paddingRight="5dp"
         android:singleLine="true" />
 
+    <!-- Password -->
     <EditText
         android:id="@+id/edtActLoginPassword"
         style="?EditTextGrayBorder"
