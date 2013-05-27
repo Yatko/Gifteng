@@ -11,9 +11,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
@@ -170,7 +174,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 */
 	private final int viewHeightMin = 150, viewHeightMax = 250; // in pixels
 	
-	private ImageButton imgBtnMore;
+	private ImageButton imgBtnMore, imgBtnFacebook, imgBtnTwitter;
 	/**
 	 * to get current location for distance calculation
 	 */
@@ -233,6 +237,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		txtMiles = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpMiles);
         txtLeft = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpBidsRem);
         txtDays = (TextView) popupView.findViewById(R.id.txtListingDetailsPopUpDaysRem);
+        imgBtnMore = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpMore);
+        imgBtnMore.setOnClickListener(this);
+        imgBtnFacebook = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpShare);
+        imgBtnFacebook.setOnClickListener(this);
+        imgBtnTwitter = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpTweet);
+        imgBtnTwitter.setOnClickListener(this);
 		//Map
 		mapView = (TapControlledMapView) mapContainer.findViewById(R.id.mapviewActListingDetails);
 		// dismiss balloon upon single tap of MapView 
@@ -287,8 +297,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         imgBtnSend.setOnClickListener(this);
         laySend = (LinearLayout) findViewById(R.id.layActListingDetailsSend);
         
-        imgBtnMore = (ImageButton) popupView.findViewById(R.id.btnListingDetailsPopUpMore);
-        imgBtnMore.setOnClickListener(this);        
+                
         layRequest = (LinearLayout) findViewById(R.id.layActListingDetailsRequestItem);
     }
     @Override
@@ -823,6 +832,46 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
 			accountIntent.putExtra("user_name", listing.getCreator().getName());
 			startActivity(accountIntent);
+		} else if (id == R.id.btnListingDetailsPopUpShare) {
+			Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+			shareIntent.setType("text/plain");
+			String shareText = listing.getTitle()+" "
+					+ listing.getDescription()+" "
+					+	Constants.PHOTO_URL_PREFIX + listing.getImage().getUrl();
+			shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+			PackageManager pm = getPackageManager();
+			List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+			for (final ResolveInfo app : activityList) {
+			    if ((app.activityInfo.name).contains("facebook")) {
+			        final ActivityInfo activity = app.activityInfo;
+			        final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+			        shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+			        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			        shareIntent.setComponent(name);
+			        startActivity(shareIntent);
+			        break;
+			   }
+			}
+		} else if (id == R.id.btnListingDetailsPopUpTweet) {
+			Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+			shareIntent.setType("text/plain");
+			String shareText = listing.getTitle()+" "
+					+ listing.getDescription()+" "
+					+	Constants.PHOTO_URL_PREFIX + listing.getImage().getUrl();
+			shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+			PackageManager pm = getPackageManager();
+			List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+			for (final ResolveInfo app : activityList) {
+			    if ("com.twitter.android.PostActivity".equals(app.activityInfo.name)) {
+			        final ActivityInfo activity = app.activityInfo;
+			        final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+			        shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+			        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			        shareIntent.setComponent(name);
+			        startActivity(shareIntent);
+			        break;
+			   }
+			}
 		}
 	}
 	
