@@ -4,7 +4,7 @@
  * Custom form validation class, that adds an extra function to check if the
  * form validation at that moment (when invoked) contains errors.
  * Useful for callback validators when they communicates with the WS, on any previous
- * validation fail the callback can be skipped with this simple check.
+ * validation fail the callback can be skipped with this simple check (hasErrors).
  *
  * @author gyuszi
  */
