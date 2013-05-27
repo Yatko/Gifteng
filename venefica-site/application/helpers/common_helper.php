@@ -13,6 +13,8 @@ if ( ! function_exists('display')) {
     }
 }
 
+// making a safer world
+
 if ( ! function_exists('safe_content')) {
     function safe_content($str) {
         $str = strip_tags($str);
@@ -25,6 +27,8 @@ if ( ! function_exists('safe_parameter')) {
         return $str;
     }
 }
+
+// object and properties related helpers
 
 if ( ! function_exists('getField')) {
     function getField($obj, $fieldName) {
@@ -44,5 +48,28 @@ if ( ! function_exists('hasField')) {
             return FALSE;
         }
         return property_exists($obj, $fieldName);
+    }
+}
+
+// associative array related helpers
+
+if ( ! function_exists('getElement')) {
+    function getElement($array, $elem) {
+        if ( $array == null || $elem == null ) {
+            return null;
+        }
+        if (array_key_exists($elem, $array) ) {
+            return $array[$elem];
+        }
+        return null;
+    }
+}
+
+if ( ! function_exists('hasElement')) {
+    function hasElement($array, $elem) {
+        if ( $array == null || $elem == null ) {
+            return FALSE;
+        }
+        return array_key_exists($elem, $array);
     }
 }
