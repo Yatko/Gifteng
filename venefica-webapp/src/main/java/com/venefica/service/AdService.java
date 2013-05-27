@@ -135,8 +135,8 @@ public interface AdService {
      * found attached to the specified ad
      */
     @WebMethod(operationName = "DeleteImageFromAd")
-    void deleteImageFromAd
-            (@WebParam(name = "adId") @NotNull Long adId,
+    void deleteImageFromAd(
+            @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "imageId") @NotNull Long imageId)
             throws AdNotFoundException, AuthorizationException, ImageNotFoundException;
     
