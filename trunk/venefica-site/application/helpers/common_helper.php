@@ -28,6 +28,19 @@ if ( ! function_exists('safe_parameter')) {
     }
 }
 
+if ( ! function_exists('is_empty')) {
+    function is_empty($obj) {
+        if ( $obj == null ) {
+            return true;
+        }
+        $object_vars = get_object_vars($obj);
+        if ( $object_vars == null || empty($object_vars) ) {
+            return true;
+        }
+        return false;
+    }
+}
+
 // object and properties related helpers
 
 if ( ! function_exists('getField')) {
