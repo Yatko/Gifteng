@@ -14,7 +14,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="340dp" >
+        android:layout_height="300dp" >
 
         <ImageView
             android:id="@+id/imgListingTileBg"
@@ -27,10 +27,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/background_transperent_black"
-            android:weightSum="100" >
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:gravity="center_horizontal"
+            android:background="@color/transparent"
+            android:weightSum="120" >
 
-            <TextView
+            <!--
+                 <TextView
                 android:id="@+id/txtListingTileTitle"
                 style="bold"
                 android:layout_width="wrap_content"
@@ -40,17 +44,38 @@
                 android:gravity="left"
                 android:maxLines="1"
                 android:textColor="@color/white" />
+            -->
+
+            <ImageButton
+                android:id="@+id/imgBtnListingTileFavourite"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="30"
+                android:contentDescription="@string/label_share"
+                android:src="@drawable/icon_star_10" />
 
             <ImageButton
                 android:id="@+id/imgBtnListingTileShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="20"
-                android:background="@color/transparent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="30"
                 android:contentDescription="@string/label_share"
-                android:gravity="right"
-                android:src="@drawable/icon_share" />
+                android:src="@drawable/icon_export" />
+
+            <ImageButton
+                android:id="@+id/imgBtnListingTileComment"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_gravity="right"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="30"
+                android:src="@drawable/icon_monolog" />
         </LinearLayout>
 
         <TextView
@@ -64,5 +89,39 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:weightSum="100" >
+
+        <TextView
+            android:id="@+id/txtListingTileTitle"
+            style="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:layout_weight="60"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:textColor="@color/light_gray" />
+        <TextView
+            android:id="@+id/txtListingTileMiles"
+            style="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:layout_weight="40"
+            android:ellipsize="end"
+            android:gravity="right|bottom"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:text="22 mi"
+            android:textColor="@color/light_blue" />
+    </LinearLayout>
 
 </LinearLayout>
