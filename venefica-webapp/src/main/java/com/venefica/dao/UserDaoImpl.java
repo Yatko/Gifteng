@@ -25,28 +25,34 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public User findUserByName(String name) {
-        List<User> users = createQuery("from " + getDomainClassName() + " u where u.name=:name")
+        List<User> users = createQuery(""
+                + "from " + getDomainClassName() + " u "
+                + "where u.name = :name"
+                + "")
                 .setParameter("name", name)
                 .list();
-
         return users.isEmpty() ? null : users.get(0);
     }
 
     @Override
     public User findUserByEmail(String email) {
-        List<User> users = createQuery("from " + getDomainClassName() + " u where u.email=:email")
+        List<User> users = createQuery(""
+                + "from " + getDomainClassName() + " u "
+                + "where u.email = :email"
+                + "")
                 .setParameter("email", email)
                 .list();
-
         return users.isEmpty() ? null : users.get(0);
     }
 
     @Override
     public User findUserByPhoneNumber(String phoneNumber) {
-        List<User> users = createQuery("from " + getDomainClassName() + " u where u.phoneNumber=:phoneNumber")
+        List<User> users = createQuery(""
+                + "from " + getDomainClassName() + " u "
+                + "where u.phoneNumber = :phoneNumber"
+                + "")
                 .setParameter("phoneNumber", phoneNumber)
                 .list();
-
         return users.isEmpty() ? null : users.get(0);
     }
 
@@ -63,25 +69,31 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
 
     @Override
     public boolean removeByName(String name) {
-        int numUserDeleted = createQuery("delete from " + getDomainClassName() + " u where u.name = :name")
+        int numUserDeleted = createQuery(""
+                + "delete from " + getDomainClassName() + " u "
+                + "where u.name = :name"
+                + "")
                 .setParameter("name", name)
                 .executeUpdate();
-
         return numUserDeleted != 0;
     }
 
     @Override
     public boolean removeByEmail(String email) {
-        int numUserDeleted = createQuery("delete from " + getDomainClassName() + " u where u.email = :email")
+        int numUserDeleted = createQuery(""
+                + "delete from " + getDomainClassName() + " u "
+                + "where u.email = :email"
+                + "")
                 .setParameter("email", email)
                 .executeUpdate();
-
         return numUserDeleted != 0;
     }
 
     @Override
     public Long getMaxUserId() {
-        Long maxId = (Long) createQuery("select max(u.id) from " + getDomainClassName() + " u").uniqueResult();
+        Long maxId = (Long) createQuery(""
+                + "select max(u.id) from " + getDomainClassName() + " u"
+                + "").uniqueResult();
         return maxId != null ? maxId : 0;
     }
 }
