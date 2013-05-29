@@ -124,7 +124,7 @@ public class User {
         this.userData.setAddress(address);
     }
     
-    public boolean isBusinessAcc() {
+    public boolean isBusinessAccount() {
         return userData.isBusinessAccount();
     }
     
@@ -138,6 +138,11 @@ public class User {
         followers.remove(user);
     }
     
+    public boolean inFollowers(User user) {
+        initFollowers();
+        return followers.contains(user);
+    }
+    
     public void addFollowing(User user) {
         initFollowings();
         followings.add(user);
@@ -146,6 +151,11 @@ public class User {
     public void removeFollowing(User user) {
         initFollowings();
         followings.remove(user);
+    }
+    
+    public boolean inFollowings(User user) {
+        initFollowings();
+        return followings.contains(user);
     }
     
     private void initFollowers() {

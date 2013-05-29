@@ -1,11 +1,16 @@
 package com.venefica.service;
 
+import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
+import com.venefica.model.BusinessCategory;
+import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
 import com.venefica.model.User;
+import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
@@ -31,7 +36,28 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Inject
     private InvitationDao invitationDao;
     @Inject
-    protected UserDataDao userDataDao;
+    private UserDataDao userDataDao;
+    @Inject
+    private BusinessCategoryDao businessCategoryDao;
+    
+    //**********************
+    //* categories related *
+    //**********************
+    
+    @Override
+    public List<BusinessCategoryDto> getAllBusinessCategories() {
+        List<BusinessCategoryDto> result = new LinkedList<BusinessCategoryDto>();
+        List<BusinessCategory> categories = businessCategoryDao.getCategories();
+        
+        for (BusinessCategory category : categories) {
+            BusinessCategoryDto categoryDto = new BusinessCategoryDto(category);
+            result.add(categoryDto);
+        }
+        
+        return result;
+    }
+    
+    
     
     //************************************
     //* user crud (create/update/delete) *
@@ -39,8 +65,32 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
+    public Long registerBusinessUser(UserDto userDto, String password) throws UserAlreadyExistsException, GeneralException {
+        String email = userDto.getEmail();
+        String businessName = userDto.getBusinessName();
+        Long categoryId = userDto.getBusinessCategoryId();
+        
+        if (userDataDao.findByBusinessName(businessName) != null) {
+            throw new UserAlreadyExistsException(UserField.NAME, "User with the specified business name already exists!");
+        } else if (userDao.findUserByEmail(email) != null) {
+            throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
+        }
+        
+        BusinessCategory category = validateBusinessCategory(categoryId);
+        
+        User user = userDto.toBusinessUser(imageDao);
+        user.setPassword(password);
+        ((BusinessUserData) user.getUserData()).setCategory(category);
+        
+        userDataDao.save(user.getUserData());
+        
+        return userDao.save(user);
+    }
+    
+    @Override
+    @Transactional
     public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
-        User user = userDto.toUser(imageDao);
+        User user = userDto.toMemberUser(imageDao);
         user.setPassword(password);
 
         // Check for existing users
@@ -124,8 +174,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         UserDto userDto = new UserDto(user);
         if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
-            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+            userDto.setInFollowers(currentUser.inFollowers(user));
+            userDto.setInFollowings(currentUser.inFollowings(user));
         }
         return userDto;
     }
@@ -143,8 +193,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         UserDto userDto = new UserDto(user);
         if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
-            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+            userDto.setInFollowers(currentUser.inFollowers(user));
+            userDto.setInFollowings(currentUser.inFollowings(user));
         }
         return userDto;
     }
@@ -162,8 +212,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         UserDto userDto = new UserDto(user);
         if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(inFollowers(currentUser.getFollowers(), user));
-            userDto.setInFollowings(inFollowings(currentUser.getFollowings(), user));
+            userDto.setInFollowers(currentUser.inFollowers(user));
+            userDto.setInFollowings(currentUser.inFollowings(user));
         }
         return userDto;
     }
@@ -258,11 +308,15 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     // internal helpers
     
-    private boolean inFollowers(Set<User> followers, User user) {
-        return followers.contains(user);
-    }
-    
-    private boolean inFollowings(Set<User> followings, User user) {
-        return followings.contains(user);
+    private BusinessCategory validateBusinessCategory(Long categoryId) throws GeneralException {
+        if (categoryId == null) {
+            throw new GeneralException("Category id not specified!");
+        }
+
+        BusinessCategory category = businessCategoryDao.get(categoryId);
+        if (category == null) {
+            throw new GeneralException("Category with id = " + categoryId + " not found!");
+        }
+        return category;
     }
 }

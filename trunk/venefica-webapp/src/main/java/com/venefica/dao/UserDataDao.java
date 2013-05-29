@@ -4,6 +4,7 @@
  */
 package com.venefica.dao;
 
+import com.venefica.model.BusinessUserData;
 import com.venefica.model.UserData;
 
 /**
@@ -28,4 +29,11 @@ public interface UserDataDao {
      */
     public void update(UserData userData);
     
+    /**
+     * Finds business user data by name.
+     * 
+     * @param name name of the business
+     * @return business user data object
+     */
+    public BusinessUserData findByBusinessName(String name);
 }

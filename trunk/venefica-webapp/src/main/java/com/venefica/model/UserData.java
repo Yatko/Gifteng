@@ -4,6 +4,7 @@
  */
 package com.venefica.model;
 
+import com.venefica.service.dto.UserDto;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -48,6 +49,10 @@ public abstract class UserData {
     public UserData() {
         this.address = new Address();
     }
+    
+    public abstract void updateUser(UserDto userDto);
+    
+    public abstract void updateUserDto(UserDto userDto);
     
     public abstract boolean isBusinessAccount();
     

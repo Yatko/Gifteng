@@ -1,6 +1,7 @@
 package com.venefica.service;
 
 import com.venefica.config.Constants;
+import com.venefica.dao.AdDataDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.CommentDao;
@@ -60,6 +61,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdServiceImpl extends AbstractService implements AdService {
 
     @Inject
+    private AdDataDao adDataDao;
+    @Inject
     private CategoryDao categoryDao;
     @Inject
     private ImageDao imageDao;
@@ -104,61 +107,143 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public Long placeAd(AdDto adDto) throws AdValidationException {
         User currentUser = getCurrentUser();
 
-        Ad ad = new Ad();
-        ad.setStatus(AdStatus.ACTIVE);
-        ad.setType(currentUser.isBusinessAcc() ? AdType.BUSINESS : AdType.MEMBER);
-        ad.setSent(false);
-        ad.setReceived(false);
-        
-        adDto.update(ad);
-
-        Category category = validateCategory(adDto.getCategoryId());
-        
         // ++ TODO: create ad validator
-        ad.setCategory(category);
-
         if (adDto.getTitle() == null) {
             throw new AdValidationException(AdField.TITLE, "Title not specified!");
         }
-
-        ImageDto imageDto = adDto.getImage();
-
+        
+        Category category = validateCategory(adDto.getCategoryId());
+        Image image = null;
+        Image thumbImage = null;
+        
         // Assign main image?
-        if (imageDto != null) {
+        if (adDto.getImage() != null) {
+            ImageDto imageDto = adDto.getImage();
             if (imageDto.isValid()) {
-                Image image = imageDto.toImage();
+                image = imageDto.toImage();
                 imageDao.save(image);
-                ad.setMainImage(image);
             } else {
                 throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
             }
         }
 
-        ImageDto thumbImageDto = adDto.getImageThumbnail();
-
         // Assign thumb image?
-        if (thumbImageDto != null) {
+        if (adDto.getImageThumbnail() != null) {
+            ImageDto thumbImageDto = adDto.getImageThumbnail();
             if (thumbImageDto.isValid()) {
-                Image thumbImage = thumbImageDto.toImage();
+                thumbImage = thumbImageDto.toImage();
                 imageDao.save(thumbImage);
-                ad.setThumbImage(thumbImage);
             } else {
                 throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
             }
         }
         // ++
-
+        
+        boolean expires = adDto.isExpires() != null ? adDto.isExpires() : true;
+        Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
+        Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
+        
+        Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
+        adDto.update(ad);
+        
+        ad.getAdData().setCategory(category);
+        ad.getAdData().setMainImage(image);
+        ad.getAdData().setThumbImage(thumbImage);
+        
+        adDataDao.save(ad.getAdData());
+        
+        ad.setStatus(AdStatus.ACTIVE);
+        ad.setSent(false);
+        ad.setReceived(false);
         ad.setCreator(currentUser);
+        ad.setExpires(expires);
         ad.setExpired(false);
-
-        if (adDto.getExpiresAt() != null) {
-            ad.setExpiresAt(adDto.getExpiresAt());
-        } else {
-            Date expiresAt = DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
-            ad.setExpiresAt(expiresAt);
+        ad.setExpiresAt(expiresAt);
+        ad.setAvailableAt(availableAt);
+        return adDao.save(ad);
+    }
+    
+    @Override
+    @Transactional
+    public void updateAd(AdDto adDto) throws AdNotFoundException, AdValidationException, AuthorizationException {
+        Ad ad = validateAd(adDto.getId());
+        
+        // ++ TODO: create ad validator
+        if (adDto.getTitle() == null) {
+            throw new AdValidationException(AdField.TITLE, "Title is null!");
         }
 
-        return adDao.save(ad);
+        Category category = validateCategory(adDto.getCategoryId());
+        User currentUser = getCurrentUser();
+
+        if (!ad.getCreator().equals(currentUser)) {
+            throw new AuthorizationException("You can update only your own ads!");
+        }
+
+        // WARNING: This update must be performed within an active transaction!
+        adDto.update(ad);
+
+        ad.getAdData().setCategory(category);
+
+        if (adDto.getImage() != null) {
+            ImageDto imageDto = adDto.getImage();
+            if (imageDto.isValid()) {
+                Image image = ad.getAdData().getMainImage();
+
+                if (image != null) {
+                    ad.getAdData().setMainImage(null);
+                    imageDao.delete(image);
+                }
+
+                image = imageDto.toImage();
+                imageDao.save(image);
+                ad.getAdData().setMainImage(image);
+            } else {
+                throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
+            }
+        }
+
+        if (adDto.getImageThumbnail() != null) {
+            ImageDto thumbImageDto = adDto.getImageThumbnail();
+            if (thumbImageDto.isValid()) {
+                Image thumbImage = ad.getAdData().getThumbImage();
+
+                if (thumbImage != null) {
+                    ad.getAdData().setThumbImage(null);
+                    imageDao.delete(thumbImage);
+                }
+
+                thumbImage = thumbImageDto.toImage();
+                imageDao.save(thumbImage);
+                ad.getAdData().setThumbImage(thumbImage);
+            } else {
+                throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
+            }
+        }
+        
+        adDataDao.update(ad.getAdData());
+
+//        if (adDto.getExpiresAt() != null && currentUser.isBusinessAcc()) {
+//                ad.setExpiresAt(adDto.getExpiresAt());
+//                ad.setExpired(false);
+//        }
+
+        // ++
+    }
+    
+    @Override
+    @Transactional
+    public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException {
+        Ad ad = validateAd(adId);
+        User currentUser = getCurrentUser();
+
+        if (!ad.getCreator().equals(currentUser)) {
+            throw new AuthorizationException("Only the creator can delete the ad");
+        }
+
+        if (!ad.isDeleted()) {
+            ad.markAsDeleted();
+        }
     }
 
     @Override
@@ -211,12 +296,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
             Long imageId = imageIds.get(0);
             Image image = validateImage(imageId);
             
-            if (!ad.getImages().contains(image)) {
+            if (!ad.getAdData().getImages().contains(image)) {
                 throw new AuthorizationException("Image doesn't belong to the specified ad!");
             }
             
             ad.removeImage(image);
             imageDao.delete(image);
+            adDataDao.update(ad.getAdData());
         } else {
             //some exceptions are not thrown, instead are captured and continued with the next image
             for ( Long imageId : imageIds ) {
@@ -228,7 +314,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     continue;
                 }
 
-                if (!ad.getImages().contains(image)) {
+                if (!ad.getAdData().getImages().contains(image)) {
                     logger.warn("Image (imageId: " + imageId + ") doesn't belong to the specified ad!");
                     continue;
                 }
@@ -236,92 +322,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 ad.removeImage(image);
                 imageDao.delete(image);
             }
+            adDataDao.update(ad.getAdData());
         }
     }
 
-    @Override
-    @Transactional
-    public void updateAd(AdDto adDto) throws AdNotFoundException, AdValidationException, AuthorizationException {
-        Ad ad = validateAd(adDto.getId());
-        
-        // ++ TODO: create ad validator
-        if (adDto.getTitle() == null) {
-            throw new AdValidationException(AdField.TITLE, "Title is null!");
-        }
-
-        Category category = validateCategory(adDto.getCategoryId());
-        User currentUser = getCurrentUser();
-
-        if (!ad.getCreator().equals(currentUser)) {
-            throw new AuthorizationException("You can update only your own ads!");
-        }
-
-        // WARNING: This update must be performed within an active transaction!
-        adDto.update(ad);
-
-        ad.setCategory(category);
-
-        ImageDto imageDto = adDto.getImage();
-
-        if (imageDto != null) {
-            if (imageDto.isValid()) {
-                Image image = ad.getMainImage();
-
-                if (image != null) {
-                    ad.setMainImage(null);
-                    imageDao.delete(image);
-                }
-
-                image = imageDto.toImage();
-                imageDao.save(image);
-                ad.setMainImage(image);
-            } else {
-                throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
-            }
-        }
-
-        ImageDto thumbImageDto = adDto.getImageThumbnail();
-
-        if (thumbImageDto != null) {
-            if (thumbImageDto.isValid()) {
-                Image thumbImage = ad.getThumbImage();
-
-                if (thumbImage != null) {
-                    ad.setThumbImage(null);
-                    imageDao.delete(thumbImage);
-                }
-
-                thumbImage = thumbImageDto.toImage();
-                imageDao.save(thumbImage);
-                ad.setThumbImage(thumbImage);
-            } else {
-                throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
-            }
-        }
-
-//        if (adDto.getExpiresAt() != null && currentUser.isBusinessAcc()) {
-//                ad.setExpiresAt(adDto.getExpiresAt());
-//                ad.setExpired(false);
-//        }
-
-        // ++
-    }
-    
-    @Override
-    @Transactional
-    public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException {
-        Ad ad = validateAd(adId);
-        User currentUser = getCurrentUser();
-
-        if (!ad.getCreator().equals(currentUser)) {
-            throw new AuthorizationException("Only the creator can delete the ad");
-        }
-
-        if (!ad.isDeleted()) {
-            ad.markAsDeleted();
-        }
-    }
-    
     
     
     //*************************
@@ -534,7 +538,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.getRequests() != null && ad.getRequests().size() - 1 > Constants.REQUEST_MAX_ALLOWED ) {
             throw new InvalidRequestException("Max request limit reached.");
         }
-        if ( ad.getQuantity() <= 0 ) {
+        if ( ad.getAdData().getQuantity() <= 0 ) {
             throw new InvalidRequestException("No more available.");
         }
         

@@ -3,11 +3,14 @@ package com.venefica.service;
 import com.venefica.auth.Token;
 import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
+import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.UserDao;
 import com.venefica.model.User;
 import com.venefica.service.dto.AddressDto;
+import com.venefica.service.dto.BusinessCategoryDto;
 //import com.venefica.service.dto.ReviewDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
@@ -30,10 +33,13 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
 
     private static final String TEST_USER_NAME = "userManagementServiceTestUser2";
     private static final String TEST_INVITATION_CODE = "12345";
+    private static final String TEST_BUSINESS_NAME = "venefica-labs";
+    private static final String TEST_PASSWORD = "pa$$word";
     
     @Inject
+    private BusinessCategoryDao businessCategoryDao;
+    @Inject
     private UserDao userDao;
-    
     @Inject
     private TokenEncryptor tokenEncryptor;
     
@@ -50,6 +56,25 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         testUserAuthToken = testUser != null ? tokenEncryptor.encrypt(new Token(testUser.getId()))
                 : null;
     }
+    
+    //**********************
+    //* categories related *
+    //**********************
+
+    @Test
+    public void checkBasicBusinessCategoriesTest() {
+        assertTrue("There are no business categories!", businessCategoryDao.hasCategories());
+    }
+
+    @Test
+    public void getAllBusinessCategoriesTest() {
+        List<BusinessCategoryDto> categories = client.getAllBusinessCategories();
+        assertTrue("No business categories returned!", categories != null && categories.size() > 0);
+    }
+    
+    //***************
+    //* user search *
+    //***************
 
     @Test
     public void getUserTest() throws UserNotFoundException, UserAlreadyExistsException {
@@ -58,19 +83,37 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         assertNotNull("User object must be returned!", userDto);
     }
 
+    //************************************
+    //* user crud (create/update/delete) *
+    //************************************
+    
     // register
+    
+    @Test
+    public void registerBusinessUserTest() throws UserAlreadyExistsException, GeneralException {
+        BusinessCategoryDto category = client.getAllBusinessCategories().get(0);
+        UserDto testBusinessUserDto = createBusinessUserDto(TEST_BUSINESS_NAME, category.getId());
+        client.registerBusinessUser(testBusinessUserDto, TEST_PASSWORD);
+    }
+    
+    @Test(expected = UserAlreadyExistsException.class)
+    public void registerBusinessUserWithTheSameNameTest() throws UserAlreadyExistsException, GeneralException {
+        BusinessCategoryDto category = client.getAllBusinessCategories().get(0);
+        UserDto testBusinessUserDto = createBusinessUserDto(TEST_BUSINESS_NAME, category.getId());
+        client.registerBusinessUser(testBusinessUserDto, TEST_PASSWORD);
+    }
     
     @Test
     public void registerUserTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
         UserDto testUserDto = createUserDto(TEST_USER_NAME);
-        client.registerUser(testUserDto, "pa$$word", TEST_INVITATION_CODE);
+        client.registerUser(testUserDto, TEST_PASSWORD, TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
         UserDto userWithRegisteredName = createUserDto("otherUser");
         userWithRegisteredName.setName(getFirstUser().getName());
-        client.registerUser(userWithRegisteredName, "pa$$word", TEST_INVITATION_CODE);
+        client.registerUser(userWithRegisteredName, TEST_PASSWORD, TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
@@ -85,15 +128,15 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         String invitationCode = "11111";
         
         UserDto testUserDto_1 = createUserDto("test_1");
-        Long testUserId_1 = client.registerUser(testUserDto_1, "pa$$word", invitationCode);
+        Long testUserId_1 = client.registerUser(testUserDto_1, TEST_PASSWORD, invitationCode);
         assertNotNull("Test user might been created", testUserId_1);
         
         UserDto testUserDto_2 = createUserDto("test_2");
-        Long testUserId_2 = client.registerUser(testUserDto_2, "pa$$word", invitationCode);
+        Long testUserId_2 = client.registerUser(testUserDto_2, TEST_PASSWORD, invitationCode);
         assertNotNull("Test user might been created", testUserId_2);
         
         UserDto testUserDto_3 = createUserDto("test_3");
-        client.registerUser(testUserDto_3, "pa$$word", invitationCode);
+        client.registerUser(testUserDto_3, TEST_PASSWORD, invitationCode);
     }
     
     // update
@@ -122,6 +165,10 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         client.updateUser(userDto);
     }
 
+    //***************
+    //* user follow *
+    //***************
+    
     // follow
     
     @Test
@@ -254,9 +301,22 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         userDto.setName(name);
         userDto.setFirstName("First name");
         userDto.setLastName("Last name");
-        userDto.setEmail(name + "@mail.ru");
+        userDto.setEmail(name + "@email.com");
         userDto.setPhoneNumber("123" + name.hashCode());
         userDto.setDateOfBirth(new Date());
+        userDto.setAddress(address);
+        return userDto;
+    }
+    
+    private static UserDto createBusinessUserDto(String businessName, Long businessCategoryId) {
+        AddressDto address = new AddressDto();
+        address.setZipCode("555");
+        
+        UserDto userDto = new UserDto(true);
+        userDto.setBusinessCategoryId(businessCategoryId);
+        userDto.setBusinessName(businessName);
+        userDto.setEmail(businessName + "@email.com");
+        userDto.setPhoneNumber("555" + businessName.hashCode());
         userDto.setAddress(address);
         return userDto;
     }

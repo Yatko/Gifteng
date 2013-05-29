@@ -54,11 +54,22 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
         if (lastAdId < 0) {
-            ads = createQuery("from " + getDomainClassName() + " a where a.deleted = false order by a.createdAt desc")
+            ads = createQuery(""
+                    + "from " + getDomainClassName() + " a where "
+                    + "a.deleted = false and "
+                    + "a.adData.category.hidden = false "
+                    + "order by a.createdAt desc"
+                    + "")
                     .setMaxResults(numberAds)
                     .list();
         } else {
-            ads = createQuery("from " + getDomainClassName() + " a where a.deleted = false and a.id < :lastId order by a.createdAt desc")
+            ads = createQuery(""
+                    + "from " + getDomainClassName() + " a where "
+                    + "a.deleted = false and "
+                    + "a.adData.category.hidden = false and "
+                    + "a.id < :lastId "
+                    + "order by a.createdAt desc"
+                    + "")
                     .setParameter("lastId", lastAdId)
                     .setMaxResults(numberAds)
                     .list();
@@ -81,7 +92,6 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         BigDecimal minPrice = filter.getMinPrice();
         BigDecimal maxPrice = filter.getMaxPrice();
         Boolean hasPhoto = filter.getHasPhoto();
-//        Boolean wanted = filter.isWanted();
         AdType type = filter.getType();
         
         // Build query string
@@ -92,34 +102,30 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         }
 
         if (searchString != null) {
-            queryStr += " and lower(a.title) like '%' || :searchstr || '%'";
+            queryStr += " and lower(a.adData.title) like '%' || :searchstr || '%'";
         }
 
         if (categories != null && !categories.isEmpty()) {
-            queryStr += " and a.category.id in (:categories)";
+            queryStr += " and a.adData.category.id in (:categories)";
         }
 
         //queryStr += createSqlPartForPostgresql(filter);
         queryStr += createSqlPartForMysql(filter);
 
         if (isPositiveOrZero(minPrice)) {
-            queryStr += " and a.price >= :minPrice";
+            queryStr += " and a.adData.price >= :minPrice";
         }
 
         if (isPositiveOrZero(maxPrice)) {
-            queryStr += " and a.price <= :maxPrice";
+            queryStr += " and a.adData.price <= :maxPrice";
         }
 
         if (hasPhoto != null && hasPhoto) {
-            queryStr += " and a.mainImage is not null";
+            queryStr += " and a.adData.mainImage is not null";
         }
 
-//        if (wanted != null) {
-//            queryStr += " and a.wanted = :wanted";
-//        }
-        
         if (type != null) {
-            queryStr += " and a.type = :type";
+            queryStr += " and a.adData.type = :type";
         }
 
         queryStr += " order by a.id desc";
@@ -154,10 +160,6 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("maxPrice", maxPrice);
         }
 
-//        if (wanted != null) {
-//            query.setParameter("wanted", wanted);
-//        }
-        
         if (type != null) {
             query.setParameter("type", type);
         }
@@ -174,10 +176,19 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @Override
     public void markExpiredAds() {
         // @formatter:off		
-        int numRows = createQuery(
-                "update " + getDomainClassName() + " a "
-                + "set a.expired = true, a.numExpire = a.numExpire + 1, a.status = :status "
-                + "where a.expiresAt < current_date() and a.expired = false and a.deleted = false and a.sold = false")
+        int numRows = createQuery(""
+                + "update " + getDomainClassName() + " a "
+                + "set "
+                + "a.expired = true, "
+                + "a.numExpire = a.numExpire + 1, "
+                + "a.status = :status "
+                + "where "
+                + "a.expires = true and "
+                + "a.expiresAt < current_date() and "
+                + "a.expired = false and "
+                + "a.deleted = false and "
+                + "a.sold = false"
+                + "")
                 .setParameter("status", AdStatus.EXPIRED)
                 .executeUpdate();
         // @formatter:on
@@ -190,7 +201,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<Ad> getByUser(Long userId) {
-        return createQuery("from " + getDomainClassName() + " a where a.creator.id = :userid and a.deleted = false order by a.id desc")
+        return createQuery(""
+                + "from " + getDomainClassName() + " a where "
+                + "a.creator.id = :userid and "
+                + "a.adData.category.hidden = false and "
+                + "a.deleted = false "
+                + "order by a.id desc")
                 .setParameter("userid", userId)
                 .list();
     }
@@ -206,7 +222,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     private String createSqlPartForPostgresql(FilterDto filter) {
         String queryStr = "";
         if ( isDataValidForDWithin(filter) ) {
-            queryStr += " and dwithin(a.location, :curpos, :maxdist) = true";
+            queryStr += " and dwithin(a.adData.location, :curpos, :maxdist) = true";
         }
         return queryStr;
     }
@@ -231,7 +247,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             //NOTE:
             //It's possible that the returning (calculated distance) value to be in degrees.
             //If so use a conversion into km or m
-            queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
+            queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.adData.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
         }
         return queryStr;
     }

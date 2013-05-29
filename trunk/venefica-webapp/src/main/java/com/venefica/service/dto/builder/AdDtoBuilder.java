@@ -74,23 +74,27 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     public AdDto build() {
         AdDto adDto = new AdDto();
         adDto.setId(model.getId());
-        adDto.setCategoryId(model.getCategory().getId());
-        adDto.setCategory(model.getCategory().getName());
-        adDto.setTitle(model.getTitle());
-        adDto.setDescription(model.getDescription());
-        adDto.setPrice(model.getPrice());
-        adDto.setQuantity(model.getQuantity());
+        adDto.setCategoryId(model.getAdData().getCategory().getId());
+        adDto.setCategory(model.getAdData().getCategory().getName());
+        adDto.setTitle(model.getAdData().getTitle());
+        adDto.setDescription(model.getAdData().getDescription());
+        adDto.setPrice(model.getAdData().getPrice());
+        adDto.setQuantity(model.getAdData().getQuantity());
+        adDto.setFreeShipping(model.getAdData().getFreeShipping());
+        adDto.setPickUp(model.getAdData().getPickUp());
+        adDto.setPlace(model.getAdData().getPlace());
+        adDto.setType(model.getAdData().getType());
 
-        if (model.getLocation() != null) {
-            adDto.setAddress(new AddressDto(model.getLocation()));
+        if (model.getAdData().getLocation() != null) {
+            adDto.setAddress(new AddressDto(model.getAdData().getLocation()));
         }
 
-        if (model.getMainImage() != null) {
-            adDto.setImage(new ImageDto(model.getMainImage()));
+        if (model.getAdData().getMainImage() != null) {
+            adDto.setImage(new ImageDto(model.getAdData().getMainImage()));
         }
 
-        if (model.getThumbImage() != null) {
-            adDto.setImageThumbnail(new ImageDto(model.getThumbImage()));
+        if (model.getAdData().getThumbImage() != null) {
+            adDto.setImageThumbnail(new ImageDto(model.getAdData().getThumbImage()));
         }
         
         if ( filteredComments != null ) {
@@ -107,7 +111,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if (includeImagesFlag) {
             LinkedList<ImageDto> images = new LinkedList<ImageDto>();
 
-            for (Image image : model.getImages()) {
+            for (Image image : model.getAdData().getImages()) {
                 ImageDto imageDto = new ImageDto(image);
                 images.add(imageDto);
             }
@@ -116,17 +120,21 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
 
         adDto.setCreatedAt(model.getCreatedAt());
-        //adDto.setWanted(model.isWanted());
+        adDto.setExpires(model.isExpires());
         adDto.setExpired(model.isExpired());
         adDto.setExpiresAt(model.getExpiresAt());
+        adDto.setAvailableAt(model.getAvailableAt());
         adDto.setNumAvailProlongations(model.getNumAvailProlongations());
         adDto.setNumViews(model.getNumViews());
         adDto.setRating(model.getRating());
-
         adDto.setOwner(currentUser != null && model.getCreator().equals(currentUser));
 
         if (includeCreatorFlag) {
-            adDto.setCreator(new UserDto(model.getCreator()));
+            UserDto creator = new UserDto(model.getCreator());
+            creator.setInFollowers(currentUser.inFollowers(model.getCreator()));
+            creator.setInFollowings(currentUser.inFollowings(model.getCreator()));
+            
+            adDto.setCreator(creator);
         }
 
         if (includeCanMarkAsSpamFlag) {

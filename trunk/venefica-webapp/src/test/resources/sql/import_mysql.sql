@@ -25,6 +25,11 @@ insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('s
 insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('third', '12345', 'thirdUser@gmail.com', 3);
 insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('null', '12345', 'null@gmail.com', 4);
 
+-- Business categories
+delete from `businesscategory`;
+insert into `businesscategory` (`name`, `hidden`) values ('Electronics', '0');
+insert into `businesscategory` (`name`, `hidden`) values ('Furniture', '0');
+
 -- Categories
 delete from `category`;
 insert into `category` (`name`, `hidden`) values ('local places', '0');
@@ -39,9 +44,17 @@ insert into `category` (`name`, `hidden`, `parent_id`) values ('bars/clubs', '0'
 insert into `category` (`name`, `hidden`, `parent_id`) values ('restaurants', '0', '1');
 insert into `category` (`name`, `hidden`, `parent_id`) values ('salons/nails/spas', '0', '1');
 
+-- Ad data
+delete from `addata`;
+insert into `addata` (`id`, `type`, `category_id`, `title`, `quantity`) values (1, 'MEMBER', 1, 'test ad', '1');
+
+-- Member ad data
+delete from `memberaddata`;
+insert into `memberaddata` (`id`) values (1);
+
 -- Ads
 delete from `ad`;
-insert into `ad` (`creator_id`, `category_id`, `title`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `sent`, `received`, `quantity`, `numexpire`, `status`) values (1, 1, 'test ad', now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', '0', '1', '0', 'ACTIVE');
+insert into `ad` (`adData_id`, `creator_id`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `sent`, `received`, `numexpire`, `status`, `expires`) values (1, 1, now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', '0', '0', 'ACTIVE', '1');
 
 -- Bookmarks
 delete from `bookmark`;

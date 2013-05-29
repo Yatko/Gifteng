@@ -4,7 +4,13 @@
  */
 package com.venefica.model;
 
+import com.venefica.service.dto.UserDto;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
 
@@ -18,9 +24,18 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "businessuserdata")
 public class BusinessUserData  extends UserData {
     
+    @Column(unique = true, nullable = false)
     private String businessName;
     private String contactName;
     private Boolean verified;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "business_category_fk")
+    private BusinessCategory category;
+    
+    @OneToMany
+    @ForeignKey(name = "businessuserdata_userdata_fk", inverseName = "businessuserdata_address_fk")
+    private List<AddressWrapper> addresses;
 
     public BusinessUserData() {
         super();
@@ -29,6 +44,20 @@ public class BusinessUserData  extends UserData {
     public BusinessUserData(String businessName) {
         this();
         this.businessName = businessName;
+    }
+
+    @Override
+    public void updateUser(UserDto userDto) {
+        businessName = userDto.getBusinessName();
+        contactName = userDto.getContactName();
+    }
+
+    @Override
+    public void updateUserDto(UserDto userDto) {
+        userDto.setBusinessName(businessName);
+        userDto.setContactName(contactName);
+        userDto.setBusinessCategoryId(category.getId());
+        userDto.setBusinessCategory(category.getName());
     }
     
     @Override
@@ -45,6 +74,19 @@ public class BusinessUserData  extends UserData {
     public String getFullName() {
         return contactName;
     }
+    
+    public void addAddress(Address address) {
+        initAddresses();
+        addresses.add(new AddressWrapper(address));
+    }
+    
+    private void initAddresses() {
+        if ( addresses == null ) {
+            addresses = new ArrayList<AddressWrapper>(0);
+        }
+    }
+    
+    // getters/setters
     
     public String getBusinessName() {
         return businessName;
@@ -68,6 +110,22 @@ public class BusinessUserData  extends UserData {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public List<AddressWrapper> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressWrapper> addresses) {
+        this.addresses = addresses;
+    }
+
+    public BusinessCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(BusinessCategory category) {
+        this.category = category;
     }
     
 }

@@ -76,6 +76,7 @@ public class TestDataConfig {
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
+        //factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_IMPORT_FILES_SQL_EXTRACTOR, "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor"); //not working
         factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);
         factoryBuilder.getProperties().put(AvailableSettings.FORMAT_SQL, hibernateFormatSQL);
         
