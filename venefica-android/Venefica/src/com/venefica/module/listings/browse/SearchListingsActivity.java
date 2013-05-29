@@ -3,6 +3,7 @@ package com.venefica.module.listings.browse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.EditorInfo;
@@ -48,8 +50,10 @@ import com.google.android.maps.MapView;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.ListingDetailsActivity;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.ListingListAdapter;
 import com.venefica.module.listings.MapItemizedOverlay;
+import com.venefica.module.listings.ListingListAdapter.TileButtonClickListener;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaMapActivity;
 import com.venefica.module.map.ListingOverlayItem;
@@ -59,12 +63,13 @@ import com.venefica.module.network.WSAction;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
 public class SearchListingsActivity extends VeneficaMapActivity implements
-ISlideMenuCallback, LocationListener{
+ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	/**
 	 * List to show listings
 	 */
@@ -109,6 +114,8 @@ ISlideMenuCallback, LocationListener{
 	public static final int ACT_MODE_DOWNLOAD_BOOKMARKS = 3003;
 	public static final int ACT_MODE_REMOVE_BOOKMARK = 3004;
 	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3006;
+	public static final int ACT_MODE_BOOKMARK_LISTINGS = 3007;
+	public static final int ACT_MODE_ADD_COMMENT = 3008;
 	private static int CURRENT_MODE;
 
 	private WSAction wsAction;
@@ -150,6 +157,18 @@ ISlideMenuCallback, LocationListener{
 	 * flag to use location from
 	 */
 	private boolean useCurrentLocation;
+	/**
+	 * selected listing id
+	 */
+	private long selectedListingId;
+	/**
+	 * comment layout
+	 */
+	private LinearLayout laySend;
+	private boolean isSendMsgVisible = false;
+	private boolean isOwner;
+	private EditText edtComment;
+	private ImageButton imgBtnSendComment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -172,6 +191,11 @@ ISlideMenuCallback, LocationListener{
 		slideMenuView.setUserDetails(((VeneficaApplication)getApplication()).getUser());
         super.setSlideMenuView(slideMenuView);
         
+        //comment 
+        laySend = (LinearLayout) findViewById(R.id.layActSearchListingsSend);
+        edtComment = (EditText) findViewById(R.id.edtActSearchListingsMessage);
+        imgBtnSendComment = (ImageButton) findViewById(R.id.imgBtnActSearchListingsSend);
+        imgBtnSendComment.setOnClickListener(this);
 		//Create the search view
         searchView = (EditText) getLayoutInflater().inflate(R.layout.view_searchbar, null);
         searchView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -431,6 +455,15 @@ ISlideMenuCallback, LocationListener{
 			}else if(ERROR_CODE == Constants.ERROR_SIGN_OUT_APPLICATION){
 				((AlertDialog) dialog).getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.VISIBLE);
 				message = (String) getResources().getText(R.string.msg_app_exit);
+			}else if (ERROR_CODE == Constants.RESULT_BOOKMARKS_LISTING_SUCCESS) {
+				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_success);
+			}else if (ERROR_CODE == Constants.ERROR_RESULT_BOOKMARKS_LISTING) {
+				message = (String) getResources().getText(R.string.msg_detail_listing_add_fav_failed);
+			}else if(ERROR_CODE == Constants.ERROR_RESULT_ADD_COMMENT){
+				message = (String) getResources().getText(R.string.error_add_comment);
+			}else if(ERROR_CODE == Constants.RESULT_ADD_COMMENT_SUCCESS){
+				setMessageLayoutVisiblity(false);
+				message = (String) getResources().getText(R.string.msg_add_comment_success);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -456,10 +489,18 @@ ISlideMenuCallback, LocationListener{
 				if (params[0].equals(ACT_MODE_SEARCH_BY_CATEGORY)) {
 					wrapper = wsAction.searchListings(((VeneficaApplication)getApplication()).getAuthToken()
 							, lastAdId, LIST_PAGE_SIZE, filter);
-				}else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
+				} else if (params[0].equals(ACT_MODE_DOWNLOAD_BOOKMARKS)) {
 					wrapper = wsAction.getBookmarkedListings(((VeneficaApplication)getApplication()).getAuthToken());
-				}else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
+				} else if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
 					wrapper = wsAction.getMyListings(((VeneficaApplication)getApplication()).getAuthToken());
+				} else if (params[0].equals(ACT_MODE_BOOKMARK_LISTINGS)) {
+					ListingDetailsResultWrapper res = 
+					wsAction.bookmarkListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+					wrapper.result = res.result; 
+				}else if (params[0].equals(ACT_MODE_ADD_COMMENT)) {
+					ListingDetailsResultWrapper res = wsAction.addCommentToListing(((VeneficaApplication)getApplication()).getAuthToken()
+							, selectedListingId, getComment());
+					wrapper.result = res.result;
 				}
 			}catch (IOException e) {
 				Log.e("SearchListingTask::doInBackground :", e.toString());
@@ -673,6 +714,52 @@ ISlideMenuCallback, LocationListener{
 	
 	@Override
 	public void onBackPressed() {
+		if (isSendMsgVisible) {
+			setMessageLayoutVisiblity(false);
+		}
 		// disable app exit on back button press
+	}
+
+	@Override
+	public void onCommentButtonClick(long adId, boolean isOwner) {
+		setMessageLayoutVisiblity(true);
+		this.isOwner = isOwner;
+	}
+
+	@Override
+	public void onFavoriteButtonClick(long adId) {
+		selectedListingId = adId;
+		new SearchListingTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
+	}
+	/**
+	 * Set send comment layout visibility
+	 * @param isVisible
+	 */
+	private void setMessageLayoutVisiblity(boolean isVisible){
+		if (isVisible) {
+			laySend.setVisibility(ViewGroup.VISIBLE);
+		} else {
+			laySend.setVisibility(ViewGroup.GONE);
+		}		
+		isSendMsgVisible = isVisible;
+	}
+	/**
+	 * Get comments to send
+	 * @return commentDto
+	 */
+	public CommentDto getComment() {
+		CommentDto commentDto = new CommentDto();
+		commentDto.setCreatedAt(new Date());		
+		commentDto.setOwner(this.isOwner);
+		commentDto.setText(edtComment.getText().toString());
+		return commentDto;
+	}
+
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.imgBtnActSearchListingsSend && !edtComment.getText().toString().trim().equals("")) {
+			new SearchListingTask().execute(ACT_MODE_ADD_COMMENT);
+		}
 	}
 }
