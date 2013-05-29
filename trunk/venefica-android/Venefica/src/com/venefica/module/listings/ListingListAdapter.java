@@ -22,6 +22,7 @@ import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.CommentDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -30,14 +31,21 @@ import com.venefica.utils.VeneficaApplication;
  * Adapter class for Listing List Adapter
  */
 public class ListingListAdapter extends BaseAdapter implements OnClickListener{
+	
+	public interface TileButtonClickListener{
+		public void onCommentButtonClick(long adId, boolean isOwner);
+		public void onFavoriteButtonClick(long adId);
+	}
 	private List<AdDto> listings;
 	private Context context;
 	private boolean isGridView;
 	private ViewHolder holder;
+	private TileButtonClickListener tileButtonClickListener;
 	public ListingListAdapter(Context context, List<AdDto> listings, boolean isGridView) {
 		this.context = context;
 		this.listings = listings;
 		this.isGridView = isGridView;
+		this.tileButtonClickListener = (TileButtonClickListener) context;
 	}
 
 	/* (non-Javadoc)
@@ -80,11 +88,16 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			holder.txtMemberInfo = (TextView) convertView.findViewById(R.id.txtUserViewMemberInfo);
 			holder.txtAddress = (TextView) convertView.findViewById(R.id.txtUserViewAddress);
 			holder.profImgView = (ImageView) convertView.findViewById(R.id.imgUserViewProfileImg);
-			holder.btnSendMsg = (ImageButton) convertView.findViewById(R.id.imgBtnUserViewSendMsg);
-			holder.btnSendMsg.setVisibility(View.INVISIBLE);
+			holder.imgBtnSendMsg = (ImageButton) convertView.findViewById(R.id.imgBtnUserViewSendMsg);
+			holder.imgBtnSendMsg.setVisibility(View.INVISIBLE);
 	        holder.btnFollow = (Button) convertView.findViewById(R.id.imgBtnUserViewFollow);
 	        holder.btnFollow.setOnClickListener(this);
 	        holder.btnFollow.setVisibility(View.INVISIBLE);
+	        
+	        holder.imgBtnFavourite = (ImageButton) convertView.findViewById(R.id.imgBtnListingTileFavourite);
+	        holder.imgBtnFavourite.setOnClickListener(this);
+	        holder.imgBtnComment = (ImageButton) convertView.findViewById(R.id.imgBtnListingTileComment);
+	        holder.imgBtnComment.setOnClickListener(this);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -94,6 +107,10 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 		holder.txtPrice.append(listings.get(position).getPrice().toString());
 		holder.imgBtnShare.setContentDescription(listings.get(position).getTitle()+ " "+ listings.get(position).getDescription());
 		holder.imgView.setContentDescription(listings.get(position).getId()+"");
+		holder.imgBtnComment.setContentDescription(listings.get(position).getId()+"");
+		holder.imgBtnComment.setTag(listings.get(position).isOwner());
+		holder.imgBtnFavourite.setContentDescription(listings.get(position).getId()+"");
+		holder.imgBtnFavourite.setTag(listings.get(position).isInBookmars());
 //		txtPrice.append(" ");
 //		txtPrice.append(listing.getCurrencyCode());
 		if (this.listings.get(position).getImage() != null) {
@@ -157,22 +174,23 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 	     * Text view to show user details
 	     */
 	    TextView txtUserName, txtMemberInfo, txtAddress;
-		ImageButton imgBtnShare, btnSendMsg;
+		ImageButton imgBtnShare, imgBtnSendMsg, imgBtnFavourite, imgBtnComment;
 		Button btnFollow;
 		ImageView imgView, profImgView;
 	}
 
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == R.id.imgBtnListingTileShare) {
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.imgBtnListingTileShare) {
 			Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, v.getContentDescription());
+			sendIntent.putExtra(Intent.EXTRA_TEXT, view.getContentDescription());
 			sendIntent.setType("text/plain");
 			context.startActivity(sendIntent);
-		}else if (v.getId() == R.id.imgListingTileBg){
+		}else if (id == R.id.imgListingTileBg){
 			Intent intent = new Intent(context, ListingDetailsActivity.class);
-			intent.putExtra("ad_id", Long.parseLong(v.getContentDescription().toString()));
+			intent.putExtra("ad_id", Long.parseLong(view.getContentDescription().toString()));
 			int mode = SearchListingsActivity.getCURRENT_MODE();
 			if (mode == SearchListingsActivity.ACT_MODE_DOWNLOAD_BOOKMARKS) {
 				mode = ListingDetailsActivity.ACT_MODE_BOOKMARK_LISTINGS;
@@ -183,7 +201,17 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			}
 			intent.putExtra("act_mode", mode);
 			context.startActivity(intent);
-		} else if (v.getId() == R.id.imgBtnUserViewFollow) {
+		} else if (id == R.id.imgBtnListingTileFavourite) {
+			if (view.getTag().toString().equals("false")) {
+				tileButtonClickListener.onFavoriteButtonClick(Long
+						.parseLong(view.getContentDescription().toString()));
+			} else {
+				Utility.showShortToast(this.context, this.context.getResources().getString(R.string.g_msg_already_in_bookmark));
+			}
+		} else if (id == R.id.imgBtnListingTileComment) {
+			tileButtonClickListener.onCommentButtonClick(Long.parseLong(view.getContentDescription().toString())
+					, view.getTag().toString().equals("true")? true: false);
+		} else if (id == R.id.imgBtnUserViewFollow) {
 			
 		}
 	}
