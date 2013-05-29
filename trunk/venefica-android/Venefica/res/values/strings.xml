@@ -82,6 +82,7 @@
     <string name="g_msg_cancel_request_ad_success">Gift request cancelled.</string>
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
     <string name="g_msg_reset_pwd_success">Password changed successfully.</string>
+    <string name="g_msg_already_in_bookmark">Gift already in favourites.</string>
     
 
     <!-- errors -->
