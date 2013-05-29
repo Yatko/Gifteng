@@ -46,18 +46,22 @@ public interface Constants {
     public static final String MESSAGE_SIGNATURE = "MessageSig";
     public static final String AUTH_TOKEN = "AuthToken";
     public static final Set<String> OPERATIONS_FOR_SKIP_TOKEN_AUTHORIZATION = new HashSet<String>(Arrays.asList(
-            //registration related
+            //UserManagementService: registration related
             "RegisterUser",
-            //login related
+            "RegisterBusinessUser",
+            "GetAllBusinessCategories",
+            
+            //AuthService: login related
             "Authenticate",
             "AuthenticateEmail",
             "AuthenticatePhone",
-            //invitation related
-            "RequestInvitation",
-            "IsInvitationValid",
-            //forgot password
+            //AuthService: forgot password
             "ForgotPasswordEmail",
-            "ChangeForgottenPassword"
+            "ChangeForgottenPassword",
+            
+            //InvitationService: invitation related
+            "RequestInvitation",
+            "IsInvitationValid"
     ));
     
 }

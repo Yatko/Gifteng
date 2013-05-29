@@ -25,6 +25,11 @@ insert into local_user ("id", "name", "password", "email") values (nextval('user
 insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com');
 insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com');
 
+-- Business categories
+delete from businesscategory;
+insert into businesscategory ("id", "name", "hidden") values (nextval('business_cat_seq'), 'Electronics', 'f');
+insert into businesscategory ("id", "name", "hidden") values (nextval('business_cat_seq'), 'Furniture', 'f');
+
 -- Categories
 delete from category;
 insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'local places', 'f');
@@ -39,9 +44,17 @@ insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_
 insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'restaurants', 'f', '1');
 insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'salons/nails/spas', 'f', '1');
 
+-- Ad data
+delete from addata;
+insert into addata ("id", "type", "category_id", "title", "quantity") values (nextval('addata_seq'), 'MEMBER', 1, 'test ad', '1');
+
+-- Member ad data
+delete from memberaddata;
+insert into memberaddata ("id") values (1);
+
 -- Ads
 delete from ad;
-insert into ad ("id", "creator_id", "category_id", "title", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "sent", "received", "quantity", "numexpire", "status") values (nextval('ad_seq'), 1, 1, 'test ad', now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 'f', 'f', 1, 0, 'ACTIVE');
+insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "sent", "received", "numexpire", "status", "expires") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 'f', 'f', 0, 'ACTIVE', 't');
 
 -- Bookmarks
 delete from bookmark;

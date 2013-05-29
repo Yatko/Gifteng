@@ -1,14 +1,11 @@
 package com.venefica.model;
 
 import com.venefica.config.Constants;
-import com.vividsolutions.jts.geom.Point;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,13 +16,13 @@ import javax.persistence.Id;
 //import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.ForeignKey;
-import org.hibernate.annotations.Type;
 //import javax.persistence.SequenceGenerator;
 
 /**
@@ -44,38 +41,9 @@ public class Ad {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne(optional = false)
-    @ForeignKey(name = "ad_category_fk")
-    private Category category;
-    
-    @Column(length = 500, nullable = false)
-    private String title;
-    @Column(length = 500)
-    private String subtitle;
-    @Column(length = 1000)
-    private String description;
-    
-    private Integer quantity; //specifies how many requests can be selected also
-    private BigDecimal price; //original price, current value
-    
-    @ManyToOne
-    @ForeignKey(name = "ad_mainimg_fk")
-    private Image mainImage; //cover image
-    
-    @ManyToOne
-    @ForeignKey(name = "ad_thumbimg_fk")
-    private Image thumbImage;
-    
-    @OneToMany
-    @OrderBy
-    @ForeignKey(name = "ad_image_ad_fk", inverseName = "ad_image_image_fk")
-    private List<Image> images;
-    
-    @Column(columnDefinition = "Geometry")
-    @Type(type = "org.hibernate.spatial.GeometryType")
-    private Point location;
-    @Embedded
-    private Address address;
+    @OneToOne
+    @ForeignKey(name = "addata_fk")
+    private AdData adData;
     
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -84,12 +52,11 @@ public class Ad {
     @ForeignKey(name = "ad_creator_fk")
     private User creator;
     
-//    private boolean wanted; //not used in the gifteng project
-    
     @Temporal(TemporalType.TIMESTAMP)
     private Date availableAt; //beginning of the offer (available since)
     
     private int numExpire; //how many times expired
+    private boolean expires; //never expire?
     @Column(nullable = false)
     private boolean expired;
     @Temporal(TemporalType.TIMESTAMP)
@@ -140,16 +107,19 @@ public class Ad {
     @OrderBy
     private List<Request> requests;
     
-    private Boolean freeShipping;
-    private Boolean pickUp;
-    
     @Enumerated(EnumType.STRING)
     private AdStatus status;
-    @Enumerated(EnumType.STRING)
-    private AdType type;
-
-    public Ad() {
-        images = new LinkedList<Image>();
+    
+    protected Ad() {
+    }
+    
+    public Ad(AdType type) {
+        if ( type == AdType.MEMBER ) {
+            adData = new MemberAdData();
+        } else if ( type == AdType.BUSINESS ) {
+            adData = new BusinessAdData();
+        }
+        
         ratings = new LinkedList<Rating>();
         spamMarks = new LinkedList<SpamMark>();
         comments = new LinkedList<Comment>();
@@ -179,11 +149,11 @@ public class Ad {
     }
     
     public void select() {
-        quantity--;
+        adData.select();
     }
     
     public void unselect() {
-        quantity++;
+        adData.unselect();
     }
     
     public boolean isAlreadyViewedBy(User user) {
@@ -219,17 +189,15 @@ public class Ad {
     }
     
     public void addImage(Image image) {
-        if ( images == null ) {
-            images = new LinkedList<Image>();
-        }
-        images.add(image);
+        adData.addImage(image);
     }
     
     public void removeImage(Image image) {
-        if ( images == null ) {
-            images = new LinkedList<Image>();
-        }
-        images.remove(image);
+        adData.removeImage(image);
+    }
+    
+    public AdType getType() {
+        return adData.getType();
     }
     
     // getter/setter
@@ -249,70 +217,6 @@ public class Ad {
 
     public void setCreator(User creator) {
         this.creator = creator;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Point getLocation() {
-        return location;
-    }
-
-    public void setLocation(Point location) {
-        this.location = location;
-    }
-
-    public Image getMainImage() {
-        return mainImage;
-    }
-
-    public void setMainImage(Image mainImage) {
-        this.mainImage = mainImage;
-    }
-
-    public Image getThumbImage() {
-        return thumbImage;
-    }
-
-    public void setThumbImage(Image thumbImage) {
-        this.thumbImage = thumbImage;
-    }
-
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
     }
 
     public Date getCreatedAt() {
@@ -395,14 +299,6 @@ public class Ad {
         this.ratings = ratings;
     }
 
-//    public boolean isWanted() {
-//        return wanted;
-//    }
-//
-//    public void setWanted(boolean wanted) {
-//        this.wanted = wanted;
-//    }
-
     public List<SpamMark> getSpamMarks() {
         return spamMarks;
     }
@@ -457,22 +353,6 @@ public class Ad {
 
     public void setViewers(List<Viewer> viewers) {
         this.viewers = viewers;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public List<Request> getRequests() {
@@ -531,30 +411,6 @@ public class Ad {
         this.reviewedAt = reviewedAt;
     }
 
-    public Boolean getFreeShipping() {
-        return freeShipping;
-    }
-
-    public void setFreeShipping(Boolean freeShipping) {
-        this.freeShipping = freeShipping;
-    }
-
-    public Boolean getPickUp() {
-        return pickUp;
-    }
-
-    public void setPickUp(Boolean pickUp) {
-        this.pickUp = pickUp;
-    }
-
-    public AdType getType() {
-        return type;
-    }
-
-    public void setType(AdType type) {
-        this.type = type;
-    }
-
     public int getNumExpire() {
         return numExpire;
     }
@@ -571,11 +427,19 @@ public class Ad {
         this.availableAt = availableAt;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public boolean isExpires() {
+        return expires;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setExpires(boolean expires) {
+        this.expires = expires;
+    }
+
+    public AdData getAdData() {
+        return adData;
+    }
+
+    public void setAdData(AdData adData) {
+        this.adData = adData;
     }
 }

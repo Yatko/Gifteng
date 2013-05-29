@@ -1,6 +1,8 @@
 package com.venefica.service;
 
+import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
@@ -23,9 +25,34 @@ import javax.jws.soap.SOAPBinding.ParameterStyle;
 @SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
 public interface UserManagementService {
 
+    //**********************
+    //* categories related *
+    //**********************
+    
+    @WebMethod(operationName = "GetAllBusinessCategories")
+    @WebResult(name = "category")
+    List<BusinessCategoryDto> getAllBusinessCategories();
+    
+    
+    
     //************************************
     //* user crud (create/update/delete) *
     //************************************
+    
+    /**
+     * Registers a new business user.
+     * 
+     * @param userDto the user to be created
+     * @param password
+     * @return
+     * @throws UserAlreadyExistsException when a user with the same email exists
+     * @throws GeneralException when the provided category does not exists
+     */
+    @WebMethod(operationName = "RegisterBusinessUser")
+    @WebResult(name = "userId")
+    public Long registerBusinessUser(
+            @WebParam(name = "user") UserDto userDto,
+            @WebParam(name = "password") String password) throws UserAlreadyExistsException, GeneralException;
     
     /**
      * Registers new local user not connected to any social network.
@@ -35,13 +62,14 @@ public interface UserManagementService {
      * future)
      * @param invitationCode the invitation code
      * @throws UserAlreadyExistsException is thrown when a user with the same
-     * name already exists
+     * name and email already exists
      * @throws InvitationNotFoundException thrown when the provided invitation code
      * could not be found
      */
     @WebMethod(operationName = "RegisterUser")
     @WebResult(name = "userId")
-    public Long registerUser(@WebParam(name = "user") UserDto userDto,
+    public Long registerUser(
+            @WebParam(name = "user") UserDto userDto,
             @WebParam(name = "password") String password,
             @WebParam(name = "invitationCode") String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException;
     

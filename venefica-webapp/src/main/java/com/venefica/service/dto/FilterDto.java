@@ -27,7 +27,6 @@ public class FilterDto {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
-//    private Boolean wanted;
     private AdType type;
     private Boolean includeOwned;
 
@@ -98,14 +97,6 @@ public class FilterDto {
     public void setHasPhoto(Boolean hasPhoto) {
         this.hasPhoto = hasPhoto;
     }
-
-//    public Boolean isWanted() {
-//        return wanted;
-//    }
-//
-//    public void setWanted(Boolean wanted) {
-//        this.wanted = wanted;
-//    }
 
     public Boolean getIncludeOwned() {
         return includeOwned;

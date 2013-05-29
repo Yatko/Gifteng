@@ -1,9 +1,13 @@
 package com.venefica.service.dto;
 
 import com.venefica.model.Ad;
+import com.venefica.model.AdPlace;
+import com.venefica.model.AdType;
+import com.venefica.model.WeekDay;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -52,8 +56,6 @@ public class AdDto extends DtoBase {
     private boolean owner;
     // out
     private boolean inBookmars;
-//    // in, out
-//    private boolean wanted;
     // out
     private boolean expired;
     // out
@@ -62,6 +64,10 @@ public class AdDto extends DtoBase {
     private boolean received;
     // out
     private boolean requested; //there is a valid request for this ad by the current user
+    // in, out
+    private Boolean expires; //never expire?
+    // in, out
+    private Date availableAt;
     // in, out
     private Date expiresAt;
     // out
@@ -80,28 +86,50 @@ public class AdDto extends DtoBase {
     private Boolean freeShipping;
     // in, out
     private Boolean pickUp;
+    // in, out
+    private AdPlace place;
+    // out
+    private AdType type;
     // out
     @XmlElementWrapper(name = "comments")
     @XmlElement(name = "item")
     private List<CommentDto> comments;
     // in, out
     private AddressDto address;
-
+    
+    // business ad data
+    
+    // in
+    private String promoCode;
+    // in
+    private String website;
+    // in
+    private Boolean needsReservation;
+    // in
+    private Date availableFromTime;
+    // in
+    private Date availableToTime;
+    // in
+    private Boolean availableAllDay;
+    // in
+    private Set<WeekDay> availableDays;
+    
     // Required for JAX-WS
     public AdDto() {
     }
 
     public void update(Ad ad) {
-        ad.setTitle(title);
-        ad.setSubtitle(subtitle);
-        ad.setDescription(description);
-        ad.setPrice(price);
-        ad.setQuantity(quantity);
-        //ad.setWanted(wanted);
-        ad.setFreeShipping(freeShipping);
-        ad.setPickUp(pickUp);
-        ad.setAddress(address != null ? address.getAddress() : null);
-        ad.setLocation(address != null ? address.getLocation() : null);
+        ad.getAdData().setTitle(title);
+        ad.getAdData().setSubtitle(subtitle);
+        ad.getAdData().setDescription(description);
+        ad.getAdData().setPrice(price);
+        ad.getAdData().setQuantity(quantity);
+        ad.getAdData().setFreeShipping(freeShipping);
+        ad.getAdData().setPickUp(pickUp);
+        ad.getAdData().setPlace(place);
+        ad.getAdData().setAddress(address != null ? address.getAddress() : null);
+        ad.getAdData().setLocation(address != null ? address.getLocation() : null);
+        ad.getAdData().updateAd(this);
     }
     
     // getter/setter
@@ -201,14 +229,6 @@ public class AdDto extends DtoBase {
     public void setInBookmars(boolean inBookmars) {
         this.inBookmars = inBookmars;
     }
-
-//    public boolean isWanted() {
-//        return wanted;
-//    }
-//
-//    public void setWanted(boolean wanted) {
-//        this.wanted = wanted;
-//    }
 
     public boolean isExpired() {
         return expired;
@@ -344,5 +364,93 @@ public class AdDto extends DtoBase {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public Date getAvailableAt() {
+        return availableAt;
+    }
+
+    public void setAvailableAt(Date availableAt) {
+        this.availableAt = availableAt;
+    }
+
+    public Boolean isExpires() {
+        return expires;
+    }
+
+    public void setExpires(Boolean expires) {
+        this.expires = expires;
+    }
+
+    public AdPlace getPlace() {
+        return place;
+    }
+
+    public void setPlace(AdPlace place) {
+        this.place = place;
+    }
+
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public Boolean getNeedsReservation() {
+        return needsReservation;
+    }
+
+    public void setNeedsReservation(Boolean needsReservation) {
+        this.needsReservation = needsReservation;
+    }
+
+    public Date getAvailableFromTime() {
+        return availableFromTime;
+    }
+
+    public void setAvailableFromTime(Date availableFromTime) {
+        this.availableFromTime = availableFromTime;
+    }
+
+    public Date getAvailableToTime() {
+        return availableToTime;
+    }
+
+    public void setAvailableToTime(Date availableToTime) {
+        this.availableToTime = availableToTime;
+    }
+
+    public Set<WeekDay> getAvailableDays() {
+        return availableDays;
+    }
+
+    public void setAvailableDays(Set<WeekDay> availableDays) {
+        this.availableDays = availableDays;
+    }
+
+    public AdType getType() {
+        return type;
+    }
+
+    public void setType(AdType type) {
+        this.type = type;
+    }
+
+    public Boolean getAvailableAllDay() {
+        return availableAllDay;
+    }
+
+    public void setAvailableAllDay(Boolean availableAllDay) {
+        this.availableAllDay = availableAllDay;
     }
 }

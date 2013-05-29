@@ -4,6 +4,7 @@
  */
 package com.venefica.model;
 
+import com.venefica.service.dto.UserDto;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -51,6 +52,22 @@ public class MemberUserData extends UserData {
     }
 
     @Override
+    public void updateUser(UserDto userDto) {
+        dateOfBirth = userDto.getDateOfBirth();
+        lastName = userDto.getLastName();
+        firstName = userDto.getFirstName();
+        gender = userDto.getGender();
+    }
+
+    @Override
+    public void updateUserDto(UserDto userDto) {
+        userDto.setDateOfBirth(dateOfBirth);
+        userDto.setFirstName(firstName);
+        userDto.setLastName(lastName);
+        userDto.setGender(gender);
+    }
+    
+    @Override
     public boolean isBusinessAccount() {
         return false;
     }
@@ -67,6 +84,8 @@ public class MemberUserData extends UserData {
     public String getFullName() {
         return firstName + " " + lastName;
     }
+    
+    // getters/setters
     
     public String getFirstName() {
         return firstName;

@@ -390,7 +390,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
         Ad ad_ = adDao.get(adDto.getId());
         assertNotNull(ad_);
-        assertTrue("Ad not updated!", adDto.getTitle().equals(ad_.getTitle()));
+        assertTrue("Ad not updated!", adDto.getTitle().equals(ad_.getAdData().getTitle()));
     }
     
     //***************

@@ -1,6 +1,7 @@
 package com.venefica.service.dto;
 
 import com.venefica.dao.ImageDao;
+import com.venefica.model.BusinessUserData;
 import com.venefica.model.Gender;
 import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
@@ -43,10 +44,27 @@ public class UserDto extends DtoBase {
     private Gender gender;
     // in, out
     private AddressDto address;
+    // in, out
+    private boolean businessAccount;
+    
+    // business user data
+    
+    // in, out
+    private String businessName;
+    // in, out
+    private String contactName;
+    // in, out
+    private Long businessCategoryId;
+    // in, out
+    private String businessCategory;
     
     // TODO: add necessary fields
     // Required for JAX-WS
     public UserDto() {
+    }
+    
+    public UserDto(boolean businessAccount) {
+        this.businessAccount = businessAccount;
     }
 
     /**
@@ -54,20 +72,17 @@ public class UserDto extends DtoBase {
      *
      * @param user domain object
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public UserDto(User user) {
         id = user.getId();
         name = user.getName();
         email = user.getEmail();
         phoneNumber = user.getPhoneNumber();
         joinedAt = user.getJoinedAt();
-        
-        firstName = ((MemberUserData) user.getUserData()).getFirstName();
-        lastName = ((MemberUserData) user.getUserData()).getLastName();
-        gender = ((MemberUserData) user.getUserData()).getGender();
-        dateOfBirth = ((MemberUserData) user.getUserData()).getDateOfBirth();
-
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
         address = user.getAddress() != null ? new AddressDto(user.getAddress()) : null;
+        businessAccount = user.isBusinessAccount();
+        user.getUserData().updateUserDto(this);
     }
 
     /**
@@ -79,12 +94,8 @@ public class UserDto extends DtoBase {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
+        user.getUserData().updateUser(this);
         
-        ((MemberUserData) user.getUserData()).setDateOfBirth(dateOfBirth);
-        ((MemberUserData) user.getUserData()).setLastName(lastName);
-        ((MemberUserData) user.getUserData()).setFirstName(firstName);
-        ((MemberUserData) user.getUserData()).setGender(gender);
-
         // Handle avatar image
         if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
             if (user.getAvatar() != null) {
@@ -105,9 +116,16 @@ public class UserDto extends DtoBase {
         }
     }
 
-    public User toUser(ImageDao imageDao) {
+    public User toMemberUser(ImageDao imageDao) {
         User user = new User();
         user.setUserData(new MemberUserData());
+        update(user, imageDao);
+        return user;
+    }
+    
+    public User toBusinessUser(ImageDao imageDao) {
+        User user = new User();
+        user.setUserData(new BusinessUserData());
         update(user, imageDao);
         return user;
     }
@@ -216,5 +234,45 @@ public class UserDto extends DtoBase {
 
     public void setAddress(AddressDto address) {
         this.address = address;
+    }
+
+    public boolean isBusinessAccount() {
+        return businessAccount;
+    }
+
+    public void setBusinessAccount(boolean businessAccount) {
+        this.businessAccount = businessAccount;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public Long getBusinessCategoryId() {
+        return businessCategoryId;
+    }
+
+    public void setBusinessCategoryId(Long businessCategoryId) {
+        this.businessCategoryId = businessCategoryId;
+    }
+
+    public String getBusinessCategory() {
+        return businessCategory;
+    }
+
+    public void setBusinessCategory(String businessCategory) {
+        this.businessCategory = businessCategory;
     }
 }
