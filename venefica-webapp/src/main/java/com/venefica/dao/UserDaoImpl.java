@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementation of
- *
- * @{link {@link UserDao}.
+ * Implementation of {@link UserDao}.
  *
  * @author Sviatoslav Grebenchukov
  */
