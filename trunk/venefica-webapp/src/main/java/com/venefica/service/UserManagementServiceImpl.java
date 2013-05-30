@@ -1,13 +1,16 @@
 package com.venefica.service;
 
+import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
+import com.venefica.model.AddressWrapper;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
 import com.venefica.model.User;
+import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.GeneralException;
@@ -39,6 +42,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private UserDataDao userDataDao;
     @Inject
     private BusinessCategoryDao businessCategoryDao;
+    @Inject
+    private AddressWrapperDao addressWrapperDao;
     
     //**********************
     //* categories related *
@@ -81,6 +86,17 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User user = userDto.toBusinessUser(imageDao);
         user.setPassword(password);
         ((BusinessUserData) user.getUserData()).setCategory(category);
+        
+        if ( userDto.getAddresses() != null && !userDto.getAddresses().isEmpty() ) {
+            List<AddressWrapper> addresses = new LinkedList<AddressWrapper>();
+            for ( AddressDto addressDto : userDto.getAddresses() ) {
+                AddressWrapper addressWrapper = addressDto.getAddressWrapper();
+                addressWrapperDao.save(addressWrapper);
+                
+                addresses.add(addressWrapper);
+            }
+            ((BusinessUserData) user.getUserData()).setAddresses(addresses);
+        }
         
         userDataDao.save(user.getUserData());
         
