@@ -4,8 +4,10 @@
  */
 package com.venefica.model;
 
+import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.UserDto;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,6 +60,14 @@ public class BusinessUserData  extends UserData {
         userDto.setContactName(contactName);
         userDto.setBusinessCategoryId(category.getId());
         userDto.setBusinessCategory(category.getName());
+        
+        if ( addresses != null && !addresses.isEmpty() ) {
+            List<AddressDto> addressesDto = new LinkedList<AddressDto>();
+            for ( AddressWrapper addressWrapper : addresses ) {
+                addressesDto.add(new AddressDto(addressWrapper.getAddress()));
+            }
+            userDto.setAddresses(addressesDto);
+        }
     }
     
     @Override
