@@ -63,6 +63,13 @@ public class BusinessAdData extends AdData {
     
     @Override
     public void updateAdDto(AdDto adDto) {
+        adDto.setPromoCode(promoCode);
+        adDto.setWebsite(website);
+        adDto.setNeedsReservation(needsReservation);
+        adDto.setAvailableFromTime(availableFromTime);
+        adDto.setAvailableToTime(availableToTime);
+        adDto.setAvailableAllDay(availableAllDay);
+        adDto.setAvailableDays(availableDays);
     }
     
     // getters/setters

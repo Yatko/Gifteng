@@ -84,7 +84,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setPickUp(model.getAdData().getPickUp());
         adDto.setPlace(model.getAdData().getPlace());
         adDto.setType(model.getAdData().getType());
-
+        
         if (model.getAdData().getLocation() != null) {
             adDto.setAddress(new AddressDto(model.getAdData().getLocation()));
         }
@@ -128,7 +128,9 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setNumViews(model.getNumViews());
         adDto.setRating(model.getRating());
         adDto.setOwner(currentUser != null && model.getCreator().equals(currentUser));
-
+        
+        model.getAdData().updateAdDto(adDto);
+        
         if (includeCreatorFlag) {
             UserDto creator = new UserDto(model.getCreator());
             creator.setInFollowers(currentUser.inFollowers(model.getCreator()));
