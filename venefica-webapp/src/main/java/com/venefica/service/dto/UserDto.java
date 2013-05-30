@@ -7,6 +7,8 @@ import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -57,6 +59,8 @@ public class UserDto extends DtoBase {
     private Long businessCategoryId;
     // in, out
     private String businessCategory;
+    // in, out
+    private List<AddressDto> addresses;
     
     // TODO: add necessary fields
     // Required for JAX-WS
@@ -94,6 +98,7 @@ public class UserDto extends DtoBase {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
+        user.setAddress(address != null ? address.getAddress() : null);
         user.getUserData().updateUser(this);
         
         // Handle avatar image
@@ -110,10 +115,6 @@ public class UserDto extends DtoBase {
             // Set new avatar image
             user.setAvatar(avatarImage);
         }
-        
-        if ( address != null ) {
-            user.setAddress(address.getAddress());
-        }
     }
 
     public User toMemberUser(ImageDao imageDao) {
@@ -128,6 +129,13 @@ public class UserDto extends DtoBase {
         user.setUserData(new BusinessUserData());
         update(user, imageDao);
         return user;
+    }
+    
+    public void addAddress(AddressDto addressDto) {
+        if ( addresses == null ) {
+            addresses = new LinkedList<AddressDto>();
+        }
+        addresses.add(addressDto);
     }
     
     // getter/setter
@@ -274,5 +282,13 @@ public class UserDto extends DtoBase {
 
     public void setBusinessCategory(String businessCategory) {
         this.businessCategory = businessCategory;
+    }
+
+    public List<AddressDto> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressDto> addresses) {
+        this.addresses = addresses;
     }
 }

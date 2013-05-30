@@ -6,6 +6,7 @@ package com.venefica.service.dto;
 
 import com.venefica.common.GeoUtils;
 import com.venefica.model.Address;
+import com.venefica.model.AddressWrapper;
 import com.vividsolutions.jts.geom.Point;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -84,6 +85,10 @@ public class AddressDto {
         address.setArea(area);
         address.setZipCode(zipCode);
         return address;
+    }
+    
+    public AddressWrapper getAddressWrapper() {
+        return new AddressWrapper(getAddress());
     }
     
     // getters/setters
