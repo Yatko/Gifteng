@@ -90,10 +90,14 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     // register
     
     @Test
-    public void registerBusinessUserTest() throws UserAlreadyExistsException, GeneralException {
+    public void registerBusinessUserTest() throws UserAlreadyExistsException, GeneralException, UserNotFoundException {
         BusinessCategoryDto category = client.getAllBusinessCategories().get(0);
         UserDto testBusinessUserDto = createBusinessUserDto(TEST_BUSINESS_NAME, category.getId());
         client.registerBusinessUser(testBusinessUserDto, TEST_PASSWORD);
+        
+        authenticateClientAsFirstUser();
+        UserDto userDto = client.getUserByEmail(testBusinessUserDto.getEmail());
+        assertTrue(userDto != null);
     }
     
     @Test(expected = UserAlreadyExistsException.class)
@@ -317,7 +321,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         userDto.setBusinessName(businessName);
         userDto.setEmail(businessName + "@email.com");
         userDto.setPhoneNumber("555" + businessName.hashCode());
-        userDto.setAddress(address);
+        userDto.addAddress(address);
         return userDto;
     }
 }
