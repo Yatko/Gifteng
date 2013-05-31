@@ -51,8 +51,9 @@ public class AddressDto {
     }
     
     public AddressDto(Point location) {
-        this.latitude = location.getX();
-        this.longitude = location.getY();
+         //the longitude-Y and longitude-X is not a mistake
+        this.latitude = location.getY();
+        this.longitude = location.getX();
     }
     
     public AddressDto(Address address) {
