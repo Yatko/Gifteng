@@ -43,7 +43,7 @@
     <string name="g_label_cancel_request">Cancel Request</string>
     <string name="g_label_choose_email">Choose an Email client</string>
     <string name="g_label_unfollow">Unfollow</string>
-    
+
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -58,6 +58,7 @@
     <string name="g_hint_postlisting_current_value">Current value</string>
     <string name="g_hint_choose_category">Choose Category</string>
     <string name="g_hint_current_location">My Loaction</string>
+    <string name="g_hint_code">Code</string>
 
     <!-- messages -->
     <string name="g_msg_about">Gifteng is an invitation-only social community where Members can give and receive things they love for free.</string>
@@ -83,7 +84,6 @@
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
     <string name="g_msg_reset_pwd_success">Password changed successfully.</string>
     <string name="g_msg_already_in_bookmark">Gift already in favourites.</string>
-    
 
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
@@ -95,10 +95,11 @@
     <string name="g_error_reset_pwd_invalid_code">Reset password failed. Invalid code.</string>
     <string name="g_error_reset_pwd_code_expired">Reset password failed. Code expired.</string>
     <string name="g_error_reset_pwd_used_code">Reset password failed. Code already used.</string>
-
-	<string name="g_facebook_share">https://www.facebook.com/gifteng</string>
+    <string name="g_error_no_requests">You have no receivings.</string>
+    <string name="g_facebook_share">https://www.facebook.com/gifteng</string>
     <string name="g_twitter_share">https://twitter.com/gifteng</string>
     <string name="g_geftang_url">https://www.gifteng.com</string>
+
     <string-array name="g_array_purpose_of_registration">
         <item>How did you here out about us?</item>
         <item>Google</item>
@@ -409,9 +410,9 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
+    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
     <!-- Release key -->
-    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
@@ -420,5 +421,6 @@
     <string name="title_activity_password_reset">PasswordResetActivity</string>
     <string name="title_activity_profile_detail">ProfileDetailActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_receiving_list">ReceivingListActivity</string>
 
 </resources>
