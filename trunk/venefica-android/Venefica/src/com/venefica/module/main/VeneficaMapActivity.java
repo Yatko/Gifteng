@@ -8,6 +8,7 @@ import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
+import com.venefica.module.listings.receiving.ReceivingListActivity;
 import com.venefica.module.messages.MessageListActivity;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.utils.Utility;
@@ -75,7 +76,11 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 			}
 	    	break;
 		case R.id.slideMenuBuying:
-			Utility.showLongToast(this, getResources().getString(R.string.msg_blocked));
+			if(!(getApplicationContext() instanceof ReceivingListActivity)){
+				Intent receivingIntent = new Intent(getApplicationContext(), ReceivingListActivity.class);
+				receivingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		    	startActivity(receivingIntent);
+			}
     		break;
 		case R.id.slideMenuWatching:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
