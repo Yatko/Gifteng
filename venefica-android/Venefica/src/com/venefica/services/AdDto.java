@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ksoap2.serialization.KvmSerializable;
@@ -17,6 +18,44 @@ import com.venefica.utils.Constants;
 
 public class AdDto implements KvmSerializable
 {
+	/**
+	 * days
+	 * @author avinash
+	 */
+	public enum WeekDay {
+	    
+	    MONDAY,
+	    TUESDAY,
+	    WEDNESDAY,
+	    THURSDAY,
+	    FRIDAY,
+	    SATURDAY,
+	    SUNDAY,
+	    
+	}
+	/**
+	 * The type of the ad. A MEMBER typed ad will have it's creator also a member
+	 * user.
+	 * 
+	 * @author avinash
+	 */
+	public enum AdType {
+	    
+	    MEMBER,
+	    BUSINESS,
+	    
+	}
+	/**
+	 * The ad place.
+	 * 
+	 * @author avinash
+	 */
+	public enum AdPlace {
+	    
+	    ONLINE,
+	    LOCATION,
+	    
+	}
 	private long id;
 	private long categoryId;
 	private String category = "";
@@ -51,6 +90,32 @@ public class AdDto implements KvmSerializable
     private String subtitle;
     private AddressDto address;
     private List<CommentDto> comments;
+    
+    // in, out
+    private Boolean expires; //never expire?
+    // in, out
+    private Date availableAt;
+    // in, out
+    private AdPlace place;
+    // out
+    private AdType type;
+     
+    // business ad data
+    
+    // in
+    private String promoCode;
+    // in
+    private String website;
+    // in
+    private Boolean needsReservation;
+    // in
+    private Date availableFromTime;
+    // in
+    private Date availableToTime;
+    // in
+    private Boolean availableAllDay;
+    // in
+    private Set<WeekDay> availableDays;
 	public AdDto()
 	{
 
@@ -125,6 +190,34 @@ public class AdDto implements KvmSerializable
 				return address;
 			case 28:
 				return comments;
+			case 29:
+				return expires;
+			case 30:
+				return availableAt != null ? availableAt.getTime() : 0;
+			case 31:
+				if (place != null)
+					return place.name();
+				else
+					return null;
+			case 32:
+				if (type != null)
+					return type.name();
+				else
+					return null;			
+			case 33:
+				return promoCode;
+			case 34:
+				return website;
+			case 35:
+				return needsReservation;
+			case 36:
+				return availableFromTime;
+			case 37:
+				return availableToTime;
+			case 38:
+				return availableAllDay;
+			case 39:
+				return availableDays;
 		}
 
 		return null;
@@ -132,7 +225,7 @@ public class AdDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 29;
+		return 40;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -289,6 +382,50 @@ public class AdDto implements KvmSerializable
 				info.name = "comments";
 				info.type = new Vector<CommentDto>().getClass();
 				break;
+			case 29:
+				info.name = "expires";
+				info.type = Boolean.class;
+				break;				
+			case 30:
+				info.name = "availableAt";
+				info.type = String.class;
+				break;
+			case 31:
+				info.name = "place";
+				info.type = String.class;
+				break;
+			case 32:
+				info.name = "type";
+				info.type = String.class;
+				break;
+			case 33:
+				info.name = "promoCode";
+				info.type = String.class;
+				break;
+			case 34:
+				info.name = "website";
+				info.type = String.class;
+				break;
+			case 35:
+				info.name = "needsReservation";
+				info.type = Boolean.class;
+				break;
+			case 36:
+				info.name = "availableFromTime";
+				info.type = String.class;
+				break;
+			case 37:
+				info.name = "availableToTime";
+				info.type = String.class;
+				break;
+			case 38:
+				info.name = "availableAllDay";
+				info.type = Boolean.class;
+				break;
+			case 39:
+				info.name = "availableDays";
+				info.type = new Vector<WeekDay>().getClass();
+				break;
 			default:
 				break;
 		}
@@ -299,6 +436,7 @@ public class AdDto implements KvmSerializable
 	{
 		try
 		{
+//			System.out.println("AdDto index"+index);
 			switch (index)
 			{
 				case 0:
@@ -401,6 +539,39 @@ public class AdDto implements KvmSerializable
 					break;
 				case 28:
 					comments = (List<CommentDto>)value;
+					break;
+				case 29:
+					expires = Boolean.parseBoolean(value.toString());
+					break;
+				case 30:
+					availableAt = new Date(Long.parseLong(value.toString()));
+					break;
+				case 31:
+					place = AdPlace.valueOf(value.toString());
+					break;
+				case 32:
+					type = 	AdType.valueOf(value.toString());
+					break;
+				case 33:
+					promoCode = String.valueOf(value);
+					break;
+				case 34:
+					website = String.valueOf(value);
+					break;
+				case 35:
+					needsReservation = Boolean.parseBoolean(value.toString());
+					break;
+				case 36:
+					availableFromTime = new Date(Long.parseLong(value.toString()));
+					break;
+				case 37:
+					availableToTime = new Date(Long.parseLong(value.toString()));
+					break;
+				case 38:
+					availableAllDay = Boolean.parseBoolean(value.toString());
+					break;
+				case 39:
+					availableDays = (Set<AdDto.WeekDay>)value;
 					break;
 			}
 		}catch (Exception e){
@@ -890,5 +1061,181 @@ public class AdDto implements KvmSerializable
 	 */
 	public void setComments(List<CommentDto> comments) {
 		this.comments = comments;
+	}
+
+
+	/**
+	 * @return the expires
+	 */
+	public Boolean getExpires() {
+		return expires;
+	}
+
+
+	/**
+	 * @param expires the expires to set
+	 */
+	public void setExpires(Boolean expires) {
+		this.expires = expires;
+	}
+
+
+	/**
+	 * @return the availableAt
+	 */
+	public Date getAvailableAt() {
+		return availableAt;
+	}
+
+
+	/**
+	 * @param availableAt the availableAt to set
+	 */
+	public void setAvailableAt(Date availableAt) {
+		this.availableAt = availableAt;
+	}
+
+
+	/**
+	 * @return the place
+	 */
+	public AdPlace getPlace() {
+		return place;
+	}
+
+
+	/**
+	 * @param place the place to set
+	 */
+	public void setPlace(AdPlace place) {
+		this.place = place;
+	}
+
+
+	/**
+	 * @return the type
+	 */
+	public AdType getType() {
+		return type;
+	}
+
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(AdType type) {
+		this.type = type;
+	}
+
+
+	/**
+	 * @return the promoCode
+	 */
+	public String getPromoCode() {
+		return promoCode;
+	}
+
+
+	/**
+	 * @param promoCode the promoCode to set
+	 */
+	public void setPromoCode(String promoCode) {
+		this.promoCode = promoCode;
+	}
+
+
+	/**
+	 * @return the website
+	 */
+	public String getWebsite() {
+		return website;
+	}
+
+
+	/**
+	 * @param website the website to set
+	 */
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+
+	/**
+	 * @return the needsReservation
+	 */
+	public Boolean getNeedsReservation() {
+		return needsReservation;
+	}
+
+
+	/**
+	 * @param needsReservation the needsReservation to set
+	 */
+	public void setNeedsReservation(Boolean needsReservation) {
+		this.needsReservation = needsReservation;
+	}
+
+
+	/**
+	 * @return the availableFromTime
+	 */
+	public Date getAvailableFromTime() {
+		return availableFromTime;
+	}
+
+
+	/**
+	 * @param availableFromTime the availableFromTime to set
+	 */
+	public void setAvailableFromTime(Date availableFromTime) {
+		this.availableFromTime = availableFromTime;
+	}
+
+
+	/**
+	 * @return the availableToTime
+	 */
+	public Date getAvailableToTime() {
+		return availableToTime;
+	}
+
+
+	/**
+	 * @param availableToTime the availableToTime to set
+	 */
+	public void setAvailableToTime(Date availableToTime) {
+		this.availableToTime = availableToTime;
+	}
+
+
+	/**
+	 * @return the availableAllDay
+	 */
+	public Boolean getAvailableAllDay() {
+		return availableAllDay;
+	}
+
+
+	/**
+	 * @param availableAllDay the availableAllDay to set
+	 */
+	public void setAvailableAllDay(Boolean availableAllDay) {
+		this.availableAllDay = availableAllDay;
+	}
+
+
+	/**
+	 * @return the availableDays
+	 */
+	public Set<WeekDay> getAvailableDays() {
+		return availableDays;
+	}
+
+
+	/**
+	 * @param availableDays the availableDays to set
+	 */
+	public void setAvailableDays(Set<WeekDay> availableDays) {
+		this.availableDays = availableDays;
 	}
 }

@@ -3,10 +3,8 @@
  */
 package com.venefica.services;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
@@ -24,7 +22,7 @@ import com.venefica.utils.Constants;
  */
 public class RequestDto implements KvmSerializable {
 
-	enum RequestStatus {
+	public enum RequestStatus {
 	    
 	    PENDING, //REQUESTED - giver didn't make a decision
 	    EXPIRED, //REJECTED - if someone else selected
@@ -118,7 +116,7 @@ public class RequestDto implements KvmSerializable {
 				break;
 			case 3:
 				info.name = "requestedAt";
-				info.type = Long.class;
+				info.type = String.class;
 				break;
 			case 4:
 				info.name = "status";
@@ -129,11 +127,13 @@ public class RequestDto implements KvmSerializable {
 	public void register(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(Constants.SERVICES_NAMESPACE, this.getClass().getName(), this.getClass());
+		new UserDto().register(envelope);
 	}
 
 	public void registerRead(SoapSerializationEnvelope envelope)
 	{
-		envelope.addMapping(null, "UserDto", this.getClass());
+		envelope.addMapping(null, "RequestDto", this.getClass());
+		new UserDto().registerRead(envelope);
 	}
 	/**
 	 * @return the id
