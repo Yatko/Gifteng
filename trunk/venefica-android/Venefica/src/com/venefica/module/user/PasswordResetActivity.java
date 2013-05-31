@@ -70,8 +70,10 @@ public class PasswordResetActivity extends VeneficaActivity implements OnPasswor
 		}
 	}
 	@Override
-	public void onResetPasswordButtonClick(String password) {
+	public void onResetPasswordButtonClick(String password, String code) {
 		if (!uploadingData) {
+			this.newPassword = password;
+			this.code = code;
 			new ResetPasswordTask().execute(ACT_MODE_RESET_PASSWORD);
 		}		
 	}

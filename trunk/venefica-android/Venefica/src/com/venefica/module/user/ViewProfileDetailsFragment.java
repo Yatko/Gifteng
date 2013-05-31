@@ -18,7 +18,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.venefica.module.utils.BadgeView;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
-import com.venefica.services.ReviewDto;
+import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -59,7 +59,7 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 //	private ArrayList<UserDto> userFollowerList;
 	
 	private ExpandableListView reviewExpandableListView;
-	private ArrayList<ReviewDto> userReviewList;
+	private ArrayList<RatingDto> userReviewList;
 	private ReviewsExpandableListAdapter reviewsExpandableListAdapter;
 	
 	private ArrayList<ProfileGroup> profileGroups;
@@ -69,7 +69,7 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 		super.onCreate(savedInstanceState);
 //		userFollowingList = new ArrayList<UserDto>();
 //		userFollowerList = new ArrayList<UserDto>();
-		userReviewList = new ArrayList<ReviewDto>();
+		userReviewList = new ArrayList<RatingDto>();
 		profileGroups = new ArrayList<ProfileGroup>();
 		userExpandableListAdapter = new ProfileExpandableListAdapter(getActivity(), profileGroups);
 		
@@ -191,7 +191,7 @@ public class ViewProfileDetailsFragment extends SherlockFragment {
 	 * Method to update reviews
 	 * @param reviewsList
 	 */
-	public void setReviews(List<ReviewDto> reviewsList) {
+	public void setReviews(List<RatingDto> reviewsList) {
 		if(isAttached){
 			reviewsList.clear();
 			reviewsList.addAll(reviewsList);

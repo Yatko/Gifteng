@@ -2,12 +2,15 @@ package com.venefica.module.user;
 
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
 import org.ksoap2.serialization.KvmSerializable;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 import com.venefica.services.AddressDto;
+import com.venefica.services.CommentDto;
 import com.venefica.services.ImageDto;
 import com.venefica.utils.Constants;
 
@@ -40,7 +43,18 @@ public class UserDto implements KvmSerializable
     private boolean inFollowings;
     private Gender gender;
     private AddressDto address;
-	public Object getProperty(int index)
+
+    private boolean businessAccount;
+    
+    // business user data
+    
+    private String businessName;
+    private String contactName;
+    private Long businessCategoryId;
+    private String businessCategory;
+    private List<AddressDto> addresses;
+
+    public Object getProperty(int index)
 	{
 		//final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -83,6 +97,18 @@ public class UserDto implements KvmSerializable
 				return null;
 		case 12:
 			return address;
+		case 13:
+			return businessAccount;
+		case 14:
+			return businessName;
+		case 15:
+			return contactName;
+		case 16:
+			return businessCategoryId;
+		case 17:
+			return businessCategory;
+		case 18:
+			return addresses;
 		}
 
 		return null;
@@ -90,7 +116,7 @@ public class UserDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 13;
+		return 19;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -176,6 +202,30 @@ public class UserDto implements KvmSerializable
 			info.name = "address";
 			info.type = AddressDto.class;
 			break;
+		case 13:
+			info.name = "businessAccount";
+			info.type = Boolean.class;
+			break;
+		case 14:
+			info.name = "businessName";
+			info.type = String.class;
+			break;
+		case 15:
+			info.name = "contactName";
+			info.type = String.class;
+			break;
+		case 16:
+			info.name = "businessCategoryId";
+			info.type = Long.class;
+			break;
+		case 17:
+			info.name = "businessCategory";
+			info.type = String.class;
+			break;
+		case 18:
+			info.name = "addresses";
+			info.type = new Vector<CommentDto>().getClass();
+			break;
 		default:
 			break;
 		}
@@ -183,6 +233,7 @@ public class UserDto implements KvmSerializable
 
 	public void setProperty(int index, Object value)
 	{
+		System.out.println("UserDto index"+index);
 		switch (index)
 		{
 		case 0:
@@ -235,6 +286,24 @@ public class UserDto implements KvmSerializable
 			break;
 		case 12:
 			address = (AddressDto)value;
+			break;
+		case 13:
+			businessAccount = Boolean.parseBoolean(value.toString());
+			break;
+		case 14:
+			businessName = String.valueOf(value);
+			break;
+		case 15:
+			contactName = String.valueOf(value);
+			break;
+		case 16:
+			businessCategoryId = Long.valueOf(value.toString());
+			break;
+		case 17:
+			businessCategory = String.valueOf(value);
+			break;
+		case 18:
+			addresses = (List<AddressDto>)value;
 			break;
 		}
 	}
@@ -489,5 +558,89 @@ public class UserDto implements KvmSerializable
 	 */
 	public void setAddress(AddressDto address) {
 		this.address = address;
+	}
+
+	/**
+	 * @return the businessAccount
+	 */
+	public boolean isBusinessAccount() {
+		return businessAccount;
+	}
+
+	/**
+	 * @param businessAccount the businessAccount to set
+	 */
+	public void setBusinessAccount(boolean businessAccount) {
+		this.businessAccount = businessAccount;
+	}
+
+	/**
+	 * @return the businessName
+	 */
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	/**
+	 * @param businessName the businessName to set
+	 */
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
+
+	/**
+	 * @return the contactName
+	 */
+	public String getContactName() {
+		return contactName;
+	}
+
+	/**
+	 * @param contactName the contactName to set
+	 */
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+
+	/**
+	 * @return the businessCategoryId
+	 */
+	public Long getBusinessCategoryId() {
+		return businessCategoryId;
+	}
+
+	/**
+	 * @param businessCategoryId the businessCategoryId to set
+	 */
+	public void setBusinessCategoryId(Long businessCategoryId) {
+		this.businessCategoryId = businessCategoryId;
+	}
+
+	/**
+	 * @return the businessCategory
+	 */
+	public String getBusinessCategory() {
+		return businessCategory;
+	}
+
+	/**
+	 * @param businessCategory the businessCategory to set
+	 */
+	public void setBusinessCategory(String businessCategory) {
+		this.businessCategory = businessCategory;
+	}
+
+	/**
+	 * @return the addresses
+	 */
+	public List<AddressDto> getAddresses() {
+		return addresses;
+	}
+
+	/**
+	 * @param addresses the addresses to set
+	 */
+	public void setAddresses(List<AddressDto> addresses) {
+		this.addresses = addresses;
 	}
 }

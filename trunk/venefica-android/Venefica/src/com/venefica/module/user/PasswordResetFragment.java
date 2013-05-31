@@ -31,12 +31,12 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 	 * Listener to communicate with activity
 	 */
 	public interface OnPasswordReset{
-		public void onResetPasswordButtonClick(String password);
+		public void onResetPasswordButtonClick(String password, String code);
 	}
 	private OnPasswordReset onPasswordReset;
 	
 	private Button btnResetPassword;
-	private EditText edtNewPassword, edtConfPassword;
+	private EditText edtNewPassword, edtConfPassword,edtCode;
 
 	private InputFieldValidator vaildator;
 	@Override
@@ -47,6 +47,7 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 		btnResetPassword.setOnClickListener(this);
 		edtNewPassword = (EditText) view.findViewById(R.id.edtActLoginNewPassword);
 		edtConfPassword = (EditText) view.findViewById(R.id.edtActLoginConfirmPassword);
+		edtCode = (EditText) view.findViewById(R.id.edtActLoginResetCode);
 		return view;
 	}
 	
@@ -67,7 +68,7 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.btnActLoginResetPasswd && validateFields()) {
-			onPasswordReset.onResetPasswordButtonClick(edtConfPassword.getText().toString());
+			onPasswordReset.onResetPasswordButtonClick(edtConfPassword.getText().toString(), edtCode.getText().toString().trim());
 		}
 	}
 	
@@ -102,6 +103,13 @@ public class PasswordResetFragment extends SherlockFragment implements OnClickLi
 			message.append("- ");
 			message.append(getResources().getString(R.string.g_hint_conf_password).toString());
 			message.append(" "+getResources().getString(R.string.g_msg_pwd_not_match).toString());
+		}
+    	if (edtCode.getText().toString().trim().equals("")) {
+    		result = false;
+    		message.append(getResources().getString(R.string.g_hint_code).toString());
+			message.append("- ");
+			message.append(getResources().getString(R.string.g_hint_code).toString());
+			message.append(" "+getResources().getString(R.string.msg_validation_county_city_area).toString());
 		}
     	if (!result) {
 			Utility.showLongToast(getActivity(), message.toString()); 
