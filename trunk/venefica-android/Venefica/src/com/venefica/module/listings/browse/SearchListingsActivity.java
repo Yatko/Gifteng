@@ -63,6 +63,7 @@ import com.venefica.module.network.WSAction;
 import com.venefica.module.settings.SettingsActivity;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
+import com.venefica.services.AdDto.AdType;
 import com.venefica.services.CommentDto;
 import com.venefica.services.FilterDto;
 import com.venefica.utils.Constants;
@@ -144,6 +145,17 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	private LocationManager locationManager;
 	private String locProvider;
 	private Location location;
+	/*
+	 * business
+	 */
+	private MapItemizedOverlay<?> businessOverlayItems;
+	/**
+	 * members
+	 */
+	private MapItemizedOverlay<?> membersOverlayItems;
+	/**
+	 * Current location
+	 */
 	private MapItemizedOverlay<?> overlayItems;
 	/**
 	 * Shared Preferences
@@ -229,6 +241,8 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 		mapView.setOnSingleTapListener(new OnSingleTapListener() {
 			@Override
 			public boolean onSingleTap(MotionEvent e) {
+				businessOverlayItems.hideAllBalloons();
+				membersOverlayItems.hideAllBalloons();
 				overlayItems.hideAllBalloons();
 				return true;
 			}
@@ -237,7 +251,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
         mapView.setTraffic(true);
         mapView.setSatellite(false);
         mapController = mapView.getController();
-        mapController.setZoom(6);
+        mapController.setZoom(16);
         
         //Toggle Button to view Tiles
         txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
@@ -294,7 +308,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 				startActivity(intent);
 			}
 		});		
-		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView){
+		businessOverlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.red_dot), mapView){
 			@Override
 			public boolean onTouchEvent(MotionEvent event, MapView mapView) {
 				//get location when user lifts the finger
@@ -309,6 +323,28 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 				return false;
 			}
 		}; 
+		businessOverlayItems.setShowClose(false);
+		businessOverlayItems.setShowDisclosure(false);
+//		businessOverlayItems.setSnapToCenter(true);
+		membersOverlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView){
+			@Override
+			public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+				//get location when user lifts the finger
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					GeoPoint touchedPoint = mapView.getProjection().fromPixels(
+							(int) event.getX(), (int) event.getY());
+					if (location != null && !useCurrentLocation) {
+						location.setLatitude(touchedPoint.getLatitudeE6() / 1E6);
+						location.setLongitude(touchedPoint.getLongitudeE6() / 1E6);											
+					}
+				}
+				return false;
+			}
+		}; 
+		membersOverlayItems.setShowClose(false);
+		membersOverlayItems.setShowDisclosure(false);
+//		membersOverlayItems.setSnapToCenter(true);
+		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.blue_dot), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
@@ -602,23 +638,57 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	 */
 	private void updateMap(List<AdDto> listings){
 		if (isMapShown) {
-			overlayItems.clear();
+			businessOverlayItems.clear();
+			membersOverlayItems.clear();
+			MapItemizedOverlay<?> allOverlays = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 			for (AdDto adDto : listings) {				
-				overlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getAddress().getLatitude() * 1E6)
+				if (adDto.getType() == AdType.BUSINESS) {
+					businessOverlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getAddress().getLatitude() * 1E6)
+							, (int)(adDto.getAddress().getLongitude() * 1E6)), adDto.getTitle()
+							, adDto.getDescription(), adDto.getId()
+							, Constants.PHOTO_URL_PREFIX + adDto.getImage().getUrl()));
+				} else {				
+					membersOverlayItems.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getAddress().getLatitude() * 1E6)
+							, (int)(adDto.getAddress().getLongitude() * 1E6)), adDto.getTitle()
+							, adDto.getDescription(), adDto.getId()
+							, Constants.PHOTO_URL_PREFIX + adDto.getImage().getUrl()));
+				}
+				allOverlays.addOverlay(new ListingOverlayItem(new GeoPoint((int)(adDto.getAddress().getLatitude() * 1E6)
 						, (int)(adDto.getAddress().getLongitude() * 1E6)), adDto.getTitle()
 						, adDto.getDescription(), adDto.getId()
 						, Constants.PHOTO_URL_PREFIX + adDto.getImage().getUrl()));
 			}
-			mapView.getOverlays().add(overlayItems);			
-			mapController.zoomToSpan(overlayItems.getLatSpanE6(), overlayItems.getLonSpanE6());
+			mapView.getOverlays().add(businessOverlayItems);
+			mapView.getOverlays().add(membersOverlayItems);
+			updateMap(this.location);
+			mapController.zoomToSpan(allOverlays.getLatSpanE6(), allOverlays.getLonSpanE6());
 //			mapController.setCenter(currLoc);
 			mapView.invalidate();
+		}	
+	}
+	/**
+	 * method to show listing location on map
+	 * @param latitude
+	 * @param longitude
+	 * @param title
+	 * @param description
+	 */
+	private void updateMap(Location location){
+		if (isMapShown ) {
+			GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
+			mapController.animateTo(currLoc);
+			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, getResources().getString(R.string.g_hint_current_location), ""
+					, -1, Constants.PHOTO_URL_PREFIX );
+			overlayItems.clear();
+			overlayItems.addOverlay(overlayItem);
+			mapView.getOverlays().add(overlayItems);
 		}	
 	}
 	@Override
 	public void onLocationChanged(Location location) {
 		if (location != null && Utility.isBetterLocation(location, this.location)) {
 			this.location = location;
+			updateMap(location);
 		}		
 	}
 
@@ -722,8 +792,9 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 
 	@Override
 	public void onCommentButtonClick(long adId, boolean isOwner) {
-		setMessageLayoutVisiblity(true);
+		selectedListingId = adId;
 		this.isOwner = isOwner;
+		setMessageLayoutVisiblity(true);
 	}
 
 	@Override
