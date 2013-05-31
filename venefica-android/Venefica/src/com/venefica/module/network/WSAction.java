@@ -24,6 +24,7 @@ import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.browse.SearchListingResultWrapper;
 import com.venefica.module.listings.post.PostListingResultWrapper;
+import com.venefica.module.listings.receiving.RequestsResultWrapper;
 import com.venefica.module.messages.MessageResultWrapper;
 import com.venefica.module.user.UserDto;
 import com.venefica.module.user.UserRegistrationResultWrapper;
@@ -37,6 +38,7 @@ import com.venefica.services.ImageDto;
 import com.venefica.services.InvitationDto;
 import com.venefica.services.MessageDto;
 import com.venefica.services.RatingDto;
+import com.venefica.services.RequestDto;
 import com.venefica.utils.Constants;
 
 /**
@@ -87,6 +89,7 @@ public class WSAction {
 	private final String WS_METHOD_DELETE_IMAGES = "DeleteImagesFromAd";
 	private final String WS_METHOD_FORGOT_PASSWORD_VERIFY_EMAIL = "ForgotPasswordEmail";
 	private final String WS_METHOD_FORGOT_PASSWORD_RESET = "ChangeForgottenPassword";
+	private final String WS_METHOD_GET_REQUESTS_BY_USER = "GetRequestsByUser";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -1852,6 +1855,43 @@ public class WSAction {
 			} else {
 				result.result = Constants.ERROR_RESULT_RESET_PASSWORD;
 			}			
+		}
+		return result;
+	}
+	
+	public RequestsResultWrapper getRequests(String token, long userId) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_REQUESTS_BY_USER;
+		RequestsResultWrapper result = new RequestsResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_REQUESTS_BY_USER);
+
+			request.addProperty("userId", userId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new RequestDto().registerRead(envelope);
+			new UserDto().registerRead(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response instanceof RequestDto){
+				result.requests = new ArrayList<RequestDto>();
+				result.requests.add((RequestDto)response);
+				result.result = Constants.RESULT_GET_REQUESTS_SUCCESS;
+			}else{
+				result.requests = (List<RequestDto>)response;
+				result.result = Constants.RESULT_GET_REQUESTS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_REQUESTS;			
 		}
 		return result;
 	}

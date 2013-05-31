@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/imgReceivingLItemImage"
+        android:layout_width="80dp"
+        android:layout_height="65dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/chkMessageLItemSelect"
+        android:background="@color/black"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_picture_white" />
+
+    <TextView 
+        android:id="@+id/txtReceivingLItemStatus"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgReceivingLItemImage"
+        android:layout_alignParentLeft="true"/>
+    <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:id="@+id/btnReceivingLItemCancelReq"
+        android:layout_toRightOf="@id/imgReceivingLItemImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:id="@+id/btnReceivingLItemSendMsg"
+        android:layout_toRightOf="@id/btnReceivingLItemCancelReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:id="@+id/btnReceivingLItemMarkReceived"
+        android:layout_toRightOf="@id/btnReceivingLItemSendMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:id="@+id/btnReceivingLItemLeaveReview"
+        android:layout_toRightOf="@id/btnReceivingLItemMarkReceived"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:id="@+id/btnReceivingLItemDelete"
+        android:layout_toRightOf="@id/btnReceivingLItemLeaveReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/> -->
+</RelativeLayout>
