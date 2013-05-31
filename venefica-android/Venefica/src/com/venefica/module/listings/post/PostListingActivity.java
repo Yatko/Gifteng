@@ -276,8 +276,13 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setDescription(data.getString(GetListingDetails.KEY_DESCRIPTION));
 				listing.setCategoryId(data.getLong(GetListingDetails.KEY_CATEGORY_ID));
 				listing.setPrice(new BigDecimal(data.getString(GetListingDetails.KEY_CURRENT_VALUE)));
-				listing.getAddress().setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
-				listing.getAddress().setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
+				AddressDto addressDto = new AddressDto();
+				addressDto.setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
+				addressDto.setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
+				addressDto.setZipCode(data.getString(GetListingDetails.KEY_ZIP_CODE));
+				listing.setAddress(addressDto);
+//				listing.getAddress().setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
+//				listing.getAddress().setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
 				listing.setFreeShipping(data.getBoolean(GetListingDetails.KEY_FREE_SHIPPING));
 				listing.setPickUp(data.getBoolean(GetListingDetails.KEY_PICKUP));
 				
