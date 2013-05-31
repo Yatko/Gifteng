@@ -101,7 +101,8 @@ public class Constants
 	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_NOT_FOUND = 1092;
 	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_EXPIRED = 1093;
 	public static final int ERROR_RESULT_RESET_PASSWORD_CODE_USED = 1094;	
-	
+	public static final int RESULT_GET_REQUESTS_SUCCESS = 1095;
+	public static final int ERROR_RESULT_GET_REQUESTS = 1096;
 	//date
 	public static final DateFormat dateFormat = DateFormat.getDateInstance();
 	public static final DateFormat dateTimeFormat = DateFormat.getDateTimeInstance();
@@ -223,6 +224,7 @@ public class Constants
 	public static final String FONT_PTSANS_CAPTION_BOLD = "fonts/pt-sans/PTC75F.ttf";
 	public static final String FONT_PTSANS_NARROW_REGULAR = "fonts/pt-sans/PTN57F.ttf";
 	public static final String FONT_PTSANS_NARROW_BOLD = "fonts/pt-sans/PTN77F.ttf";
+	
 	
 			
 }
