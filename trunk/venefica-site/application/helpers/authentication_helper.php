@@ -38,6 +38,29 @@ if ( ! function_exists('getSoapOptions')) {
 }
 
 
+if ( ! function_exists('login')) {
+    /**
+     * Authenticates and login the user by its given email/pass combination.
+     * 
+     * @param string $email
+     * @param string $password
+     * @return boolean true is login success
+     */
+    function login($email, $password) {
+        $CI =& get_instance();
+        $CI->load->library('auth_service');
+        $CI->load->library('usermanagement_service');
+        
+        try {
+            $token = $CI->auth_service->authenticateEmail($email, $password);
+            $CI->usermanagement_service->storeUser($email, $token);
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Email and/or password is incorrect: '.$ex->getMessage());
+            return FALSE;
+        }
+        return TRUE;
+    }
+}
 if ( ! function_exists('isLogged')) {
     /**
      * Check if there is valid token in the session.

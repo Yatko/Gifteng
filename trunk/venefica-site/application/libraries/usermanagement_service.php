@@ -11,9 +11,56 @@ class Usermanagement_service {
         log_message(DEBUG, "Initializing Usermanagement_service");
     }
     
+    //**********************
+    //* categories related *
+    //**********************
+    
+    /**
+     * 
+     * @return array of BusinessCategory_model
+     * @throws Exception
+     */
+    public function getAllBusinessCategories() {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $result = $userService->getAllBusinessCategories();
+            
+            $categories = array();
+            if ( hasField($result, 'category') && $result->category ) {
+                $categories = BusinessCategory_model::convertBusinessCategories($result->category);
+            }
+            return $categories;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting all business categories failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //************************************
     //* user crud (create/update/delete) *
     //************************************
+    
+    /**
+     * Registers business user.
+     * 
+     * @param User_model $user
+     * @param string $password
+     * @return long the created user ID
+     * @throws Exception
+     */
+    public function registerBusinessUser($user, $password) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $result = $userService->registerBusinessUser(array(
+                "user" => $user,
+                "password" => $password
+            ));
+            return $result->userId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
     
     /**
      * Invokes the user registration on WS.

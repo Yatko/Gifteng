@@ -7,6 +7,9 @@
  */
 class User_model extends CI_Model {
     
+    const GENDER_MALE = 'MALE';
+    const GENDER_FEMALE = 'FEMALE';
+    
     var $id; //string
     var $name; //string
     var $firstName; //string
@@ -20,6 +23,14 @@ class User_model extends CI_Model {
     var $inFollowings; //boolean
     var $gender; //enum: MALE, FEMALE
     var $address; //Address_model
+    var $businessAccount; //boolean
+    
+    // business user data
+    var $businessName; //string
+    var $contactName; //string
+    var $businessCategoryId; //long
+    var $businessCategory; //string
+    var $addresses; //array of Address_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing User_model");
@@ -36,11 +47,19 @@ class User_model extends CI_Model {
             $this->inFollowers = getField($obj, 'inFollowers');
             $this->inFollowings = getField($obj, 'inFollowings');
             $this->gender = getField($obj, 'gender');
+            $this->businessAccount = getField($obj, 'businessAccount');
+            $this->businessName= getField($obj, 'businessName');
+            $this->contactName = getField($obj, 'contactName');
+            $this->businessCategoryId = getField($obj, 'businessCategoryId');
+            $this->businessCategory = getField($obj, 'businessCategory');
             if ( hasField($obj, 'avatar') ) {
                 $this->avatar = Image_model::convertImage($obj->avatar);
             }
             if ( hasField($obj, 'address') ) {
                 $this->address = Address_model::convertAddress($obj->address);
+            }
+            if ( hasField($obj, 'addresses') ) {
+                $this->addresses = Address_model::convertAddresses($obj->addresses);
             }
         }
     }
@@ -99,7 +118,7 @@ class User_model extends CI_Model {
             foreach ( $usersResult as $user ) {
                 array_push($users, User_model::convertUser($user));
             }
-        } else {
+        } elseif ( !is_empty($usersResult) ) {
             $user = $usersResult;
             array_push($users, User_model::convertUser($user));
         }

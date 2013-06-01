@@ -40,7 +40,7 @@ class Image_model extends CI_Model {
             foreach ( $imagesResult as $image ) {
                 array_push($images, Image_model::convertImage($image));
             }
-        } else {
+        } elseif ( !is_empty($imagesResult) ) {
             $image = $imagesResult;
             array_push($images, Image_model::convertImage($image));
         }

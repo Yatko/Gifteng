@@ -70,7 +70,7 @@ class Message_model extends CI_Model {
             foreach ( $messagesResult as $message ) {
                 array_push($messages, Message_model::convertMessage($message));
             }
-        } else {
+        } elseif ( !is_empty($messagesResult) ) {
             $messages = $messagesResult;
             array_push($messages, Message_model::convertMessage($messages));
         }

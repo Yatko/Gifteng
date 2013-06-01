@@ -8,8 +8,8 @@ class Authentication extends CI_Controller {
         $this->init();
         
         $data = array();
-        $data['action'] = $this->getAction();
-        $data['is_logged'] = isLogged();
+        $data['action'] = $this->getActionFromUri();
+        $data['isLogged'] = isLogged();
         $data['user'] = $this->usermanagement_service->loadUser();
         
         $data = array_merge($data, $extra_data);
@@ -21,7 +21,7 @@ class Authentication extends CI_Controller {
     
     public function login() {
         $this->init();
-        $action = $this->getAction();
+        $action = $this->getActionFromUri();
         
         $is_valid = $this->login_login();
         
@@ -66,7 +66,7 @@ class Authentication extends CI_Controller {
         $this->init();
         $extra_data = array();
         
-        $code = $this->getCode();
+        $code = $this->getCodeFromUri();
         if ( empty($code) ) {
             $code = $this->input->post('reset_password_code');
         }
@@ -196,12 +196,8 @@ class Authentication extends CI_Controller {
             return FALSE;
         }
         
-        try {
-            $email = $this->input->post('login_email');
-            $token = $this->auth_service->authenticateEmail($email, $password);
-            $this->usermanagement_service->storeUser($email, $token);
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Email and/or password is incorrect: '.$ex->getMessage());
+        $email = $this->input->post('login_email');
+        if ( !login($email, $password) ) {
             $this->login_form->set_message('authorize_email_password', lang('login_failed'));
             return FALSE;
         }
@@ -268,12 +264,12 @@ class Authentication extends CI_Controller {
         }
     }
     
-    private function getAction() {
+    private function getActionFromUri() {
         $action = $this->uri->segment(2, null);
         return $action;
     }
     
-    private function getCode() {
+    private function getCodeFromUri() {
         $code = $this->uri->segment(3, null);
         return $code;
     }

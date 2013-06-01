@@ -82,7 +82,7 @@ class Rating_model extends CI_Model {
             foreach ( $ratingsResult as $rating ) {
                 array_push($ratings, Rating_model::convertRating($rating));
             }
-        } else {
+        } elseif ( !is_empty($ratingsResult) ) {
             $rating = $ratingsResult;
             array_push($ratings, Rating_model::convertRating($rating));
         }

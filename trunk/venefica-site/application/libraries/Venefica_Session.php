@@ -21,6 +21,22 @@ class Venefica_Session extends CI_Session {
         parent::__construct($params);
     }
     
+    /**
+     * Fetch a specific flashdata item from the session array. First tries to extract
+     * the 'old' data, and if not found tries with the 'new'.
+     * 
+     * @param string $key
+     * @return object
+     */
+    public function flashdata($key) {
+        $value = parent::flashdata($key);
+        if ( $value != null && $value != FALSE && !empty($value) ) {
+            return $value;
+        }
+        
+        $flashdata_key = $this->flashdata_key.':new:'.$key;
+        return $this->userdata($flashdata_key);
+    }
 }
 
 ?>

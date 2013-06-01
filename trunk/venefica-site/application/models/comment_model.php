@@ -57,7 +57,7 @@ class Comment_model extends CI_Model {
             foreach ( $commentsResult as $comment ) {
                 array_push($comments, Comment_model::convertComment($comment));
             }
-        } else {
+        } elseif ( !is_empty($commentsResult) ) {
             $comment = $commentsResult;
             array_push($comments, Comment_model::convertComment($comment));
         }

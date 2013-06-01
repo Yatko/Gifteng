@@ -244,12 +244,36 @@ $config['encryption_key'] = 'VENEFICA_SECRET_KEY';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
+
+/**
+// MYSQL
+CREATE TABLE IF NOT EXISTS  `venefica_session` (
+    session_id varchar(40) DEFAULT '0' NOT NULL,
+    ip_address varchar(45) DEFAULT '0' NOT NULL,
+    user_agent varchar(120) NOT NULL,
+    last_activity int(10) unsigned DEFAULT 0 NOT NULL,
+    user_data text NOT NULL,
+    PRIMARY KEY (session_id),
+    KEY `last_activity_idx` (`last_activity`)
+);
+
+// SQLITE
+CREATE TABLE venefica_session (
+    session_id VARCHAR(40) DEFAULT '0' NOT NULL,
+    ip_address VARCHAR(45) DEFAULT '0' NOT NULL,
+    user_agent VARCHAR(120) NOT NULL,
+    last_activity INT(10) DEFAULT 0 NOT NULL,
+    user_data VARCHAR(255) NOT NULL,
+    PRIMARY KEY (session_id)
+);
+/**/
+
 $config['sess_cookie_name']	= 'venefica_session';
 $config['sess_expiration']	= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= FALSE;
-$config['sess_table_name']	= 'venefica_sessions';
+$config['sess_use_database']	= TRUE;
+$config['sess_table_name']	= 'venefica_session';
 $config['sess_match_ip']	= FALSE;
 $config['sess_match_useragent']	= TRUE;
 $config['sess_time_to_update']	= 300;

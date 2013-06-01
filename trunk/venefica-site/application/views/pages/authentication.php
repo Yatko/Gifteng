@@ -12,9 +12,13 @@ if ( !isset($authentication_forgot_password_requested) ) {
 ?>
 
 <div class="form"><div class="container containerDefaultSize">
-    <? if ( $is_logged && $user ): ?>
+    <? if ( $isLogged && $user ): ?>
         <div class="contentBox">
-            <?=sprintf(lang('login_welcome'), $user->name)?>
+            <? if ( $user->businessAccount ): ?>
+                <?=sprintf(lang('login_welcome'), $user->businessName)?>
+            <? else: ?>
+                <?=sprintf(lang('login_welcome'), $user->name)?>
+            <? endif; ?>
         </div>
     <? elseif ( $action == "reset" ): ?>
         <div>

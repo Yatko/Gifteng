@@ -1,0 +1,442 @@
+/* CSS Document */
+
+html, body{font-family:'Lato', sans-serif;text-shadow: 0 1px 0 #fff;background:url('temp-sample/geBackground.png') #eeedea;}
+
+.geContainer {}
+.geSpacer {height: 20px;}
+.geFormTagline {border-bottom: 1px solid #fafafa;margin-bottom:20px;}
+.geFormSubmit {border-top: 1px solid #fafafa;padding-top:20px;margin-top: 20px;}
+
+.geFormTerms textarea {width:90%}
+
+/* TODO IMPORTANT! review the global box-sizing for any negative effects */
+[class^="ge"], [class*=" ge"] {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+
+/* BROWSE */
+
+.geBrowse {}
+.geBrowse .geItemBox .geProfileBox {padding:6px;}
+.geItemBox .geTitle {font-weight: 600;font-size: 120%;}
+.geItemBox .geSubTitle {color:#a3a3a3;}
+.geItemBox .geTerms {}
+.geItemBox .geDescription {}
+.geItemBox div.geItemShare {text-align: right;}
+
+/* TODO make this the default structure for userbox*/
+.geBrowse .geItemBox .geProfileBox {line-height: 100%;}
+.geBrowse .geItemBox .geProfileBox .geProfileImage {width:40px;height:40px;background-size:40px 40px;}
+.geBrowse .geItemBox .geProfileBox .geUsername {font-size: 90%;font-weight:600;color:#6f6f6f;}
+.geBrowse .geItemBox .geProfileBox .geAge {font-size: 70%;font-weight:400;color:#a3a3a3;padding:0px 0;}
+.geBrowse .geItemBox .geProfileBox .geLocation {font-size: 80%;font-weight:400;text-align:left;}
+.geBrowse .geItemBox .geProfileBox .gePoints {font-size: 76%;height: 0px;display: none;}
+
+.geBrowse .geItemBox .geItemImage img {width:270px;height:270px;background-size:270px 270px;}
+
+.geBrowse .geItemBox .geItemText {padding:6px;}
+.geBrowse .geItemBox .geItemText .geTitle {font-size: 90%;}
+.geBrowse .geItemBox .geItemText p {line-height: 100%;}
+.geBrowse .geItemBox .geTitle em.geSpacer span.label {width: 0px;height: 0px;display: none;}
+.geBrowse .geItemBox .geTitle em.geSpacer {padding: 3px;}
+.geBrowse .geItemBox .geSubTitle {width: 0px;height: 0px;display: none;}
+.geBrowse .geItemBox .geDescription {color: #a3a3a3;font-size: 76%;}
+.geBrowse .geItemBox .geDescription em {width: 0px;height: 0px;display: none;}
+.geBrowse .geItemBox p.geLocation {font-weight: 600;font-size: 76%;text-align:right;}
+
+/* TODO
+.geBrowse .geLocation {text-align:right;padding:6px 9px 0 9px;background: url('temp-sample/geLocation.png') no-repeat 70% center;}
+*/
+
+.geMessageBox .geProfileBox {padding:6px;}
+.geMessageBox .geProfileBox .geProfileImage {width:64px;height:64px;background-size:64px 64px;}
+.geMessageList {font-size: 80%;line-height: 100%;padding: 12px 0;}
+.geMessageList .geMessage {padding:6px;border-bottom:1px solid #e4e4e4;background-color:#fafafa;}
+.geMessageList .geMessage .geProfileImage {width:64px;height:64px;background-size:64px 64px;}
+
+.geMessageBox {font-size: 80%;line-height: 100%;padding: 3px 0;}
+.geMessageBox .geItemMessage {border-top:3px double #e4e4e4;}
+.geMessageBox .geMessage {padding:6px;border-bottom:1px solid #e4e4e4;background-color:#fafafa;}
+.geMessageBox .geMessage .geProfileImage {width:64px;height:64px;background-size:64px 64px;}
+
+.geBrowse .geItemBox .geItemMessage {border-top:3px double #e4e4e4;}
+.geBrowse .geItemBox .geMessage {padding:6px;border-bottom:1px solid #e4e4e4;background-color:#fafafa;font-size: 80%;line-height: 100%;}
+.geBrowse .geItemBox .geMessage .geProfileImage {width:32px;height:32px;background-size:32px 32px;}
+
+.geBoxExpand {height:28px;background:url('temp-sample/geBoxExpand.png') no-repeat center #fff;}
+
+
+/* LABELS BADGES */
+
+.geLabel-follow, .geBadge-follow {float: right;font-size: 70%;padding: 1px 6px 0 6px;
+	background-color: #00bebe;text-shadow:none;text-align: center;}
+.geLabel-active, .geBadge-active {background-color: #00bebe;}
+.geLabel-active[href], .geBadge-active[href] {background-color: #008b96;}
+
+.geLabel-ended, .geBadge-ended {background-color: #aaaaaa;}
+.geLabel-ended[href], .geBadge-ended[href] {background-color: #a3a3a3;}
+
+.geLabel-positive, .geBadge-positive {background-color: #00bebe;}
+.geLabel-positive[href], .geBadge-positive[href] {background-color: #008b96;}
+
+.geLabel-neutral, .geBadge-neutral {background-color: #aaaaaa;}
+.geLabel-neutral[href], .geBadge-neutral[href] {background-color: #a3a3a3;}
+
+.geLabel-negative, .geBadge-negative {background-color: #ff0000;}
+.geLabel-negative[href], .geBadge-negative[href] {background-color: #ff0000;}
+
+
+/* Gifteng BOXES */
+.geBox {background-color:#fff;border-radius:3px;box-shadow:0px 2px 3px #cbc8c3;}
+.geBox2 {background:transparent;border-radius:3px;box-shadow:0px 2px 3px #cbc8c3;}
+.geBox3 {background-color:#fafafa;}
+.geBox6 {background-color:#fafafa;border-top:1px solid #eeede9;border-bottom-right-radius: 3px;border-bottom-left-radius: 3px;}
+
+.geBox h3 {margin-bottom:0px;line-height: 50%;}
+
+.geBWelcome img.img-rounded {border-radius: 90px;width:120px;height:120px;background-size:120px 120px;margin: 0 24px;}
+
+.geItemDetails1 .add-on {width: 80px;}
+
+/* BOX SIZE PROPERTIES */
+.geLargeBox {padding:20px;}
+.geLargeBox .geSpacer {height: 20px;}
+.geLargeBox .geItemImage img {width:420px;height:420px;background-size:420px 420px;}
+
+.geLargeBox {}
+.geLargeBox .geProfileImage {width:100px;height:100px;background-size:100px 100px;}
+.geLargeBox .geUsername {font-size: 180%;font-weight:400;color:#6f6f6f;}
+.geLargeBox .geAge {font-size: 100%;font-weight:400;color:#a3a3a3;padding:3px 0;}
+.geLargeBox .geLocation {font-size: 100%;font-weight:400;text-align:left;}
+.geLargeBox .gePoints {font-size: 136%;font-weight:400;padding-top:12px;}
+
+
+.geMedBox {padding:20px;}
+.geMedBox .geItemImage img {width:133px;height:133px;background-size:133px 133px;}
+.geMedBox .geItemBox p.geSpacer {height: 0px;display: none;}
+.geMedBox .geItemBox .geTitle {font-size: 80%;}
+.geMedBox .geItemBox .geTitle em.geSpacer {padding:0 0;display:block;height: 0px;}
+.geMedBox .geItemBox .geTitle em.geSpacer span.label {height: 0px;display: none;}
+
+
+.geSmallBox {padding:12px;}
+.geSmallBox .geItemImage img {width:200px;height:200px;background-size:200px 200px;}
+.geSmallBox p {font-size: 90%;margin:.3em 0 .3em 0;line-height:120%}
+.geSmallBox .geUsername {font-weight:800;color:#000;}
+.geSmallBox .geAge {font-size:80%;}
+.geSmallBox .geLocation {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;}
+.geSmallBox .geLocation li {list-style-image:url('temp-sample/icon_location.png');}
+.geSmallBox .gePoints {color:#a3a3a3;}
+.geSmallBox .geSpacer {height: 3px;}
+
+/* ITEM BOX */ /* TODO review necessity of before/after attributes and add attributes to other geBoxes */
+.geItemBox {}
+.geItemBox:before, .geItemBox:after {display: table;line-height: 0;content: "";}
+.geItemBox:after {clear: both;}
+
+.geItemBox em {font-style: normal;font-weight: 600;color: #00bebe;}
+.geItemBox .geTitle {font-weight: 600;font-size: 120%;}
+.geItemBox .geSubTitle {color:#a3a3a3;}
+.geItemBox .geTerms {}
+.geItemBox .geDescription {}
+.geItemBox div.geItemShare {text-align: right;}
+
+.geItemBox .geItemThumbnail img {width:90px;height:90px;background-size:90px 90px;padding:3px 0;}
+
+/* POST BOX */
+
+.gePostBox {}
+.geWide {width: 390px; !important;}
+
+/* LIST BOX */
+.geListBox {padding:6px;}
+.geListBox em {font-style: normal;font-weight: 600;color: #00bebe;display: block;}
+.geListBox .geTitle {font-weight: 600;font-size: 90%;}
+.geListBox .geSubTitle {color:#a3a3a3;}
+.geListBox .geItemText {text-align:center;}
+.geListBox .geItemImage img {width:60px;height:60px;background-size:60px 60px;}
+.geListBox .geItemText, .geListBox .geItemInfo, .geListBox .geItemAction {height: 80px; padding-top: 3px;}
+.geListBox .geItemImage img {
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	-moz-border-radius-topright: 0px;
+	border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+}
+
+/* REVIEW BOX */
+.geReviewBox {padding:3px;}
+.geReviewBox em {font-style: normal;font-weight: 600;color: #00bebe;display: block;}
+.geReviewBox .geTitle {font-weight: 600;font-size: 90%;}
+.geReviewBox .geSubTitle {color:#a3a3a3;}
+.geReviewBox .geItemText {text-align:center;}
+.geReviewBox .geItemText, .geListBox .geItemInfo, .geListBox .geItemAction {height: 80px; padding-top: 3px;}
+.geRating {width:32px;}
+.geReviewBox .geRating img {width:32px;height:32px;background-size:32px 32px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-left-radius: 3px;
+	border-top-left-radius: 3px;
+}
+
+.geReviewBox .geRating .geLabel-positive, .geReviewBox .geReview .geLabel-neutral, .geReviewBox .geRating .geLabel-negative {width: 32px;text-shadow:none;text-align: center;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+   	-moz-border-radius-topleft: 0px;
+   	-moz-border-radius-topright: 0px;
+   	border-top-left-radius: 0px;
+  	border-top-left-radius: 0px;
+}
+
+
+.geReviewBox .geText .geTitle, .geReviewBox .geText .geSubTitle {
+	line-height: 100%;
+}
+
+
+.geReviewBox .geDate .geTile {background:#fafafa;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 80%;
+	line-height: 120%;
+	height:52px;
+}
+
+
+/* FOLLOW BOX */
+.geFollowBox {padding:6px;}
+.geFollowBox em {font-style: normal;font-weight: 600;color: #00bebe;display: block;}
+.geFollowBox .geTitle {font-weight: 600;font-size: 90%;}
+.geFollowBox .geAge {color:#a3a3a3;line-height: 90%;}
+.geRating {width:32px;}
+.geFollowBox img.geProfileImage {width:32px;height:32px;background-size:32px 32px;}
+.geFollowBox .btn {margin-top: 3px;}
+
+.geFollowBox .geRating .geLabel-positive, .geFollowBox .geReview .geLabel-neutral, .geFollowBox .geRating .geLabel-negative {width: 32px;text-shadow:none;text-align: center;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+   	-moz-border-radius-topleft: 0px;
+   	-moz-border-radius-topright: 0px;
+   	border-top-left-radius: 0px;
+  	border-top-left-radius: 0px;
+}
+
+
+.geFollowBox .geDate .geTile {background:#fafafa;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 80%;
+	line-height: 120%;
+	height:52px;
+}
+
+/* FAVORITE BOX */
+.geFavoriteBox {padding:6px;}
+.geFavoriteBox .geItemImage img {width:60px;height:60px;background-size:60px 60px;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+	-moz-border-radius-topleft: 0px;
+	-moz-border-radius-topright: 0px;
+	border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+}
+.geFavoriteBox .geItemText, .geFavoriteBox .geItemInfo, .geFavoriteBox .geItemAction {padding-top: 3px;}
+.geFavoriteBox .geItemAction {text-align: center; padding-top: 16px;}
+.geFavoriteBox .geItemInfo .geTile, .geItemAction .geTile {padding: 0px;
+	height: 59px;
+	line-height: 100%;
+	font-size: 90%;
+	-webkit-border-radius: 4px;
+   	-moz-border-radius: 4px;
+ 	border-radius: 4px;}
+.geFavoriteBox .geItemInfo .geTile p {padding:3px;}
+
+
+
+
+
+
+
+.geItemInfo .geTile, .geItemAction .geTile {height: 75px;padding:12px 0;
+	font-size: 90%;
+	-webkit-border-radius: 4px;
+   	-moz-border-radius: 4px;
+ 	border-radius: 4px;}
+.geItemInfo .geTile p, .geItemAction .geTile p {padding:0px;}
+.geItemInfo .geTile {background:#fafafa;}
+
+
+.geTitle .label-info, .geTitle .badge-info {background-color: #00bebe;text-shadow:none;}
+.geTitle em.geSpacer {padding:0 12px;}
+.geSubTitle .label-info, .geSubTitle .badge-info {background-color: #00bebe;text-shadow:none;}
+
+.geItemImage .geLabel-active, .geItemImage .geLabel-ended {width: 60px;text-shadow:none;text-align: center;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-top-right-radius: 0px;
+   	-moz-border-radius-topleft: 0px;
+   	-moz-border-radius-topright: 0px;
+   	border-top-left-radius: 0px;
+  	border-top-left-radius: 0px;
+}
+
+/* TILES */
+
+.geTile {width: 100%;height:100%;text-align: center;color:#a3a3a3;}
+.geTile p {margin: 0px;}
+
+.geLeftBorder {border-left:1px solid #eeede9;}
+.geRightBorder {border-right:1px solid #eeede9;}
+
+.geSmall .geTile {padding:6px 0;}
+.geSmall .geTile p {padding:0px;}
+
+
+
+/* ITEM IMAGE */
+
+
+
+/* ITEM TEXT */
+.geItemText {}
+
+
+
+.geStage {width: 900px;}
+.geUsername {font-weight:800;color:#000;}
+.geAge {font-size:80%;}
+.geLocation {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;}
+.geLocation li {list-style-image:url('temp-sample/icon_location.png');}
+.gePoints {color:#a3a3a3;}
+
+
+
+
+
+/* ge ProgressBar*/
+.progress-ge .bar,
+.progress .bar-ge {
+  background-color: #00bebe;
+  background-image: -moz-linear-gradient(top, #3cd6d3, #008b96);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3cd6d3), to(#008b96));
+  background-image: -webkit-linear-gradient(top, #3cd6d3, #008b96);
+  background-image: -o-linear-gradient(top, #3cd6d3, #008b96);
+  background-image: linear-gradient(to bottom, #3cd6d3, #008b96);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3cd6d3', endColorstr='#ff008b96', GradientType=0);
+}
+
+
+
+
+/* PROFILE */
+
+
+
+
+
+/* ge COLORS */
+.geColor0 {color: #00bebe !important;}
+
+/* ge ICONS */
+[class^="icon-ge"],[class*=" icon-ge"] {background-image: url("temp-sample/share.png");}
+.icon-geFacebook {background-position: 0 0;}
+.icon-geTwitter {background-position: -24px 0;}
+.icon-gePinterest {background-position: -48px 0;}
+
+.icon-green {
+  background-image: url("bootstrap/img/glyphicons-halflings-green.png");
+}
+
+/* ge BUTTONS */
+.btn-ge {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #3cd6d3;
+  *background-color: #3cd6d3;
+  background-image: -moz-linear-gradient(top, #3cd6d3, #3cd6d3);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3cd6d3), to(#3cd6d3));
+  background-image: -webkit-linear-gradient(top, #3cd6d3, #3cd6d3);
+  background-image: -o-linear-gradient(top, #3cd6d3, #3cd6d3);
+  background-image: linear-gradient(to bottom, #3cd6d3, #3cd6d3);
+  background-repeat: repeat-x;
+  border-color: #3cd6d3 #3cd6d3 #008b96;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3cd6d3', endColorstr='#ff3cd6d3', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+.btn-ge:hover,.btn-ge:focus,.btn-ge:active,.btn-ge.active,.btn-ge.disabled,.btn-ge[disabled] {color: #ffffff;background-color: #00bebe;*background-color: #008b96;}
+.btn-ge:active, .btn-gr.active {background-color: #003399;}
+
+
+
+
+
+
+/* ********** TODO REMOVE BELOW ********** */
+/* ********** TODO REMOVE BELOW ********** */
+/* ********** TODO REMOVE BELOW ********** */
+
+.rectSpacer1 {padding:6px 9px;}
+.rectSpacer2 {padding:12px;}
+.rectSpacerX{padding:3px 0 6px 0;}
+.rectSpacerY{padding:3px 0 6px 0;}
+
+.profileBox1, .profileBox2, .profileBox3 {padding:6px 9px;text-decoration:none;}
+.profileBox1 {padding:12px;}
+
+
+.clear {
+    clear:both;
+    line-height:0;
+}
+
+.geBPUploadBlock {
+         border: 1px solid #ccc;
+         border-radius: 3px;
+         padding: 20px;
+     }
+     
+.geBPUploadBlock .row-fluid {} /* TODO handle on mobile */
+
+.linespacer {height: 30px;}
+
+/* SPACE */
+.geSpacer1{padding: 3px 6px;}
+.geSpacer2{padding: 6px 12px;}
+.geSpacer3{padding: 9px 18px;}
+.geSpacer4{padding: 12px 24px;}
+
+.geVSpacer1 {padding:3px 0;}
+.geVSpacer2 {padding:6px 0;}
+.geVSpacer3 {padding:9px 0;}
+.geVSpacer4 {padding:12px 0;}
+
+.geHSpacer1 {padding:0 3px;}
+.geHSpacer2 {padding:0 6px;}
+.geHSpacer3 {padding:0 9px;}
+.geHSpacer4 {padding:0 12px;}
+
+.geSquareSpacer1 {padding:3px;}
+.geSquareSpacer2 {padding:6px;}
+.geSquareSpacer3 {padding:9px;}
+.geSquareSpacer4 {padding:12px;}
+
+
+/* BOOTSTRAP OVERRIDE */
+.geWell {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #e3e3e3;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}

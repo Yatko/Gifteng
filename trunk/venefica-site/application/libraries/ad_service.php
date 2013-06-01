@@ -11,6 +11,156 @@ class Ad_service {
         log_message(DEBUG, "Initializing Ad_service");
     }
     
+    //**********************
+    //* categories related *
+    //**********************
+    
+    /**
+     * 
+     * @param long $categoryId
+     * @return array of Category_model
+     * @throws Exception
+     */
+    public function getCategories($categoryId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getCategories(array("categoryId" => $categoryId));
+            
+            $categories = array();
+            if ( hasField($result, 'category') && $result->category ) {
+                $categories = Category_model::convertCategories($result->category);
+            }
+            return $categories;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting subcategories (categoryId: ' . $categoryId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @return array of Category_model
+     * @throws Exception
+     */
+    public function getAllCategories() {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getAllCategories();
+            
+            $categories = array();
+            if ( hasField($result, 'category') && $result->category ) {
+                $categories = Category_model::convertCategories($result->category);
+            }
+            return $categories;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting all categories failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    //***********************************
+    //* ad cruds (create/update/delete) *
+    //***********************************
+    
+    /**
+     * 
+     * @param Ad_model $ad
+     * @return long ad ID
+     * @throws Exception
+     */
+    public function placeAd($ad) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->placeAd(array("ad" => $ad));
+            $adId = $result->adId;
+            return $adId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad creation failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param Ad_model $ad
+     * @throws Exception
+     */
+    public function updateAd($ad) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->updateAd(array("ad" => $ad));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad update failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @throws Exception
+     */
+    public function deleteAd($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->deleteAd(array("adId" => $adId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad removal (adId: ' . $adId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @param Image_model $image
+     * @return long image ID
+     * @throws Exception
+     */
+    public function addImageToAd($adId, $image) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->addImageToAd(array("adId" => $adId, "image" => $image));
+            $imageId = $result->imgId;
+            return $imageId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Add image to ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @param long $imageId
+     * @throws Exception
+     */
+    public function deleteImageFromAd($adId, $imageId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->deleteImageFromAd(array("adId" => $adId, "imageId" => $imageId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Remove image from ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @param array of long $imageIds
+     * @throws Exception
+     */
+    public function deleteImagesFromAd($adId, $imageIds) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->deleteImagesFromAd(array("adId" => $adId, "imageIds" => $imageIds));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Remove images from ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //*************************
     //* ads listing/filtering *
     //*************************
@@ -414,27 +564,6 @@ class Ad_service {
             return $ratings;
         } catch ( Exception $ex ) {
             log_message(ERROR, 'User sent ratings (userId: ' . $userId . ') request failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
-
-    //**********************
-    //* categories related *
-    //**********************
-    
-    //TODO: not yet finished
-    public function getAllCategories() {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getAllCategories();
-            $categories = $result->category;
-            
-            //TODO:
-            print_r($categories);
-            
-            return $categories;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Getting all categories failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
