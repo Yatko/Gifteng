@@ -592,6 +592,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
     
     @Override
+    @Transactional
     public List<RequestDto> getRequests(Long adId) throws AdNotFoundException {
         Ad ad = validateAd(adId);
         List<Request> requests = requestDao.getByAd(adId);
