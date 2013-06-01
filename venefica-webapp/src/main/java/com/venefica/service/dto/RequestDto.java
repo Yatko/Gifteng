@@ -27,6 +27,11 @@ public class RequestDto extends DtoBase {
     private Date requestedAt;
     // out
     private RequestStatus status;
+    
+    // out
+    private ImageDto image;
+    // out
+    private ImageDto imageThumbnail;
 
     public RequestDto() {
     }
@@ -37,6 +42,13 @@ public class RequestDto extends DtoBase {
         this.user = new UserDto(request.getUser());
         this.requestedAt = request.getRequestedAt();
         this.status = request.getStatus();
+        
+        if (request.getAd().getAdData().getMainImage() != null) {
+            this.image = new ImageDto(request.getAd().getAdData().getMainImage());
+        }
+        if (request.getAd().getAdData().getThumbImage()!= null) {
+            this.imageThumbnail = new ImageDto(request.getAd().getAdData().getThumbImage());
+        }
     }
     
     public Long getId() {
@@ -77,6 +89,22 @@ public class RequestDto extends DtoBase {
 
     public void setAdId(Long adId) {
         this.adId = adId;
+    }
+
+    public ImageDto getImage() {
+        return image;
+    }
+
+    public void setImage(ImageDto image) {
+        this.image = image;
+    }
+
+    public ImageDto getImageThumbnail() {
+        return imageThumbnail;
+    }
+
+    public void setImageThumbnail(ImageDto imageThumbnail) {
+        this.imageThumbnail = imageThumbnail;
     }
     
 }
