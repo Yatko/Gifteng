@@ -45,9 +45,15 @@ $route['404_override'] = '';
 $route['browse/ajax/(:any)'] = 'browse/ajax/$1';
 $route['browse'] = 'browse/view';
 
-$route['profile/ajax/(:any)'] = 'profile/ajax/$1';
+//$route['profile/ajax/(:any)'] = 'profile/ajax/$1';
 $route['profile/(:any)'] = 'profile/view/$1';
 $route['profile'] = 'profile/view';
+
+//$route['post/(:any)'] = 'post/$1';
+$route['post'] = 'post/view';
+
+$route['view/(:num)'] = 'view/show/$1';
+$route['view'] = 'view/invalid';
 
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication'] = 'authentication/view';
@@ -56,7 +62,7 @@ $route['invitation/(:any)'] = 'invitation/$1';
 $route['invitation'] = 'invitation/view';
 
 $route['registration/(:any)'] = 'registration/$1';
-$route['registration'] = 'registration/view';
+$route['registration'] = 'registration/business';
 
 $route['(:any)'] = 'index/view';
 

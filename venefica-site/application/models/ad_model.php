@@ -7,6 +7,20 @@
  */
 class Ad_model extends CI_Model {
     
+    const PLACE_ONLINE = 'ONLINE';
+    const PLACE_LOCATION = 'LOCATION';
+    
+    const ADTYPE_MEMBER = 'MEMBER';
+    const ADTYPE_BUSINESS = 'BUSINESS';
+    
+    const WEEKDAY_MONDAY = 'MONDAY';
+    const WEEKDAY_TUESDAY = 'TUESDAY';
+    const WEEKDAY_WEDNESDAY = 'WEDNESDAY';
+    const WEEKDAY_THURSDAY = 'THURSDAY';
+    const WEEKDAY_FRIDAY = 'FRIDAY';
+    const WEEKDAY_SATURDAY = 'SATURDAY';
+    const WEEKDAY_SUNDAY = 'SUNDAY';
+
     var $id; //long
     var $categoryId; //long
     var $category; //string
@@ -25,17 +39,30 @@ class Ad_model extends CI_Model {
     var $sent; //boolean
     var $received; //boolean
     var $requested; //boolean
+    var $expires; //boolean
+    var $availableAt; //long - timestamp
     var $expiresAt; //long - timestamp
-    var $numAvailProlongations; //int
-    var $numViews; //int
-    var $rating; //float
+    var $numAvailProlongations = 0; //int
+    var $numViews = 0; //int
+    var $rating = 0; //float
     var $canRate; //boolean
     var $creator; //User_model
     var $canMarkAsSpam; //boolean
     var $freeShipping; //boolean
     var $pickUp; //boolean
+    var $place; //enum: ONLINE, LOCATION
+    var $type; //enum: MEMBER, BUSINESS
     var $comments; //array of Comment_model
     var $address; //Address_model
+    
+    // business ad data
+    var $promoCode; //string
+    var $website; //string
+    var $needsReservation; //boolean
+    var $availableFromTime; //long - time
+    var $availableToTime; //long - time
+    var $availableAllDay; //boolean
+    var $availableDays; //array of enum: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Ad_model");
@@ -56,6 +83,8 @@ class Ad_model extends CI_Model {
             $this->sent = getField($obj, 'sent');
             $this->received = getField($obj, 'received');
             $this->requested = getField($obj, 'requested');
+            $this->expires = getField($obj, 'expires');
+            $this->availableAt = getField($obj, 'availableAt');
             $this->expiresAt = getField($obj, 'expiresAt');
             $this->numAvailProlongations = getField($obj, 'numAvailProlongations');
             $this->numViews = getField($obj, 'numViews');
@@ -64,6 +93,18 @@ class Ad_model extends CI_Model {
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
             $this->freeShipping = getField($obj, 'freeShipping');
             $this->pickUp = getField($obj, 'pickUp');
+            $this->place = getField($obj, 'place');
+            $this->type = getField($obj, 'type');
+            
+            //business ad data
+            $this->promoCode = getField($obj, 'promoCode');
+            $this->website = getField($obj, 'website');
+            $this->needsReservation = getField($obj, 'needsReservation');
+            $this->availableFromTime = getField($obj, 'availableFromTime');
+            $this->availableToTime = getField($obj, 'availableToTime');
+            $this->availableAllDay = getField($obj, 'availableAllDay');
+            $this->availableDays = getField($obj, 'availableDays');
+            
             if ( hasField($obj, 'creator') ) {
                 $this->creator = User_model::convertUser($obj->creator);
             }
@@ -168,7 +209,7 @@ class Ad_model extends CI_Model {
             foreach ( $adsResult as $ad ) {
                 array_push($ads, Ad_model::convertAd($ad));
             }
-        } else {
+        } elseif ( !is_empty($adsResult) ) {
             $ad = $adsResult;
             array_push($ads, Ad_model::convertAd($ad));
         }

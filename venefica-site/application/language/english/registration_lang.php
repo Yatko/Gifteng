@@ -7,12 +7,27 @@ $lang['registration_password_hint'] = "Password";
 $lang['registration_join_button'] = "JOIN";
 $lang['registration_footer'] = "By joining, you agree to our Terms of Use and Privacy Policy";
 
-$lang['registration_failed'] = "User registration failed!";
+$lang['u_registration_failed'] = "User registration failed!";
 
 #
-#registration form fields
+#user registration form fields
 #
-$lang['registration_firstname'] = "First name";
-$lang['registration_lastname'] = "Last name";
-$lang['registration_email'] = "Email";
-$lang['registration_password'] = "Password";
+$lang['u_registration_firstname'] = "First name";
+$lang['u_registration_lastname'] = "Last name";
+$lang['u_registration_email'] = "Email";
+$lang['u_registration_password'] = "Password";
+
+
+
+$lang['b_registration_failed'] = "Business registration failed!";
+
+#
+#business registration form fields
+#
+$lang['b_registration_businessName'] = "business name";
+$lang['b_registration_email'] = "email";
+$lang['b_registration_password_1'] = "password";
+$lang['b_registration_password_2'] = "password again";
+$lang['b_registration_zipCode'] = "zipcode";
+$lang['b_registration_category'] = "category";
+

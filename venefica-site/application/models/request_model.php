@@ -5,11 +5,17 @@
  */
 class Request_model extends CI_Model {
     
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_EXPIRED = 'EXPIRED';
+    const STATUS_ACCEPTED = 'ACCEPTED';
+    
     var $id; //long
     var $adId; //long
     var $user; //User_model
     var $requestedAt; //long - timestamp
     var $status; //enum: PENDING, EXPIRED, ACCEPTED
+    var $image; //Image_model
+    var $imageThumbnail; //Image_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Request_model");
@@ -21,6 +27,12 @@ class Request_model extends CI_Model {
             $this->status = getField($obj, 'status');
             if ( hasField($obj, 'user') ) {
                 $this->user = User_model::convertUser($obj->user);
+            }
+            if ( hasField($obj, 'image') ) {
+                $this->image = Image_model::convertImage($obj->image);
+            }
+            if ( hasField($obj, 'imageThumbnail') ) {
+                $this->imageThumbnail = Image_model::convertImage($obj->imageThumbnail);
             }
         }
     }
@@ -57,7 +69,7 @@ class Request_model extends CI_Model {
             foreach ( $requestsResult as $request ) {
                 array_push($requests, Request_model::convertRequest($request));
             }
-        } else {
+        } elseif ( !is_empty($requestsResult) ) {
             $requests = $requestsResult;
             array_push($requests, Request_model::convertRequest($requests));
         }

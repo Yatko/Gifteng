@@ -1,5 +1,5 @@
 <?=isset($this->registration_form) ? $this->registration_form->error_string() : ""?>
-<?=form_open('/registration', '', array('invitation_code' => $invitation_code))?>
+<?=form_open('/registration/user', '', array('invitation_code' => $invitation_code))?>
 
 <div class="content"><div>
     <div>

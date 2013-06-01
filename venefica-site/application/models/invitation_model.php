@@ -7,6 +7,9 @@
  */
 class Invitation_model extends CI_Model {
     
+    const USERTYPE_GIVER = 'GIVER';
+    const USERTYPE_RECEIVER = 'RECEIVER';
+    
     var $email; //string
     var $country; //string
     var $zipCode; //string

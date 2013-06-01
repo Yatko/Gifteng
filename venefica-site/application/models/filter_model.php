@@ -7,6 +7,9 @@
  */
 class Filter_model extends CI_Model {
     
+    const TYPE_MEMBER = "MEMBER";
+    const TYPE_BUSINESS = "BUSINESS";
+    
     var $searchString; //string
     var $categories; //array of long
     var $distance; //long

@@ -7,6 +7,7 @@
  */
 class Address_model extends CI_Model {
     
+    var $name; //string
     var $address1; //string
     var $address2; //string
     var $city; //string
@@ -22,6 +23,7 @@ class Address_model extends CI_Model {
         log_message(DEBUG, "Initializing Address_model");
         
         if ( $obj != null ) {
+            $this->name = getField($obj, 'name');
             $this->address1 = getField($obj, 'address1');
             $this->address2 = getField($obj, 'address2');
             $this->city = getField($obj, 'city');
@@ -51,6 +53,19 @@ class Address_model extends CI_Model {
     }
     
     // static helpers
+    
+    public static function convertAddresses($addressesResult) {
+        $addresses = array();
+        if ( is_array($addressesResult) && count($addressesResult) > 0 ) {
+            foreach ( $addressesResult as $address ) {
+                array_push($addresses, Address_model::convertAddress($address));
+            }
+        } elseif ( !is_empty($addressesResult) ) {
+            $address = $addressesResult;
+            array_push($addresses, Address_model::convertAddress($address));
+        }
+        return $addresses;
+    }
     
     public static function convertAddress($address) {
         return new Address_model($address);

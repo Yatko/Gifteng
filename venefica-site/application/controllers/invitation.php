@@ -11,8 +11,8 @@ class Invitation extends CI_Controller {
         $this->init();
         
         $data = array();
-        $data['action'] = $this->getAction();
-        $data['step'] = $this->getStep();
+        $data['action'] = $this->getActionFromUri();
+        $data['step'] = $this->getStepFromUri();
         
         $data = array_merge($data, $extra_data);
         
@@ -44,7 +44,7 @@ class Invitation extends CI_Controller {
     }
 
     private function process_invitation_request(&$extra_data) {
-        $step = $this->getStep();
+        $step = $this->getStepFromUri();
         $is_valid = $this->invitation_request($step);
         if ( $is_valid ) {
             if ( $step == 1 ) {
@@ -105,7 +105,7 @@ class Invitation extends CI_Controller {
     }
     
     private function process_invitation_verify(&$extra_data) {
-        $step = $this->getStep();
+        $step = $this->getStepFromUri();
         $is_valid = $this->invitation_verify($step);
         if ( $is_valid ) {
             if ( $step == 1 ) {
@@ -124,7 +124,7 @@ class Invitation extends CI_Controller {
                 $code = $this->input->post('invitation_code');
                 $this->session->set_flashdata('invitation_code', $code);
                 
-                redirect('/registration');
+                redirect('/registration/user');
             } else {
                 log_message(INFO, "Invalid step ($step)!");
                 redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
@@ -313,12 +313,12 @@ class Invitation extends CI_Controller {
         }
     }
     
-    private function getAction() {
+    private function getActionFromUri() {
         $action = $this->uri->segment(2, null);
         return $action;
     }
     
-    private function getStep() {
+    private function getStepFromUri() {
         $step = $this->uri->segment(3, null);
         return $step;
     }

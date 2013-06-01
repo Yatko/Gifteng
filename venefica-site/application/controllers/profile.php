@@ -7,82 +7,87 @@ class Profile extends CI_Controller {
     public function view($name = null) {
         $this->init();
         
-        $user = null;
-        $receivings = null;
-        $givings = null;
-        $bookmarks = null;
-        $followers = null;
-        $followings = null;
-        $ratings = null;
+        if ( !validate_login() ) return;
         
-        $givings_num = 0;
-        $receivings_num = 0;
-        $bookmarks_num = 0;
-        $followers_num = 0;
-        $followings_num = 0;
-        $ratings_num = 0;
+        try {
+            if ( !empty($name) ) {
+                $user = $this->usermanagement_service->getUserByName($name);
+            } else {
+                $user = $this->usermanagement_service->loadUser();
+            }
+        } catch ( Exception $ex ) {
+            $user = null;
+        }
         
-        if ( isLogged() ) {
-            try {
-                if ( !empty($name) ) {
-                    $user = $this->usermanagement_service->getUserByName($name);
-                } else {
-                    $user = $this->usermanagement_service->loadUser();
-                }
-            } catch ( Exception $ex ) {
-            }
-            
-            try {
-                $receivings = $this->ad_service->getUserRequestedAds($user->id);
-            } catch ( Exception $ex ) {
-            }
-            
-            try {
-                $givings = $this->ad_service->getUserAds($user->id);
-            } catch ( Exception $ex ) {
-            }
-            
-            try {
-                $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
-            } catch ( Exception $ex ) {
-            }
-            
-            try {
-                $followers = $this->usermanagement_service->getFollowers($user->id);
-            } catch ( Exception $ex ) {
-            }
-            try {
-                $followings = $this->usermanagement_service->getFollowings($user->id);
-            } catch ( Exception $ex ) {
-            }
-            
-            try {
-                $ratings = $this->ad_service->getReceivedRatings($user->id);
-            } catch ( Exception $ex ) {
-            }
+        if ( !validate_user($user) ) return;
+
+        try {
+            $receivings = $this->ad_service->getUserRequestedAds($user->id);
+        } catch ( Exception $ex ) {
+            $receivings = null;
+        }
+
+        try {
+            $givings = $this->ad_service->getUserAds($user->id);
+        } catch ( Exception $ex ) {
+            $givings = null;
+        }
+
+        try {
+            $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
+        } catch ( Exception $ex ) {
+            $bookmarks = null;
+        }
+
+        try {
+            $followers = $this->usermanagement_service->getFollowers($user->id);
+        } catch ( Exception $ex ) {
+            $followers = null;
+        }
+        try {
+            $followings = $this->usermanagement_service->getFollowings($user->id);
+        } catch ( Exception $ex ) {
+            $followings = null;
+        }
+
+        try {
+            $ratings = $this->ad_service->getReceivedRatings($user->id);
+        } catch ( Exception $ex ) {
+            $ratings = null;
         }
         
         if ( $receivings ) {
             $receivings_num = count($receivings);
+        } else {
+            $receivings_num = 0;
         }
         if ( $givings ) {
             $givings_num = count($givings);
+        } else {
+            $givings_num = 0;
         }
         if ( $bookmarks ) {
             $bookmarks_num = count($bookmarks);
+        } else {
+            $bookmarks_num = 0;
         }
         if ( $followers ) {
             $followers_num = count($followers);
+        } else {
+            $followers_num = 0;
         }
         if ( $followings ) {
             $followings_num = count($followings);
+        } else {
+            $followings_num = 0;
         }
         if ( $ratings ) {
             $ratings_num = count($ratings);
+        } else {
+            $ratings_num = 0;
         }
         
         $data = array();
-        $data['isLogged'] = isLogged();
         $data['is_ajax'] = false;
         $data['user'] = $user;
         $data['receivings'] = $receivings;
@@ -111,7 +116,6 @@ class Profile extends CI_Controller {
         }
         
         $data = array();
-        $data['isLogged'] = isLogged();
         $data['is_ajax'] = true;
         
         $this->load->view('pages/profile', $data);

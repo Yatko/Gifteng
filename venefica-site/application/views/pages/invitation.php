@@ -86,9 +86,9 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                 </div>
                 <div class="label" style="text-align:left;margin:6px;font-weight:200;"><?=lang('invitation_usertype_message')?></div>
                 <div class="label" style="text-align:center;margin:6px 6px 32px 6px;">
-                    <input type="radio" name="invitation_usertype" id="giver_usertype" value="GIVER" <?=set_radio('invitation_usertype', 'GIVER')?> class="radionInline" />
+                    <input type="radio" name="invitation_usertype" id="giver_usertype" value="<?=Invitation_model::USERTYPE_GIVER?>" <?=set_radio('invitation_usertype', Invitation_model::USERTYPE_GIVER)?> class="radionInline" />
                     <label for="giver_usertype"><?=lang('invitation_usertype_giver')?></label>
-                    <input type="radio" name="invitation_usertype" id="receiver_usertype" value="RECEIVER" <?=set_radio('invitation_usertype', 'RECEIVER')?> class="radionInline" />
+                    <input type="radio" name="invitation_usertype" id="receiver_usertype" value="<?=Invitation_model::USERTYPE_RECEIVER?>" <?=set_radio('invitation_usertype', Invitation_model::USERTYPE_RECEIVER)?> class="radionInline" />
                     <label for="receiver_usertype"><?=lang('invitation_usertype_receiver')?></label>
                 </div>
                 <div class="clear"></div>
