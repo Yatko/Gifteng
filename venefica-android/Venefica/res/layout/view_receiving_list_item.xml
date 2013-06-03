@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/imgReceivingLItemImage"
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="65dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="2dp"
@@ -16,36 +16,177 @@
         android:scaleType="centerCrop"
         android:src="@drawable/icon_picture_white" />
 
-    <TextView 
+    <TextView
         android:id="@+id/txtReceivingLItemStatus"
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@id/imgReceivingLItemImage"
-        android:layout_alignParentLeft="true"/>
+        android:gravity="center" />
+
+    <!-- cancel request -->
+
+    <LinearLayout
+        android:id="@+id/layCancelReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/imgReceivingLItemImage"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtReceivingLItemCancelReq"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_cancel_request"
+            android:textSize="8sp" />
+
+        <ImageButton
+            android:id="@+id/btnReceivingListItemCancelReq"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/button_height"
+            android:gravity="center"
+            android:src="@drawable/icon_cancel" />
+    </LinearLayout>
+    <!-- send msg -->
+
+    <LinearLayout
+        android:id="@+id/laySendMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/layCancelReq"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtReceivingLItemSendMsg"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_send_msg"
+            android:textSize="8sp" />
+
+        <ImageButton
+            android:id="@+id/btnReceivingListItemSendMsg"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/button_height"
+            android:gravity="center"
+            android:src="@drawable/icon_mail" />
+    </LinearLayout>
+    <!-- mark received -->
+
+    <LinearLayout
+        android:id="@+id/layMarkReceived"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/laySendMsg"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtReceivingLItemMarkReceived"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_mark_received"
+            android:textSize="8sp" />
+
+        <ImageButton
+            android:id="@+id/btnReceivingListItemMarkReceived"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/button_height"
+            android:gravity="center"
+            android:src="@drawable/icon_tick" />
+    </LinearLayout>
+    <!-- leave review -->
+
+    <LinearLayout
+        android:id="@+id/layLeaveReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/layMarkReceived"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtReceivingLItemLeaveReview"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_leave_review"
+            android:textSize="8sp" />
+
+        <ImageButton
+            android:id="@+id/btnReceivingListItemLeaveReview"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/button_height"
+            android:gravity="center"
+            android:src="@drawable/icon_achievement" />
+    </LinearLayout>
+    <!--
     <com.venefica.module.listings.receiving.CustomImageTextButton
         android:id="@+id/btnReceivingLItemCancelReq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
         android:layout_toRightOf="@id/imgReceivingLItemImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:gravity="center_vertical" />
 
-    <!-- <com.venefica.module.listings.receiving.CustomImageTextButton
+    <com.venefica.module.listings.receiving.CustomImageTextButton
         android:id="@+id/btnReceivingLItemSendMsg"
-        android:layout_toRightOf="@id/btnReceivingLItemCancelReq"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/btnReceivingLItemCancelReq"
+        android:gravity="center_vertical" />
+
     <com.venefica.module.listings.receiving.CustomImageTextButton
         android:id="@+id/btnReceivingLItemMarkReceived"
-        android:layout_toRightOf="@id/btnReceivingLItemSendMsg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/btnReceivingLItemSendMsg"
+        android:gravity="center_vertical" />
+
     <com.venefica.module.listings.receiving.CustomImageTextButton
         android:id="@+id/btnReceivingLItemLeaveReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
         android:layout_toRightOf="@id/btnReceivingLItemMarkReceived"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <com.venefica.module.listings.receiving.CustomImageTextButton
+        android:gravity="center_vertical" />
+    -->
+
+
+    <!--
+         <com.venefica.module.listings.receiving.CustomImageTextButton
         android:id="@+id/btnReceivingLItemDelete"
-        android:layout_toRightOf="@id/btnReceivingLItemLeaveReview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/> -->
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/btnReceivingLItemLeaveReview"
+        android:gravity="center_vertical" />
+    -->
+
 </RelativeLayout>
