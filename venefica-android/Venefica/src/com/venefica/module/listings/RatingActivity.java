@@ -1,6 +1,7 @@
 package com.venefica.module.listings;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -15,17 +16,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
-import com.venefica.module.messages.MessageResultWrapper;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.user.UserDto;
 import com.venefica.module.utils.Utility;
+import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -51,6 +52,7 @@ public class RatingActivity extends VeneficaActivity {
 	 * listing to rate
 	 */
 	private long adId = 0;
+	private long toUserId = 0;
 	/**
 	 * rating value
 	 */
@@ -58,11 +60,12 @@ public class RatingActivity extends VeneficaActivity {
 	/**
 	 * UI components
 	 */
-	private RatingBar ratingBar;
+//	private RatingBar ratingBar;
 	private TextView txtUser, txtRatingLevel;
 	private EditText edtTitle, edtComment;
 	private ImageView imgProfile;
 	private Button btnPost;
+	private RadioGroup valueRadioGroup;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -77,6 +80,7 @@ public class RatingActivity extends VeneficaActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true); 
 		setProgressBarIndeterminateVisibility(false);
 		adId = getIntent().getExtras().getLong("ad_id");
+		toUserId = getIntent().getExtras().getLong("to_user_id");
 		
 		imgProfile = (ImageView) findViewById(R.id.imgActRatingProfile);
 		if (((VeneficaApplication) getApplication()).getUser().getAvatar() != null
@@ -88,7 +92,7 @@ public class RatingActivity extends VeneficaActivity {
 					imgProfile,
 					getResources().getDrawable(R.drawable.icon_user));
 		}
-		ratingBar = (RatingBar) findViewById(R.id.ratBarActRating);
+		/*ratingBar = (RatingBar) findViewById(R.id.ratBarActRating);
 		ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 			
 			@Override
@@ -96,8 +100,9 @@ public class RatingActivity extends VeneficaActivity {
 					boolean fromUser) {
 				ratingValue = (int) rating;
 			}
-		});
+		});*/
 		
+		valueRadioGroup = (RadioGroup) findViewById(R.id.radioGroupActRatingValue);
 		txtUser = (TextView) findViewById(R.id.txtActRatingUserName);
 		txtUser.setText(((VeneficaApplication)getApplication()).getUser().getFirstName()+" "
 				+ ((VeneficaApplication)getApplication()).getUser().getLastName());
@@ -198,7 +203,7 @@ public class RatingActivity extends VeneficaActivity {
 					wsAction = new WSAction();
 				}
 				if (params[0].equals(ACT_MODE_POST_RATING)){
-					wrapper = wsAction.rateAd(((VeneficaApplication)getApplication()).getAuthToken(), adId, ratingValue);
+					wrapper = wsAction.rateAd(((VeneficaApplication)getApplication()).getAuthToken(), getRating());
 				}
 			} catch (IOException e) {
 				Log.e("RatingTask::doInBackground :", e.toString());
@@ -225,5 +230,28 @@ public class RatingActivity extends VeneficaActivity {
 			showDialog(D_ERROR);
 			isWorking  = false;
 		}
+	}
+	
+	/**
+	 * Get rating to update
+	 * @return rating RatingDto
+	 */
+	private RatingDto getRating(){
+		RatingDto ratingDto = new RatingDto();
+		ratingDto.setAdId(adId);
+		ratingDto.setFromUser(((VeneficaApplication)getApplication()).getUser());
+		ratingDto.setRatedAt(new Date());
+		ratingDto.setText(edtComment.getText().toString());
+		ratingDto.setToUser(new UserDto());
+		ratingDto.setToUserId(toUserId);
+		switch (valueRadioGroup.getCheckedRadioButtonId()) {
+		  case R.id.radioActProfileLike :
+			  ratingDto.setValue(1);
+	              break;
+		  case R.id.radioActProfileDislike :
+			  ratingDto.setValue(-1);
+			  break;
+		}
+		return ratingDto;
 	}
 }
