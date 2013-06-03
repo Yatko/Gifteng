@@ -90,6 +90,7 @@ public class WSAction {
 	private final String WS_METHOD_FORGOT_PASSWORD_VERIFY_EMAIL = "ForgotPasswordEmail";
 	private final String WS_METHOD_FORGOT_PASSWORD_RESET = "ChangeForgottenPassword";
 	private final String WS_METHOD_GET_REQUESTS_BY_USER = "GetRequestsByUser";
+	private final String WS_METHOD_MARK_RECEIVED = "MarkAsReceived";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -1163,7 +1164,7 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public ListingDetailsResultWrapper rateAd(String token, long adId, int ratingValue) throws IOException, XmlPullParserException{
+	public ListingDetailsResultWrapper rateAd(String token, RatingDto rating) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_RATE_AD;
 
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
@@ -1173,12 +1174,13 @@ public class WSAction {
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
-			request.addProperty("adId", adId);
-			request.addProperty("ratingValue", ratingValue);
+//			request.addProperty("adId", adId);
+			request.addProperty("rating", rating);
 
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			envelope.dotNet = true;
+			new RatingDto().register(envelope);
 
 			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
 			headerList.add(new HeaderProperty("authToken", token));
@@ -1687,16 +1689,16 @@ public class WSAction {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	public ListingDetailsResultWrapper cancelRequestForListing(String token, long adId) throws IOException, XmlPullParserException{
+	public RequestsResultWrapper cancelRequestForListing(String token, long requestId) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_CANCEL_REQUEST;
 
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
-		ListingDetailsResultWrapper result = new ListingDetailsResultWrapper();
+		RequestsResultWrapper result = new RequestsResultWrapper();
 
 		try{
 			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
 
-			request.addProperty("adId", adId);
+			request.addProperty("requestId", requestId);
 
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = true;
@@ -1892,6 +1894,40 @@ public class WSAction {
 			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_REQUESTS;			
+		}
+		return result;
+	}
+	
+	public RequestsResultWrapper markListingAsReceived(String token, long requestId) throws IOException, XmlPullParserException{
+		final String SOAP_METHOD = WS_METHOD_MARK_RECEIVED;
+
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + SOAP_METHOD;
+		RequestsResultWrapper result = new RequestsResultWrapper();
+
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, SOAP_METHOD);
+
+			request.addProperty("requestId", requestId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			Object response = envelope.getResponse();
+			if (response == null) {
+				result.result = Constants.RESULT_MARK_RECEIVED_SUCCESS;
+			} else {
+				result.result = Constants.ERROR_RESULT_MARK_RECEIVED;
+			}
+			
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_MARK_RECEIVED;
 		}
 		return result;
 	}
