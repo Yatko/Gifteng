@@ -34,6 +34,8 @@ public class RequestDto implements KvmSerializable {
     private UserDto user;
     private Date requestedAt;
     private RequestStatus status;
+    private ImageDto image;
+    private ImageDto imageThumbnail;
 	/* (non-Javadoc)
 	 * @see org.ksoap2.serialization.KvmSerializable#getProperty(int)
 	 */
@@ -53,6 +55,10 @@ public class RequestDto implements KvmSerializable {
 				return status.name();
 			else
 				return null;
+		case 5:
+			return image;
+		case 6:
+			return imageThumbnail;
 		}
 		return null;
 	}
@@ -63,7 +69,7 @@ public class RequestDto implements KvmSerializable {
 	@Override
 	public int getPropertyCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 7;
 	}
 
 	@Override
@@ -86,11 +92,15 @@ public class RequestDto implements KvmSerializable {
 					break;
 				case 4:
 					status = RequestStatus.valueOf(value.toString());
-					break;				
+					break;	
+				case 5:
+					image = (ImageDto)value;
+					break;
+				case 6:
+					imageThumbnail = (ImageDto)value;
+					break;
 			}
-		}
-		catch (Exception e)
-		{
+		}catch (Exception e){
 			Log.d("AdDto.setProperty Exception:", e.getLocalizedMessage());
 		}
 	}
@@ -122,18 +132,28 @@ public class RequestDto implements KvmSerializable {
 				info.name = "status";
 				info.type = RequestStatus.class;
 				break;
+			case 5:
+				info.name = "image";
+				info.type = ImageDto.class;
+				break;
+			case 6:
+				info.name = "imageThumbnail";
+				info.type = ImageDto.class;
+				break;
 		}
 	}
 	public void register(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(Constants.SERVICES_NAMESPACE, this.getClass().getName(), this.getClass());
 		new UserDto().register(envelope);
+		new ImageDto().register(envelope);
 	}
 
 	public void registerRead(SoapSerializationEnvelope envelope)
 	{
 		envelope.addMapping(null, "RequestDto", this.getClass());
 		new UserDto().registerRead(envelope);
+		new ImageDto().registerRead(envelope);
 	}
 	/**
 	 * @return the id
@@ -203,6 +223,34 @@ public class RequestDto implements KvmSerializable {
 	 */
 	public void setStatus(RequestStatus status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the image
+	 */
+	public ImageDto getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(ImageDto image) {
+		this.image = image;
+	}
+
+	/**
+	 * @return the imageThumbnail
+	 */
+	public ImageDto getImageThumbnail() {
+		return imageThumbnail;
+	}
+
+	/**
+	 * @param imageThumbnail the imageThumbnail to set
+	 */
+	public void setImageThumbnail(ImageDto imageThumbnail) {
+		this.imageThumbnail = imageThumbnail;
 	}
 
 }
