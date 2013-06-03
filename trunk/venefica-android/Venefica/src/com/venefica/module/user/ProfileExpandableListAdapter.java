@@ -5,11 +5,6 @@ package com.venefica.module.user;
 
 import java.util.ArrayList;
 
-import com.venefica.module.main.R;
-import com.venefica.module.utils.Utility;
-import com.venefica.utils.Constants;
-import com.venefica.utils.VeneficaApplication;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +12,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.venefica.module.main.R;
+import com.venefica.module.utils.Utility;
+import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
 
 /**
@@ -28,12 +27,18 @@ import android.widget.TextView;
  */
 public class ProfileExpandableListAdapter extends BaseExpandableListAdapter implements OnClickListener {
 
+	public interface OnProfileListButtonListener{
+		public void onFollowButtonClick(long userId, boolean inFollowings);
+	}
 	private Context context;
 	private ArrayList<ProfileGroup> profileGroups;
 	private UserDetailViewHolder userDetailViewHolder;
+	private OnProfileListButtonListener onProfileListButtonListener;
+	
 	public ProfileExpandableListAdapter(Context context, ArrayList<ProfileGroup> profileGroups){
 		this.context = context;
 		this.profileGroups = profileGroups;
+		this.onProfileListButtonListener = (OnProfileListButtonListener)context;
 	}
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {		
@@ -86,10 +91,13 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter impl
 									R.drawable.icon_picture_white));
 		}
 		if (profileGroups.get(groupPosition).getUsers().get(childPosition).isInFollowings()) {
-			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.label_follow));
+			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.g_label_unfollow));			
 		} else {
-			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.g_label_unfollow));
+			userDetailViewHolder.btnFollow.setText(context.getResources().getString(R.string.label_follow));
 		}
+		
+		userDetailViewHolder.btnFollow.setTag(profileGroups.get(groupPosition).getUsers().get(childPosition).isInFollowings());
+		userDetailViewHolder.btnFollow.setContentDescription(profileGroups.get(groupPosition).getUsers().get(childPosition).getId()+"");
 		return convertView;
 	}
 
@@ -159,7 +167,8 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter impl
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.imgBtnUserViewFollow:
-			
+			onProfileListButtonListener.onFollowButtonClick(Long.parseLong(view.getContentDescription().toString())
+					, Boolean.parseBoolean(view.getTag().toString()));
 			break;
 
 		default:
