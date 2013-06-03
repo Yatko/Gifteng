@@ -128,10 +128,12 @@ public class RatingDto implements KvmSerializable {
 	}
 	public void register(SoapSerializationEnvelope envelope){
 		envelope.addMapping(Constants.SERVICES_NAMESPACE, this.getClass().getName(), this.getClass());
+		new UserDto().register(envelope);
 	}
 
 	public void registerRead(SoapSerializationEnvelope envelope){
 		envelope.addMapping(null, "RatingDto", this.getClass());
+		new UserDto().registerRead(envelope);
 	}
 
 	/**
