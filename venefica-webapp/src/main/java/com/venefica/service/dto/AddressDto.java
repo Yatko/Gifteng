@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class AddressDto {
     
     // in, out
+    private String name;
+    // in, out
     private String address1;
     // in, out
     private String address2;
@@ -65,6 +67,11 @@ public class AddressDto {
         state = address.getState();
         area = address.getArea();
         zipCode = address.getZipCode();
+    }
+    
+    public AddressDto(AddressWrapper addressWrapper) {
+        this(addressWrapper.getAddress());
+        name = addressWrapper.getName();
     }
     
     public Point getLocation() {
@@ -172,5 +179,13 @@ public class AddressDto {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
