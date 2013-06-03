@@ -33,13 +33,14 @@ import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.user.ProfileExpandableListAdapter.OnProfileListButtonListener;
 import com.venefica.module.utils.BadgeView;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.RatingDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
-public class ProfileDetailActivity extends VeneficaActivity implements OnClickListener {
+public class ProfileDetailActivity extends VeneficaActivity implements OnClickListener, OnProfileListButtonListener {
 
 	private int ACT_MODE;
 	/**
@@ -80,6 +81,10 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 	private UserDto user;
 	private String userName;
 	/**
+	 * user to follow
+	 */
+	private long userIdToFollow;
+	/**
 	 * view to show user details
 	 */
 	private TextView txtUserName, txtMemberInfo, txtAddress;
@@ -115,6 +120,8 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 		
 		userReviewList = new ArrayList<RatingDto>();
 		profileGroups = new ArrayList<ProfileGroup>();
+		setFollowings(new ArrayList<UserDto>());
+		setFollowers(new ArrayList<UserDto>());
 		userExpandableListAdapter = new ProfileExpandableListAdapter(this, profileGroups);
 		
 		reviewsExpandableListAdapter = new ReviewsExpandableListAdapter(this, userReviewList);
@@ -176,8 +183,9 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 				
 				public void onClick(DialogInterface dialog, int which) {
 					dismissDialog(D_ERROR);
-					if(ERROR_CODE == Constants.RESULT_REGISTER_USER_SUCCESS){
-//							RegisterUserActivity.this.finish();
+					if(ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS ||
+							ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS){
+						new UserProfileTask().execute(ACT_MODE_GET_USER);
 					}
 				}
 			});			
@@ -213,12 +221,12 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 				message = (String) getResources().getText(R.string.g_error);
 			} else if(ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_follow_success);
-				user.setInFollowings(true);
-				setUserDto(user);
+//				user.setInFollowings(true);
+//				setUserDto(user);
 			} else if(ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_unfollow_success);
-				user.setInFollowings(false);
-				setUserDto(user);
+//				user.setInFollowings(false);
+//				setUserDto(user);
 			}
     		((AlertDialog) dialog).setMessage(message);
 		}    	
@@ -254,11 +262,11 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 							, user.getId());
 				} else if (params[0].equals(ACT_MODE_FOLLOW_USER)) {
 					ListingDetailsResultWrapper res = wsAction.followUser(((VeneficaApplication)getApplication()).getAuthToken()
-							, user.getId());
+							, userIdToFollow);
 					wrapper.result = res.result;
 				} else if (params[0].equals(ACT_MODE_UNFOLLOW_USER)) {
 					ListingDetailsResultWrapper res = wsAction.unfollowUser(((VeneficaApplication)getApplication()).getAuthToken()
-							, user.getId());
+							, userIdToFollow);
 					wrapper.result = res.result;
 				}/*else if (params[0].equals(ACT_MODE_SEND_MESSAGE)) {
 					ListingDetailsResultWrapper res = wsAction.sendMessageTo(((VeneficaApplication)getApplication()).getAuthToken()
@@ -285,10 +293,18 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 				user = result.userDto;
 				setUserDto(result.userDto);
 				getDataForUser();				
-			} else if (result.followings != null && result.result == Constants.RESULT_GET_FOLLOWINGS_SUCCESS) {
-				setFollowings(result.followings);
-			} else if (result.followers != null && result.result == Constants.RESULT_GET_FOLLOWERS_SUCCESS) {
-				setFollowers(result.followers);
+			} else if ( result.result == Constants.RESULT_GET_FOLLOWINGS_SUCCESS) {
+				if (result.followings != null) {
+					setFollowings(result.followings);
+				} else {
+					setFollowings(new ArrayList<UserDto>());
+				}				
+			} else if (result.result == Constants.RESULT_GET_FOLLOWERS_SUCCESS) {
+				if (result.followers != null) {
+					setFollowers(result.followers);
+				} else {
+					setFollowers(new ArrayList<UserDto>());
+				}				
 			} else if (result.reviews != null && result.result == Constants.RESULT_GET_REVIEWS_SUCCESS) {
 				setReviews(result.reviews);
 			} else if (result.result != -1 && result.result != Constants.ERROR_NO_DATA) {
@@ -307,11 +323,13 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 	 * @param followingsList
 	 */
 	public void setFollowings(List<UserDto> followingsList) {				
-		ProfileGroup profileGroup1 = new ProfileGroup(); 
-		profileGroup1.setGroupName(getResources().getString(R.string.g_label_following));
-		profileGroup1.setUsers(followingsList);
-		profileGroups.add(profileGroup1);
-		userExpandableListAdapter.notifyDataSetChanged();		
+		ProfileGroup profileGroup = new ProfileGroup(); 
+		profileGroup.setGroupName(getResources().getString(R.string.g_label_following));
+		profileGroup.setUsers(followingsList);
+		profileGroups.add(profileGroup);
+		if (userExpandableListAdapter != null) {
+			userExpandableListAdapter.notifyDataSetChanged();
+		}				
 	}
 
 	public void getDataForUser() {
@@ -330,7 +348,9 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 		profileGroup.setGroupName(getResources().getString(R.string.g_label_followers));
 		profileGroup.setUsers(followersList);
 		profileGroups.add(profileGroup);
-		userExpandableListAdapter.notifyDataSetChanged();
+		if (userExpandableListAdapter != null) {
+			userExpandableListAdapter.notifyDataSetChanged();
+		}
 	}
 	/**
 	 * Method to update reviews
@@ -394,6 +414,7 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 		if (!isWorking) {
 			switch (id) {
 			case R.id.imgBtnUserViewFollow:
+				this.userIdToFollow = user.getId();
 				if (user.isInFollowings()) {
 					new UserProfileTask().execute(ACT_MODE_UNFOLLOW_USER);
 				} else {
@@ -409,6 +430,16 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 				startActivity(accountIntent);
 				break;
 			}
+		}
+	}
+
+	@Override
+	public void onFollowButtonClick(long userId, boolean inFollowings) {
+		this.userIdToFollow = userId;
+		if (inFollowings) {
+			new UserProfileTask().execute(ACT_MODE_UNFOLLOW_USER);
+		} else {
+			new UserProfileTask().execute(ACT_MODE_FOLLOW_USER);
 		}
 	}
 }
