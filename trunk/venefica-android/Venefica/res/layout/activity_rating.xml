@@ -60,21 +60,45 @@
         android:background="@color/light_blue" />
     <!-- rating bar -->
 
-    <RatingBar
+    <!-- <RatingBar
         android:id="@+id/ratBarActRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtActRatingDevider"
         android:layout_centerHorizontal="true"
         android:numStars="5"
-        android:stepSize="1.0" />
+        android:stepSize="1.0" /> -->
+        <RadioGroup
+            android:id="@+id/radioGroupActRatingValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtActRatingDevider"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioActProfileLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/g_label_like" />
+
+            <RadioButton
+                android:id="@+id/radioActProfileDislike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/g_label_dislike" />
+        </RadioGroup>
     <!-- rating level in words -->
 
     <TextView
         android:id="@+id/txtActRatingLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ratBarActRating"
+        android:layout_below="@id/radioGroupActRatingValue"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:paddingBottom="7dp"
@@ -90,7 +114,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="@string/hint_title" />
+        android:hint="@string/hint_title"
+        android:visibility="gone" />
     <!-- user comments -->
 
     <EditText
