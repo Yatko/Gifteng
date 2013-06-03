@@ -12,6 +12,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 
 import android.util.Log;
 
+import com.venefica.services.AdDto.AdType;
 import com.venefica.utils.Constants;
 
 public class FilterDto implements KvmSerializable
@@ -32,6 +33,9 @@ public class FilterDto implements KvmSerializable
 //	private boolean wanted = false;
 	private String searchString;
 	private Boolean includeOwned;
+	
+	private AdType type;
+	
 	public FilterDto()
 	{
 		rev = staticRev++;
