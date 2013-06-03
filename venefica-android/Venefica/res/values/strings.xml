@@ -40,9 +40,14 @@
     <string name="g_label_followers">Followers</string>
     <string name="g_label_reviews">Reviews</string>
     <string name="g_label_review_by">Review by</string>
-    <string name="g_label_cancel_request">Cancel Request</string>
+    <string name="g_label_cancel_request">CANCEL REQUEST</string>
     <string name="g_label_choose_email">Choose an Email client</string>
     <string name="g_label_unfollow">Unfollow</string>
+    <string name="g_label_mark_received">MARK RECEIVED</string>
+    <string name="g_label_leave_review">LEAVE REVIEW</string>
+    <string name="g_label_send_msg">SEND MESSAGE</string>
+    <string name="g_label_like">Like</string>
+    <string name="g_label_dislike">Dislike</string>
 
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
@@ -84,7 +89,7 @@
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
     <string name="g_msg_reset_pwd_success">Password changed successfully.</string>
     <string name="g_msg_already_in_bookmark">Gift already in favourites.</string>
-
+	<string name="g_msg_msrk_received_success">Gift maked as received.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
