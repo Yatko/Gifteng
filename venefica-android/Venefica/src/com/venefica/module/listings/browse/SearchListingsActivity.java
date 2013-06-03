@@ -591,7 +591,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), Constants.PREF_DEF_VAL_MAX_PRICE))));
 		filter.setMinPrice(new BigDecimal(
 				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_min), Constants.PREF_DEF_VAL_MIN_PRICE))));
-//		filter.setWanted(false);
+		filter.setIncludeOwned(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
 		Long cat = prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
@@ -674,7 +674,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	 * @param description
 	 */
 	private void updateMap(Location location){
-		if (isMapShown ) {
+		if (isMapShown && location != null) {
 			GeoPoint currLoc = new GeoPoint((int)(location.getLatitude() * 1E6), (int)(location.getLongitude() * 1E6));
 			mapController.animateTo(currLoc);
 			ListingOverlayItem overlayItem = new ListingOverlayItem(currLoc, getResources().getString(R.string.g_hint_current_location), ""
