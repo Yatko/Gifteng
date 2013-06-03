@@ -261,7 +261,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		mapView.setTraffic(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(14); // Zoom 1 is world view
+		mapController.setZoom(18); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
@@ -461,7 +461,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 				listing.setCanMarkAsSpam(true);
 			}else if(ERROR_CODE == Constants.RESULT_REQUEST_AD_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_request_ad_success);
-			}else if(ERROR_CODE == Constants.RESULT_REQUEST_AD_SUCCESS){
+			}else if(ERROR_CODE == Constants.RESULT_CANCEL_REQUEST_SUCCESS){
 				message = (String) getResources().getText(R.string.g_msg_cancel_request_ad_success);
 			}else if(ERROR_CODE == Constants.ERROR_RESULT_REQUEST_AD || ERROR_CODE == Constants.ERROR_RESULT_CANCEL_REQUEST){
 				message = (String) getResources().getText(R.string.g_error);
@@ -485,10 +485,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
      */
 	private void setDetails(AdDto listing) {
 		if (!listing.isOwner()) {
-			layRequest.setVisibility(ViewGroup.VISIBLE);			
-		} /*else {
-			listing.setCreator(((VeneficaApplication) getApplication()).getUser());
-		}*/
+			layRequest.setVisibility(ViewGroup.VISIBLE);
+			btnFollow.setVisibility(View.VISIBLE);
+			btnSendMsg.setVisibility(View.VISIBLE);
+		} else {
+			btnFollow.setVisibility(View.GONE);
+			btnSendMsg.setVisibility(View.GONE);
+		}
 		//Show on map
 		updateMap(listing.getAddress().getLatitude(), listing.getAddress().getLongitude()
 				, listing.getTitle(), listing.getDescription(), listing.getId()
@@ -681,8 +684,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					wrapper = wsAction.requestListing(((VeneficaApplication)getApplication()).getAuthToken()
 							, listing.getId());
 				}else if (params[0].equals(ACT_MODE_CANCEL_REQUEST_AD)) {
-					wrapper = wsAction.cancelRequestForListing(((VeneficaApplication)getApplication()).getAuthToken()
-							, listing.getId());
+//					wrapper = wsAction.cancelRequestForListing(((VeneficaApplication)getApplication()).getAuthToken()
+//							, listing.getId());
 				}
 			}catch (IOException e) {
 				Log.e("ListingDetailsTask::doInBackground :", e.toString());
@@ -771,7 +774,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		messageDto.setText(edtMessage.getText().toString());
 		messageDto.setToName(listing.getCreator().getName());
 		messageDto.setToFullName(listing.getCreator().getFirstName() +" "+listing.getCreator().getLastName());
-		messageDto.setToAvatarUrl(listing.getCreator().getAvatar().getUrl());
+		messageDto.setToAvatarUrl(listing.getCreator().getAvatar() != null && listing.getCreator().getAvatar().getUrl()!= null 
+				?listing.getCreator().getAvatar().getUrl() : "/url_null");
 		return messageDto;
 	}
 	
@@ -826,6 +830,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			//start rating activity
 			Intent reviewIntent = new Intent(this, RatingActivity.class);
 			reviewIntent.putExtra("ad_id", selectedListingId);
+			reviewIntent.putExtra("to_user_id", listing.getCreator().getId());
 			startActivity(reviewIntent);
 		} else if (id == R.id.layActListingDetailUserDetails && listing!= null) {
 			Intent accountIntent = new Intent(ListingDetailsActivity.this, ProfileDetailActivity.class);
