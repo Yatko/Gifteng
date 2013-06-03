@@ -64,7 +64,7 @@ public class BusinessUserData  extends UserData {
         if ( addresses != null && !addresses.isEmpty() ) {
             List<AddressDto> addressesDto = new LinkedList<AddressDto>();
             for ( AddressWrapper addressWrapper : addresses ) {
-                addressesDto.add(new AddressDto(addressWrapper.getAddress()));
+                addressesDto.add(new AddressDto(addressWrapper));
             }
             userDto.setAddresses(addressesDto);
         }

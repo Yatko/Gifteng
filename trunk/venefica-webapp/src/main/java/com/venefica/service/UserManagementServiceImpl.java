@@ -189,10 +189,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         
         UserDto userDto = new UserDto(user);
-        if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(currentUser.inFollowers(user));
-            userDto.setInFollowings(currentUser.inFollowings(user));
-        }
+        populateRelations(userDto, currentUser, user);
         return userDto;
     }
     
@@ -208,10 +205,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         
         UserDto userDto = new UserDto(user);
-        if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(currentUser.inFollowers(user));
-            userDto.setInFollowings(currentUser.inFollowings(user));
-        }
+        populateRelations(userDto, currentUser, user);
         return userDto;
     }
     
@@ -227,10 +221,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         
         UserDto userDto = new UserDto(user);
-        if ( !currentUser.equals(user) ) {
-            userDto.setInFollowers(currentUser.inFollowers(user));
-            userDto.setInFollowings(currentUser.inFollowings(user));
-        }
+        populateRelations(userDto, currentUser, user);
         return userDto;
     }
 
@@ -271,10 +262,14 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     public List<UserDto> getFollowers(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
         User user = validateUser(userId);
+        User currentUser = getCurrentUser();
         
         if ( user.getFollowers() != null ) {
             for ( User follower : user.getFollowers() ) {
-                result.add(new UserDto(follower));
+                UserDto userDto = new UserDto(follower);
+                populateRelations(userDto, currentUser, follower);
+                
+                result.add(userDto);
             }
         }
         
@@ -286,10 +281,14 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     public List<UserDto> getFollowings(Long userId) throws UserNotFoundException {
         List<UserDto> result = new LinkedList<UserDto>();
         User user = validateUser(userId);
+        User currentUser = getCurrentUser();
         
         if ( user.getFollowings() != null ) {
             for ( User following : user.getFollowings()) {
-                result.add(new UserDto(following));
+                UserDto userDto = new UserDto(following);
+                populateRelations(userDto, currentUser, following);
+                
+                result.add(userDto);
             }
         }
         
@@ -334,5 +333,13 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new GeneralException("Category with id = " + categoryId + " not found!");
         }
         return category;
+    }
+    
+    private void populateRelations(UserDto userDto, User currentUser, User user) {
+        //populates only when the user and currentUser is not the same person
+        if ( !currentUser.equals(user) ) {
+            userDto.setInFollowers(currentUser.inFollowers(user));
+            userDto.setInFollowings(currentUser.inFollowings(user));
+        }
     }
 }

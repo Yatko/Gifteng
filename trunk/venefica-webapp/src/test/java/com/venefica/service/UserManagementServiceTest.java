@@ -299,6 +299,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     
     private static UserDto createUserDto(String name) {
         AddressDto address = new AddressDto();
+        address.setName("Main location");
         address.setZipCode("123");
         
         UserDto userDto = new UserDto();
