@@ -257,11 +257,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}
 		});
 		// satellite or 2d mode
-		mapView.setSatellite(false);
-		mapView.setTraffic(true);
+		mapView.setSatellite(true);
+		mapView.setTraffic(false);
 		
         mapController = mapView.getController();
-		mapController.setZoom(18); // Zoom 1 is world view
+		mapController.setZoom(19); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
@@ -352,9 +352,11 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 							|| ERROR_CODE == Constants.ERROR_RESULT_GET_LISTING_DETAILS
 							|| ERROR_CODE == Constants.ERROR_NETWORK_CONNECT) {
 						finish();
-					}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS) {
+					}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS 
+							|| ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS 
+							|| ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS) {
 						new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
-					}
+					} 
 				}
 			});			
 			AlertDialog aDialog = builder.create();
