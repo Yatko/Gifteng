@@ -1445,7 +1445,7 @@ public class WSAction {
 			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
 			Object obj = envelope.getResponse();
 			if (obj == null) {
-				result.result = Constants.ERROR_NO_DATA;
+				result.result = Constants.RESULT_GET_FOLLOWERS_SUCCESS;
 			}else if (obj instanceof UserDto){
 				result.followers = new ArrayList<UserDto>();
 				result.followers.add((UserDto)obj);
@@ -1492,7 +1492,7 @@ public class WSAction {
 			
 			Object response = envelope.getResponse();
 			if (response == null) {
-				result.result = Constants.ERROR_NO_DATA;
+				result.result = Constants.RESULT_GET_FOLLOWINGS_SUCCESS;
 			} else if (response instanceof UserDto){
 				result.followings = new ArrayList<UserDto>();
 				result.followings.add((UserDto)response);
