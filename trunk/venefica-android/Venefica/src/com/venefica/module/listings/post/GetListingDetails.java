@@ -180,11 +180,11 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			}
 		});
 		// satellite or 2d mode
-		mapView.setSatellite(false);
-		mapView.setTraffic(true);
+		mapView.setSatellite(true);
+		mapView.setTraffic(false);
 		
         mapController = mapView.getController();
-		mapController.setZoom(14); // Zoom 1 is world view
+		mapController.setZoom(19);  // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
