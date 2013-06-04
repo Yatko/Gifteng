@@ -137,7 +137,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setTitle("Test");
         adDto.setDescription("Test description");
         adDto.setPrice(new BigDecimal(5.0));
-        adDto.setAddress(new AddressDto(new Double(5.0), new Double(1.0)));
+        adDto.setAddress(new AddressDto(new Double(1.0), new Double(5.0)));
         adDto.setImage(new ImageDto(ImageType.JPEG, new byte[]{0x01, 0x02, 0x03}));
 
         Long adId = client.placeAd(adDto);
@@ -443,12 +443,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     public void getAdsExTest() {
         authenticateClientAsFirstUser();
 
-        FilterDto filter = new FilterDto();
         LinkedList<Long> categories = new LinkedList<Long>();
         categories.add(new Long(1));
         categories.add(new Long(2));
+        
+        FilterDto filter = new FilterDto();
         filter.setCategories(categories);
-
         filter.setDistance(new Long(100));
         filter.setMaxPrice(new BigDecimal("5.3"));
         filter.setHasPhoto(true);
@@ -458,6 +458,30 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
                 && ads.size() > 0);
     }
 
+    @Test
+    public void getAdsExLocationTest() throws AdValidationException {
+        authenticateClientAsFirstUser();
+        
+        AdDto adDto = new AdDto();
+        adDto.setCategoryId(new Long(1));
+        adDto.setTitle("Location test");
+        adDto.setDescription("Location test description");
+        adDto.setPrice(new BigDecimal(5.0));
+        adDto.setAddress(new AddressDto(new Double("77.4604016"), new Double("20.7445253")));
+        
+        Long adId = client.placeAd(adDto);
+        assertNotNull("The id of the ad must be returned!", adId);
+        
+        FilterDto filter = new FilterDto();
+        filter.setLongitude(new Double("77.0256938"));
+        filter.setLatitude(new Double("20.7118088"));
+        filter.setDistance(new Long(50));
+        
+        List<AdDto> ads = client.getAds(new Long(-1), 10, filter);
+        assertTrue("There must be at least one ad in the collection.", ads != null && ads.size() == 1);
+        assertEquals(adId, ads.get(0).getId());
+    }
+    
     @Test
     @Transactional
     public void transactionalTest() {

@@ -39,23 +39,23 @@ public class AddressDto {
     private String zipCode;
     
     // in,out
-    private Double latitude;
-    // in,out
     private Double longitude;
+    // in,out
+    private Double latitude;
     
     // WARNING: required for JAX-WS
     public AddressDto() {
     }
     
-    public AddressDto(Double latitude, Double longitude) {
-        this.latitude = latitude;
+    public AddressDto(Double longitude, Double latitude) {
         this.longitude = longitude;
+        this.latitude = latitude;
     }
     
     public AddressDto(Point location) {
-         //the longitude-Y and longitude-X is not a mistake
-        this.latitude = location.getY();
+         //the longitude-X and latitude-Y is not a mistake
         this.longitude = location.getX();
+        this.latitude = location.getY();
     }
     
     public AddressDto(Address address) {
@@ -75,8 +75,8 @@ public class AddressDto {
     }
     
     public Point getLocation() {
-        if (latitude != null && longitude != null) {
-            Point location = GeoUtils.createPoint(latitude, longitude);
+        if (longitude != null && latitude != null) {
+            Point location = GeoUtils.createPoint(longitude, latitude);
             return location;
         }
         return null;

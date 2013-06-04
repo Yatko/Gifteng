@@ -12,11 +12,11 @@ public class GeoUtils {
     private static final GeometryFactory GEOM_FACTORY = new GeometryFactory(new PrecisionModel(), SRID);
     // @formatter:on
 
-    public static Point createPoint(Coordinate coordinate) {
-        return GEOM_FACTORY.createPoint(coordinate);
-    }
-
-    public static Point createPoint(Double latitude, Double longitude) {
+    public static Point createPoint(Double longitude, Double latitude) {
         return createPoint(new Coordinate(longitude, latitude));
+    }
+    
+    private static Point createPoint(Coordinate coordinate) {
+        return GEOM_FACTORY.createPoint(coordinate);
     }
 }
