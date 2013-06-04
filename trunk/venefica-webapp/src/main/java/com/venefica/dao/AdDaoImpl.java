@@ -144,8 +144,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameterList("categories", categories);
         }
 
-        if (distance != null && distance > 0 && latitude != null && longitude != null) {
-            Point curPositon = GeoUtils.createPoint(latitude, longitude);
+        if (distance != null && distance > 0 && longitude != null && latitude != null) {
+            Point curPositon = GeoUtils.createPoint(longitude, latitude);
             //Double distanceInDecimalDegrees = distance.doubleValue() / METERS_IN_ONE_DEGREE;
             Double distanceInDecimalDegrees = distance.doubleValue();
             query.setParameter("curpos", curPositon, GeometryType.INSTANCE);
@@ -241,13 +241,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     private String createSqlPartForMysql(FilterDto filter) {
         String queryStr = "";
         if ( isDataValidForDWithin(filter) ) {
-            //queryStr += " and round(glength(linestringfromwkb(linestring(asbinary(a.location), asbinary(:curpos))))) <= :maxdist";
-            //queryStr += " and round(glength(linestringfromwkb(linestring(GeomFromText(astext(a.location)), GeomFromText(astext(:curpos)))))) <= :maxdist";
-            
             //NOTE:
             //It's possible that the returning (calculated distance) value to be in degrees.
             //If so use a conversion into km or m
-            queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.adData.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
+            
+            //queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.adData.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
+            queryStr += " and glength(linestring(a.adData.location, GeomFromText(astext(:curpos)))) <= :maxdist";
         }
         return queryStr;
     }
