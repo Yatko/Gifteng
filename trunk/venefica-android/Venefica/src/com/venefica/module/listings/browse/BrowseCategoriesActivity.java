@@ -2,6 +2,7 @@ package com.venefica.module.listings.browse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -17,14 +18,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.CategoryDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
@@ -34,7 +41,7 @@ import com.venefica.utils.VeneficaApplication;
  * @author avinash
  * Activity to search by Categories
  */
-public class BrowseCategoriesActivity extends VeneficaActivity {
+public class BrowseCategoriesActivity extends VeneficaActivity implements OnClickListener {
 
 	/**
 	 * List to show Categories
@@ -66,6 +73,14 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 	private int ERROR_CODE;
 	private WSAction wsAction;
 	
+	private CheckBox chkMember, chkBusiness;
+	private Button btnSave;
+	private boolean isWorking;
+	/**
+	 * Shared Preferences
+	 */
+	SharedPreferences prefs;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -73,8 +88,13 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_browse_categories);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                
+        
+        //get preferences
+        prefs = getSharedPreferences(Constants.VENEFICA_PREFERENCES, Activity.MODE_PRIVATE);
         listViewCategories = (ListView) findViewById(R.id.listActBrowseCatCategories);
+        TextView textViewFooter = new TextView(this);
+        textViewFooter.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.FILL_PARENT, Utility.convertDpToPixel(this, 60)));
+        listViewCategories.addFooterView(textViewFooter);
 		listViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int index,
@@ -108,7 +128,18 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 //        categories = getCategories();// Demo data
 		categories = new ArrayList<CategoryDto>();
         categoriesListAdapter = new CategoryListAdapter(this, categories);
+        categoriesListAdapter.setForFilterScreen(true);
         listViewCategories.setAdapter(categoriesListAdapter);
+        
+        //save button
+        btnSave = (Button) findViewById(R.id.btnActBrowseCatCategoriesSave);
+        btnSave.setOnClickListener(this);
+        //AdType
+        chkMember = (CheckBox) findViewById(R.id.chkActBrowseCatMember); 
+        chkBusiness = (CheckBox) findViewById(R.id.chkActBrowseCatBusiness);
+        chkMember.setChecked(prefs.getBoolean(Constants.PREF_KEY_MEMBER, false));
+        chkBusiness.setChecked(prefs.getBoolean(Constants.PREF_KEY_BUSINESS, false));
+        
         CURRENT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_SAVE_CATEGORY_PREF);
         //Download categories list
         if (WSAction.isNetworkConnected(this)) {
@@ -189,6 +220,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 //			showDialog(D_PROGRESS);
+			isWorking = true;
 			setSupportProgressBarIndeterminateVisibility(true);
 		}
 		@Override
@@ -212,6 +244,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 		
 		protected void onPostExecute(BrowseCatResultWrapper result) {
 //			dismissDialog(D_PROGRESS);
+			isWorking = false;
 			setSupportProgressBarIndeterminateVisibility(false);
 			if(result.categories == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
@@ -220,7 +253,36 @@ public class BrowseCategoriesActivity extends VeneficaActivity {
 					&& result.categories.size() > 0) {
 				categories.clear();
 				categories.addAll(result.categories);
+				categoriesListAdapter.setSelectedPositions(getSelectedCategories());
 				categoriesListAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	/** Get saved categories
+	 * @return
+	 */
+	private ArrayList<Long> getSelectedCategories(){
+		String catString = prefs.getString(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
+		if (catString.equals(Constants.PREF_DEF_VAL_CATEGORY)) {
+			return new ArrayList<Long>();
+		} else {
+			return Utility.getListFromString(catString);
+		}		
+	}
+	@Override
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.btnActBrowseCatCategoriesSave) {
+			if (isWorking) {
+				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
+			} else {
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putBoolean(Constants.PREF_KEY_MEMBER, chkMember.isChecked());
+				editor.putBoolean(Constants.PREF_KEY_BUSINESS, chkBusiness.isChecked());
+				editor.putString(Constants.PREF_KEY_CATEGORY_ID, Utility.getStringFromList(categoriesListAdapter.getSelectedPositions()));
+				editor.commit();
+				finish();
 			}
 		}
 	}

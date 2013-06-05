@@ -248,8 +248,8 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 			}
 		});
         mapView.setBuiltInZoomControls(true);
-        mapView.setTraffic(true);
-        mapView.setSatellite(false);
+        mapView.setTraffic(false);
+        mapView.setSatellite(true);
         mapController = mapView.getController();
         mapController.setZoom(16);
         
@@ -594,15 +594,24 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 		filter.setIncludeOwned(false);
 		filter.setSearchString(searchView.getText().toString());
 		filter.setHasPhoto(true);
-		Long cat = prefs.getLong(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
-		//Load all if no category set
-		if (cat == Constants.PREF_DEF_VAL_CATEGORY) {
+			
+		String catString = prefs.getString(Constants.PREF_KEY_CATEGORY_ID, Constants.PREF_DEF_VAL_CATEGORY);
+		if (catString.equals(Constants.PREF_DEF_VAL_CATEGORY)) {
 			filter.setCategories(null);
 		} else {
 			List<Long> cats = new ArrayList<Long>();
-			cats.add(cat);		
+			cats.addAll(Utility.getListFromString(catString));		
 			filter.setCategories(cats);
-		}		
+		}
+		
+		if ((prefs.getBoolean(Constants.PREF_KEY_MEMBER, false) && prefs.getBoolean(Constants.PREF_KEY_BUSINESS, false))
+				|| (!prefs.getBoolean(Constants.PREF_KEY_MEMBER, false) && !prefs.getBoolean(Constants.PREF_KEY_BUSINESS, false))) {
+			filter.setType(null);
+		} else if (prefs.getBoolean(Constants.PREF_KEY_MEMBER, false)) {
+			filter.setType(AdType.MEMBER);
+		} else if (prefs.getBoolean(Constants.PREF_KEY_BUSINESS, false)) {
+			filter.setType(AdType.BUSINESS);
+		}
 	}
 	
 	@Override
@@ -620,8 +629,9 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getTitle().toString().equalsIgnoreCase(getResources().getString(R.string.label_search_setting))) {
-			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-			settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_FILTER_SETTINGS);
+//			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+//			settingsIntent.putExtra("act_mode",SettingsActivity.ACT_MODE_FILTER_SETTINGS);
+			Intent settingsIntent = new Intent(getApplicationContext(), BrowseCategoriesActivity.class);
 	    	startActivity(settingsIntent);
 		} 
 		return super.onOptionsItemSelected(item);

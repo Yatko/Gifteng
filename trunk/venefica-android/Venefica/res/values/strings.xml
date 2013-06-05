@@ -48,6 +48,9 @@
     <string name="g_label_send_msg">SEND MESSAGE</string>
     <string name="g_label_like">Like</string>
     <string name="g_label_dislike">Dislike</string>
+    <string name="g_label_from_members">Gift from Members</string>
+    <string name="g_label_from_business">Gift from Business</string>
+    <string name="g_label_save_settings">Save Settings</string>
 
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
@@ -415,9 +418,9 @@
     <!-- codes -->
     <string name="code_category_other">other</string>
     <!-- Debug key -->
-    <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string>
+    <!-- <string name="google_map_api_key">0ElieL9os3eqSJ1K6tA2CndyWDmWa-NqqXr56Kw</string> -->
     <!-- Release key -->
-    <!-- <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string> -->
+    <string name="google_map_api_key">0ElieL9os3erYMNcR9jThm1lsWL7xw-RD0IbkGQ</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_rating">Rating &amp; Review by</string>
