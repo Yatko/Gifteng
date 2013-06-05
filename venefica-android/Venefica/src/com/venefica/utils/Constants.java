@@ -199,6 +199,8 @@ public class Constants
 	public static final String PREF_KEY_PASSWORD = "password";
 	public static final String PREF_KEY_LOGIN_TYPE = "login_type";
 	public static final String PREF_KEY_CATEGORY_ID = "cat_id";
+	public static final String PREF_KEY_MEMBER = "member";
+	public static final String PREF_KEY_BUSINESS = "business";
 	public static final String PREF_KEY_CATEGORY = "category";
 	
 	//Shared prefs values
@@ -214,7 +216,7 @@ public class Constants
 	public static final int PREF_DEF_VAL_MILES = 50;
 	public static final String PREF_DEF_VAL_MAX_PRICE = "5000000";
 	public static final String PREF_DEF_VAL_MIN_PRICE = "0";
-	public static final int PREF_DEF_VAL_CATEGORY = -1;	
+	public static final String PREF_DEF_VAL_CATEGORY = "";	
 	
 	public static final int EXPIRE_AD_IN_DAYS = 60;
 			
