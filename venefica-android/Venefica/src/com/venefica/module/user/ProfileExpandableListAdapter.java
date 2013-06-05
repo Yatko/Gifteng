@@ -113,6 +113,7 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter impl
 
 	@Override
 	public int getGroupCount() {
+		System.out.println("Group size : "+ profileGroups.size());
 		return profileGroups.size();
 	}
 
