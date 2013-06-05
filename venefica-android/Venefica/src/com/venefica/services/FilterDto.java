@@ -131,9 +131,10 @@ public class FilterDto implements KvmSerializable
 			case 8:
 				info.name = "includeOwned";
 				info.type = Boolean.class;
+				break;
 			case 9:
 				info.name = "type";
-				info.type = String.class;
+				info.type = AdType.class;
 				break;
 			default:
 				break;
@@ -179,6 +180,7 @@ public class FilterDto implements KvmSerializable
 					break; 
 				case 9:
 					type = AdType.valueOf(value.toString());
+					break; 
 			}
 		}
 		catch (Exception e)
