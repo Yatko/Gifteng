@@ -65,6 +65,11 @@ public class FilterDto implements KvmSerializable
 				return searchString;
 			case 8:
 				return includeOwned;
+			case 9:
+				if (type != null)
+					return type.name();
+				else
+					return null;
 		}
 
 		return null;
@@ -72,7 +77,7 @@ public class FilterDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 9;
+		return 10;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -126,6 +131,10 @@ public class FilterDto implements KvmSerializable
 			case 8:
 				info.name = "includeOwned";
 				info.type = Boolean.class;
+			case 9:
+				info.name = "type";
+				info.type = String.class;
+				break;
 			default:
 				break;
 		}
@@ -168,6 +177,8 @@ public class FilterDto implements KvmSerializable
 				case 8:
 					includeOwned = Boolean.valueOf(value.toString());
 					break; 
+				case 9:
+					type = AdType.valueOf(value.toString());
 			}
 		}
 		catch (Exception e)
@@ -324,5 +335,19 @@ public class FilterDto implements KvmSerializable
 	 */
 	public void setIncludeOwned(Boolean includeOwned) {
 		this.includeOwned = includeOwned;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public AdType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(AdType type) {
+		this.type = type;
 	}
 }
