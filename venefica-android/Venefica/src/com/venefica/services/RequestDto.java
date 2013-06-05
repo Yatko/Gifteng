@@ -13,6 +13,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import android.util.Log;
 
 import com.venefica.module.user.UserDto;
+import com.venefica.services.AdDto.AdType;
 import com.venefica.utils.Constants;
 
 
@@ -36,6 +37,7 @@ public class RequestDto implements KvmSerializable {
     private RequestStatus status;
     private ImageDto image;
     private ImageDto imageThumbnail;
+    private AdType type;
 	/* (non-Javadoc)
 	 * @see org.ksoap2.serialization.KvmSerializable#getProperty(int)
 	 */
@@ -59,6 +61,11 @@ public class RequestDto implements KvmSerializable {
 			return image;
 		case 6:
 			return imageThumbnail;
+		case 7:
+			if (type != null)
+				return type.name();
+			else
+				return null;
 		}
 		return null;
 	}
@@ -69,7 +76,7 @@ public class RequestDto implements KvmSerializable {
 	@Override
 	public int getPropertyCount() {
 		// TODO Auto-generated method stub
-		return 7;
+		return 8;
 	}
 
 	@Override
@@ -98,6 +105,9 @@ public class RequestDto implements KvmSerializable {
 					break;
 				case 6:
 					imageThumbnail = (ImageDto)value;
+					break;
+				case 7:
+					type = AdType.valueOf(value.toString());
 					break;
 			}
 		}catch (Exception e){
@@ -139,6 +149,10 @@ public class RequestDto implements KvmSerializable {
 			case 6:
 				info.name = "imageThumbnail";
 				info.type = ImageDto.class;
+				break;
+			case 7:
+				info.name = "type";
+				info.type = AdType.class;
 				break;
 		}
 	}
@@ -251,6 +265,20 @@ public class RequestDto implements KvmSerializable {
 	 */
 	public void setImageThumbnail(ImageDto imageThumbnail) {
 		this.imageThumbnail = imageThumbnail;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public AdType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(AdType type) {
+		this.type = type;
 	}
 
 }
