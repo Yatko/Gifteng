@@ -467,6 +467,19 @@
             android:layout_marginBottom="7dp"
             android:hint="@string/label_country"
             android:inputType="text" />
+        
+        <Button
+            android:id="@+id/btnActProfileSave"
+            style="?ButtonRoundCorner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/edtActProfileCountry"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/g_label_save" />
     </RelativeLayout>
 
 </ScrollView>

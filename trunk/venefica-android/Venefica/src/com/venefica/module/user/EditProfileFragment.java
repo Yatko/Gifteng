@@ -54,6 +54,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 		 */
 		public void onDateEdit();
 		public void onChangePassword();
+		public void onSaveButtonClick();
 	}
 	private OnEditProfileListener onEditProfileListener;
 	/**
@@ -66,7 +67,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 	/**
 	 * Buttons for profile selection and signup
 	 */
-	private Button btnSelProfileImg, btnResetPassword;
+	private Button btnSelProfileImg, btnResetPassword, btnSave;
 	private ImageView imageView;
 	private RadioGroup genderRadioGroup;
 	/**
@@ -119,6 +120,8 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
         btnResetPassword = (Button) view.findViewById(R.id.btnActProfileChangePassword);
         btnResetPassword.setOnClickListener(this);
         
+        btnSave =  (Button) view.findViewById(R.id.btnActProfileSave);
+        btnSave.setOnClickListener(this);
         txtMemberSince = (TextView)view.findViewById(R.id.txtActProfileMemberFrom);
         imageView = (ImageView) view.findViewById(R.id.imgActProfileProfileImg);
         
@@ -389,6 +392,9 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 		} else if (id == R.id.btnActProfileChangePassword) {
 			//show change password dialog
 			onEditProfileListener.onChangePassword();
+		} else if (id == R.id.btnActProfileSave) {
+			//save
+			onEditProfileListener.onSaveButtonClick();
 		}
 		
 	}	
