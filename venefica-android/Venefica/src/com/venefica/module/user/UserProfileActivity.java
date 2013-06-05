@@ -13,7 +13,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.DatePicker;
 
@@ -25,7 +24,6 @@ import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.user.ChangePasswordDialogFragment.OnChangePasswordDialogListener;
 import com.venefica.module.user.EditProfileFragment.OnEditProfileListener;
-import com.venefica.module.utils.InputFieldValidator;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -94,12 +92,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
         setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.activity_user_profile);
 		ACT_MODE = getIntent().getIntExtra("act_mode", ACT_MODE_EDIT_PROFILE);
-		
-		/*FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		viewProfileDetailsFragment = new ViewProfileDetailsFragment();
-		fragmentTransaction.add(R.id.layActUserProfieRoot, viewProfileDetailsFragment);
-		fragmentTransaction.commit();*/
-		
+			
 		editProfileFragment = new EditProfileFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.layActUserProfieRoot, editProfileFragment).commit();
 		isEditFragDisplayed = true;
@@ -114,10 +107,8 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (ACT_MODE == ACT_MODE_VIEW_PROFILE) {
-//			menu.findItem(R.id.menu_edit_profile).setEnabled(true);
 			menu.findItem(R.id.menu_save_profile).setEnabled(false);
 		} else if (ACT_MODE == ACT_MODE_EDIT_PROFILE){
-//			menu.findItem(R.id.menu_edit_profile).setEnabled(false);
 			menu.findItem(R.id.menu_save_profile).setEnabled(true);
 		}		
 		return true;
@@ -140,12 +131,7 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
     		    	showDialog(D_ERROR);	 
     		    }
 			}			
-		}/* else if (itemId == R.id.menu_edit_profile) {
-			ACT_MODE = ACT_MODE_EDIT_PROFILE;
-			editProfileFragment = new EditProfileFragment();
-			getSupportFragmentManager().beginTransaction().replace(R.id.layActUserProfieRoot, editProfileFragment).addToBackStack(null).commit();
-			isEditFragDisplayed = true;
-		}*/
+		}
 		return true;
 	}
 	
@@ -320,5 +306,20 @@ public class UserProfileActivity extends VeneficaActivity implements OnEditProfi
 	@Override
 	public void onChangePassword() {
 		showEditDialog();
+	}
+
+	@Override
+	public void onSaveButtonClick() {
+		//update profile
+		if (!isWorking) {
+			if(WSAction.isNetworkConnected(this)){
+				if (editProfileFragment.validateFields()) {
+					new UserProfileTask().execute(ACT_MODE_UPDATE_PROF);
+				}
+			} else {
+		    	ERROR_CODE = Constants.ERROR_NETWORK_UNAVAILABLE;
+		    	showDialog(D_ERROR);	 
+		    }
+		}	
 	}
 }
