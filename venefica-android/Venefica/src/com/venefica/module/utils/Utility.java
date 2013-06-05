@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.ksoap2.transport.HttpTransportSE;
 import org.ksoap2.transport.HttpsTransportSE;
@@ -473,5 +477,39 @@ public class Utility {
 		c.add(Calendar.DAY_OF_YEAR, daysToShift);
 		date.setTime(c.getTimeInMillis());
 		return date;
+	}
+	
+	/**
+	 * Method to convert list to string
+	 * @param list
+	 * @return String
+	 */
+	public static String getStringFromList(ArrayList<Long> list) {
+		StringBuffer stringBuf = new StringBuffer();
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+//			Long long1 = (Long) iterator.next();
+			stringBuf.append((Long) iterator.next());
+			if(iterator.hasNext())
+				stringBuf.append(",");
+		}
+		/*for (Long value : list) {
+			stringBuf.append(value);
+			stringBuf.append(",");
+		}*/				
+		return stringBuf.toString();
+	}
+	
+	/**
+	 * Method to convert string to list
+	 * @param string String
+	 * @return ArrayList<Long> 
+	 */
+	public static ArrayList<Long> getListFromString(String string){
+		List<String> list = Arrays.asList(string.split("\\s*,\\s*"));
+		ArrayList<Long> longs = new ArrayList<Long>();
+		for (String value : list) {
+			longs.add(Long.parseLong(value));
+		}
+		return longs;
 	}
 }
