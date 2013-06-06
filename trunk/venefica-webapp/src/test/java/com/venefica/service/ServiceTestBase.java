@@ -73,23 +73,90 @@ public abstract class ServiceTestBase<T> {
     public ServiceTestBase(Class<? extends T> serviceClass) {
         this.serviceClass = serviceClass;
     }
+    
+    /**
+     * Inserts a new key/value pair into HTTP headers.
+     * 
+     * @param cxfClient 
+     * @param key
+     * @param value 
+     */
+    public static void addToHttpHeader(Client cxfClient, String key, Object value) {
+        Object headers = cxfClient.getRequestContext().get(Message.PROTOCOL_HEADERS);
+        if ( headers == null || !(headers instanceof Map) ) {
+            headers = new HashMap<String, List<?>>();
+        }
+        
+        ((Map) headers).put(key, Arrays.asList(value));
+        cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
+    }
+    
+    /**
+     * 
+     * @param <T>
+     * @param service 
+     */
+    public static <T> void configureTimeouts(T service) {
+        configureTimeouts(getCxfClient(service));
+    }
+    
+    /**
+     * 
+     * @param cxfClient 
+     */
+    public static void configureTimeouts(Client cxfClient) {
+        HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
+        httpConduit.getClient().setReceiveTimeout(120000);
+        httpConduit.getClient().setConnectionTimeout(120000);
+    }
+    
+    /**
+     * 
+     * @param <T>
+     * @param endpoint
+     * @param serviceClass
+     * @return 
+     */
+    public static <T> T createClient(String endpoint, Class<T> serviceClass) {
+        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+        factory.setAddress(endpoint);
+        factory.setServiceClass(serviceClass);
+        return (T) factory.create();
+    }
+    
+    /**
+     * 
+     * @param <T>
+     * @param service
+     * @return 
+     */
+    public static <T> Client getCxfClient(T service) {
+        Client cxfClient = ClientProxy.getClient(service);
+        return cxfClient;
+    }
+    
+    /**
+     * Adds authentication token to request headers of the underlying cxf
+     * client for the given service.
+     * 
+     * @param <T>
+     * @param service
+     * @param token 
+     */
+    public static <T> void authenticateClientWithToken(T service, String token) {
+        addToHttpHeader(getCxfClient(service), Constants.AUTH_TOKEN, token);
+    }
 
     @Before
     @SuppressWarnings("unchecked")
     public void initClientAndProxy() {
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setAddress(endpointAddress);
-        factory.setServiceClass(serviceClass);
-
-        client = (T) factory.create();
-        cxfClient = ClientProxy.getClient(client);
+        client = createClient(endpointAddress, serviceClass);
+        cxfClient = getCxfClient(client);
         
         //cxfClient.getRequestContext().put("schema-validation-enabled", "true");
         //cxfClient.getResponseContext().put("schema-validation-enabled", "true");
         
-        HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
-        httpConduit.getClient().setReceiveTimeout(120000);
-        httpConduit.getClient().setConnectionTimeout(120000);
+        configureTimeouts(cxfClient);
     }
 
     @Before
@@ -138,7 +205,7 @@ public abstract class ServiceTestBase<T> {
      * @param token
      */
     protected void authenticateClientWithToken(String token) {
-        addToHttpHeader(Constants.AUTH_TOKEN, token);
+        authenticateClientWithToken(client, token);
     }
 
     protected void authenticateClientAsFirstUser() {
@@ -164,22 +231,6 @@ public abstract class ServiceTestBase<T> {
 
     protected void rollbackTransaction(TransactionStatus status) {
         transactionManager.rollback(status);
-    }
-    
-    /**
-     * Inserts a new key/value pair into HTTP headers.
-     * 
-     * @param key
-     * @param value 
-     */
-    private void addToHttpHeader(String key, Object value) {
-        Object headers = cxfClient.getRequestContext().get(Message.PROTOCOL_HEADERS);
-        if ( headers == null || !(headers instanceof Map) ) {
-            headers = new HashMap<String, List<?>>();
-        }
-        
-        ((Map) headers).put(key, Arrays.asList(value));
-        cxfClient.getRequestContext().put(Message.PROTOCOL_HEADERS, headers);
     }
     
     /**
