@@ -198,7 +198,7 @@ public class Constants
 	public static final String PREF_KEY_LOGIN = "login_id";
 	public static final String PREF_KEY_PASSWORD = "password";
 	public static final String PREF_KEY_LOGIN_TYPE = "login_type";
-	public static final String PREF_KEY_CATEGORY_ID = "cat_id";
+	public static final String PREF_KEY_CATEGORY_ID = "cat_ids";
 	public static final String PREF_KEY_MEMBER = "member";
 	public static final String PREF_KEY_BUSINESS = "business";
 	public static final String PREF_KEY_CATEGORY = "category";
