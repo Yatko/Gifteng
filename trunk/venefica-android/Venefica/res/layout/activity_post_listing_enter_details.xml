@@ -62,7 +62,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:hint="@string/g_hint_postlisting_current_value"
-            android:inputType="numberDecimal" />
+            android:inputType="text" />
 
         <LinearLayout
             android:layout_width="match_parent"

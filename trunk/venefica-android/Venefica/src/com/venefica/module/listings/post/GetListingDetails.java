@@ -37,6 +37,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
 import com.venefica.module.listings.MapItemizedOverlay;
 import com.venefica.module.listings.browse.BrowseCatResultWrapper;
 import com.venefica.module.listings.browse.CategoryListAdapter;
@@ -120,6 +121,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	 */
 	private boolean isBackFromPreview = false;
 	private String selectedCategory = "";
+	private boolean setLocationManually = false;
 	/**
 	 * cover image position
 	 */
@@ -155,10 +157,12 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			edtTitle.setText(getIntent().getStringExtra(GetListingDetails.KEY_TITLE));
 			selectedCategory = getIntent().getStringExtra(GetListingDetails.KEY_CATEGORY);
 			edtDescription.setText(getIntent().getStringExtra(GetListingDetails.KEY_DESCRIPTION));
-			edtPrice.setText(getIntent().getStringExtra(GetListingDetails.KEY_CURRENT_VALUE));
+			edtPrice.setText("$");
+			edtPrice.append(getIntent().getStringExtra(GetListingDetails.KEY_CURRENT_VALUE));
 			isBackFromPreview = getIntent().getBooleanExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isBackFromPreview);
 			chePickUp.setChecked(getIntent().getBooleanExtra(GetListingDetails.KEY_PICKUP, true));
 			chkFreeShipping.setChecked(getIntent().getBooleanExtra(GetListingDetails.KEY_FREE_SHIPPING, true));
+			edtZip.setText(getIntent().getStringExtra(GetListingDetails.KEY_ZIP_CODE));
 		}
 		coverImagePosition = getIntent().getIntExtra(KEY_COVER_IMAGE, coverImagePosition);
 		btnNext = (Button) findViewById(R.id.btnActPostListingNextToPreview);
@@ -182,10 +186,24 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		// satellite or 2d mode
 		mapView.setSatellite(true);
 		mapView.setTraffic(false);
-		
+		mapView.setBuiltInZoomControls(true);
         mapController = mapView.getController();
-		mapController.setZoom(19);  // Zoom 1 is world view
-		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
+		mapController.setZoom(18);  // Zoom 1 is world view
+		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView){
+			@Override
+			public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+				//get location when user lifts the finger
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					GeoPoint touchedPoint = mapView.getProjection().fromPixels(
+							(int) event.getX(), (int) event.getY());
+					if (location != null && !setLocationManually) {
+						location.setLatitude(touchedPoint.getLatitudeE6() / 1E6);
+						location.setLongitude(touchedPoint.getLongitudeE6() / 1E6);											
+					}
+				}
+				return false;
+			}
+		}; 
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
 		overlayItems.setSnapToCenter(true);
@@ -286,6 +304,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	public void onLocationChanged(Location location) {
 		if (location != null) {
 			this.location = location;
+//			this.location.setLatitude(40.715);
+//			this.location.setLongitude(-74.0111);
 			updateMap(location);
 		}
 	}
@@ -343,22 +363,8 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			InputMethodManager imm = (InputMethodManager) GetListingDetails.this
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-			Intent intent = new Intent();
-			intent.putExtra(KEY_TITLE, edtTitle.getText().toString());
-			intent.putExtra(KEY_DESCRIPTION, edtDescription.getText().toString());
-			intent.putExtra(KEY_CATEGORY, categories.get(spinCategory.getSelectedItemPosition()).getName());
-			intent.putExtra(KEY_CATEGORY_ID, categories.get(spinCategory.getSelectedItemPosition()).getId());
-			intent.putExtra(KEY_CURRENT_VALUE, edtPrice.getText().toString());
-			intent.putExtra(KEY_ZIP_CODE, edtPrice.getText().toString());
-			if (location != null) {
-				intent.putExtra(KEY_LATITUDE, location.getLatitude());
-				intent.putExtra(KEY_LONGITUDE, location.getLongitude());
-			}
-			intent.putExtra(KEY_COVER_IMAGE, coverImagePosition);
-			intent.putExtra(KEY_IS_BACK_FROM_PREVIEW, false);
-			intent.putExtra(KEY_FREE_SHIPPING, chkFreeShipping.isChecked());
-			intent.putExtra(KEY_PICKUP, chePickUp.isChecked());
-			setResult(Activity.RESULT_OK, intent);
+			
+			setResult(Activity.RESULT_OK, getDataToPost());
 			finish();
 		}
 	}
@@ -373,21 +379,22 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
     		vaildator = new InputFieldValidator();    		
     	}
     	
-    	if(!vaildator.validateField(edtTitle, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    	if(edtTitle.getText().toString().trim().equals("")){
     		result = false;
-    		message.append(getResources().getString(R.string.label_postlisting_title).toString());
+    		message.append(getResources().getString(R.string.label_postlisting_listing_title).toString());
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_county_city_area));
     		message.append("\n");
     	}    	
-    	if(!vaildator.validateField(edtDescription, Pattern.compile(InputFieldValidator.COUNTY_CITY_AREA_PATTERN_REGX))){
+    	if(edtDescription.getText().toString().trim().equals("")){
     		result = false;
     		message.append(getResources().getString(R.string.label_postlisting_description).toString());
     		message.append("- ");
-    		message.append(getResources().getString(R.string.msg_validation_county_city_area));
+    		message.append(getResources().getString(R.string.msg_validation_not_empty));
     		message.append("\n");
     	}
-    	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.PRICE_PATTERN_REGX))){
+    	if(!vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.PRICE_PATTERN_REGX))
+    			&& !vaildator.validateField(edtPrice, Pattern.compile(InputFieldValidator.PRICE_PATTERN_REGX_$))){
     		result = false;
     		message.append(getResources().getString(R.string.label_postlisting_price).toString());
     		message.append("- ");
@@ -397,7 +404,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
     	if(!vaildator.validateField(edtZip, Pattern.compile(InputFieldValidator.ZIP_PATTERN_REGX))
     			|| edtZip.getText().toString().length() < Constants.ZIP_CODE_LENGTH){
     		result = false;
-    		message.append(edtZip.getText().toString());
+    		message.append(getResources().getString(R.string.label_zip));
     		message.append("- ");
     		message.append(getResources().getString(R.string.msg_validation_zipcode));
     		message.append("\n");
@@ -463,6 +470,28 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 		}
 	}
 
+	/**
+	 * Get intent to set as result
+	 * @return intent Intent 
+	 */
+	private Intent getDataToPost(){
+		Intent intent = new Intent();
+		intent.putExtra(KEY_TITLE, edtTitle.getText().toString());
+		intent.putExtra(KEY_DESCRIPTION, edtDescription.getText().toString());
+		intent.putExtra(KEY_CATEGORY, categories.get(spinCategory.getSelectedItemPosition()).getName());
+		intent.putExtra(KEY_CATEGORY_ID, categories.get(spinCategory.getSelectedItemPosition()).getId());
+		intent.putExtra(KEY_CURRENT_VALUE, edtPrice.getText().toString());
+		intent.putExtra(KEY_ZIP_CODE, edtZip.getText().toString());
+		if (location != null) {
+			intent.putExtra(KEY_LATITUDE, location.getLatitude());
+			intent.putExtra(KEY_LONGITUDE, location.getLongitude());
+		}
+		intent.putExtra(KEY_COVER_IMAGE, coverImagePosition);
+		intent.putExtra(KEY_IS_BACK_FROM_PREVIEW, false);
+		intent.putExtra(KEY_FREE_SHIPPING, chkFreeShipping.isChecked());
+		intent.putExtra(KEY_PICKUP, chePickUp.isChecked());
+		return intent;
+	}
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View view, int position,
 			long id) {
@@ -477,5 +506,11 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void onBackPressed() {
+		// hide virtual keyboard					
+		setResult(Activity.RESULT_FIRST_USER, getDataToPost());
+		finish();
 	}
 }
