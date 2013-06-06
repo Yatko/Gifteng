@@ -45,9 +45,9 @@ public abstract class ServiceTestBase<T> {
     public static final String SECOND_USER_NAME = "second";
     public static final String THIRD_USER_NAME = "third";
     
-    protected final Class<? extends T> serviceClass;
     protected T client;
-    protected Client cxfClient;
+    private final Class<? extends T> serviceClass;
+    private Client cxfClient;
     
     @Inject
     private UserDao userDao;
@@ -78,7 +78,7 @@ public abstract class ServiceTestBase<T> {
     @SuppressWarnings("unchecked")
     public void initClientAndProxy() {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
-        factory.setAddress(getEndpointAddress());
+        factory.setAddress(endpointAddress);
         factory.setServiceClass(serviceClass);
 
         client = (T) factory.create();
@@ -102,15 +102,6 @@ public abstract class ServiceTestBase<T> {
         
         thirdUser = initUser(THIRD_USER_ID);
         thirdUserAuthToken = initAuthToken(THIRD_USER_ID);
-    }
-    
-    /**
-     * Returns the endpoint address of the service.
-     *
-     * @return
-     */
-    protected String getEndpointAddress() {
-        return endpointAddress;
     }
 
     /**
