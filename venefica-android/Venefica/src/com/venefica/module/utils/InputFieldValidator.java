@@ -36,7 +36,8 @@ public class InputFieldValidator {
 	 */
 	public static final String EMAIL_PATTERN_REGX = "([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})";
 	
-	public static final String PRICE_PATTERN_REGX = "[\\d,]+[\\.]+[\\d]+";
+	public static final String PRICE_PATTERN_REGX_$ = "\\$\\ ?[+-]?[0-9]{1,3}(?:,?[0-9])*(?:\\.[0-9]{1,2})?";
+	public static final String PRICE_PATTERN_REGX = "^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\\.[0-9]{2})?$";
 	/**
 	 * Method to validate EditField data for given pattern
 	 * @param edtField input field to validate

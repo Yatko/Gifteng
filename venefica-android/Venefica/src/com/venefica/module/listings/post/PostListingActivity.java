@@ -96,12 +96,12 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
-		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
+//		getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
 		setProgressBarIndeterminateVisibility(false);
 		
 		setContentView(R.layout.activity_post_listing);
@@ -225,13 +225,13 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			intent.putExtra(GetListingDetails.KEY_CATEGORY, listing.getCategory());
 			intent.putExtra(GetListingDetails.KEY_CATEGORY_ID, listing.getCategoryId());
 			intent.putExtra(GetListingDetails.KEY_CURRENT_VALUE, listing.getPrice().toString());
-//			intent.putExtra(GetListingDetails.KEY_ZIP_CODE, listing.get);
+			intent.putExtra(GetListingDetails.KEY_ZIP_CODE, listing.getAddress().getZipCode());
 //			intent.putExtra(GetListingDetails.KEY_LATITUDE, listing.getLatitude());
 //			intent.putExtra(GetListingDetails.KEY_LONGITUDE, listing.getLongitude());
 			intent.putExtra(GetListingDetails.KEY_COVER_IMAGE, coverImagePosition);	
 			intent.putExtra(GetListingDetails.KEY_IS_BACK_FROM_PREVIEW, isPreviewShown);	
 			intent.putExtra(GetListingDetails.KEY_IS_UPDATE_MODE
-					, CURRENT_MODE == ACT_MODE_UPDATE_LISTING ? true : false);
+					, /*CURRENT_MODE == ACT_MODE_UPDATE_LISTING ?*/ true /*: false*/);
 			intent.putExtra(GetListingDetails.KEY_FREE_SHIPPING, listing.getFreeShipping());
 			intent.putExtra(GetListingDetails.KEY_PICKUP, listing.getPickUp());
 		} else {			
@@ -262,7 +262,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 		isPreviewShown = false;
-		if (resultCode == Activity.RESULT_OK) {
+//		if (resultCode == Activity.RESULT_OK) {
 			//get listing data to post 
 			if (requestCode == REQ_GET_LISTING_DETAILS_TO_POST) {
 				Bundle data = intent.getExtras();
@@ -275,14 +275,15 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 				listing.setCategory(data.getString(GetListingDetails.KEY_CATEGORY));
 				listing.setDescription(data.getString(GetListingDetails.KEY_DESCRIPTION));
 				listing.setCategoryId(data.getLong(GetListingDetails.KEY_CATEGORY_ID));
-				listing.setPrice(new BigDecimal(data.getString(GetListingDetails.KEY_CURRENT_VALUE)));
+				String priceVal = data.getString(GetListingDetails.KEY_CURRENT_VALUE);
+				if (!priceVal.equals("")) {
+					listing.setPrice(new BigDecimal(priceVal.replace("$", "")));
+				}				
 				AddressDto addressDto = new AddressDto();
 				addressDto.setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
 				addressDto.setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
 				addressDto.setZipCode(data.getString(GetListingDetails.KEY_ZIP_CODE));
 				listing.setAddress(addressDto);
-//				listing.getAddress().setLatitude(data.getDouble(GetListingDetails.KEY_LATITUDE));
-//				listing.getAddress().setLongitude(data.getDouble(GetListingDetails.KEY_LONGITUDE));
 				listing.setFreeShipping(data.getBoolean(GetListingDetails.KEY_FREE_SHIPPING));
 				listing.setPickUp(data.getBoolean(GetListingDetails.KEY_PICKUP));
 				
@@ -304,11 +305,12 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 					coverImage = new ImageDto(getImageFromCache(Constants.PHOTO_URL_PREFIX + getImagesToUpdate().get(coverImagePosition).getUrl()));
 				}				
 				listing.setImage(coverImage);
-				
-				PostPreviewFragment postPreviewFragment = new PostPreviewFragment();
-				getSupportFragmentManager().beginTransaction().replace(R.id.layPostlistingMain, postPreviewFragment).addToBackStack(null).commit();
+				if (resultCode == Activity.RESULT_OK) {
+					PostPreviewFragment postPreviewFragment = new PostPreviewFragment();
+					getSupportFragmentManager().beginTransaction().replace(R.id.layPostlistingMain, postPreviewFragment).addToBackStack(null).commit();
+				}
 			}
-		}
+//		}
 	}
 	
 	/**
@@ -363,6 +365,7 @@ public class PostListingActivity extends VeneficaActivity implements OnPostImage
 	public void onPostButtonClick() {
 		if(WSAction.isNetworkConnected(PostListingActivity.this)){	
 			if (!uploadingData) {
+				uploadingData = true;
 				if(CURRENT_MODE == ACT_MODE_UPDATE_LISTING){
 					new PostListingTask().execute(ACT_MODE_UPDATE_LISTING);
 				}else if (CURRENT_MODE == ACT_MODE_POST_LISTING) {
