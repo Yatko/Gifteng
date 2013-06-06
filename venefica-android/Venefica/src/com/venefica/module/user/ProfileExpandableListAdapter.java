@@ -98,6 +98,12 @@ public class ProfileExpandableListAdapter extends BaseExpandableListAdapter impl
 		
 		userDetailViewHolder.btnFollow.setTag(profileGroups.get(groupPosition).getUsers().get(childPosition).isInFollowings());
 		userDetailViewHolder.btnFollow.setContentDescription(profileGroups.get(groupPosition).getUsers().get(childPosition).getId()+"");
+		if (profileGroups.get(groupPosition).getUsers().get(childPosition).getId() 
+				== ((VeneficaApplication) ((ProfileDetailActivity)this.context).getApplication()).getUser().getId()) {
+			userDetailViewHolder.btnFollow.setVisibility(View.GONE);
+		} else {
+			userDetailViewHolder.btnFollow.setVisibility(View.VISIBLE);
+		}
 		return convertView;
 	}
 
