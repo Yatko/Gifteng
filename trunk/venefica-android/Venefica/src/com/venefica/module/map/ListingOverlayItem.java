@@ -8,7 +8,7 @@ import com.google.android.maps.OverlayItem;
  * Overlay Item for listing to show on map
  */
 public class ListingOverlayItem extends OverlayItem {
-	private long listingId;
+	private long listingId = -1;
 	private String imgURL;
 	/**
 	 * @param point
