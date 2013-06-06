@@ -194,9 +194,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+//        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS);
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
+//        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
         getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         setContentView(R.layout.activity_listing_details);
@@ -259,9 +259,10 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		// satellite or 2d mode
 		mapView.setSatellite(true);
 		mapView.setTraffic(false);
+		mapView.setBuiltInZoomControls(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(19); // Zoom 1 is world view
+		mapController.setZoom(20); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
