@@ -223,7 +223,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         String queryStr = "";
         if ( isDataValidForDWithin(filter) ) {
             queryStr += " and dwithin(a.adData.location, :curpos, :maxdist) = true";
-            queryStr += " and x(a.adData.location) > 0 and y(a.adData.location) > 0";
+            queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
         }
         return queryStr;
     }
@@ -248,7 +248,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             
             //queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.adData.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
             queryStr += " and glength(linestring(a.adData.location, GeomFromText(astext(:curpos)))) <= :maxdist";
-            queryStr += " and x(a.adData.location) > 0 and y(a.adData.location) > 0";
+            queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
         }
         return queryStr;
     }
