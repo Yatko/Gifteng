@@ -3,10 +3,12 @@
  */
 package com.venefica.module.listings;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,6 @@ import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.utils.Utility;
 import com.venefica.services.AdDto;
-import com.venefica.services.CommentDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -41,6 +42,7 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 	private boolean isGridView;
 	private ViewHolder holder;
 	private TileButtonClickListener tileButtonClickListener;
+	private Location location;
 	public ListingListAdapter(Context context, List<AdDto> listings, boolean isGridView) {
 		this.context = context;
 		this.listings = listings;
@@ -79,6 +81,7 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			convertView = inflater.inflate(R.layout.view_listing_tile_item, parent, false);
 			holder.txtTitle = (TextView) convertView.findViewById(R.id.txtListingTileTitle);
 			holder.txtPrice = (TextView) convertView.findViewById(R.id.txtListingTilePrice);
+			holder.txtMiles = (TextView) convertView.findViewById(R.id.txtListingTileMiles);
 			holder.imgBtnShare = (ImageButton) convertView.findViewById(R.id.imgBtnListingTileShare);
 			holder.imgBtnShare.setOnClickListener(this);
 			holder.imgView = (ImageView) convertView.findViewById(R.id.imgListingTileBg);
@@ -111,8 +114,12 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 		holder.imgBtnComment.setTag(listings.get(position).isOwner());
 		holder.imgBtnFavourite.setContentDescription(listings.get(position).getId()+"");
 		holder.imgBtnFavourite.setTag(listings.get(position).isInBookmars());
-//		txtPrice.append(" ");
-//		txtPrice.append(listing.getCurrencyCode());
+		
+		if (location != null && listings.get(position).getAddress() != null) {			
+			holder.txtMiles.setText(getDistanceInMiles(listings.get(position)));
+			holder.txtMiles.append(context.getResources().getString(R.string.g_label_miles));
+		}		
+		
 		if (this.listings.get(position).getImage() != null) {
 			((VeneficaApplication) ((SearchListingsActivity)context).getApplication())
 				.getImgManager().loadImage(Constants.PHOTO_URL_PREFIX + this.listings.get(position).getImage().getUrl()
@@ -173,7 +180,7 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 		/**
 	     * Text view to show user details
 	     */
-	    TextView txtUserName, txtMemberInfo, txtAddress;
+	    TextView txtUserName, txtMemberInfo, txtAddress, txtMiles;
 		ImageButton imgBtnShare, imgBtnSendMsg, imgBtnFavourite, imgBtnComment;
 		Button btnFollow;
 		ImageView imgView, profImgView;
@@ -215,5 +222,29 @@ public class ListingListAdapter extends BaseAdapter implements OnClickListener{
 			
 		}
 	}
+	
+	/**
+	 * Set current location
+	 * @param location
+	 */
+	public void setCurrentLocation(Location location){
+		this.location = location;		
+	}
 
+	/**
+	 * Method to calculate distance of Ad location from current position
+	 * @param listing
+	 * @return distance of Ad location from current position
+	 */
+	private String getDistanceInMiles(AdDto listing) {
+		if (location != null && listing.getAddress() != null) {
+			Location location2 = new Location(location);
+			location2.setLatitude(listing.getAddress().getLatitude());
+			location2.setLongitude(listing.getAddress().getLongitude());
+			float distance = location.distanceTo(location2);
+			DecimalFormat df = new DecimalFormat("#.##");
+			return df.format(distance * 0.00062137119);
+		}
+		return "";
+	}
 }
