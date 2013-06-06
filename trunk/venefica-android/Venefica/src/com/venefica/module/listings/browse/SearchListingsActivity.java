@@ -181,6 +181,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	private boolean isOwner;
 	private EditText edtComment;
 	private ImageButton imgBtnSendComment;
+	private boolean isCustomSearch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -223,6 +224,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 						getFilterOptions();
 						lastAdId = -1;
 						isLoadOnScroll = false;
+						isCustomSearch = true;
 						// hide virtual keyboard
 						InputMethodManager imm = (InputMethodManager) SearchListingsActivity.this
 								.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -251,7 +253,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
         mapView.setTraffic(false);
         mapView.setSatellite(true);
         mapController = mapView.getController();
-        mapController.setZoom(16);
+        mapController.setZoom(17);
         
         //Toggle Button to view Tiles
         txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
@@ -584,9 +586,15 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 		filter = new FilterDto();		
 		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), Constants.PREF_DEF_VAL_MILES));
 		if (location != null) {
-			filter.setLatitude(new Double(location.getLatitude()));
-			filter.setLongitude(new Double(location.getLongitude()));
-		}		
+//			if (!isCustomSearch) {
+				filter.setLatitude(new Double(location.getLatitude()));
+				filter.setLongitude(new Double(location.getLongitude()));
+//			} else {
+//				filter.setLatitude(39.715);
+//				filter.setLongitude(-74.0119);
+//				isCustomSearch = false;
+//			}
+		}
 		filter.setMaxPrice(new BigDecimal(
 				Double.parseDouble(prefs.getString(getResources().getString(R.string.pref_key_price_max), Constants.PREF_DEF_VAL_MAX_PRICE))));
 		filter.setMinPrice(new BigDecimal(
@@ -671,7 +679,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 			mapView.getOverlays().add(businessOverlayItems);
 			mapView.getOverlays().add(membersOverlayItems);
 			updateMap(this.location);
-			mapController.zoomToSpan(allOverlays.getLatSpanE6(), allOverlays.getLonSpanE6());
+//			mapController.zoomToSpan(allOverlays.getLatSpanE6(), allOverlays.getLonSpanE6());
 //			mapController.setCenter(currLoc);
 			mapView.invalidate();
 		}	
@@ -692,13 +700,18 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
-		}	
+		}
 	}
 	@Override
 	public void onLocationChanged(Location location) {
 		if (location != null && Utility.isBetterLocation(location, this.location)) {
 			this.location = location;
-			updateMap(location);
+//			this.location.setLatitude(40.715);
+//			this.location.setLongitude(-74.0111);
+			updateMap(this.location);
+			if (listingsListAdapter != null) {
+				listingsListAdapter.setCurrentLocation(location);
+			}
 		}		
 	}
 
