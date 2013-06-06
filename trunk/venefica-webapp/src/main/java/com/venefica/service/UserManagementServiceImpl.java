@@ -5,12 +5,10 @@ import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
-import com.venefica.model.AddressWrapper;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
 import com.venefica.model.User;
-import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.GeneralException;
@@ -83,30 +81,18 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         BusinessCategory category = validateBusinessCategory(categoryId);
         
-        User user = userDto.toBusinessUser(imageDao);
+        User user = userDto.toBusinessUser(imageDao, addressWrapperDao);
         user.setPassword(password);
         ((BusinessUserData) user.getUserData()).setCategory(category);
         
-        if ( userDto.getAddresses() != null && !userDto.getAddresses().isEmpty() ) {
-            List<AddressWrapper> addresses = new LinkedList<AddressWrapper>();
-            for ( AddressDto addressDto : userDto.getAddresses() ) {
-                AddressWrapper addressWrapper = addressDto.getAddressWrapper();
-                addressWrapperDao.save(addressWrapper);
-                
-                addresses.add(addressWrapper);
-            }
-            ((BusinessUserData) user.getUserData()).setAddresses(addresses);
-        }
-        
         userDataDao.save(user.getUserData());
-        
         return userDao.save(user);
     }
     
     @Override
     @Transactional
     public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
-        User user = userDto.toMemberUser(imageDao);
+        User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
 
         // Check for existing users
@@ -156,7 +142,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new UserAlreadyExistsException(UserField.EMAIL, "User with the same email already exists!");
         }
 
-        userDto.update(user, imageDao);
+        userDto.update(user, imageDao, addressWrapperDao);
         userDataDao.update(user.getUserData());
 
         return user.isComplete();

@@ -1,6 +1,8 @@
 package com.venefica.service.dto;
 
+import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.ImageDao;
+import com.venefica.model.AddressWrapper;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Gender;
 import com.venefica.model.Image;
@@ -94,7 +96,7 @@ public class UserDto extends DtoBase {
      *
      * @param user domain object to update
      */
-    public void update(User user, ImageDao imageDao) {
+    public void update(User user, ImageDao imageDao, AddressWrapperDao addressWrapperDao) {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
@@ -115,19 +117,28 @@ public class UserDto extends DtoBase {
             // Set new avatar image
             user.setAvatar(avatarImage);
         }
+        
+        if ( user.isBusinessAccount() ) {
+            List<AddressWrapper> addressWrappers = ((BusinessUserData) user.getUserData()).getAddresses();
+            if ( addressWrappers != null && !addressWrappers.isEmpty() ) {
+                for ( AddressWrapper addressWrapper : addressWrappers ) {
+                    addressWrapperDao.saveOrUpdate(addressWrapper);
+                }
+            }
+        }
     }
 
-    public User toMemberUser(ImageDao imageDao) {
+    public User toMemberUser(ImageDao imageDao, AddressWrapperDao addressWrapperDao) {
         User user = new User();
         user.setUserData(new MemberUserData());
-        update(user, imageDao);
+        update(user, imageDao, addressWrapperDao);
         return user;
     }
     
-    public User toBusinessUser(ImageDao imageDao) {
+    public User toBusinessUser(ImageDao imageDao, AddressWrapperDao addressWrapperDao) {
         User user = new User();
         user.setUserData(new BusinessUserData());
-        update(user, imageDao);
+        update(user, imageDao, addressWrapperDao);
         return user;
     }
     

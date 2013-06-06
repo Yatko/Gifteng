@@ -10,10 +10,9 @@ import com.venefica.model.AddressWrapper;
 public interface AddressWrapperDao {
 
     /**
-     * Saves the address in the database.
+     * Saves or updates the address in the database.
      *
      * @param addressWrapper addressWrapper to save
-     * @return id of the stored addressWrapper
      */
-    Long save(AddressWrapper addressWrapper);
+    void saveOrUpdate(AddressWrapper addressWrapper);
 }

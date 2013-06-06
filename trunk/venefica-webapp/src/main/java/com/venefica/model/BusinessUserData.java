@@ -52,6 +52,14 @@ public class BusinessUserData  extends UserData {
     public void updateUser(UserDto userDto) {
         businessName = userDto.getBusinessName();
         contactName = userDto.getContactName();
+        
+        if ( userDto.getAddresses() != null && !userDto.getAddresses().isEmpty() ) {
+            addresses = new LinkedList<AddressWrapper>();
+            for ( AddressDto addressDto : userDto.getAddresses() ) {
+                AddressWrapper addressWrapper = addressDto.getAddressWrapper();
+                addresses.add(addressWrapper);
+            }
+        }
     }
 
     @Override

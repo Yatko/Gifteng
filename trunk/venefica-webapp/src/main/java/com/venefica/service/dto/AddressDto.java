@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class AddressDto {
     
     // in, out
+    private Long id;
+    // in, out
     private String name;
     // in, out
     private String address1;
@@ -71,6 +73,7 @@ public class AddressDto {
     
     public AddressDto(AddressWrapper addressWrapper) {
         this(addressWrapper.getAddress());
+        id = addressWrapper.getId();
         name = addressWrapper.getName();
     }
     
@@ -96,7 +99,10 @@ public class AddressDto {
     }
     
     public AddressWrapper getAddressWrapper() {
-        return new AddressWrapper(getAddress());
+        AddressWrapper addressWrapper = new AddressWrapper(getAddress());
+        addressWrapper.setId(id);
+        addressWrapper.setName(name);
+        return addressWrapper;
     }
     
     // getters/setters
@@ -187,5 +193,13 @@ public class AddressDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
