@@ -234,6 +234,18 @@ public abstract class ServiceTestBase<T> {
     }
     
     /**
+     * Generates an encrypted string for the Token of the given user id.
+     * 
+     * @param userId
+     * @return
+     * @throws TokenEncryptionException 
+     */
+    protected String initAuthToken(Long userId) throws TokenEncryptionException {
+        String authToken = tokenEncryptor.encrypt(new Token(userId));
+        return authToken;
+    }
+    
+    /**
      * Retrieves the user on the specified id. Method will fail with assertion
      * exception if the user cannot be found.
      * 
@@ -244,17 +256,5 @@ public abstract class ServiceTestBase<T> {
         User user = userDao.get(userId);
         assertNotNull("User (id = " + userId + ") not found!", user);
         return user;
-    }
-    
-    /**
-     * Generates an encrypted string for the Token of the given user id.
-     * 
-     * @param userId
-     * @return
-     * @throws TokenEncryptionException 
-     */
-    private String initAuthToken(Long userId) throws TokenEncryptionException {
-        String authToken = tokenEncryptor.encrypt(new Token(userId));
-        return authToken;
     }
 }

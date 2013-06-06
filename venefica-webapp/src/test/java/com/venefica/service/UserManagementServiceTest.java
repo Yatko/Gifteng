@@ -20,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -53,8 +54,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     @Before
     public void loadTestUser() throws TokenEncryptionException {
         testUser = userDao.findUserByName(TEST_USER_NAME);
-        testUserAuthToken = testUser != null ? tokenEncryptor.encrypt(new Token(testUser.getId()))
-                : null;
+        testUserAuthToken = testUser != null ? tokenEncryptor.encrypt(new Token(testUser.getId())) : null;
     }
     
     //**********************
@@ -105,6 +105,30 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         BusinessCategoryDto category = client.getAllBusinessCategories().get(0);
         UserDto testBusinessUserDto = createBusinessUserDto(TEST_BUSINESS_NAME, category.getId());
         client.registerBusinessUser(testBusinessUserDto, TEST_PASSWORD);
+    }
+    
+    @Test
+    public void updateBusinessUser() throws TokenEncryptionException, UserAlreadyExistsException, UserNotFoundException {
+        User businessUser = userDao.findUserByName(TEST_BUSINESS_NAME);
+        String businessUserAuthToken = initAuthToken(businessUser.getId());
+        
+        authenticateClientWithToken(businessUserAuthToken);
+        
+        UserDto businessUserDto = client.getUserByName(TEST_BUSINESS_NAME);
+        
+        List<AddressDto> addresses = businessUserDto.getAddresses();
+        
+        AddressDto address = addresses.get(0);
+        address.setAddress1("address 1 updated");
+        
+        AddressDto newAddress = new AddressDto();
+        newAddress.setAddress1("address 1 new");
+        addresses.add(newAddress);
+        
+        client.updateUser(businessUserDto);
+        
+        UserDto updatedBusinessUserDto = client.getUserByName(TEST_BUSINESS_NAME);
+        assertEquals(updatedBusinessUserDto.getAddresses().size(), addresses.size());
     }
     
     @Test
@@ -314,15 +338,22 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     }
     
     private static UserDto createBusinessUserDto(String businessName, Long businessCategoryId) {
-        AddressDto address = new AddressDto();
-        address.setZipCode("555");
+        AddressDto address_1 = new AddressDto();
+        address_1.setName("Head office");
+        address_1.setZipCode("555");
+        
+        AddressDto address_2 = new AddressDto();
+        address_2.setName("Depo");
+        address_2.setZipCode("222");
         
         UserDto userDto = new UserDto(true);
         userDto.setBusinessCategoryId(businessCategoryId);
         userDto.setBusinessName(businessName);
+        userDto.setName(businessName);
         userDto.setEmail(businessName + "@email.com");
         userDto.setPhoneNumber("555" + businessName.hashCode());
-        userDto.addAddress(address);
+        userDto.addAddress(address_1);
+        userDto.addAddress(address_2);
         return userDto;
     }
 }

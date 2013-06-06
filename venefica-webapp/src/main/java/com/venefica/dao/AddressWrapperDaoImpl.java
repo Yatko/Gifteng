@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AddressWrapperDaoImpl extends DaoBase<AddressWrapper> implements AddressWrapperDao {
 
     @Override
-    public Long save(AddressWrapper addressWrapper) {
-        return saveEntity(addressWrapper);
+    public void saveOrUpdate(AddressWrapper addressWrapper) {
+        saveOrUpdateEntity(addressWrapper);
     }
 }
