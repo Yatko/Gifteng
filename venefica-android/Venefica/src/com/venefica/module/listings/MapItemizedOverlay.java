@@ -79,7 +79,7 @@ public class MapItemizedOverlay<Item extends OverlayItem> extends
 	 */
 	@Override
 	protected boolean onBalloonTap(int index, ListingOverlayItem item) {
-		if (this.context instanceof SearchListingsActivity) {
+		if (this.context instanceof SearchListingsActivity && item.getListingId() != -1) {
 			Intent intent = new Intent(this.context, ListingDetailsActivity.class);
 			intent.putExtra("ad_id", item.getListingId());
 			intent.putExtra("act_mode", ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
