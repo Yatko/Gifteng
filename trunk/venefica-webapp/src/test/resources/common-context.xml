@@ -135,7 +135,7 @@
     <import resource="classpath:mailjimp-spring-config.xml" />
     
     
-        
+    
     
     <bean id="abstractLoggingInterceptor" abstract="true">
         <property name="prettyLogging" value="true"/>
