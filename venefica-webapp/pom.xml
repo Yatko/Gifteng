@@ -14,7 +14,6 @@
         <org.hibernate.version>4.1.3.Final</org.hibernate.version>
         <org.quartz>2.1.5</org.quartz>
         <!--<tomcat.manager.url>http://192.168.1.150:8081/manager</tomcat.manager.url>-->
-        <!--<skip.tests>false</skip.tests>-->
         <env>local</env> <!-- default config -->
     </properties>
     
@@ -288,6 +287,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.13</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.13</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <!-- <forkMode>never</forkMode> -->
                     <systemProperties>
@@ -297,7 +303,10 @@
                             <value>log4j-test.properties</value>
                         </property>
                     </systemProperties>
-                    <!--<skipTests>${skip.tests}</skipTests>-->
+                    <includes>
+                        <include>**/*.class</include>
+                    </includes>
+                    <excludedGroups>com.venefica.service.integration.IntegrationTestMarker</excludedGroups>
                 </configuration>
             </plugin>
             <plugin>
@@ -336,6 +345,42 @@
             -->
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>integration</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.13</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit47</artifactId>
+                                <version>2.13</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <groups>com.venefica.service.integration.IntegrationTestMarker</groups>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>**/*.class</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     
     <repositories>
         <repository>

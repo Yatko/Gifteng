@@ -48,4 +48,19 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    <action>
+        <actionName>CUSTOM-only integration tests</actionName>
+        <displayName>only integration tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>integration-test</goal>
+        </goals>
+        <properties>
+            <test>xxx</test>
+            <failIfNoTests>false</failIfNoTests>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>integration</activatedProfile>
+        </activatedProfiles>
+    </action>
 </actions>
