@@ -4,5 +4,6 @@ public enum AdField {
     CATEGORY_ID,
     TITLE,
     IMAGE,
-    THUMB_IMAGE
+    THUMB_IMAGE,
+    BARCODE_IMAGE,
 }

@@ -14,6 +14,7 @@ import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.Bookmark;
+import com.venefica.model.BusinessAdData;
 import com.venefica.model.Category;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
@@ -113,30 +114,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         Category category = validateCategory(adDto.getCategoryId());
-        Image image = null;
-        Image thumbImage = null;
-        
-        // Assign main image?
-        if (adDto.getImage() != null) {
-            ImageDto imageDto = adDto.getImage();
-            if (imageDto.isValid()) {
-                image = imageDto.toImage();
-                imageDao.save(image);
-            } else {
-                throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
-            }
-        }
-
-        // Assign thumb image?
-        if (adDto.getImageThumbnail() != null) {
-            ImageDto thumbImageDto = adDto.getImageThumbnail();
-            if (thumbImageDto.isValid()) {
-                thumbImage = thumbImageDto.toImage();
-                imageDao.save(thumbImage);
-            } else {
-                throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
-            }
-        }
+        Image image = saveImage(adDto.getImage(), AdField.IMAGE); //main image
+        Image thumbImage = saveImage(adDto.getImageThumbnail(), AdField.THUMB_IMAGE); //thumb image
+        Image barcodeImage = saveImage(adDto.getImageBarcode(), AdField.BARCODE_IMAGE); //barcode image
         // ++
         
         boolean expires = adDto.isExpires() != null ? adDto.isExpires() : true;
@@ -149,6 +129,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.getAdData().setCategory(category);
         ad.getAdData().setMainImage(image);
         ad.getAdData().setThumbImage(thumbImage);
+        
+        if ( ad.getType() == AdType.BUSINESS ) {
+            ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
+        }
         
         adDataDao.save(ad.getAdData());
         
@@ -218,6 +202,24 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 ad.getAdData().setThumbImage(thumbImage);
             } else {
                 throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
+            }
+        }
+        
+        if (ad.getType() == AdType.BUSINESS && adDto.getImageBarcode() != null) {
+            ImageDto barcodeImageDto = adDto.getImageBarcode();
+            if (barcodeImageDto.isValid()) {
+                Image barcodeImage = ((BusinessAdData) ad.getAdData()).getBarcodeImage();
+
+                if (barcodeImage != null) {
+                    ad.getAdData().setThumbImage(null);
+                    imageDao.delete(barcodeImage);
+                }
+
+                barcodeImage = barcodeImageDto.toImage();
+                imageDao.save(barcodeImage);
+                ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
+            } else {
+                throw new AdValidationException(AdField.BARCODE_IMAGE, "Invalid image specified!");
             }
         }
         
@@ -938,6 +940,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     + " not found!");
         }
         return category;
+    }
+    
+    
+    
+    private Image saveImage(ImageDto imageDto, AdField field) throws AdValidationException {
+        if (imageDto != null) {
+            if (imageDto.isValid()) {
+                Image image = imageDto.toImage();
+                imageDao.save(image);
+                return image;
+            } else {
+                throw new AdValidationException(field, "Invalid image specified!");
+            }
+        }
+        return null;
     }
     
     
