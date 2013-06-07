@@ -5,6 +5,7 @@
 package com.venefica.model;
 
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.ImageDto;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.CollectionTable;
@@ -15,6 +16,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,6 +48,10 @@ public class BusinessAdData extends AdData {
     @Enumerated(EnumType.STRING)
     private Set<WeekDay> availableDays;
     
+    @ManyToOne
+    @ForeignKey(name = "businessaddata_barcodeimg_fk")
+    private Image barcodeImage;
+    
     public BusinessAdData() {
         super(AdType.BUSINESS);
     }
@@ -70,6 +76,10 @@ public class BusinessAdData extends AdData {
         adDto.setAvailableToTime(availableToTime);
         adDto.setAvailableAllDay(availableAllDay);
         adDto.setAvailableDays(availableDays);
+        
+        if ( barcodeImage != null ) {
+            adDto.setImageBarcode(new ImageDto(barcodeImage));
+        }
     }
     
     // getters/setters
@@ -128,5 +138,13 @@ public class BusinessAdData extends AdData {
 
     public void setAvailableAllDay(Boolean availableAllDay) {
         this.availableAllDay = availableAllDay;
+    }
+
+    public Image getBarcodeImage() {
+        return barcodeImage;
+    }
+
+    public void setBarcodeImage(Image barcodeImage) {
+        this.barcodeImage = barcodeImage;
     }
 }

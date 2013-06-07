@@ -99,20 +99,22 @@ public class AdDto extends DtoBase {
     
     // business ad data
     
-    // in
+    // in, out
     private String promoCode;
-    // in
+    // in, out
     private String website;
-    // in
+    // in, out
     private Boolean needsReservation;
-    // in
+    // in, out
     private Date availableFromTime;
-    // in
+    // in, out
     private Date availableToTime;
-    // in
+    // in, out
     private Boolean availableAllDay;
-    // in
+    // in, out
     private Set<WeekDay> availableDays;
+    // in, out
+    private ImageDto imageBarcode;
     
     // Required for JAX-WS
     public AdDto() {
@@ -452,5 +454,13 @@ public class AdDto extends DtoBase {
 
     public void setAvailableAllDay(Boolean availableAllDay) {
         this.availableAllDay = availableAllDay;
+    }
+
+    public ImageDto getImageBarcode() {
+        return imageBarcode;
+    }
+
+    public void setImageBarcode(ImageDto imageBarcode) {
+        this.imageBarcode = imageBarcode;
     }
 }
