@@ -150,7 +150,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 	 */
 	public void setUserData(UserDto userDto){
 		try {			
-			if (userDto.getAvatar() != null
+			/*if (userDto.getAvatar() != null
 					&& userDto.getAvatar().getUrl() != null) {
 				((VeneficaApplication) getActivity().getApplication())
 						.getImgManager().loadImage(
@@ -159,7 +159,7 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 										imageView,
 								getResources().getDrawable(
 										R.drawable.icon_picture_white));
-			}
+			}*/
 			txtMemberSince.append(" ");
 			if (userDto.getJoinedAt() != null) {
 				txtMemberSince.append(Utility.convertShortDateToString(userDto
@@ -189,7 +189,18 @@ public class EditProfileFragment extends SherlockFragment implements OnClickList
 				genderRadioGroup.check(R.id.radioActProfileMale);
 			}else {
 				genderRadioGroup.check(R.id.radioActProfileFemale);
-			}			
+			}
+			
+			if (userDto.getAvatar() != null
+					&& userDto.getAvatar().getUrl() != null) {
+				((VeneficaApplication) getActivity().getApplication())
+						.getImgManager().loadImage(
+								Constants.PHOTO_URL_PREFIX
+										+ userDto.getAvatar().getUrl(),
+										imageView,
+								getResources().getDrawable(
+										R.drawable.icon_picture_white));
+			}
 		} catch (Exception e) {
 			Log.e("EditProfileFragment::setUserData: ", e.toString());
 		}
