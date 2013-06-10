@@ -125,6 +125,9 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	public static final int ERROR_CONF_MARK_AS_SPAM = 4017;
 	public static final int ACT_MODE_REQUEST_AD = 4018;
 	public static final int ACT_MODE_CANCEL_REQUEST_AD = 4019;
+	private static final String TAG_REQUEST_AD = "request_ad";
+	private static final String TAG_EDIT_AD = "edit_ad";
+	
     /**
      * Current mode
      */
@@ -186,10 +189,13 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	 */
 	private TextView txtMiles, txtLeft, txtDays;
 	/**
-	 * request button layout
+	 * user layout
 	 */
-	private LinearLayout layRequest;
 	private FrameLayout layUserDetails;
+	/**
+	 * true when loading web service data
+	 */
+	private boolean isWorking = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	setTheme(com.actionbarsherlock.R.style.Theme_Sherlock_Light_DarkActionBar);
@@ -257,12 +263,12 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			}
 		});
 		// satellite or 2d mode
-		mapView.setSatellite(true);
+		mapView.setSatellite(false);
 		mapView.setTraffic(false);
 		mapView.setBuiltInZoomControls(true);
 		
         mapController = mapView.getController();
-		mapController.setZoom(20); // Zoom 1 is world view
+		mapController.setZoom(12); // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView);
 		overlayItems.setShowClose(false);
 		overlayItems.setShowDisclosure(false);
@@ -298,8 +304,6 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
         imgBtnSend.setOnClickListener(this);
         laySend = (LinearLayout) findViewById(R.id.layActListingDetailsSend);
         
-                
-        layRequest = (LinearLayout) findViewById(R.id.layActListingDetailsRequestItem);
     }
     @Override
     protected void onStart() {
@@ -355,7 +359,8 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 						finish();
 					}else if (ERROR_CODE == Constants.RESULT_RELIST_LISTING_SUCCESS 
 							|| ERROR_CODE == Constants.RESULT_FOLLOW_USER_SUCCESS 
-							|| ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS) {
+							|| ERROR_CODE == Constants.RESULT_UNFOLLOW_USER_SUCCESS
+							|| ERROR_CODE == Constants.RESULT_REQUEST_AD_SUCCESS) {
 						new ListingDetailsTask().execute(ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
 					} 
 				}
@@ -488,12 +493,17 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
      */
 	private void setDetails(AdDto listing) {
 		if (!listing.isOwner()) {
-			layRequest.setVisibility(ViewGroup.VISIBLE);
 			btnFollow.setVisibility(View.VISIBLE);
 			btnSendMsg.setVisibility(View.VISIBLE);
+			btnGetIt.setText(getResources().getString(R.string.label_detail_listing_get_it));
+			btnGetIt.setTag(TAG_REQUEST_AD);
 		} else {
 			btnFollow.setVisibility(View.GONE);
 			btnSendMsg.setVisibility(View.GONE);
+			btnBookmark.setVisibility(View.INVISIBLE);
+			btnFlag.setVisibility(View.INVISIBLE);
+			btnGetIt.setText(getResources().getString(R.string.g_label_edit));
+			btnGetIt.setTag(TAG_EDIT_AD);
 		}
 		//Show on map
 		updateMap(listing.getAddress().getLatitude(), listing.getAddress().getLongitude()
@@ -508,11 +518,6 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 					getResources().getDrawable(R.drawable.icon_picture_white));
 		}
 		
-		/*if (listing.isRequested()) {
-			btnGetIt.setText(getResources().getString(R.string.g_label_cancel_request));
-		} else {*/
-			btnGetIt.setText(getResources().getString(R.string.label_detail_listing_get_it));
-//		}
 		images.clear();
 //		images.add(listing.getImage());
 		images.addAll(listing.getImages());
@@ -602,36 +607,47 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	int itemId = item.getItemId();
-		if (itemId == R.id.menu_listing_update) {
-			Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
-			intent.putExtra("ad_id", selectedListingId);
-			intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
-			startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
-		} else if (itemId == R.id.menu_listing_end) {
-			new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
-		} else if (itemId == R.id.menu_listing_relist) {
-			new ListingDetailsTask().execute(ACT_MODE_RELIST_LISTINGS);
-		} else if (itemId == R.id.menu_listing_delete) {
-			new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
-		} else if (itemId == android.R.id.home) {
-			if (isSendMsgVisible) {
-				setMessageLayoutVisiblity(false);
-				isSendMessage = false;
-			}else if (isViewExpanded) {
-				/*collapseAllViews();*/
-			} else{
-				finish();
-			}			
-		}else if (itemId == R.id.menu_listing_share) {
-			Intent sendIntent = new Intent();
-			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-			sendIntent.setType("text/plain");
-			startActivity(sendIntent);
+		if (!isWorking) {
+			if (itemId == R.id.menu_listing_update) {
+				updateListing();
+			} else if (itemId == R.id.menu_listing_end) {
+				new ListingDetailsTask().execute(ACT_MODE_END_LISTINGS);
+			} else if (itemId == R.id.menu_listing_relist) {
+				new ListingDetailsTask().execute(ACT_MODE_RELIST_LISTINGS);
+			} else if (itemId == R.id.menu_listing_delete) {
+				new ListingDetailsTask().execute(ACT_MODE_DELETE_LISTINGS);
+			} else if (itemId == android.R.id.home) {
+				if (isSendMsgVisible) {
+					setMessageLayoutVisiblity(false);
+					isSendMessage = false;
+				} else if (isViewExpanded) {
+					/*collapseAllViews();*/
+				} else {
+					finish();
+				}
+			} else if (itemId == R.id.menu_listing_share) {
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_TEXT,
+						"This is my text to send.");
+				sendIntent.setType("text/plain");
+				startActivity(sendIntent);
+			}
+		} else {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
 		}
-    	return true;
+		return true;
     }
     /**
+     * go to udate screen
+     */
+    private void updateListing() {
+    	Intent intent = new Intent(ListingDetailsActivity.this, PostListingActivity.class);
+		intent.putExtra("ad_id", selectedListingId);
+		intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
+		startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
+	}
+	/**
      * 
      * @author avinash
      * Task to handle listing download.
@@ -640,7 +656,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
-//    		showDialog(D_PROGRESS);
+    		isWorking = true;
     		setSupportProgressBarIndeterminateVisibility(true);
     	}
 		@Override
@@ -703,7 +719,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
     	@Override
     	protected void onPostExecute(ListingDetailsResultWrapper result) {
     		super.onPostExecute(result);
-//    		dismissDialog(D_PROGRESS);
+    		isWorking = false;
     		setSupportProgressBarIndeterminateVisibility(false);
     		if(result.listing == null && result.comments == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
@@ -760,9 +776,6 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 		commentDto.setCreatedAt(new Date());		
 		commentDto.setOwner(listing.isOwner());
 		commentDto.setText(edtMessage.getText().toString());
-		/*commentDto.setPublisherName(publisherName);
-		commentDto.setPublisherFullName(publisherFullName);
-		commentDto.setPublisherAvatarUrl(publisherAvatarUrl);*/
 		return commentDto;
 	}
 
@@ -786,100 +799,135 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 	public void onClick(View v) {
 		popupWindow.dismiss();
 		int id = v.getId();
-		if (id == R.id.btnActListingDetailsBookmark) {
-			if (listing != null && !listing.isOwner() && !listing.isInBookmars()) {
-				new ListingDetailsTask().execute(ACT_MODE_BOOKMARK_LISTINGS);
-			} else if(!listing.isOwner()) {
-				ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
-				showDialog(D_CONFIRM);
-			}
-		} else if (id == R.id.imgBtnUserViewSendMsg && listing != null && !listing.isOwner()) {
-			setMessageLayoutVisiblity(true);
-			isSendMessage = true;
-		} else if(id == R.id.imgBtnActListingDetailsSend && listing != null){
-			//Check for empty message
-			if (edtMessage.getText().toString().trim().length() > 0) {
-				// hide virtual keyboard
-				InputMethodManager imm = (InputMethodManager) ListingDetailsActivity.this
-						.getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(imgBtnSend.getWindowToken(), 0);
-				if (isSendMessage) {
-					new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
-				} else {
-					new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
+		if (!isWorking) {
+			if (id == R.id.btnActListingDetailsBookmark) {
+				if (listing != null && !listing.isOwner()
+						&& !listing.isInBookmars()) {
+					new ListingDetailsTask()
+							.execute(ACT_MODE_BOOKMARK_LISTINGS);
+				} else if (!listing.isOwner()) {
+					ERROR_CODE = Constants.ERROR_CONFIRM_REMOVE_BOOKMARKS;
+					showDialog(D_CONFIRM);
 				}
-			}						
-		} else if (id == R.id.imgBtnUserViewFollow) {
-			if (listing.getCreator().isInFollowings()) {
-				new ListingDetailsTask().execute(ACT_MODE_UNFOLLOW_USER);
-			} else {
-				new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);
-			}			
-		} else if (id == R.id.btnActListingDetailsFlag && listing != null) {
-			if (listing.isCanMarkAsSpam()) {
-				ERROR_CODE = ERROR_CONF_MARK_AS_SPAM;				
-			} else {
-				ERROR_CODE = ERROR_CONF_UNMARK_AS_SPAM;
-			}
-			showDialog(D_CONFIRM);
-		} else if (id == R.id.btnActListingDetailsRequest) {
-			if (listing.isRequested()) {
-				Utility.showLongToast(this, getResources().getString(R.string.g_msg_request_placed_already));
-//				new ListingDetailsTask().execute(ACT_MODE_CANCEL_REQUEST_AD);
-			} else {
-				new ListingDetailsTask().execute(ACT_MODE_REQUEST_AD);
-			}			
-		} else if (id == R.id.btnListingDetailsPopUpMore) {
-			//start rating activity
-			Intent reviewIntent = new Intent(this, RatingActivity.class);
-			reviewIntent.putExtra("ad_id", selectedListingId);
-			reviewIntent.putExtra("to_user_id", listing.getCreator().getId());
-			startActivity(reviewIntent);
-		} else if (id == R.id.layActListingDetailUserDetails && listing!= null) {
-			Intent accountIntent = new Intent(ListingDetailsActivity.this, ProfileDetailActivity.class);
-			accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
-			accountIntent.putExtra("user_name", listing.getCreator().getName());
-			startActivity(accountIntent);
-		} else if (id == R.id.btnListingDetailsPopUpShare) {
-			Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-			shareIntent.setType("text/plain");
-			String shareText = listing.getTitle()+" "
-					+ listing.getDescription()+" "
-					+	Constants.PHOTO_URL_PREFIX + listing.getImage().getUrl();
-			shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
-			PackageManager pm = getPackageManager();
-			List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
-			for (final ResolveInfo app : activityList) {
-			    if ((app.activityInfo.name).contains("facebook")) {
-			        final ActivityInfo activity = app.activityInfo;
-			        final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
-			        shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-			        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			        shareIntent.setComponent(name);
-			        startActivity(shareIntent);
-			        break;
-			   }
-			}
-		} else if (id == R.id.btnListingDetailsPopUpTweet) {
-			Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-			shareIntent.setType("text/plain");
-			String shareText = listing.getTitle()+" "
-					+ listing.getDescription()+" "
-					+	Constants.PHOTO_URL_PREFIX + listing.getImage().getUrl();
-			shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
-			PackageManager pm = getPackageManager();
-			List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
-			for (final ResolveInfo app : activityList) {
-			    if ("com.twitter.android.PostActivity".equals(app.activityInfo.name)) {
-			        final ActivityInfo activity = app.activityInfo;
-			        final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
-			        shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-			        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			        shareIntent.setComponent(name);
-			        startActivity(shareIntent);
-			        break;
-			   }
-			}
+			} else if (id == R.id.imgBtnUserViewSendMsg && listing != null
+					&& !listing.isOwner()) {
+				setMessageLayoutVisiblity(true);
+				isSendMessage = true;
+			} else if (id == R.id.imgBtnActListingDetailsSend
+					&& listing != null) {
+				//Check for empty message
+				if (edtMessage.getText().toString().trim().length() > 0) {
+					// hide virtual keyboard
+					InputMethodManager imm = (InputMethodManager) ListingDetailsActivity.this
+							.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(imgBtnSend.getWindowToken(), 0);
+					if (isSendMessage) {
+						new ListingDetailsTask().execute(ACT_MODE_SEND_MESSAGE);
+					} else {
+						new ListingDetailsTask().execute(ACT_MODE_ADD_COMMENT);
+					}
+				}
+			} else if (id == R.id.imgBtnUserViewFollow) {
+				if (listing.getCreator().isInFollowings()) {
+					new ListingDetailsTask().execute(ACT_MODE_UNFOLLOW_USER);
+				} else {
+					new ListingDetailsTask().execute(ACT_MODE_FOLLOW_USER);
+				}
+			} else if (id == R.id.btnActListingDetailsFlag && listing != null) {
+				if (listing.isCanMarkAsSpam()) {
+					ERROR_CODE = ERROR_CONF_MARK_AS_SPAM;
+				} else {
+					ERROR_CODE = ERROR_CONF_UNMARK_AS_SPAM;
+				}
+				showDialog(D_CONFIRM);
+			} else if (id == R.id.btnActListingDetailsRequest) {
+				if (v.getTag().equals(TAG_REQUEST_AD)) {
+					if (listing.isRequested()) {
+						Utility.showLongToast(
+								this,
+								getResources().getString(
+										R.string.g_msg_request_placed_already));
+					} else {
+						new ListingDetailsTask().execute(ACT_MODE_REQUEST_AD);
+					}
+				} else if (v.getTag().equals(TAG_EDIT_AD)) {
+					//update
+					updateListing();
+				}
+			} else if (id == R.id.btnListingDetailsPopUpMore) {
+				//start rating activity
+				Intent reviewIntent = new Intent(this, RatingActivity.class);
+				reviewIntent.putExtra("ad_id", selectedListingId);
+				reviewIntent.putExtra("to_user_id", listing.getCreator()
+						.getId());
+				startActivity(reviewIntent);
+			} else if (id == R.id.layActListingDetailUserDetails
+					&& listing != null) {
+				Intent accountIntent = new Intent(ListingDetailsActivity.this,
+						ProfileDetailActivity.class);
+				accountIntent.putExtra("act_mode",
+						ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
+				accountIntent.putExtra("user_name", listing.getCreator()
+						.getName());
+				startActivity(accountIntent);
+			} else if (id == R.id.btnListingDetailsPopUpShare) {
+				Intent shareIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				shareIntent.setType("text/plain");
+				String shareText = listing.getTitle() + " "
+						+ listing.getDescription() + " "
+						+ Constants.PHOTO_URL_PREFIX
+						+ listing.getImage().getUrl();
+				shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						shareText);
+				PackageManager pm = getPackageManager();
+				List<ResolveInfo> activityList = pm.queryIntentActivities(
+						shareIntent, 0);
+				for (final ResolveInfo app : activityList) {
+					if ((app.activityInfo.name).contains("facebook")) {
+						final ActivityInfo activity = app.activityInfo;
+						final ComponentName name = new ComponentName(
+								activity.applicationInfo.packageName,
+								activity.name);
+						shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+						shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						shareIntent.setComponent(name);
+						startActivity(shareIntent);
+						break;
+					}
+				}
+			} else if (id == R.id.btnListingDetailsPopUpTweet) {
+				Intent shareIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				shareIntent.setType("text/plain");
+				String shareText = listing.getTitle() + " "
+						+ listing.getDescription() + " "
+						+ Constants.PHOTO_URL_PREFIX
+						+ listing.getImage().getUrl();
+				shareIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						shareText);
+				PackageManager pm = getPackageManager();
+				List<ResolveInfo> activityList = pm.queryIntentActivities(
+						shareIntent, 0);
+				for (final ResolveInfo app : activityList) {
+					if ("com.twitter.android.PostActivity"
+							.equals(app.activityInfo.name)) {
+						final ActivityInfo activity = app.activityInfo;
+						final ComponentName name = new ComponentName(
+								activity.applicationInfo.packageName,
+								activity.name);
+						shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+						shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						shareIntent.setComponent(name);
+						startActivity(shareIntent);
+						break;
+					}
+				}
+			} 
+		} else {
+			Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
 		}
 	}
 	
