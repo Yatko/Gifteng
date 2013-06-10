@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,9 +96,16 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
         userView.findViewById(R.id.imgBtnUserViewFollow).setVisibility(INVISIBLE);
         userView.findViewById(R.id.imgBtnUserViewSendMsg).setVisibility(INVISIBLE);
         userView.setOnClickListener(this);
+        ((ViewGroup)findViewById(R.id.laySideNavigationUserLayContainer)).addView(userView);
+        
 		navigationMenu = (RelativeLayout) findViewById(R.id.side_navigation_menu);
+		
 		listView = (ListView) findViewById(R.id.side_navigation_listview);
-		listView.addHeaderView(userView);
+//		listView.addHeaderView(userView);
+		TextView textViewHeader = new TextView(getContext());
+		textViewHeader.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT
+				, AbsListView.LayoutParams.WRAP_CONTENT));
+		listView.addHeaderView(textViewHeader);
 		listView.setFastScrollEnabled(true);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -270,14 +278,6 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
 	}
 	public void setUserDetails(UserDto user){
 		if (user != null) {
-			if (user.getAvatar() != null && user.getAvatar().getUrl() != null) {
-				((VeneficaApplication) ((SearchListingsActivity) getContext())
-						.getApplication()).getImgManager().loadImage(
-						Constants.PHOTO_URL_PREFIX + user.getAvatar().getUrl(),
-						profImgView,
-						getResources().getDrawable(
-								R.drawable.icon_picture_white));
-			}
 			txtUserName.setText(user.getFirstName() + " "
 					+ (user.getLastName()));
 			txtMemberInfo
@@ -295,11 +295,20 @@ public class SlideMenuView extends LinearLayout implements View.OnClickListener 
 						+ user.getAddress().getCounty() != null ? user
 						.getAddress().getCounty() : "");
 			}
+			if (user.getAvatar() != null && user.getAvatar().getUrl() != null) {
+				((VeneficaApplication) ((SearchListingsActivity) getContext())
+						.getApplication()).getImgManager().loadImage(
+						Constants.PHOTO_URL_PREFIX + user.getAvatar().getUrl(),
+						profImgView,
+						getResources().getDrawable(
+								R.drawable.icon_picture_white));
+			}
 		}
 	}
 
 	@Override
 	public void onClick(View view) {
+		toggleMenu();
 		Intent accountIntent = new Intent(getContext(), ProfileDetailActivity.class);
 		accountIntent.putExtra("act_mode",ProfileDetailActivity.ACT_MODE_VIEW_PROFILE);
 		accountIntent.putExtra("user_name", ((VeneficaApplication) ((SearchListingsActivity) getContext())
