@@ -383,6 +383,7 @@ public class ProfileDetailActivity extends VeneficaActivity implements OnClickLi
 				txtAddress.setText(userDto.getAddress().getCity() + ", " + userDto.getAddress().getCounty());
 			}
 			if (userDto.getId() == ((VeneficaApplication) getApplication()).getUser().getId()) {
+				((VeneficaApplication) getApplication()).setUser(userDto);
 				imgButtonEdit.setVisibility(View.VISIBLE);
 				imgButtonEdit.setImageDrawable(getResources().getDrawable(R.drawable.icon_edit));
 				btnFollow.setVisibility(View.INVISIBLE);
