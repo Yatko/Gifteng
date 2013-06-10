@@ -120,7 +120,6 @@
             android:gravity="right|bottom"
             android:maxLines="1"
             android:textSize="12sp"
-            android:text="22 mi"
             android:textColor="@color/light_blue" />
     </LinearLayout>
 
