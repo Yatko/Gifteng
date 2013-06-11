@@ -705,7 +705,7 @@ public class WSAction {
 			if (result.listings == null || result.listings.size() == 0) {
 				result.result = Constants.ERROR_NO_BOOKMARKS;
 			} else {
-				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+				result.result = Constants.RESULT_GET_BOOKMARKS_SUCCESS;
 			}
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_BOOKMARKS;

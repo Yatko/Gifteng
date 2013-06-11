@@ -6,6 +6,7 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
+import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.listings.receiving.ReceivingListActivity;
@@ -84,10 +85,12 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
     		break;
 		case R.id.slideMenuWatching:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
-				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				/*Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_BOOKMARKS);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    	startActivity(browseIntent);
+		    	startActivity(browseIntent);*/
+				Intent browseIntent = new Intent(getApplicationContext(), BookmarkListingsActivity.class);
+				startActivity(browseIntent);
 			}
     		break;
 		case R.id.slideMenuMessages:
