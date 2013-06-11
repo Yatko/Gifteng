@@ -1,0 +1,13 @@
+
+.geBrowse .geBox {margin-bottom: 10px; margin-right: 10px; margin-left: 10px;}
+.icon-green {
+    background-image: url("img/glyphicons-halflings-green.png") !important;
+}
+.file {
+    display: none;
+}
+
+.ge-datepicker {
+    width: 223px;
+}
+
