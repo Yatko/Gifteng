@@ -11,14 +11,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.user.UserDto;
+import com.venefica.services.AdDto.AdType;
 import com.venefica.services.RequestDto;
 import com.venefica.services.RequestDto.RequestStatus;
 import com.venefica.utils.Constants;
@@ -35,6 +35,7 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 		public void onSendMessage(UserDto toUser);
 		public void onMarkRceived(long requestId);
 		public void onLeaveReview(long adId, UserDto toUser);
+		public void onCoverImageClick(long adId);
 	}
 	private Context context;
 	private List<RequestDto> requests;
@@ -86,6 +87,7 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 			convertView = inflater.inflate(R.layout.view_receiving_list_item, null);
 			holder.imgListingCoverImg = (ImageView) convertView.findViewById(R.id.imgReceivingLItemImage);
 			holder.txtStatus = (TextView) convertView.findViewById(R.id.txtReceivingLItemStatus);
+			holder.txtExpiaryDate = (TextView) convertView.findViewById(R.id.txtReceivingLItemExpiaryDate);
 			
 			holder.txtCancelRequest = (TextView) convertView.findViewById(R.id.txtReceivingLItemCancelReq);
 			
@@ -94,10 +96,13 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 			holder.btnMarkReceived = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemMarkReceived);
 			holder.btnLeaveReview = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemLeaveReview);
 			
+			holder.layExpiaryDate = (LinearLayout) convertView.findViewById(R.id.layExpiaryDate);
+			
 			holder.btnCancelRequest.setOnClickListener(this);
 			holder.btnSendMessage.setOnClickListener(this);
 			holder.btnMarkReceived.setOnClickListener(this);
 			holder.btnLeaveReview.setOnClickListener(this);
+			holder.imgListingCoverImg.setOnClickListener(this);
 			
 			convertView.setTag(holder);
 		} else {
@@ -131,34 +136,45 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 			holder.btnLeaveReview.setEnabled(false);
 		}
 		
-				
-		holder.txtStatus.setText(requests.get(position).getStatus().toString().toUpperCase());
+		if (requests.get(position).getType() == AdType.MEMBER) {
+			holder.layExpiaryDate.setVisibility(ViewGroup.GONE);
+			holder.txtStatus.setText(requests.get(position).getStatus().toString().toUpperCase());
+		} else {
+			holder.layExpiaryDate.setVisibility(ViewGroup.VISIBLE);
+			holder.txtStatus.setText("");
+//			holder.txtExpiaryDate.setText(requests.get(position).get);
+		}
+		
 		holder.btnCancelRequest.setTag(requests.get(position).getId());
 		holder.btnSendMessage.setTag(requests.get(position).getUser());
 		holder.btnMarkReceived.setTag(requests.get(position).getId());
 		holder.btnLeaveReview.setTag(requests.get(position).getUser());
 		holder.btnLeaveReview.setContentDescription(requests.get(position).getAdId()+"");
+		holder.imgListingCoverImg.setTag(requests.get(position).getAdId());
 		return convertView;
 	}
 
 	private static class ViewHolder {
 		ImageView imgListingCoverImg;
-		TextView txtStatus, txtCancelRequest;
+		TextView txtStatus, txtCancelRequest, txtExpiaryDate;
 		ImageButton btnCancelRequest, btnSendMessage
 					, btnMarkReceived, btnLeaveReview;
+		LinearLayout layExpiaryDate;
 	}
 
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
-		if (id == R.id.btnReceivingListItemCancelReq) {
+		if (id == R.id.btnReceivingListItemCancelReq && buttonClickListener != null) {
 			buttonClickListener.onCancelRequest(Long.parseLong(view.getTag().toString()));
-		} else if (id == R.id.btnReceivingListItemSendMsg) {
+		} else if (id == R.id.btnReceivingListItemSendMsg && buttonClickListener != null) {
 			buttonClickListener.onSendMessage((UserDto) view.getTag());
-		} else if (id == R.id.btnReceivingListItemMarkReceived) {
+		} else if (id == R.id.btnReceivingListItemMarkReceived && buttonClickListener != null) {
 			buttonClickListener.onMarkRceived(Long.parseLong(view.getTag().toString()));
-		} else if (id == R.id.btnReceivingListItemLeaveReview) {
+		} else if (id == R.id.btnReceivingListItemLeaveReview && buttonClickListener != null) {
 			buttonClickListener.onLeaveReview(Long.parseLong(view.getContentDescription().toString()), (UserDto) view.getTag());
+		} else if (id == R.id.imgReceivingLItemImage && buttonClickListener != null) {
+			buttonClickListener.onCoverImageClick(Long.parseLong(view.getTag().toString()));
 		}
 	}
 

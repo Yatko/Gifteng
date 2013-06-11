@@ -25,8 +25,10 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.RatingActivity;
+import com.venefica.module.listings.browse.SearchListingsActivity;
 import com.venefica.module.listings.receiving.ReceivingListAdapter.OnButtonClickListener;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
@@ -340,5 +342,15 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
 		if (id == R.id.imgBtnActReceivingSend) {
 			new ReceivingTask().execute(ACT_MODE_SEND_MESSAGE);
 		}
+	}
+
+
+	@Override
+	public void onCoverImageClick(long adId) {
+		//show details
+		Intent intent = new Intent(this, ListingDetailsActivity.class);
+		intent.putExtra("ad_id", adId);
+		intent.putExtra("act_mode", ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+		startActivity(intent);
 	}
 }

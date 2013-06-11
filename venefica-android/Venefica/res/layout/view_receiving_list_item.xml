@@ -24,6 +24,37 @@
         android:layout_below="@id/imgReceivingLItemImage"
         android:gravity="center" />
 
+    <!-- Expiary -->
+    <LinearLayout
+        android:id="@+id/layExpiaryDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@id/imgReceivingLItemImage"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtReceivingLItemExpiary"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_expiars"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/txtReceivingLItemExpiaryDate"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/g_label_expiars"
+            android:textSize="13sp" />
+    </LinearLayout>
     <!-- cancel request -->
 
     <LinearLayout
@@ -32,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/imgReceivingLItemImage"
+        android:layout_toRightOf="@id/layExpiaryDate"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
@@ -140,53 +171,6 @@
             android:gravity="center"
             android:src="@drawable/icon_achievement" />
     </LinearLayout>
-    <!--
-    <com.venefica.module.listings.receiving.CustomImageTextButton
-        android:id="@+id/btnReceivingLItemCancelReq"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/imgReceivingLItemImage"
-        android:gravity="center_vertical" />
-
-    <com.venefica.module.listings.receiving.CustomImageTextButton
-        android:id="@+id/btnReceivingLItemSendMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/btnReceivingLItemCancelReq"
-        android:gravity="center_vertical" />
-
-    <com.venefica.module.listings.receiving.CustomImageTextButton
-        android:id="@+id/btnReceivingLItemMarkReceived"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/btnReceivingLItemSendMsg"
-        android:gravity="center_vertical" />
-
-    <com.venefica.module.listings.receiving.CustomImageTextButton
-        android:id="@+id/btnReceivingLItemLeaveReview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/btnReceivingLItemMarkReceived"
-        android:gravity="center_vertical" />
-    -->
-
-
-    <!--
-         <com.venefica.module.listings.receiving.CustomImageTextButton
-        android:id="@+id/btnReceivingLItemDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/btnReceivingLItemLeaveReview"
-        android:gravity="center_vertical" />
-    -->
+    
 
 </RelativeLayout>
