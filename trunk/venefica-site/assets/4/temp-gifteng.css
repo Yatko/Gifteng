@@ -1,6 +1,8 @@
 /* CSS Document */
 html, body{font-family:'Lato', sans-serif;text-shadow: 0 1px 0 #fff;background:url('temp-sample/ge-background.png') #eeedea;}
 
+/* ERROR */
+.error {color: #eb6b62;padding: 9px;text-align: center;}
 
 /* Bootstrap Flat-UI override */
 input:focus:invalid:focus,

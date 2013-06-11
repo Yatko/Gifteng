@@ -52,7 +52,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
             
             <div class="row-fluid">
                 <div class="span12">
-                    <div>
+                    <div style="text-align:center; color: #00bebe !important; padding: 16px;">
                         <?=lang('invitation_confirmed_share')?>
                     </div>
                     <ul class="bottom-icons">
@@ -66,7 +66,9 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
             
             <?=form_open('/invitation/request/2', '', array('invitation_email' => $invitation_email))?>
             <?=isset($this->request_invitation_form) ? $this->request_invitation_form->error_string() : ""?>
-
+            <input type="hidden" name="invitation_country" value="<?=$invitation_country?>">
+            
+            <?/**?>
             <div class="row-fluid">
                 <div class="span12">
                     <select name="invitation_country" id="invitation_country" class="select-block mbl select-info" data-size="10">
@@ -76,6 +78,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                     </select>
                 </div>
             </div><!--./country-->
+            <?/**/?>
 
             <div id="invitationZipcodeUS" <?=display($invitation_country, $country_condition)?>>
                 <div class="row-fluid">

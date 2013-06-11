@@ -34,7 +34,7 @@ $lang['invitation_source_list'] = array(
     'Google',
     'Facebook',
     'Twitter',
-    'Indiegogo',
+    //'Indiegogo',
     //'Kickstarter'
 );
 

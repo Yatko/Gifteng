@@ -16,7 +16,7 @@ $page = $this->uri->segment(1, null);
     
     <meta charset="utf-8"/>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-    <meta name="description" content="Gifteng - make the world a giving place" />
+    <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
@@ -32,7 +32,7 @@ $page = $this->uri->segment(1, null);
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
     
     
-    <link rel="shortcut icon" href="<?=BASE_PATH?>temp-sample/favicon.ico">
+    <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
     
     
     <!-- Load JS here for greater good =============================-->
@@ -68,11 +68,11 @@ $page = $this->uri->segment(1, null);
     
     <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
     
-    <meta property="og:site_name" content="Gifteng ♥"/>
+    <meta property="og:site_name" content="Gifteng"/>
     <meta property="og:url" content="http://gifteng.com/"/>
     <meta property="og:title" content="Gifteng ♥"/>
-    <meta property="og:description" content="- make the world a giving place -"/>
-    <meta property="og:image" content="<?=BASE_PATH?>temp-sample/favicon.ico"/>
+    <meta property="og:description" content="Give. Receive. Inspire."/>
+    <meta property="og:image" content="<?=BASE_PATH?>images/logo.png"/>
     <meta property="og:type" content="website"/>
     
     <script>

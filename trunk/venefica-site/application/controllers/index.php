@@ -10,6 +10,7 @@ class Index extends CI_Controller {
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/index');
+        $this->load->view('pages/footer');
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
 }
