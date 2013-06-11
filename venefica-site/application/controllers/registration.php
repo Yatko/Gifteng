@@ -35,6 +35,7 @@ class Registration extends CI_Controller {
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/business_registration', $data);
+        $this->load->view('pages/footer');
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     

@@ -7,7 +7,7 @@ $lang['validation_integer'] = 'The %s must be a number.';
 $lang['validation_is_natural_no_zero'] = 'The %s must be a positive and non zero number.';
 
 
-$lang['main_title'] = "Gifteng";
+$lang['main_title'] = "Gifteng | Give. Receive. Inspire.";
 $lang['main_slogan'] = "- make the world a giving place -";
 
 $lang['main_menu_about'] = "About";
