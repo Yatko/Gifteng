@@ -2,3 +2,6 @@
 .icon-green {
     background-image: url("img/glyphicons-halflings-green.png") !important;
 }
+.file {
+    display: none;
+}
