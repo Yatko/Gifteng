@@ -747,6 +747,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                         .includeCreator(true) //TODO: maybe this is not needed
                         .build();
                 adDto.setInBookmars(true);
+                adDto.setRequested(requested(user, ad));
                 result.add(adDto);
             }
         }
