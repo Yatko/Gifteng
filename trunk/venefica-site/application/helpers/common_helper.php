@@ -33,11 +33,14 @@ if ( ! function_exists('is_empty')) {
         if ( $obj == null ) {
             return true;
         }
-        $object_vars = get_object_vars($obj);
-        if ( $object_vars == null || empty($object_vars) ) {
-            return true;
+        if ( is_object($obj) ) {
+            $object_vars = get_object_vars($obj);
+            if ( $object_vars == null || empty($object_vars) ) {
+                return true;
+            }
+            return false;
         }
-        return false;
+        return empty($obj);
     }
 }
 
@@ -84,5 +87,63 @@ if ( ! function_exists('hasElement')) {
             return FALSE;
         }
         return array_key_exists($elem, $array);
+    }
+}
+
+// various converters
+
+if ( ! function_exists('readFileAsString')) {
+    function readFileAsString($file) {
+        $content = fread(fopen($file, "r"), filesize($file));
+        return $content;
+    }
+}
+
+
+// various string related helpers
+
+if ( ! function_exists('startsWith')) {
+    function startsWith($haystack, $needle) {
+        return !strncmp($haystack, $needle, strlen($needle));
+    }
+}
+if ( ! function_exists('endsWith')) {
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+        return (substr($haystack, -$length) === $needle);
+    }
+}
+
+
+// date and time helpers
+
+if ( ! function_exists('convertDateToTimestamp')) {
+    function convertDateToTimestamp($strDate) {
+        $date = date_create_from_format('j F, Y', $strDate);
+        $timestamp = date_format($date, "U");
+        return $timestamp;
+    }
+}
+if ( ! function_exists('convertTimestampToDate')) {
+    function convertTimestampToDate($timestamp) {
+        $strDate = date("j F, Y", $timestamp);
+        return $strDate;
+    }
+}
+
+if ( ! function_exists('convertHourToTimestamp')) {
+    function convertHourToTimestamp($strDate) {
+        $date = date_create_from_format('G', $strDate);
+        $timestamp = date_format($date, "U");
+        return $timestamp;
+    }
+}
+if ( ! function_exists('convertTimestampToHour')) {
+    function convertTimestampToHour($timestamp) {
+        $strDate = date("G", $timestamp);
+        return $strDate;
     }
 }

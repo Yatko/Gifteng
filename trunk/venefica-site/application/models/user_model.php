@@ -70,6 +70,45 @@ class User_model extends CI_Model {
         return parent::__get($key);
     }
     
+    public function getAddressById($id) {
+        if ( $this->addresses && sizeof($this->addresses) > 0 ) {
+            foreach ( $this->addresses as $address ) {
+                if ( $address->id == $id ) {
+                    return $address;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public function getLastAddress() {
+        if ( $this->addresses && sizeof($this->addresses) > 0 ) {
+            $lastAddress = null;
+            foreach ( $this->addresses as $address ) {
+                if ( $lastAddress == null ) {
+                    $lastAddress = $address;
+                    continue;
+                }
+                if (
+                    $lastAddress->id != null &&
+                    $address->id != null &&
+                    $lastAddress->id < $address->id
+                ) {
+                    $lastAddress = $address;
+                }
+            }
+            return $lastAddress;
+        }
+        return null;
+    }
+    
+    public function addAddress(Address_model $address) {
+        if ( $this->addresses == null || sizeof($this->addresses) == 0 ) {
+            $this->addresses = array();
+        }
+        array_push($this->addresses, $address);
+    }
+    
     public function getAvatarUrl() {
         if ( $this->avatar == null ) {
             return '';

@@ -8,6 +8,7 @@
 class Registration extends CI_Controller {
     
     private $initialized = false;
+    private $auto_login = false;
     
     public function user() {
         $data = array();
@@ -86,17 +87,30 @@ class Registration extends CI_Controller {
         $is_valid = $this->registration_form->run();
         if ( $is_valid ) {
             //form data valid after post
-            $email = $this->input->post('email');
-            $password = $this->input->post('password_1');
-            if ( login($email, $password) ) {
-                redirect('/profile');
+            if ( $this->auto_login ) {
+                //logging in into system automatically
+                $email = $this->input->post('email');
+                $password = $this->input->post('password_1');
+
+                if ( login($email, $password) ) {
+                    redirect('/profile');
+                } else {
+                    log_message(ERROR, 'Newly created business cannot auto login into system');
+                }
             } else {
-                log_message(ERROR, 'Newly created business cannot auto login into system');
+                $this->session->set_flashdata('registration_success', true);
+                redirect('/registration/business');
             }
         } elseif ( $_POST ) {
             //form data not valid after post
         } else {
             //direct access of the page
+            
+            $registration_success = $this->session->flashdata('registration_success');
+            if ( $registration_success ) {
+                $extra_data['registration_success'] = true;
+                return;
+            }
         }
         
         try {

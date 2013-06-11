@@ -14,7 +14,8 @@ define('INFO',  'info');
 define('ERROR', 'error');
 
 define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
-define('TEMPLATES', 3);
+define('TEMPLATES', 4);
+define('TEMP_FOLDER', sys_get_temp_dir());
 
 
 /*

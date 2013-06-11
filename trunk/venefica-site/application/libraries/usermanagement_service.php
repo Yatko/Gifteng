@@ -86,6 +86,23 @@ class Usermanagement_service {
         }
     }
     
+    /**
+     * 
+     * @param User_model $user
+     * @return boolean true if all required information is gathered.
+     * @throws Exception
+     */
+    public function updateUser($user) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->updateUser(array("user" => $user));
+            return $result->complete;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //***************
     //* user search *
     //***************
@@ -215,6 +232,15 @@ class Usermanagement_service {
      */
     public function loadUser() {
         return loadFromSession('user');
+    }
+    
+    /**
+     * refresh the user in the session by requesting server
+     */
+    public function refreshUser() {
+        $user = $this->loadUser();
+        $token = loadToken();
+        $this->storeUser($user->email, $token);
     }
 
     /* internal functions */

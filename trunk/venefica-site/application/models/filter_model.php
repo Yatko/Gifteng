@@ -13,8 +13,8 @@ class Filter_model extends CI_Model {
     var $searchString; //string
     var $categories; //array of long
     var $distance; //long
-    var $latitude; //double
     var $longitude; //double
+    var $latitude; //double
     var $minPrice; //float
     var $maxPrice; //float
     var $hasPhoto; //boolean

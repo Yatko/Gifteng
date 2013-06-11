@@ -2,7 +2,6 @@
 
 $lang['invitation_email_hint'] = "Email address";
 $lang['invitation_request_button'] = "REQUEST AN INVITATION";
-$lang['invitation_country_hint'] = "Choose a Country...";
 $lang['invitation_zipcode_hint'] = "Your ZIP code";
 $lang['invitation_source_hint'] = "How did you hear about us?";
 $lang['invitation_source_friend'] = "From a friend";
