@@ -14,6 +14,7 @@ class Request_model extends CI_Model {
     var $user; //User_model
     var $requestedAt; //long - timestamp
     var $status; //enum: PENDING, EXPIRED, ACCEPTED
+    var $type; //enum: MEMBER, BUSINESS (see Ad_model)
     var $image; //Image_model
     var $imageThumbnail; //Image_model
     

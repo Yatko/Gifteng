@@ -47,6 +47,8 @@ $page = $this->uri->segment(1, null);
     <script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>
     <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
     
+    <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
+    
     
     <meta property="og:site_name" content="Gifteng ♥"/>
     <meta property="og:url" content="http://gifteng.com/"/>

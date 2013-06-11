@@ -7,7 +7,12 @@
  */
 class Image_model extends CI_Model {
     
+    const IMGTYPE_JPEG = 'JPEG';
+    const IMGTYPE_PNG = 'PNG';
+    
     var $id; //long
+    var $imgType; //enum: JPEG, PNG
+    var $data; //byte[]
     var $url; //string
     
     public function __construct($obj = null) {
@@ -15,6 +20,7 @@ class Image_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->imgType = getField($obj, 'imgType');
             $this->url = getField($obj, 'url');
         }
     }
@@ -49,5 +55,22 @@ class Image_model extends CI_Model {
     
     public static function convertImage($image) {
         return new Image_model($image);
+    }
+    
+    public static function getImgType($image_file_name) {
+        if ( endsWith(strtolower($image_file_name), "png") ) {
+            return Image_model::IMGTYPE_PNG;
+        }
+        return Image_model::IMGTYPE_JPEG;
+    }
+    
+    public static function createImageModel($image_file_name) {
+        if ( is_empty($image_file_name) ) {
+            return null;
+        }
+        $image = new Image_model();
+        $image->imgType = Image_model::getImgType($image_file_name);
+        $image->data = readFileAsString(TEMP_FOLDER .'/'. $image_file_name);
+        return $image;
     }
 }

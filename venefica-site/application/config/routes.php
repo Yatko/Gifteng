@@ -49,7 +49,7 @@ $route['browse'] = 'browse/view';
 $route['profile/(:any)'] = 'profile/view/$1';
 $route['profile'] = 'profile/view';
 
-//$route['post/(:any)'] = 'post/$1';
+$route['post/(:any)'] = 'post/$1';
 $route['post'] = 'post/view';
 
 $route['view/(:num)'] = 'view/show/$1';
@@ -63,6 +63,14 @@ $route['invitation'] = 'invitation/view';
 
 $route['registration/(:any)'] = 'registration/$1';
 $route['registration'] = 'registration/business';
+
+$route['get_photo/(:any)'] = 'generator/get_photo/$1/0/0'; //original sized image
+$route['get_photo/(:any)/(:num)'] = 'generator/get_photo/$1/$2/$2'; //width and heoght will be the same size
+$route['get_photo/(:any)/(:num)/(:num)'] = 'generator/get_photo/$1/$2/$3';
+$route['get_photo'] = 'generator/get_photo//0/0'; //empty image
+
+//promotion landing pages
+$route['totegiveaway'] = 'landing/totegiveaway';
 
 $route['(:any)'] = 'index/view';
 

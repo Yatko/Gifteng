@@ -13,6 +13,7 @@ class Ad_model extends CI_Model {
     const ADTYPE_MEMBER = 'MEMBER';
     const ADTYPE_BUSINESS = 'BUSINESS';
     
+    const WEEKDAY_ALL_WEEK = '*';
     const WEEKDAY_MONDAY = 'MONDAY';
     const WEEKDAY_TUESDAY = 'TUESDAY';
     const WEEKDAY_WEDNESDAY = 'WEDNESDAY';
@@ -63,6 +64,7 @@ class Ad_model extends CI_Model {
     var $availableToTime; //long - time
     var $availableAllDay; //boolean
     var $availableDays; //array of enum: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+    var $imageBarcode; //Image_model
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Ad_model");
@@ -113,6 +115,9 @@ class Ad_model extends CI_Model {
             }
             if ( hasField($obj, 'imageThumbnail') ) {
                 $this->imageThumbnail = Image_model::convertImage($obj->imageThumbnail);
+            }
+            if ( hasField($obj, 'imageBarcode') ) {
+                $this->imageBarcode = Image_model::convertImage($obj->imageBarcode);
             }
             if ( hasField($obj, 'images') && hasField($obj->images, 'item') && $obj->images->item != null ) {
                 $this->images = Image_model::convertImages($obj->images->item);

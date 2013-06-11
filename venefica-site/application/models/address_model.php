@@ -7,6 +7,7 @@
  */
 class Address_model extends CI_Model {
     
+    var $id; //long
     var $name; //string
     var $address1; //string
     var $address2; //string
@@ -16,13 +17,14 @@ class Address_model extends CI_Model {
     var $state; //string
     var $area; //string
     var $zipCode; //string
-    var $latitude; //double
     var $longitude; //double
+    var $latitude; //double
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Address_model");
         
         if ( $obj != null ) {
+            $this->id = getField($obj, 'id');
             $this->name = getField($obj, 'name');
             $this->address1 = getField($obj, 'address1');
             $this->address2 = getField($obj, 'address2');
@@ -32,8 +34,8 @@ class Address_model extends CI_Model {
             $this->state = getField($obj, 'state');
             $this->area = getField($obj, 'area');
             $this->zipCode = getField($obj, 'zipCode');
-            $this->latitude = getField($obj, 'latitude');
             $this->longitude = getField($obj, 'longitude');
+            $this->latitude = getField($obj, 'latitude');
         }
     }
     
@@ -50,6 +52,23 @@ class Address_model extends CI_Model {
             $ret = '';
         }
         return $ret;
+    }
+    
+    public function toString() {
+        return "Address ["
+            ."id=".$this->id.", "
+            ."name=".$this->name.", "
+            ."address1=".$this->address1.", "
+            ."address2=".$this->address2.", "
+            ."city=".$this->city.", "
+            ."county=".$this->county.", "
+            ."country=".$this->country.", "
+            ."state=".$this->state.", "
+            ."area=".$this->area.", "
+            ."zipCode=".$this->zipCode.", "
+            ."longitude=".$this->longitude.", "
+            ."latitude=".$this->latitude.""
+            ."]";
     }
     
     // static helpers
