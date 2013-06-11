@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/imgBookmarkLItemImage"
+        android:layout_width="70dp"
+        android:layout_height="65dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/black"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_picture_white" />
+
+    <Button
+        android:id="@+id/btnBookmarkLItemRequest"
+        style="?ButtonRoundCorner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/g_label_requerst_gift" />
+
+</LinearLayout>

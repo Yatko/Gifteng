@@ -251,9 +251,9 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 		});
         mapView.setBuiltInZoomControls(true);
         mapView.setTraffic(false);
-        mapView.setSatellite(true);
+        mapView.setSatellite(false);
         mapController = mapView.getController();
-        mapController.setZoom(17);
+        mapController.setZoom(12);
         
         //Toggle Button to view Tiles
         txtTitleTile = (TextView) findViewById(R.id.txtActSearchListingsTitleTile);
