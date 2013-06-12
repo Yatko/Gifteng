@@ -1,28 +1,31 @@
 package com.venefica.module.listings.mylistings;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.util.Log;
 import android.widget.ListView;
 
-import com.venefica.module.listings.ListingDetailsActivity;
-import com.venefica.module.listings.ListingListAdapter;
+import com.actionbarsherlock.view.Window;
+import com.venefica.module.listings.browse.SearchListingResultWrapper;
 import com.venefica.module.main.R;
+import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
+import com.venefica.utils.VeneficaApplication;
 
-public class MyListingsActivity extends Activity {
+public class MyListingsActivity extends VeneficaActivity {
 	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3001;
 	/**
 	 * List to show my listings
@@ -31,7 +34,7 @@ public class MyListingsActivity extends Activity {
 	/**
 	 * List adapter
 	 */
-	private ListingListAdapter listingsListAdapter;
+	private MyListingsAdapter listingsListAdapter;
 	/**
 	 * Listings list
 	 */
@@ -47,26 +50,35 @@ public class MyListingsActivity extends Activity {
 	private WSAction wsAction;
 	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_listings);
-        listViewListings = (ListView) findViewById(R.id.listActMyListings);
-//        listings = getDemoListings();
-        listings = new ArrayList<AdDto>();
-		listingsListAdapter = new ListingListAdapter(this, listings, false);
-		listViewListings.setAdapter(listingsListAdapter);
-		listViewListings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		// getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.background_transperent_black));
+		getSupportActionBar().setCustomView(R.layout.view_actionbar_title);
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
 
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				Intent intent = new Intent(MyListingsActivity.this, ListingDetailsActivity.class);
-				intent.putExtra("ad_id", listings.get(position).getId());
-				intent.putExtra("mode", ListingDetailsActivity.ACT_MODE_MY_LISTINGS_DETAILS);
-				startActivity(intent);
-			}
-		});
-		registerForContextMenu(listViewListings);		
-    }
+		setContentView(R.layout.activity_my_listings);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportProgressBarIndeterminateVisibility(false);
+		listViewListings = (ListView) findViewById(R.id.listActMyListings);
+		// listings = getDemoListings();
+		listings = new ArrayList<AdDto>();
+		listingsListAdapter = new MyListingsAdapter(this, listings);
+		listViewListings.setAdapter(listingsListAdapter);
+		/*
+		 * listViewListings.setOnItemClickListener(new
+		 * AdapterView.OnItemClickListener() {
+		 * 
+		 * public void onItemClick(AdapterView<?> parent, View view, int
+		 * position, long id) { Intent intent = new
+		 * Intent(MyListingsActivity.this, ListingDetailsActivity.class);
+		 * intent.putExtra("ad_id", listings.get(position).getId());
+		 * intent.putExtra("mode",
+		 * ListingDetailsActivity.ACT_MODE_MY_LISTINGS_DETAILS);
+		 * startActivity(intent); } });
+		 */
+		registerForContextMenu(listViewListings);
+	}
 
     @Override
     protected void onResume() {
@@ -126,16 +138,16 @@ public class MyListingsActivity extends Activity {
      * @author avinash
      * Class to handle my listings download 
      */
-    class MyListingsTask extends AsyncTask<Integer, Integer, MyListingsResultWrapper>{
+    class MyListingsTask extends AsyncTask<Integer, Integer, SearchListingResultWrapper>{
     	@Override
     	protected void onPreExecute() {
     		super.onPreExecute();
-    		showDialog(D_PROGRESS);
+    		setSupportProgressBarIndeterminateVisibility(true);
     	}
 		@Override
-		protected MyListingsResultWrapper doInBackground(Integer... params) {
-			MyListingsResultWrapper wrapper = new MyListingsResultWrapper();
-			/*try{
+		protected SearchListingResultWrapper doInBackground(Integer... params) {
+			SearchListingResultWrapper wrapper = new SearchListingResultWrapper();
+			try{
 				if(wsAction == null ){
 					wsAction = new WSAction();
 				}
@@ -147,28 +159,24 @@ public class MyListingsActivity extends Activity {
 				wrapper.result = Constants.ERROR_NETWORK_CONNECT;
 			} catch (XmlPullParserException e) {
 				Log.e("MyListingsTask::doInBackground :", e.toString());
-			}*/
+			}
 			return wrapper;
 		}
     	
 		@Override
-		protected void onPostExecute(MyListingsResultWrapper result) {
+		protected void onPostExecute(SearchListingResultWrapper result) {
 			super.onPostExecute(result);
-			dismissDialog(D_PROGRESS);
-			if(result.myListings == null && result.result == -1){
+			setSupportProgressBarIndeterminateVisibility(false);
+			if(result.listings == null && result.result == -1){
 				ERROR_CODE = Constants.ERROR_NETWORK_CONNECT;
 				showDialog(D_ERROR);
-			}else if (result.result == Constants.RESULT_GET_MY_LISTINGS_SUCCESS && result.myListings != null
-					&& result.myListings.size() > 0) {
+			}else if (result.result == Constants.RESULT_GET_MY_LISTINGS_SUCCESS && result.listings != null
+					&& result.listings.size() > 0) {
 				listings.clear();
-				listings.addAll(result.myListings);
+				listings.addAll(result.listings);
 				listingsListAdapter.notifyDataSetChanged();
 			}
 		}
     }
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_my_listings, menu);
-        return true;
-    }*/
+    
 }

@@ -8,6 +8,7 @@ import com.venefica.module.dashboard.ISlideMenuCallback;
 import com.venefica.module.dashboard.SlideMenuView;
 import com.venefica.module.listings.bookmarks.BookmarkListingsActivity;
 import com.venefica.module.listings.browse.SearchListingsActivity;
+import com.venefica.module.listings.mylistings.MyListingsActivity;
 import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.listings.receiving.ReceivingListActivity;
 import com.venefica.module.messages.MessageListActivity;
@@ -70,10 +71,12 @@ public abstract class VeneficaMapActivity extends SherlockMapActivity implements
 	    	break;
 		case R.id.slideMenuSelling:
 			if(!(getApplicationContext() instanceof SearchListingsActivity)){
-				Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
+				/*Intent browseIntent = new Intent(getApplicationContext(), SearchListingsActivity.class);
 				browseIntent.putExtra("act_mode", SearchListingsActivity.ACT_MODE_DOWNLOAD_MY_LISTINGS);
 				browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		    	startActivity(browseIntent);
+		    	startActivity(browseIntent);*/
+				Intent browseIntent = new Intent(getApplicationContext(), MyListingsActivity.class);
+				startActivity(browseIntent);
 			}
 	    	break;
 		case R.id.slideMenuBuying:
