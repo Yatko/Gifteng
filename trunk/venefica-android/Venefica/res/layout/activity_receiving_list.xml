@@ -8,10 +8,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ReceivingListActivity" >
 
+    <!-- Ad Type -->
+    <RadioGroup
+        android:id="@+id/radioGroupActReceivingAdType"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radioActReceivingMember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/g_label_from_member"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioActProfileBusiness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/g_label_from_business"
+            android:textSize="12sp" />
+    </RadioGroup>
+
     <ListView
         android:id="@+id/listActRequestList"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:layout_below="@id/radioGroupActReceivingAdType" />
     <!-- Send message (default hidden) -->
 
     <LinearLayout
