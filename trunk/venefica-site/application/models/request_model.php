@@ -14,6 +14,8 @@ class Request_model extends CI_Model {
     var $user; //User_model
     var $requestedAt; //long - timestamp
     var $status; //enum: PENDING, EXPIRED, ACCEPTED
+    var $adStatus; //enum: ACTIVE, EXPIRED, SELECTED, SENT, RECEIVED (see Ad_model)
+    var $adExpiresAt; //long - timestamp
     var $type; //enum: MEMBER, BUSINESS (see Ad_model)
     var $image; //Image_model
     var $imageThumbnail; //Image_model
@@ -26,6 +28,8 @@ class Request_model extends CI_Model {
             $this->adId = getField($obj, 'adId');
             $this->requestedAt = getField($obj, 'requestedAt');
             $this->status = getField($obj, 'status');
+            $this->adStatus = getField($obj, 'adStatus');
+            $this->adExpiresAt = getField($obj, 'adExpiresAt');
             if ( hasField($obj, 'user') ) {
                 $this->user = User_model::convertUser($obj->user);
             }
