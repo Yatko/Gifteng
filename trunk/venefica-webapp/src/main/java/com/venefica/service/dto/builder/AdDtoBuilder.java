@@ -84,6 +84,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setPickUp(model.getAdData().getPickUp());
         adDto.setPlace(model.getAdData().getPlace());
         adDto.setType(model.getAdData().getType());
+        adDto.setStatus(model.getStatus());
         
         if (model.getAdData().getLocation() != null) {
             adDto.setAddress(new AddressDto(model.getAdData().getLocation()));
