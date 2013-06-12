@@ -59,6 +59,10 @@ select:focus:invalid:focus {
 .geicon-gift{ background-position: 0 -158px;  } 
 .geicon-check{ background-position: 0 -237px;  } 
 .geicon-heart{ background-position: 0 -316px;  }
+.geicon-press{ background-position: 0 -395px;  }
+.geicon-job{ background-position: 0 -474px;  }
+.geicon-business{ background-position: 0 -553px;  }
+.geicon-giftenger{ background-position: 0 -632px;  }
 .gifteng {display: inline-block;background-image: url("temp-sample/ge-icons.png");background-repeat: no-repeat;background-position: 0 -8px;width: 86px;height: 46px;}
 .gifteng2 {display: inline-block;background-image: url("temp-sample/ge-icons.png");background-repeat: no-repeat;background-position: 0 -87px;width: 86px;height: 46px;}
 /* INCONBAR (needs Flat UI) */
@@ -175,6 +179,10 @@ hr.ge-hr-dotted {border: 0;border-bottom: 1px dotted #e4e4e4 !important;backgrou
 #invitation_2.ge-form {margin-top:120px;}
 #invitation_2 .ge-well #invitation_usertype {margin-top:12px;}
 #invitation_2.ge-form .ge-well .ge-submit {margin-top: 12px;}
+/* CONTACT */
+#contact .ge-well {text-align:center;}
+#contact .ge-well p.ge-title {font-size: 120%;min-height:20px !important;}
+#contact .ge-well p {font-size: 90%;min-height:80px;}
 
 /* favorites */
 .ge-favorite .ge-well {padding:9px;}
