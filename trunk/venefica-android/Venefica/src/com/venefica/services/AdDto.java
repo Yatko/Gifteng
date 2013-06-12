@@ -56,6 +56,25 @@ public class AdDto implements KvmSerializable
 	    LOCATION,
 	    
 	}
+	/**
+	 * The 'lifecycle' of an ad.
+	 * 
+	 * The following possible next statuses are allowed:
+	 * - ACTIVE -> EXPIRED, SELECTED
+	 * - EXPIRED -> ACTIVE, SELECTED
+	 * - SELECTED -> SENT, ACTIVE
+	 * - SENT -> RECEIVED, ACTIVE
+	 * - RECEIVED
+	 */
+	public enum AdStatus {
+	    
+	    ACTIVE,
+	    EXPIRED,
+	    SELECTED,
+	    SENT,
+	    RECEIVED,
+	    
+	}
 	private long id;
 	private long categoryId;
 	private String category = "";
@@ -89,33 +108,23 @@ public class AdDto implements KvmSerializable
     private int quantity;
     private String subtitle;
     private AddressDto address;
-    private List<CommentDto> comments;
+    private List<CommentDto> comments;    
     
-    // in, out
     private Boolean expires; //never expire?
-    // in, out
     private Date availableAt;
-    // in, out
     private AdPlace place;
-    // out
     private AdType type;
      
     // business ad data
     
-    // in
     private String promoCode;
-    // in
     private String website;
-    // in
     private Boolean needsReservation;
-    // in
     private Date availableFromTime;
-    // in
     private Date availableToTime;
-    // in
     private Boolean availableAllDay;
-    // in
     private Set<WeekDay> availableDays;
+    private AdStatus status;
 	public AdDto()
 	{
 
@@ -218,6 +227,11 @@ public class AdDto implements KvmSerializable
 				return availableAllDay;
 			case 39:
 				return availableDays;
+			case 40:
+				if (status != null)
+					return status.name();
+				else
+					return null;
 		}
 
 		return null;
@@ -225,7 +239,7 @@ public class AdDto implements KvmSerializable
 
 	public int getPropertyCount()
 	{
-		return 40;
+		return 41;
 	}
 
 	public void getPropertyInfo(int index, @SuppressWarnings ("rawtypes") Hashtable properties, PropertyInfo info)
@@ -396,7 +410,7 @@ public class AdDto implements KvmSerializable
 				break;
 			case 32:
 				info.name = "type";
-				info.type = String.class;
+				info.type = AdType.class;
 				break;
 			case 33:
 				info.name = "promoCode";
@@ -425,6 +439,10 @@ public class AdDto implements KvmSerializable
 			case 39:
 				info.name = "availableDays";
 				info.type = new Vector<WeekDay>().getClass();
+				break;
+			case 40:
+				info.name = "status";
+				info.type = AdStatus.class;
 				break;
 			default:
 				break;
@@ -572,6 +590,9 @@ public class AdDto implements KvmSerializable
 					break;
 				case 39:
 					availableDays = (Set<AdDto.WeekDay>)value;
+					break;
+				case 40:
+					status = AdStatus.valueOf(value.toString());
 					break;
 			}
 		}catch (Exception e){
@@ -1237,5 +1258,21 @@ public class AdDto implements KvmSerializable
 	 */
 	public void setAvailableDays(Set<WeekDay> availableDays) {
 		this.availableDays = availableDays;
+	}
+
+
+	/**
+	 * @return the status
+	 */
+	public AdStatus getStatus() {
+		return status;
+	}
+
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(AdStatus status) {
+		this.status = status;
 	}
 }

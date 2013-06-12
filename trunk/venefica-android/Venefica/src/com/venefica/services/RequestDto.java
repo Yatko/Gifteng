@@ -13,6 +13,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import android.util.Log;
 
 import com.venefica.module.user.UserDto;
+import com.venefica.services.AdDto.AdStatus;
 import com.venefica.services.AdDto.AdType;
 import com.venefica.utils.Constants;
 
@@ -38,6 +39,8 @@ public class RequestDto implements KvmSerializable {
     private ImageDto image;
     private ImageDto imageThumbnail;
     private AdType type;
+    private AdStatus adStatus;
+    private Date adExpiresAt;
 	/* (non-Javadoc)
 	 * @see org.ksoap2.serialization.KvmSerializable#getProperty(int)
 	 */
@@ -66,6 +69,13 @@ public class RequestDto implements KvmSerializable {
 				return type.name();
 			else
 				return null;
+		case 8:
+			if (adStatus != null)
+				return adStatus.name();
+			else
+				return null;
+		case 9:
+			return adExpiresAt != null ? adExpiresAt.getTime() : 0;
 		}
 		return null;
 	}
@@ -76,7 +86,7 @@ public class RequestDto implements KvmSerializable {
 	@Override
 	public int getPropertyCount() {
 		// TODO Auto-generated method stub
-		return 8;
+		return 10;
 	}
 
 	@Override
@@ -108,6 +118,12 @@ public class RequestDto implements KvmSerializable {
 					break;
 				case 7:
 					type = AdType.valueOf(value.toString());
+					break;
+				case 8:
+					adStatus = AdStatus.valueOf(value.toString());
+					break;
+				case 9:
+					adExpiresAt = new Date(Long.parseLong(value.toString()));
 					break;
 			}
 		}catch (Exception e){
@@ -153,6 +169,14 @@ public class RequestDto implements KvmSerializable {
 			case 7:
 				info.name = "type";
 				info.type = AdType.class;
+				break;
+			case 8:
+				info.name = "adStatus";
+				info.type = AdStatus.class;
+				break;
+			case 9:
+				info.name = "adExpiresAt";
+				info.type = String.class;
 				break;
 		}
 	}
@@ -279,6 +303,34 @@ public class RequestDto implements KvmSerializable {
 	 */
 	public void setType(AdType type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the adStatus
+	 */
+	public AdStatus getAdStatus() {
+		return adStatus;
+	}
+
+	/**
+	 * @param adStatus the adStatus to set
+	 */
+	public void setAdStatus(AdStatus adStatus) {
+		this.adStatus = adStatus;
+	}
+
+	/**
+	 * @return the adExpiresAt
+	 */
+	public Date getAdExpiresAt() {
+		return adExpiresAt;
+	}
+
+	/**
+	 * @param adExpiresAt the adExpiresAt to set
+	 */
+	public void setAdExpiresAt(Date adExpiresAt) {
+		this.adExpiresAt = adExpiresAt;
 	}
 
 }
