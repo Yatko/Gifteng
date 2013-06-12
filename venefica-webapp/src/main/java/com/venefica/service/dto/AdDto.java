@@ -2,6 +2,7 @@ package com.venefica.service.dto;
 
 import com.venefica.model.Ad;
 import com.venefica.model.AdPlace;
+import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.WeekDay;
 import java.math.BigDecimal;
@@ -96,6 +97,8 @@ public class AdDto extends DtoBase {
     private List<CommentDto> comments;
     // in, out
     private AddressDto address;
+    // out
+    private AdStatus status;
     
     // business ad data
     
@@ -462,5 +465,13 @@ public class AdDto extends DtoBase {
 
     public void setImageBarcode(ImageDto imageBarcode) {
         this.imageBarcode = imageBarcode;
+    }
+
+    public AdStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AdStatus status) {
+        this.status = status;
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.venefica.service.dto;
 
+import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
@@ -30,6 +31,10 @@ public class RequestDto extends DtoBase {
     private RequestStatus status;
     
     // out
+    private AdStatus adStatus;
+    // out
+    private Date adExpiresAt;
+    // out
     private AdType type;
     // out
     private ImageDto image;
@@ -46,6 +51,8 @@ public class RequestDto extends DtoBase {
         this.requestedAt = request.getRequestedAt();
         this.status = request.getStatus();
         this.type = request.getAd().getType();
+        this.adStatus = request.getAd().getStatus();
+        this.adExpiresAt = request.getAd().getExpiresAt();
         
         if (request.getAd().getAdData().getMainImage() != null) {
             this.image = new ImageDto(request.getAd().getAdData().getMainImage());
@@ -117,6 +124,22 @@ public class RequestDto extends DtoBase {
 
     public void setType(AdType type) {
         this.type = type;
+    }
+
+    public AdStatus getAdStatus() {
+        return adStatus;
+    }
+
+    public void setAdStatus(AdStatus adStatus) {
+        this.adStatus = adStatus;
+    }
+
+    public Date getAdExpiresAt() {
+        return adExpiresAt;
+    }
+
+    public void setAdExpiresAt(Date adExpiresAt) {
+        this.adExpiresAt = adExpiresAt;
     }
     
 }
