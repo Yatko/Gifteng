@@ -22,6 +22,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -34,8 +37,10 @@ import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
 import com.venefica.module.user.UserDto;
+import com.venefica.module.utils.Utility;
 import com.venefica.services.MessageDto;
 import com.venefica.services.RequestDto;
+import com.venefica.services.AdDto.AdType;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
@@ -64,6 +69,8 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
 	 */
 	private ListView listViewrequests;
 	private List<RequestDto> requestDtos;
+	private List<RequestDto> requestMembersDtos;
+	private List<RequestDto> requestBusinessDtos;
 	private ReceivingListAdapter receivingListAdapter;
 	private WSAction wsAction;
 	private long adId, requestId;
@@ -76,6 +83,10 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
 	private boolean isOwner;
 	private EditText edtComment;
 	private ImageButton imgBtnSendComment;
+	/**
+	 * Radio box for Ad type
+	 */
+	private RadioGroup radioGroupAdType;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -89,9 +100,33 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
         
         listViewrequests = (ListView) findViewById(R.id.listActRequestList);
         this.requestDtos = new ArrayList<RequestDto>();
+        this.requestMembersDtos = new ArrayList<RequestDto>();
+        this.requestBusinessDtos= new ArrayList<RequestDto>();
+        
         this.receivingListAdapter = new ReceivingListAdapter(this, requestDtos);
         this.receivingListAdapter.setButtonClickListener(this);
         listViewrequests.setAdapter(receivingListAdapter);
+        //AdType
+        radioGroupAdType = (RadioGroup) findViewById(R.id.radioGroupActReceivingAdType);
+        radioGroupAdType.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				requestDtos.clear();
+				if (checkedId == R.id.radioActReceivingMember) {
+					if (requestMembersDtos.size() == 0) {
+						Utility.showShortToast(ReceivingListActivity.this,getResources().getString(R.string.g_msg_no_data_for_members));
+					}
+					requestDtos.addAll(requestMembersDtos);				
+				} else {
+					if (requestBusinessDtos.size() == 0) {
+						Utility.showShortToast(ReceivingListActivity.this, getResources().getString(R.string.g_msg_no_data_for_business));
+					}
+					requestDtos.addAll(requestBusinessDtos);
+				}
+				receivingListAdapter.notifyDataSetChanged();
+			}
+		});
         
         //comment 
         laySend = (LinearLayout) findViewById(R.id.layActReceivingSend);
@@ -226,6 +261,10 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
 		}		
 		isSendMsgVisible = isVisible;
 	}
+    /**
+     * @author avinash
+     *	Class to handle network tasks
+     */
     class ReceivingTask extends AsyncTask<Integer, Integer, RequestsResultWrapper>{
     	@Override
     	protected void onPreExecute() {
@@ -274,7 +313,16 @@ public class ReceivingListActivity extends VeneficaActivity implements OnButtonC
 			}else if(result.result == Constants.RESULT_GET_REQUESTS_SUCCESS){
 				if (result.requests != null && result.requests.size() > 0) {
 					requestDtos.clear();
-					requestDtos.addAll(result.requests);
+					requestMembersDtos.clear();
+					requestBusinessDtos.clear();
+					for (RequestDto request : result.requests) {
+						if (request.getType() == AdType.MEMBER) {
+							requestMembersDtos.add(request);
+						} else {
+							requestBusinessDtos.add(request);
+						}
+					}
+					requestDtos.addAll(requestMembersDtos);
 					receivingListAdapter.notifyDataSetChanged();
 				} else {
 					ERROR_CODE = Constants.ERROR_NO_DATA;

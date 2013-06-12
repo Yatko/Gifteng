@@ -136,6 +136,7 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 			holder.btnLeaveReview.setEnabled(false);
 		}
 		
+		
 		if (requests.get(position).getType() == AdType.MEMBER) {
 			holder.layExpiaryDate.setVisibility(ViewGroup.GONE);
 			holder.txtStatus.setText(requests.get(position).getStatus().toString().toUpperCase());
