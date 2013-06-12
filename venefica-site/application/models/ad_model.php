@@ -21,7 +21,13 @@ class Ad_model extends CI_Model {
     const WEEKDAY_FRIDAY = 'FRIDAY';
     const WEEKDAY_SATURDAY = 'SATURDAY';
     const WEEKDAY_SUNDAY = 'SUNDAY';
-
+    
+    const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_EXPIRED = 'EXPIRED';
+    const STATUS_SELECTED = 'SELECTED';
+    const STATUS_SENT = 'SENT';
+    const STATUS_RECEIVED = 'RECEIVED';
+    
     var $id; //long
     var $categoryId; //long
     var $category; //string
@@ -55,6 +61,7 @@ class Ad_model extends CI_Model {
     var $type; //enum: MEMBER, BUSINESS
     var $comments; //array of Comment_model
     var $address; //Address_model
+    var $status; //enum: ACTIVE, EXPIRED, SELECTED, SENT, RECEIVED
     
     // business ad data
     var $promoCode; //string
@@ -97,6 +104,7 @@ class Ad_model extends CI_Model {
             $this->pickUp = getField($obj, 'pickUp');
             $this->place = getField($obj, 'place');
             $this->type = getField($obj, 'type');
+            $this->status = getField($obj, 'status');
             
             //business ad data
             $this->promoCode = getField($obj, 'promoCode');
