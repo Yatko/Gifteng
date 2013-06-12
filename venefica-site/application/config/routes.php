@@ -69,6 +69,8 @@ $route['get_photo/(:any)/(:num)'] = 'generator/get_photo/$1/$2/$2'; //width and 
 $route['get_photo/(:any)/(:num)/(:num)'] = 'generator/get_photo/$1/$2/$3';
 $route['get_photo'] = 'generator/get_photo//0/0'; //empty image
 
+$route['contact'] = 'contact/view';
+
 //promotion landing pages
 $route['totegiveaway'] = 'landing/totegiveaway';
 

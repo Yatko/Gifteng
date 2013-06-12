@@ -37,6 +37,8 @@ class Generator extends CI_Controller {
     private function init() {
         if ( !$this->initialized ) {
             $this->load->library('image_lib');
+            
+            $this->initialized = true;
         }
     }
 }
