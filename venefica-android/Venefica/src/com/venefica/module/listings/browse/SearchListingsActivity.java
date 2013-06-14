@@ -584,7 +584,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 	private void getFilterOptions(){
 		useCurrentLocation = prefs.getBoolean(getResources().getString(R.string.pref_key_use_current_location), true);
 		filter = new FilterDto();		
-		filter.setDistance(prefs.getInt(getResources().getString(R.string.pref_key_use_miles), Constants.PREF_DEF_VAL_MILES));
+		filter.setDistance(prefs.getInt(Constants.PREF_KEY_MILES, Constants.PREF_DEF_VAL_MILES));
 		if (location != null) {
 //			if (!isCustomSearch) {
 				filter.setLatitude(new Double(location.getLatitude()));
@@ -700,6 +700,7 @@ ISlideMenuCallback, LocationListener, TileButtonClickListener, OnClickListener{
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
+			mapView.invalidate();
 		}
 	}
 	@Override
