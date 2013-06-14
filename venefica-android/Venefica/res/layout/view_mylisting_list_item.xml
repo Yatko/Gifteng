@@ -34,7 +34,8 @@
             android:id="@+id/layMyListingLItemEditButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <Button
                 android:id="@+id/btnMyListingLItemEdit"
@@ -61,8 +62,8 @@
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
 
             <LinearLayout
                 android:id="@+id/layMyListingLItemRequests"
@@ -104,6 +105,128 @@
                     android:src="@drawable/icon_picture_white" />
             </LinearLayout>
         </HorizontalScrollView>
+
+        <LinearLayout
+            android:id="@+id/layMyListingLItemButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <!-- send msg -->
+
+            <LinearLayout
+                android:id="@+id/laySendMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtMyListingLItemSendMsg"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="@string/g_label_send_msg"
+                    android:textSize="8sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMyListingLItemSendMsg"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/button_height"
+                    android:gravity="center"
+                    android:src="@drawable/icon_mail" />
+            </LinearLayout>
+            <!-- mark gifted -->
+
+            <LinearLayout
+                android:id="@+id/layMarkGifted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtMyListingLItemMarkGifted"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="@string/g_label_mark_gifted"
+                    android:textSize="8sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMyListingLItemMarkGifted"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/button_height"
+                    android:gravity="center"
+                    android:src="@drawable/icon_tick" />
+            </LinearLayout>
+            <!-- leave review -->
+
+            <LinearLayout
+                android:id="@+id/layLeaveReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtMyListingLItemLeaveReview"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="@string/g_label_leave_review"
+                    android:textSize="8sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMyListingLItemLeaveReview"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/button_height"
+                    android:gravity="center"
+                    android:src="@drawable/icon_achievement" />
+            </LinearLayout>
+            <!-- delete ad -->
+
+            <LinearLayout
+                android:id="@+id/layDeleteAd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/txtMyListingLItemDeleteAd"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="@string/g_label_delete"
+                    android:textSize="8sp" />
+
+                <ImageButton
+                    android:id="@+id/btnMyListingLItemDeleteAd"
+                    android:layout_width="50dp"
+                    android:layout_height="@dimen/button_height"
+                    android:gravity="center"
+                    android:src="@drawable/icon_trash" />
+            </LinearLayout>
+        </LinearLayout>
     </FrameLayout>
 
 </RelativeLayout>
