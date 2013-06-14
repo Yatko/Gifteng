@@ -23,6 +23,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class BrowseCategoriesActivity extends VeneficaActivity implements OnClic
 	private WSAction wsAction;
 	
 	private CheckBox chkMember, chkBusiness;
+	private EditText edtDistance;
 	private Button btnSave;
 	private boolean isWorking;
 	/**
@@ -130,7 +132,9 @@ public class BrowseCategoriesActivity extends VeneficaActivity implements OnClic
         categoriesListAdapter = new CategoryListAdapter(this, categories);
         categoriesListAdapter.setForFilterScreen(true);
         listViewCategories.setAdapter(categoriesListAdapter);
-        
+        //distance
+        edtDistance = (EditText) findViewById(R.id.edtActBrowseCatDistance);
+        edtDistance.setText(String.valueOf(prefs.getInt(Constants.PREF_KEY_MILES, Constants.PREF_DEF_VAL_MILES)));
         //save button
         btnSave = (Button) findViewById(R.id.btnActBrowseCatCategoriesSave);
         btnSave.setOnClickListener(this);
@@ -276,8 +280,9 @@ public class BrowseCategoriesActivity extends VeneficaActivity implements OnClic
 		if (id == R.id.btnActBrowseCatCategoriesSave) {
 			if (isWorking) {
 				Utility.showLongToast(this, getResources().getString(R.string.msg_working_in_background));
-			} else {
+			} else if(!edtDistance.getText().toString().equals("") && Integer.parseInt(edtDistance.getText().toString()) > 0){
 				SharedPreferences.Editor editor = prefs.edit();
+				editor.putInt(Constants.PREF_KEY_MILES, Integer.parseInt(edtDistance.getText().toString()));
 				editor.putBoolean(Constants.PREF_KEY_MEMBER, chkMember.isChecked());
 				editor.putBoolean(Constants.PREF_KEY_BUSINESS, chkBusiness.isChecked());
 				editor.putString(Constants.PREF_KEY_CATEGORY_ID, Utility.getStringFromList(categoriesListAdapter.getSelectedPositions()));
