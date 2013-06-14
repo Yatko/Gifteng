@@ -11,22 +11,30 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.venefica.module.listings.ListingDetailsActivity;
+import com.venefica.module.listings.ListingDetailsResultWrapper;
 import com.venefica.module.listings.browse.SearchListingResultWrapper;
+import com.venefica.module.listings.mylistings.MyListingsAdapter.OnButtonClickListener;
+import com.venefica.module.listings.post.PostListingActivity;
 import com.venefica.module.main.R;
 import com.venefica.module.main.VeneficaActivity;
 import com.venefica.module.network.WSAction;
+import com.venefica.module.user.UserDto;
 import com.venefica.services.AdDto;
 import com.venefica.utils.Constants;
 import com.venefica.utils.VeneficaApplication;
 
-public class MyListingsActivity extends VeneficaActivity {
+public class MyListingsActivity extends VeneficaActivity implements OnButtonClickListener {
 	public static final int ACT_MODE_DOWNLOAD_MY_LISTINGS = 3001;
+	public static final int ACT_MODE_DELETE_LISTINGS = 3002;
 	/**
 	 * List to show my listings
 	 */
@@ -34,7 +42,7 @@ public class MyListingsActivity extends VeneficaActivity {
 	/**
 	 * List adapter
 	 */
-	private MyListingsAdapter listingsListAdapter;
+	private MyListingsAdapter myListingsAdapter;
 	/**
 	 * Listings list
 	 */
@@ -48,6 +56,7 @@ public class MyListingsActivity extends VeneficaActivity {
 	 */
 	private int ERROR_CODE;
 	private WSAction wsAction;
+	private long selectedListingId = -1;
 	
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +72,9 @@ public class MyListingsActivity extends VeneficaActivity {
 		listViewListings = (ListView) findViewById(R.id.listActMyListings);
 		// listings = getDemoListings();
 		listings = new ArrayList<AdDto>();
-		listingsListAdapter = new MyListingsAdapter(this, listings);
-		listViewListings.setAdapter(listingsListAdapter);
+		myListingsAdapter = new MyListingsAdapter(this, listings);
+		myListingsAdapter.setButtonClickListener(this);
+		listViewListings.setAdapter(myListingsAdapter);
 		/*
 		 * listViewListings.setOnItemClickListener(new
 		 * AdapterView.OnItemClickListener() {
@@ -132,7 +142,13 @@ public class MyListingsActivity extends VeneficaActivity {
     		((AlertDialog) dialog).setMessage(message);
 		}    	
     }
-    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == android.R.id.home) {
+    		finish();
+    	}
+    	return true;
+    }
     /**
      * 
      * @author avinash
@@ -153,6 +169,10 @@ public class MyListingsActivity extends VeneficaActivity {
 				}
 				if (params[0].equals(ACT_MODE_DOWNLOAD_MY_LISTINGS)) {
 					wrapper = wsAction.getMyListings(((VeneficaApplication)getApplication()).getAuthToken());
+				} else if (params[0].equals(ACT_MODE_DELETE_LISTINGS)) {
+					ListingDetailsResultWrapper res = new ListingDetailsResultWrapper();
+					res = wsAction.deleteListing(((VeneficaApplication)getApplication()).getAuthToken(), selectedListingId);
+					wrapper.result = res.result;
 				}
 			}catch (IOException e) {
 				Log.e("MyListingsTask::doInBackground :", e.toString());
@@ -174,9 +194,52 @@ public class MyListingsActivity extends VeneficaActivity {
 					&& result.listings.size() > 0) {
 				listings.clear();
 				listings.addAll(result.listings);
-				listingsListAdapter.notifyDataSetChanged();
+				myListingsAdapter.notifyDataSetChanged();
 			}
 		}
     }
+
+	@Override
+	public void onDeleteAd(long adId) {
+		selectedListingId = adId;
+		new MyListingsTask().execute(ACT_MODE_DELETE_LISTINGS);
+	}
+
+	@Override
+	public void onSendMessage(UserDto toUser) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMarkGifted(long requestId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onLeaveReview(long adId, UserDto toUser) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onCoverImageClick(long adId) {
+		// show details
+		Intent intent = new Intent(this, ListingDetailsActivity.class);
+		intent.putExtra("ad_id", adId);
+		intent.putExtra("act_mode",
+				ListingDetailsActivity.ACT_MODE_DOWNLOAD_LISTINGS_DETAILS);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onEditAd(long adId) {
+		// edit Ad
+		Intent intent = new Intent(this, PostListingActivity.class);
+		intent.putExtra("ad_id", adId);
+		intent.putExtra("act_mode",PostListingActivity.ACT_MODE_UPDATE_LISTING);
+		startActivityForResult(intent, PostListingActivity.ACT_MODE_UPDATE_LISTING);
+	}
     
 }
