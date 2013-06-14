@@ -91,6 +91,7 @@ public class WSAction {
 	private final String WS_METHOD_FORGOT_PASSWORD_RESET = "ChangeForgottenPassword";
 	private final String WS_METHOD_GET_REQUESTS_BY_USER = "GetRequestsByUser";
 	private final String WS_METHOD_MARK_RECEIVED = "MarkAsReceived";
+	private final String WS_METHOD_GET_REQUESTS_BY_AD = "GetRequests";
 	public static final int BAD_AUTH_TOKEN = -1;
 	public static final long BAD_AD_ID = Long.MIN_VALUE;
 	public static final long BAD_IMAGE_ID = Long.MIN_VALUE;
@@ -501,10 +502,10 @@ public class WSAction {
 			} else if (response instanceof AdDto){
 				result.listings = new ArrayList<AdDto>();
 				result.listings.add((AdDto)response);
-				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+				result.result = Constants.RESULT_GET_MY_LISTINGS_SUCCESS;
 			}else{
 				result.listings = (List<AdDto>)response;
-				result.result = Constants.RESULT_GET_LISTINGS_SUCCESS;
+				result.result = Constants.RESULT_GET_MY_LISTINGS_SUCCESS;
 			}			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_GET_MY_LISTINGS;
@@ -1861,6 +1862,14 @@ public class WSAction {
 		return result;
 	}
 	
+	/**
+	 * Method to get requests for user
+	 * @param token
+	 * @param userId
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
 	public RequestsResultWrapper getRequests(String token, long userId) throws IOException, XmlPullParserException{
 		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_REQUESTS_BY_USER;
 		RequestsResultWrapper result = new RequestsResultWrapper();
@@ -1898,6 +1907,14 @@ public class WSAction {
 		return result;
 	}
 	
+	/**
+	 * Method to mark listing as received
+	 * @param token
+	 * @param requestId
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
 	public RequestsResultWrapper markListingAsReceived(String token, long requestId) throws IOException, XmlPullParserException{
 		final String SOAP_METHOD = WS_METHOD_MARK_RECEIVED;
 
@@ -1928,6 +1945,51 @@ public class WSAction {
 			
 		}catch (SoapFault e){
 			result.result = Constants.ERROR_RESULT_MARK_RECEIVED;
+		}
+		return result;
+	}
+	
+	/**
+	 * Method to get requests for Ad
+	 * @param token
+	 * @param adId
+	 * @return result
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	public RequestsResultWrapper getRequestsByAd(String token, long adId) throws IOException, XmlPullParserException{
+		String SOAP_ACTION = Constants.SERVICES_NAMESPACE + WS_METHOD_GET_REQUESTS_BY_AD;
+		RequestsResultWrapper result = new RequestsResultWrapper();
+
+		HttpTransportSE androidHttpTransport = Utility.getServicesTransport(Constants.SERVICES_AD_URL);
+		try{
+			SoapObject request = new SoapObject(Constants.SERVICES_NAMESPACE, WS_METHOD_GET_REQUESTS_BY_AD);
+
+			request.addProperty("adId", adId);
+
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.dotNet = true;
+			envelope.setOutputSoapObject(request);
+			new RequestDto().registerRead(envelope);
+			new UserDto().registerRead(envelope);
+
+			List<HeaderProperty> headerList = new ArrayList<HeaderProperty>();
+			headerList.add(new HeaderProperty("authToken", token));
+
+			androidHttpTransport.debug = true;
+			androidHttpTransport.call(SOAP_ACTION, envelope, headerList);
+			
+			Object response = envelope.getResponse();
+			if (response instanceof RequestDto){
+				result.requests = new ArrayList<RequestDto>();
+				result.requests.add((RequestDto)response);
+				result.result = Constants.RESULT_GET_REQUESTS_SUCCESS;
+			}else{
+				result.requests = (List<RequestDto>)response;
+				result.result = Constants.RESULT_GET_REQUESTS_SUCCESS;
+			}
+		}catch (SoapFault e){
+			result.result = Constants.ERROR_RESULT_GET_REQUESTS;			
 		}
 		return result;
 	}
