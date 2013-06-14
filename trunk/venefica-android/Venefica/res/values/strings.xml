@@ -56,6 +56,8 @@
 	<string name="g_label_expiars">Expires:</string>
 	<string name="g_label_from_business">FROM BUSINESSES</string>
 	<string name="g_label_from_member">FROM MEMBERS</string>
+	<string name="g_label_mark_gifted">MARK GIFTED</string>
+	<string name="g_label_delete">DELETE</string>
     
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
@@ -396,7 +398,7 @@
 
     <!-- Pref Filter -->
     <string name="pref_filter_title">Filter Settings</string>
-    <string name="pref_key_use_miles">pref_key_use_miles</string>
+    <string name="pref_key_use_miles">pref_key_use_mile</string>
     <string name="pref_use_miles_title">Distance</string>
     <string name="pref_use_miles_summ">Set distance in miles</string>
     <string name="pref_key_category">pref_key_category</string>
