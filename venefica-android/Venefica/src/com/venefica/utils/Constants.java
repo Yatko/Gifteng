@@ -202,6 +202,7 @@ public class Constants
 	public static final String PREF_KEY_MEMBER = "member";
 	public static final String PREF_KEY_BUSINESS = "business";
 	public static final String PREF_KEY_CATEGORY = "category";
+	public static final String PREF_KEY_MILES = "distance";
 	
 	//Shared prefs values
 	public static final String PREF_VAL_LOGIN_VENEFICA = "login_venefica";
