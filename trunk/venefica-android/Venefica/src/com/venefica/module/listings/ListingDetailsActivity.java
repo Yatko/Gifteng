@@ -561,6 +561,7 @@ public class ListingDetailsActivity extends VeneficaMapActivity implements andro
 			mapView.getOverlays().add(overlayItems);
 			//scroll map to view overlay in visiblee area
 			mapView.scrollBy(0, -mapView.getHeight()/4);
+			mapView.invalidate();
 		}	
 	}
 	

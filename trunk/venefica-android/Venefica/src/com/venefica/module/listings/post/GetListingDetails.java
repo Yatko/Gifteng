@@ -184,11 +184,11 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			}
 		});
 		// satellite or 2d mode
-		mapView.setSatellite(true);
+		mapView.setSatellite(false);
 		mapView.setTraffic(false);
 		mapView.setBuiltInZoomControls(true);
         mapController = mapView.getController();
-		mapController.setZoom(18);  // Zoom 1 is world view
+		mapController.setZoom(12);  // Zoom 1 is world view
 		overlayItems = new MapItemizedOverlay<ListingOverlayItem>(getResources().getDrawable(R.drawable.icon_location), mapView){
 			@Override
 			public boolean onTouchEvent(MotionEvent event, MapView mapView) {
@@ -338,6 +338,7 @@ public class GetListingDetails extends VeneficaMapActivity implements LocationLi
 			overlayItems.clear();
 			overlayItems.addOverlay(overlayItem);
 			mapView.getOverlays().add(overlayItems);
+			mapView.invalidate();
 		}	
 	}
 	/**
