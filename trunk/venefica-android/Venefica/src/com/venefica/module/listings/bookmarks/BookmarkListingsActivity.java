@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.venefica.module.listings.ListingDetailsActivity;
 import com.venefica.module.listings.ListingDetailsResultWrapper;
@@ -200,6 +201,13 @@ public class BookmarkListingsActivity extends VeneficaActivity implements Bookma
 		}    	
     }	
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == android.R.id.home) {
+    		finish();
+    	}
+    	return true;
+    }
     /**
      * 
      * @author avinash
