@@ -39,12 +39,26 @@
             android:textColor="@color/light_gray"
             android:textSize="14sp" />
     </LinearLayout>
-
+	<TextView
+        android:id="@+id/txtActBrowseCatDistance"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layAdTypeChkPref"
+        android:gravity="left"
+        android:text="@string/pref_use_miles_title" />
+	<EditText 
+	    android:id="@+id/edtActBrowseCatDistance"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtActBrowseCatDistance"
+        android:gravity="left"
+        android:inputType="number"
+        android:hint="miles"/>
     <TextView
         android:id="@+id/txtActBrowseCatSearchByCat"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layAdTypeChkPref"
+        android:layout_below="@id/edtActBrowseCatDistance"
         android:gravity="left"
         android:text="@string/label_browse_cat_browse" />
 
