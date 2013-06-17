@@ -25,13 +25,13 @@
 
     <!-- Expiary -->
     <LinearLayout
-        android:id="@+id/layExpiaryDate"
+        android:id="@+id/layReceivingLItemExpiaryDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/imgReceivingLItemImage"
-        android:gravity="center_vertical"
+        android:gravity="left|center_vertical"
         android:orientation="vertical" >
 
         <TextView
@@ -57,13 +57,13 @@
     <!-- cancel request -->
 
     <LinearLayout
-        android:id="@+id/layCancelReq"
+        android:id="@+id/layReceivingLItemCancelReq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/layExpiaryDate"
-        android:gravity="center_vertical"
+        android:layout_toRightOf="@id/layReceivingLItemExpiaryDate"
+        android:gravity="right|center_vertical"
         android:orientation="vertical" >
 
         <TextView
@@ -86,13 +86,13 @@
     <!-- send msg -->
 
     <LinearLayout
-        android:id="@+id/laySendMsg"
+        android:id="@+id/layReceivingLItemSendMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/layCancelReq"
-        android:gravity="center_vertical"
+        android:layout_toRightOf="@id/layReceivingLItemCancelReq"
+        android:gravity="right|center_vertical"
         android:orientation="vertical" >
 
         <TextView
@@ -115,13 +115,13 @@
     <!-- mark received -->
 
     <LinearLayout
-        android:id="@+id/layMarkReceived"
+        android:id="@+id/layReceivingLItemMarkReceived"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/laySendMsg"
-        android:gravity="center_vertical"
+        android:layout_toRightOf="@id/layReceivingLItemSendMsg"
+        android:gravity="right|center_vertical"
         android:orientation="vertical" >
 
         <TextView
@@ -144,13 +144,13 @@
     <!-- leave review -->
 
     <LinearLayout
-        android:id="@+id/layLeaveReview"
+        android:id="@+id/layReceivingLItemLeaveReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
         android:layout_marginTop="15dp"
-        android:layout_toRightOf="@id/layMarkReceived"
-        android:gravity="center_vertical"
+        android:layout_toRightOf="@id/layReceivingLItemMarkReceived"
+        android:gravity="right|center_vertical"
         android:orientation="vertical" >
 
         <TextView
