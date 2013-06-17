@@ -38,6 +38,7 @@ public abstract class UserData {
     
     protected String phoneNumber;
     private String website;
+    private String about;
     
     @Embedded
     protected Address address;
@@ -99,5 +100,13 @@ public abstract class UserData {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 }

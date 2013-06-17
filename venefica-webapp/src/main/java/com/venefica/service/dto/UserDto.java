@@ -37,6 +37,8 @@ public class UserDto extends DtoBase {
     // in, out
     private Date dateOfBirth;
     // in, out
+    private String about;
+    // in, out
     private ImageDto avatar;
     // out
     private Date joinedAt;
@@ -84,6 +86,7 @@ public class UserDto extends DtoBase {
         name = user.getName();
         email = user.getEmail();
         phoneNumber = user.getPhoneNumber();
+        about = user.getAbout();
         joinedAt = user.getJoinedAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
         address = user.getAddress() != null ? new AddressDto(user.getAddress()) : null;
@@ -100,6 +103,7 @@ public class UserDto extends DtoBase {
         user.setName(name);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
+        user.setAbout(about);
         user.setAddress(address != null ? address.getAddress() : null);
         user.getUserData().updateUser(this);
         
@@ -301,5 +305,13 @@ public class UserDto extends DtoBase {
 
     public void setAddresses(List<AddressDto> addresses) {
         this.addresses = addresses;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 }

@@ -99,6 +99,10 @@ public class AdDto extends DtoBase {
     private AddressDto address;
     // out
     private AdStatus status;
+    // out
+    @XmlElementWrapper(name = "requests")
+    @XmlElement(name = "item")
+    private List<RequestDto> requests;
     
     // business ad data
     
@@ -473,5 +477,13 @@ public class AdDto extends DtoBase {
 
     public void setStatus(AdStatus status) {
         this.status = status;
+    }
+
+    public List<RequestDto> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<RequestDto> requests) {
+        this.requests = requests;
     }
 }

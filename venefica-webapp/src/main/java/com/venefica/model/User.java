@@ -116,6 +116,14 @@ public class User {
         this.userData.setPhoneNumber(phoneNumber);
     }
     
+    public String getAbout() {
+        return userData != null ? userData.getAbout(): null;
+    }
+    
+    public void setAbout(String about) {
+        this.userData.setAbout(about);
+    }
+    
     public Address getAddress() {
         return userData != null ? userData.getAddress() : null;
     }
