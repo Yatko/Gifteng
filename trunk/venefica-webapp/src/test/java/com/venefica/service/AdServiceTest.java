@@ -671,12 +671,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test
     public void getMyAdsTest() {
         authenticateClientAsFirstUser();
-        List<AdDto> ads = client.getMyAds();
+        List<AdDto> ads = client.getMyAds(true);
         assertNotNull(ads);
         assertTrue("At least one ad might have returened!", !ads.isEmpty());
 
         authenticateClientAsThirdUser();
-        ads = client.getMyAds();
+        ads = client.getMyAds(true);
         assertTrue(ads == null);
     }
     
@@ -708,6 +708,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         makeAdActive();
         authenticateClientAsThirdUser();
         client.requestAd(FIRST_AD_ID);
+        
+        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
+        assertNotNull(ads);
+        assertTrue("At least one ad might have returened!", !ads.isEmpty());
         
         authenticateClientAsSecondUser();
         Long requestId = client.requestAd(FIRST_AD_ID);
