@@ -1,15 +1,18 @@
 package com.venefica.service.dto.builder;
 
 import com.venefica.model.Ad;
+import com.venefica.model.AdStatus;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
+import com.venefica.model.Request;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.RequestDto;
 import com.venefica.service.dto.UserDto;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private boolean includeImagesFlag;
     private boolean includeCanMarkAsSpamFlag;
     private boolean includeCanRateFlag;
+    private boolean includeRequestsFlag;
 
     public AdDtoBuilder(Ad model) {
         super(model);
@@ -67,6 +71,15 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     public AdDtoBuilder includeCanRate() {
         includeCanRateFlag = true;
+        return this;
+    }
+    
+    public AdDtoBuilder includeRequests() {
+        return includeRequests(true);
+    }
+    
+    public AdDtoBuilder includeRequests(boolean include) {
+        includeRequestsFlag = include;
         return this;
     }
 
@@ -119,6 +132,17 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
             adDto.setImages(images);
         }
+        
+        if ( includeRequestsFlag ) {
+            LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
+            
+            for (Request request : model.getRequests()) {
+                RequestDto requestDto = new RequestDto(request);
+                requests.add(requestDto);
+            }
+            
+            adDto.setRequests(requests);
+        }
 
         adDto.setCreatedAt(model.getCreatedAt());
         adDto.setExpires(model.isExpires());
@@ -143,11 +167,19 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if (includeCanMarkAsSpamFlag) {
             boolean canMarkAsSpam = true;
             
-            //cannot mark own ad
-            for (SpamMark spamMark : model.getSpamMarks()) {
-                if (spamMark.getWitness().equals(currentUser)) {
+            if ( canMarkAsSpam ) {
+                //cannot mark own ad
+                if ( model.getCreator().equals(currentUser) ) {
                     canMarkAsSpam = false;
-                    break;
+                }
+            }
+            if ( canMarkAsSpam ) {
+                //cannot mark twice the same ad
+                for (SpamMark spamMark : model.getSpamMarks()) {
+                    if (spamMark.getWitness().equals(currentUser)) {
+                        canMarkAsSpam = false;
+                        break;
+                    }
                 }
             }
 
@@ -155,13 +187,24 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
 
         if (includeCanRateFlag) {
-            boolean canRate = true;
+            boolean canRate = (model.getStatus() == AdStatus.SENT || model.getStatus() == AdStatus.RECEIVED);
 
-            //cannot rate already rated ads
-            for (Rating rating : model.getRatings()) {
-                if (rating.getFrom().equals(currentUser)) {
-                    canRate = false;
-                    break;
+            if ( canRate ) {
+                //cannot rate already rated ad (by the same user)
+                for (Rating rating : model.getRatings()) {
+                    if (rating.getFrom().equals(currentUser)) {
+                        canRate = false;
+                        break;
+                    }
+                }
+            }
+            if ( canRate ) {
+                //cannot rate by not selected requestor
+                for (Request request : model.getRequests()) {
+                    if ( request.getUser().equals(currentUser) && !request.isSelected() ) {
+                        canRate = false;
+                        break;
+                    }
                 }
             }
 

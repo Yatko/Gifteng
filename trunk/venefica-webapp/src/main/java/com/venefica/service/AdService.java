@@ -179,21 +179,26 @@ public interface AdService {
     /**
      * Returns a list of all ads created by the current user.
      * 
+     * @param includeRequests flag to include available requests
      * @return list of ads
      */
     @WebMethod(operationName = "GetMyAds")
     @WebResult(name = "ad")
-    List<AdDto> getMyAds();
+    List<AdDto> getMyAds(@WebParam(name = "includeRequests") Boolean includeRequests);
 
     /**
      * Returns a list of all ads created by the given user.
      * 
+     * @param userId the creator user
+     * @param includeRequests flag to include available requests
      * @return list of ads
      * @throws UserNotFoundException is thrown when the user with the specified id is not found
      */
     @WebMethod(operationName = "GetUserAds")
     @WebResult(name = "ad")
-    List<AdDto> getUserAds(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    List<AdDto> getUserAds(
+            @WebParam(name = "userId") Long userId,
+            @WebParam(name = "includeRequests") Boolean includeRequests) throws UserNotFoundException;
     
     /**
      * Returns a list of all ads requested by the given user.
@@ -332,6 +337,16 @@ public interface AdService {
      */
     @WebMethod(operationName = "SelectRequest")
     void selectRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException;
+    
+    /**
+     * 
+     * @param requestId
+     * @return
+     * @throws RequestNotFoundException 
+     */
+    @WebMethod(operationName = "GetRequestById")
+    @WebResult(name = "request")
+    RequestDto getRequestById(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException;
     
     /**
      * Returns available requests for the given ad.

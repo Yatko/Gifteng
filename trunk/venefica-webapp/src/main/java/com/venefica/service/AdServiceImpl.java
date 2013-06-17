@@ -387,10 +387,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     @Transactional
-    public List<AdDto> getMyAds() {
+    public List<AdDto> getMyAds(Boolean includeRequests) {
         try {
             Long userId = getCurrentUserId();
-            return getUserAds(userId);
+            return getUserAds(userId, includeRequests);
         } catch ( UserNotFoundException ex ) {
             logger.error("User (current/logged) not found", ex);
             return new ArrayList<AdDto>();
@@ -399,13 +399,16 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<AdDto> getUserAds(Long userId) throws UserNotFoundException {
+    public List<AdDto> getUserAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User user = validateUser(userId);
         List<Ad> ads = adDao.getByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
         
         for (Ad ad : ads) {
-            AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(user).build();
+            AdDto adDto = new AdDtoBuilder(ad)
+                    .setCurrentUser(user)
+                    .includeRequests(includeRequests != null ? includeRequests : false)
+                    .build();
             result.add(adDto);
         }
         
@@ -581,7 +584,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         request.unmarkAsSelected();
         request.markAsDeleted();
         
-        ad.unselect(); //incrememt available quantity
+        ad.unselect(); //increment available quantity
     }
     
     @Override
@@ -591,6 +594,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User user = getCurrentUser();
         
         selectRequest(request, user);
+    }
+    
+    @Override
+    @Transactional
+    public RequestDto getRequestById(Long requestId) throws RequestNotFoundException {
+        Request request = validateRequest(requestId);
+        return new RequestDto(request);
     }
     
     @Override
@@ -832,6 +842,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if (ratingValue != -1 && ratingValue != 1) {
             throw new InvalidRateOperationException("Only '1' or '-1' can be used as rating values!");
+        } else if ( from.equals(to) ) {
+            throw new InvalidRateOperationException("You cannot rate your ad for yourself.");
         }
 
         for (Rating r : ad.getRatings()) {
