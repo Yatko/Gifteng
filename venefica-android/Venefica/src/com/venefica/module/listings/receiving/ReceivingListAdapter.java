@@ -90,19 +90,25 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 			holder.txtExpiaryDate = (TextView) convertView.findViewById(R.id.txtReceivingLItemExpiaryDate);
 			
 			holder.txtCancelRequest = (TextView) convertView.findViewById(R.id.txtReceivingLItemCancelReq);
-			
+			//buttons
 			holder.btnCancelRequest = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemCancelReq);
 			holder.btnSendMessage = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemSendMsg);
 			holder.btnMarkReceived = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemMarkReceived);
 			holder.btnLeaveReview = (ImageButton) convertView.findViewById(R.id.btnReceivingListItemLeaveReview);
-			
-			holder.layExpiaryDate = (LinearLayout) convertView.findViewById(R.id.layExpiaryDate);
+			//expiary date
+			holder.layExpiaryDate = (LinearLayout) convertView.findViewById(R.id.layReceivingLItemExpiaryDate);
 			
 			holder.btnCancelRequest.setOnClickListener(this);
 			holder.btnSendMessage.setOnClickListener(this);
 			holder.btnMarkReceived.setOnClickListener(this);
 			holder.btnLeaveReview.setOnClickListener(this);
 			holder.imgListingCoverImg.setOnClickListener(this);
+			
+			//layouts
+			holder.layCancelRequest = (LinearLayout) convertView.findViewById(R.id.layReceivingLItemCancelReq);
+			holder.laySendMsg = (LinearLayout) convertView.findViewById(R.id.layReceivingLItemSendMsg);
+			holder.layMarkReceived = (LinearLayout) convertView.findViewById(R.id.layReceivingLItemMarkReceived);
+			holder.layLeaveReview = (LinearLayout) convertView.findViewById(R.id.layReceivingLItemLeaveReview);
 			
 			convertView.setTag(holder);
 		} else {
@@ -118,22 +124,34 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 				.getImgManager().loadImage("", holder.imgListingCoverImg, context.getResources().getDrawable(R.drawable.icon_picture_white));
 		}
 		if (requests.get(position).getStatus() == RequestStatus.ACCEPTED) {
-			holder.btnCancelRequest.setEnabled(false);
+//			holder.btnCancelRequest.setEnabled(false);
 			holder.btnSendMessage.setEnabled(true);
 			holder.btnMarkReceived.setEnabled(true);
 			holder.btnLeaveReview.setEnabled(true);
+			holder.layCancelRequest.setVisibility(ViewGroup.GONE);
+			holder.laySendMsg.setVisibility(ViewGroup.VISIBLE);;
+			holder.layMarkReceived.setVisibility(ViewGroup.VISIBLE);;
+			holder.layLeaveReview.setVisibility(ViewGroup.VISIBLE); 
 		} else if (requests.get(position).getStatus() == RequestStatus.PENDING){
 			holder.btnCancelRequest.setEnabled(true);
 			holder.btnSendMessage.setEnabled(false);
 			holder.btnMarkReceived.setEnabled(false);
 			holder.btnLeaveReview.setEnabled(false);
+//			holder.layCancelRequest.setVisibility(ViewGroup.VISIBLE);
+//			holder.laySendMsg.setVisibility(ViewGroup.GONE);;
+//			holder.layMarkReceived.setVisibility(ViewGroup.GONE);;
+//			holder.layLeaveReview.setVisibility(ViewGroup.GONE); 
 		} else if (requests.get(position).getStatus() == RequestStatus.EXPIRED) {
 			holder.txtCancelRequest.setText(context.getResources().getString(R.string.label_menu_delete).toUpperCase());
 			holder.btnCancelRequest.setImageResource(R.drawable.icon_trash);
-			holder.btnCancelRequest.setEnabled(true);
-			holder.btnSendMessage.setEnabled(false);
-			holder.btnMarkReceived.setEnabled(false);
-			holder.btnLeaveReview.setEnabled(false);
+//			holder.btnCancelRequest.setEnabled(true);
+//			holder.btnSendMessage.setEnabled(false);
+//			holder.btnMarkReceived.setEnabled(false);
+//			holder.btnLeaveReview.setEnabled(false);
+			holder.layCancelRequest.setVisibility(ViewGroup.VISIBLE);
+			holder.laySendMsg.setVisibility(ViewGroup.GONE);;
+			holder.layMarkReceived.setVisibility(ViewGroup.GONE);;
+			holder.layLeaveReview.setVisibility(ViewGroup.GONE); 
 		}
 		
 		
@@ -160,7 +178,7 @@ public class ReceivingListAdapter extends BaseAdapter implements OnClickListener
 		TextView txtStatus, txtCancelRequest, txtExpiaryDate;
 		ImageButton btnCancelRequest, btnSendMessage
 					, btnMarkReceived, btnLeaveReview;
-		LinearLayout layExpiaryDate;
+		LinearLayout layExpiaryDate, layCancelRequest, laySendMsg, layMarkReceived, layLeaveReview;
 	}
 
 	@Override

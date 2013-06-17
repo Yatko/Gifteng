@@ -40,6 +40,8 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.util.Log;
+
 /**
  * A J2SE based HttpTransport layer.
  */
@@ -176,7 +178,7 @@ public class HttpTransportSE extends Transport
 		OutputStream os = connection.openOutputStream();
 
 		os.write(requestData, 0, requestData.length);
-//		Log.d("request :",new String(requestData));
+		Log.d("request :",new String(requestData));
 		os.flush();
 		os.close();
 		requestData = null;
@@ -241,6 +243,7 @@ public class HttpTransportSE extends Transport
 			bos.flush();
 			buf = bos.toByteArray();
 			responseDump = new String(buf);
+			Log.d("responseDump ::", responseDump);
 			is.close();
 			is = new ByteArrayInputStream(buf);
 		}

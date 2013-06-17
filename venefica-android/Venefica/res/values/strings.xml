@@ -51,14 +51,16 @@
     <string name="g_label_from_members">Gift from Members</string>
     <string name="g_label_from_business">Gift from Business</string>
     <string name="g_label_save_settings">Save Settings</string>
-	<string name="g_label_miles">mi</string>
-	<string name="g_label_requerst_gift">Request Gift</string>
-	<string name="g_label_expiars">Expires:</string>
-	<string name="g_label_from_business">FROM BUSINESSES</string>
-	<string name="g_label_from_member">FROM MEMBERS</string>
-	<string name="g_label_mark_gifted">MARK GIFTED</string>
-	<string name="g_label_delete">DELETE</string>
-    
+    <string name="g_label_miles">mi</string>
+    <string name="g_label_requerst_gift">Request Gift</string>
+    <string name="g_label_expiars">Expires:</string>
+    <string name="g_label_from_business">FROM BUSINESSES</string>
+    <string name="g_label_from_member">FROM MEMBERS</string>
+    <string name="g_label_mark_gifted">MARK GIFTED</string>
+    <string name="g_label_delete">DELETE</string>
+    <string name="g_label_accept_request">Accept Request</string>
+    <string name="g_label_decline_request">Decline Request</string>
+
     <!-- hint -->
     <string name="g_hint_enter_email_phone">Email Address or Phone #</string>
     <string name="g_hint_zip">Your Zip Code</string>
@@ -99,9 +101,9 @@
     <string name="g_msg_request_placed_already">You have already placed request for this gift.</string>
     <string name="g_msg_reset_pwd_success">Password changed successfully.</string>
     <string name="g_msg_already_in_bookmark">Gift already in favourites.</string>
-	<string name="g_msg_msrk_received_success">Gift maked as received.</string>
-	<string name="g_msg_no_data_for_members">No receivings from members.</string>
-	<string name="g_msg_no_data_for_business">No receivings from businesses.</string>
+    <string name="g_msg_msrk_received_success">Gift maked as received.</string>
+    <string name="g_msg_no_data_for_members">No receivings from members.</string>
+    <string name="g_msg_no_data_for_business">No receivings from businesses.</string>
     <!-- errors -->
     <string name="g_error_invtation_code">Sorry, your Invitation Code is not correct</string>
     <string name="g_error_req_invtation_code">Faild to request invitation. Please try again later.</string>
@@ -355,43 +357,34 @@
     <string name="pref_key_privacy_settings_text_alerts">pref_key_privacy_settings_text_alerts</string>
     <string name="pref_privacy_settings_stay_logged_in">Stay Logged In</string>
     <string name="pref_key_privacy_settings_stay_logged_in">pref_key_privacy_settings_stay_logged_in</string>
-    
+
     <!-- settings pref -->
     <string name="pref_notify_title">Notify me by email when...</string>
     <string name="pref_notify_description">* Please note that despite your notification preferences, you will still receive emails for giving and receiving actions. These emails are required by Gifteng so that you have an accurate record of the transaction history.</string>
-
     <string name="pref_title_requested_gift">A Gift requested </string>
     <string name="pref_desc_requested_gift">Someone requested my Gift</string>
     <string name="pref_key_requested_gift">requested_my_gift</string>
-    
     <string name="pref_title_i_need_to_review">Review</string>
     <string name="pref_desc_i_need_to_review">I need to leave a review</string>
     <string name="pref_key_i_need_to_review">need_to_leave_a_review</string>
-    
     <string name="pref_title_following_posted">Post from favourite user</string>
     <string name="pref_desc_following_posted">A member I follow posted a new gift</string>
     <string name="pref_key_following_posted">member_i_follow_posted_a_new_gift</string>
-    
     <string name="pref_title_earned_points">Points</string>
     <string name="pref_desc_earned_points">I earned point for activites</string>
     <string name="pref_key_earned_points">earned_point_for_activites</string>
-    
     <string name="pref_title_received_review">Got reviews / points</string>
     <string name="pref_desc_received_review">I received reviews / got points</string>
     <string name="pref_key_received_review">received_reviews_got_points</string>
-    
-	<string name="pref_title_new_gift_available">New gifts</string>   
+    <string name="pref_title_new_gift_available">New gifts</string>
     <string name="pref_desc_new_gift_available">New gifts are available</string>
     <string name="pref_key_new_gift_available">new_gifts_are_available</string>
-    
     <string name="pref_title_someone_follow_me">Someone followed me</string>
     <string name="pref_desc_someone_follow_me">Someone followed me</string>
     <string name="pref_key_someone_follow_me">someone_followed_me</string>
-    
     <string name="pref_title_someone_comment_my_gift">Received comments</string>
     <string name="pref_desc_someone_comment_my_gift">Someone commented on my Gift</string>
     <string name="pref_key_someone_comment_my_gift">someone_commented_on_my_gift</string>
-    
     <string name="pref_title_someone_sent_me_pvt_msg">Private Message</string>
     <string name="pref_desc_someone_sent_me_pvt_msg">Someone sent me a private message</string>
     <string name="pref_key_someone_sent_me_pvt_msg">someone_sent_me_a_private_message</string>
@@ -480,5 +473,6 @@
     <string name="title_activity_profile_detail">ProfileDetailActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_receiving_list">ReceivingListActivity</string>
+    <string name="title_activity_accept_request">AcceptRequestActivity</string>
 
 </resources>
