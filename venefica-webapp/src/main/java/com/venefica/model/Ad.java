@@ -107,6 +107,10 @@ public class Ad {
     @OrderBy
     private List<Request> requests;
     
+    @OneToMany(mappedBy = "ad")
+    @OrderBy
+    private List<Bookmark> bookmarks;
+    
     @Enumerated(EnumType.STRING)
     private AdStatus status;
     
@@ -123,6 +127,7 @@ public class Ad {
         ratings = new LinkedList<Rating>();
         spamMarks = new LinkedList<SpamMark>();
         comments = new LinkedList<Comment>();
+        bookmarks = new LinkedList<Bookmark>();
         viewers = new ArrayList<Viewer>(0);
         createdAt = new Date();
         rating = 0.0f;
@@ -441,5 +446,13 @@ public class Ad {
 
     public void setAdData(AdData adData) {
         this.adData = adData;
+    }
+
+    public List<Bookmark> getBookmarks() {
+        return bookmarks;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmarks) {
+        this.bookmarks = bookmarks;
     }
 }

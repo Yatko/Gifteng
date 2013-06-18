@@ -9,6 +9,7 @@ import com.venefica.model.AdStatus;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
+import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CategoryDto;
@@ -51,6 +52,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -339,7 +341,8 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test
     public void updateInvalidAdTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        AdDto adDto = createAdDto(getFirstUser());
 
         adDto.setTitle(null);
         try {
@@ -370,20 +373,20 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void unauthorizedUpdateAdTest() throws AdNotFoundException, AdValidationException,
-            AuthorizationException {
+    public void unauthorizedUpdateAdTest() throws AdNotFoundException, AdValidationException, AuthorizationException {
         authenticateClientAsSecondUser();
-        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        AdDto adDto = createAdDto(getFirstUser());
         adDto.setTitle("Hacked category");
         client.updateAd(adDto);
     }
 
     @Test
-    public void updateAdTest() throws AdNotFoundException, AdValidationException,
-            AuthorizationException {
+    public void updateAdTest() throws AdNotFoundException, AdValidationException, AuthorizationException {
         authenticateClientAsFirstUser();
 
-        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
+        AdDto adDto = createAdDto(getFirstUser());
         adDto.setTitle("New Title");
         adDto.setDescription("New Description");
         client.updateAd(adDto);
@@ -782,6 +785,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     // internal helpers
+    
+    private AdDto createAdDto(User currentUser) {
+        AdDto adDto = new AdDtoBuilder(ad)
+                .setCurrentUser(currentUser)
+                .includeStatistics(false)
+                .build();
+        return adDto;
+    }
     
     private void makeAdActive() {
         TransactionStatus status = beginNewTransaction();
