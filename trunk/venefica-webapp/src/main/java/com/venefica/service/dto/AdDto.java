@@ -72,12 +72,6 @@ public class AdDto extends DtoBase {
     // in, out
     private Date expiresAt;
     // out
-    private int numAvailProlongations;
-    // out
-    private long numViews;
-    // out
-    private float rating;
-    // out
     private Boolean canRate;
     // out
     private UserDto creator;
@@ -103,6 +97,8 @@ public class AdDto extends DtoBase {
     @XmlElementWrapper(name = "requests")
     @XmlElement(name = "item")
     private List<RequestDto> requests;
+    // out
+    private AdStatisticsDto statistics;
     
     // business ad data
     
@@ -253,30 +249,6 @@ public class AdDto extends DtoBase {
 
     public void setExpiresAt(Date expiresAt) {
         this.expiresAt = expiresAt;
-    }
-
-    public int getNumAvailProlongations() {
-        return numAvailProlongations;
-    }
-
-    public void setNumAvailProlongations(int numAvailProlongations) {
-        this.numAvailProlongations = numAvailProlongations;
-    }
-
-    public long getNumViews() {
-        return numViews;
-    }
-
-    public void setNumViews(long numViews) {
-        this.numViews = numViews;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
     }
 
     public Boolean getCanRate() {
@@ -485,5 +457,13 @@ public class AdDto extends DtoBase {
 
     public void setRequests(List<RequestDto> requests) {
         this.requests = requests;
+    }
+
+    public AdStatisticsDto getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(AdStatisticsDto statistics) {
+        this.statistics = statistics;
     }
 }

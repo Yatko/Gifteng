@@ -9,6 +9,7 @@ import com.venefica.model.Request;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
@@ -31,6 +32,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private boolean includeCanMarkAsSpamFlag;
     private boolean includeCanRateFlag;
     private boolean includeRequestsFlag;
+    private boolean includeStatisticsFlag = true;
 
     public AdDtoBuilder(Ad model) {
         super(model);
@@ -80,6 +82,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     
     public AdDtoBuilder includeRequests(boolean include) {
         includeRequestsFlag = include;
+        return this;
+    }
+    
+    public AdDtoBuilder includeStatistics(boolean include) {
+        includeStatisticsFlag = include;
         return this;
     }
 
@@ -143,15 +150,12 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             
             adDto.setRequests(requests);
         }
-
+        
         adDto.setCreatedAt(model.getCreatedAt());
         adDto.setExpires(model.isExpires());
         adDto.setExpired(model.isExpired());
         adDto.setExpiresAt(model.getExpiresAt());
         adDto.setAvailableAt(model.getAvailableAt());
-        adDto.setNumAvailProlongations(model.getNumAvailProlongations());
-        adDto.setNumViews(model.getNumViews());
-        adDto.setRating(model.getRating());
         adDto.setOwner(currentUser != null && model.getCreator().equals(currentUser));
         
         model.getAdData().updateAdDto(adDto);
@@ -209,6 +213,18 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             }
 
             adDto.setCanRate(canRate);
+        }
+        
+        if (includeStatisticsFlag) {
+            AdStatisticsDto statistics = new AdStatisticsDto();
+            statistics.setNumAvailProlongations(model.getNumAvailProlongations());
+            statistics.setNumViews(model.getNumViews());
+            statistics.setRating(model.getRating());
+            statistics.setNumBookmarks(model.getBookmarks() != null ? model.getBookmarks().size() : 0);
+            statistics.setNumComments(model.getComments() != null ? model.getComments().size() : 0);
+            statistics.setNumShares(0);
+
+            adDto.setStatistics(statistics);
         }
 
         return adDto;
