@@ -2,6 +2,7 @@ package com.venefica.model;
 
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
+import com.vividsolutions.jts.geom.Point;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -130,6 +131,14 @@ public class User {
     
     public void setAddress(Address address) {
         this.userData.setAddress(address);
+    }
+    
+    public Point getLocation() {
+        return userData != null ? userData.getLocation(): null;
+    }
+    
+    public void setLocation(Point location) {
+        this.userData.setLocation(location);
     }
     
     public boolean isBusinessAccount() {

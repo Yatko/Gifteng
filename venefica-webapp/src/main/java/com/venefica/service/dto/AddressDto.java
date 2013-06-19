@@ -55,27 +55,26 @@ public class AddressDto {
     }
     
     public AddressDto(Point location) {
-         //the longitude-X and latitude-Y is not a mistake
-        this.longitude = location.getX();
-        this.latitude = location.getY();
+        setLocation(location);
     }
     
     public AddressDto(Address address) {
-        address1 = address.getAddress1();
-        address2 = address.getAddress2();
-        city = address.getCity();
-        county = address.getCounty();
-        country = address.getCountry();
-        state = address.getState();
-        area = address.getArea();
-        zipCode = address.getZipCode();
+        setAddress(address);
+    }
+    
+    public AddressDto(Address address, Point location) {
+        setAddress(address);
+        setLocation(location);
     }
     
     public AddressDto(AddressWrapper addressWrapper) {
-        this(addressWrapper.getAddress());
+        setAddress(addressWrapper.getAddress());
+        
         id = addressWrapper.getId();
         name = addressWrapper.getName();
     }
+    
+    // helper methods
     
     public Point getLocation() {
         if (longitude != null && latitude != null) {
@@ -103,6 +102,29 @@ public class AddressDto {
         addressWrapper.setId(id);
         addressWrapper.setName(name);
         return addressWrapper;
+    }
+    
+    // internal helpers
+    
+    private void setAddress(Address address) {
+        if ( address != null ) {
+            address1 = address.getAddress1();
+            address2 = address.getAddress2();
+            city = address.getCity();
+            county = address.getCounty();
+            country = address.getCountry();
+            state = address.getState();
+            area = address.getArea();
+            zipCode = address.getZipCode();
+        }
+    }
+    
+    private void setLocation(Point location) {
+        if ( location != null ) {
+            //the longitude-X and latitude-Y is not a mistake
+            this.longitude = location.getX();
+            this.latitude = location.getY();
+        }
     }
     
     // getters/setters

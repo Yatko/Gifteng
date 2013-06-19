@@ -5,6 +5,7 @@
 package com.venefica.model;
 
 import com.venefica.service.dto.UserDto;
+import com.vividsolutions.jts.geom.Point;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -17,6 +18,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Type;
 
 /**
  * Contains user data. Based on user type (business or simple member) the
@@ -40,6 +42,9 @@ public abstract class UserData {
     private String website;
     private String about;
     
+    @Column(columnDefinition = "Geometry")
+    @Type(type = "org.hibernate.spatial.GeometryType")
+    protected Point location;
     @Embedded
     protected Address address;
     
@@ -94,6 +99,14 @@ public abstract class UserData {
         this.invitation = invitation;
     }
 
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+    
     public Address getAddress() {
         return address;
     }
