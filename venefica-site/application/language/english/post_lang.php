@@ -1,7 +1,7 @@
 <?php
 
 #
-#post form fields
+#business post form fields
 #
 $lang['post_title'] = "title";
 $lang['post_price'] = "current value";

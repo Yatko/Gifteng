@@ -34,13 +34,11 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
     });
 </script>
 
-<div class="container">
-    <div class="row ge-business ge-post">
+<div class="container ge-topspace">
+    <div class="row">
         
-        <div id="invitation_2" class="span4 offset4 ge-form">
+        <div id="invitation_2" class="span4 offset4">
             <div class="well ge-well">
-                
-                
                 
     <? if ( $action == "request" ): ?>
         <? if ( $step == 3 ): ?>
@@ -85,7 +83,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                     <div class="span12">
                         <div class="control-group large">
                             <div class="controls">
-                                <input name="invitation_zipcode" type="text" value="<?=set_value('invitation_zipcode')?>" placeholder="<?=lang('invitation_zipcode_hint')?>" class="span3">
+                                <input name="invitation_zipcode" type="text" value="<?=set_value('invitation_zipcode')?>" maxlength="5" placeholder="<?=lang('invitation_zipcode_hint')?>" class="span3">
                             </div>
                         </div>
                     </div>
@@ -230,43 +228,6 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
             
         <? endif; ?>
     <? endif; ?>
-    
-    
-    <? /** ?>
-    <? if ( $action == "verify" && $step == 2): ?>
-        <!-- -->
-    <? else: ?>
-        <div class="contentBox">
-            <div><a id="requestInvitation" class="red"><?=lang('invitation_invitation')?></a></div>
-        </div>
-    <? endif; ?>
-
-    <div id="requestInvitationForm" <?=display($action, "verify")?>>
-
-        <? if ( $action == "verify" && $step == 2): ?>
-            <?=form_open('/invitation/verify/2', '', array('invitation_code' => $invitation_code))?>
-            
-            <div class="formBox">
-                <div class="red"><?=lang('invitation_verified')?></div>
-                <div><input type="submit" value="<?=lang('invitation_join_button')?>" class="green"></div>
-            </div>
-
-            <?=form_close()?>
-        <? else: ?>
-            <?=form_open('/invitation/verify/1')?>
-            
-            <div class="formBox">
-                <?=isset($this->verify_invitation_form) ? $this->verify_invitation_form->error_string() : ""?>
-                <div><input name="invitation_code" value="<?=set_value('invitation_code')?>" type="text" class="textbox" title="<?=lang('invitation_code_hint')?>" placeholder="<?=lang('invitation_code_hint')?>"></div>
-                <div><input type="submit" value="<?=lang('invitation_verify_button')?>" class="red"></div>
-            </div>
-
-            <?=form_close()?>
-        <? endif; ?>
-
-    </div>
-    <? /**/ ?>
-                
                 
             </div><!--./ge well-->
         </div><!--./ge-invite step2-->

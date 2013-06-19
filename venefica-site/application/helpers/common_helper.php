@@ -33,6 +33,12 @@ if ( ! function_exists('is_empty')) {
         if ( $obj == null ) {
             return true;
         }
+        if ( is_array($obj) ) {
+            if ( sizeof($obj) == 0 ) {
+                return true;
+            }
+            return false;
+        }
         if ( is_object($obj) ) {
             $object_vars = get_object_vars($obj);
             if ( $object_vars == null || empty($object_vars) ) {
@@ -114,36 +120,5 @@ if ( ! function_exists('endsWith')) {
             return true;
         }
         return (substr($haystack, -$length) === $needle);
-    }
-}
-
-
-// date and time helpers
-
-if ( ! function_exists('convertDateToTimestamp')) {
-    function convertDateToTimestamp($strDate) {
-        $date = date_create_from_format('j F, Y', $strDate);
-        $timestamp = date_format($date, "U");
-        return $timestamp;
-    }
-}
-if ( ! function_exists('convertTimestampToDate')) {
-    function convertTimestampToDate($timestamp) {
-        $strDate = date("j F, Y", $timestamp);
-        return $strDate;
-    }
-}
-
-if ( ! function_exists('convertHourToTimestamp')) {
-    function convertHourToTimestamp($strDate) {
-        $date = date_create_from_format('G', $strDate);
-        $timestamp = date_format($date, "U");
-        return $timestamp;
-    }
-}
-if ( ! function_exists('convertTimestampToHour')) {
-    function convertTimestampToHour($timestamp) {
-        $strDate = date("G", $timestamp);
-        return $strDate;
     }
 }

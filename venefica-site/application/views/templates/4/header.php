@@ -24,12 +24,17 @@ $page = $this->uri->segment(1, null);
     <!-- Loading Bootstrap -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
     <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
-    <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-lightbox.min.css" />-->
     <!-- Loading Flat UI -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <!-- Loading ge temp CSS -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-pages.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
+    
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+    <![endif]-->
     
     
     <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
@@ -47,8 +52,10 @@ $page = $this->uri->segment(1, null);
     <script src="<?=JS_PATH?>jquery.tagsinput.js"></script>
     <script src="<?=JS_PATH?>jquery.placeholder.js"></script>
     <script src="<?=JS_PATH?>jquery.stacktable.js"></script>
-    <!--<script src="<?=JS_PATH?>bootstrap-lightbox.min.js"></script>-->
     <script src="<?=JS_PATH?>application.js"></script>
+    
+    <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+    <script src="<?=JS_PATH?>leaflet-providers.js"></script>
     
     
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -58,12 +65,12 @@ $page = $this->uri->segment(1, null);
     
     
     <!--MASONRY -->
-    <!--
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>masonry.css" />
     <script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>
     <script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>
     <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
-    -->
+    
+    
     
     
     <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
@@ -89,36 +96,6 @@ $page = $this->uri->segment(1, null);
 
 <body>
 
-<?/**?>
-<div class="navbar navbar-fixed-top ge-navbar">
-    <div class="navbar-inner">
-        <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="<?=base_url()?>index">Gifteng</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile"><?=lang('main_submenu_profile')?></a></li>
-                    <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse">BROWSE</a></li>
-                    <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post">POST</a></li>
-                    <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation">INVITATION</a></li>
-                    <li<?=($page == "registration" ? ' class="active"' : '')?>><a href="<?=base_url()?>registration">REGISTRATION</a></li>
-                    <? if( isLogged() ): ?>
-                        <li<?=($page == "authentication" ? ' class="active"' : '')?>><a href="<?=base_url()?>authentication/logout">SIGN OUT</a></li>
-                    <? else: ?>
-                        <li<?=($page == "authentication" ? ' class="active"' : '')?>><a href="<?=base_url()?>authentication/login">SIGN IN</a></li>
-                    <? endif; ?>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div><!--./navbar-->
-<?/**/?>
-
-
 <!-- ********** ********** ********** -->    
 <!-- content starts here -->
 <!-- ********** ********** ********** -->  
@@ -134,17 +111,47 @@ $page = $this->uri->segment(1, null);
             <span class="nav">
                 <a href="<?=base_url()?>index"><i class="gifteng"></i><sup>Beta</sup></a>
             </span>
+            
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <? if( isLogged() ): ?>
+                    
+                        <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile"><?=lang('main_submenu_profile')?></a></li>
+                        <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse">BROWSE</a></li>
+                        <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post">POST</a></li>
+                    
+                    <? else: ?>
+                    
+                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/request">INVITATION REQUEST</a></li>
+                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/verify">INVITATION VERIFY</a></li>
+                        <li<?=($page == "registration" ? ' class="active"' : '')?>><a href="<?=base_url()?>registration">REGISTRATION</a></li>
+                    
+                    <? endif; ?>
+                        
+                    <li<?=($page == "contact" ? ' class="active"' : '')?>><a href="<?=base_url()?>contact">CONTACT</a></li>
+                </ul>
+            </div>
+            
             <ul class="nav pull-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
-                    <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                        <form action="#" method="post" accept-charset="UTF-8">
-                            <input style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
-                            <input style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
-                            <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
-                            <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
-                            <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="button" value="Sign In" />
-                        </form>
+                    <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
+                        
+                        <? if( isLogged() ): ?>
+                            
+                            <a href="<?=base_url()?>authentication/logout" class="btn btn-block btn-ge">SIGN OUT</a>
+                        
+                        <? else: ?>
+                        
+                            <form action="<?=base_url()?>authentication/login" method="post" accept-charset="UTF-8">
+                                <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
+                                <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
+                                <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
+                                <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
+                                <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
+                            </form>
+                        
+                        <? endif; ?>
                     </div>
                 </li>
            </ul>
@@ -152,4 +159,3 @@ $page = $this->uri->segment(1, null);
     </div>
     </div>
 </div><!--./navbar-->
-

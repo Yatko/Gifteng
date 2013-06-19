@@ -2,6 +2,9 @@
 
 class Profile extends CI_Controller {
     
+    const AJAX_STATUS_RESULT = 'result';
+    const AJAX_STATUS_ERROR = 'error';
+    
     private $initialized = false;
     
     public function view($name = null) {
@@ -28,7 +31,7 @@ class Profile extends CI_Controller {
         }
 
         try {
-            $givings = $this->ad_service->getUserAds($user->id);
+            $givings = $this->ad_service->getUserAds($user->id, false);
         } catch ( Exception $ex ) {
             $givings = null;
         }
@@ -88,7 +91,7 @@ class Profile extends CI_Controller {
         }
         
         $data = array();
-        $data['is_ajax'] = false;
+//        $data['is_ajax'] = false;
         $data['user'] = $user;
         $data['receivings'] = $receivings;
         $data['givings'] = $givings;
@@ -108,18 +111,63 @@ class Profile extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
-    public function ajax() {
+    public function change_avatar() {
         $this->init();
         
         if ( !isLogged() ) {
             return;
+        } else if ( !$_FILES ) {
+            return;
         }
         
-        $data = array();
-        $data['is_ajax'] = true;
+        $field = 'image';
+        if ( !isset($_FILES[$field]) || $_FILES[$field]['error'] == 4 ) {
+            //no file selected for upload
+            return;
+        }
         
-        $this->load->view('pages/profile', $data);
+        $config['upload_path'] = TEMP_FOLDER;
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['encrypt_name'] = true;
+        
+        $this->load->library('upload', $config);
+        if ( !$this->upload->do_upload($field) ) {
+            $error = $this->upload->display_errors();
+            $this->respondAjax(Profile::AJAX_STATUS_ERROR, $error);
+            return;
+        }
+        
+        $data = $this->upload->data();
+        $image_file_name = $data['file_name'];
+        $image = Image_model::createImageModel($image_file_name);
+        
+        try {
+            $user = $this->usermanagement_service->loadUser();
+            $user->avatar = $image;
+            
+            $this->usermanagement_service->updateUser($user);
+            $this->usermanagement_service->refreshUser();
+            $user = $this->usermanagement_service->loadUser();
+            
+            $this->respondAjax(Profile::AJAX_STATUS_RESULT, $user->getAvatarUrl());
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->getMessage());
+            $this->respondAjax(Profile::AJAX_STATUS_ERROR, 'Something went wrong !');
+        }
     }
+
+//    public function ajax() {
+//        $this->init();
+//        
+//        if ( !isLogged() ) {
+//            return;
+//        }
+//        
+//        $data = array();
+//        $data['is_ajax'] = true;
+//        
+//        $this->load->view('pages/profile', $data);
+//    }
     
     // internal
     
@@ -129,17 +177,22 @@ class Profile extends CI_Controller {
             $this->lang->load('main');
             $this->lang->load('profile');
             
-            $this->load->library('auth_service');
             $this->load->library('ad_service');
             $this->load->library('usermanagement_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');
             $this->load->model('ad_model');
+            $this->load->model('adstatistics_model');
             $this->load->model('user_model');
             $this->load->model('rating_model');
             
             $this->initialized = true;
         }
+    }
+    
+    private function respondAjax($status, $result) {
+        $data['obj'] = array($status => $result);
+        $this->load->view('json', $data);
     }
 }

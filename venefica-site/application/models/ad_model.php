@@ -49,9 +49,6 @@ class Ad_model extends CI_Model {
     var $expires; //boolean
     var $availableAt; //long - timestamp
     var $expiresAt; //long - timestamp
-    var $numAvailProlongations = 0; //int
-    var $numViews = 0; //int
-    var $rating = 0; //float
     var $canRate; //boolean
     var $creator; //User_model
     var $canMarkAsSpam; //boolean
@@ -62,6 +59,8 @@ class Ad_model extends CI_Model {
     var $comments; //array of Comment_model
     var $address; //Address_model
     var $status; //enum: ACTIVE, EXPIRED, SELECTED, SENT, RECEIVED
+    var $requests; //array of Request_model
+    var $statistics; //AdStatistics_model
     
     // business ad data
     var $promoCode; //string
@@ -95,9 +94,6 @@ class Ad_model extends CI_Model {
             $this->expires = getField($obj, 'expires');
             $this->availableAt = getField($obj, 'availableAt');
             $this->expiresAt = getField($obj, 'expiresAt');
-            $this->numAvailProlongations = getField($obj, 'numAvailProlongations');
-            $this->numViews = getField($obj, 'numViews');
-            $this->rating = getField($obj, 'rating');
             $this->canRate = getField($obj, 'canRate');
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
             $this->freeShipping = getField($obj, 'freeShipping');
@@ -135,6 +131,12 @@ class Ad_model extends CI_Model {
             }
             if ( hasField($obj, 'address') ) {
                 $this->address = Address_model::convertAddress($obj->address);
+            }
+            if ( hasField($obj, 'requests') && hasField($obj->requests, 'item') && $obj->requests->item != null ) {
+                $this->requests = Request_model::convertRequests($obj->requests->item);
+            }
+            if ( hasField($obj, 'statistics') ) {
+                $this->statistics = AdStatistics_model::convertAdStatistics($obj->statistics);
             }
         }
     }

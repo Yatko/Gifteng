@@ -125,7 +125,7 @@
                         <div class="control-group">
                             <div class="controls">
                                 <div class="input">
-                                    <input name="zipCode" value="<?=set_value('zipCode')?>" type="text" placeholder="Zip code" class="span2" required="">
+                                    <input name="zipCode" value="<?=set_value('zipCode')?>" type="text" maxlength="5" placeholder="Zip code" class="span2" required="">
                                 </div>
                             </div>
                         </div>

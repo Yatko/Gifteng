@@ -37,7 +37,7 @@
         $("#new_address").click(function() {
             $.ajax({
                 type: 'POST',
-                url: '<?=base_url()?>post/new_address',
+                url: '<?=base_url()?>post/business/ajax/new_address',
                 dataType: 'json',
                 data: {
                     new_address_name: $("#new_address_name").val(),
@@ -45,56 +45,54 @@
                     new_address_address_2: $("#new_address_address_2").val(),
                     new_address_city: $("#new_address_city").val(),
                     new_address_zipCode: $("#new_address_zipCode").val()
-                },
-                success: function (address) {
-                    var addressId = address.id;
-                    var addressName = address.name;
-                    
-                    var $parent = $("#business_post_location_addresses");
-                    var source = $parent.children(":first")[0];
-                    var cloned = $(source).clone(true, true)[0];
-
-                    $(cloned).find("*").each(function(index, element) {
-                        var oldId = element.id;
-                        var oldName = element.name;
-                        var oldFor = $(element).attr('for');
-
-                        if (oldId) {
-                            var matches = oldId.match(/(.+)_\d+/);
-                            if (matches && matches.length >= 2) {
-                                var newId = matches[1] + "_" + addressId;
-                                element.id = newId;
-                            }
-                        }
-                        if (oldName) {
-                            var matches = oldName.match(/(.+)_\d+/);
-                            if (matches && matches.length >= 2) {
-                                var newName = matches[1] + "_" + addressId;
-                                element.name = newName;
-                            }
-                        }
-                        if (oldFor) {
-                            var matches = oldFor.match(/(.+)_\d+/);
-                            if (matches && matches.length >= 2) {
-                                var newFor = matches[1] + "_" + addressId;
-                                $(element).attr('for', newFor);
-                            }
-                        }
-                    });
-                    $(cloned).find("#address_" + addressId).text(addressName);
-                    //alert(cloned.outerHTML);
-                    $(cloned).appendTo($parent);
-                    
-                    $("#new_address_name").val('');
-                    $("#new_address_address").val('');
-                    $("#new_address_address_2").val('');
-                    $("#new_address_city").val('');
-                    $("#new_address_zipCode").val('');
-                    $("#locationContainer").modal('hide');
-                },
-                error: function(data) {
-                    //TODO
                 }
+            }).done(function(address) {
+                var addressId = address.id;
+                var addressName = address.name;
+
+                var $parent = $("#business_post_location_addresses");
+                var source = $parent.children(":first")[0];
+                var cloned = $(source).clone(true, true)[0];
+
+                $(cloned).find("*").each(function(index, element) {
+                    var oldId = element.id;
+                    var oldName = element.name;
+                    var oldFor = $(element).attr('for');
+
+                    if (oldId) {
+                        var matches = oldId.match(/(.+)_\d+/);
+                        if (matches && matches.length >= 2) {
+                            var newId = matches[1] + "_" + addressId;
+                            element.id = newId;
+                        }
+                    }
+                    if (oldName) {
+                        var matches = oldName.match(/(.+)_\d+/);
+                        if (matches && matches.length >= 2) {
+                            var newName = matches[1] + "_" + addressId;
+                            element.name = newName;
+                        }
+                    }
+                    if (oldFor) {
+                        var matches = oldFor.match(/(.+)_\d+/);
+                        if (matches && matches.length >= 2) {
+                            var newFor = matches[1] + "_" + addressId;
+                            $(element).attr('for', newFor);
+                        }
+                    }
+                });
+                $(cloned).find("#address_" + addressId).text(addressName);
+                //alert(cloned.outerHTML);
+                $(cloned).appendTo($parent);
+
+                $("#new_address_name").val('');
+                $("#new_address_address").val('');
+                $("#new_address_address_2").val('');
+                $("#new_address_city").val('');
+                $("#new_address_zipCode").val('');
+                $("#locationContainer").modal('hide');
+            }).fail(function(data) {
+                //TODO
             });
         });
     });
@@ -105,7 +103,7 @@
 ?>
 
 
-<div class="container ge-container">
+<div class="container ge-topspace">
 <div class="row ge-business ge-post">
 
     <div class="span12 ge-headline">
@@ -116,11 +114,11 @@
     </div><!--./ge-headline-->
     
     
-    <?=form_open_multipart('/post', '', array('step' => $step)) ?>
+    <?=form_open_multipart('/post/business', '', array('step' => $step)) ?>
     <?=isset($this->post_form) ? $this->post_form->error_string() : "" ?>
         
         
-        <? if ($step == Post::STEP_START): ?>
+        <? if ($step == Business_post::STEP_START): ?>
             
             
             <div id="business_post_start" class="span6 ge-form">
@@ -260,7 +258,7 @@
             </div><!--./ge-post step1-->
             
             
-        <? elseif ($step == Post::STEP_ONLINE): ?>
+        <? elseif ($step == Business_post::STEP_ONLINE): ?>
 
 
             <div id="business_post_online" class="span6 ge-form">
@@ -324,7 +322,7 @@
                         <div class="controls">
                             <button class="btn file" for="image" type="button">
                                 <? if( !is_empty($image) ): ?>
-                                <img src="get_photo/<?=$image?>/30/30" />
+                                <img src="<?=base_url()?>get_photo/<?=$image?>/30/30" />
                                 <? endif; ?>
                                 Upload from your device
                             </button>
@@ -349,7 +347,7 @@
             </div><!--./ge-post online-->
 
 
-        <? elseif ($step == Post::STEP_LOCATION): ?>
+        <? elseif ($step == Business_post::STEP_LOCATION): ?>
             
             
             <?
@@ -512,7 +510,7 @@
                             <div class="span2">
                                 <button class="btn btn-small file" for="image_<?=$address_id?>" type="button">
                                     <? if( $image && !is_empty($image) ): ?>
-                                    <img src="get_photo/<?=$image?>/30/30" />
+                                    <img src="<?=base_url()?>get_photo/<?=$image?>/30/30" />
                                     <? endif; ?>
                                     Add
                                 </button>
@@ -522,7 +520,7 @@
                             <div class="span2">
                                 <button class="btn btn-small file" for="bar_code_<?=$address_id?>" type="button">
                                     <? if( !is_empty($bar_code) ): ?>
-                                    <img src="get_photo/<?=$bar_code?>/30/30" />
+                                    <img src="<?=base_url()?>get_photo/<?=$bar_code?>/30/30" />
                                     <? endif; ?>
                                     Add
                                 </button>
@@ -585,7 +583,7 @@
                                     </div>
                                     <div class="control-group">
                                         <div class="controls">
-                                            <input id="new_address_zipCode" type="text" placeholder="Zip code" class="input-block-level" required="">
+                                            <input id="new_address_zipCode" type="text" maxlength="5" placeholder="Zip code" class="input-block-level" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -617,13 +615,13 @@
             </div><!--./ge-post location-->
 
 
-        <? elseif ($step == Post::STEP_PREVIEW): ?>
+        <? elseif ($step == Business_post::STEP_PREVIEW): ?>
 
 
             preview
 
 
-        <? elseif ($step == Post::STEP_POST): ?>
+        <? elseif ($step == Business_post::STEP_POST): ?>
 
 
             Error: <?=$error ?>
@@ -631,7 +629,7 @@
 
         <? endif; ?>
 
-        <?=form_close() ?>
+    <?=form_close() ?>
     
 </div>
 </div>

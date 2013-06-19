@@ -96,7 +96,7 @@ class Authentication extends CI_Controller {
         
         destroySession();
         
-        redirect('/authentication/login');
+        redirect('/index');
     }
     
     
