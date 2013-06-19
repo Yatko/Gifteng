@@ -14,7 +14,7 @@ import org.hibernate.annotations.ForeignKey;
 //import javax.persistence.SequenceGenerator;
 
 /**
- * Comment for an ad.
+ * Comment for an ad. Comments are publicly available for every user.
  *
  * @author Sviatoslav Grebenchukov
  */
@@ -51,15 +51,12 @@ public class Comment {
     private Comment reply;
 
     public Comment() {
-        createdAt = new Date();
     }
 
     public Comment(Ad ad, User publisher, String text) {
         this.ad = ad;
         this.publisher = publisher;
         this.text = text;
-
-        createdAt = new Date();
     }
 
     public Long getId() {
