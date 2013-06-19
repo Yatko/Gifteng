@@ -89,7 +89,7 @@ public class UserDto extends DtoBase {
         about = user.getAbout();
         joinedAt = user.getJoinedAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
-        address = user.getAddress() != null ? new AddressDto(user.getAddress()) : null;
+        address = new AddressDto(user.getAddress(), user.getLocation());
         businessAccount = user.isBusinessAccount();
         user.getUserData().updateUserDto(this);
     }
@@ -105,6 +105,7 @@ public class UserDto extends DtoBase {
         user.setPhoneNumber(phoneNumber);
         user.setAbout(about);
         user.setAddress(address != null ? address.getAddress() : null);
+        user.setLocation(address != null ? address.getLocation() : null);
         user.getUserData().updateUser(this);
         
         // Handle avatar image
