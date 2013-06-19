@@ -1,7 +1,7 @@
 $(function() {
     $(':file').wrap($('<div/>').css({
         height: 0,
-        width:0,
+        width: 0,
         'overflow': 'hidden'
     }));
     
@@ -15,13 +15,30 @@ $(function() {
             //$this.text(fileName);
             
             $this.addClass('btn-ge');
+            if ( !$this.attr('original_text') ) {
+                //saving original text to be used later
+                $this.attr('original_text', $this.text());
+            }
             $this.text('Done');
-            $this.prop('disabled', true);
+            //$this.prop('disabled', true);
+            $this.trigger('file_selected');
         });
         
         $this.click(function() {
             fileInput.click();
         }).show();
+    });
+    
+    //making auto height of the body for every modal
+    $('.modal').each(function() {
+        $this = $(this);
+        $this.on('show', function () {
+            $('.modal-body', this).css({
+                width: 'auto',
+                height: 'auto',
+                'max-height':'100%'
+            });
+        });
     });
 });
 
