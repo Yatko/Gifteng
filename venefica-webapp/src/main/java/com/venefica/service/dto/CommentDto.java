@@ -41,13 +41,13 @@ public class CommentDto extends DtoBase {
     }
 
     public CommentDto(Comment comment, User currentUser) {
+        Image avatar = comment.getPublisher().getAvatar();
+        
         id = comment.getId();
         text = comment.getText();
         owner = comment.getPublisher().equals(currentUser);
         publisherName = comment.getPublisher().getName();
         publisherFullName = comment.getPublisher().getFullName();
-
-        Image avatar = comment.getPublisher().getAvatar();
         publisherAvatarUrl = ImageDto.imageUrl(avatar);
         createdAt = comment.getCreatedAt();
     }
