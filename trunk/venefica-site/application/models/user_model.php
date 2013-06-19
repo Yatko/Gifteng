@@ -17,6 +17,7 @@ class User_model extends CI_Model {
     var $email; //string
     var $phoneNumber; //string
     var $dateOfBirth; //long - timestamp
+    var $about; //string
     var $avatar; //Image_model
     var $joinedAt; //long - timestamp
     var $inFollowers; //boolean
@@ -43,6 +44,7 @@ class User_model extends CI_Model {
             $this->email = getField($obj, 'email');
             $this->phoneNumber = getField($obj, 'phoneNumber');
             $this->dateOfBirth = getField($obj, 'dateOfBirth');
+            $this->about = getField($obj, 'about');
             $this->joinedAt = getField($obj, 'joinedAt');
             $this->inFollowers = getField($obj, 'inFollowers');
             $this->inFollowings = getField($obj, 'inFollowings');
@@ -132,6 +134,13 @@ class User_model extends CI_Model {
             return '';
         }
         return $this->address->getLocation();
+    }
+    
+    public function getZipCode() {
+        if ( $this->address == null ) {
+            return '';
+        }
+        return $this->address->zipCode;
     }
     
     public function toString() {

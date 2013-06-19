@@ -2,6 +2,9 @@
 
 class Browse extends CI_Controller {
     
+    const AJAX_STATUS_RESULT = 'result';
+    const AJAX_STATUS_ERROR = 'error';
+    
     private $initialized = false;
     
     private static $STARTING_AD_NUM = 5;
@@ -12,44 +15,105 @@ class Browse extends CI_Controller {
         
         if ( !validate_login() ) return;
         
-        $lastAdId = $this->getLastAdIdFromUri();
+        $user = $this->usermanagement_service->loadUser();
+        $lastAdId = -1;
         $ads = $this->getAds($lastAdId, Browse::$STARTING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = false;
         $data['ads'] = $ads;
+        $data['user'] = $user;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/browse', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
-    public function ajax() {
+    public function get_more() {
         $this->init();
         
         if ( !isLogged() ) {
             return;
+        } else if ( !$_GET ) {
+            return;
         }
         
-        $lastAdId = $this->getLastAdIdFromUri();
+        $user = $this->usermanagement_service->loadUser();
+        $lastAdId = $_GET['lastAdId'];
         $ads = $this->getAds($lastAdId, Browse::$CONTINUING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = true;
         $data['ads'] = $ads;
+        $data['user'] = $user;
         
         $this->load->view('pages/browse', $data);
     }
     
-    // internal
-    
-    private function getAds($lastAdId, $numberAds) {
+    public function follow() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
         try {
-            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, 2);
+            $userId = $_GET['userId'];
+            $this->usermanagement_service->follow($userId);
+            
+            $this->respondAjax(Browse::AJAX_STATUS_RESULT, 'OK');
         } catch ( Exception $ex ) {
-            return $ex->getMessage();
+            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
+    
+    public function unfollow() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $userId = $_GET['userId'];
+            $this->usermanagement_service->unfollow($userId);
+            
+            $this->respondAjax(Browse::AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function comment() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('commentAdId');
+            $text = $this->input->post('commentText');
+            
+            $comment = new Comment_model();
+            $comment->text = $text;
+            
+            $this->message_service->addCommentToAd($adId, $comment);
+            $ad = $this->ad_service->getAdById($adId);
+            
+            $this->respondAjax(Browse::AJAX_STATUS_RESULT, $ad->statistics->numComments);
+        } catch ( Exception $ex ) {
+            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    // internal
     
     private function init() {
         if ( !$this->initialized ) {
@@ -57,22 +121,49 @@ class Browse extends CI_Controller {
             $this->lang->load('main');
             $this->lang->load('browse');
             
-            $this->load->library('auth_service');
             $this->load->library('ad_service');
+            $this->load->library('usermanagement_service');
+            $this->load->library('message_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');
             $this->load->model('ad_model');
+            $this->load->model('adstatistics_model');
             $this->load->model('user_model');
             $this->load->model('comment_model');
+            $this->load->model('request_model');
             
             $this->initialized = true;
         }
     }
     
-    private function getLastAdIdFromUri() {
-        //default value is -1
-        $lastAdId = $this->uri->segment(3, -1);
-        return $lastAdId;
+    private function getAds($lastAdId, $numberAds) {
+        /**
+        // to mock
+        
+        $ads = array();
+        $user = $this->usermanagement_service->loadUser();
+        for ( $i = 1; $i <= $numberAds; $i++ ) {
+            $ad = new Ad_model();
+            $ad->id = $lastAdId + $i;
+            $ad->owner = true;
+            $ad->creator = $user;
+            $ad->title = 'Test';
+            
+            array_push($ads, $ad);
+        }
+        return $ads;
+        /**/
+        
+        try {
+            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, 2);
+        } catch ( Exception $ex ) {
+            return $ex->getMessage();
+        }
+    }
+    
+    private function respondAjax($status, $result) {
+        $data['obj'] = array($status => $result);
+        $this->load->view('json', $data);
     }
 }

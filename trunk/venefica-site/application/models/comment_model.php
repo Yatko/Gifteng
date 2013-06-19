@@ -49,6 +49,13 @@ class Comment_model extends CI_Model {
         return date(DATE_FORMAT, $this->createdAt / 1000);
     }
     
+    public function getCreateDateHumanTiming() {
+        if ( $this->createdAt == null ) {
+            return '';
+        }
+        return humanTiming($this->createdAt / 1000);
+    }
+    
     // static helpers
     
     public static function convertComments($commentsResult) {

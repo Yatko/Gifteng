@@ -155,7 +155,7 @@ class Usermanagement_service {
     public function unfollow($userId) {
         try {
             $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $userService->follow(array("userId" => $userId));
+            $userService->unfollow(array("userId" => $userId));
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);

@@ -29,13 +29,43 @@ class Venefica_Session extends CI_Session {
      * @return object
      */
     public function flashdata($key) {
-        $value = parent::flashdata($key);
-        if ( $value != null && $value != FALSE && !empty($value) ) {
-            return $value;
+        $old_key = $this->flashdata_key.':old:'.$key;
+        $new_key = $this->flashdata_key.':new:'.$key;
+        
+        $old_value = $this->userdata($old_key);
+        $new_value = $this->userdata($new_key);
+        
+        //log_message('ERROR', 'OLD (key: '.$old_key.', value: '.print_r($old_value, true).')');
+        //log_message('ERROR', 'NEW (key: '.$new_key.', value: '.print_r($new_value, true).')');
+        
+        if ( $new_value != null && $new_value != FALSE && !empty($new_value) ) {
+            return $new_value;
+        } else {
+            return $old_value;
         }
         
-        $flashdata_key = $this->flashdata_key.':new:'.$key;
-        return $this->userdata($flashdata_key);
+        /**
+        if ( $old_value != null && $old_value != FALSE && !empty($old_value) ) {
+            return $old_value;
+        } else {
+            return $new_value;
+        }
+        /**/
+    }
+    
+    /**
+     * Keeps all the flash data present in the session for the next request.
+     */
+    public function kepp_all_flashdata() {
+        $all_userdata = parent::all_userdata();
+        foreach ( $all_userdata as $key => $value ) {
+            if ( startsWith($key, $this->flashdata_key.':new:') || startsWith($key, $this->flashdata_key.':old:') ) {
+                //flashdata key
+                $parts = explode(':', $key);
+                $var = $parts[2];
+                parent::keep_flashdata($var);
+            }
+        }
     }
 }
 

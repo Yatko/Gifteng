@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="row ge-welcome ge-topspace">
+<div class="container ge-topspace">
+    <div class="row ge-welcome">
         <div class="span12">
             <div class="ge-stage" id="contact">
                 <div class="row-fluid ge-headline">
@@ -19,7 +19,7 @@
                             <div class="row-fluid ge-text">
                                 <div class="control-group">
                                     <div class="controls">
-                                        <button class="btn btn-block btn-primary btn-ge">press@gifteng.com</button>
+                                        <a href="mailto:press@gifteng.com" class="btn btn-block btn-primary btn-ge">press@gifteng.com</a>
                                     </div>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                             <div class="row-fluid ge-text">
                                 <div class="control-group">
                                     <div class="controls">
-                                        <button class="btn btn-block btn-primary btn-ge">contact@gifteng.com</button>
+                                        <a href="mailto:contact@gifteng.com" class="btn btn-block btn-primary btn-ge">contact@gifteng.com</a>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             <div class="row-fluid ge-text">
                                 <div class="control-group">
                                     <div class="controls">
-                                        <button class="btn btn-block btn-primary btn-ge">jobs@gifteng.com</button>
+                                        <a href="mailto:jobs@gifteng.com" class="btn btn-block btn-primary btn-ge">jobs@gifteng.com</a>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                             <div class="row-fluid ge-text">
                                 <div class="control-group">
                                     <div class="controls">
-                                        <button class="btn btn-block btn-primary btn-ge">help@gifteng.com</button>
+                                        <a href="mailto:help@gifteng.com" class="btn btn-block btn-primary btn-ge">help@gifteng.com</a>
                                     </div>
                                 </div>
                             </div>
