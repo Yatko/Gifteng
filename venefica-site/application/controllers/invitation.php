@@ -2,22 +2,29 @@
 
 class Invitation extends CI_Controller {
     
-    private static $ACTION_REQUEST_INVITATION = "request";
-    private static $ACTION_VERIFY_INVITATION = "verify";
+    const ACTION_REQUEST = 'request';
+    const ACTION_VERIFY = 'verify';
     
     private $initialized = false;
     
     public function view($extra_data = array()) {
         $this->init();
         
+        $action = $this->getActionFromUri();
+        
         $data = array();
-        $data['action'] = $this->getActionFromUri();
         $data['step'] = $this->getStepFromUri();
         
         $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/invitation', $data);
+        if ( $action == Invitation::ACTION_REQUEST ) {
+            $this->load->view('pages/invitation_request', $data);
+        } else if ( $action == Invitation::ACTION_VERIFY ) {
+            $this->load->view('pages/invitation_verify', $data);
+        } else {
+            redirect('/invitation/' . Invitation::ACTION_REQUEST);
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -51,15 +58,15 @@ class Invitation extends CI_Controller {
                 $email = $this->input->post('invitation_email');
                 $this->session->set_flashdata('invitation_email', $email);
                 
-                redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/2');
+                redirect('/invitation/'. Invitation::ACTION_REQUEST . '/2');
             } elseif ( $step == 2 ) {
                 $email = $this->input->post('invitation_email');
                 $this->session->set_flashdata('invitation_email', $email);
                 
-                redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/3');
+                redirect('/invitation/' . Invitation::ACTION_REQUEST . '/3');
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_REQUEST . '/1');
             }
         } elseif ( $_POST ) {
             if ( $step == 1 ) {
@@ -75,7 +82,7 @@ class Invitation extends CI_Controller {
                 $extra_data['invitation_email'] = $email;
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_REQUEST . '/1');
             }
         } else {
             if ( $step == 1 ) {
@@ -87,18 +94,18 @@ class Invitation extends CI_Controller {
                     $extra_data['invitation_source'] = '';
                     $extra_data['invitation_email'] = $email;
                 } else {
-                    redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                    redirect('/invitation/' . Invitation::ACTION_REQUEST . '/1');
                 }
             } elseif ( $step == 3 ) {
                 $email = $this->session->flashdata('invitation_email');
                 if ( $email ) {
                     //success and thank you message
                 } else {
-                    redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                    redirect('/invitation/' . Invitation::ACTION_REQUEST . '/1');
                 }
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_REQUEST_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_REQUEST . '/1');
             }
         }
         return $is_valid;
@@ -112,10 +119,10 @@ class Invitation extends CI_Controller {
                 $code = $this->input->post('invitation_code');
                 $this->session->set_flashdata('invitation_code', $code);
                 
-                redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/2');
+                redirect('/invitation/' . Invitation::ACTION_VERIFY . '/2');
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_VERIFY . '/1');
             }
         } elseif ( $_POST ) {
             if ( $step == 1 ) {
@@ -127,7 +134,7 @@ class Invitation extends CI_Controller {
                 redirect('/registration/user');
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_VERIFY . '/1');
             }
         } else {
             if ( $step == 1 ) {
@@ -137,11 +144,11 @@ class Invitation extends CI_Controller {
                 if ( $code ) {
                     $extra_data['invitation_code'] = $code;
                 } else {
-                    redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                    redirect('/invitation/' . Invitation::ACTION_VERIFY . '/1');
                 }
             } else {
                 log_message(INFO, "Invalid step ($step)!");
-                redirect('/invitation/'.self::$ACTION_VERIFY_INVITATION.'/1');
+                redirect('/invitation/' . Invitation::ACTION_VERIFY . '/1');
             }
         }
         return $is_valid;

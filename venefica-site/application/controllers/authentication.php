@@ -2,20 +2,39 @@
 
 class Authentication extends CI_Controller {
     
+    const ACTION_LOGIN = 'login';
+    const ACTION_RESET = 'reset';
+    const ACTION_FORGOT = 'forgot';
+    
     private $initialized = false;
     
     public function view($extra_data = array()) {
         $this->init();
         
+        $action = $this->getActionFromUri();
+        $isLogged = isLogged();
+        $user = $this->usermanagement_service->loadUser();
+        
+        if ( isLogged() && $user ) {
+            redirect('/profile');
+        }
+        
         $data = array();
-        $data['action'] = $this->getActionFromUri();
-        $data['isLogged'] = isLogged();
-        $data['user'] = $this->usermanagement_service->loadUser();
+        $data['isLogged'] = $isLogged;
+        $data['user'] = $user;
         
         $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/authentication', $data);
+        if ( $action == Authentication::ACTION_LOGIN ) {
+            $this->load->view('pages/authentication_login', $data);
+        } else if ( $action == Authentication::ACTION_RESET ) {
+            $this->load->view('pages/authentication_reset', $data);
+        } else if ( $action == Authentication::ACTION_FORGOT ) {
+            $this->load->view('pages/authentication_forgot', $data);
+        } else {
+            redirect('/authentication/' . Authentication::ACTION_LOGIN);
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     

@@ -4,7 +4,7 @@ $lang['registration_firstname_hint'] = "First name";
 $lang['registration_lastname_hint'] = "First name";
 $lang['registration_email_hint'] = "Email";
 $lang['registration_password_hint'] = "Password";
-$lang['registration_join_button'] = "JOIN";
+$lang['registration_join_button'] = "Join";
 $lang['registration_footer'] = "By joining, you agree to our Terms of Use and Privacy Policy";
 
 $lang['u_registration_failed'] = "User registration failed!";

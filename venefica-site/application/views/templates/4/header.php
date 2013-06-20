@@ -15,7 +15,7 @@ $page = $this->uri->segment(1, null);
     <title><?=lang('main_title')?></title>
     
     <meta charset="utf-8"/>
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -23,7 +23,7 @@ $page = $this->uri->segment(1, null);
     
     <!-- Loading Bootstrap -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
-    <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
+    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />
     <!-- Loading Flat UI -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <!-- Loading ge temp CSS -->
@@ -122,8 +122,7 @@ $page = $this->uri->segment(1, null);
                     
                     <? else: ?>
                     
-                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/request">INVITATION REQUEST</a></li>
-                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/verify">INVITATION VERIFY</a></li>
+                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation">INVITATION</a></li>
                         <li<?=($page == "registration" ? ' class="active"' : '')?>><a href="<?=base_url()?>registration">REGISTRATION</a></li>
                     
                     <? endif; ?>

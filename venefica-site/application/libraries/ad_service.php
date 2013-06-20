@@ -329,6 +329,22 @@ class Ad_service {
         }
     }
     
+    //*****************
+    //* ad statistics *
+    //*****************
+    
+    public function getStatistics($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getStatistics(array("adId" => $adId));
+            $statistics = AdStatistics_model::convertAdStatistics($result->statistics);
+            return $statistics;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad statistics (id: '.$adId.') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //***************
     //* ad requests *
     //***************
