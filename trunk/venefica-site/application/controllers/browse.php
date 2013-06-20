@@ -105,9 +105,9 @@ class Browse extends CI_Controller {
             $comment->text = $text;
             
             $this->message_service->addCommentToAd($adId, $comment);
-            $ad = $this->ad_service->getAdById($adId);
+            $statistics = $this->ad_service->getStatistics($adId);
             
-            $this->respondAjax(Browse::AJAX_STATUS_RESULT, $ad->statistics->numComments);
+            $this->respondAjax(Browse::AJAX_STATUS_RESULT, $statistics->numComments);
         } catch ( Exception $ex ) {
             $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
         }

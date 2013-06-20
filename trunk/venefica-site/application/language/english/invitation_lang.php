@@ -1,8 +1,8 @@
 <?php
 
 $lang['invitation_email_hint'] = "Email address";
-$lang['invitation_request_button'] = "REQUEST AN INVITATION";
-$lang['invitation_zipcode_hint'] = "Your ZIP code";
+$lang['invitation_request_button'] = "Request an Invitation";
+$lang['invitation_zipcode_hint'] = "Your zip code";
 $lang['invitation_source_hint'] = "How did you hear about us?";
 $lang['invitation_source_friend'] = "From a friend";
 $lang['invitation_source_other'] = "Other";
@@ -10,13 +10,13 @@ $lang['invitation_source_other_hint'] = "Please specify";
 $lang['invitation_usertype_message'] = "What will you use Gifteng for?";
 $lang['invitation_usertype_giver'] = "Giving";
 $lang['invitation_usertype_receiver'] = "Receiving";
-$lang['invitation_confirm_button'] = "CONFIRM REQUEST";
-$lang['invitation_confirmed'] = "Thank you for your request,<br>we will contact you soon!";
+$lang['invitation_confirm_button'] = "Confirm Request";
+//$lang['invitation_confirmed'] = "Thank you for your request,<br>we will contact you soon!";
 $lang['invitation_invitation'] = "I have an invitation";
 $lang['invitation_code_hint'] = "Invitation Code";
-$lang['invitation_verify_button'] = "VERIFY INVITATION";
+$lang['invitation_verify_button'] = "Verify Invitation";
 
-$lang['invitation_confirmed_share'] = '';
+//$lang['invitation_confirmed_share'] = '';
 
 $lang['invitation_request_failed_empty_form'] = "Please fill out the form.";
 $lang['invitation_request_failed_incorrect_zipcode'] = "Zip code needs to be five character.";
@@ -27,8 +27,8 @@ $lang['invitation_request_failed_already_subscribed'] = "You can only request on
 $lang['invitation_verify_invalid'] = "Sorry, we don't recognize this invitation code.";
 $lang['invitation_verify_failed'] = "Cannot verify invitation!";
 
-$lang['invitation_verified'] = "Congratulation!";
-$lang['invitation_join_button'] = "JOIN";
+$lang['invitation_verified'] = "Success!<br />You can register now.";
+$lang['invitation_join_button'] = "Join";
 
 $lang['invitation_source_list'] = array(
     'Google',
