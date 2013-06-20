@@ -1,6 +1,7 @@
 package com.venefica.service;
 
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
@@ -258,13 +259,23 @@ public interface AdService {
 
     
     
+    //*****************
+    //* ad statistics *
+    //*****************
+    
+    @WebMethod(operationName = "GetStatistics")
+    @WebResult(name = "statistics")
+    AdStatisticsDto getStatistics(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
+    
+    
+    
     //***********************
     //* ad lifecycle change *
     //***********************
     
     //
-    // Note: these are not complete as the delete is also a lifecycle change, so
-    // needs a little bit of rethinking
+    // Note and todo: these are not complete as the delete is also a lifecycle change,
+    // so needs a little bit of rethinking.
     //
     
     /**
