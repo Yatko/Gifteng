@@ -30,6 +30,15 @@ public interface ForgotPasswordDao {
     public ForgotPassword findByCode(String code);
     
     /**
+     * Finds an existing, but active request. This is useful to reuse the same
+     * record and unique key upon multiple requests.
+     * 
+     * @param email
+     * @return 
+     */
+    public ForgotPassword findNonExpiredRequestByEmail(String email);
+    
+    /**
      * Set 'expired' flag to true for all expired requests in the database.
      */
     void markExpiredRequests();

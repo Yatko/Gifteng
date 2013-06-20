@@ -32,19 +32,38 @@ public class ForgotPasswordDaoImpl extends DaoBase<ForgotPassword> implements Fo
     
     @Override
     public ForgotPassword findByCode(String code) {
-        List<ForgotPassword> requests = createQuery("from " + getDomainClassName() + " i where i.code=:code")
+        List<ForgotPassword> requests = createQuery("from " + getDomainClassName() + " fp where fp.code = :code")
                 .setParameter("code", code)
                 .list();
-
+        return requests.isEmpty() ? null : requests.get(0);
+    }
+    
+    @Override
+    public ForgotPassword findNonExpiredRequestByEmail(String email) {
+        List<ForgotPassword> requests = createQuery(""
+                + "from " + getDomainClassName() + " fp where "
+                + "fp.expired = false and "
+                + "fp.expiresAt > current_date() and "
+                + "fp.used = false and "
+                + "fp.email = :email"
+                + "")
+                .setParameter("email", email)
+                .list();
         return requests.isEmpty() ? null : requests.get(0);
     }
     
     @Override
     public void markExpiredRequests() {
         // @formatter:off		
-        int numRows = createQuery(
-                "update " + getDomainClassName() + " fp set fp.expired = true where fp.expiresAt < current_date() "
-                + "and fp.expired = false and fp.used = false")
+        int numRows = createQuery(""
+                + "update " + getDomainClassName() + " fp "
+                + "set "
+                + "fp.expired = true "
+                + "where "
+                + "fp.expiresAt < current_date() and "
+                + "fp.expired = false and "
+                + "fp.used = false"
+                + "")
                 .executeUpdate();
         // @formatter:on
 

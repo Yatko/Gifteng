@@ -104,30 +104,33 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             throw new UserNotFoundException("The email address (" + email + ") does not exists");
         }
         
-        String code;
-        int generationTried = 0;
-        while ( true ) {
-            code = RandomGenerator.generateAlphanumeric(Constants.FORGOT_PASSWORD_DEFAULT_CODE_LENGTH);
-            generationTried++;
-            if ( forgotPasswordDao.findByCode(code) == null ) {
-                //the generated code does not exists, found an unused (free) one
-                break;
-            } else if ( generationTried >= 10 ) {
-                throw new GeneralException("Cannot generate valid forgot password request code!");
+        ForgotPassword forgotPassword = forgotPasswordDao.findNonExpiredRequestByEmail(email);
+        if ( forgotPassword == null ) {
+            String code;
+            int generationTried = 0;
+            while ( true ) {
+                code = RandomGenerator.generateAlphanumeric(Constants.FORGOT_PASSWORD_DEFAULT_CODE_LENGTH);
+                generationTried++;
+                if ( forgotPasswordDao.findByCode(code) == null ) {
+                    //the generated code does not exists, found an unused (free) one
+                    break;
+                } else if ( generationTried >= 10 ) {
+                    throw new GeneralException("Cannot generate valid forgot password request code!");
+                }
             }
+
+            forgotPassword = new ForgotPassword();
+            forgotPassword.setIpAddress(getIpAddress());
+            forgotPassword.setExpiresAt(DateUtils.addDays(new Date(), Constants.FORGOT_PASSWORD_EXPIRATION_PERIOD_DAYS));
+            forgotPassword.setExpired(false);
+            forgotPassword.setCode(code);
+            forgotPassword.setEmail(email);
+            forgotPasswordDao.save(forgotPassword);
         }
-        
-        ForgotPassword forgotPassword = new ForgotPassword();
-        forgotPassword.setIpAddress(getIpAddress());
-        forgotPassword.setExpiresAt(DateUtils.addDays(new Date(), Constants.FORGOT_PASSWORD_EXPIRATION_PERIOD_DAYS));
-        forgotPassword.setExpired(false);
-        forgotPassword.setCode(code);
-        forgotPassword.setEmail(email);
-        forgotPasswordDao.save(forgotPassword);
         
         try {
             Map<String, Object> vars = new HashMap<String, Object>(0);
-            vars.put("code", code);
+            vars.put("code", forgotPassword.getCode());
 
             emailSender.sendHtmlEmailByTemplates(
                     FORGOT_PASSWORD_SUBJECT_TEMPLATE,
