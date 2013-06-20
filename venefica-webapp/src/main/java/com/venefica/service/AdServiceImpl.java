@@ -25,6 +25,7 @@ import com.venefica.model.SpamMark;
 import com.venefica.model.User;
 import com.venefica.model.Viewer;
 import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
@@ -459,6 +460,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
         adDto.setRequested(requested(currentUser, ad));
         
         return adDto;
+    }
+    
+    
+    
+    //*****************
+    //* ad statistics *
+    //*****************
+    
+    @Override
+    @Transactional
+    public AdStatisticsDto getStatistics(Long adId) throws AdNotFoundException {
+        Ad ad = validateAd(adId);
+        
+        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getCurrentUser()).build();
+        return adDto.getStatistics();
     }
 
     
