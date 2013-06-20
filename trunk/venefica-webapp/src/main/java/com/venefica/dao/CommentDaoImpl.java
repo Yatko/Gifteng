@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Comment;
+import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,6 +20,7 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
     
     @Override
     public Long save(Comment comment) {
+        comment.setCreatedAt(new Date());
         return saveEntity(comment);
     }
 
