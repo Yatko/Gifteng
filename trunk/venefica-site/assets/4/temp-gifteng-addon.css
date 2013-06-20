@@ -27,13 +27,14 @@
     height: 254px;
 }
 
+/**
 .user-giving {
     padding-top: 120px !important;
 }
 .ge-browse {
     padding-top: 120px !important;
 }
-
+/**/
 
 #email_change_notification {
     display: none;

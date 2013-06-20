@@ -165,7 +165,7 @@ hr.ge-hr-dotted {border: 0;border-bottom: 1px dotted #e4e4e4 !important;backgrou
 .ge-expand, .ge-messages .ge-expand {height:28px;background:url('temp-sample/ge-expand.png') no-repeat center #fff;}
 
 .ge-input {padding: 0px;}
-.ge-messagelist, .ge-conversation {max-height:300px !important;overflow: scroll;border-top: 1px solid #e4e4e4;}
+.ge-messagelist, .ge-conversation {max-height:147px !important;overflow: scroll;border-top: 1px solid #e4e4e4;}
 .ge-message {padding: 9px;background-color: #fafafa;border-bottom: 1px solid #e4e4e4;}
 .ge-message:after {clear: both;}
 .ge-message .ge-user-image {float:left;margin-right: 9px;width:50px;}
@@ -215,11 +215,9 @@ hr.ge-hr-dotted {border: 0;border-bottom: 1px dotted #e4e4e4 !important;backgrou
 .ge-user .ge-info .nav-tabs > li > a {padding: 7px 16px 8px;}
 
 /* ITEM */
-/**
 .ge-item {}
 .ge-item:before, .ge-item:after {display: table;line-height: 0;content: "";}
 .ge-item:after {clear: both;}
-/**/
 
 .ge-item-location {font-size:80%;font-weight:100;text-decoration:none;color:#00bebe;}
 .ge-item-location li {list-style-image:url('temp-sample/icon_location.png');}
