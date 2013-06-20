@@ -161,7 +161,9 @@ public class EmailSender {
         }
     }
     
-    public String mergeVelocityTemplate(String templateName, Map<String, Object> vars) {
+    // internal helpers
+    
+    private String mergeVelocityTemplate(String templateName, Map<String, Object> vars) {
         if ( velocityEngine == null ) {
             throw new RuntimeException("Velocity engine is not initialized");
         }

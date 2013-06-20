@@ -68,6 +68,7 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
         
         Long invitationId = invitationDao.save(invitation);
         
+        /**
         try {
             Map<String, Object> vars = new HashMap<String, Object>(0);
             vars.put("invitationCode", code);
@@ -85,6 +86,7 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
             logger.error("Runtime exception", ex);
             throw new InvitationException(GeneralException.GENERAL_ERROR, ex.getMessage());
         }
+        /**/
         
         try {
             String source;
