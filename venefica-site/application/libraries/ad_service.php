@@ -501,6 +501,39 @@ class Ad_service {
     //***************
     
     /**
+     * 
+     * @param long $adId
+     * @return long the bookmark id
+     * @throws Exception
+     */
+    public function bookmarkAd($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->bookmarkAd(array("adId" => $adId));
+            $bookmarkId = $result->bookmarkId;
+            return $bookmarkId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Bookmark ad (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @throws Exception
+     */
+    public function removeBookmark($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->removeBookmark(array("adId" => $adId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Remove bookmark ad (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+
+    /**
      * Requests the list of bookmarked ads by the given user.
      * 
      * @param long $userId
