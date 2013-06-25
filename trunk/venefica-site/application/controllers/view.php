@@ -2,12 +2,19 @@
 
 class View extends CI_Controller {
     
+    const AJAX_STATUS_RESULT = 'result';
+    const AJAX_STATUS_ERROR = 'error';
+    
     private $initialized = false;
     
     public function show($adId) {
         $this->init();
         
         if ( !validate_login() ) return;
+        if ( $adId == null ) {
+            validate_ad(null);
+            return;
+        }
         
         try {
             $ad = $this->ad_service->getAdById($adId);
@@ -33,11 +40,42 @@ class View extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
-    public function invalid($data = array()) {
+    public function bookmark() {
         $this->init();
         
-        if ( !validate_login() ) return;
-        if ( !validate_ad(null) ) return;
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $adId = $_GET['adId'];
+            $this->ad_service->bookmarkAd($adId);
+            
+            $this->respondAjax(View::AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            $this->respondAjax(View::AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function remove_bookmark() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $adId = $_GET['adId'];
+            $this->ad_service->removeBookmark($adId);
+            
+            $this->respondAjax(View::AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            $this->respondAjax(View::AJAX_STATUS_ERROR, $ex->getMessage());
+        }
     }
     
     // internal
@@ -60,5 +98,10 @@ class View extends CI_Controller {
             
             $this->initialized = true;
         }
+    }
+    
+    private function respondAjax($status, $result) {
+        $data['obj'] = array($status => $result);
+        $this->load->view('json', $data);
     }
 }
