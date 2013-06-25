@@ -41,6 +41,11 @@
 $route['default_controller'] = 'index/view';
 $route['404_override'] = '';
 
+
+$route['admin/(:any)'] = 'admin/$1';
+$route['admin'] = 'admin/dashboard';
+
+
 //$route['browse/(:any)'] = 'browse/view/$1';
 $route['browse/ajax/(:any)'] = 'browse/$1';
 $route['browse'] = 'browse/view';
@@ -66,9 +71,9 @@ $route['post/member'] = 'member_post/view';
 $route['post'] = 'post/post_redirect';
 
 
-
+$route['view/ajax/(:any)'] = 'view/$1';
 $route['view/(:num)'] = 'view/show/$1';
-$route['view'] = 'view/invalid';
+$route['view'] = 'view/show/';
 
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication'] = 'authentication/view';
