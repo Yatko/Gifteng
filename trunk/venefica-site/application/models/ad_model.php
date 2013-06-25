@@ -195,6 +195,14 @@ class Ad_model extends CI_Model {
     
     // ad related
     
+    public function isBusiness() {
+        return $this->type == Ad_model::ADTYPE_BUSINESS;
+    }
+    
+    public function isOnline() {
+        return $this->place == Ad_model::PLACE_ONLINE;
+    }
+    
     public function getCreateDate() {
         if ( $this->createdAt == null ) {
             return '';

@@ -25,6 +25,8 @@ class User_model extends CI_Model {
     var $gender; //enum: MALE, FEMALE
     var $address; //Address_model
     var $businessAccount; //boolean
+    var $score; //float
+    var $pendingScore; //float
     
     // business user data
     var $businessName; //string
@@ -50,6 +52,8 @@ class User_model extends CI_Model {
             $this->inFollowings = getField($obj, 'inFollowings');
             $this->gender = getField($obj, 'gender');
             $this->businessAccount = getField($obj, 'businessAccount');
+            $this->score = getField($obj, 'score');
+            $this->pendingScore = getField($obj, 'pendingScore');
             $this->businessName= getField($obj, 'businessName');
             $this->contactName = getField($obj, 'contactName');
             $this->businessCategoryId = getField($obj, 'businessCategoryId');
