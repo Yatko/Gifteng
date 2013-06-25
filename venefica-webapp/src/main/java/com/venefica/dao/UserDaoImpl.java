@@ -20,6 +20,15 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     public User get(Long id) {
         return getEntity(id);
     }
+    
+    @Override
+    public List<User> getAll() {
+        List<User> users = createQuery(""
+                + "from " + getDomainClassName() + " u "
+                + "")
+                .list();
+        return users;
+    }
 
     @Override
     public User findUserByName(String name) {

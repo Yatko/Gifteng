@@ -102,7 +102,7 @@ public interface AdService {
      */
     @WebMethod(operationName = "DeleteAd")
     void deleteAd(@WebParam(name = "adId") @NotNull Long adId)
-            throws AdNotFoundException, AuthorizationException;
+            throws AdNotFoundException, AuthorizationException, InvalidAdStateException;
     
     /**
      * Ads an image to the specified ad. The image data is stored in the

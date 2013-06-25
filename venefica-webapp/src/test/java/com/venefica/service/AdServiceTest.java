@@ -61,7 +61,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 @ContextConfiguration(locations = "/AdServiceTest-context.xml")
 public class AdServiceTest extends ServiceTestBase<AdService> {
 
-    private static final Long FIRST_AD_ID = new Long(1);
+    private static final Long FIRST_AD_ID = 1L;
     
     private static final float EPSILON = 0.0001f;
     
@@ -434,7 +434,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     public void getBookmarkedAdsTest() {
         authenticateClientAsFirstUser();
         List<AdDto> bookmarkedAds = client.getBookmarkedAds();
-        assertNotNull("List of ads must be returened!");
+        assertNotNull("List of ads must be returned!", bookmarkedAds);
         assertTrue("There must be at least one ad in the list!", !bookmarkedAds.isEmpty());
     }
 
@@ -597,19 +597,19 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************************
     
     @Test(expected = AdNotFoundException.class)
-    public void deleteUnexistingAdTest() throws AdNotFoundException, AuthorizationException {
+    public void deleteUnexistingAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException {
+    public void deleteAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsSecondUser();
         client.deleteAd(ad.getId());
     }
 
     @Test
-    public void deleteAdTest() throws AdNotFoundException, AuthorizationException {
+    public void deleteAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(ad.getId());
 

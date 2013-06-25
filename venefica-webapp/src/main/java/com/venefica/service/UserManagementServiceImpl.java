@@ -5,10 +5,12 @@ import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
+import com.venefica.dao.UserPointDao;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
 import com.venefica.model.User;
+import com.venefica.model.UserPoint;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.GeneralException;
@@ -17,6 +19,7 @@ import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +45,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private BusinessCategoryDao businessCategoryDao;
     @Inject
     private AddressWrapperDao addressWrapperDao;
+    @Inject
+    private UserPointDao userPointDao;
     
     //**********************
     //* categories related *
@@ -92,13 +97,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
-        User user = userDto.toMemberUser(imageDao, addressWrapperDao);
-        user.setPassword(password);
-
         // Check for existing users
-        if (userDao.findUserByName(user.getName()) != null) {
+        if (userDao.findUserByName(userDto.getName()) != null) {
             throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
-        } else if (userDao.findUserByEmail(user.getEmail()) != null) {
+        } else if (userDao.findUserByEmail(userDto.getEmail()) != null) {
             throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
         } else if ( invitationCode == null ) {
             throw new InvalidInvitationException("Invitation code cannot be empty!");
@@ -111,11 +113,20 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new InvalidInvitationException("Invitation with code '" + invitationCode + "' is invalid!");
         }
         
+        User user = userDto.toMemberUser(imageDao, addressWrapperDao);
+        user.setPassword(password);
+        
         invitation.use();
         invitationDao.update(invitation);
         
         user.getUserData().setInvitation(invitation);
         userDataDao.save(user.getUserData());
+        
+        UserPoint userPoint = new UserPoint(0, 0);
+        userPoint.setUser(user);
+        userPointDao.save(userPoint);
+        
+        user.setUserPoint(userPoint);
         
         return userDao.save(user);
     }
@@ -154,6 +165,18 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     //* user search *
     //***************
 
+    @Override
+    @Transactional
+    public List<UserDto> getUsers() {
+        List<UserDto> result = new ArrayList<UserDto>(0);
+        List<User> users = userDao.getAll();
+        for ( User user : users ) {
+            UserDto userDto = new UserDto(user);
+            result.add(userDto);
+        }
+        return result;
+    }
+    
     @Override
     @Transactional
     public UserDto getUser() throws UserNotFoundException {

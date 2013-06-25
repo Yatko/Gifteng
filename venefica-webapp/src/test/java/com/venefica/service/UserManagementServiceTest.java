@@ -171,7 +171,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     
     @Test(expected = UserAlreadyExistsException.class)
     public void updateUserWithTheSameNameTest() throws UserAlreadyExistsException {
-        UserDto userWithRegisteredName = new UserDto(testUser);
+        UserDto userWithRegisteredName = new UserDto(testUser, false);
         userWithRegisteredName.setName(getFirstUser().getName());
         authenticateClientWithToken(testUserAuthToken);
         client.updateUser(userWithRegisteredName);
@@ -179,7 +179,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
 
     @Test(expected = UserAlreadyExistsException.class)
     public void updateUserWithTheSameEmailTest() throws UserAlreadyExistsException {
-        UserDto userWithRegisteredEmail = new UserDto(testUser);
+        UserDto userWithRegisteredEmail = new UserDto(testUser, false);
         userWithRegisteredEmail.setEmail(getFirstUser().getEmail());
         authenticateClientWithToken(testUserAuthToken);
         client.updateUser(userWithRegisteredEmail);
@@ -187,7 +187,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
 
     @Test
     public void updateUserTest() throws UserAlreadyExistsException {
-        UserDto userDto = new UserDto(testUser);
+        UserDto userDto = new UserDto(testUser, false);
         userDto.setPhoneNumber("47093");
         authenticateClientWithToken(testUserAuthToken);
         client.updateUser(userDto);

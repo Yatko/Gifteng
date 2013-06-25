@@ -9,6 +9,8 @@ import com.venefica.dao.ImageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.SpamMarkDao;
+import com.venefica.dao.UserPointDao;
+import com.venefica.dao.UserTransactionDao;
 import com.venefica.dao.ViewerDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
@@ -23,6 +25,8 @@ import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
+import com.venefica.model.UserPoint;
+import com.venefica.model.UserTransaction;
 import com.venefica.model.Viewer;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AdStatisticsDto;
@@ -47,6 +51,7 @@ import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -80,6 +85,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private ViewerDao viewerDao;
     @Inject
     private RequestDao requestDao;
+    @Inject
+    private UserPointDao userPointDao;
+    @Inject
+    private UserTransactionDao userTransactionDao;
 
     
     
@@ -107,8 +116,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public Long placeAd(AdDto adDto) throws AdValidationException {
-        User currentUser = getCurrentUser();
-
         // ++ TODO: create ad validator
         if (adDto.getTitle() == null) {
             throw new AdValidationException(AdField.TITLE, "Title not specified!");
@@ -119,6 +126,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Image thumbImage = saveImage(adDto.getImageThumbnail(), AdField.THUMB_IMAGE); //thumb image
         Image barcodeImage = saveImage(adDto.getImageBarcode(), AdField.BARCODE_IMAGE); //barcode image
         // ++
+        
+        User currentUser = getCurrentUser();
+        BigDecimal beforePendingNumber = calculatePendingNumber(currentUser);
         
         boolean expires = adDto.isExpires() != null ? adDto.isExpires() : true;
         Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
@@ -145,7 +155,19 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.setExpired(false);
         ad.setExpiresAt(expiresAt);
         ad.setAvailableAt(availableAt);
-        return adDao.save(ad);
+        Long adId = adDao.save(ad);
+        
+        BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
+        BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+        
+        UserTransaction transaction = new UserTransaction(ad);
+        transaction.setUser(currentUser);
+        transaction.setUserPoint(currentUser.getUserPoint());
+        transaction.setPendingNumber(currentPendingNumber);
+        transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+        userTransactionDao.save(transaction);
+        
+        return adId;
     }
     
     @Override
@@ -236,17 +258,26 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException {
+    public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         Ad ad = validateAd(adId);
         User currentUser = getCurrentUser();
+        UserTransaction transaction = userTransactionDao.getByAd(currentUser.getId(), adId);
 
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("Only the creator can delete the ad");
         }
-
-        if (!ad.isDeleted()) {
-            ad.markAsDeleted();
+        if ( ad.isDeleted() ) {
+            throw new InvalidAdStateException("Ad (adId: " + adId + ") is already deleted");
         }
+        if ( transaction == null ) {
+            throw new InvalidAdStateException("There is no transaction assiciated with this ad (adId: " + adId + ")");
+        }
+
+        ad.markAsDeleted();
+        
+        transaction.setFinalized(true);
+        transaction.setFinalizedAt(new Date());
+        userTransactionDao.update(transaction);
     }
 
     @Override
@@ -502,7 +533,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             if ( ad.canProlong() ) {
                 //relist ad
                 ad.prolong(Constants.AD_PROLONGATION_PERIOD_DAYS);
-                ad.setStatus(AdStatus.ACTIVE);
             } else {
                 throw new InvalidAdStateException("Ad can't be relisted anymore!");
             }
@@ -563,12 +593,23 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("No more available.");
         }
         
+        BigDecimal beforePendingNumber = calculatePendingNumber(user);
+        
         request = new Request();
         request.setAd(ad);
         request.setUser(user);
         request.setStatus(RequestStatus.PENDING);
         Long requestId = requestDao.save(request);
         
+        BigDecimal currentPendingNumber = calculatePendingNumber(user);
+        BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+        
+        UserTransaction transaction = new UserTransaction(request);
+        transaction.setUser(user);
+        transaction.setUserPoint(user.getUserPoint());
+        transaction.setPendingNumber(currentPendingNumber);
+        transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+        userTransactionDao.save(transaction);
         
         if ( ad.getType() == AdType.BUSINESS ) {
             //auto select request for business ads
@@ -584,6 +625,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User user = getCurrentUser();
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();
+        UserTransaction transaction = userTransactionDao.getByRequest(user.getId(), requestId);
         
         if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
             //continue
@@ -597,10 +639,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
         
+        if ( transaction == null ) {
+            throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
+        }
+        
         request.unmarkAsSelected();
         request.markAsDeleted();
         
         ad.unselect(); //increment available quantity
+        
+        transaction.setFinalized(true);
+        transaction.setFinalizedAt(new Date());
+        userTransactionDao.update(transaction);
     }
     
     @Override
@@ -687,14 +737,26 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Request request = validateRequest(requestId);
         User user = getCurrentUser();
         Ad ad = request.getAd();
+        Long adId = ad.getId();
+        UserTransaction transaction = userTransactionDao.getByAd(user.getId(), adId);
         
         if ( !ad.getCreator().equals(user) ) {
             throw new InvalidRequestException("Only creator users can mark as sent.");
         }
+        if ( transaction == null ) {
+            throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
+        }
         
-        ad.setSent(true);
-        ad.setSentAt(new Date());
-        ad.setStatus(AdStatus.SENT);
+        ad.markAsSent();
+        
+        transaction.setFinalized(true);
+        transaction.setFinalizedAt(new Date());
+        userTransactionDao.update(transaction);
+        
+        UserPoint userPoint = user.getUserPoint();
+        userPoint.addNumber(transaction.getPendingNumber());
+        userPoint.addScore(transaction.getPendingScore());
+        userPointDao.update(userPoint);
     }
     
     @Override
@@ -703,14 +765,25 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Request request = validateRequest(requestId);
         User user = getCurrentUser();
         Ad ad = request.getAd();
+        UserTransaction transaction = userTransactionDao.getByRequest(user.getId(), requestId);
         
         if ( !request.getUser().equals(user) ) {
             throw new InvalidRequestException("Only requestor can mar as received.");
         }
+        if ( transaction == null ) {
+            throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
+        }
         
-        ad.setReceived(true);
-        ad.setReceivedAt(new Date());
-        ad.setStatus(AdStatus.RECEIVED);
+        ad.markAsReceived();
+        
+        transaction.setFinalized(true);
+        transaction.setFinalizedAt(new Date());
+        userTransactionDao.update(transaction);
+        
+        UserPoint userPoint = user.getUserPoint();
+        userPoint.addNumber(transaction.getPendingNumber());
+        userPoint.addScore(transaction.getPendingScore());
+        userPointDao.update(userPoint);
     }
     
     
@@ -1056,8 +1129,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         request.markAsSelected();
         
         ad.select(); //decrementing available quantity
-        ad.setStatus(AdStatus.SELECTED);
         ad.setExpiresAt(new Date()); //reset the expiration date
     }
     
+    
+    
+    private BigDecimal calculatePendingNumber(User user) {
+        BigDecimal beforeNumber = UserPoint.getGenerosityNumber(user, false);
+        BigDecimal beforePendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(beforeNumber);
+        return beforePendingNumber;
+    }
 }

@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.User;
+import java.util.List;
 
 /**
  * Data access interface for {@link User} entity.
@@ -17,6 +18,12 @@ public interface UserDao {
      */
     public User get(Long id);
 
+    /**
+     * 
+     * @return the list of available users
+     */
+    public List<User> getAll();
+    
     /**
      * Finds the user by his name.
      *
