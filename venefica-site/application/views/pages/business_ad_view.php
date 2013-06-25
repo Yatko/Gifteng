@@ -1,6 +1,6 @@
 <?
 $user_is_business = $user->businessAccount;
-$ad_is_business = ($ad->type == Ad_model::ADTYPE_BUSINESS);
+$ad_is_business = $ad->isBusiness();
 $ad_title = $ad->title;
 $ad_subtitle = $ad->subtitle;
 $ad_description = $ad->description;

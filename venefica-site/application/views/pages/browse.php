@@ -198,7 +198,7 @@
 </div>
 
 
-<div class="container">
+<div class="container ge-topspace">
     <div class="row ge-tile-view ge-browse">
         
         <div class="span12">
