@@ -151,10 +151,12 @@ public class Ad {
         expired = false;
         expiresAt = DateUtils.addDays(new Date(), days);
         numAvailProlongations--;
+        status = AdStatus.ACTIVE;
     }
     
     public void select() {
         adData.select();
+        status = AdStatus.SELECTED;
     }
     
     public void unselect() {
@@ -181,6 +183,18 @@ public class Ad {
     public void unmarkAsDeleted() {
         deleted = false;
         deletedAt = null;
+    }
+    
+    public void markAsSent() {
+        sent = true;
+        sentAt = new Date();
+        status = AdStatus.SENT;
+    }
+    
+    public void markAsReceived() {
+        received = true;
+        receivedAt = new Date();
+        status = AdStatus.RECEIVED;
     }
     
     public void markAsSold() {
@@ -222,6 +236,7 @@ public class Ad {
 
     public void setCreator(User creator) {
         this.creator = creator;
+        this.creator.addAd(this);
     }
 
     public Date getCreatedAt() {

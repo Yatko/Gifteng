@@ -8,6 +8,7 @@ import com.venefica.model.Gender;
 import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,10 @@ public class UserDto extends DtoBase {
     private AddressDto address;
     // in, out
     private boolean businessAccount;
+    // out
+    private BigDecimal score;
+    // out
+    private BigDecimal pendingScore;
     
     // business user data
     
@@ -82,6 +87,10 @@ public class UserDto extends DtoBase {
      */
     @SuppressWarnings("LeakingThisInConstructor")
     public UserDto(User user) {
+        this(user, true);
+    }
+    
+    public UserDto(User user, boolean includeUserPoints) {
         id = user.getId();
         name = user.getName();
         email = user.getEmail();
@@ -92,6 +101,11 @@ public class UserDto extends DtoBase {
         address = new AddressDto(user.getAddress(), user.getLocation());
         businessAccount = user.isBusinessAccount();
         user.getUserData().updateUserDto(this);
+        
+        if ( includeUserPoints && user.getUserPoint() != null ) {
+            score = user.getUserPoint().getScore();
+            pendingScore = user.getUserPoint().getPendingScore();
+        }
     }
 
     /**

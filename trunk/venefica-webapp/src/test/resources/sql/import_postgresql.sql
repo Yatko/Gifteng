@@ -20,10 +20,22 @@ insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed")
 
 -- Users
 delete from local_user;
-insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com');
-insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com');
-insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com');
-insert into local_user ("id", "name", "password", "email") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com');
+insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com', 1);
+insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com', 2);
+insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com', 3);
+insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com', 4);
+
+-- User point
+delete from user_point;
+insert into user_point ("id", "number", "score") values (1, '0', '0');
+insert into user_point ("id", "number", "score") values (2, '0', '0');
+insert into user_point ("id", "number", "score") values (3, '0', '0');
+insert into user_point ("id", "number", "score") values (4, '0', '0');
+
+update local_user set "userPoint_id"=1 where "id"=1;
+update local_user set "userPoint_id"=2 where "id"=2;
+update local_user set "userPoint_id"=3 where "id"=3;
+update local_user set "userPoint_id"=4 where "id"=4;
 
 -- Business categories
 delete from businesscategory;
@@ -39,14 +51,14 @@ insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'music
 insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'rentals', 'f');
 insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'real estate', 'f');
 insert into category ("id", "name", "hidden") values (nextval('cat_seq'), 'jobs', 'f');
-insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'events', 'f', '1');
-insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'bars/clubs', 'f', '1');
-insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'restaurants', 'f', '1');
-insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'salons/nails/spas', 'f', '1');
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'events', 'f', 1);
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'bars/clubs', 'f', 1);
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'restaurants', 'f', 1);
+insert into category ("id", "name", "hidden", "parent_id") values (nextval('cat_seq'), 'salons/nails/spas', 'f', 1);
 
 -- Ad data
 delete from addata;
-insert into addata ("id", "type", "category_id", "title", "quantity") values (nextval('addata_seq'), 'MEMBER', 1, 'test ad', '1');
+insert into addata ("id", "type", "category_id", "title", "quantity", "price") values (nextval('addata_seq'), 'MEMBER', 1, 'test ad', '1', '12.50');
 
 -- Member ad data
 delete from memberaddata;
@@ -55,6 +67,9 @@ insert into memberaddata ("id") values (1);
 -- Ads
 delete from ad;
 insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "sent", "received", "numexpire", "status", "expires") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 'f', 'f', 0, 'ACTIVE', 't');
+
+delete from user_transaction;
+insert into user_transaction ("finalized", "pendingNumber", "pendingScore", "ad_id", "user_id", "userPoint_id") values ('f', '2.2625', '0', 1, 1, 1);
 
 -- Bookmarks
 delete from bookmark;

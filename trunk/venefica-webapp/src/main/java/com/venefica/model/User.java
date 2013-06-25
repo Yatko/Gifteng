@@ -3,6 +3,7 @@ package com.venefica.model;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.vividsolutions.jts.geom.Point;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,6 +53,11 @@ public class User {
     private Date joinedAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginAt;
+    
+    @OneToMany(mappedBy = "creator")
+    private List<Ad> ads;
+    @OneToMany(mappedBy = "user")
+    private List<Request> requests;
     
     @OneToOne
     @ForeignKey(name = "userdata_fk")
@@ -173,6 +179,20 @@ public class User {
     public boolean inFollowings(User user) {
         initFollowings();
         return followings.contains(user);
+    }
+    
+    public void addAd(Ad ad) {
+        if ( ads == null ) {
+            ads = new ArrayList<Ad>(0);
+        }
+        ads.add(ad);
+    }
+    
+    public void addRequest(Request request) {
+        if ( requests == null ) {
+            requests = new ArrayList<Request>(0);
+        }
+        requests.add(request);
     }
     
     private void initFollowers() {
@@ -303,5 +323,21 @@ public class User {
 
     public void setUserPoint(UserPoint userPoint) {
         this.userPoint = userPoint;
+    }
+
+    public List<Ad> getAds() {
+        return ads;
+    }
+
+    public void setAds(List<Ad> ads) {
+        this.ads = ads;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
     }
 }

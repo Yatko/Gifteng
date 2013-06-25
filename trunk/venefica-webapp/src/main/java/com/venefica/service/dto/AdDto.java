@@ -128,12 +128,13 @@ public class AdDto extends DtoBase {
         ad.getAdData().setSubtitle(subtitle);
         ad.getAdData().setDescription(description);
         ad.getAdData().setPrice(price);
-        ad.getAdData().setQuantity(quantity);
+        ad.getAdData().setQuantity(quantity != null ? quantity : 1);
         ad.getAdData().setFreeShipping(freeShipping);
         ad.getAdData().setPickUp(pickUp);
         ad.getAdData().setPlace(place);
         ad.getAdData().setAddress(address != null ? address.getAddress() : null);
         ad.getAdData().setLocation(address != null ? address.getLocation() : null);
+        
         ad.getAdData().updateAd(this);
     }
     
