@@ -13,6 +13,7 @@ import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.dto.UserStatisticsDto;
 import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -34,7 +35,10 @@ import org.springframework.util.MultiValueMap;
 @Service("userManagementService")
 @WebService(endpointInterface = "com.venefica.service.UserManagementService")
 public class UserManagementServiceImpl extends AbstractService implements UserManagementService {
-
+    
+    @Inject
+    private AdService adService;
+    
     @Inject
     private ImageDao imageDao;
     @Inject
@@ -161,6 +165,19 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     
     
+    //*******************
+    //* user statistics *
+    //*******************
+    
+    @Override
+    @Transactional
+    public UserStatisticsDto getStatistics(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        return buildStatistics(user);
+    }
+    
+    
+    
     //***************
     //* user search *
     //***************
@@ -196,8 +213,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     public UserDto getUserByName(String name) throws UserNotFoundException {
         User user = validateUser(name);
         User currentUser = getCurrentUser();
+        UserStatisticsDto statistics = buildStatistics(user);
         
         UserDto userDto = new UserDto(user);
+        userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
         return userDto;
     }
@@ -212,8 +231,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
 
         User currentUser = getCurrentUser();
+        UserStatisticsDto statistics = buildStatistics(user);
         
         UserDto userDto = new UserDto(user);
+        userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
         return userDto;
     }
@@ -228,8 +249,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
 
         User currentUser = getCurrentUser();
+        UserStatisticsDto statistics = buildStatistics(user);
         
         UserDto userDto = new UserDto(user);
+        userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
         return userDto;
     }
@@ -350,5 +373,24 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             userDto.setInFollowers(currentUser.inFollowers(user));
             userDto.setInFollowings(currentUser.inFollowings(user));
         }
+    }
+
+    private UserStatisticsDto buildStatistics(User user) throws UserNotFoundException {
+        Long userId = user.getId();
+        int numReceivings = adService.getUserRequestedAds(userId).size();
+        int numGivings = adService.getUserAds(userId, false).size();
+        int numRatings = adService.getReceivedRatings(userId).size();
+        int numBookmarks = adService.getBookmarkedAds(userId).size();
+        int numFollowers = this.getFollowers(userId).size();
+        int numFollowings = this.getFollowings(userId).size();
+        
+        UserStatisticsDto statistics = new UserStatisticsDto();
+        statistics.setNumReceivings(numReceivings);
+        statistics.setNumGivings(numGivings);
+        statistics.setNumBookmarks(numBookmarks);
+        statistics.setNumFollowers(numFollowers);
+        statistics.setNumFollowings(numFollowings);
+        statistics.setNumRatings(numRatings);
+        return statistics;
     }
 }

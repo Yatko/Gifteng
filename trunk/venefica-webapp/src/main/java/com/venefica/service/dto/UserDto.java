@@ -57,6 +57,8 @@ public class UserDto extends DtoBase {
     private BigDecimal score;
     // out
     private BigDecimal pendingScore;
+    // out
+    private UserStatisticsDto statistics;
     
     // business user data
     
@@ -71,15 +73,10 @@ public class UserDto extends DtoBase {
     // in, out
     private List<AddressDto> addresses;
     
-    // TODO: add necessary fields
     // Required for JAX-WS
     public UserDto() {
     }
     
-    public UserDto(boolean businessAccount) {
-        this.businessAccount = businessAccount;
-    }
-
     /**
      * Constructs the DTO object form the domain object.
      *
@@ -328,5 +325,29 @@ public class UserDto extends DtoBase {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public UserStatisticsDto getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(UserStatisticsDto statistics) {
+        this.statistics = statistics;
+    }
+
+    public BigDecimal getScore() {
+        return score;
+    }
+
+    public void setScore(BigDecimal score) {
+        this.score = score;
+    }
+
+    public BigDecimal getPendingScore() {
+        return pendingScore;
+    }
+
+    public void setPendingScore(BigDecimal pendingScore) {
+        this.pendingScore = pendingScore;
     }
 }

@@ -2,6 +2,7 @@ package com.venefica.service;
 
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.dto.UserStatisticsDto;
 import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
@@ -15,6 +16,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.validation.constraints.NotNull;
 
 /**
  * Registers new users and updates information about them.
@@ -92,6 +94,16 @@ public interface UserManagementService {
     @WebResult(name = "complete")
     public boolean isUserComplete();
 
+    
+    
+    //*******************
+    //* user statistics *
+    //*******************
+    
+    @WebMethod(operationName = "GetStatistics")
+    @WebResult(name = "statistics")
+    public UserStatisticsDto getStatistics(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    
     
     
     //***************

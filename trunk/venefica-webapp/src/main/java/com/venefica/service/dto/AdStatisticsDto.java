@@ -19,11 +19,11 @@ public class AdStatisticsDto {
     // out
     private long numViews;
     // out
-    private long numComments;
+    private int numComments;
     // out
-    private long numBookmarks;
+    private int numBookmarks;
     // out
-    private long numShares;
+    private int numShares;
     // out
     private float rating;
 
@@ -55,27 +55,27 @@ public class AdStatisticsDto {
         this.rating = rating;
     }
 
-    public long getNumComments() {
+    public int getNumComments() {
         return numComments;
     }
 
-    public void setNumComments(long numComments) {
+    public void setNumComments(int numComments) {
         this.numComments = numComments;
     }
 
-    public long getNumBookmarks() {
+    public int getNumBookmarks() {
         return numBookmarks;
     }
 
-    public void setNumBookmarks(long numBookmarks) {
+    public void setNumBookmarks(int numBookmarks) {
         this.numBookmarks = numBookmarks;
     }
 
-    public long getNumShares() {
+    public int getNumShares() {
         return numShares;
     }
 
-    public void setNumShares(long numShares) {
+    public void setNumShares(int numShares) {
         this.numShares = numShares;
     }
     
