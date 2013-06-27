@@ -1,0 +1,193 @@
+/* CSS Document */
+
+/* TEMP */
+#top-giftengers .ge-user .ge-user-image img {width: 90px;height: 90px;}
+#top-giftengers img.inactive {opacity: 0.01;filter: alpha(opacity=01);}
+#top-giftengers img.inactive:hover {opacity: 0.9;filter: alpha(opacity=90);}
+
+/* TODO review all before USER */
+/* GENERAL */
+html, body{font-family:'Lato', sans-serif;text-shadow: 0 1px 0 #fff;background:url('temp-sample/ge-background.png') #eeedea;}
+p {color: #34495e;font-size: 100%;}
+em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hierarchy */
+.error {color: #eb6b62 !important;padding: 9px;text-align: center;}
+.ge-topspace {padding-top:66px;}
+
+/* box-sizing */
+[class^="ge"], [class*=" ge"], textarea {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+/* WELL */
+.ge-well {
+	background:#fff;
+	padding: 9px 0;
+	border:none;
+	box-shadow: 0px 2px 3px #cbc8c3;
+}
+.ge-well .ge-topspace {padding-top:26px;}
+.ge-well .ge-logo {padding:26px 0 24px;text-align:center;}
+.ge-well .ge-well-content {min-height:410px;}
+.ge-well .ge-well-content.ge-form {padding:0px;}
+.ge-well .ge-footline {
+	margin-top: 12px;
+	padding: 9px 19px 0 19px;
+	background-color:#e4e4e4;
+	-webkit-border-radius:0 0 4px 4px;
+	-moz-border-radius:0 0 4px 4px;
+	border-radius:0 0 4px 4px;
+	min-height:37px;
+}
+.ge-well .ge-footline.empty {background:none;}
+.ge-well .ge-footline a {color: #fff;text-shadow: none;}
+.ge-well .ge-footline p {padding-bottom: 0px;color: #aaaaaa;text-align: center;}
+.ge-well .control-label, .ge-well .label, .ge-well label {color: #bdc3c7;}
+.ge-well i.lead {color:#00bebe;padding: 9px;}
+.ge-well .ge-item {padding:0px;}
+.ge-well .ge-action {padding:9px;} /* todo review */
+
+
+
+
+
+
+
+
+/* USER */
+.ge-user {padding: 0 9px;}
+.ge-user {zoom:1;} /* todo review */
+.ge-user .ge-user-image {float: left;margin-right: 9px;}
+.ge-user .ge-user-image img {width: 60px;height: 60px;}
+.ge-user .ge-detail {font-size: 70%;line-height:110%;color:#aaaaaa;}
+.ge-user .ge-detail .ge-name a {font-size:136%;font-weight:600;color:#aaaaaa;}
+.ge-user .ge-detail .ge-name a.fui-gear {font-size:90%;color:#00bebe;} /*edit*/
+.ge-user .ge-detail .ge-name span.label-ge {float: right;color:#ffffff;background:#00bebe;} /*follow btn*/
+.ge-user .ge-detail .ge-name span.label-ge.active {background:#e4e4e4;}
+.ge-user .ge-detail .ge-points span.label {color:#00bebe;margin-top:6px;} /*G score*/
+.ge-user:before,.ge-user:after {content:"";display:table;} /* todo review */
+.ge-user:after {clear:both;}
+/* user info panel */
+.ge-user .ge-info {background-color:#fafafa;border-radius: 3px;}
+.ge-user .ge-info [id^="tab_"] .btn.btn-ge {background-color:#fafafa;color: #00bebe;}
+.ge-user .ge-info .nav-tabs.nav-append-content > li.active:first-child:before {background-color: transparent;border-left: none;}
+.ge-user .ge-info .tab-content {border: none;margin-bottom: 0px;padding: 10px;position: relative;z-index: 1;background-color:#fafafa;}
+.ge-user .ge-info .nav-tabs {border-bottom: 1px solid #dedede;}
+.ge-user .ge-info .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {border-color: transparent;background-color: transparent;border-width: 2px;color: #7f8c9a;border-bottom: 1px solid #00bebe;}
+.ge-user .ge-info .nav-tabs > li > a {padding: 7px 16px 8px;}
+/* user profile - see also: detail-view*/
+
+/* ITEM */
+.ge-item {}
+.ge-item .ge-item-image {background: url("temp-sample/ge-item.jpg") center center no-repeat; background-size:100% auto;min-height:220px;padding:0 6px;margin: 9px 0;}
+.ge-item .ge-item-image .btn {background-color: rgb(0, 0, 0);background-color: rgba(0, 0, 0, 0.2);
+	/* For IE 5.5 - 7*/
+	filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";}
+.ge-item .ge-item-image	.ge-action {padding-top:160px;}
+.ge-item .ge-item-text, .ge-item .ge-share {padding:0 9px;}
+.ge-item .ge-title{color:#34495e;font-size: 100%;font-weight: 600;line-height:1.5em;margin:0 0 12px 0;}
+.ge-item .ge-subtitle{color:#aaaaaa;}
+.ge-item .ge-subtitle em{margin:0 3px 0 6px;}
+.ge-item .ge-user-image img.inactive {opacity: 0.2;filter: alpha(opacity=20);} /* giving */
+.ge-box p.ge-location {font-weight:400;color: #aaaaaa;font-size: 80%;line-height:1.2em;text-align:right;margin-bottom: 3px;} /* browse location TODO review hierarchy */
+.ge-ribbon {
+display: inline-block;
+font-family: 'Flat-UI-Icons';
+speak: none;
+font-style: normal;
+font-weight: normal;
+font-variant: normal;
+text-transform: none;
+-webkit-font-smoothing: antialiased;
+color: #00bebe;
+font-size: 260%;
+vertical-align: top;
+text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+margin: 0 0 0 15px;
+line-height:80%;
+}
+.ge-ribbon:before {content: "\e022";} /* TODO review hierarchy */
+
+/* DETAIL-VIEW */
+.ge-detail-view .well {padding:19px 0px !important ;}
+.ge-detail-view .ge-user {padding:0 19px;}
+.ge-detail-view .ge-user .ge-user-image {margin-right: 19px;}
+.ge-detail-view .ge-user .ge-user-image img {width: 112px;height: 112px;}
+.ge-detail-view .ge-user .ge-detail {font-size: 100%;}
+.ge-detail-view .ge-user .ge-detail .ge-name a {margin:12px 0 19px 0;} /* TODO margin does not work! */
+.ge-detail-view .ge-item .ge-item-image {min-height:420px;margin:19px 0 0 0;}
+.ge-detail-view .ge-item .ge-item-image	.ge-action {padding-top:350px;}
+.ge-detail-view .ge-item .ge-action, .ge-detail-view .ge-item .ge-description {padding:0 19px;}
+.ge-detail-view .ge-item .ge-map .img {min-height: 195px;}
+.ge-detail-view .ge-messagelist {max-height:589px;}
+
+/* MESSAGING  todo reorder, review */
+.ge-comments .ge-well, .ge-messages .ge-well {padding: 19px 0 0 0;}
+.ge-messages .ge-input {padding: 0px;}
+.ge-messages .ge-input .ge-text textarea, .ge-comments .ge-input .ge-text textarea {font-size: 11px;line-height:130%}
+.ge-messages .ge-input .ge-text textarea:focus {border-color: #bdc3c7;}
+.ge-messages .ge-input .btn {color: #fff;padding: 14px 3px !important;}
+.ge-messages .ge-title, .ge-message a.ge-title {font-weight:600;color:#aaaaaa;}
+.ge-messages .ge-subject {padding:9px;}
+.ge-messagelist, .ge-conversation {max-height:117px;overflow: scroll;border-top: 1px solid #e4e4e4;}
+.ge-messagelist .ge-message a.fui-trash {float: right;color: #e4e4e4;}
+.ge-message {padding: 9px;background-color: #fafafa;border-bottom: 1px solid #e4e4e4;}
+.ge-message .ge-user-image {float:left;width:50px;width:50px;width:50px;}
+.ge-message .ge-text {display:table;font-size: 100%;text-shadow: none;}
+.ge-message .ge-text .ge-name {color:#34495e;font-weight:600;} 
+.ge-message .ge-text .ge-date {padding-left:9px;color: #999;}
+.ge-message .ge-text .ge-block {display: block;margin-top:3px;}
+.ge-message:hover {background-color:#f7f5f5;}
+.ge-message .ge-text {font-size: 11px;line-height:1.1em;}
+.ge-message .ge-user-image img {width: 42px;height: 42px;}
+.ge-message:after {clear: both;}
+.ge-expand, .ge-messages .ge-expand {height:28px;background:url('temp-sample/ge-expand.png') no-repeat center #fff;}
+
+
+
+/* ITEM */
+.ge-box:before, .ge-box:after {display: table;line-height: 0;content: "";} /* TODO review necessity */
+.ge-box:after {clear: both;} /* TODO review necessity */
+.ge-box-well {padding:0} /* TODO review necessity */
+.ge-box-images {padding:9px 0;} /* TODO review necessity */
+
+
+
+
+
+
+
+/* ELEMENTS */
+/* buttons */
+.btn.btn-ge {background-color: #00bebe;}
+.btn.btn-ge:hover,.btn.btn-ge:focus,.btn-group:focus .btn.btn-ge.dropdown-toggle {background-color: #00cece;}
+.btn.btn-ge:active,.btn-group.open .btn.btn-ge.dropdown-toggle,.btn.btn-ge.active {background-color: #00a5a5;}
+
+.btn.btn-ge2 {background-color: #eb6b62 !important;}
+.btn.btn-ge2:hover,.btn.btn-ge2:focus,.btn-group:focus .btn.btn-ge2.dropdown-toggle {background-color: #eb8f89 !important;}
+.btn.btn-ge2:active,.btn-group.open .btn.btn-ge2.dropdown-toggle,.btn.btn-ge2.active {background-color: #d26058 !important;}
+.btn.ge-submit {margin-top:16px;}
+
+/* Bootstrap Flat-UI override - form elements */
+input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focus {border-color: #eb8f89 !important;-webkit-box-shadow: none !important;-moz-box-shadow: none !important;box-shadow: none !important;}
+.checkbox.checked .icons {color: #00bebe !important;}
+.radio.checked .icons {color: #00bebe !important;}
+.checkbox.checked, .radio.checked {color: #00bebe !important;}
+.dropdown-menu li.selected > a, .dropdown-menu li.active > a.highlighted, .dropdown-menu li.selected > a.highlighted {background: #00bebe !important;text-shadow: none !important;}
+.btn.btn-info.dropdown-toggle, .btn.btn-info.active {background-color: #bdc3c7;}
+
+/* TABS */
+.user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}
+.user-giving_recipient .ge-user .ge-points a {font-size: 70%;vertical-align: super;}
+
+
+/* FORMS */
+.ge-form {padding:19px;}
+.ge-form .control-form button {margin-top:42px;text-transform:uppercase;}
+
+
+
+/* OTHER PAGES */
+.ge-terms, .ge-description, .ge-details {font-size: 100%;line-height: 120%;}
+.ge-headline {text-align: center;margin-bottom: 30px;font-weight: 600;}
+.control-post-start {margin-top:94px;}
+.control-post-online {margin-top:139px;}

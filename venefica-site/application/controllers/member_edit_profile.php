@@ -2,9 +2,6 @@
 
 class Member_edit_profile extends CI_Controller {
     
-    const AJAX_STATUS_RESULT = 'result';
-    const AJAX_STATUS_ERROR = 'error';
-    
     private $initialized = false;
     
     var $user;
@@ -27,7 +24,7 @@ class Member_edit_profile extends CI_Controller {
         }
         
         $result = $this->process();
-        if ( key_exists(Member_edit_profile::AJAX_STATUS_RESULT, $result) ) {
+        if ( key_exists(AJAX_STATUS_RESULT, $result) ) {
             redirect('/profile');
         }
         
@@ -59,7 +56,7 @@ class Member_edit_profile extends CI_Controller {
         }
         
         $result = $this->process();
-        $this->respondAjax($result);
+        respond_ajax_array($result);
     }
     
     // internal
@@ -75,19 +72,10 @@ class Member_edit_profile extends CI_Controller {
             $this->load->model('image_model');
             $this->load->model('address_model');
             $this->load->model('user_model');
+            $this->load->model('userstatistics_model');
             
             $this->initialized = true;
         }
-    }
-    
-    private function respondAjax($responseArray) {
-        $obj = array();
-        foreach ( $responseArray as $status => $result ) {
-            $obj[$status] = $result;
-        }
-        
-        $data['obj'] = $obj;
-        $this->load->view('json', $data);
     }
     
     private function process() {
@@ -112,18 +100,18 @@ class Member_edit_profile extends CI_Controller {
                 $this->user = $this->usermanagement_service->loadUser();
                 
                 return array(
-                    Member_edit_profile::AJAX_STATUS_RESULT => 'OK'
+                    AJAX_STATUS_RESULT => 'OK'
                 );
             } catch ( Exception $ex ) {
                 log_message(ERROR, $ex->getMessage());
                 return array(
-                    Member_edit_profile::AJAX_STATUS_ERROR => 'Something went wrong when updating user!'
+                    AJAX_STATUS_ERROR => 'Something went wrong when updating user!'
                 );
             }
         } elseif ( $_POST ) {
             //form data not valid after post
             return array(
-                Member_edit_profile::AJAX_STATUS_ERROR => $this->edit_profile_form->error_string()
+                AJAX_STATUS_ERROR => $this->edit_profile_form->error_string()
             );
         } else {
             //direct access of the page

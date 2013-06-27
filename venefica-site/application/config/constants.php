@@ -13,7 +13,11 @@ define('DEBUG', 'debug');
 define('INFO',  'info');
 define('ERROR', 'error');
 
+define('AJAX_STATUS_RESULT', 'result');
+define('AJAX_STATUS_ERROR', 'error');
+
 define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
+define('DESCRIPTION_MAX_LENGTH', 100);
 define('TEMPLATES', 4);
 define('TEMP_FOLDER', sys_get_temp_dir());
 

@@ -24,9 +24,9 @@
             }).done(function(response) {
                 if ( !response || response == '' ) {
                     //TODO: empty result
-                } else if ( response.<?=Member_edit_profile::AJAX_STATUS_ERROR?> ) {
-                    $('#ajax_error').html(response.<?=Member_edit_profile::AJAX_STATUS_ERROR?>);
-                } else if ( response.<?=Member_edit_profile::AJAX_STATUS_RESULT?> ) {
+                } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
+                    $('#ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
+                } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
                     $('.modal').modal('hide');
                     location.reload(true);
                 } else {
@@ -59,6 +59,7 @@ $email = $user->email;
                     <div class="span12">
 
 <? endif; ?>
+                        
                         <?
                         $message = isset($this->edit_profile_form) ? $this->edit_profile_form->error_string() : "";
                         if ( $message == '' ) $message = 'Let\'s edit your profile';

@@ -15,10 +15,10 @@
             }).done(function(response) {
                 if ( !response || response == '' ) {
                     //TODO: empty result
-                } else if ( response.<?=Profile::AJAX_STATUS_ERROR?> ) {
+                } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
                     //TODO
-                } else if ( response.<?=Profile::AJAX_STATUS_RESULT?> ) {
-                    $('#avatarImage').attr('src', response.<?=Profile::AJAX_STATUS_RESULT?>);
+                } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
+                    $('#avatarImage').attr('src', response.<?=AJAX_STATUS_RESULT?>);
                 } else {
                     //TODO: unknown response received
                 }
@@ -38,6 +38,14 @@
 </script>
 
 <?
+
+$receivings_num = $user->statistics->numReceivings;
+$givings_num = $user->statistics->numGivings;
+$bookmarks_num = $user->statistics->numBookmarks;
+$followers_num = $user->statistics->numFollowers;
+$followings_num = $user->statistics->numFollowings;
+$ratings_num = $user->statistics->numRatings;
+
 $user_avatar_img = $user->getAvatarUrl();
 $user_full_name = $user->getFullName();
 $user_joined = $user->getJoinDate();
@@ -46,6 +54,7 @@ $user_about = $user->about;
 
 if ( trim($user_avatar_img) == '' ) $user_avatar_img = BASE_PATH.'temp-sample/ge-user.jpg';
 if ( trim($user_full_name) == '' ) $user_full_name = '&nbsp;';
+
 ?>
 
 

@@ -1,12 +1,4 @@
 
-.hidden {
-  display: none;
-  visibility: hidden;
-}
-
-.icon-green {
-    background-image: url("img/glyphicons-halflings-white.png") !important;
-}
 .file {
     display: none;
     cursor: pointer;
@@ -27,15 +19,6 @@
     height: 254px;
 }
 
-/**
-.user-giving {
-    padding-top: 120px !important;
-}
-.ge-browse {
-    padding-top: 120px !important;
-}
-/**/
-
 #email_change_notification {
     display: none;
 }
@@ -43,9 +26,11 @@
     display: none;
 }
 
+/**
 .ge-item {
     margin-left: 12px !important;
 }
+/**/
 
 form {
     margin: 0px !important;

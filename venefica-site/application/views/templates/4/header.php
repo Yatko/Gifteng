@@ -27,8 +27,14 @@ $page = $this->uri->segment(1, null);
     <!-- Loading Flat UI -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <!-- Loading ge temp CSS -->
+    
+    <!--
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-pages.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
+    -->
+    
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
     
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
