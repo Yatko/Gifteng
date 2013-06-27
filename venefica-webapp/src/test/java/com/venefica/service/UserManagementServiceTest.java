@@ -346,7 +346,8 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         address_2.setName("Depo");
         address_2.setZipCode("222");
         
-        UserDto userDto = new UserDto(true);
+        UserDto userDto = new UserDto();
+        userDto.setBusinessAccount(true);
         userDto.setBusinessCategoryId(businessCategoryId);
         userDto.setBusinessName(businessName);
         userDto.setName(businessName);
