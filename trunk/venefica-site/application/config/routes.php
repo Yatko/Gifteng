@@ -46,6 +46,10 @@ $route['admin/(:any)'] = 'admin/$1';
 $route['admin'] = 'admin/dashboard';
 
 
+$route['ajax/(:any)'] = 'ajax/$1';
+$route['ajax'] = 'ajax/invalid';
+
+
 //$route['browse/(:any)'] = 'browse/view/$1';
 $route['browse/ajax/(:any)'] = 'browse/$1';
 $route['browse'] = 'browse/view';
@@ -71,7 +75,6 @@ $route['post/member'] = 'member_post/view';
 $route['post'] = 'post/post_redirect';
 
 
-$route['view/ajax/(:any)'] = 'view/$1';
 $route['view/(:num)'] = 'view/show/$1';
 $route['view'] = 'view/show/';
 

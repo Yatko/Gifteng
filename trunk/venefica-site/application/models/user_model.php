@@ -27,6 +27,7 @@ class User_model extends CI_Model {
     var $businessAccount; //boolean
     var $score; //float
     var $pendingScore; //float
+    var $statistics; //UserStatistics_model
     
     // business user data
     var $businessName; //string
@@ -58,6 +59,9 @@ class User_model extends CI_Model {
             $this->contactName = getField($obj, 'contactName');
             $this->businessCategoryId = getField($obj, 'businessCategoryId');
             $this->businessCategory = getField($obj, 'businessCategory');
+            if ( hasField($obj, 'statistics') ) {
+                $this->statistics = UserStatistics_model::convertUserStatistics($obj->statistics);
+            }
             if ( hasField($obj, 'avatar') ) {
                 $this->avatar = Image_model::convertImage($obj->avatar);
             }
@@ -123,7 +127,7 @@ class User_model extends CI_Model {
     }
     
     public function getFullName() {
-        return $this->firstName.' '.$this->lastName;
+        return trim($this->firstName) . ' ' . trim($this->lastName);
     }
     
     public function getJoinDate() {
@@ -145,6 +149,14 @@ class User_model extends CI_Model {
             return '';
         }
         return $this->address->zipCode;
+    }
+    
+    public function getPoints() {
+        $points = $this->score;
+        if ( $this->pendingScore ) {
+            $points = $points . '/' . $this->pendingScore;
+        }
+        return $points;
     }
     
     public function toString() {

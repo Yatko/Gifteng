@@ -103,6 +103,22 @@ class Usermanagement_service {
         }
     }
     
+    //*****************
+    //* user statistics *
+    //*****************
+    
+    public function getStatistics($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getStatistics(array("userId" => $userId));
+            $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
+            return $statistics;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'User statistics (id: '.$userId.') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //***************
     //* user search *
     //***************

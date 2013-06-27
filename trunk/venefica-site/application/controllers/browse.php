@@ -2,9 +2,6 @@
 
 class Browse extends CI_Controller {
     
-    const AJAX_STATUS_RESULT = 'result';
-    const AJAX_STATUS_ERROR = 'error';
-    
     private $initialized = false;
     
     private static $STARTING_AD_NUM = 5;
@@ -25,10 +22,13 @@ class Browse extends CI_Controller {
         $data['user'] = $user;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
+        $this->load->view('javascript/follow_unfollow');
+        $this->load->view('javascript/bookmark');
         $this->load->view('pages/browse', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
+    //ajax call
     public function get_more() {
         $this->init();
         
@@ -50,69 +50,6 @@ class Browse extends CI_Controller {
         $this->load->view('pages/browse', $data);
     }
     
-    public function follow() {
-        $this->init();
-        
-        if ( !isLogged() ) {
-            return;
-        } else if ( !$_GET ) {
-            return;
-        }
-        
-        try {
-            $userId = $_GET['userId'];
-            $this->usermanagement_service->follow($userId);
-            
-            $this->respondAjax(Browse::AJAX_STATUS_RESULT, 'OK');
-        } catch ( Exception $ex ) {
-            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
-        }
-    }
-    
-    public function unfollow() {
-        $this->init();
-        
-        if ( !isLogged() ) {
-            return;
-        } else if ( !$_GET ) {
-            return;
-        }
-        
-        try {
-            $userId = $_GET['userId'];
-            $this->usermanagement_service->unfollow($userId);
-            
-            $this->respondAjax(Browse::AJAX_STATUS_RESULT, 'OK');
-        } catch ( Exception $ex ) {
-            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
-        }
-    }
-    
-    public function comment() {
-        $this->init();
-        
-        if ( !isLogged() ) {
-            return;
-        } else if ( !$_POST ) {
-            return;
-        }
-        
-        try {
-            $adId = $this->input->post('commentAdId');
-            $text = $this->input->post('commentText');
-            
-            $comment = new Comment_model();
-            $comment->text = $text;
-            
-            $this->message_service->addCommentToAd($adId, $comment);
-            $statistics = $this->ad_service->getStatistics($adId);
-            
-            $this->respondAjax(Browse::AJAX_STATUS_RESULT, $statistics->numComments);
-        } catch ( Exception $ex ) {
-            $this->respondAjax(Browse::AJAX_STATUS_ERROR, $ex->getMessage());
-        }
-    }
-    
     // internal
     
     private function init() {
@@ -130,6 +67,7 @@ class Browse extends CI_Controller {
             $this->load->model('ad_model');
             $this->load->model('adstatistics_model');
             $this->load->model('user_model');
+            $this->load->model('userstatistics_model');
             $this->load->model('comment_model');
             $this->load->model('request_model');
             
@@ -160,10 +98,5 @@ class Browse extends CI_Controller {
         } catch ( Exception $ex ) {
             return $ex->getMessage();
         }
-    }
-    
-    private function respondAjax($status, $result) {
-        $data['obj'] = array($status => $result);
-        $this->load->view('json', $data);
     }
 }

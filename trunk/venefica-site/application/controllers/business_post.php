@@ -145,6 +145,7 @@ class Business_post extends CI_Controller {
             $this->load->model('ad_model');
             $this->load->model('adstatistics_model');
             $this->load->model('user_model');
+            $this->load->model('userstatistics_model');
             $this->load->model('category_model');
             
             $this->initialized = true;

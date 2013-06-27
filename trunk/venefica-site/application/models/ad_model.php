@@ -41,7 +41,7 @@ class Ad_model extends CI_Model {
     var $images; //array of Image_model
     var $createdAt; //long - timestamp
     var $owner; //boolean
-    var $inBookmars; //boolean
+    var $inBookmarks; //boolean
     var $expired; //boolean
     var $sent; //boolean
     var $received; //boolean
@@ -86,7 +86,7 @@ class Ad_model extends CI_Model {
             $this->quantity = getField($obj, 'quantity');
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
-            $this->inBookmars = getField($obj, 'inBookmars');
+            $this->inBookmarks = getField($obj, 'inBookmarks');
             $this->expired = getField($obj, 'expired');
             $this->sent = getField($obj, 'sent');
             $this->received = getField($obj, 'received');
@@ -191,6 +191,13 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->creator->getLocation();
+    }
+    
+    public function getCreatorPoints() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getPoints();
     }
     
     // ad related

@@ -26,6 +26,7 @@ class Post extends CI_Controller {
             $this->load->model('image_model');
             $this->load->model('address_model');
             $this->load->model('user_model');
+            $this->load->model('userstatistics_model');
             
             $this->initialized = true;
         }

@@ -13,6 +13,33 @@ if ( ! function_exists('display')) {
     }
 }
 
+if ( ! function_exists('respond_ajax')) {
+    function respond_ajax($status, $result) {
+        $CI =& get_instance();
+        
+        $data = array();
+        $data['obj'] = array($status => $result);
+        
+        $CI->load->view('json', $data);
+    }
+}
+
+if ( ! function_exists('respond_ajax_array')) {
+    function respond_ajax_array($responseArray) {
+        $CI =& get_instance();
+        
+        $obj = array();
+        foreach ( $responseArray as $status => $result ) {
+            $obj[$status] = $result;
+        }
+        
+        $data['obj'] = $obj;
+        $CI->load->view('json', $data);
+    }
+}
+
+
+
 // making a safer world
 
 if ( ! function_exists('safe_content')) {

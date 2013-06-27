@@ -17,6 +17,7 @@ class Venefica_Session extends CI_Session {
         get_instance()->load->model("image_model");
         get_instance()->load->model('address_model');
         get_instance()->load->model("user_model");
+        get_instance()->load->model('userstatistics_model');
         
         parent::__construct($params);
     }
