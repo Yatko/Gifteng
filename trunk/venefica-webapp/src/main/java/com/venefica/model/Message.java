@@ -29,6 +29,10 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @ManyToOne
+    @ForeignKey(name = "message_ad_fk")
+    private Ad ad;
+    
     @ManyToOne(optional = false)
     @ForeignKey(name = "message_to_fk")
     private User to;
@@ -43,6 +47,7 @@ public class Message {
     
     @Basic(optional = false)
     private String text;
+    
     @Column(name = "readd")
     private boolean read;
     
@@ -52,9 +57,12 @@ public class Message {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    
+    private boolean deleted;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedAt;
 
     public Message() {
-        createdAt = new Date();
         read = false;
     }
 
@@ -134,5 +142,29 @@ public class Message {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

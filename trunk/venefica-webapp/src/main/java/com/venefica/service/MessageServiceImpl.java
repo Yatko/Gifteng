@@ -76,7 +76,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Transactional
     public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments) throws AdNotFoundException {
         Ad ad = validateAd(adId);
-        LinkedList<CommentDto> result = new LinkedList<CommentDto>();
+        List<CommentDto> result = new LinkedList<CommentDto>();
 
         User currentUser = getCurrentUser();
         List<Comment> comments = commentDao.getAdComments(adId, lastCommentId, numComments);
@@ -85,7 +85,6 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             CommentDto commentDto = new CommentDto(comment, currentUser);
             result.add(commentDto);
         }
-
         return result;
     }
     
@@ -95,6 +94,29 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     //* messaging *
     //*************
 
+    @Override
+    public List<MessageDto> getMessagesByAd(Long adId) throws AdNotFoundException {
+        Ad ad = validateAd(adId);
+        List<MessageDto> result = new LinkedList<MessageDto>();
+        
+        User currentUser = getCurrentUser();
+        List<Message> messages = messageDao.getByAd(adId);
+        
+        for (Message message : messages) {
+            if ( message.isHiddenByRecipient() || message.isHiddenBySender() ) {
+                continue;
+            }
+            
+            MessageDto messageDto = new MessageDtoBuilder(message)
+                    .setCurrentUser(currentUser)
+                    .build();
+            message.setRead(true); // mark as read
+            
+            result.add(messageDto);
+        }
+        return result;
+    }
+    
     @Override
     @Transactional
     public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, MessageValidationException {
@@ -126,6 +148,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
         // Only text can be updated!
         message.setText(messageDto.getText());
+        message.setUpdatedAt(new Date());
     }
 
     @Override
@@ -136,22 +159,27 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
         // incoming
         for (Message msg : currentUser.getReceivedMessages()) {
-            if (msg.isHiddenByRecipient()) {
+            if (msg.isDeleted() || msg.isHiddenByRecipient()) {
                 continue;
             }
 
-            MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
+            MessageDto messageDto = new MessageDtoBuilder(msg)
+                    .setCurrentUser(currentUser)
+                    .build();
             msg.setRead(true); // mark as read
+            
             result.add(messageDto);
         }
 
         // outgoing
         for (Message msg : currentUser.getSentMessages()) {
-            if (msg.isHiddenBySender()) {
+            if (msg.isDeleted() || msg.isHiddenBySender()) {
                 continue;
             }
 
-            MessageDto messageDto = new MessageDtoBuilder(msg).setCurrentUser(currentUser).build();
+            MessageDto messageDto = new MessageDtoBuilder(msg)
+                    .setCurrentUser(currentUser)
+                    .build();
             result.add(messageDto);
         }
 
@@ -180,7 +208,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User currentUser = getCurrentUser();
 
         if (!message.getTo().equals(currentUser) && !message.getFrom().equals(currentUser)) {
-            throw new AuthorizationException("You are neither recipient nor sender of the message!");
+            throw new AuthorizationException("You are neither recipient nor sender of the message (messageId: " + messageId + ")!");
         }
 
         messageDao.deleteMessage(message);

@@ -17,7 +17,7 @@ import static org.quartz.JobBuilder.newJob;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import org.quartz.Trigger;
 import static org.quartz.TriggerBuilder.newTrigger;
 import org.quartz.impl.StdSchedulerFactory;
@@ -76,13 +76,12 @@ public class MainConfig {
         return new ThreadSecurityContextHolder();
     }
 
-    @Bean(name = "scheduler", destroyMethod = "shutdown")
+    @Bean(name = "scheduler", initMethod = "start", destroyMethod = "shutdown")
     public Scheduler scheduler() throws SchedulerException {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.scheduleJob(adExpirationJobDetail(), adExpirationTrigger());
         scheduler.scheduleJob(invitationExpirationJobDetail(), invitationExpirationTrigger());
         scheduler.scheduleJob(forgotPasswordExpirationJobDetail(), forgotPasswordExpirationTrigger());
-        scheduler.start();
         return scheduler;
     }
     
@@ -132,20 +131,19 @@ public class MainConfig {
     
     private JobDetail createJobDetail(Class <? extends Job> jobClass, String identity) {
         // @formatter:off
-        JobDetail job = newJob(jobClass)
+        return newJob(jobClass)
+                .withDescription("JobDetail (class: " + jobClass.getSimpleName() + ", identity: " + identity + ")")
                 .withIdentity(identity, JOB_GROUP)
                 .build();
-        return job;
         // @formatter:on 
     }
     
     private Trigger createTrigger(String identity, int intervalInSeconds) {
         // @formatter:off
         return newTrigger()
+                .withDescription("Trigger (identity: " + identity + ")")
                 .withIdentity(identity, JOB_GROUP)
-                .withSchedule(simpleSchedule()
-                .withIntervalInSeconds(intervalInSeconds)
-                .repeatForever())
+                .withSchedule(repeatSecondlyForever(intervalInSeconds))
                 .build();
         // @formatter:on
     }

@@ -23,7 +23,7 @@ public class EmailConfig {
     @Inject
     private Environment environment;
     
-    @Bean
+    @Bean(initMethod = "init")
     public EmailSender emailSender() {
         int smtpPort = environment.getProperty("email.smtpPort", int.class);
         int smtpPortSSL = environment.getProperty("email.smtpPortSSL", int.class);
@@ -51,7 +51,6 @@ public class EmailConfig {
         emailService.setUndeliveredEmailAddress(undeliveredEmailAddress);
         emailService.setImagesBaseUrl(imagesBaseUrl);
         emailService.setEnabled(enabled);
-        emailService.init();
         return emailService;
     }
     

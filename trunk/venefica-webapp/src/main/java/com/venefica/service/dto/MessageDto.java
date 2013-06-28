@@ -16,6 +16,8 @@ public class MessageDto extends DtoBase {
     // in, out
     private Long id;
     // in, out
+    private Long adId;
+    // in, out
     private String text;
     // out
     private boolean owner;
@@ -40,19 +42,13 @@ public class MessageDto extends DtoBase {
     public MessageDto() {
     }
 
-    public MessageDto(String text) {
-        this.text = text;
-    }
-
     public MessageDto(String toName, String text) {
         this.toName = toName;
         this.text = text;
     }
 
-    public void update(Message message) {
-        message.setText(text);
-    }
-
+    // getters/setters
+    
     public Long getId() {
         return id;
     }
@@ -139,5 +135,13 @@ public class MessageDto extends DtoBase {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getAdId() {
+        return adId;
+    }
+
+    public void setAdId(Long adId) {
+        this.adId = adId;
     }
 }

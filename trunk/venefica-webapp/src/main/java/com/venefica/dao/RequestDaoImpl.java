@@ -67,8 +67,11 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
         // @formatter:off
     }
     
-//    @Override
-//    public void delete(Request request) {
-//        deleteEntity(request);
-//    }
+    @Override
+    public void hide(Long requestId) {
+        Request request = getEntity(requestId);
+        request.setHidden(true);
+        request.setHideAt(new Date());
+        updateEntity(request);
+    }
 }

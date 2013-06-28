@@ -16,6 +16,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
+import javax.validation.constraints.NotNull;
 
 /**
  * Allows to add comments to ads and sends messages directly to users.
@@ -42,8 +43,8 @@ public interface MessageService {
     @WebMethod(operationName = "AddCommentToAd")
     @WebResult(name = "commentId")
     Long addCommentToAd(
-            @WebParam(name = "adId") Long adId,
-            @WebParam(name = "comment") CommentDto commentDto)
+            @WebParam(name = "adId") @NotNull Long adId,
+            @WebParam(name = "comment") @NotNull CommentDto commentDto)
             throws AdNotFoundException, CommentValidationException;
 
     /**
@@ -54,7 +55,7 @@ public interface MessageService {
      * fields
      */
     @WebMethod(operationName = "UpdateComment")
-    void updateComment(@WebParam(name = "comment") CommentDto commentDto)
+    void updateComment(@WebParam(name = "comment") @NotNull CommentDto commentDto)
             throws CommentNotFoundException, CommentValidationException;
 
     /**
@@ -69,7 +70,7 @@ public interface MessageService {
      */
     @WebMethod(operationName = "GetCommentsByAd")
     @WebResult(name = "comment")
-    List<CommentDto> getCommentsByAd(@WebParam(name = "adId") Long adId,
+    List<CommentDto> getCommentsByAd(@WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "lastCommentId") Long lastCommentId,
             @WebParam(name = "numComments") int numComments) throws AdNotFoundException;
 
@@ -78,6 +79,17 @@ public interface MessageService {
     //*************
     //* messaging *
     //*************
+    
+    /**
+     * Returns all messages associated with the given ad.
+     * 
+     * @param adId
+     * @return
+     * @throws AdNotFoundException 
+     */
+    @WebMethod(operationName = "GetMessagesByAd")
+    @WebResult(name = "message")
+    List<MessageDto> getMessagesByAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
     
     /**
      * Sends the message to the specified user.
@@ -89,7 +101,7 @@ public interface MessageService {
      */
     @WebMethod(operationName = "SendMessage")
     @WebResult(name = "messageId")
-    Long sendMessage(@WebParam(name = "message") MessageDto messageDto)
+    Long sendMessage(@WebParam(name = "message") @NotNull MessageDto messageDto)
             throws UserNotFoundException, MessageValidationException;
 
     /**
@@ -104,7 +116,7 @@ public interface MessageService {
      * required fields
      */
     @WebMethod(operationName = "UpdateMessage")
-    void updateMessage(@WebParam(name = "message") MessageDto messageDto)
+    void updateMessage(@WebParam(name = "message") @NotNull MessageDto messageDto)
             throws MessageNotFoundException, AuthorizationException, MessageValidationException;
 
     /**
@@ -126,7 +138,7 @@ public interface MessageService {
      * the message
      */
     @WebMethod(operationName = "HideMessage")
-    void hideMessage(@WebParam(name = "messageId") Long messageId) throws MessageNotFoundException,
+    void hideMessage(@WebParam(name = "messageId") @NotNull Long messageId) throws MessageNotFoundException,
             AuthorizationException;
 
     /**
@@ -139,7 +151,7 @@ public interface MessageService {
      * the message
      */
     @WebMethod(operationName = "DeleteMessage")
-    void deleteMessage(@WebParam(name = "messageId") Long messageId)
+    void deleteMessage(@WebParam(name = "messageId") @NotNull Long messageId)
             throws MessageNotFoundException, AuthorizationException;
     
     
@@ -154,5 +166,5 @@ public interface MessageService {
      * @param message text of the message
      */
     @WebMethod(operationName = "ShareOnSocialNetworks")
-    void shareOnSocialNetworks(@WebParam(name = "message") String message);
+    void shareOnSocialNetworks(@WebParam(name = "message") @NotNull String message);
 }

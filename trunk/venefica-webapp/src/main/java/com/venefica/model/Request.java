@@ -52,6 +52,10 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date selectedAt;
     
+    private boolean hidden; //marking hidden by the user in the GUI
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date hideAt;
+    
 //    @OneToOne(mappedBy = "request")
 //    private Review review;
     
@@ -170,5 +174,21 @@ public class Request {
 
     public void setSelectedAt(Date selectedAt) {
         this.selectedAt = selectedAt;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public Date getHideAt() {
+        return hideAt;
+    }
+
+    public void setHideAt(Date hideAt) {
+        this.hideAt = hideAt;
     }
 }
