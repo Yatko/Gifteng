@@ -27,6 +27,7 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
         
         MessageDto messageDto = new MessageDto();
         messageDto.setId(model.getId());
+        messageDto.setAdId(model.getAd() != null ? model.getAd().getId() : null);
         messageDto.setText(model.getText());
         messageDto.setOwner(owner);
         messageDto.setToName(model.getTo().getName());

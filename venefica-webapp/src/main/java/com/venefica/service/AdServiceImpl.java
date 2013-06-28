@@ -6,6 +6,7 @@ import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.CommentDao;
 import com.venefica.dao.ImageDao;
+import com.venefica.dao.MessageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.SpamMarkDao;
@@ -20,6 +21,7 @@ import com.venefica.model.BusinessAdData;
 import com.venefica.model.Category;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
+import com.venefica.model.Message;
 import com.venefica.model.Rating;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
@@ -82,6 +84,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Inject
     private CommentDao commentDao;
     @Inject
+    private MessageDao messageDao;
+    @Inject
     private ViewerDao viewerDao;
     @Inject
     private RequestDao requestDao;
@@ -128,7 +132,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // ++
         
         User currentUser = getCurrentUser();
-        BigDecimal beforePendingNumber = calculatePendingNumber(currentUser);
+        BigDecimal beforePendingNumber = null;
+        
+        if ( !currentUser.isBusinessAccount() ) {
+            beforePendingNumber = calculatePendingNumber(currentUser);
+        }
         
         boolean expires = adDto.isExpires() != null ? adDto.isExpires() : true;
         Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
@@ -157,15 +165,17 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.setAvailableAt(availableAt);
         Long adId = adDao.save(ad);
         
-        BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
-        BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
-        
-        UserTransaction transaction = new UserTransaction(ad);
-        transaction.setUser(currentUser);
-        transaction.setUserPoint(currentUser.getUserPoint());
-        transaction.setPendingNumber(currentPendingNumber);
-        transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
-        userTransactionDao.save(transaction);
+        if ( !currentUser.isBusinessAccount() ) {
+            BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
+            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+
+            UserTransaction transaction = new UserTransaction(ad);
+            transaction.setUser(currentUser);
+            transaction.setUserPoint(currentUser.getUserPoint());
+            transaction.setPendingNumber(currentPendingNumber);
+            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+            userTransactionDao.save(transaction);
+        }
         
         return adId;
     }
@@ -408,7 +418,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeImages(includeImages != null ? includeImages : false)
                     .includeCreator(includeCreator != null ? includeCreator : false)
                     .build();
-            adDto.setInBookmars(inBookmarks(bokmarkedAds, ad));
+            adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
             adDto.setRequested(requested(currentUser, ad));
             
             result.add(adDto);
@@ -487,7 +497,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 .build();
         // @formatter:on
 
-        adDto.setInBookmars(inBookmarks(currentUser, ad));
+        adDto.setInBookmarks(inBookmarks(currentUser, ad));
         adDto.setRequested(requested(currentUser, ad));
         
         return adDto;
@@ -566,7 +576,29 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public Long requestAd(Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException {
+    public boolean canRequest(Long adId) throws AdNotFoundException {
+        //TODO
+        return false;
+    }
+    
+    @Override
+    public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
+        Request request = validateRequest(requestId);
+        User user = getCurrentUser();
+        
+        if ( !request.getUser().equals(user) ) {
+            throw new InvalidRequestException("Only requestor can hide requests.");
+        }
+        if ( request.getStatus() != RequestStatus.EXPIRED ) {
+            throw new InvalidRequestException("Only expired requests can be hidden.");
+        }
+        
+        requestDao.hide(requestId);
+    }
+    
+    @Override
+    @Transactional
+    public Long requestAd(Long adId, String text) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException {
         Ad ad = validateAd(adId);
         User user = getCurrentUser();
         Long userId = getCurrentUserId();
@@ -593,7 +625,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("No more available.");
         }
         
-        BigDecimal beforePendingNumber = calculatePendingNumber(user);
+        BigDecimal beforePendingNumber = null;
+        
+        if ( !user.isBusinessAccount() ) {
+            beforePendingNumber = calculatePendingNumber(user);
+        }
         
         request = new Request();
         request.setAd(ad);
@@ -601,15 +637,25 @@ public class AdServiceImpl extends AbstractService implements AdService {
         request.setStatus(RequestStatus.PENDING);
         Long requestId = requestDao.save(request);
         
-        BigDecimal currentPendingNumber = calculatePendingNumber(user);
-        BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+        if ( !user.isBusinessAccount() ) {
+            BigDecimal currentPendingNumber = calculatePendingNumber(user);
+            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+
+            UserTransaction transaction = new UserTransaction(request);
+            transaction.setUser(user);
+            transaction.setUserPoint(user.getUserPoint());
+            transaction.setPendingNumber(currentPendingNumber);
+            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+            userTransactionDao.save(transaction);
+        }
         
-        UserTransaction transaction = new UserTransaction(request);
-        transaction.setUser(user);
-        transaction.setUserPoint(user.getUserPoint());
-        transaction.setPendingNumber(currentPendingNumber);
-        transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
-        userTransactionDao.save(transaction);
+        if ( text != null && !text.trim().isEmpty() ) {
+            Message message = new Message(text);
+            message.setTo(ad.getCreator());
+            message.setFrom(user);
+            message.setAd(ad);
+            messageDao.save(message);
+        }
         
         if ( ad.getType() == AdType.BUSINESS ) {
             //auto select request for business ads
@@ -768,7 +814,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         UserTransaction transaction = userTransactionDao.getByRequest(user.getId(), requestId);
         
         if ( !request.getUser().equals(user) ) {
-            throw new InvalidRequestException("Only requestor can mar as received.");
+            throw new InvalidRequestException("Only requestor can mark as received.");
         }
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
@@ -845,7 +891,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                         .setCurrentUser(user)
                         .includeCreator(true) //TODO: maybe this is not needed
                         .build();
-                adDto.setInBookmars(true);
+                adDto.setInBookmarks(true);
                 adDto.setRequested(requested(user, ad));
                 result.add(adDto);
             }

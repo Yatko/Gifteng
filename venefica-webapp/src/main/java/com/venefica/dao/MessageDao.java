@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Message;
+import java.util.List;
 
 /**
  * Data access interface for {@link Message} entity.
@@ -31,4 +32,12 @@ public interface MessageDao {
      * @param message message to delete
      */
     void deleteMessage(Message message);
+    
+    /**
+     * Extracts messages for the specified ad.
+     * 
+     * @param adId
+     * @return 
+     */
+    List<Message> getByAd(Long adId);
 }

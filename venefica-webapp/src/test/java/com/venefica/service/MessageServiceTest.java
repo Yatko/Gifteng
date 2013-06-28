@@ -276,21 +276,19 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     public void deleteMessageByTirdUserTest() throws UserNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(),
-                "Four message"));
+        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Four message"));
         authenticateClientAsThirdUser();
         client.deleteMessage(messageId);
     }
 
     @Test
-    public void deleteMessateTest() throws UserNotFoundException, MessageValidationException,
+    public void deleteMessageTest() throws UserNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(),
-                "Five message"));
+        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Five message"));
         client.deleteMessage(messageId);
 
         Message deletedMessage = messageDao.get(messageId);
-        assertTrue("Message has not been deleted!", deletedMessage == null);
+        assertTrue("Message has not been deleted!", deletedMessage.isDeleted());
     }
 }

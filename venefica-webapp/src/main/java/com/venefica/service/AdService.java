@@ -311,10 +311,31 @@ public interface AdService {
     //***************
     
     /**
+     * 
+     * @param adId
+     * @return
+     * @throws AdNotFoundException 
+     */
+    @WebMethod(operationName = "CanRequest")
+    @WebResult(name = "request")
+    boolean canRequest(@WebParam(name = "adId") Long adId) throws AdNotFoundException;
+    
+    /**
+     * Marks the given request as hidden in the GUI.
+     * 
+     * @param requestId
+     * @throws RequestNotFoundException
+     * @throws InvalidRequestException 
+     */
+    @WebMethod(operationName = "HideRequest")
+    void hideRequest(@WebParam(name = "requestId") Long requestId) throws RequestNotFoundException, InvalidRequestException;
+    
+    /**
      * Creates a new request on the given ad. The owner cannot request
      * it's own ad.
      * 
      * @param adId
+     * @param text 
      * @return the created request id
      * @throws AdNotFoundException 
      * @throws AlreadyRequestedException
@@ -323,7 +344,7 @@ public interface AdService {
      */
     @WebMethod(operationName = "RequestAd")
     @WebResult(name = "requestId")
-    Long requestAd(@WebParam(name = "adId") Long adId) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException;
+    Long requestAd(@WebParam(name = "adId") Long adId, @WebParam(name = "text") String text) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException;
     
     /**
      * Cancels (removes) an existing request. Only the receiver

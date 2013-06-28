@@ -710,14 +710,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException {
         makeAdActive();
         authenticateClientAsThirdUser();
-        client.requestAd(FIRST_AD_ID);
+        client.requestAd(FIRST_AD_ID, "Give me your gift please");
         
         List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
         assertNotNull(ads);
         assertTrue("At least one ad might have returened!", !ads.isEmpty());
         
         authenticateClientAsSecondUser();
-        Long requestId = client.requestAd(FIRST_AD_ID);
+        Long requestId = client.requestAd(FIRST_AD_ID, "I'm nicer than third user, so give me the gift.");
         
         authenticateClientAsFirstUser();
         client.selectRequest(requestId);

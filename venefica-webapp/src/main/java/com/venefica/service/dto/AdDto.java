@@ -56,7 +56,7 @@ public class AdDto extends DtoBase {
     // out
     private boolean owner;
     // out
-    private boolean inBookmars;
+    private boolean inBookmarks;
     // out
     private boolean expired;
     // out
@@ -228,12 +228,12 @@ public class AdDto extends DtoBase {
         this.owner = owner;
     }
 
-    public boolean isInBookmars() {
-        return inBookmars;
+    public boolean isInBookmarks() {
+        return inBookmarks;
     }
 
-    public void setInBookmars(boolean inBookmars) {
-        this.inBookmars = inBookmars;
+    public void setInBookmarks(boolean inBookmarks) {
+        this.inBookmarks = inBookmarks;
     }
 
     public boolean isExpired() {

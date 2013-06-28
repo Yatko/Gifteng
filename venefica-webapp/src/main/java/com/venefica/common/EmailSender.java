@@ -51,7 +51,6 @@ public class EmailSender {
     
     private VelocityEngine velocityEngine;
     
-    @PostConstruct
     public void init() {
         try {
             Properties props = new Properties();

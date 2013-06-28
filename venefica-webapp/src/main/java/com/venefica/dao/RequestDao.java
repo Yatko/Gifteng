@@ -64,10 +64,10 @@ public interface RequestDao {
      */
     List<Request> getForUser(Long userId);
     
-//    /**
-//     * Removes request from the database.
-//     *
-//     * @param request the request to remove
-//     */
-//    void delete(Request request);
+    /**
+     * Mark the request as hidden
+     * 
+     * @param requestId  
+     */
+    void hide(Long requestId);
 }

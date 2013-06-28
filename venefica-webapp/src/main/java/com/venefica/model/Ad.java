@@ -219,6 +219,17 @@ public class Ad {
         return adData.getType();
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Ad)) {
+            return false;
+        }
+
+        Ad other = (Ad) obj;
+
+        return id != null && id.equals(other.id);
+    }
+    
     // getter/setter
     
     public Long getId() {

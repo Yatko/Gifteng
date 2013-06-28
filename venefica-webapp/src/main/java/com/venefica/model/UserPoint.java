@@ -161,10 +161,14 @@ public class UserPoint {
     }
     
     public static BigDecimal getGivingNumber(User user, boolean includePending) {
+        UserPoint userPoint = user.getUserPoint();
         BigDecimal number = BigDecimal.ZERO;
         for ( Ad ad : user.getAds() ) {
             if ( !includePending && !ad.isSent()) {
                 //only sent ads will be considered
+                continue;
+            } else if ( userPoint.containsTransaction(ad) ) {
+                //ad is already present in a transaction (there was a culculatio with it)
                 continue;
             }
             
@@ -174,12 +178,16 @@ public class UserPoint {
     }
     
     public static BigDecimal getReceivingNumber(User user, boolean includePending) {
+        UserPoint userPoint = user.getUserPoint();
         BigDecimal number = BigDecimal.ZERO;
         for ( Request request : user.getRequests()) {
             Ad ad = request.getAd();
             
             if ( !includePending && !request.isSelected() && !ad.isReceived() ) {
                 //only selected request and received ad is considered
+                continue;
+            } else if ( userPoint.containsTransaction(request) ) {
+                //request is already present in a transaction (there was a culculatio with it)
                 continue;
             }
             
@@ -195,6 +203,30 @@ public class UserPoint {
         }
         BigDecimal number = price.multiply(BigDecimal.TEN).divide(HUNDRED);
         return number;
+    }
+    
+    private boolean containsTransaction(Ad ad) {
+        if ( transactions == null || transactions.isEmpty() ) {
+            return false;
+        }
+        for ( UserTransaction transaction : transactions ) {
+            if ( transaction.getAd() != null && transaction.getAd().equals(ad) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean containsTransaction(Request request) {
+        if ( transactions == null || transactions.isEmpty() ) {
+            return false;
+        }
+        for ( UserTransaction transaction : transactions ) {
+            if ( transaction.getRequest()!= null && transaction.getRequest().equals(request) ) {
+                return true;
+            }
+        }
+        return false;
     }
     
     // getters/setters
