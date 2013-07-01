@@ -121,7 +121,7 @@ public class MessageDto extends DtoBase {
         this.fromAvatarUrl = fromAvatarUrl;
     }
 
-    public boolean hasRead() {
+    public boolean isRead() {
         return read;
     }
 

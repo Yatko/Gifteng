@@ -25,6 +25,8 @@ public class AdStatisticsDto {
     // out
     private int numShares;
     // out
+    private int numRequests;
+    // out
     private float rating;
 
     // WARNING: required for JAX-WS
@@ -77,6 +79,14 @@ public class AdStatisticsDto {
 
     public void setNumShares(int numShares) {
         this.numShares = numShares;
+    }
+
+    public int getNumRequests() {
+        return numRequests;
+    }
+
+    public void setNumRequests(int numRequests) {
+        this.numRequests = numRequests;
     }
     
 }
