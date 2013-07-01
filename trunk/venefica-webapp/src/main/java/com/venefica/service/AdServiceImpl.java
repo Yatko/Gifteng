@@ -657,6 +657,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             messageDao.save(message);
         }
         
+        try {
+            //NOTE: in case of request existing bookmark should be removed
+            removeBookmark(adId);
+        } catch ( BookmarkNotFoundException ex ) {
+        }
+        
         if ( ad.getType() == AdType.BUSINESS ) {
             //auto select request for business ads
             selectRequest(request, ad.getCreator());
