@@ -24,6 +24,8 @@ public class CommentDto extends DtoBase {
     // out
     private boolean owner;
     // out
+    private Long publisherId;
+    // out
     private String publisherName;
     // out
     private String publisherFullName;
@@ -46,6 +48,7 @@ public class CommentDto extends DtoBase {
         id = comment.getId();
         text = comment.getText();
         owner = comment.getPublisher().equals(currentUser);
+        publisherId = comment.getPublisher().getId();
         publisherName = comment.getPublisher().getName();
         publisherFullName = comment.getPublisher().getFullName();
         publisherAvatarUrl = ImageDto.imageUrl(avatar);
@@ -110,5 +113,13 @@ public class CommentDto extends DtoBase {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
     }
 }
