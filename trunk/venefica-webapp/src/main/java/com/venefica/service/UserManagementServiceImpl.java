@@ -256,6 +256,19 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         populateRelations(userDto, currentUser, user);
         return userDto;
     }
+    
+    @Override
+    @Transactional
+    public UserDto getUserById(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        User currentUser = getCurrentUser();
+        UserStatisticsDto statistics = buildStatistics(user);
+        
+        UserDto userDto = new UserDto(user);
+        userDto.setStatistics(statistics);
+        populateRelations(userDto, currentUser, user);
+        return userDto;
+    }
 
     
     
