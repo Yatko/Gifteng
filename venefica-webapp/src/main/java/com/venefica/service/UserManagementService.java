@@ -164,6 +164,16 @@ public interface UserManagementService {
     @WebMethod(operationName = "GetUserByPhone")
     @WebResult(name = "user")
     public UserDto getUserByPhone(@WebParam(name = "phone") String phone) throws UserNotFoundException;
+    
+    /**
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    @WebMethod(operationName = "GetUserById")
+    @WebResult(name = "user")
+    public UserDto getUserById(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
 
     
     
