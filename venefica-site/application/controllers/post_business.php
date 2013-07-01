@@ -1,6 +1,6 @@
 <?php
 
-class Business_post extends CI_Controller {
+class Post_business extends CI_Controller {
     
     private $initialized = false;
     
@@ -43,7 +43,7 @@ class Business_post extends CI_Controller {
         $data['user'] = $this->user;
         $data['step'] = $step;
         
-        if ( $step == Business_post::STEP_START ) {
+        if ( $step == Post_business::STEP_START ) {
             try {
                 $categories = $this->ad_service->getAllCategories();
             } catch ( Exception $ex ) {
@@ -51,9 +51,9 @@ class Business_post extends CI_Controller {
             }
             
             $data['categories'] = $categories;
-        } else if ( $step == Business_post::STEP_ONLINE ) {
-            $post_online_array = $this->session->flashdata("post_".Business_post::STEP_ONLINE);
-            $files_online_array = $this->session->flashdata("files_".Business_post::STEP_ONLINE);
+        } else if ( $step == Post_business::STEP_ONLINE ) {
+            $post_online_array = $this->session->flashdata("post_".Post_business::STEP_ONLINE);
+            $files_online_array = $this->session->flashdata("files_".Post_business::STEP_ONLINE);
             
             $image = $this->getImageFileName($post_online_array, $files_online_array, 'image');
             if ( is_empty($image) ) {
@@ -61,9 +61,9 @@ class Business_post extends CI_Controller {
             }
             
             $data['image'] = $image;
-        } else if ( $step == Business_post::STEP_LOCATION ) {
-            $post_location_array = $this->session->flashdata("post_".Business_post::STEP_LOCATION);
-            $files_location_array = $this->session->flashdata("files_".Business_post::STEP_LOCATION);
+        } else if ( $step == Post_business::STEP_LOCATION ) {
+            $post_location_array = $this->session->flashdata("post_".Post_business::STEP_LOCATION);
+            $files_location_array = $this->session->flashdata("files_".Post_business::STEP_LOCATION);
             
             if ( $this->user->addresses && sizeof($this->user->addresses) > 0 ) {
                 foreach ( $this->user->addresses as $address ) {
@@ -82,15 +82,15 @@ class Business_post extends CI_Controller {
                     $data['bar_code_'.$address_id] = $bar_code;
                 }
             }
-        } else if ( $step == Business_post::STEP_PREVIEW ) {
+        } else if ( $step == Post_business::STEP_PREVIEW ) {
             
-        } else if ( $step == Business_post::STEP_POST ) {
+        } else if ( $step == Post_business::STEP_POST ) {
             $error = $this->create_ad();
             $data['error'] = $error;
         }
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/business_post', $data);
+        $this->load->view('pages/post_business', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -161,56 +161,56 @@ class Business_post extends CI_Controller {
                 return $step;
             }
         }
-        return Business_post::STEP_START;
+        return Post_business::STEP_START;
     }
     
     private function getNextStep($current_step) {
-        if ( $current_step == Business_post::STEP_START ) {
+        if ( $current_step == Post_business::STEP_START ) {
             if ( $_POST ) {
                 if ( $this->input->post('place') == Ad_model::PLACE_ONLINE ) {
-                    return Business_post::STEP_ONLINE;
+                    return Post_business::STEP_ONLINE;
                 } else {
-                    return Business_post::STEP_LOCATION;
+                    return Post_business::STEP_LOCATION;
                 }
             } else {
-                return Business_post::STEP_START;
+                return Post_business::STEP_START;
             }
         }
-//        elseif ( $current_step == Business_post::STEP_ONLINE || $current_step == Business_post::STEP_LOCATION ) {
-//            return Business_post::STEP_PREVIEW;
-//        } elseif ( $current_step == Business_post::STEP_PREVIEW ) {
-//            return Business_post::STEP_POST;
+//        elseif ( $current_step == Post_business::STEP_ONLINE || $current_step == Post_business::STEP_LOCATION ) {
+//            return Post_business::STEP_PREVIEW;
+//        } elseif ( $current_step == Post_business::STEP_PREVIEW ) {
+//            return Post_business::STEP_POST;
 //        }
-        elseif ( $current_step == Business_post::STEP_ONLINE || $current_step == Business_post::STEP_LOCATION ) {
-            return Business_post::STEP_POST;
+        elseif ( $current_step == Post_business::STEP_ONLINE || $current_step == Post_business::STEP_LOCATION ) {
+            return Post_business::STEP_POST;
         }
         return null;
     }
     
     private function keepPostData($current_step) {
-        $this->session->keep_flashdata('post_'.Business_post::STEP_START);
-        $this->session->keep_flashdata('post_'.Business_post::STEP_ONLINE);
-        $this->session->keep_flashdata('post_'.Business_post::STEP_LOCATION);
+        $this->session->keep_flashdata('post_'.Post_business::STEP_START);
+        $this->session->keep_flashdata('post_'.Post_business::STEP_ONLINE);
+        $this->session->keep_flashdata('post_'.Post_business::STEP_LOCATION);
         if ( $current_step != null ) {
             $this->session->set_flashdata('post_'.$current_step, $_POST);
         }
         
-        $this->session->keep_flashdata('files_'.Business_post::STEP_START);
-        $this->session->keep_flashdata('files_'.Business_post::STEP_ONLINE);
-        $this->session->keep_flashdata('files_'.Business_post::STEP_LOCATION);
+        $this->session->keep_flashdata('files_'.Post_business::STEP_START);
+        $this->session->keep_flashdata('files_'.Post_business::STEP_ONLINE);
+        $this->session->keep_flashdata('files_'.Post_business::STEP_LOCATION);
         if ( $current_step != null ) {
             $this->session->set_flashdata('files_'.$current_step, $_FILES);
         }
     }
     
     private function process($current_step) {
-        if ( $current_step == Business_post::STEP_START ) {
+        if ( $current_step == Post_business::STEP_START ) {
             return $this->post_start();
-        } elseif ( $current_step == Business_post::STEP_ONLINE ) {
+        } elseif ( $current_step == Post_business::STEP_ONLINE ) {
             return $this->post_online();
-        } elseif ( $current_step == Business_post::STEP_LOCATION ) {
+        } elseif ( $current_step == Post_business::STEP_LOCATION ) {
             return $this->post_location();
-        } elseif ( $current_step == Business_post::STEP_PREVIEW ) {
+        } elseif ( $current_step == Post_business::STEP_PREVIEW ) {
             return $this->post_preview();
         }
         return true;
@@ -289,13 +289,13 @@ class Business_post extends CI_Controller {
     }
 
     private function create_ad() {
-        $post_start_array = $this->session->flashdata("post_".Business_post::STEP_START);
-        $post_online_array = $this->session->flashdata("post_".Business_post::STEP_ONLINE);
-        $post_location_array = $this->session->flashdata("post_".Business_post::STEP_LOCATION);
+        $post_start_array = $this->session->flashdata("post_".Post_business::STEP_START);
+        $post_online_array = $this->session->flashdata("post_".Post_business::STEP_ONLINE);
+        $post_location_array = $this->session->flashdata("post_".Post_business::STEP_LOCATION);
         
-        $files_start_array = $this->session->flashdata("files_".Business_post::STEP_START);
-        $files_online_array = $this->session->flashdata("files_".Business_post::STEP_ONLINE);
-        $files_location_array = $this->session->flashdata("files_".Business_post::STEP_LOCATION);
+        $files_start_array = $this->session->flashdata("files_".Post_business::STEP_START);
+        $files_online_array = $this->session->flashdata("files_".Post_business::STEP_ONLINE);
+        $files_location_array = $this->session->flashdata("files_".Post_business::STEP_LOCATION);
         
         $ads = array();
         

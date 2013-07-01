@@ -1,6 +1,6 @@
 <?php
 
-class Business_edit_profile extends CI_Controller {
+class Edit_profile_business extends CI_Controller {
     
     private $initialized = false;
     

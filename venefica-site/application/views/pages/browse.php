@@ -10,7 +10,13 @@
     ?>
     
     <script langauge="javascript">
-        function comment(element, adId) {
+        function show_comment_rest(callerElement, commentId) {
+            $('.comment_' + commentId + '_separator').addClass('hide');
+            $('.comment_' + commentId + '_rest').removeClass('hide').css('display', 'inline');
+            $(callerElement).addClass('hide');
+        }
+        
+        function comment(callerElement, adId) {
             var $commentAdId = $("#comment_post_form input[name=commentAdId]");
             $commentAdId.val(adId);
             
@@ -59,41 +65,6 @@
                     });
                 });
             }
-            
-            $('#addCommentBtn').click(function() {
-                var $commentAdId = $("#comment_post_form input[name=commentAdId]");
-                var $commentText = $("#comment_post_form textarea[name=commentText]");
-                var adId = $commentAdId.val();
-                
-                $.ajax({
-                    type: 'POST',
-                    url: '<?=base_url()?>ajax/comment',
-                    dataType: 'json',
-                    cache: false,
-                    data: {
-                        commentAdId: $commentAdId.val(),
-                        commentText: $commentText.val()
-                    }
-                }).done(function(response) {
-                    if ( !response || response == '' ) {
-                        //TODO: empty result
-                    } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
-                        //TODO
-                    } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
-                        $commentAdId.val('');
-                        $commentText.val('');
-                        
-                        var num_comments = response.<?=AJAX_STATUS_RESULT?>;
-                        $('.ad_comment_' + adId).text(num_comments);
-                        
-                        $('#commentContainer').modal('hide');
-                    } else {
-                        //TODO: unknown response received
-                    }
-                }).fail(function(data) {
-                    //TODO
-                });
-            });
         });
     </script>
 <? endif; ?>
@@ -161,7 +132,8 @@
             $creator_img = $ad->getCreatorAvatarUrl();
             $creator_id = $ad->creator->id;
             $creator_name = $ad->getCreatorFullName();
-            $creator_joined = $ad->getCreatorJoinDate();
+            $creator_profile_link = base_url().'profile/'.$creator_username;
+            $creator_joined = $ad->getCreatorJoinDateHumanTiming(); //$ad->getCreatorJoinDate();
             $creator_location = $ad->getCreatorLocation();
             $creator_points = $ad->getCreatorPoints();
             
@@ -221,16 +193,16 @@
                             
                             <div class="ge-user">
                                 <div class="ge-user-image">
-                                    <a href="<?=base_url()?>profile/<?=$creator_username?>"><img src="<?=$creator_img?>" class="img img-rounded"></a>
+                                    <a href="<?=$creator_profile_link?>"><img src="<?=$creator_img?>" class="img img-rounded"></a>
                                 </div>
                                 <div class="ge-detail">
                                     <div class="ge-name">
-                                        <a href="<?=base_url()?>profile/<?=$creator_username?>"><?=$creator_name?></a>
+                                        <a href="<?=$creator_profile_link?>"><?=$creator_name?></a>
                                         <? if(!$is_owner): ?>
                                             <? if( $is_in_followings ): ?>
-                                                <span onclick="follow_unfollow(<?=$creator_id?>)" class="user_<?=$creator_id?> ge-user-follow label label-small label-ge active link">Unfollow</span>
+                                                <span onclick="follow_unfollow(<?=$creator_id?>);" class="user_<?=$creator_id?> ge-user-follow label label-small label-ge active link">Unfollow</span>
                                             <? else: ?>
-                                                <span onclick="follow_unfollow(<?=$creator_id?>)" class="user_<?=$creator_id?> ge-user-unfollow label label-small label-ge active link">Follow</span>
+                                                <span onclick="follow_unfollow(<?=$creator_id?>);" class="user_<?=$creator_id?> ge-user-unfollow label label-small label-ge active link">Follow</span>
                                             <? endif; ?>
                                         <? endif; ?>
                                     </div>
@@ -258,11 +230,11 @@
                                                     <? if( $ad_is_bookmarked ): ?>
                                                         <button class="btn btn-small btn-block btn-ge disabled"><i class="fui-star-2"></i> <?=$ad_num_bookmarks?></button>
                                                     <? else: ?>
-                                                        <button onclick="bookmark(this, <?=$ad_id?>)" class="btn btn-small btn-block btn-ge"><i class="fui-star-2"></i> <span class="ad_bookmark_<?=$ad_id?>"><?=$ad_num_bookmarks?></span></button>
+                                                        <button onclick="bookmark(this, <?=$ad_id?>);" class="btn btn-small btn-block btn-ge"><i class="fui-star-2"></i> <span class="ad_bookmark_<?=$ad_id?>"><?=$ad_num_bookmarks?></span></button>
                                                     <? endif; ?>
                                                 </div>
                                                 <div class="span4">
-                                                    <button onclick="comment(this, <?=$ad_id?>)" class="btn btn-small btn-block btn-ge"><i class="fui-bubble"></i> <span class="ad_comment_<?=$ad_id?>"><?=$ad_num_comments?></span></button>
+                                                    <button onclick="comment(this, <?=$ad_id?>);" class="btn btn-small btn-block btn-ge"><i class="fui-bubble"></i> <span class="ad_comment_<?=$ad_id?>"><?=$ad_num_comments?></span></button>
                                                 </div>
                                                 <div class="span4">
                                                     <button class="btn btn-small btn-block btn-ge"><i class="fui-export"></i> <?=$ad_num_shares?></button>
@@ -303,20 +275,38 @@
                     $commentor_username = $comment->publisherName;
                     $commentor_img = $comment->getPublisherAvatarUrl();
                     $commentor_name = $comment->publisherFullName;
-                    $comment_text = $comment->text;
+                    $commentor_profile_link = base_url().'profile/'.$commentor_username;
+                    $comment_id = $comment->id;
+                    $comment_text = trim($comment->text);
                     $comment_since = $comment->getCreateDateHumanTiming();
 
                     if ( trim($commentor_img) == '' ) $commentor_img = BASE_PATH.'temp-sample/ge-user.jpg';
                     if ( trim($comment_since) != '' ) $comment_since = $comment_since . ' ago';
+                    
+                    if ( strlen($comment_text) > COMMENT_MAX_LENGTH ) {
+                        $comment_text_rest = substr($comment_text, COMMENT_MAX_LENGTH);
+                        $comment_text = substr($comment_text, 0, COMMENT_MAX_LENGTH);
+                    } else {
+                        $comment_text_rest = '';
+                    }
                     ?>
                     
                     <div class="row-fluid ge-message">
                         <div class="ge-user-image">
-                            <a href="<?=base_url()?>profile/<?=$commentor_username?>"><img src="<?=$commentor_img?>" class="img img-rounded"></a>
+                            <a href="<?=$commentor_profile_link?>"><img src="<?=$commentor_img?>" class="img img-rounded"></a>
                         </div>
                         <div class="ge-text">
-                            <a class="ge-name" href="<?=base_url()?>profile/<?=$commentor_username?>"><?=$commentor_name?></a><span class="ge-date"><?=$comment_since?></span>
-                            <span class="ge-block"><?=$comment_text?></span>
+                            <a class="ge-name" href="<?=$commentor_profile_link?>"><?=$commentor_name?></a><span class="ge-date"><?=$comment_since?></span>
+                            <span class="ge-block">
+                                <?=$comment_text?>
+                                
+                                <? if( $comment_text_rest != '' ): ?>
+                                    <span class="comment_<?=$comment_id?>_separator">...</span>
+                                    <span class="comment_<?=$comment_id?>_rest hide"><?=$comment_text_rest?></span>
+                                    
+                                    <a class="text-note link" onclick="show_comment_rest(this, <?=$comment_id?>);">read more</a>
+                                <? endif; ?>
+                            </span>
                         </div>
                     </div><!--./ge-message-->
                 <? endforeach; ?>

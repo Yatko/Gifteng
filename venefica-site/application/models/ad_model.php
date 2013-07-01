@@ -186,6 +186,13 @@ class Ad_model extends CI_Model {
         return $this->creator->getJoinDate();
     }
     
+    public function getCreatorJoinDateHumanTiming() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getJoinDateHumanTiming();
+    }
+    
     public function getCreatorLocation() {
         if ( $this->creator == null ) {
             return '';

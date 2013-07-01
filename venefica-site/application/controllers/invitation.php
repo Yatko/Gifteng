@@ -265,10 +265,10 @@ class Invitation extends CI_Controller {
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Cannot request invitation: '.$ex->getMessage());
             
-            $code = $ex->getCode() != null ? $ex->getCode() : Invitation_service::$GENERAL_ERROR;
+            $code = $ex->getCode() != null ? $ex->getCode() : Invitation_service::GENERAL_ERROR;
             $errorMessage = lang('invitation_request_failed');
             
-            if ( $code == Invitation_service::$ALREADY_SUBSCRIBED ) {
+            if ( $code == Invitation_service::ALREADY_SUBSCRIBED ) {
                 $errorMessage = lang('invitation_request_failed_already_subscribed');
             }
             

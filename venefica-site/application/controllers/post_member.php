@@ -1,6 +1,6 @@
 <?php
 
-class Member_post extends CI_Controller {
+class Post_member extends CI_Controller {
     
     private $initialized = false;
     
@@ -11,11 +11,11 @@ class Member_post extends CI_Controller {
     const STEP_POST = 'post';
     
     var $steps = array(
-        Member_post::STEP_START,
-        Member_post::STEP_DETAILS,
-        Member_post::STEP_MAP,
-        Member_post::STEP_PREVIEW,
-        Member_post::STEP_POST
+        Post_member::STEP_START,
+        Post_member::STEP_DETAILS,
+        Post_member::STEP_MAP,
+        Post_member::STEP_PREVIEW,
+        Post_member::STEP_POST
     );
     
     var $user;
@@ -37,7 +37,7 @@ class Member_post extends CI_Controller {
         if ( $is_valid ) {
             //form data valid after post
             $step = $next_step;
-            if ( $step == Member_post::STEP_POST ) {
+            if ( $step == Post_member::STEP_POST ) {
                 //do not keep flash data on last step - to avoid retransmit upon page reload
             } else {
                 $this->keepPostData($current_step);
@@ -55,9 +55,9 @@ class Member_post extends CI_Controller {
         $data['user'] = $this->user;
         $data['step'] = $step;
         
-        if ( $step == Member_post::STEP_START ) {
-            $post_start_array = $this->session->flashdata("post_".Member_post::STEP_START);
-            $files_start_array = $this->session->flashdata("files_".Member_post::STEP_START);
+        if ( $step == Post_member::STEP_START ) {
+            $post_start_array = $this->session->flashdata("post_".Post_member::STEP_START);
+            $files_start_array = $this->session->flashdata("files_".Post_member::STEP_START);
             
             $image = $this->getImageFileName($post_start_array, $files_start_array, 'image');
             if ( is_empty($image) ) {
@@ -65,15 +65,15 @@ class Member_post extends CI_Controller {
             }
             
             $data['image'] = $image;
-        } else if ( $step == Member_post::STEP_DETAILS ) {
+        } else if ( $step == Post_member::STEP_DETAILS ) {
             try {
                 $categories = $this->ad_service->getAllCategories();
             } catch ( Exception $ex ) {
                 $categories = array();
             }
             
-            $post_details_array = $this->session->flashdata("post_".Member_post::STEP_DETAILS);
-            $files_details_array = $this->session->flashdata("files_".Member_post::STEP_DETAILS);
+            $post_details_array = $this->session->flashdata("post_".Post_member::STEP_DETAILS);
+            $files_details_array = $this->session->flashdata("files_".Post_member::STEP_DETAILS);
             
             $data['title'] = $post_details_array['title'];
             $data['description'] = $post_details_array['description'];
@@ -83,12 +83,12 @@ class Member_post extends CI_Controller {
             $data['pickUp'] = hasElement($post_details_array, 'pickUp') ? $post_details_array['pickUp'] : '0';
             $data['freeShipping'] = hasElement($post_details_array, 'freeShipping') ? $post_details_array['freeShipping'] : '0';
             $data['categories'] = $categories;
-        } else if ( $step == Member_post::STEP_MAP ) {
-            $post_details_array = $this->session->flashdata("post_".Member_post::STEP_DETAILS);
-            $files_details_array = $this->session->flashdata("files_".Member_post::STEP_DETAILS);
+        } else if ( $step == Post_member::STEP_MAP ) {
+            $post_details_array = $this->session->flashdata("post_".Post_member::STEP_DETAILS);
+            $files_details_array = $this->session->flashdata("files_".Post_member::STEP_DETAILS);
             
-            $post_map_array = $this->session->flashdata("post_".Member_post::STEP_MAP);
-            $files_map_array = $this->session->flashdata("files_".Member_post::STEP_MAP);
+            $post_map_array = $this->session->flashdata("post_".Post_member::STEP_MAP);
+            $files_map_array = $this->session->flashdata("files_".Post_member::STEP_MAP);
             
             $zipCode = $post_details_array['zipCode'];
             $longitude = $post_map_array['longitude'];
@@ -110,18 +110,18 @@ class Member_post extends CI_Controller {
             $data['marker_latitude'] = $marker_latitude;
             $data['longitude'] = $longitude;
             $data['latitude'] = $latitude;
-        } else if ( $step == Member_post::STEP_PREVIEW ) {
+        } else if ( $step == Post_member::STEP_PREVIEW ) {
             try {
                 $categories = $this->ad_service->getAllCategories();
             } catch ( Exception $ex ) {
                 $categories = array();
             }
             
-            $post_start_array = $this->session->flashdata("post_".Member_post::STEP_START);
-            $files_start_array = $this->session->flashdata("files_".Member_post::STEP_START);
+            $post_start_array = $this->session->flashdata("post_".Post_member::STEP_START);
+            $files_start_array = $this->session->flashdata("files_".Post_member::STEP_START);
             
-            $post_details_array = $this->session->flashdata("post_".Member_post::STEP_DETAILS);
-            $files_details_array = $this->session->flashdata("files_".Member_post::STEP_DETAILS);
+            $post_details_array = $this->session->flashdata("post_".Post_member::STEP_DETAILS);
+            $files_details_array = $this->session->flashdata("files_".Post_member::STEP_DETAILS);
             
             $image = $this->getImageFileName($post_start_array, $files_start_array, 'image');
             if ( is_empty($image) ) {
@@ -145,13 +145,13 @@ class Member_post extends CI_Controller {
             $data['freeShipping'] = hasElement($post_details_array, 'freeShipping') ? $post_details_array['freeShipping'] : '0';
             $data['categoryId'] = $categoryId;
             $data['category'] = $category;
-        } else if ( $step == Member_post::STEP_POST ) {
+        } else if ( $step == Post_member::STEP_POST ) {
             $error = $this->create_ad();
             $data['error'] = $error;
         }
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/member_post', $data);
+        $this->load->view('pages/post_member', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -187,7 +187,7 @@ class Member_post extends CI_Controller {
                 return $step;
             }
         }
-        return Member_post::STEP_START;
+        return Post_member::STEP_START;
     }
     
     private function getNextStep($current_step) {
@@ -198,14 +198,14 @@ class Member_post extends CI_Controller {
             }
         }
         
-        if ( $current_step == Member_post::STEP_START ) {
-            return Member_post::STEP_DETAILS;
-        } elseif ( $current_step == Member_post::STEP_DETAILS ) {
-            return Member_post::STEP_MAP;
-        } elseif ( $current_step == Member_post::STEP_MAP ) {
-            return Member_post::STEP_PREVIEW;
-        } elseif ( $current_step == Member_post::STEP_PREVIEW ) {
-            return Member_post::STEP_POST;
+        if ( $current_step == Post_member::STEP_START ) {
+            return Post_member::STEP_DETAILS;
+        } elseif ( $current_step == Post_member::STEP_DETAILS ) {
+            return Post_member::STEP_MAP;
+        } elseif ( $current_step == Post_member::STEP_MAP ) {
+            return Post_member::STEP_PREVIEW;
+        } elseif ( $current_step == Post_member::STEP_PREVIEW ) {
+            return Post_member::STEP_POST;
         }
         return null;
     }
@@ -222,13 +222,13 @@ class Member_post extends CI_Controller {
     }
     
     private function process($current_step) {
-        if ( $current_step == Member_post::STEP_START ) {
+        if ( $current_step == Post_member::STEP_START ) {
             return $this->post_start();
-        } elseif ( $current_step == Member_post::STEP_DETAILS ) {
+        } elseif ( $current_step == Post_member::STEP_DETAILS ) {
             return $this->post_details();
-        } elseif ( $current_step == Member_post::STEP_MAP ) {
+        } elseif ( $current_step == Post_member::STEP_MAP ) {
             return $this->post_map();
-        } elseif ( $current_step == Member_post::STEP_PREVIEW ) {
+        } elseif ( $current_step == Post_member::STEP_PREVIEW ) {
             return $this->post_preview();
         }
         return true;
@@ -292,13 +292,13 @@ class Member_post extends CI_Controller {
     }
     
     private function create_ad() {
-        $post_start_array = $this->session->flashdata("post_".Member_post::STEP_START);
-        $post_details_array = $this->session->flashdata("post_".Member_post::STEP_DETAILS);
-        $post_map_array = $this->session->flashdata("post_".Member_post::STEP_MAP);
+        $post_start_array = $this->session->flashdata("post_".Post_member::STEP_START);
+        $post_details_array = $this->session->flashdata("post_".Post_member::STEP_DETAILS);
+        $post_map_array = $this->session->flashdata("post_".Post_member::STEP_MAP);
         
-        $files_start_array = $this->session->flashdata("files_".Member_post::STEP_START);
-        $files_details_array = $this->session->flashdata("files_".Member_post::STEP_DETAILS);
-        $files_map_array = $this->session->flashdata("files_".Member_post::STEP_MAP);
+        $files_start_array = $this->session->flashdata("files_".Post_member::STEP_START);
+        $files_details_array = $this->session->flashdata("files_".Post_member::STEP_DETAILS);
+        $files_map_array = $this->session->flashdata("files_".Post_member::STEP_MAP);
         
         if ( empty($post_start_array) ) {
             return '';

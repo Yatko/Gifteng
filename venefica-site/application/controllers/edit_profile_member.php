@@ -1,6 +1,6 @@
 <?php
 
-class Member_edit_profile extends CI_Controller {
+class Edit_profile_member extends CI_Controller {
     
     private $initialized = false;
     
@@ -33,10 +33,10 @@ class Member_edit_profile extends CI_Controller {
         $data['is_modal'] = $is_modal;
         
         if ( $is_modal ) {
-            $this->load->view('pages/member_edit_profile', $data);
+            $this->load->view('pages/edit_profile_member', $data);
         } else {
             $this->load->view('templates/'.TEMPLATES.'/header');
-            $this->load->view('pages/member_edit_profile', $data);
+            $this->load->view('pages/edit_profile_member', $data);
             $this->load->view('templates/'.TEMPLATES.'/footer');
         }
     }

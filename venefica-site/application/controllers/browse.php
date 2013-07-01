@@ -4,8 +4,9 @@ class Browse extends CI_Controller {
     
     private $initialized = false;
     
-    private static $STARTING_AD_NUM = 5;
-    private static $CONTINUING_AD_NUM = 10;
+    const STARTING_AD_NUM = 5;
+    const CONTINUING_AD_NUM = 10;
+    const COMMENTS_NUM = 2;
     
     public function view($category = null) {
         $this->init();
@@ -14,7 +15,7 @@ class Browse extends CI_Controller {
         
         $user = $this->usermanagement_service->loadUser();
         $lastAdId = -1;
-        $ads = $this->getAds($lastAdId, Browse::$STARTING_AD_NUM);
+        $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = false;
@@ -24,6 +25,7 @@ class Browse extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('javascript/follow_unfollow');
         $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/comment');
         $this->load->view('pages/browse', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
@@ -40,7 +42,7 @@ class Browse extends CI_Controller {
         
         $user = $this->usermanagement_service->loadUser();
         $lastAdId = $_GET['lastAdId'];
-        $ads = $this->getAds($lastAdId, Browse::$CONTINUING_AD_NUM);
+        $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = true;
@@ -94,7 +96,7 @@ class Browse extends CI_Controller {
         /**/
         
         try {
-            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, 2);
+            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, Browse::COMMENTS_NUM);
         } catch ( Exception $ex ) {
             return $ex->getMessage();
         }

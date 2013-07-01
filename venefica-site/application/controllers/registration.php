@@ -20,7 +20,7 @@ class Registration extends CI_Controller {
         $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/member_registration', $data);
+        $this->load->view('pages/registration_member', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -34,7 +34,7 @@ class Registration extends CI_Controller {
         $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('pages/business_registration', $data);
+        $this->load->view('pages/registration_business', $data);
         $this->load->view('pages/footer');
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }

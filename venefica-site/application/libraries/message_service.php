@@ -85,6 +85,28 @@ class Message_service {
     
     /**
      * 
+     * @param long $adId
+     * @return array of Message_model
+     * @throws Exception
+     */
+    public function getMessagesByAd($adId) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $messageService->getMessagesByAd(array("adId" => $adId));
+            
+            $messages = array();
+            if ( hasField($result, 'message') && $result->message ) {
+                $messages = Message_model::convertMessages($result->message);
+            }
+            return $messages;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Messages request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param Message_model $message
      * @return long message id
      * @throws Exception

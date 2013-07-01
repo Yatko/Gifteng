@@ -1,7 +1,7 @@
 <script langauge="javascript">
     $(function() {
         $('#postImage').on('file_selected', function() {
-            $('input[name=next_step]').val('<?=Member_post::STEP_START?>');
+            $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             $("#member_post_form").submit();
         });
         
@@ -47,7 +47,7 @@
             locationMarker.addTo(map);
         }
         $("#editButton").click(function() {
-            $('input[name=next_step]').val('<?=Member_post::STEP_START?>');
+            $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             $('#member_post_form').submit();
         });
         $('#closeButton').click(function() {
@@ -68,7 +68,7 @@
     <?=form_open_multipart('/post/member', array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '')) ?>
     
         
-        <? if ($step == Member_post::STEP_START): ?>
+        <? if ($step == Post_member::STEP_START): ?>
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'Let\'s give';
@@ -119,7 +119,7 @@
             </div><!--./post-gift_1-->
             
             
-        <? elseif ($step == Member_post::STEP_DETAILS): ?>
+        <? elseif ($step == Post_member::STEP_DETAILS): ?>
             
             
             <?
@@ -235,7 +235,7 @@
             </div><!--./post-gift_2-->
             
             
-        <? elseif ($step == Member_post::STEP_MAP): ?>
+        <? elseif ($step == Post_member::STEP_MAP): ?>
             
             
             <?
@@ -279,7 +279,7 @@
             </div><!--./post-gift_3-->
             
             
-        <? elseif ($step == Member_post::STEP_PREVIEW): ?>
+        <? elseif ($step == Post_member::STEP_PREVIEW): ?>
             
             
             <?
@@ -341,7 +341,7 @@
             </div><!--./post-gift_4-->
             
             
-        <? elseif ($step == Member_post::STEP_POST): ?>
+        <? elseif ($step == Post_member::STEP_POST): ?>
             
             
             <? if( !empty($error) ): ?>
