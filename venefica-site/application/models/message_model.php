@@ -9,9 +9,11 @@ class Message_model extends CI_Model {
     var $adId; //long
     var $text; //string
     var $owner; //boolean
+    var $toId; //long
     var $toName; //string
     var $toFullName; //string
     var $toAvatarUrl; //string
+    var $fromId; //long
     var $fromName; //string
     var $fromFullName; //string
     var $fromAvaratUrl; //string
@@ -27,8 +29,10 @@ class Message_model extends CI_Model {
             $this->text = getField($obj, 'text');
             $this->owner = getField($obj, 'owner');
             $this->toName = getField($obj, 'toName');
+            $this->toId = getField($obj, 'toId');
             $this->toFullName = getField($obj, 'toFullName');
             $this->toAvatarUrl = getField($obj, 'toAvatarUrl');
+            $this->fromId = getField($obj, 'fromId');
             $this->fromName = getField($obj, 'fromName');
             $this->fromFullName = getField($obj, 'fromFullName');
             $this->fromAvaratUrl = getField($obj, 'fromAvaratUrl');
@@ -43,6 +47,8 @@ class Message_model extends CI_Model {
         return parent::__get($key);
     }
     
+    // helper urls
+    
     public function getToAvatarUrl() {
         if ( $this->toAvatarUrl == null ) {
             return '';
@@ -56,6 +62,20 @@ class Message_model extends CI_Model {
         }
         return SERVER_URL.$this->fromAvatarUrl;
     }
+    
+    public function getToProfileUrl() {
+        $name = $this->toName;
+        if ( $name == null || is_empty($name) ) $name = $this->toId;
+        return base_url() . 'profile/' . $name;
+    }
+    
+    public function getFromProfileUrl() {
+        $name = $this->fromName;
+        if ( $name == null || is_empty($name) ) $name = $this->fromId;
+        return base_url() . 'profile/' . $name;
+    }
+    
+    //
     
     public function getCreateDate() {
         if ( $this->createdAt == null ) {

@@ -158,6 +158,24 @@ class Usermanagement_service {
         }
     }
     
+    /**
+     * 
+     * @param long $userId
+     * @return User_model
+     * @throws Exception
+     */
+    public function getUserById($userId) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getUserById(array("userId" => $userId));
+            $user = $result->user;
+            return User_model::convertUser($user);
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //***************
     //* user follow *
     //***************

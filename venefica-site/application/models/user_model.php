@@ -80,6 +80,23 @@ class User_model extends CI_Model {
         return parent::__get($key);
     }
     
+    // helper urls
+    
+    public function getProfileUrl() {
+        $name = $this->name;
+        if ( $name == null || is_empty($name) ) $name = $this->id;
+        return base_url() . 'profile/' . $name;
+    }
+    
+    public function getAvatarUrl() {
+        if ( $this->avatar == null ) {
+            return '';
+        }
+        return SERVER_URL.$this->avatar->url;
+    }
+
+    //
+    
     public function getAddressById($id) {
         if ( $this->addresses && sizeof($this->addresses) > 0 ) {
             foreach ( $this->addresses as $address ) {
@@ -117,13 +134,6 @@ class User_model extends CI_Model {
             $this->addresses = array();
         }
         array_push($this->addresses, $address);
-    }
-    
-    public function getAvatarUrl() {
-        if ( $this->avatar == null ) {
-            return '';
-        }
-        return SERVER_URL.$this->avatar->url;
     }
     
     public function getFullName() {

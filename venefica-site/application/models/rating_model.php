@@ -39,12 +39,7 @@ class Rating_model extends CI_Model {
         return parent::__get($key);
     }
     
-    public function getRateDate() {
-        if ( $this->ratedAt == null ) {
-            return '';
-        }
-        return date(DATE_FORMAT, $this->ratedAt / 1000);
-    }
+    // helper urls
     
     public function getFromAvatarUrl() {
         if ( $this->fromUser == null ) {
@@ -53,11 +48,11 @@ class Rating_model extends CI_Model {
         return $this->fromUser->getAvatarUrl();
     }
     
-    public function getFromFullName() {
+    public function getFromProfileUrl() {
         if ( $this->fromUser == null ) {
             return '';
         }
-        return $this->fromUser->getFullName();
+        return $this->fromUser->getProfileUrl();
     }
     
     public function getToAvatarUrl() {
@@ -65,6 +60,29 @@ class Rating_model extends CI_Model {
             return '';
         }
         return $this->toUser->getAvatarUrl();
+    }
+    
+    public function getToProfileUrl() {
+        if ( $this->toUser == null ) {
+            return '';
+        }
+        return $this->toUser->getProfileUrl();
+    }
+    
+    //
+    
+    public function getRateDate() {
+        if ( $this->ratedAt == null ) {
+            return '';
+        }
+        return date(DATE_FORMAT, $this->ratedAt / 1000);
+    }
+    
+    public function getFromFullName() {
+        if ( $this->fromUser == null ) {
+            return '';
+        }
+        return $this->fromUser->getFullName();
     }
     
     public function getToFullName() {
