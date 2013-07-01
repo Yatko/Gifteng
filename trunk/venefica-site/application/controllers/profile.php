@@ -11,7 +11,11 @@ class Profile extends CI_Controller {
         
         try {
             if ( !empty($name) ) {
-                $user = $this->usermanagement_service->getUserByName($name);
+                if ( is_numeric($name) ) {
+                    $user = $this->usermanagement_service->getUserById($name);
+                } else {
+                    $user = $this->usermanagement_service->getUserByName($name);
+                }
             } else {
                 $user = $this->usermanagement_service->loadUser();
             }

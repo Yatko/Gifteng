@@ -10,6 +10,7 @@ class Comment_model extends CI_Model {
     var $id; //long
     var $text; //string
     var $owner; //boolean
+    var $publisherId; //long
     var $publisherName; //string
     var $publisherFullName; //string
     var $publisherAvatarUrl; //string
@@ -22,6 +23,7 @@ class Comment_model extends CI_Model {
             $this->id = getField($obj, 'id');
             $this->text = getField($obj, 'text');
             $this->owner = getField($obj, 'owner');
+            $this->publisherId = getField($obj, 'publisherId');
             $this->publisherName = getField($obj, 'publisherName');
             $this->publisherFullName = getField($obj, 'publisherFullName');
             $this->publisherAvatarUrl = getField($obj, 'publisherAvatarUrl');
@@ -35,12 +37,22 @@ class Comment_model extends CI_Model {
         return parent::__get($key);
     }
     
+    // helper urls
+    
+    public function getPublisherProfileUrl() {
+        $name = $this->publisherName;
+        if ( $name == null || is_empty($name) ) $name = $this->publisherId;
+        return base_url() . 'profile/' . $name;
+    }
+    
     public function getPublisherAvatarUrl() {
         if ( $this->publisherAvatarUrl == null ) {
             return '';
         }
         return SERVER_URL.$this->publisherAvatarUrl;
     }
+    
+    //
     
     public function getCreateDate() {
         if ( $this->createdAt == null ) {

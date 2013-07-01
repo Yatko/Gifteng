@@ -48,15 +48,26 @@ class Request_model extends CI_Model {
         return parent::__get($key);
     }
     
-    public function getRequestDate() {
-        return date(DATE_FORMAT, $this->requestedAt / 1000);
-    }
+    // helper urls
     
     public function getUserAvatarUrl() {
         if ( $this->user == null ) {
             return '';
         }
         return $this->user->getAvatarUrl();
+    }
+    
+    public function getUserProfileUrl() {
+        if ( $this->user == null ) {
+            return '';
+        }
+        return $this->user->getProfileUrl();
+    }
+    
+    //
+    
+    public function getRequestDate() {
+        return date(DATE_FORMAT, $this->requestedAt / 1000);
     }
     
     public function getUserFullName() {

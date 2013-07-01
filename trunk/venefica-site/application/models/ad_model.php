@@ -147,6 +147,29 @@ class Ad_model extends CI_Model {
         return parent::__get($key);
     }
     
+    // helper urls
+    
+    public function getImageUrl() {
+        if ( !$this->hasImage() ) {
+            return '';
+        }
+        return SERVER_URL.$this->image->url;
+    }
+    
+    public function getCreatorAvatarUrl() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getAvatarUrl();
+    }
+    
+    public function getCreatorProfileUrl() {
+        if ( $this->creator == null ) {
+            return '';
+        }
+        return $this->creator->getProfileUrl();
+    }
+    
     // image related
     
     public function hasImage() {
@@ -156,13 +179,6 @@ class Ad_model extends CI_Model {
         return FALSE;
     }
     
-    public function getImageUrl() {
-        if ( !$this->hasImage() ) {
-            return '';
-        }
-        return SERVER_URL.$this->image->url;
-    }
-    
     // creator related
     
     public function getCreatorFullName() {
@@ -170,13 +186,6 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->creator->getFullName();
-    }
-    
-    public function getCreatorAvatarUrl() {
-        if ( $this->creator == null ) {
-            return '';
-        }
-        return $this->creator->getAvatarUrl();
     }
     
     public function getCreatorJoinDate() {

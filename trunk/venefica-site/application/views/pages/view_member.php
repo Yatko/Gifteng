@@ -117,7 +117,7 @@ $creator_id = $ad->creator->id;
 $creator_username = $ad->creator->name;
 $creator_img = $ad->getCreatorAvatarUrl();
 $creator_name = $ad->getCreatorFullName();
-$creator_profile_link = base_url().'profile/'.$creator_username;
+$creator_profile_link = $ad->getCreatorProfileUrl();
 $creator_joined = $ad->getCreatorJoinDateHumanTiming(); //$ad->getCreatorJoinDate();
 $creator_location = $ad->getCreatorLocation();
 $creator_points = $ad->getCreatorPoints();
@@ -452,7 +452,7 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
         $commentor_username = $comment->publisherName;
         $commentor_img = $comment->getPublisherAvatarUrl();
         $commentor_name = $comment->publisherFullName;
-        $commentor_profile_link = base_url().'profile/'.$commentor_username;
+        $commentor_profile_link = $comment->getPublisherProfileUrl();
         $comment_id = $comment->id;
         $comment_text = $comment->text;
         $comment_since = $comment->getCreateDateHumanTiming();
