@@ -30,9 +30,11 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
         messageDto.setAdId(model.getAd() != null ? model.getAd().getId() : null);
         messageDto.setText(model.getText());
         messageDto.setOwner(owner);
+        messageDto.setToId(model.getTo().getId());
         messageDto.setToName(model.getTo().getName());
         messageDto.setToFullName(model.getTo().getFullName());
         messageDto.setToAvatarUrl(ImageDto.imageUrl(toAvatar));
+        messageDto.setFromId(model.getFrom().getId());
         messageDto.setFromName(model.getFrom().getName());
         messageDto.setFromFullName(model.getFrom().getFullName());
         messageDto.setFromAvatarUrl(ImageDto.imageUrl(fromAvatar));

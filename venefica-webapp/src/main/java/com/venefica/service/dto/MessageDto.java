@@ -22,11 +22,15 @@ public class MessageDto extends DtoBase {
     // out
     private boolean owner;
     // out, in
+    private Long toId;
+    // out, in
     private String toName;
     // out
     private String toFullName;
     // out
     private String toAvatarUrl;
+    // out
+    private Long fromId;
     // out
     private String fromName;
     // out
@@ -143,5 +147,21 @@ public class MessageDto extends DtoBase {
 
     public void setAdId(Long adId) {
         this.adId = adId;
+    }
+
+    public Long getToId() {
+        return toId;
+    }
+
+    public void setToId(Long toId) {
+        this.toId = toId;
+    }
+
+    public Long getFromId() {
+        return fromId;
+    }
+
+    public void setFromId(Long fromId) {
+        this.fromId = fromId;
     }
 }
