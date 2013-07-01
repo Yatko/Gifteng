@@ -223,7 +223,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         assertTrue("Invalid number of messages in the collection!", messages.size() == 1);
 
         MessageDto message = messages.get(0);
-        assertTrue("Message must be marked as not read!", !message.hasRead());
+        assertTrue("Message must be marked as not read!", !message.isRead());
 
         Message storedMessage = messageDao.get(message.getId());
         assertTrue("Message in the database must be marked as read!", storedMessage.hasRead());
