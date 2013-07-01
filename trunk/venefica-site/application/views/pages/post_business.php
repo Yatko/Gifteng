@@ -118,7 +118,7 @@
     <?=isset($this->post_form) ? $this->post_form->error_string() : "" ?>
         
         
-        <? if ($step == Business_post::STEP_START): ?>
+        <? if ($step == Post_business::STEP_START): ?>
             
             
             <div id="business_post_start" class="span6 ge-form">
@@ -258,7 +258,7 @@
             </div><!--./ge-post step1-->
             
             
-        <? elseif ($step == Business_post::STEP_ONLINE): ?>
+        <? elseif ($step == Post_business::STEP_ONLINE): ?>
 
 
             <div id="business_post_online" class="span6 ge-form">
@@ -347,7 +347,7 @@
             </div><!--./ge-post online-->
 
 
-        <? elseif ($step == Business_post::STEP_LOCATION): ?>
+        <? elseif ($step == Post_business::STEP_LOCATION): ?>
             
             
             <?
@@ -615,13 +615,13 @@
             </div><!--./ge-post location-->
 
 
-        <? elseif ($step == Business_post::STEP_PREVIEW): ?>
+        <? elseif ($step == Post_business::STEP_PREVIEW): ?>
 
 
             preview
 
 
-        <? elseif ($step == Business_post::STEP_POST): ?>
+        <? elseif ($step == Post_business::STEP_POST): ?>
 
 
             Error: <?=$error ?>

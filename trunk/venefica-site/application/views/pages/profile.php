@@ -48,9 +48,10 @@ $ratings_num = $user->statistics->numRatings;
 
 $user_avatar_img = $user->getAvatarUrl();
 $user_full_name = $user->getFullName();
-$user_joined = $user->getJoinDate();
+$user_joined = $user->getJoinDateHumanTiming(); //$user->getCreatorJoinDate();
 $user_location = $user->getLocation();
 $user_about = $user->about;
+$user_points = $user->getPoints();
 
 if ( trim($user_avatar_img) == '' ) $user_avatar_img = BASE_PATH.'temp-sample/ge-user.jpg';
 if ( trim($user_full_name) == '' ) $user_full_name = '&nbsp;';
@@ -103,7 +104,7 @@ if ( trim($user_full_name) == '' ) $user_full_name = '&nbsp;';
                             <div class="ge-name"><?=$user_full_name?> <a href="<?=base_url()?>edit_profile" data-target="#editProfileContainer" data-toggle="modal"><i class="fui-gear"></i></a></div>
                             <div class="ge-age">Giftenger since <?=$user_joined?></div>
                             <div class="ge-location"><?=$user_location?></div>
-                            <div class="ge-points">xxx</div>
+                            <div class="ge-points"><?=$user_points?></div>
                         </div>
                     </div>
                     <div class="span6 ge-info">

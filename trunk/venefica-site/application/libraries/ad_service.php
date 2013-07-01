@@ -350,16 +350,35 @@ class Ad_service {
     //***************
     
     /**
+     * 
+     * @param long $requestId
+     * @throws Exception
+     */
+    public function hideRequest($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->hideRequest(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Hide request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
      * Creates a new request on the given ad.
      * 
      * @param long $adId
+     * @param string $text
      * @return long the request id
      * @throws Exception
      */
-    public function requestAd($adId) {
+    public function requestAd($adId, $text) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->requestAd(array("adId" => $adId));
+            $result = $adService->requestAd(array(
+                "adId" => $adId,
+                "text" => $text
+            ));
             $requestId = $result->requestId;
             return $requestId;
         } catch ( Exception $ex ) {

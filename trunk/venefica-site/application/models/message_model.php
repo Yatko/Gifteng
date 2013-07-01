@@ -6,6 +6,7 @@
 class Message_model extends CI_Model {
     
     var $id; //long
+    var $adId; //long
     var $text; //string
     var $owner; //boolean
     var $toName; //string
@@ -22,6 +23,7 @@ class Message_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->adId = getField($obj, 'adId');
             $this->text = getField($obj, 'text');
             $this->owner = getField($obj, 'owner');
             $this->toName = getField($obj, 'toName');

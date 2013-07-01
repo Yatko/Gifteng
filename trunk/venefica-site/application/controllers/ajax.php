@@ -111,6 +111,27 @@ class Ajax extends CI_Controller {
         }
     }
     
+    public function request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('requestAdId');
+            $text = $this->input->post('requestText');
+            
+            $this->ad_service->requestAd($adId, $text);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     // internal functions
     
     private function init() {

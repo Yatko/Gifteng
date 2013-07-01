@@ -7,14 +7,14 @@
  */
 class Invitation_service {
     
-    public static $GENERAL_ERROR            = 0;
+    const GENERAL_ERROR            = 0;
     //email sending related errors
-    public static $INVALID_FROM_ADDRESS     = 1;
-    public static $INVALID_TO_ADDRESS       = 2;
-    public static $INVALID_EMAIL_MESSAGE    = 3;
-    public static $EMAIL_SEND_ERROR         = 4;
+    const INVALID_FROM_ADDRESS     = 1;
+    const INVALID_TO_ADDRESS       = 2;
+    const INVALID_EMAIL_MESSAGE    = 3;
+    const EMAIL_SEND_ERROR         = 4;
     //MailJimp related errors
-    public static $ALREADY_SUBSCRIBED       = 11;
+    const ALREADY_SUBSCRIBED       = 11;
 
     public function __construct() {
         log_message(DEBUG, "Initializing Invitation_service");

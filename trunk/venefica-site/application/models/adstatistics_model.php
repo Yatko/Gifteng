@@ -12,6 +12,7 @@ class AdStatistics_model extends CI_Model {
     var $numComments = 0; //int
     var $numBookmarks = 0; //int
     var $numShares = 0; //int
+    var $numRequests = 0; //int
     var $rating = 0; //float
     
     public function __construct($obj = null) {
@@ -23,6 +24,7 @@ class AdStatistics_model extends CI_Model {
             $this->numComments = getField($obj, 'numComments');
             $this->numBookmarks = getField($obj, 'numBookmarks');
             $this->numShares = getField($obj, 'numShares');
+            $this->numRequests = getField($obj, 'numRequests');
             $this->rating = getField($obj, 'rating');
         }
     }

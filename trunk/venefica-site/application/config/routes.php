@@ -42,61 +42,59 @@ $route['default_controller'] = 'index/view';
 $route['404_override'] = '';
 
 
-$route['admin/(:any)'] = 'admin/$1';
-$route['admin'] = 'admin/dashboard';
+$route['admin/(:any)']  = 'admin/$1';
+$route['admin']         = 'admin/dashboard';
 
 
-$route['ajax/(:any)'] = 'ajax/$1';
-$route['ajax'] = 'ajax/invalid';
+$route['ajax/(:any)']   = 'ajax/$1';
+$route['ajax']          = 'ajax/invalid';
 
 
-//$route['browse/(:any)'] = 'browse/view/$1';
-$route['browse/ajax/(:any)'] = 'browse/$1';
-$route['browse'] = 'browse/view';
+$route['browse/ajax/(:any)']    = 'browse/$1';
+$route['browse']                = 'browse/view';
 
-$route['profile/ajax/(:any)'] = 'profile/$1';
-$route['profile/(:any)'] = 'profile/view/$1';
-$route['profile'] = 'profile/view';
+$route['profile/ajax/(:any)']   = 'profile/$1';
+$route['profile/(:any)']        = 'profile/view/$1';
+$route['profile']               = 'profile/view';
 
-$route['edit_profile/ajax/business'] = 'business_edit_profile/ajax';
-$route['edit_profile/ajax/member'] = 'member_edit_profile/ajax';
-$route['edit_profile/business'] = 'business_edit_profile/view';
-$route['edit_profile/member'] = 'member_edit_profile/view';
-$route['edit_profile'] = 'edit_profile/edit_profile_redirect';
-
+$route['edit_profile/ajax/business']    = 'edit_profile_business/ajax';
+$route['edit_profile/ajax/member']      = 'edit_profile_member/ajax';
+$route['edit_profile/business']         = 'edit_profile_business/view';
+$route['edit_profile/member']           = 'edit_profile_member/view';
+$route['edit_profile']                  = 'edit_profile/edit_profile_redirect';
 
 
-$route['post/business/ajax/(:any)'] = 'business_post/$1';
-$route['post/business'] = 'business_post/view';
 
-$route['post/member/(:any)'] = 'member_post/$1';
-$route['post/member'] = 'member_post/view';
-
+$route['post/business/ajax/(:any)'] = 'post_business/$1';
+$route['post/business']             = 'post_business/view';
+$route['post/member/(:any)']    = 'post_member/$1';
+$route['post/member']           = 'post_member/view';
 $route['post'] = 'post/post_redirect';
 
 
-$route['view/(:num)'] = 'view/show/$1';
-$route['view'] = 'view/show/';
+$route['view/(:num)']   = 'view/show/$1';
+$route['view']          = 'view/show/';
 
 $route['authentication/(:any)'] = 'authentication/$1';
-$route['authentication'] = 'authentication/view';
+$route['authentication']        = 'authentication/view';
 
 $route['invitation/(:any)'] = 'invitation/$1';
-$route['invitation'] = 'invitation/view';
+$route['invitation']        = 'invitation/view';
 
-$route['registration/(:any)'] = 'registration/$1';
-$route['registration'] = 'registration/business';
-$route['business'] = 'registration/business';
+$route['registration/(:any)']   = 'registration/$1';
+$route['registration']          = 'registration/business';
+$route['business']              = 'registration/business';
 
-$route['get_photo/(:any)'] = 'generator/get_photo/$1/0/0'; //original sized image
-$route['get_photo/(:any)/(:num)'] = 'generator/get_photo/$1/$2/$2'; //width and heoght will be the same size
-$route['get_photo/(:any)/(:num)/(:num)'] = 'generator/get_photo/$1/$2/$3';
-$route['get_photo'] = 'generator/get_photo//0/0'; //empty image
+$route['get_photo/(:any)']                  = 'generator/get_photo/$1/0/0'; //original sized image
+$route['get_photo/(:any)/(:num)']           = 'generator/get_photo/$1/$2/$2'; //width and heoght will be the same size
+$route['get_photo/(:any)/(:num)/(:num)']    = 'generator/get_photo/$1/$2/$3';
+$route['get_photo']                         = 'generator/get_photo//0/0'; //empty image
 
 $route['contact'] = 'contact/view';
 
 //promotion landing pages
 $route['totegiveaway'] = 'landing/totegiveaway';
+
 
 $route['(:any)'] = 'index/view';
 

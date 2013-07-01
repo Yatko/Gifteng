@@ -137,6 +137,13 @@ class User_model extends CI_Model {
         return date(DATE_FORMAT, $this->joinedAt / 1000);
     }
     
+    public function getJoinDateHumanTiming() {
+        if ( $this->joinedAt == null ) {
+            return '';
+        }
+        return humanTiming($this->joinedAt / 1000);
+    }
+    
     public function getLocation() {
         if ( $this->address == null ) {
             return '';
