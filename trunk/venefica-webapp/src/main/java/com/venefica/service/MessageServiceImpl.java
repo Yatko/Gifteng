@@ -121,7 +121,13 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Transactional
     public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, MessageValidationException {
         validateMessageDto(messageDto);
-        User to = validateUser(messageDto.getToName());
+        
+        User to;
+        if ( messageDto.getToName() != null ) {
+            to = validateUser(messageDto.getToName());
+        } else {
+            to = validateUser(messageDto.getToId());
+        }
         User currentUser = getCurrentUser();
 
         if (currentUser.getName().equals(to.getName())) {
