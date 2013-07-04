@@ -1,4 +1,10 @@
 <script langauge="javascript">
+    function show_comment_rest(callerElement, commentId) {
+        $('.comment_' + commentId + '_separator').addClass('hide');
+        $('.comment_' + commentId + '_rest').removeClass('hide').css('display', 'inline');
+        $(callerElement).addClass('hide');
+    }
+    
     $(function() {
         $('#addCommentBtn').click(function() {
             if ( $("#comment_post_form").length === 0 ) {
@@ -20,9 +26,9 @@
             }).done(function(response) {
                 if ( !response || response === '' ) {
                     //TODO: empty result
-                } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
+                } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                     //TODO
-                } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
+                } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                     var adId = $commentAdId.val();
                     
                     $commentAdId.val('');

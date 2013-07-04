@@ -10,19 +10,6 @@
     ?>
     
     <script langauge="javascript">
-        function show_comment_rest(callerElement, commentId) {
-            $('.comment_' + commentId + '_separator').addClass('hide');
-            $('.comment_' + commentId + '_rest').removeClass('hide').css('display', 'inline');
-            $(callerElement).addClass('hide');
-        }
-        
-        function comment(callerElement, adId) {
-            var $commentAdId = $("#comment_post_form input[name=commentAdId]");
-            $commentAdId.val(adId);
-            
-            $('#commentContainer').modal('show');
-        }
-        
         $(function() {
             if ( $('#boxContainer').length > 0 ) {
                 var $container = $('#boxContainer');
@@ -75,263 +62,49 @@
 
 <? if ( !$boxContainer_exists ): ?>
 
-
-<div id="commentContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-body">
-        
-        <label class="control-label" for="fieldset">
-            <blockquote>
-                <p>
-                    Comment
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </p>
-            </blockquote>
-        </label>
-        
-        <?=form_open('/ajax/comment', array('id' => 'comment_post_form'))?>
-        
-            <input type="hidden" name="commentAdId" value=""/>
-
-            <div class="row-fluid ge-message ge-input ge-text">
-                <div class="span9">
-                    <textarea name="commentText" placeholder="Your comment ..."></textarea>
-                </div>
-                <div class="span3">
-                    <a id="addCommentBtn" class="btn btn-mini btn-block">Add</a>
-                </div>
-            </div>
-        
-        <?=form_close()?>
-        
-    </div>
-</div>
-
-
-<div class="container ge-topspace">
-    <div class="row ge-tile-view ge-browse">
-
-<div id="boxContainer" class="transitions-enabled infinite-scroll clearfix">
+<div class="row">
+    <div class="ge-tile-view ge-browse">
+        <div id="boxContainer" class="transitions-enabled infinite-scroll clearfix">
 
 <? endif; ?>
 
-    
-    <? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
+
+<? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
+    <? foreach ($ads as $ad): ?>
         <?
-        $user_avatar_img = $user->getAvatarUrl();
-        
-        if ( trim($user_avatar_img) == '' ) $user_avatar_img = BASE_PATH.'temp-sample/ge-user.jpg';
+        $ad_id = $ad->id;
         ?>
-        
-        <? foreach ($ads as $ad): ?>
-            <?
-            $is_owner = $ad->owner;
-            //$is_in_followers = $ad->creator->inFollowers;
-            $is_in_followings = $ad->creator->inFollowings;
-            
-            $creator_img = $ad->getCreatorAvatarUrl();
-            $creator_id = $ad->creator->id;
-            $creator_name = $ad->getCreatorFullName();
-            $creator_profile_link = $ad->getCreatorProfileUrl();
-            $creator_joined = $ad->getCreatorJoinDateHumanTiming(); //$ad->getCreatorJoinDate();
-            $creator_location = $ad->getCreatorLocation();
-            $creator_points = $ad->getCreatorPoints();
-            
-            $ad_is_bookmarked = $ad->inBookmarks;
-            $ad_id = $ad->id;
-            $ad_img = $ad->getImageUrl();
-            $ad_title = $ad->title;
-            $ad_subtitle = $ad->subtitle;
-            //$ad_description = $ad->description;
-            //$ad_location = $ad->getLocation();
-            
-            $ad_distance = null;
-            if (
-                $user->address != null &&
-                $user->address->latitude &&
-                $user->address->longitude &&
-                $ad->address != null &&
-                $ad->address->latitude &&
-                $ad->address->longitude
-            ) {
-                $ad_distance = distance_haversine(
-                    $user->address->latitude,
-                    $user->address->longitude,
-                    $ad->address->latitude,
-                    $ad->address->longitude
-                );
-            }
-            
-            if ( $ad->statistics != null ) {
-                $ad_num_bookmarks = $ad->statistics->numBookmarks;
-                $ad_num_comments = $ad->statistics->numComments;
-                $ad_num_shares = $ad->statistics->numShares;
-            } else {
-                $ad_num_bookmarks = 0;
-                $ad_num_comments = 0;
-                $ad_num_shares = 0;
-            }
-            
-            $creator_name = safe_content($creator_name);
-            $ad_title = safe_content($ad_title);
-            $ad_title_as_parameter = safe_parameter($ad_title);
-            $ad_subtitle = safe_content($ad_subtitle);
-            //$ad_description = safe_content($ad_description);
-            
-            if ( trim($ad_subtitle) != '' ) $ad_subtitle = $ad_subtitle.' % off';
-            ?>
-            
-            <div class="ge-ad-item-box">
-            
+
+        <div class="ge-ad-item-box">
             <div class="span4 ge-box">
                 <div class="well ge-well">
-                    
                     <div class="ge-ad-id hide" id="ad_<?=$ad_id?>"></div>
-                    
                     <div class="row-fluid">
                         <div class="span12">
-                            
+
                             <div class="ge-user">
-                                <div class="ge-user-image">
-                                    <a href="<?=$creator_profile_link?>"><img src="<?=$creator_img?>" class="img img-rounded"></a>
-                                </div>
-                                <div class="ge-detail">
-                                    <div class="ge-name">
-                                        <a href="<?=$creator_profile_link?>"><?=$creator_name?></a>
-                                        <? if(!$is_owner): ?>
-                                            <? if( $is_in_followings ): ?>
-                                                <span onclick="follow_unfollow(<?=$creator_id?>);" class="user_<?=$creator_id?> ge-user-follow label label-small label-ge active link">Unfollow</span>
-                                            <? else: ?>
-                                                <span onclick="follow_unfollow(<?=$creator_id?>);" class="user_<?=$creator_id?> ge-user-unfollow label label-small label-ge active link">Follow</span>
-                                            <? endif; ?>
-                                        <? endif; ?>
-                                    </div>
-                                    <? if( $creator_joined != '' ): ?>
-                                        <div class="ge-age">Giftenger since <?=$creator_joined?></div>
-                                    <? endif; ?>
-                                    <? if( $creator_location != '' ): ?>
-                                        <div class="ge-location"><?=$creator_location?></div>
-                                    <? endif; ?>
-                                    <? if( $creator_points != '' ): ?>
-                                        <div class="ge-points"><span class="label label-small"><?=$creator_points?></span></div>
-                                    <? endif; ?>
-                                </div>
+                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
                             </div>
-                            
-                            <div class="ge-item">	
-                                <div class="row-fluid ge-item-image" style="background: url('<?=$ad_img?>');">
-                                    <div class="row-fluid">
-                                        <div class="ge-ribbon"></div>
-                                    </div>
-                                    <div class="row-fluid">
-                                        <div class="span12 ge-action">
-                                            <div class="row-fluid">
-                                                <div class="span4">
-                                                    <? if( $ad_is_bookmarked ): ?>
-                                                        <button class="btn btn-small btn-block btn-ge disabled"><i class="fui-star-2"></i> <?=$ad_num_bookmarks?></button>
-                                                    <? else: ?>
-                                                        <button onclick="bookmark(this, <?=$ad_id?>);" class="btn btn-small btn-block btn-ge"><i class="fui-star-2"></i> <span class="ad_bookmark_<?=$ad_id?>"><?=$ad_num_bookmarks?></span></button>
-                                                    <? endif; ?>
-                                                </div>
-                                                <div class="span4">
-                                                    <button onclick="comment(this, <?=$ad_id?>);" class="btn btn-small btn-block btn-ge"><i class="fui-bubble"></i> <span class="ad_comment_<?=$ad_id?>"><?=$ad_num_comments?></span></button>
-                                                </div>
-                                                <div class="span4">
-                                                    <button class="btn btn-small btn-block btn-ge"><i class="fui-export"></i> <?=$ad_num_shares?></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!--./ge-item-image-->
 
-                                <div class="row-fluid ge-item-text">
-                                    <div class="row-fluid">
-                                        <p class="ge-title">
-                                            <i class="fui-tag"></i>
-                                            <a href="<?=base_url()?>view/<?=$ad_id?>"><?=$ad_title?></a>
-                                            <? if( $ad_subtitle != '' ): ?>
-                                                <span class="ge-subtitle">
-                                                    <em>&amp;</em>
-                                                    <?=$ad_subtitle?>
-                                                </span>
-                                            <? endif; ?>
-                                        </p>
-                                        <? if( $ad_distance != null && $ad_distance != '' ): ?>
-                                            <p class="ge-location"><i class="fui-location"></i> <?=$ad_distance?> mi</p>
-                                        <? endif; ?>
-                                    </div><!--/text-->
-                                </div>
+                            <div class="ge-item">
+                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => true, 'canShare' => true)); ?>
+                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $user)); ?>
                             </div><!--./ge-item-->
-                            
-            <? if ( isset($ad->comments) && is_array($ad->comments) && count($ad->comments) > 0 ): ?>
-                            
-                            <div class="row-fluid ge-comments">
-                                <div class="span12">
-                                    <div class="row-fluid ge-messagelist">
-                                        <div class="span12">
-                                            
-                <? foreach ( $ad->comments as $comment ): ?>
-                    <?
-                    $commentor_username = $comment->publisherName;
-                    $commentor_img = $comment->getPublisherAvatarUrl();
-                    $commentor_name = $comment->publisherFullName;
-                    $commentor_profile_link = $comment->getPublisherProfileUrl();
-                    $comment_id = $comment->id;
-                    $comment_text = trim($comment->text);
-                    $comment_since = $comment->getCreateDateHumanTiming();
 
-                    if ( trim($commentor_img) == '' ) $commentor_img = BASE_PATH.'temp-sample/ge-user.jpg';
-                    if ( trim($comment_since) != '' ) $comment_since = $comment_since . ' ago';
-                    
-                    if ( strlen($comment_text) > COMMENT_MAX_LENGTH ) {
-                        $comment_text_rest = substr($comment_text, COMMENT_MAX_LENGTH);
-                        $comment_text = substr($comment_text, 0, COMMENT_MAX_LENGTH);
-                    } else {
-                        $comment_text_rest = '';
-                    }
-                    ?>
-                    
-                    <div class="row-fluid ge-message">
-                        <div class="ge-user-image">
-                            <a href="<?=$commentor_profile_link?>"><img src="<?=$commentor_img?>" class="img img-rounded"></a>
-                        </div>
-                        <div class="ge-text">
-                            <a class="ge-name" href="<?=$commentor_profile_link?>"><?=$commentor_name?></a><span class="ge-date"><?=$comment_since?></span>
-                            <span class="ge-block">
-                                <?=$comment_text?>
-                                
-                                <? if( $comment_text_rest != '' ): ?>
-                                    <span class="comment_<?=$comment_id?>_separator">...</span>
-                                    <span class="comment_<?=$comment_id?>_rest hide"><?=$comment_text_rest?></span>
-                                    
-                                    <a class="text-note link" onclick="show_comment_rest(this, <?=$comment_id?>);">read more</a>
-                                <? endif; ?>
-                            </span>
-                        </div>
-                    </div><!--./ge-message-->
-                <? endforeach; ?>
-                                            
-                                        </div>
-                                    </div><!--./ge-messagelist-->
-                                </div>
-                            </div><!--./ge-comments-->
-            <? endif; ?>
-                        
+                            <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
                         </div>
                     </div>
-                    
                 </div>
             </div>
-            
-            </div>
-            
-        <? endforeach; ?>
-    <? endif; ?>
-    
-    
+        </div>
+
+    <? endforeach; ?>
+<? endif; ?>
+
+
 <? if ( !$boxContainer_exists ): ?>
-</div>
-                <div id="loadingPage"></div>
-        
+        </div>
+        <div id="loadingPage"></div>
     </div>
 </div>
 <? endif; ?>

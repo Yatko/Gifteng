@@ -26,17 +26,30 @@ class View extends CI_Controller {
         $user = $this->usermanagement_service->loadUser();
         $comments = $this->message_service->getCommentsByAd($adId, -1, View::COMMENTS_NUM);
         
+        /**
+        // to mock
+        
+        $ad = new Ad_model();
+        $ad->id = 1;
+        $ad->owner = false;
+        $ad->creator = $user;
+        $ad->title = 'Test';
+        
+        $comments = null;
+        /**/
+        
         $data = array();
         $data['adId'] = $adId;
         $data['ad'] = $ad;
         $data['user'] = $user;
         $data['comments'] = $comments;
         
-        $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('javascript/follow_unfollow');
+        $modal = $this->load->view('modal/request', array(), true);
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');
-        $this->load->view('javascript/request');
         if ( $user->businessAccount ) {
             $this->load->view('pages/view_business', $data);
         } else {

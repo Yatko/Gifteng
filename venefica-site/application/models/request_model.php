@@ -52,7 +52,7 @@ class Request_model extends CI_Model {
     
     public function getUserAvatarUrl() {
         if ( $this->user == null ) {
-            return '';
+            return DEFAULT_USER_URL;
         }
         return $this->user->getAvatarUrl();
     }
@@ -72,9 +72,30 @@ class Request_model extends CI_Model {
     
     public function getUserFullName() {
         if ( $this->user == null ) {
-            return '';
+            return '&nbsp;';
         }
         return $this->user->getFullName();
+    }
+    
+    public function isPending() {
+        if ( $this->status == Request_model::STATUS_PENDING ) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isSelected() {
+        if ( $this->status == Request_model::STATUS_ACCEPTED ) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isExpired() {
+        if ( $this->status == Request_model::STATUS_EXPIRED ) {
+            return true;
+        }
+        return false;
     }
     
     // static helpers
@@ -86,8 +107,8 @@ class Request_model extends CI_Model {
                 array_push($requests, Request_model::convertRequest($request));
             }
         } elseif ( !is_empty($requestsResult) ) {
-            $requests = $requestsResult;
-            array_push($requests, Request_model::convertRequest($requests));
+            $request = $requestsResult;
+            array_push($requests, Request_model::convertRequest($request));
         }
         return $requests;
     }

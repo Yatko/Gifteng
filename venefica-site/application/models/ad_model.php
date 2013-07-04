@@ -150,15 +150,19 @@ class Ad_model extends CI_Model {
     // helper urls
     
     public function getImageUrl() {
-        if ( !$this->hasImage() ) {
-            return '';
+        $url = '';
+        if ( $this->hasImage() ) {
+            $url = SERVER_URL.$this->image->url;
         }
-        return SERVER_URL.$this->image->url;
+        if ( trim($url) == '' ) {
+            $url = DEFAULT_AD_URL;
+        }
+        return $url;
     }
     
     public function getCreatorAvatarUrl() {
         if ( $this->creator == null ) {
-            return '';
+            return DEFAULT_USER_URL;
         }
         return $this->creator->getAvatarUrl();
     }
@@ -168,6 +172,10 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->creator->getProfileUrl();
+    }
+    
+    public function getViewUrl() {
+        return base_url() . 'view/' . $this->id;
     }
     
     // image related
@@ -183,7 +191,7 @@ class Ad_model extends CI_Model {
     
     public function getCreatorFullName() {
         if ( $this->creator == null ) {
-            return '';
+            return '&nbsp;';
         }
         return $this->creator->getFullName();
     }
@@ -245,6 +253,44 @@ class Ad_model extends CI_Model {
             return '';
         }
         return $this->address->getLocation();
+    }
+    
+    // requests related
+    
+    /**
+     * Gets the request made by the goven user for this ad.
+     * 
+     * @param long $userId
+     * @return Request_model
+     */
+    public function getRequestByUser($userId) {
+        if ( !$this->hasRequest() ) {
+            return null;
+        }
+        foreach ( $this->requests as $request ) {
+            if ( $request->user->id == $userId ) {
+                return $request;
+            }
+        }
+        return null;
+    }
+    
+    public function hasRequest() {
+        if ( $this->requests != null && count($this->requests) > 0 ) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function hasSelection() {
+        if ( $this->requests != null && count($this->requests) > 0 ) {
+            foreach ( $this->requests as $request ) {
+                if ( $request->isSelected() ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     // static helpers

@@ -22,8 +22,10 @@ class Browse extends CI_Controller {
         $data['ads'] = $ads;
         $data['user'] = $user;
         
-        $this->load->view('templates/'.TEMPLATES.'/header');
-        $this->load->view('javascript/follow_unfollow');
+        $modal = $this->load->view('modal/comment', array(), true);
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');
         $this->load->view('pages/browse', $data);

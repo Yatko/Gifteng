@@ -198,13 +198,17 @@ class Ad_service {
      * exception will be thrown by ws.
      * 
      * @param long $userId
+     * @param boolean $includeRequests
      * @return array of Ad_model
      * @throws Exception
      */
-    public function getUserRequestedAds($userId) {
+    public function getUserRequestedAds($userId, $includeRequests) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getUserRequestedAds(array("userId" => $userId));
+            $result = $adService->getUserRequestedAds(array(
+                "userId" => $userId,
+                "includeRequests" => $includeRequests
+            ));
             
             $ads = array();
             if ( hasField($result, 'ad') && $result->ad ) {

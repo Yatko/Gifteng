@@ -46,10 +46,11 @@ class Comment_model extends CI_Model {
     }
     
     public function getPublisherAvatarUrl() {
-        if ( $this->publisherAvatarUrl == null ) {
-            return '';
+        $url = $this->publisherAvatarUrl;
+        if ( $url == null || trim($url) == '' ) {
+            return DEFAULT_USER_URL;
         }
-        return SERVER_URL.$this->publisherAvatarUrl;
+        return SERVER_URL.$url;
     }
     
     //

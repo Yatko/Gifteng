@@ -1,10 +1,5 @@
 <?php
 
-define('BASE_PATH', base_url().'assets/'.TEMPLATES.'/');
-define('JS_PATH', BASE_PATH.'js/');
-define('CSS_PATH', BASE_PATH.'css/');
-define('IMG_PATH', BASE_PATH.'img/');
-
 $page = $this->uri->segment(1, null);
 
 ?>
@@ -23,7 +18,7 @@ $page = $this->uri->segment(1, null);
     
     <!-- Loading Bootstrap -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
-    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />
+    <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
     <!-- Loading Flat UI -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <!-- Loading ge temp CSS -->
@@ -35,6 +30,7 @@ $page = $this->uri->segment(1, null);
     -->
     
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>snap.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
     
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
@@ -59,6 +55,8 @@ $page = $this->uri->segment(1, null);
     <script src="<?=JS_PATH?>jquery.placeholder.js"></script>
     <script src="<?=JS_PATH?>jquery.stacktable.js"></script>
     <script src="<?=JS_PATH?>application.js"></script>
+    <script src="<?=JS_PATH?>snap_krasi.js"></script>
+    <script src="<?=JS_PATH?>krasi.js"></script>
     
     <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
     <script src="<?=JS_PATH?>leaflet-providers.js"></script>
@@ -81,6 +79,8 @@ $page = $this->uri->segment(1, null);
     
     <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
     
+    
+    
     <meta property="og:site_name" content="Gifteng"/>
     <meta property="og:url" content="http://gifteng.com/"/>
     <meta property="og:title" content="Gifteng ♥"/>
@@ -102,13 +102,46 @@ $page = $this->uri->segment(1, null);
 
 <body>
 
-<!-- ********** ********** ********** -->    
-<!-- content starts here -->
-<!-- ********** ********** ********** -->  
 
-<!-- ge CONTENT -->
-<div class="ge-container">
+<?= isset($modal) ? $modal : '' ?>
 
+
+<? if( isLogged() ): ?>
+
+<div class="snap-drawers">
+    <div class="snap-drawer snap-drawer-left">
+        <div>
+            <ul>
+                <li><input type="text" placeholder="Search" /></li>
+                <li>
+                    <div class="row-fluid ge-user">
+                        <?
+                        $user = $this->usermanagement_service->loadUser();
+                        $this->load->view('element/user', array('user' => $user, 'canEdit' => false, 'small' => true));
+                        ?>
+                    </div>
+                </li>
+                <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post"><i class="fui-eye"></i> Post</a></li>
+                <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
+                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation"><i class="fui-user"></i> Invite Friends</a></li>
+                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
+                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
+                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
+                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-user"></i> Connections</a></li>
+                <li><a href="#"><i class="fui-mail"></i> Messages</a></li>
+                <li><a href="#"><i class="fui-alert"></i> Notifications</a></li>
+                <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="snap-drawer snap-drawer-right"></div>
+</div>
+
+<? endif; ?>
+
+
+
+<? /** ?>
 
 <div class="navbar navbar-fixed-top ge-navbar">
     <div class="navbar-inner">
@@ -123,12 +156,10 @@ $page = $this->uri->segment(1, null);
                     <? if( isLogged() ): ?>
                     
                         <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile"><?=lang('main_submenu_profile')?></a></li>
-                        <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse">BROWSE</a></li>
                         <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post">POST</a></li>
                     
                     <? else: ?>
                     
-                        <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation">INVITATION</a></li>
                         <li<?=($page == "registration" ? ' class="active"' : '')?>><a href="<?=base_url()?>registration">REGISTRATION</a></li>
                     
                     <? endif; ?>
@@ -163,4 +194,53 @@ $page = $this->uri->segment(1, null);
         </div>
     </div>
     </div>
-</div><!--./navbar-->
+</div>
+
+<? /**/ ?>
+
+
+
+<!-- ********** ********** ********** -->    
+<!-- content starts here -->
+<!-- ********** ********** ********** -->  
+
+<!-- ge CONTENT -->
+<div class="ge-container snap-content">
+    
+    <div class="navbar navbar-fixed-top ge-navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="nav-collapse">
+                    <span class="nav">
+                        <a id="open-left" class="link"><span class="fui-list"></span></a>
+                    </span>
+                    <span class="nav">
+                        <a href="<?=base_url()?>index"><i class="gifteng"></i><sup>Beta</sup></a>
+                    </span>
+                    <ul class="nav pull-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
+                            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
+                                
+                                <? if( isLogged() ): ?>
+                                    <a href="<?=base_url()?>authentication/logout" class="btn btn-block btn-ge">SIGN OUT</a>
+                                <? else: ?>
+                                    <form action="<?=base_url()?>authentication/login" method="post" accept-charset="UTF-8">
+                                        <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
+                                        <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
+                                        <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
+                                        <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
+                                        <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
+                                    </form>
+                                <? endif; ?>
+                                
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container ge-topspace">
+        

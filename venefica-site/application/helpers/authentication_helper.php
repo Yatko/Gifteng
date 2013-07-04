@@ -76,6 +76,30 @@ if ( ! function_exists('isLogged')) {
 }
 
 
+if ( ! function_exists('isOwner')) {
+    /**
+     * Checks the given user if is the one logged in.
+     * 
+     * @param User_model $user
+     * @return boolean
+     */
+    function isOwner($user) {
+        if ( !isLogged() ) {
+            return false;
+        }
+        
+        $CI =& get_instance();
+        $CI->load->library('usermanagement_service');
+        
+        $currentUser = $CI->usermanagement_service->loadUser();
+        if ( $currentUser->id == $user->id ) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
 if ( ! function_exists('loadToken')) {
     function loadToken() {
         return loadFromSession('token');
