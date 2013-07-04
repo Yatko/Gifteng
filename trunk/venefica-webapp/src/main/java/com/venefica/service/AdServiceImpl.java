@@ -446,10 +446,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<Ad> ads = adDao.getByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
         
+        if ( includeRequests == null ) {
+            includeRequests = false;
+        }
+        
         for (Ad ad : ads) {
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(user)
-                    .includeRequests(includeRequests != null ? includeRequests : false)
+                    .includeRequests(includeRequests)
                     .build();
             result.add(adDto);
         }
@@ -460,17 +464,26 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getUserRequestedAds(Long userId) throws UserNotFoundException {
-        List<RequestDto> requests = getRequestsByUser(userId);
+        User currentUser = getCurrentUser();
+        List<Request> requests = getActiveRequestsByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
         
-        for ( RequestDto requestDto : requests ) {
-            Long adId = requestDto.getAdId();
-            try {
-                result.add(getAdById(adId));
-            } catch ( AdNotFoundException ex ) {
-                logger.error("Ad not found (adId: " + adId + ") when building user requested ads", ex);
-            }
+        for ( Request request : requests ) {
+            Ad ad = request.getAd();
+            
+            // @formatter:off
+            AdDto adDto = new AdDtoBuilder(ad)
+                    .setCurrentUser(currentUser)
+                    .includeCreator()
+                    .build();
+            // @formatter:on
+            
+            adDto.setInBookmarks(inBookmarks(currentUser, ad));
+            adDto.setRequested(requested(currentUser, ad));
+            
+            result.add(adDto);
         }
+        
         return result;
     }
 
@@ -740,24 +753,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public List<RequestDto> getRequestsByUser(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
-        List<Request> requests = requestDao.getByUser(userId);
+        List<Request> requests = getActiveRequestsByUser(userId);
         List<RequestDto> result = new LinkedList<RequestDto>();
         
-        if ( requests != null && !requests.isEmpty() ) {
-            for ( Request request : requests ) {
-                switch ( request.getStatus() ) {
-                    case PENDING:
-                    case ACCEPTED: {
-                        result.add(new RequestDto(request));
-                        break;
-                    }
-                    case EXPIRED:
-                    default: {
-                        //expired requests should not be returned
-                    }
-                }
-            }
+        for ( Request request : requests ) {
+            result.add(new RequestDto(request));
         }
+        
         return result;
     }
     
@@ -1160,6 +1162,33 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return false;
     }
     
+    /**
+     * Returns all PENDING and ACCEPTED requests for the specified user.
+     * 
+     * @param user
+     * @return 
+     */
+    private List<Request> getActiveRequestsByUser(Long userId) {
+        List<Request> requests = requestDao.getByUser(userId);
+        List<Request> result = new LinkedList<Request>();
+        
+        if ( requests != null && !requests.isEmpty() ) {
+            for ( Request request : requests ) {
+                switch ( request.getStatus() ) {
+                    case PENDING:
+                    case ACCEPTED: {
+                        result.add(request);
+                        break;
+                    }
+                    case EXPIRED:
+                    default: {
+                        //expired requests should not be returned
+                    }
+                }
+            }
+        }
+        return result;
+    }
     
     
     private void selectRequest(Request request, User selector) throws InvalidRequestException, InvalidAdStateException {
