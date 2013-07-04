@@ -21,9 +21,9 @@ public class MessageDto extends DtoBase {
     private String text;
     // out
     private boolean owner;
-    // out, in
+    // in, out
     private Long toId;
-    // out, in
+    // in, out
     private String toName;
     // out
     private String toFullName;
