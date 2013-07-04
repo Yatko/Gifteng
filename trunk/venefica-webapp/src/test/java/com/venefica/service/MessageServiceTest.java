@@ -135,29 +135,28 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void sendMessageToUnexistingUserTest() throws UserNotFoundException,
-            MessageValidationException {
+    public void sendMessageToUnexistingUserTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto("UnexisingUserName", "Test message");
         client.sendMessage(messageDto);
     }
 
     @Test(expected = MessageValidationException.class)
-    public void sendInvalidMessageTest() throws UserNotFoundException, MessageValidationException {
+    public void sendInvalidMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), null);
         client.sendMessage(messageDto);
     }
 
     @Test(expected = MessageValidationException.class)
-    public void sendMessageToMyselfTest() throws UserNotFoundException, MessageValidationException {
+    public void sendMessageToMyselfTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getFirstUser().getName(), "Test message");
         client.sendMessage(messageDto);
     }
 
     @Test
-    public void sendMessageTest() throws UserNotFoundException, MessageValidationException {
+    public void sendMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "This is a test message");
         Long messageId = client.sendMessage(messageDto);
@@ -236,7 +235,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void hideMessageWithTirdUserTest() throws UserNotFoundException,
+    public void hideMessageWithTirdUserTest() throws UserNotFoundException, AdNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Second message");
@@ -247,7 +246,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void hideMessageTest() throws UserNotFoundException, MessageValidationException,
+    public void hideMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Third message");
@@ -273,7 +272,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteMessageByTirdUserTest() throws UserNotFoundException,
+    public void deleteMessageByTirdUserTest() throws UserNotFoundException, AdNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Four message"));
@@ -282,7 +281,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void deleteMessageTest() throws UserNotFoundException, MessageValidationException,
+    public void deleteMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Five message"));

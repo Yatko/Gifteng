@@ -102,7 +102,7 @@ public interface MessageService {
     @WebMethod(operationName = "SendMessage")
     @WebResult(name = "messageId")
     Long sendMessage(@WebParam(name = "message") @NotNull MessageDto messageDto)
-            throws UserNotFoundException, MessageValidationException;
+            throws UserNotFoundException, AdNotFoundException, MessageValidationException;
 
     /**
      * Updates message sent by the current user.

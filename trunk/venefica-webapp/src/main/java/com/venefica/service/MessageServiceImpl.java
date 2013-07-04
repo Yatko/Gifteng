@@ -119,7 +119,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, MessageValidationException {
+    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         validateMessageDto(messageDto);
         
         User to;
@@ -130,6 +130,11 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         }
         User currentUser = getCurrentUser();
 
+        Ad ad = null;
+        if ( messageDto.getAdId() != null ) {
+            ad = validateAd(messageDto.getAdId());
+        }
+        
         if (currentUser.getName().equals(to.getName())) {
             throw new MessageValidationException(MessageField.TO, "You can't send messages to yourself!");
         }
@@ -137,6 +142,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         Message message = new Message(messageDto.getText());
         message.setTo(to);
         message.setFrom(currentUser);
+        message.setAd(ad);
 
         return messageDao.save(message);
     }
