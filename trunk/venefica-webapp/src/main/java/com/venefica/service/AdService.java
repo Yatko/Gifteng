@@ -209,7 +209,9 @@ public interface AdService {
      */
     @WebMethod(operationName = "GetUserRequestedAds")
     @WebResult(name = "ad")
-    List<AdDto> getUserRequestedAds(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    List<AdDto> getUserRequestedAds(
+            @WebParam(name = "userId") Long userId,
+            @WebParam(name = "includeRequests") Boolean includeRequests) throws UserNotFoundException;
     
     /**
      * Returns a list of ads with id is less than specified one which fit the filter.

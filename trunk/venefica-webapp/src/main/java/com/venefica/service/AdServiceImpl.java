@@ -463,10 +463,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<AdDto> getUserRequestedAds(Long userId) throws UserNotFoundException {
+    public List<AdDto> getUserRequestedAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         List<Request> requests = getActiveRequestsByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
+        
+        if ( includeRequests == null ) {
+            includeRequests = false;
+        }
         
         for ( Request request : requests ) {
             Ad ad = request.getAd();
@@ -475,6 +479,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
                     .includeCreator()
+                    .includeRequests(includeRequests)
                     .build();
             // @formatter:on
             
