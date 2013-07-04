@@ -141,6 +141,12 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
             
             for (Request request : model.getRequests()) {
+                if ( request.isHidden() ) {
+                    continue;
+                } else if ( request.isDeleted() ) {
+                    continue;
+                }
+                
                 RequestDto requestDto = new RequestDto(request);
                 requests.add(requestDto);
             }
@@ -202,6 +208,12 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             if ( canRate ) {
                 //cannot rate by not selected requestor
                 for (Request request : model.getRequests()) {
+                    if ( request.isHidden() ) {
+                        continue;
+                    } else if ( request.isDeleted() ) {
+                        continue;
+                    }
+                    
                     if ( request.getUser().equals(currentUser) && !request.isSelected() ) {
                         canRate = false;
                         break;
