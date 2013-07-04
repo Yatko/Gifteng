@@ -603,12 +603,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         Request request = validateRequest(requestId);
         User user = getCurrentUser();
+        Ad ad = request.getAd();
         
         if ( !request.getUser().equals(user) ) {
             throw new InvalidRequestException("Only requestor can hide requests.");
         }
-        if ( request.getStatus() != RequestStatus.EXPIRED ) {
-            throw new InvalidRequestException("Only expired requests can be hidden.");
+        if ( !ad.isExpired() && request.getStatus() != RequestStatus.EXPIRED ) {
+            throw new InvalidRequestException("Only expired requests (or expired ads) can be hidden.");
         }
         
         requestDao.hide(requestId);
@@ -1159,6 +1160,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private boolean requested(User user, Ad ad) {
         if ( ad.getRequests() != null && !ad.getRequests().isEmpty() ) {
             for ( Request request : ad.getRequests() ) {
+                if ( request.isHidden() ) {
+                    continue;
+                } else if ( request.isDeleted() ) {
+                    continue;
+                }
+                
                 if ( request.getUser().equals(user) ) {
                     return true;
                 }

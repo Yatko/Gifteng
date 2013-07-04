@@ -122,17 +122,24 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, AdNotFoundException, MessageValidationException {
         validateMessageDto(messageDto);
         
-        User to;
-        if ( messageDto.getToName() != null ) {
-            to = validateUser(messageDto.getToName());
-        } else {
-            to = validateUser(messageDto.getToId());
-        }
         User currentUser = getCurrentUser();
-
+        
         Ad ad = null;
         if ( messageDto.getAdId() != null ) {
             ad = validateAd(messageDto.getAdId());
+        }
+        
+        User to = null;
+        if ( messageDto.getToName() != null ) {
+            to = validateUser(messageDto.getToName());
+        } else if ( messageDto.getToId() != null ) {
+            to = validateUser(messageDto.getToId());
+        } else if ( ad != null ) {
+            to = ad.getCreator();
+        }
+
+        if ( to == null ) {
+            throw new UserNotFoundException("Could not detect the receipient (to) user.");
         }
         
         if (currentUser.getName().equals(to.getName())) {
