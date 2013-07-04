@@ -71,12 +71,12 @@
         <? if ($step == Post_member::STEP_START): ?>
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Let\'s give';
+            if ( $message == '' ) $message = 'You should give as you would receive, cheerfully, quickly, and without hesitation';
             ?>
         
             
-            <div id="post-gift_1" class="span6 ge-form">
-                <div class="well ge-well">
+            <div id="post-gift_1" class="span6 offset3">
+                <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
                             <p><?=$message?></p>
@@ -95,19 +95,23 @@
                         </div>
                     </div><!--./upload-->
 
-                    <div class="row-fluid ge-item-image">
-                        <div class="span12">
+                    <div class="ge-item-image">
+                        <div class="row-fluid">
+                            <div class="span12">
+                            
                             <? if( !is_empty($image) ): ?>
-                            <img src="<?=base_url()?>get_photo/<?=$image?>" class="img img-rounded file" for="image" />
+                                <img src="<?=base_url()?>get_photo/<?=$image?>" class="img img-rounded file" for="image" />
                             <? else: ?>
-                            <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="img img-rounded file" for="image" />
+                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="img img-rounded file" for="image" />
                             <? endif; ?>
+                            
+                            </div>
                         </div>
                     </div><!--./ge-item-image-->
 
-                    <div class="row-fluid ge-submit">
+                    <div class="row-fluid">
                         <div class="span12">
-                            <div class="control-group">
+                            <div class="control-group control-form">
                                 <div class="controls">
                                     <button id="closeButton" type="button" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
                                     <button type="submit" class="span10 btn btn-huge btn-ge">NEXT <i class="fui-arrow-right pull-right"></i></button>
@@ -124,7 +128,7 @@
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Let\'s give';
+            if ( $message == '' ) $message = 'The More You Give, The More You Get. Promise! :)';
             
             if ( empty($title) ) $title = hasElement($_POST, 'title') ? $_POST['title'] : null;
             if ( empty($description) ) $description = hasElement($_POST, 'description') ? $_POST['description'] : null;
@@ -135,8 +139,8 @@
             if ( empty($freeShipping) ) $freeShipping = hasElement($_POST, 'freeShipping') ? $_POST['freeShipping'] : null;
             ?>
             
-            <div id="post-gift_2" class="span6 ge-form">
-                <div class="well ge-well ge-topspace">
+            <div id="post-gift_2" class="span6 offset3">
+                <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
                             <p><?=$message?></p>
@@ -221,9 +225,9 @@
                         </div>
                     </div><!--./shipping-->
 
-                    <div class="row-fluid ge-submit">
+                    <div class="row-fluid">
                         <div class="span12">
-                            <div class="control-group">
+                            <div class="control-group control-form">
                                 <div class="controls">
                                     <button id="closeButton" type="button" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
                                     <button type="submit" class="span10 btn btn-huge btn-ge">NEXT <i class="fui-arrow-right pull-right"></i></button>
@@ -240,7 +244,7 @@
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Let\'s give';
+            if ( $message == '' ) $message = 'Doesn\'t need to be perfect, just close enough';
             
             if ( empty($longitude) ) $longitude = hasElement($_POST, 'longitude') ? $_POST['longitude'] : $marker_longitude;
             if ( empty($latitude) ) $latitude = hasElement($_POST, 'latitude') ? $_POST['latitude'] : $marker_latitude;
@@ -252,8 +256,8 @@
             <input id="longitude" name="longitude" type="hidden" value="<?=$longitude?>">
             <input id="latitude" name="latitude" type="hidden" value="<?=$latitude?>">
             
-            <div id="post-gift_3" class="span6 ge-form">
-                <div class="well ge-well ge-topspace">
+            <div id="post-gift_3" class="span6 offset3">
+                <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
                             <p><?=$message?></p>
@@ -266,9 +270,9 @@
                         </div>
                     </div><!--./ge-item-image-->
 
-                    <div class="row-fluid ge-submit">
+                    <div class="row-fluid">
                         <div class="span12">
-                            <div class="control-group">
+                            <div class="control-group control-form">
                                 <div class="controls">
                                     <button type="submit" class="btn btn-huge btn-block btn-ge">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
                                 </div>
@@ -284,11 +288,11 @@
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Let\'s give';
+            if ( $message == '' ) $message = 'One last step! Make sure everything is correct.<br /><small>(Note: with every gift you give your Generosity Score will increase.)</small>';
             ?>
             
-            <div id="post-gift_4" class="span6 ge-form">
-                <div class="well ge-well">
+            <div id="post-gift_4" class="span6 offset3">
+                <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
                             <p><?=$message?></p>
@@ -326,9 +330,9 @@
                         </p>
                     </div><!--./ge-text-->
 
-                    <div class="row-fluid ge-submit">
+                    <div class="row-fluid">
                         <div class="span12">
-                            <div class="control-group">
+                            <div class="control-group control-form">
                                 <div class="controls">
                                     <button id="editButton" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
                                     <button type="submit" class="span8 btn btn-huge btn-ge">POST MY GIFT<i class="fui-arrow-right pull-right"></i></button>
@@ -346,8 +350,8 @@
             
             <? if( !empty($error) ): ?>
                 
-                <div id="post-gift_5" class="span6 ge-form">
-                    <div class="well ge-well">
+                <div id="post-gift_5" class="span6 offset3">
+                    <div class="well ge-well ge-form">
                         <label class="control-label">
                             <blockquote>
                                 <p><?=$error?></p>
@@ -358,11 +362,12 @@
                 
             <? else: ?>
                 
-                <div id="post-gift_5" class="span6 ge-form">
-                    <div class="well ge-well">
+                <div id="post-gift_5" class="span6 offset3">
+                    <div class="well ge-well ge-form">
                         <label class="control-label">
                             <blockquote>
-                                <p>Let's give</p>
+                                <p>You're Awesome!</p>
+                                <small>Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)</small>
                             </blockquote>
                         </label>
                         
@@ -373,9 +378,9 @@
                             </blockquote>
                         </div><!--./ge-headline-->
 
-                        <div class="row-fluid ge-submit">
+                        <div class="row-fluid">
                             <div class="span12">
-                                <div class="control-group">
+                                <div class="control-group control-form">
                                     <div class="controls">
                                         <button id="closeButton" type="button" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
                                         <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>

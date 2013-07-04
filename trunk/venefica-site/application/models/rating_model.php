@@ -43,7 +43,7 @@ class Rating_model extends CI_Model {
     
     public function getFromAvatarUrl() {
         if ( $this->fromUser == null ) {
-            return '';
+            return DEFAULT_USER_URL;
         }
         return $this->fromUser->getAvatarUrl();
     }
@@ -57,7 +57,7 @@ class Rating_model extends CI_Model {
     
     public function getToAvatarUrl() {
         if ( $this->toUser == null ) {
-            return '';
+            return DEFAULT_USER_URL;
         }
         return $this->toUser->getAvatarUrl();
     }
@@ -80,14 +80,14 @@ class Rating_model extends CI_Model {
     
     public function getFromFullName() {
         if ( $this->fromUser == null ) {
-            return '';
+            return '&nbsp;';
         }
         return $this->fromUser->getFullName();
     }
     
     public function getToFullName() {
         if ( $this->toUser == null ) {
-            return '';
+            return '&nbsp;';
         }
         return $this->toUser->getFullName();
     }

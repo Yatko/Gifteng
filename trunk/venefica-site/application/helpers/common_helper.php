@@ -1,5 +1,16 @@
 <?php
 
+
+define('BASE_PATH', base_url().'assets/'.TEMPLATES.'/');
+define('JS_PATH', BASE_PATH.'js/');
+define('CSS_PATH', BASE_PATH.'css/');
+define('IMG_PATH', BASE_PATH.'img/');
+
+define('DEFAULT_USER_URL', BASE_PATH.'temp-sample/ge-user.jpg');
+define('DEFAULT_AD_URL', BASE_PATH.'temp-sample/gifteng.png');
+
+
+
 /**
  * Common helper.
  * 

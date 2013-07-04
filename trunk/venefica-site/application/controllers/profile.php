@@ -10,14 +10,21 @@ class Profile extends CI_Controller {
         if ( !validate_login() ) return;
         
         try {
-            if ( !empty($name) ) {
+            $currentUser = $this->usermanagement_service->loadUser();
+            
+            if (
+                $name != null &&
+                !empty($name) &&
+                $name != $currentUser->name &&
+                $name != $currentUser->id
+            ) {
                 if ( is_numeric($name) ) {
                     $user = $this->usermanagement_service->getUserById($name);
                 } else {
                     $user = $this->usermanagement_service->getUserByName($name);
                 }
             } else {
-                $user = $this->usermanagement_service->loadUser();
+                $user = $currentUser;
             }
         } catch ( Exception $ex ) {
             $user = null;
@@ -25,51 +32,123 @@ class Profile extends CI_Controller {
         
         if ( !validate_user($user) ) return;
 
-//        try {
-//            $receivings = $this->ad_service->getUserRequestedAds($user->id);
-//        } catch ( Exception $ex ) {
-//            $receivings = null;
-//        }
 
-//        try {
-//            $givings = $this->ad_service->getUserAds($user->id, false);
-//        } catch ( Exception $ex ) {
-//            $givings = null;
-//        }
-
-//        try {
-//            $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
-//        } catch ( Exception $ex ) {
-//            $bookmarks = null;
-//        }
-
-//        try {
-//            $followers = $this->usermanagement_service->getFollowers($user->id);
-//        } catch ( Exception $ex ) {
-//            $followers = null;
-//        }
-//        try {
-//            $followings = $this->usermanagement_service->getFollowings($user->id);
-//        } catch ( Exception $ex ) {
-//            $followings = null;
-//        }
-
-//        try {
-//            $ratings = $this->ad_service->getReceivedRatings($user->id);
-//        } catch ( Exception $ex ) {
-//            $ratings = null;
-//        }
+        if ( key_exists('giving', $_GET) ) {
+            $is_giving = true;
+            try {
+                $givings = $this->ad_service->getUserAds($user->id, true);
+            } catch ( Exception $ex ) {
+                $givings = null;
+            }
+        } else {
+            $is_giving = false;
+            $givings = null;
+        }
+        
+        if ( key_exists('receiving', $_GET) ) {
+            $is_receiving = true;
+            try {
+                $receivings = $this->ad_service->getUserRequestedAds($user->id, true);
+            } catch ( Exception $ex ) {
+                $receivings = null;
+            }
+        } else {
+            $is_receiving = false;
+            $receivings = null;
+        }
+        
+        if ( key_exists('favorit', $_GET) ) {
+            $is_bookmark = true;
+            try {
+                $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
+            } catch ( Exception $ex ) {
+                $bookmarks = null;
+            }
+        } else {
+            $is_bookmark = false;
+            $bookmarks = null;
+        }
+        
+        if ( key_exists('following', $_GET) ) {
+            $is_following = true;
+            try {
+                $followings = $this->usermanagement_service->getFollowings($user->id);
+            } catch ( Exception $ex ) {
+                $followings = null;
+            }
+        } else {
+            $is_following = false;
+            $followings = null;
+        }
+        
+        if ( key_exists('follower', $_GET) ) {
+            $is_follower = true;
+            try {
+                $followers = $this->usermanagement_service->getFollowers($user->id);
+            } catch ( Exception $ex ) {
+                $followers = null;
+            }
+        } else {
+            $is_follower = false;
+            $followers = null;
+        }
+        
+        if ( key_exists('rating', $_GET) ) {
+            $is_rating = true;
+            try {
+                $ratings = $this->ad_service->getReceivedRatings($user->id);
+            } catch ( Exception $ex ) {
+                $ratings = null;
+            }
+        } else {
+            $is_rating = false;
+            $ratings = null;
+        }
+        
         
         $data = array();
         $data['user'] = $user;
-        //$data['receivings'] = $receivings;
-        //$data['givings'] = $givings;
-        //$data['followers'] = $followers;
-        //$data['followings'] = $followings;
-        //$data['ratings'] = $ratings;
+        $data['givings'] = $givings;
+        $data['receivings'] = $receivings;
+        $data['bookmarks'] = $bookmarks;
+        $data['followers'] = $followers;
+        $data['followings'] = $followings;
+        $data['ratings'] = $ratings;
         
-        $this->load->view('templates/'.TEMPLATES.'/header');
+        if ( $is_bookmark ) {
+            $request_modal = $this->load->view('modal/request', array(), true);
+        } else {
+            $request_modal = '';
+        }
+        
+        if ( $is_receiving ) {
+            $receiving_modal = $this->load->view('modal/message', array(), true);
+        } else {
+            $receiving_modal = '';
+        }
+        
+        $avatar_modal = $this->load->view('modal/avatar', array(), true);
+        $edit_profile_modal = $this->load->view('modal/edit_profile', array(), true);
+        
+        $modal = $request_modal . $receiving_modal . $avatar_modal . $edit_profile_modal;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
         $this->load->view('pages/profile', $data);
+        if ( $is_giving ) {
+            $this->load->view('pages/profile_giving', $data);
+        } else if ( $is_receiving ) {
+            $this->load->view('pages/profile_receiving', $data);
+        } else if ( $is_bookmark ) {
+            $this->load->view('pages/profile_bookmark', $data);
+        } else if ( $is_following ) {
+            $this->load->view('pages/profile_following', $data);
+        } else if ( $is_follower ) {
+            $this->load->view('pages/profile_follower', $data);
+        } else if ( $is_rating ) {
+            $this->load->view('pages/profile_rating', $data);
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -136,6 +215,7 @@ class Profile extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             $this->load->model('rating_model');
+            $this->load->model('request_model');
             
             $this->initialized = true;
         }

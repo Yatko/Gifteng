@@ -50,17 +50,19 @@ class Message_model extends CI_Model {
     // helper urls
     
     public function getToAvatarUrl() {
-        if ( $this->toAvatarUrl == null ) {
-            return '';
+        $url = $this->toAvatarUrl;
+        if ( $url == null || trim($url) == '' ) {
+            return DEFAULT_USER_URL;
         }
-        return SERVER_URL.$this->toAvatarUrl;
+        return SERVER_URL.$url;
     }
     
     public function getFromAvatarUrl() {
-        if ( $this->fromAvatarUrl == null ) {
-            return '';
+        $url = $this->fromAvatarUrl;
+        if ( $url == null || trim($url) == '' ) {
+            return DEFAULT_USER_URL;
         }
-        return SERVER_URL.$this->fromAvatarUrl;
+        return SERVER_URL.$url;
     }
     
     public function getToProfileUrl() {
@@ -84,6 +86,13 @@ class Message_model extends CI_Model {
         return date(DATE_FORMAT, $this->createdAt / 1000);
     }
     
+    public function getCreateDateHumanTiming() {
+        if ( $this->createdAt == null ) {
+            return '';
+        }
+        return humanTiming($this->createdAt / 1000);
+    }
+    
     // static helpers
     
     public static function convertMessages($messagesResult) {
@@ -93,8 +102,8 @@ class Message_model extends CI_Model {
                 array_push($messages, Message_model::convertMessage($message));
             }
         } elseif ( !is_empty($messagesResult) ) {
-            $messages = $messagesResult;
-            array_push($messages, Message_model::convertMessage($messages));
+            $message = $messagesResult;
+            array_push($messages, Message_model::convertMessage($message));
         }
         return $messages;
     }

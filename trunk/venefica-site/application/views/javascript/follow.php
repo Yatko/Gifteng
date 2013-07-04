@@ -19,11 +19,11 @@
             dataType: 'json',
             cache: false
         }).done(function(response) {
-            if ( !response || response == '' ) {
+            if ( !response || response === '' ) {
                 //TODO: empty result
-            } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
-            } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                 if ( $('.user_' + userId).length === 0 ) {
                     return;
                 }
@@ -43,6 +43,7 @@
             //TODO
         });
     }
+    
     function unfollow(userId) {
         $.ajax({
             type: 'POST',
@@ -50,11 +51,11 @@
             dataType: 'json',
             cache: false
         }).done(function(response) {
-            if ( !response || response == '' ) {
+            if ( !response || response === '' ) {
                 //TODO: empty result
-            } else if ( response.<?=AJAX_STATUS_ERROR?> ) {
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
-            } else if ( response.<?=AJAX_STATUS_RESULT?> ) {
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                 if ( $('.user_' + userId).length === 0 ) {
                     return;
                 }

@@ -89,10 +89,14 @@ class User_model extends CI_Model {
     }
     
     public function getAvatarUrl() {
-        if ( $this->avatar == null ) {
-            return '';
+        $url = '';
+        if ( $this->avatar != null ) {
+            $url = SERVER_URL.$this->avatar->url;
         }
-        return SERVER_URL.$this->avatar->url;
+        if ( trim($url) == '' ) {
+            $url = DEFAULT_USER_URL;
+        }
+        return $url;
     }
 
     //
@@ -137,7 +141,11 @@ class User_model extends CI_Model {
     }
     
     public function getFullName() {
-        return trim($this->firstName) . ' ' . trim($this->lastName);
+        $name = trim($this->firstName) . ' ' . trim($this->lastName);
+        if ( trim($name) == '' ) {
+            $name = '&nbsp;';
+        }
+        return $name;
     }
     
     public function getJoinDate() {

@@ -20,6 +20,7 @@ class Ajax extends CI_Controller {
         try {
             $userId = $_GET['userId'];
             $this->usermanagement_service->follow($userId);
+            $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, 'OK');
         } catch ( Exception $ex ) {
@@ -39,6 +40,7 @@ class Ajax extends CI_Controller {
         try {
             $userId = $_GET['userId'];
             $this->usermanagement_service->unfollow($userId);
+            $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, 'OK');
         } catch ( Exception $ex ) {
@@ -71,6 +73,31 @@ class Ajax extends CI_Controller {
         }
     }
     
+    public function message() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('messageAdId');
+            $text = $this->input->post('messageText');
+            
+            $message = new Message_model();
+            $message->text = $text;
+            $message->adId = $adId;
+            
+            $this->message_service->sendMessage($message);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     public function bookmark() {
         $this->init();
         
@@ -84,6 +111,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->bookmarkAd($adId);
             $statistics = $this->ad_service->getStatistics($adId);
+            $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, $statistics->numBookmarks);
         } catch ( Exception $ex ) {
@@ -104,6 +132,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->removeBookmark($adId);
             $statistics = $this->ad_service->getStatistics($adId);
+            $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, $statistics->numBookmarks);
         } catch ( Exception $ex ) {
@@ -125,6 +154,26 @@ class Ajax extends CI_Controller {
             $text = $this->input->post('requestText');
             
             $this->ad_service->requestAd($adId, $text);
+            $this->usermanagement_service->refreshUser();
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function hide_request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $requestId = $_GET['requestId'];
+            $this->ad_service->hideRequest($requestId);
             
             respond_ajax(AJAX_STATUS_RESULT, 'OK');
         } catch ( Exception $ex ) {
@@ -147,6 +196,7 @@ class Ajax extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             $this->load->model('comment_model');
+            $this->load->model('message_model');
             $this->load->model('request_model');
             
             $this->initialized = true;

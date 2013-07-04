@@ -19,6 +19,7 @@ define('AJAX_STATUS_ERROR', 'error');
 define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
 define('DESCRIPTION_MAX_LENGTH', 100);
 define('COMMENT_MAX_LENGTH', 100);
+define('MESSAGE_MAX_LENGTH', 100);
 define('TEMPLATES', 4);
 define('TEMP_FOLDER', sys_get_temp_dir());
 
