@@ -390,7 +390,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
     private UserStatisticsDto buildStatistics(User user) throws UserNotFoundException {
         Long userId = user.getId();
-        int numReceivings = adService.getUserRequestedAds(userId).size();
+        int numReceivings = adService.getUserRequestedAds(userId, false).size();
         int numGivings = adService.getUserAds(userId, false).size();
         int numRatings = adService.getReceivedRatings(userId).size();
         int numBookmarks = adService.getBookmarkedAds(userId).size();
