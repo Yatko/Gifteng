@@ -25,6 +25,7 @@ import com.venefica.service.fault.AlreadyRequestedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.CategoryNotFoundException;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
@@ -401,16 +402,22 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***************
 
     @Test
-    public void bookmarkAdTest() throws AdNotFoundException {
+    public void bookmarkAdTest() throws AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         Long bookmarkId = client.bookmarkAd(ad.getId());
         assertNotNull("Bookmark id must be returned!", bookmarkId);
         Bookmark bookmark = bookmarkDao.get(bookmarkId);
         assertNotNull("Bookmark not stored!", bookmark);
     }
+    
+    @Test(expected = GeneralException.class)
+    public void bookmarkOwnedAdTest() throws AdNotFoundException, GeneralException {
+        authenticateClientAsFirstUser();
+        client.bookmarkAd(ad.getId());
+    }
 
     @Test(expected = AdNotFoundException.class)
-    public void bookmarkUnexistingAdTest() throws AdNotFoundException {
+    public void bookmarkUnexistingAdTest() throws AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         client.bookmarkAd(new Long(-1));
     }
@@ -422,7 +429,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void removeBookmarkTest() throws BookmarkNotFoundException, AdNotFoundException {
+    public void removeBookmarkTest() throws BookmarkNotFoundException, AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         Long bookmarkId = client.bookmarkAd(ad.getId());
         client.removeBookmark(ad.getId());
@@ -432,7 +439,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
     @Test
     public void getBookmarkedAdsTest() {
-        authenticateClientAsFirstUser();
+        authenticateClientAsThirdUser();
         List<AdDto> bookmarkedAds = client.getBookmarkedAds();
         assertNotNull("List of ads must be returned!", bookmarkedAds);
         assertTrue("There must be at least one ad in the list!", !bookmarkedAds.isEmpty());

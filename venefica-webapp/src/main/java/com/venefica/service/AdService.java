@@ -13,6 +13,7 @@ import com.venefica.service.fault.AlreadyRatedException;
 import com.venefica.service.fault.AlreadyRequestedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.ImageNotFoundException;
 import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
@@ -459,7 +460,7 @@ public interface AdService {
      */
     @WebMethod(operationName = "BookmarkAd")
     @WebResult(name = "bookmarkId")
-    Long bookmarkAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
+    Long bookmarkAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException, GeneralException;
 
     /**
      * Removes the bookmark from the database.

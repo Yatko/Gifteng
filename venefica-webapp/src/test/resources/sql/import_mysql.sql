@@ -73,7 +73,7 @@ insert into `user_transaction` (`finalized`, `pendingNumber`, `pendingScore`, `a
 
 -- Bookmarks
 delete from `bookmark`;
-insert into `bookmark` (`user_id`, `ad_id`) values (1, 1);
+insert into `bookmark` (`user_id`, `ad_id`) values (3, 1);
 
 -- Messages
 --delete from `message`;
