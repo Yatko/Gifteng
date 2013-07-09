@@ -13,7 +13,8 @@
     <div class="container user-receiving_items">
         <div class="row">
             <div class="ge-tile-view ge-browse">
-
+                
+            <? if( isset($bookmarks) && is_array($bookmarks) && count($bookmarks) > 0 ): ?>
             <? foreach( $bookmarks as $ad ): ?>
                 <?
                 $ad_id = $ad->id;
@@ -67,6 +68,11 @@
                 </div>
                 
             <? endforeach; ?>
+            <? else: ?>
+                
+                <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                
+            <? endif; ?>
                 
             </div>
         </div>

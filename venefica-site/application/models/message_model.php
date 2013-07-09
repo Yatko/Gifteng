@@ -16,7 +16,7 @@ class Message_model extends CI_Model {
     var $fromId; //long
     var $fromName; //string
     var $fromFullName; //string
-    var $fromAvaratUrl; //string
+    var $fromAvatarUrl; //string
     var $read; //boolean
     var $createdAt; //long - timestamp
     
@@ -35,7 +35,7 @@ class Message_model extends CI_Model {
             $this->fromId = getField($obj, 'fromId');
             $this->fromName = getField($obj, 'fromName');
             $this->fromFullName = getField($obj, 'fromFullName');
-            $this->fromAvaratUrl = getField($obj, 'fromAvaratUrl');
+            $this->fromAvatarUrl = getField($obj, 'fromAvatarUrl');
             $this->read = getField($obj, 'read');
             $this->createdAt = getField($obj, 'createdAt');
         }

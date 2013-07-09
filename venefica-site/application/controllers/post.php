@@ -9,11 +9,10 @@ class Post extends CI_Controller {
         
         if ( !validate_login() ) return;
         
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( $this->user->businessAccount ) {
-            redirect("/post/business");
+        if ( isBusinessAccount() ) {
+            safe_redirect("/post/business");
         } else {
-            redirect("/post/member");
+            safe_redirect("/post/member");
         }
     }
     

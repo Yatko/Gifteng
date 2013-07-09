@@ -100,6 +100,32 @@ if ( ! function_exists('isOwner')) {
 }
 
 
+if ( ! function_exists('isBusinessAccount')) {
+    /**
+     * Checks the given user if is business typed account. If the user is not present
+     * will look at the actual logged in user flag.
+     * 
+     * @param User_model $user
+     * @return boolean
+     */
+    function isBusinessAccount($user = null) {
+        if ( $user == null ) {
+            $CI =& get_instance();
+            $CI->load->library('usermanagement_service');
+            $user = $CI->usermanagement_service->loadUser();
+        }
+        
+        $businessAccount = $user->businessAccount;
+        if ( $businessAccount == null ) {
+            $businessAccount = false;
+        }
+        
+        return $businessAccount;
+    }
+}
+
+
+
 if ( ! function_exists('loadToken')) {
     function loadToken() {
         return loadFromSession('token');

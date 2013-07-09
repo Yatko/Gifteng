@@ -13,6 +13,7 @@ if ( !isset($canBookmark) ) $canBookmark = false;
 if ( !isset($canComment) ) $canComment = false;
 if ( !isset($canShare) ) $canShare = false;
 $is_bookmarked = $ad->inBookmarks;
+$is_owner = $ad->owner;
 $id = $ad->id;
 $img = $ad->getImageUrl();
 $view_link = $ad->getViewUrl();
@@ -38,7 +39,7 @@ if ( $ad->statistics != null ) {
         <div class="span12 ge-action">
             <div class="row-fluid">
                 <div class="span4">
-                    <? if( !$canBookmark || $is_bookmarked ): ?>
+                    <? if( !$canBookmark || $is_bookmarked || $is_owner ): ?>
                         <button class="btn btn-small btn-block btn-ge disabled">
                             <i class="fui-star-2"></i>
                             <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>

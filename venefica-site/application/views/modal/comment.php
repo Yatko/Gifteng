@@ -1,8 +1,17 @@
 <script langauge="javascript">
+    $(function() {
+        $('#commentContainer').on('shown', function() {
+            $("#comment_post_form textarea[name=commentText]").focus();
+        });
+        //$('#commentContainer').on('hidden', function() {
+        //    $(this).removeData("modal");
+        //});
+    });
+    
     function startComment(callerElement, adId) {
         var $commentAdId = $("#comment_post_form input[name=commentAdId]");
         $commentAdId.val(adId);
-
+        
         $('#commentContainer').modal('show');
     }
 </script>
@@ -28,7 +37,7 @@
                     <textarea name="commentText" placeholder="Your comment ..."></textarea>
                 </div>
                 <div class="span3">
-                    <a id="addCommentBtn" class="btn btn-mini btn-block">Add</a>
+                    <button type="button" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>
                 </div>
             </div>
         

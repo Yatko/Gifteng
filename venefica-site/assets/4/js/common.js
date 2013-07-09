@@ -1,35 +1,52 @@
+function hide_file($file) {
+    $file.wrap($('<div/>').css({
+        height: 0,
+        width: 0,
+        'overflow': 'hidden'
+    }));
+}
+function open_file($button) {
+    var fileInputId = $button.attr('for');
+    var fileInput = $('#' + fileInputId);
+    
+    $button.click(function() {
+        fileInput.click();
+    }).show();
+}
+function attach_file($button) {
+    var fileInputId = $button.attr('for');
+    var fileInput = $('#' + fileInputId);
+    
+    fileInput.change(function() {
+        //var fileName = fileInput.val().replace(/C:\\fakepath\\/i, '');
+        //$file.text(fileName);
+        
+        $button.addClass('btn-ge');
+        if ( !$button.attr('original_text') ) {
+            //saving original text to be used later
+            $button.attr('original_text', $button.text());
+        }
+        $button.text('Done');
+        //$file.prop('disabled', true);
+        $button.trigger('file_selected');
+    });
+}
+
+
 $(function() {
+    
     if ( $(':file').length > 0 ) {
-        $(':file').wrap($('<div/>').css({
-            height: 0,
-            width: 0,
-            'overflow': 'hidden'
-        }));
+        $(':file').each(function() {
+            var $this = $(this);
+            hide_file($this);
+        });
     }
     
     if ( $('.file').length > 0 ) {
         $('.file').each(function() {
             var $this = $(this);
-            var fileInputId = $this.attr('for');
-            var fileInput = $('#' + fileInputId);
-
-            fileInput.change(function() {
-                //var fileName = fileInput.val().replace(/C:\\fakepath\\/i, '');
-                //$this.text(fileName);
-
-                $this.addClass('btn-ge');
-                if ( !$this.attr('original_text') ) {
-                    //saving original text to be used later
-                    $this.attr('original_text', $this.text());
-                }
-                $this.text('Done');
-                //$this.prop('disabled', true);
-                $this.trigger('file_selected');
-            });
-
-            $this.click(function() {
-                fileInput.click();
-            }).show();
+            open_file($this);
+            attach_file($this);
         });
     }
     

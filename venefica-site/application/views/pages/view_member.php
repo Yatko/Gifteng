@@ -6,25 +6,7 @@
     }
     
     $(function() {
-        if ( $('#map').length > 0 ) {
-            var locationIcon = L.icon({
-                iconUrl: '<?=BASE_PATH?>temp-sample/ge-location-pin-teal.png',
-                iconSize: [64, 64]
-            });
-            
-            var marker_longitude = $("#marker_longitude").val();
-            var marker_latitude = $("#marker_latitude").val();
-            
-            var locationMarker = L.marker([marker_latitude, marker_longitude], {
-                icon: locationIcon,
-                draggable: false
-            });
-            
-            var tileLayer = L.tileLayer.provider('Esri.WorldStreetMap');
-            var map = L.map('map').setView([marker_latitude, marker_longitude], 16);
-            tileLayer.addTo(map);
-            locationMarker.addTo(map);
-        }
+        init_map(false);
     });
 </script>
 

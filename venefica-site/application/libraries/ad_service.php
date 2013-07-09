@@ -425,6 +425,24 @@ class Ad_service {
     
     /**
      * 
+     * @param long $requestId
+     * @return Request_model
+     * @throws Exception
+     */
+    public function getRequestById($requestId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getRequestById(array("requestId" => $requestId));
+            $request = Request_model::convertRequest($result->request);
+            return $request;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param long $adId
      * @return array of Request_model
      * @throws Exception

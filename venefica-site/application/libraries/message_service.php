@@ -100,7 +100,61 @@ class Message_service {
             }
             return $messages;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Messages request failed! '.$ex->faultstring);
+            log_message(ERROR, 'Messages request for ad (adId: '.$adId.') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $user1Id
+     * @param long $user2Id
+     * @return array of Message_model
+     * @throws Exception
+     */
+    public function getMessagesByUsers($user1Id, $user2Id) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $messageService->getMessagesByUsers(array(
+                "user1Id" => $user1Id,
+                "user2Id" => $user2Id
+            ));
+            
+            $messages = array();
+            if ( hasField($result, 'message') && $result->message ) {
+                $messages = Message_model::convertMessages($result->message);
+            }
+            return $messages;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Messages request for users (user1Id: '.$user1Id.', user2Id: '.$user2Id.') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @param long $user1Id
+     * @param long $user2Id
+     * @return array of Message_model
+     * @throws Exception
+     */
+    public function getMessagesByAdAndUsers($adId, $user1Id, $user2Id) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $messageService->getMessagesByAdAndUsers(array(
+                "adId" => $adId,
+                "user1Id" => $user1Id,
+                "user2Id" => $user2Id
+            ));
+            
+            $messages = array();
+            if ( hasField($result, 'message') && $result->message ) {
+                $messages = Message_model::convertMessages($result->message);
+            }
+            return $messages;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Messages request for ad (adId: '.$adId.') and users (user1Id: '.$user1Id.', user2Id: '.$user2Id.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }

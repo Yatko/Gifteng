@@ -176,7 +176,7 @@ $email = $user->email;
                                     <div class="span3">
                                         <div class="control-group">
                                             <div class="controls">
-                                                <button id="cancelButton" type="button" data-dismiss="modal" class="btn btn-large btn-block ge-submit">Cancel</button>
+                                                <button type="button" data-dismiss="modal" class="btn btn-large btn-block ge-submit">Cancel</button>
                                             </div>
                                         </div>
                                     </div>

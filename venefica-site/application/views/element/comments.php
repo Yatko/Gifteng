@@ -84,7 +84,7 @@ if ( $ad != null ) {
                                 <textarea name="commentText" placeholder="Your message ..."></textarea>
                             </div>
                             <div class="span3 ge-text">
-                                <a id="addCommentBtn" class="btn btn-mini btn-block">Add</a>
+                                <button type="button" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>
                             </div>
                         </div>
                     </div>

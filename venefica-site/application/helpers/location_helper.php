@@ -36,7 +36,7 @@ if (!function_exists('getLocationByZipCode')) {
      * If the given zip code is empty  a (0, 0) coordinated location is returned
      * which is invalid.
      * 
-     * @param type $zipCode
+     * @param string $zipCode
      * @return array
      */
     function getLocationByZipCode($zipCode) {

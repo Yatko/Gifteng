@@ -75,6 +75,9 @@ $route['post'] = 'post/post_redirect';
 $route['view/(:num)']   = 'view/show/$1';
 $route['view']          = 'view/show/';
 
+$route['request/(:num)']   = 'request/view/$1';
+$route['request']          = 'request/view/';
+
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication']        = 'authentication/view';
 

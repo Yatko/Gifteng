@@ -1,24 +1,9 @@
 <script language="javascript">
-    function hideRequest(adId, requestId) {
-        $.ajax({
-            type: 'POST',
-            url: '<?=base_url()?>ajax/hide_request?requestId=' + requestId,
-            dataType: 'json',
-            cache: false
-        }).done(function(response) {
-            if ( !response || response === '' ) {
-                //TODO: empty result
-            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
-                //TODO
-            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                $('#ad_' + adId).addClass('hide');
-            } else {
-                //TODO: unknown response received
-            }
-        }).fail(function(data) {
-            //TODO
+    $(function() {
+        $('.ge-request').on('request_cancelled', function(event, requestId) {
+            $('#request_' + requestId).addClass('hide');
         });
-    }
+    });
 </script>
 
 <div class="row">
@@ -26,15 +11,16 @@
         <div class="row">
             <div class="ge-tile-view ge-browse">
 
-                
+                <? if( isset($receivings) && is_array($receivings) && count($receivings) > 0 ): ?>
                 <? foreach( $receivings as $ad ): ?>
                     <?
                     $request = $ad->getRequestByUser($user->id);
                     $ad_id = $ad->id;
+                    $to_id = $ad->creator->id;
                     $request_id = $request->id;
                     ?>
                     
-                    <div id="ad_<?=$ad_id?>">
+                    <div id="request_<?=$request_id?>">
                     
                     <div class="span3 ge-box">
                         <div class="well ge-well">
@@ -52,14 +38,14 @@
                                         
                                         <? if( $ad->expired ): ?>
                                             <div class="span4">
-                                                <button onclick="hideRequest(<?= $ad_id ?>, <?= $request_id ?>)" class="btn btn-small btn-block fui-trash"></button>
+                                                <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block fui-trash"></button>
                                             </div>
                                             <div class="span8">
                                                 <p class="text-center">GIFT EXPIRED</p>
                                             </div>
                                         <? elseif( $request->isExpired() ): ?>
                                             <div class="span4">
-                                                <button onclick="hideRequest(<?= $ad_id ?>, <?= $request_id ?>)" class="btn btn-small btn-block fui-trash"></button>
+                                                <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block fui-trash"></button>
                                             </div>
                                             <div class="span8">
                                                 <p class="text-center">EXPIRED</p>
@@ -68,21 +54,24 @@
                                             <div class="span4">
                                                 <button class="btn btn-small btn-block disabled fui-mail"></button>
                                             </div>
-                                            <div class="span8">
+                                            <div class="span4">
+                                                <button onclick="request_cancel(this, <?=$request_id?>);" class="ge-request btn btn-small btn-block fui-cross"></button>
+                                            </div>
+                                            <div class="span4">
                                                 <p class="text-center">PENDING</p>
                                             </div>
                                         <? elseif( $request->isSelected() ): ?>
                                             
                                             <? if( $ad->sent ): ?>
                                                 <div class="span4">
-                                                    <button onclick="startMessage(this, <?= $ad_id ?>)" class="btn btn-small btn-block btn-ge fui-mail"></button>
+                                                    <button onclick="startMessage(this, <?= $ad_id ?>, <?= $to_id ?>);" class="btn btn-small btn-block btn-ge fui-mail"></button>
                                                 </div>
                                                 <div class="span8">
                                                     <button class="btn btn-small btn-block btn-ge">RECEIVED</button>
                                                 </div>
                                             <? else: ?>
                                                 <div class="span4">
-                                                    <button onclick="startMessage(this, <?= $ad_id ?>)" class="btn btn-small btn-block btn-ge fui-mail"></button>
+                                                    <button onclick="startMessage(this, <?= $ad_id ?>, <?= $to_id ?>);" class="btn btn-small btn-block btn-ge fui-mail"></button>
                                                 </div>
                                                 <div class="span8">
                                                     <p class="text-center">ACCEPTED</p>
@@ -100,7 +89,11 @@
                     
                     </div>
                 <? endforeach; ?>
+                <? else: ?>
                 
+                    <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                
+                <? endif; ?>
                 
             </div>
         </div>

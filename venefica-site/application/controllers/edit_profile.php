@@ -9,12 +9,10 @@ class Edit_profile extends CI_Controller {
         
         if ( !validate_login() ) return;
         
-        $qs = $this->input->server('QUERY_STRING');
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( $this->user->businessAccount ) {
-            redirect("/edit_profile/business".(trim($qs) == '' ? '' : '?'.$qs));
+        if ( isBusinessAccount() ) {
+            safe_redirect("/edit_profile/business");
         } else {
-            redirect("/edit_profile/member".(trim($qs) == '' ? '' : '?'.$qs));
+            safe_redirect("/edit_profile/member");
         }
     }
     

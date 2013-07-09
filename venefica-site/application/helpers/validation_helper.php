@@ -39,3 +39,16 @@ if ( ! function_exists('validate_ad')) {
         return true;
     }
 }
+if ( ! function_exists('validate_request')) {
+    function validate_request($request) {
+        if ( $request == null ) {
+            $CI =& get_instance();
+            
+            $CI->load->view('templates/'.TEMPLATES.'/header');
+            $CI->load->view('errors/invalid_request');
+            $CI->load->view('templates/'.TEMPLATES.'/footer');
+            return false;
+        }
+        return true;
+    }
+}
