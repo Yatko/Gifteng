@@ -143,7 +143,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             throw new UserNotFoundException("Could not detect the receipient (to) user.");
         }
         
-        if (currentUser.getName().equals(to.getName())) {
+        if (currentUser.equals(to)) {
             throw new MessageValidationException(MessageField.TO, "You can't send messages to yourself!");
         }
 
