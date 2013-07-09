@@ -697,16 +697,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User user = getCurrentUser();
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();
-        UserTransaction transaction = userTransactionDao.getByRequest(user.getId(), requestId);
+        UserTransaction transaction;
         
         if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
             //continue
         } else {
-            throw new InvalidAdStateException("Ad can't be requested as its state (" + ad.getStatus() + ") is not as expected!");
+            throw new InvalidAdStateException("Request can't be cancelled as its ad state (" + ad.getStatus() + ") is not as expected!");
         }
         
-        if ( ad.getCreator().equals(user) || request.getUser().equals(user) ) {
-            //continue
+        if ( ad.getCreator().equals(user) ) {
+            //the ad creator cancelling the request
+            transaction = userTransactionDao.getByRequest(request.getUser().getId(), requestId);
+        } else if ( request.getUser().equals(user) ) {
+            //the requestor cancelling the request
+            transaction = userTransactionDao.getByRequest(user.getId(), requestId);
         } else {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
