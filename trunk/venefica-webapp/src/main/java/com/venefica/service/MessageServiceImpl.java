@@ -97,24 +97,25 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Override
     public List<MessageDto> getMessagesByAd(Long adId) throws AdNotFoundException {
         Ad ad = validateAd(adId);
-        List<MessageDto> result = new LinkedList<MessageDto>();
-        
-        User currentUser = getCurrentUser();
         List<Message> messages = messageDao.getByAd(adId);
-        
-        for (Message message : messages) {
-            if ( message.isHiddenByRecipient() || message.isHiddenBySender() ) {
-                continue;
-            }
-            
-            MessageDto messageDto = new MessageDtoBuilder(message)
-                    .setCurrentUser(currentUser)
-                    .build();
-            message.setRead(true); // mark as read
-            
-            result.add(messageDto);
-        }
-        return result;
+        return buildMessages(messages);
+    }
+    
+    @Override
+    public List<MessageDto> getMessagesByUsers(Long user1Id, Long user2Id) throws UserNotFoundException {
+        User user1 = validateUser(user1Id);
+        User user2 = validateUser(user2Id);
+        List<Message> messages = messageDao.getByUsers(user1Id, user2Id);
+        return buildMessages(messages);
+    }
+    
+    @Override
+    public List<MessageDto> getMessagesByAdAndUsers(Long adId, Long user1Id, Long user2Id) throws AdNotFoundException, UserNotFoundException {
+        Ad ad = validateAd(adId);
+        User user1 = validateUser(user1Id);
+        User user2 = validateUser(user2Id);
+        List<Message> messages = messageDao.getByAdAndUsers(adId, user1Id, user2Id);
+        return buildMessages(messages);
     }
     
     @Override
@@ -300,5 +301,26 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         if (messageDto.getText() == null) {
             throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
         }
+    }
+    
+    
+    
+    private List<MessageDto> buildMessages(List<Message> messages) {
+        List<MessageDto> result = new LinkedList<MessageDto>();
+        User currentUser = getCurrentUser();
+        
+        for (Message message : messages) {
+            if ( message.isHiddenByRecipient() || message.isHiddenBySender() ) {
+                continue;
+            }
+            
+            MessageDto messageDto = new MessageDtoBuilder(message)
+                    .setCurrentUser(currentUser)
+                    .build();
+            message.setRead(true); // mark as read
+            
+            result.add(messageDto);
+        }
+        return result;
     }
 }

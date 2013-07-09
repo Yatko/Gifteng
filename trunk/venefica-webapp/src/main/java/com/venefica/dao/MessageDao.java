@@ -40,4 +40,24 @@ public interface MessageDao {
      * @return 
      */
     List<Message> getByAd(Long adId);
+    
+    /**
+     * Returns all conversations between the given users.
+     * 
+     * @param user1
+     * @param user2
+     * @return 
+     */
+    List<Message> getByUsers(Long user1, Long user2);
+    
+    /**
+     * Returns all conversations between the given users related with the
+     * configured ad.
+     * 
+     * @param adId
+     * @param user1
+     * @param user2
+     * @return 
+     */
+    List<Message> getByAdAndUsers(Long adId, Long user1, Long user2);
 }

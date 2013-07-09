@@ -449,6 +449,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         LinkedList<Long> categories = new LinkedList<Long>();
         categories.add(new Long(1));
         categories.add(new Long(2));
+        categories.add(new Long(3));
         
         FilterDto filter = new FilterDto();
         filter.setCategories(categories);

@@ -20,7 +20,8 @@ public class BusinessCategoryDaoImpl extends DaoBase<BusinessCategory> implement
     public List<BusinessCategory> getCategories() {
         List<BusinessCategory> categories = createQuery(""
                 + "from " + getDomainClassName() + " c where "
-                + "c.hidden = false"
+                + "c.hidden = false "
+                + "order by name asc"
                 + "")
                 .list();
         return categories;
