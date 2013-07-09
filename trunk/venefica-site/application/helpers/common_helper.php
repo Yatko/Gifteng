@@ -49,6 +49,17 @@ if ( ! function_exists('respond_ajax_array')) {
     }
 }
 
+if ( ! function_exists('safe_redirect')) {
+    /**
+     * Redirect page by copying the query string as well.
+     * @param string $url
+     */
+    function safe_redirect($url = '') {
+        $CI =& get_instance();
+        $qs = $CI->input->server('QUERY_STRING');
+        redirect($url . (trim($qs) == '' ? '' : '?'.$qs));
+    }
+}
 
 
 // making a safer world

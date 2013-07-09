@@ -5,6 +5,7 @@
  * 
  * messages: array of Message_model
  * ad: Ad_model
+ * to: User_model
  * canMessage: boolean (default: true)
  */
 
@@ -16,16 +17,18 @@ if ( $ad != null ) {
     $ad_id = '';
 }
 
+if ( $to != null ) {
+    $to_id = $to->id;
+} else {
+    $to_id = '';
+}
+
 ?>
 
 <? if( (isset($messages) && is_array($messages) && count($messages) > 0) || $canMessage ): ?>
     
     <div class="row-fluid ge-messages">
         <div class="span12">
-
-            <div class="row-fluid ge-subject">
-                <a class="ge-title">Victoria's Secret: Lingerie and Women's Clothing</a>
-            </div><!--./ge-message-->
 
             <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
             
@@ -35,7 +38,7 @@ if ( $ad != null ) {
                         <? foreach ($messages as $message): ?>
                             <?
                             $img = $message->getFromAvatarUrl();
-                            $name = $message->$fromFullName;
+                            $name = $message->fromFullName;
                             $profile_link = $message->getFromProfileUrl();
                             $id = $message->id;
                             $text = trim($message->text);
@@ -82,6 +85,7 @@ if ( $ad != null ) {
                 <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
                 
                 <input type="hidden" name="messageAdId" value="<?= $ad_id ?>"/>
+                <input type="hidden" name="messageToId" value="<?= $to_id ?>"/>
 
                 <div class="row-fluid ge-input">
                     <div class="span12">
@@ -90,7 +94,7 @@ if ( $ad != null ) {
                                 <textarea name="messageText" placeholder="Your message ..."></textarea>
                             </div>
                             <div class="span3 ge-text">
-                                <a id="addMessageBtn" class="btn btn-mini btn-block">Add</a>
+                                <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
                             </div>
                         </div>
                     </div>

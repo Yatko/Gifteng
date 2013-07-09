@@ -47,11 +47,11 @@
 
     <?= form_open_multipart('/profile/ajax/change_avatar', array('id' => 'avatar_post_form')) ?>
 
-        <button id="avatar" for="image" type="button" class="btn btn-huge btn-block file">
+        <button id="avatar" for="avatar_image" type="button" class="btn btn-huge btn-block file">
             Upload a great photo
             <i class="fui-photo pull-right"></i>
         </button>
-        <input type="file" name="image" id="image" />
+        <input type="file" name="avatar_image" id="avatar_image" />
 
     <?= form_close() ?>
 

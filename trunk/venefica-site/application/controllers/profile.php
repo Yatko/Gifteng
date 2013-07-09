@@ -31,21 +31,11 @@ class Profile extends CI_Controller {
         }
         
         if ( !validate_user($user) ) return;
-
-
-        if ( key_exists('giving', $_GET) ) {
-            $is_giving = true;
-            try {
-                $givings = $this->ad_service->getUserAds($user->id, true);
-            } catch ( Exception $ex ) {
-                $givings = null;
-            }
-        } else {
-            $is_giving = false;
-            $givings = null;
-        }
         
+        $has_menu = false;
+
         if ( key_exists('receiving', $_GET) ) {
+            $has_menu = true;
             $is_receiving = true;
             try {
                 $receivings = $this->ad_service->getUserRequestedAds($user->id, true);
@@ -58,6 +48,7 @@ class Profile extends CI_Controller {
         }
         
         if ( key_exists('favorit', $_GET) ) {
+            $has_menu = true;
             $is_bookmark = true;
             try {
                 $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
@@ -70,6 +61,7 @@ class Profile extends CI_Controller {
         }
         
         if ( key_exists('following', $_GET) ) {
+            $has_menu = true;
             $is_following = true;
             try {
                 $followings = $this->usermanagement_service->getFollowings($user->id);
@@ -82,6 +74,7 @@ class Profile extends CI_Controller {
         }
         
         if ( key_exists('follower', $_GET) ) {
+            $has_menu = true;
             $is_follower = true;
             try {
                 $followers = $this->usermanagement_service->getFollowers($user->id);
@@ -94,6 +87,7 @@ class Profile extends CI_Controller {
         }
         
         if ( key_exists('rating', $_GET) ) {
+            $has_menu = true;
             $is_rating = true;
             try {
                 $ratings = $this->ad_service->getReceivedRatings($user->id);
@@ -105,6 +99,18 @@ class Profile extends CI_Controller {
             $ratings = null;
         }
         
+        if ( !$has_menu || key_exists('giving', $_GET) ) {
+            $has_menu = true;
+            $is_giving = true;
+            try {
+                $givings = $this->ad_service->getUserAds($user->id, true);
+            } catch ( Exception $ex ) {
+                $givings = null;
+            }
+        } else {
+            $is_giving = false;
+            $givings = null;
+        }
         
         $data = array();
         $data['user'] = $user;
@@ -127,20 +133,31 @@ class Profile extends CI_Controller {
             $receiving_modal = '';
         }
         
-        $avatar_modal = $this->load->view('modal/avatar', array(), true);
-        $edit_profile_modal = $this->load->view('modal/edit_profile', array(), true);
+        if ( $is_giving ) {
+            $giving_modal = $this->load->view('modal/request_view', array(), true);
+        } else {
+            $giving_modal = '';
+        }
         
-        $modal = $request_modal . $receiving_modal . $avatar_modal . $edit_profile_modal;
+        $avatar_modal = $this->load->view('modal/avatar', array(), true); //permanent
+        $edit_profile_modal = $this->load->view('modal/edit_profile', array(), true); //permanent
+        
+        $modal = $request_modal . $receiving_modal . $giving_modal . $avatar_modal . $edit_profile_modal;
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         if ( $is_giving ) {
             $this->load->view('pages/profile_giving', $data);
-        } else if ( $is_receiving ) {
+        } else if ( isOwner($user) && $is_receiving ) {
+            //only owner can see receiving list
             $this->load->view('pages/profile_receiving', $data);
-        } else if ( $is_bookmark ) {
+        } else if (  isOwner($user) && $is_bookmark ) {
+            //only owner can see bookmark list
             $this->load->view('pages/profile_bookmark', $data);
         } else if ( $is_following ) {
             $this->load->view('pages/profile_following', $data);
@@ -161,7 +178,7 @@ class Profile extends CI_Controller {
             return;
         }
         
-        $field = 'image';
+        $field = 'avatar_image';
         if ( !isset($_FILES[$field]) || $_FILES[$field]['error'] == 4 ) {
             //no file selected for upload
             return;

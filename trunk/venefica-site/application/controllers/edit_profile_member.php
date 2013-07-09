@@ -4,32 +4,26 @@ class Edit_profile_member extends CI_Controller {
     
     private $initialized = false;
     
-    var $user;
-    
     public function view() {
         $this->init();
         
         if ( !validate_login() ) return;
         
-        $qs = $this->input->server('QUERY_STRING');
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( $this->user->businessAccount ) {
-            redirect("/edit_profile/business".(trim($qs) == '' ? '' : '?'.$qs));
+        if ( isBusinessAccount() ) {
+            safe_redirect("/edit_profile/business");
         }
         
-        if ( key_exists('modal', $_GET) ) {
-            $is_modal = true;
-        } else {
-            $is_modal = false;
-        }
-        
+        $is_modal = key_exists('modal', $_GET);
         $result = $this->process();
+        
         if ( key_exists(AJAX_STATUS_RESULT, $result) ) {
             redirect('/profile');
         }
         
+        $user = $this->usermanagement_service->loadUser();
+        
         $data = array();
-        $data['user'] = $this->user;
+        $data['user'] = $user;
         $data['is_modal'] = $is_modal;
         
         if ( $is_modal ) {
@@ -48,10 +42,7 @@ class Edit_profile_member extends CI_Controller {
             return;
         } else if ( !$_POST ) {
             return;
-        }
-        
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( $this->user->businessAccount ) {
+        } else if ( isBusinessAccount() ) {
             return;
         }
         
@@ -83,21 +74,28 @@ class Edit_profile_member extends CI_Controller {
         if ( $is_valid ) {
             //form data valid after post
             
+            $user = $this->usermanagement_service->loadUser();
             $zipCode = $this->input->post('zipCode');
             $location = getLocationByZipCode($zipCode);
             
-            $user = $this->usermanagement_service->loadUser();
+            if ( $user->address == null ) {
+                $address = new Address_model();
+            } else {
+                $address = $user->address;
+            }
+            
+            $address->zipCode = $zipCode;
+            $address->longitude = $location['longitude'];
+            $address->latitude = $location['latitude'];
+            
             $user->firstName = $this->input->post('firstName');
             $user->lastName = $this->input->post('lastName');
             $user->about = $this->input->post('about');
-            $user->address->zipCode = $zipCode;
-            $user->address->longitude = $location['longitude'];
-            $user->address->latitude = $location['latitude'];
+            $user->address = $address;
             
             try {
                 $this->usermanagement_service->updateUser($user);
                 $this->usermanagement_service->refreshUser();
-                $this->user = $this->usermanagement_service->loadUser();
                 
                 return array(
                     AJAX_STATUS_RESULT => 'OK'

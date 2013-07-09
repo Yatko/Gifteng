@@ -17,9 +17,8 @@ class Post_business extends CI_Controller {
         
         if ( !validate_login() ) return;
         
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( !$this->user->businessAccount ) {
-            redirect("/post/member");
+        if ( !isBusinessAccount() ) {
+            safe_redirect("/post/member");
         }
         
         $current_step = $this->getCurrentStep();
@@ -89,7 +88,9 @@ class Post_business extends CI_Controller {
             $data['error'] = $error;
         }
         
-        $this->load->view('templates/'.TEMPLATES.'/header');
+        $modal = $this->load->view('modal/address', array(), true);
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('pages/post_business', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
@@ -105,10 +106,11 @@ class Post_business extends CI_Controller {
             return;
         }
         
-        $this->user = $this->usermanagement_service->loadUser();
-        if ( !$this->user->businessAccount ) {
+        if ( !isBusinessAccount() ) {
             return;
         }
+        
+        $this->user = $this->usermanagement_service->loadUser();
         
         $address = new Address_model();
         $address->name = $this->input->post('new_address_name');

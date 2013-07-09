@@ -2,6 +2,9 @@
 
 $page = $this->uri->segment(1, null);
 
+reset($_GET);
+$subpage = key($_GET);
+
 ?>
 
 <!DOCTYPE html>
@@ -15,20 +18,11 @@ $page = $this->uri->segment(1, null);
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
+    <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
     
-    <!-- Loading Bootstrap -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
     <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
-    <!-- Loading Flat UI -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
-    <!-- Loading ge temp CSS -->
-    
-    <!--
-    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng.css" />
-    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-pages.css" />
-    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
-    -->
-    
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>snap.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
@@ -39,10 +33,6 @@ $page = $this->uri->segment(1, null);
     <![endif]-->
     
     
-    <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
-    
-    
-    <!-- Load JS here for greater good =============================-->
     <script src="<?=JS_PATH?>jquery-1.8.3.min.js"></script>
     <script src="<?=JS_PATH?>jquery-ui-1.10.3.custom.min.js"></script>
     <script src="<?=JS_PATH?>jquery.ui.touch-punch.min.js"></script>
@@ -60,7 +50,6 @@ $page = $this->uri->segment(1, null);
     
     <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
     <script src="<?=JS_PATH?>leaflet-providers.js"></script>
-    
     
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
@@ -105,6 +94,10 @@ $page = $this->uri->segment(1, null);
 
 <?= isset($modal) ? $modal : '' ?>
 
+<? if( isLogged() ): ?>
+    <? $this->load->view('modal/post'); ?>
+<? endif; ?>
+
 
 <? if( isLogged() ): ?>
 
@@ -121,13 +114,12 @@ $page = $this->uri->segment(1, null);
                         ?>
                     </div>
                 </li>
-                <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post"><i class="fui-eye"></i> Post</a></li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
                 <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation"><i class="fui-user"></i> Invite Friends</a></li>
-                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
-                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
-                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
-                <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-user"></i> Connections</a></li>
+                <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
+                <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
+                <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
+                <li<?=($page == "profile" && $subpage == "following" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-heart"></i> Connections</a></li>
                 <li><a href="#"><i class="fui-mail"></i> Messages</a></li>
                 <li><a href="#"><i class="fui-alert"></i> Notifications</a></li>
                 <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
@@ -217,14 +209,17 @@ $page = $this->uri->segment(1, null);
                     <span class="nav">
                         <a href="<?=base_url()?>index"><i class="gifteng"></i><sup>Beta</sup></a>
                     </span>
-                    <ul class="nav pull-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
-                            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
-                                
-                                <? if( isLogged() ): ?>
-                                    <a href="<?=base_url()?>authentication/logout" class="btn btn-block btn-ge">SIGN OUT</a>
-                                <? else: ?>
+                    
+                    <? if( isLogged() ): ?>
+                        <div class="pull-right">
+                            <a href="<?=base_url()?>post" data-target="#postContainer" data-toggle="modal"><i class="ge-icon-giftbox"></i></a>
+                        </div>
+                    <? else: ?>
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
+
+                                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
                                     <form action="<?=base_url()?>authentication/login" method="post" accept-charset="UTF-8">
                                         <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
                                         <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
@@ -232,11 +227,10 @@ $page = $this->uri->segment(1, null);
                                         <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
                                         <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
                                     </form>
-                                <? endif; ?>
-                                
-                            </div>
-                        </li>
-                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    <? endif; ?>
                 </div>
             </div>
         </div>

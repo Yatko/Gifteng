@@ -84,11 +84,13 @@ class Ajax extends CI_Controller {
         
         try {
             $adId = $this->input->post('messageAdId');
+            $toId = $this->input->post('messageToId');
             $text = $this->input->post('messageText');
             
             $message = new Message_model();
             $message->text = $text;
             $message->adId = $adId;
+            $message->toId = $toId;
             
             $this->message_service->sendMessage($message);
             
@@ -174,6 +176,7 @@ class Ajax extends CI_Controller {
         try {
             $requestId = $_GET['requestId'];
             $this->ad_service->hideRequest($requestId);
+            $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, 'OK');
         } catch ( Exception $ex ) {
@@ -181,6 +184,45 @@ class Ajax extends CI_Controller {
         }
     }
     
+    public function cancel_request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $requestId = $_GET['requestId'];
+            $this->ad_service->cancelRequest($requestId);
+            $this->usermanagement_service->refreshUser();
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function select_request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $requestId = $_GET['requestId'];
+            $this->ad_service->selectRequest($requestId);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+
     // internal functions
     
     private function init() {

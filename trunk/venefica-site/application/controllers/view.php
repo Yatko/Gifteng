@@ -50,7 +50,8 @@ class View extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');
-        if ( $user->businessAccount ) {
+        $this->load->view('javascript/map');
+        if ( isBusinessAccount() ) {
             $this->load->view('pages/view_business', $data);
         } else {
             $this->load->view('pages/view_member', $data);

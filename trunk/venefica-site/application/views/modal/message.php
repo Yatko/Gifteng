@@ -1,7 +1,19 @@
 <script langauge="javascript">
-    function startMessage(callerElement, adId) {
+    $(function() {
+        $('#messageContainer').on('shown', function() {
+            $("#message_post_form textarea[name=messageText]").focus();
+        });
+        //$('#messageContainer').on('hidden', function() {
+        //    $(this).removeData("modal");
+        //});
+    });
+    
+    function startMessage(callerElement, adId, toId) {
         var $messageAdId = $("#message_post_form input[name=messageAdId]");
+        var $messageToId = $("#message_post_form input[name=messageToId]");
+        
         $messageAdId.val(adId);
+        $messageToId.val(toId);
 
         $('#messageContainer').modal('show');
     }
@@ -22,13 +34,14 @@
         <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
         
             <input type="hidden" name="messageAdId" value=""/>
+            <input type="hidden" name="messageToId" value=""/>
 
             <div class="row-fluid ge-message ge-input ge-text">
                 <div class="span9">
                     <textarea name="messageText" placeholder="Your message ..."></textarea>
                 </div>
                 <div class="span3">
-                    <a id="addMessageBtn" class="btn btn-mini btn-block">Add</a>
+                    <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
                 </div>
             </div>
         

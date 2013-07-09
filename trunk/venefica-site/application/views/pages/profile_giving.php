@@ -1,8 +1,22 @@
+<script language="javascript">
+    function request_view(requestId) {
+        if ( $('#requestContainer').length > 0 ) {
+            $('#requestContainer').modal({
+                remote: '<?=base_url()?>request/' + requestId + '?modal',
+                show: true
+            });
+        }
+    }
+</script>
+
+
+
 <div class="row">			
     <div class="container user-giving_items">
         <div class="row">
             <div class="ge-tile-view ge-browse">
 
+            <? if( isset($givings) && is_array($givings) && count($givings) > 0 ): ?>
             <? foreach( $givings as $ad ): ?>
                 
                 <div class="span3 ge-box">
@@ -13,11 +27,12 @@
                                     
                                     <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
                                     
+                                    <? if( isOwner($user) ): ?>
                                     <? if( $ad->expired ): ?>
 
                                         <div class="row-fluid ge-text ge-description">
                                             <div class="span6">
-                                                <button class="btn btn-block btn-ge">RELIST</button>
+                                                <button onclick="ad_relist(<?= $ad->id ?>)" class="btn btn-block btn-ge">RELIST</button>
                                             </div>
                                             <div class="span6">
                                                 <button class="btn btn-block btn-ge">HIDE</button>
@@ -71,11 +86,16 @@
                                         <? if( $ad->requests != null ): ?>
                                         <? foreach( $ad->requests as $request ): ?>
                                             <?
+                                            $request_id = $request->id;
                                             $requestor_img = $request->user->getAvatarUrl();
                                             $request_selected = $request->isSelected();
                                             ?>
 
-                                            <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded <?= $request_selected ? '' : 'inactive' ?>"></div>
+                                            <? if( $request_selected ): ?>
+                                                <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
+                                            <? else: ?>
+                                                <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded inactive"></div>
+                                            <? endif; ?>
                                         <? endforeach; ?>
                                         <? endif; ?>
 
@@ -93,14 +113,16 @@
 
                                         <? foreach( $ad->requests as $request ): ?>
                                             <?
+                                            $request_id = $request->id;
                                             $requestor_img = $request->user->getAvatarUrl();
                                             ?>
 
-                                            <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded"></div>
+                                            <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
                                         <? endforeach; ?>
 
                                         </div><!--./ge-action-->
 
+                                    <? endif; ?>
                                     <? endif; ?>
                                     
                                 </div><!--./ge-item-->
@@ -110,7 +132,12 @@
                 </div><!--./ge-box-->
 
             <? endforeach; ?>
+            <? else: ?>
                 
+                <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                
+            <? endif; ?>
+            
             </div>
         </div>
     </div>
