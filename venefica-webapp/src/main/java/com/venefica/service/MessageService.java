@@ -70,7 +70,8 @@ public interface MessageService {
      */
     @WebMethod(operationName = "GetCommentsByAd")
     @WebResult(name = "comment")
-    List<CommentDto> getCommentsByAd(@WebParam(name = "adId") @NotNull Long adId,
+    List<CommentDto> getCommentsByAd(
+            @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "lastCommentId") Long lastCommentId,
             @WebParam(name = "numComments") int numComments) throws AdNotFoundException;
 
@@ -90,6 +91,39 @@ public interface MessageService {
     @WebMethod(operationName = "GetMessagesByAd")
     @WebResult(name = "message")
     List<MessageDto> getMessagesByAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
+    
+    /**
+     * Returns all the messages between the two given users.
+     * 
+     * @param user1Id
+     * @param user2Id
+     * @return
+     * @throws UserNotFoundException if one of the users does not exists
+     */
+    @WebMethod(operationName = "GetMessagesByUsers")
+    @WebResult(name = "message")
+    List<MessageDto> getMessagesByUsers(
+            @WebParam(name = "user1Id") @NotNull Long user1Id,
+            @WebParam(name = "user2Id") @NotNull Long user2Id)
+            throws UserNotFoundException;
+    
+    /**
+     * Returns all the messages between the two given users for the specified ad.
+     * 
+     * @param adId
+     * @param user1Id
+     * @param user2Id
+     * @return
+     * @throws AdNotFoundException if the given ad does not exists
+     * @throws UserNotFoundException if one of the users does not exists
+     */
+    @WebMethod(operationName = "GetMessagesByAdAndUsers")
+    @WebResult(name = "message")
+    List<MessageDto> getMessagesByAdAndUsers(
+            @WebParam(name = "adId") @NotNull Long adId,
+            @WebParam(name = "user1Id") @NotNull Long user1Id,
+            @WebParam(name = "user2Id") @NotNull Long user2Id)
+            throws AdNotFoundException, UserNotFoundException;
     
     /**
      * Sends the message to the specified user.

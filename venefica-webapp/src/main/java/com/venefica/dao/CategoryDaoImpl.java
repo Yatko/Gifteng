@@ -24,14 +24,16 @@ public class CategoryDaoImpl extends DaoBase<Category> implements CategoryDao {
             categories = createQuery(""
                     + "from " + getDomainClassName() + " c where "
                     + "c.hidden = false and "
-                    + "c.parent is null"
+                    + "c.parent is null "
+                    + "order by name asc"
                     + "")
                     .list();
         } else {
             categories = createQuery(""
                     + "from " + getDomainClassName() + " c where "
                     + "c.hidden = false and "
-                    + "c.parent.id = :parentId"
+                    + "c.parent.id = :parentId "
+                    + "order by name asc"
                     + "")
                     .setParameter("parentId", parentCategoryId)
                     .list();
