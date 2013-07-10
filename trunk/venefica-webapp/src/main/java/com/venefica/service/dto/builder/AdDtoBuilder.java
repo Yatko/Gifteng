@@ -1,5 +1,6 @@
 package com.venefica.service.dto.builder;
 
+import com.venefica.config.Constants;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Comment;
@@ -140,18 +141,13 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if ( includeRequestsFlag ) {
             LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
             
-            for (Request request : model.getRequests()) {
-                if ( request.isHidden() ) {
-                    continue;
-                } else if ( request.isDeleted() ) {
-                    continue;
-                }
-                
+            for (Request request : model.getActiveRequests()) {
                 RequestDto requestDto = new RequestDto(request);
                 requests.add(requestDto);
             }
             
             adDto.setRequests(requests);
+            adDto.setCanRequest(requests.size() <= Constants.REQUEST_MAX_ALLOWED);
         }
         
         adDto.setCreatedAt(model.getCreatedAt());

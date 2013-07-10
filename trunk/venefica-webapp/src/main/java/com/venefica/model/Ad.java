@@ -219,6 +219,22 @@ public class Ad {
         return adData.getType();
     }
     
+    public List<Request> getActiveRequests() {
+        List<Request> result = new LinkedList<Request>();
+        if ( requests != null && !requests.isEmpty() ) {
+            for ( Request request : requests ) {
+                if ( request.isHidden() ) {
+                    continue;
+                } else if ( request.isDeleted() ) {
+                    continue;
+                }
+                
+                result.add(request);
+            }
+        }
+        return result;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Ad)) {

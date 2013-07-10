@@ -638,11 +638,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.getCreator().equals(user) ) {
             throw new InvalidRequestException("Cannot request owned ads.");
         }
-        if ( ad.getRequests() != null && ad.getRequests().size() - 1 > Constants.REQUEST_MAX_ALLOWED ) {
-            throw new InvalidRequestException("Max request limit reached.");
-        }
         if ( ad.getAdData().getQuantity() <= 0 ) {
             throw new InvalidRequestException("No more available.");
+        }
+        if ( ad.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+            throw new InvalidRequestException("Max request limit reached.");
         }
         
         BigDecimal beforePendingNumber = null;
@@ -1173,17 +1173,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
     
     private boolean requested(User user, Ad ad) {
-        if ( ad.getRequests() != null && !ad.getRequests().isEmpty() ) {
-            for ( Request request : ad.getRequests() ) {
-                if ( request.isHidden() ) {
-                    continue;
-                } else if ( request.isDeleted() ) {
-                    continue;
-                }
-                
-                if ( request.getUser().equals(user) ) {
-                    return true;
-                }
+        for ( Request request : ad.getActiveRequests() ) {
+            if ( request.getUser().equals(user) ) {
+                return true;
             }
         }
         return false;
