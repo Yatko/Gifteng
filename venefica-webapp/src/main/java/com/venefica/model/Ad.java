@@ -235,6 +235,15 @@ public class Ad {
         return result;
     }
     
+    public boolean isRequested(User user) {
+        for ( Request request : getActiveRequests() ) {
+            if ( request.getUser().equals(user) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Ad)) {

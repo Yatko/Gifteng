@@ -420,7 +420,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeCreator(includeCreator != null ? includeCreator : false)
                     .build();
             adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
-            adDto.setRequested(requested(currentUser, ad));
+            adDto.setRequested(ad.isRequested(currentUser));
             
             result.add(adDto);
         }
@@ -487,7 +487,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             // @formatter:on
             
             adDto.setInBookmarks(inBookmarks(currentUser, ad));
-            adDto.setRequested(requested(currentUser, ad));
+            adDto.setRequested(ad.isRequested(currentUser));
             
             result.add(adDto);
         }
@@ -520,7 +520,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // @formatter:on
 
         adDto.setInBookmarks(inBookmarks(currentUser, ad));
-        adDto.setRequested(requested(currentUser, ad));
+        adDto.setRequested(ad.isRequested(currentUser));
         
         return adDto;
     }
@@ -924,7 +924,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                         .includeCreator(true) //TODO: maybe this is not needed
                         .build();
                 adDto.setInBookmarks(true);
-                adDto.setRequested(requested(user, ad));
+                adDto.setRequested(ad.isRequested(user));
                 result.add(adDto);
             }
         }
@@ -1171,15 +1171,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Bookmark bookmark = bookmarkDao.get(user.getId(), ad.getId());
         if (bookmark != null) {
             return true;
-        }
-        return false;
-    }
-    
-    private boolean requested(User user, Ad ad) {
-        for ( Request request : ad.getActiveRequests() ) {
-            if ( request.getUser().equals(user) ) {
-                return true;
-            }
         }
         return false;
     }
