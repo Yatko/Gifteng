@@ -720,7 +720,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         request.unmarkAsSelected();
-        request.markAsDeleted();
+        if ( ad.getCreator().equals(user) ) {
+            //canceling by the ad owner
+            request.setStatus(RequestStatus.EXPIRED);
+        } else {
+            //canceling by the requestor
+            request.markAsDeleted();
+        }
         
         ad.unselect(); //increment available quantity
         
