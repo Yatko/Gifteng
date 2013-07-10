@@ -208,13 +208,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             }
             if ( canRate ) {
                 //cannot rate by not selected requestor
-                for (Request request : model.getRequests()) {
-                    if ( request.isHidden() ) {
-                        continue;
-                    } else if ( request.isDeleted() ) {
-                        continue;
-                    }
-                    
+                for (Request request : model.getActiveRequests()) {
                     if ( request.getUser().equals(currentUser) && !request.isSelected() ) {
                         canRate = false;
                         break;
@@ -226,7 +220,33 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         if ( includeCanRequestFlag ) {
-            adDto.setCanRequest(model.getActiveRequests().size() <= Constants.REQUEST_MAX_ALLOWED);
+            boolean canRequest = model.getActiveRequests().size() <= Constants.REQUEST_MAX_ALLOWED;
+            
+            if ( canRequest ) {
+                if ( model.isExpired() ) {
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( model.getCreator().equals(currentUser) ) {
+                    //owner cannot request its ad
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( currentUser.isBusinessAccount() ) {
+                    //business accounts cannot request at all
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( model.isRequested(currentUser) ) {
+                    //an active request exists for this ad
+                    canRequest = false;
+                }
+            }
+            
+            adDto.setCanRequest(canRequest);
         }
         
         if (includeStatisticsFlag) {
