@@ -32,6 +32,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private boolean includeImagesFlag;
     private boolean includeCanMarkAsSpamFlag;
     private boolean includeCanRateFlag;
+    private boolean includeCanRequestFlag;
     private boolean includeRequestsFlag;
     private boolean includeStatisticsFlag = true;
 
@@ -74,6 +75,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     public AdDtoBuilder includeCanRate() {
         includeCanRateFlag = true;
+        return this;
+    }
+    
+    public AdDtoBuilder includeCanRequest() {
+        includeCanRequestFlag = true;
         return this;
     }
     
@@ -147,7 +153,6 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             }
             
             adDto.setRequests(requests);
-            adDto.setCanRequest(requests.size() <= Constants.REQUEST_MAX_ALLOWED);
         }
         
         adDto.setCreatedAt(model.getCreatedAt());
@@ -218,6 +223,10 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             }
 
             adDto.setCanRate(canRate);
+        }
+        
+        if ( includeCanRequestFlag ) {
+            adDto.setCanRequest(model.getActiveRequests().size() <= Constants.REQUEST_MAX_ALLOWED);
         }
         
         if (includeStatisticsFlag) {

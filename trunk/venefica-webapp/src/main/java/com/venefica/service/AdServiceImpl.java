@@ -455,6 +455,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(user)
                     .includeRequests(includeRequests)
+                    .includeCanRequest()
                     .build();
             result.add(adDto);
         }
@@ -481,6 +482,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .setCurrentUser(currentUser)
                     .includeCreator()
                     .includeRequests(includeRequests)
+                    .includeCanRequest()
                     .build();
             // @formatter:on
             
@@ -513,6 +515,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 .includeCreator()
                 .includeCanMarkAsSpam()
                 .includeCanRate()
+                .includeCanRequest()
                 .build();
         // @formatter:on
 
