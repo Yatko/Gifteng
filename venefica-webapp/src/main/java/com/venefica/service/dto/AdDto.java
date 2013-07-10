@@ -98,6 +98,8 @@ public class AdDto extends DtoBase {
     @XmlElement(name = "item")
     private List<RequestDto> requests;
     // out
+    private Boolean canRequest;
+    // out
     private AdStatisticsDto statistics;
     
     // business ad data
@@ -466,5 +468,13 @@ public class AdDto extends DtoBase {
 
     public void setStatistics(AdStatisticsDto statistics) {
         this.statistics = statistics;
+    }
+
+    public Boolean getCanRequest() {
+        return canRequest;
+    }
+
+    public void setCanRequest(Boolean canRequest) {
+        this.canRequest = canRequest;
     }
 }
