@@ -638,7 +638,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.getAdData().getQuantity() <= 0 ) {
             throw new InvalidRequestException("No more available.");
         }
-        if ( ad.getVisibleRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+        if ( ad.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
             throw new InvalidRequestException("Max request limit reached.");
         }
         

@@ -2,6 +2,7 @@ package com.venefica.service.dto.builder;
 
 import com.venefica.config.Constants;
 import com.venefica.model.Ad;
+import com.venefica.model.AdStatus;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
@@ -224,8 +225,25 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         if ( includeCanRequestFlag ) {
-            boolean canRequest = model.getVisibleRequests().size() <= Constants.REQUEST_MAX_ALLOWED;
+            boolean canRequest = true;
             
+            if ( canRequest ) {
+                if ( model.getStatus() != AdStatus.ACTIVE && model.getStatus() != AdStatus.IN_PROGRESS ) {
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( model.getAdData().getQuantity() <= 0 ) {
+                    //no more available
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( model.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+                    //active requests limit reched the allowed size
+                    canRequest = false;
+                }
+            }
             if ( canRequest ) {
                 if ( model.isExpired() ) {
                     canRequest = false;

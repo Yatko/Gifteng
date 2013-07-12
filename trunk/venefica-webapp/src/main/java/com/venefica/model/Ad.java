@@ -271,6 +271,7 @@ public class Ad {
     
     /**
      * Returns all the non hidden and non deleted requests.
+     * 
      * @return 
      */
     public List<Request> getVisibleRequests() {
@@ -289,9 +290,38 @@ public class Ad {
         return result;
     }
     
+    /**
+     * Returns all the visible and active requests.
+     * 
+     * Visible means that not hidden and not deleted.
+     * Active means that is not DECLINED or CANCELED.
+     * 
+     * @return 
+     */
+    public List<Request> getActiveRequests() {
+        List<Request> result = new LinkedList<Request>();
+        if ( requests != null && !requests.isEmpty() ) {
+            for ( Request request : requests ) {
+                if ( request.isActive() ) {
+                    result.add(request);
+                }
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Verifies if a visible and active request is available for the given user.
+     * 
+     * Visible means that not hidden and not deleted.
+     * Active means that is not DECLINED or CANCELED.
+     * 
+     * @param user
+     * @return 
+     */
     public boolean isRequested(User user) {
         for ( Request request : getVisibleRequests() ) {
-            if ( request.getUser().equals(user) ) {
+            if ( request.getUser().equals(user) && request.isActive() ) {
                 return true;
             }
         }
