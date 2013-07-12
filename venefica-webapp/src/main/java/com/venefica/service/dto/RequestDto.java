@@ -40,6 +40,11 @@ public class RequestDto extends DtoBase {
     private ImageDto image;
     // out
     private ImageDto imageThumbnail;
+    
+    // out
+    private boolean sent;
+    // out
+    private boolean received;
 
     public RequestDto() {
     }
@@ -53,6 +58,8 @@ public class RequestDto extends DtoBase {
         this.type = request.getAd().getType();
         this.adStatus = request.getAd().getStatus();
         this.adExpiresAt = request.getAd().getExpiresAt();
+        this.sent = request.isSent();
+        this.received = request.isReceived();
         
         if (request.getAd().getAdData().getMainImage() != null) {
             this.image = new ImageDto(request.getAd().getAdData().getMainImage());
@@ -142,4 +149,19 @@ public class RequestDto extends DtoBase {
         this.adExpiresAt = adExpiresAt;
     }
     
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
 }

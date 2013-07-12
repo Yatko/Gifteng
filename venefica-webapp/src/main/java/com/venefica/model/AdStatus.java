@@ -8,20 +8,18 @@ package com.venefica.model;
  * The 'lifecycle' of an ad.
  * 
  * The following possible next statuses are allowed:
- * - ACTIVE -> EXPIRED, SELECTED
- * - EXPIRED -> ACTIVE, SELECTED
- * - SELECTED -> SENT, ACTIVE
- * - SENT -> RECEIVED, ACTIVE
- * - RECEIVED
+ * - ACTIVE -> EXPIRED, IN_PROGRESS
+ * - IN_PROGRESS -> ACTIVE, EXPIRED, FINALIZED
+ * - EXPIRED -> ACTIVE
+ * - FINALIZED
  * 
  * @author gyuszi
  */
 public enum AdStatus {
     
-    ACTIVE,
+    ACTIVE, //there is no active request
+    IN_PROGRESS, //there is an (one or more) active request for this ad
+    FINALIZED,
     EXPIRED,
-    SELECTED,
-    SENT,
-    RECEIVED,
     
 }
