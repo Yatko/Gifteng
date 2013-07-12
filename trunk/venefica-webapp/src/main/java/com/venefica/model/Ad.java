@@ -66,18 +66,9 @@ public class Ad {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
-    //TODO: not sure if these are needed
-    private boolean sold;
+    private boolean sold; //product/gift ended
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldAt;
-    
-    private boolean sent; //product/gift marked as sent (by the seller/owner/giver)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date sentAt;
-    
-    private boolean received; //product/gift marked as received (by the buyer/receiver)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date receivedAt;
     
     private long numViews;
     @OneToMany(mappedBy = "ad")
@@ -151,17 +142,92 @@ public class Ad {
         expired = false;
         expiresAt = DateUtils.addDays(new Date(), days);
         numAvailProlongations--;
-        status = AdStatus.ACTIVE;
+        
+        updateStatus();
     }
     
-    public void select() {
-        adData.select();
-        status = AdStatus.SELECTED;
+    /**
+     * Selecting the given request. Quantity is decreasing after this operation.
+     * If the quantity reach 0 all the other PENDING requests will become UNACCEPTED.
+     * 
+     * @param request 
+     */
+    public void select(Request request) {
+        adData.select(); //decrement quantity
+        
+        request.markAsAccepted();
+        updateStatus();
+        
+        if ( adData.getQuantity() <= 0 ) {
+            //if there are no more pieces mark all the other PENDING requests as UNACCEPTED
+            for ( Request r : getVisibleRequests() ) {
+                if ( r.isPending() ) {
+                    //all the PENDING requests will be marked as UNACCEPTED
+                    r.markAsUnaccepted();
+                }
+            }
+        }
     }
     
-    public void unselect() {
-        adData.unselect();
+    /**
+     * Canceling a request made previously by the requestor. This should be
+     * possible only if the request is not selected by the ad owner.
+     * 
+     * @param request 
+     */
+    public void cancel(Request request) {
+        if ( request.isAccepted() ) {
+            //the request is selected, no cancelation possible
+            return;
+        }
+        
+        request.cancel();
+        request.markAsDeleted();
+        
+        updateStatus();
     }
+    
+    /**
+     * Decline the given request. Decline can be made on selected or pending
+     * requests as well. When declining a selected request the quantity is increased.
+     * All the UNACCEPTED requests will be put into PENDING state, so can be selected
+     * again.
+     * 
+     * @param request 
+     */
+    public void decline(Request request) {
+        if ( request.isAccepted() ) {
+            adData.unselect();
+        }
+        
+        request.decline();
+        
+        for ( Request r : getVisibleRequests() ) {
+            if ( r.isUnaccepted()) {
+                //all the UNACCEPTED requests will be marked as PENDING again
+                r.markAsPending();
+            }
+        }
+        
+        updateStatus();
+    }
+    
+    //public void select() {
+    //    adData.select();
+    //    status = AdStatus.IN_PROGRESS;
+    //}
+    
+    //public void unselect() {
+    //    adData.unselect();
+    //    
+    //    if ( getType() == AdType.MEMBER ) {
+    //        status = AdStatus.ACTIVE;
+    //    } else if ( getType() == AdType.BUSINESS ) {
+    //        
+    //    } else {
+    //        //
+    //    }
+    //}
     
     public boolean isAlreadyViewedBy(User user) {
         if ( viewers == null || viewers.isEmpty() ) {
@@ -180,33 +246,17 @@ public class Ad {
         deletedAt = new Date();
     }
 
-    public void unmarkAsDeleted() {
-        deleted = false;
-        deletedAt = null;
-    }
-    
-    public void markAsSent() {
-        sent = true;
-        sentAt = new Date();
-        status = AdStatus.SENT;
-    }
-    
-    public void markAsReceived() {
-        received = true;
-        receivedAt = new Date();
-        status = AdStatus.RECEIVED;
-    }
+    //public void unmarkAsDeleted() {
+    //    deleted = false;
+    //    deletedAt = null;
+    //}
     
     public void markAsSold() {
         sold = true;
         soldAt = new Date();
+        status = AdStatus.FINALIZED;
     }
 
-    public void unmarkAsSold() {
-        sold = false;
-        soldAt = null;
-    }
-    
     public void addImage(Image image) {
         adData.addImage(image);
     }
@@ -219,7 +269,11 @@ public class Ad {
         return adData.getType();
     }
     
-    public List<Request> getActiveRequests() {
+    /**
+     * Returns all the non hidden and non deleted requests.
+     * @return 
+     */
+    public List<Request> getVisibleRequests() {
         List<Request> result = new LinkedList<Request>();
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
@@ -236,7 +290,7 @@ public class Ad {
     }
     
     public boolean isRequested(User user) {
-        for ( Request request : getActiveRequests() ) {
+        for ( Request request : getVisibleRequests() ) {
             if ( request.getUser().equals(user) ) {
                 return true;
             }
@@ -253,6 +307,24 @@ public class Ad {
         Ad other = (Ad) obj;
 
         return id != null && id.equals(other.id);
+    }
+    
+    private boolean hasActiveRequest() {
+        for ( Request r : getVisibleRequests() ) {
+            if ( r.isActive() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void updateStatus() {
+        if ( hasActiveRequest() ) {
+            status = AdStatus.IN_PROGRESS;
+        } else {
+            //ad become ACTIVE as there are no other active requests
+            status = AdStatus.ACTIVE;
+        }
     }
     
     // getter/setter
@@ -417,38 +489,6 @@ public class Ad {
 
     public void setRequests(List<Request> requests) {
         this.requests = requests;
-    }
-
-    public boolean isSent() {
-        return sent;
-    }
-
-    public void setSent(boolean sent) {
-        this.sent = sent;
-    }
-
-    public Date getSentAt() {
-        return sentAt;
-    }
-
-    public void setSentAt(Date sentAt) {
-        this.sentAt = sentAt;
-    }
-
-    public boolean isReceived() {
-        return received;
-    }
-
-    public void setReceived(boolean received) {
-        this.received = received;
-    }
-
-    public Date getReceivedAt() {
-        return receivedAt;
-    }
-
-    public void setReceivedAt(Date receivedAt) {
-        this.receivedAt = receivedAt;
     }
 
     public AdStatus getStatus() {

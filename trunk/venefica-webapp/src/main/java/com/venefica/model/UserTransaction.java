@@ -64,6 +64,11 @@ public class UserTransaction {
         this.request = request;
     }
     
+    public void markAsFinalized() {
+        finalized = true;
+        finalizedAt = new Date();
+    }
+    
     // getters/setters
     
     public Long getId() {

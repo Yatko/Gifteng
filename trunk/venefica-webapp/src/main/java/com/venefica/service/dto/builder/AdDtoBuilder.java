@@ -2,7 +2,6 @@ package com.venefica.service.dto.builder;
 
 import com.venefica.config.Constants;
 import com.venefica.model.Ad;
-import com.venefica.model.AdStatus;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
@@ -147,7 +146,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         if ( includeRequestsFlag ) {
             LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
             
-            for (Request request : model.getActiveRequests()) {
+            for (Request request : model.getVisibleRequests()) {
                 RequestDto requestDto = new RequestDto(request);
                 requests.add(requestDto);
             }
@@ -195,7 +194,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
 
         if (includeCanRateFlag) {
-            boolean canRate = (model.getStatus() == AdStatus.SENT || model.getStatus() == AdStatus.RECEIVED);
+            boolean canRate = true;
 
             if ( canRate ) {
                 //cannot rate already rated ad (by the same user)
@@ -207,10 +206,15 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                 }
             }
             if ( canRate ) {
+                canRate = false;
                 //cannot rate by not selected requestor
-                for (Request request : model.getActiveRequests()) {
-                    if ( request.getUser().equals(currentUser) && !request.isSelected() ) {
-                        canRate = false;
+                for (Request request : model.getVisibleRequests()) {
+                    if (
+                        request.getUser().equals(currentUser) &&
+                        request.isAccepted() &&
+                        (request.isSent() || request.isReceived())
+                    ) {
+                        canRate = true;
                         break;
                     }
                 }
@@ -220,7 +224,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         if ( includeCanRequestFlag ) {
-            boolean canRequest = model.getActiveRequests().size() <= Constants.REQUEST_MAX_ALLOWED;
+            boolean canRequest = model.getVisibleRequests().size() <= Constants.REQUEST_MAX_ALLOWED;
             
             if ( canRequest ) {
                 if ( model.isExpired() ) {

@@ -92,60 +92,72 @@ public class UserPoint {
         return pendingScore;
     }
     
-    public BigDecimal getGivingNumber(boolean includePending) {
+    private BigDecimal getGivingNumber(boolean includePending) {
         return getGivingNumber(user, includePending);
     }
     
-    public BigDecimal getReceivingNumber(boolean includePending) {
+    private BigDecimal getReceivingNumber(boolean includePending) {
         return getReceivingNumber(user, includePending);
     }
     
-    public int getActivityBalance(boolean includePending) {
+    private int getActivityBalance(boolean includePending) {
         return getActivityBalance(user, includePending);
     }
     
-    public int getGivingActivity(boolean includePending) {
+    private int getGivingActivity(boolean includePending) {
         return getGivingActivity(user, includePending);
     }
     
-    public int getReceivingActivity(boolean includePending) {
+    private int getReceivingActivity(boolean includePending) {
         return getReceivingActivity(user, includePending);
     }
     
-    public BigDecimal getGenerosityNumber(boolean includePending) {
+    private BigDecimal getGenerosityNumber(boolean includePending) {
         return getGenerosityNumber(user, includePending);
     }
     
     // static helpers
     
-    public static int getActivityBalance(User user, boolean includePending) {
+    public static BigDecimal getGenerosityNumber(User user, boolean includePending) {
+        BigDecimal numberBalance = getGivingNumber(user, includePending).subtract(getReceivingNumber(user, includePending));
+        BigDecimal activityBalance = new BigDecimal(getActivityBalance(user, includePending)).divide(HUNDRED).add(BigDecimal.ONE);
+        return numberBalance.multiply(activityBalance).add(new BigDecimal(getGivingActivity(user, includePending)));
+    }
+    
+    private static int getActivityBalance(User user, boolean includePending) {
         return getGivingActivity(user, includePending) - getReceivingActivity(user, includePending);
     }
     
-    public static int getGivingActivity(User user, boolean includePending) {
+    private static int getGivingActivity(User user, boolean includePending) {
         int activity = 0;
         for ( Ad ad : user.getAds() ) {
-            if ( !includePending && !ad.isSent()) {
-                //only sent ads will be considered
+            if ( ad.getRequests() == null ) {
                 continue;
             }
             
-            Integer quantity = ad.getAdData().getQuantity();
-            if ( quantity == null ) {
-                quantity = 0;
+            for ( Request request : ad.getRequests()) {
+                if ( !includePending && !request.isSent()) {
+                    //only sent requests will be considered
+                    continue;
+                }
+                
+                Integer quantity = ad.getAdData().getQuantity();
+                if ( quantity == null ) {
+                    quantity = 0;
+                }
+                activity += quantity;
             }
-            activity += quantity;
         }
         return activity;
     }
     
-    public static int getReceivingActivity(User user, boolean includePending) {
+    private static int getReceivingActivity(User user, boolean includePending) {
         int activity = 0;
         for ( Request request : user.getRequests()) {
             Ad ad = request.getAd();
             
-            if ( !includePending && !request.isSelected() && !ad.isReceived() ) {
-                //only selected request and received ad is considered
+            if ( !includePending && !request.isAccepted() && !request.isReceived() ) {
+                //only selected and received request is considered
                 continue;
             }
             
@@ -154,37 +166,37 @@ public class UserPoint {
         return activity;
     }
     
-    public static BigDecimal getGenerosityNumber(User user, boolean includePending) {
-        BigDecimal numberBalance = getGivingNumber(user, includePending).subtract(getReceivingNumber(user, includePending));
-        BigDecimal activityBalance = new BigDecimal(getActivityBalance(user, includePending)).divide(HUNDRED).add(BigDecimal.ONE);
-        return numberBalance.multiply(activityBalance).add(new BigDecimal(getGivingActivity(user, includePending)));
-    }
-    
-    public static BigDecimal getGivingNumber(User user, boolean includePending) {
+    private static BigDecimal getGivingNumber(User user, boolean includePending) {
         UserPoint userPoint = user.getUserPoint();
         BigDecimal number = BigDecimal.ZERO;
         for ( Ad ad : user.getAds() ) {
-            if ( !includePending && !ad.isSent()) {
-                //only sent ads will be considered
+            if ( userPoint.containsTransaction(ad) ) {
+                //ad is already present in a transaction (there was a culculation with it)
                 continue;
-            } else if ( userPoint.containsTransaction(ad) ) {
-                //ad is already present in a transaction (there was a culculatio with it)
+            } else if ( ad.getRequests() == null ) {
                 continue;
             }
             
-            number = number.add(getNumber(ad));
+            for ( Request request : ad.getRequests() ) {
+                if ( !includePending && !request.isSent()) {
+                    //only sent requests will be considered
+                    continue;
+                }
+
+                number = number.add(getNumber(ad));
+            }
         }
         return number;
     }
     
-    public static BigDecimal getReceivingNumber(User user, boolean includePending) {
+    private static BigDecimal getReceivingNumber(User user, boolean includePending) {
         UserPoint userPoint = user.getUserPoint();
         BigDecimal number = BigDecimal.ZERO;
         for ( Request request : user.getRequests()) {
             Ad ad = request.getAd();
             
-            if ( !includePending && !request.isSelected() && !ad.isReceived() ) {
-                //only selected request and received ad is considered
+            if ( !includePending && !request.isAccepted() && !request.isReceived() ) {
+                //only selected and received request is considered
                 continue;
             } else if ( userPoint.containsTransaction(request) ) {
                 //request is already present in a transaction (there was a culculatio with it)

@@ -39,6 +39,14 @@ public class UserActivity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
     
+    @ManyToOne
+    @ForeignKey(name = "activity_ad_fk")
+    private Ad ad;
+    
+    @ManyToOne
+    @ForeignKey(name = "activity_request_fk")
+    private Request request;
+    
     public UserActivity() {
     }
     
@@ -73,5 +81,21 @@ public class UserActivity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public void setRequest(Request request) {
+        this.request = request;
     }
 }

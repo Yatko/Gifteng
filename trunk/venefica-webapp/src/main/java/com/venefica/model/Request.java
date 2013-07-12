@@ -5,6 +5,7 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -48,9 +49,19 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
-    private boolean selected;
+    private boolean sent; //product/gift marked as sent (by the seller/owner/giver)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date selectedAt;
+    private Date sentAt;
+    
+    private boolean received; //product/gift marked as received (by the buyer/receiver/requestor)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date receivedAt;
+    
+    @Column(name = "selected")
+    private boolean accepted;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "selectedAt")
+    private Date acceptedAt;
     
     private boolean hidden; //marking hidden by the user in the GUI
     @Temporal(TemporalType.TIMESTAMP)
@@ -73,24 +84,82 @@ public class Request {
         return id != null && id.equals(other.id);
     }
     
+    public boolean isPending() {
+        return status == RequestStatus.PENDING;
+    }
+    
+    public boolean isUnaccepted() {
+        return status == RequestStatus.UNACCEPTED;
+    }
+    
+    /**
+     * If the request is having CANCELED or DECLINED status returns false.
+     * Deleted and hidden request is also not active - returns false.
+     * 
+     * @return 
+     */
+    public boolean isActive() {
+        if ( isDeleted() || isHidden() ) {
+            return false;
+        }
+        
+        switch ( status ) {
+            case PENDING:
+            case ACCEPTED:
+            case UNACCEPTED:
+            case SENT:
+            case RECEIVED:
+                return true;
+        }
+        return false;
+    }
+    
     public void markAsDeleted() {
         deleted = true;
         deletedAt = new Date();
     }
 
-    public void unmarkAsDeleted() {
-        deleted = false;
-        deletedAt = null;
+    public void markAsSent() {
+        sent = true;
+        sentAt = new Date();
+        status = RequestStatus.SENT;
     }
     
-    public void markAsSelected() {
-        selected = true;
-        selectedAt = new Date();
+    public void markAsReceived() {
+        received = true;
+        receivedAt = new Date();
+        status = RequestStatus.RECEIVED;
     }
-
-    public void unmarkAsSelected() {
-        selected = false;
-        selectedAt = null;
+    
+    public void markAsAccepted() {
+        accepted = true;
+        acceptedAt = new Date();
+        status = RequestStatus.ACCEPTED;
+    }
+    
+    public void markAsPending() {
+        unmarkAsAccepted();
+        status = RequestStatus.PENDING;
+    }
+    
+    public void markAsUnaccepted() {
+        unmarkAsAccepted();
+        status = RequestStatus.UNACCEPTED;
+    }
+    
+    public void cancel() {
+        unmarkAsAccepted(); //this should have no effect as cancelation is possible only if rquest is not selected
+        status = RequestStatus.CANCELED;
+    }
+    
+    public void decline() {
+        unmarkAsAccepted();
+        status = RequestStatus.DECLINED;
+    }
+    
+    private void unmarkAsAccepted() {
+        accepted = false;
+        acceptedAt = null;
     }
     
     // getter/setter
@@ -159,21 +228,53 @@ public class Request {
 //    public void setReview(Review review) {
 //        this.review = review;
 //    }
-
-    public boolean isSelected() {
-        return selected;
+    
+    public boolean isSent() {
+        return sent;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 
-    public Date getSelectedAt() {
-        return selectedAt;
+    public Date getSentAt() {
+        return sentAt;
     }
 
-    public void setSelectedAt(Date selectedAt) {
-        this.selectedAt = selectedAt;
+    public void setSentAt(Date sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public Date getReceivedAt() {
+        return receivedAt;
+    }
+
+    public void setReceivedAt(Date receivedAt) {
+        this.receivedAt = receivedAt;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public Date getAcceptedAt() {
+        return acceptedAt;
+    }
+
+    public void setAcceptedAt(Date acceptedAt) {
+        this.acceptedAt = acceptedAt;
     }
 
     public boolean isHidden() {

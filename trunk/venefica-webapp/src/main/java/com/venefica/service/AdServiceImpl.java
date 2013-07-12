@@ -157,8 +157,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         adDataDao.save(ad.getAdData());
         
         ad.setStatus(AdStatus.ACTIVE);
-        ad.setSent(false);
-        ad.setReceived(false);
         ad.setCreator(currentUser);
         ad.setExpires(expires);
         ad.setExpired(false);
@@ -286,8 +284,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         ad.markAsDeleted();
         
-        transaction.setFinalized(true);
-        transaction.setFinalizedAt(new Date());
+        transaction.markAsFinalized();
         userTransactionDao.update(transaction);
     }
 
@@ -555,39 +552,36 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("Only the creator can relist the ad!");
         }
-
         if (ad.isDeleted() /* || ad.isSold() || ad.isSpam() */) {
             throw new InvalidAdStateException("Ad can't be relisted as is deleted!");
         }
-        
-        if ( ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
-            //only EXPIRED or SELECTED status ads can be relisted
-            if ( ad.canProlong() ) {
-                //relist ad
-                ad.prolong(Constants.AD_PROLONGATION_PERIOD_DAYS);
-            } else {
-                throw new InvalidAdStateException("Ad can't be relisted anymore!");
-            }
-        } else {
+        if ( !ad.isExpired() ) {
             throw new InvalidAdStateException("Ad can't be relisted as its state (" + ad.getStatus() + ") is not as expected!");
         }
+        if ( !ad.canProlong() ) {
+            throw new InvalidAdStateException("Ad can't be relisted anymore!");
+        }
+        
+        //only EXPIRED ads can be relisted
+        ad.prolong(Constants.AD_PROLONGATION_PERIOD_DAYS);
     }
 
     @Override
     @Transactional
-    public void endAd(Long adId) throws AdNotFoundException, AuthorizationException {
+    public void endAd(Long adId) throws AdNotFoundException, InvalidAdStateException, AuthorizationException {
         Ad ad = validateAd(adId);
         User currentUser = getCurrentUser();
 
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("Only the creator can ends the ad");
         }
-
-        if (!ad.isSold()) {
-            ad.markAsSold();
-            ad.setExpired(true);
-            ad.setExpiresAt(new Date());
+        if ( ad.isSold() ) {
+            throw new InvalidAdStateException("The ad (adId: " + adId + ") is already ended/finalized");
         }
+
+        ad.markAsSold();
+        ad.setExpired(true);
+        //ad.setExpiresAt(new Date());
     }
     
     
@@ -596,28 +590,28 @@ public class AdServiceImpl extends AbstractService implements AdService {
     //* ad requests *
     //***************
     
-    @Override
-    @Transactional
-    public boolean canRequest(Long adId) throws AdNotFoundException {
-        //TODO
-        return false;
-    }
+//    @Override
+//    @Transactional
+//    public boolean canRequest(Long adId) throws AdNotFoundException {
+//        //TODO
+//        return false;
+//    }
     
-    @Override
-    public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
-        Request request = validateRequest(requestId);
-        User user = getCurrentUser();
-        Ad ad = request.getAd();
-        
-        if ( !request.getUser().equals(user) ) {
-            throw new InvalidRequestException("Only requestor can hide requests.");
-        }
-        if ( !ad.isExpired() && request.getStatus() != RequestStatus.EXPIRED ) {
-            throw new InvalidRequestException("Only expired requests (or expired ads) can be hidden.");
-        }
-        
-        requestDao.hide(requestId);
-    }
+//    @Override
+//    public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
+//        Request request = validateRequest(requestId);
+//        User user = getCurrentUser();
+//        Ad ad = request.getAd();
+//        
+//        if ( !request.getUser().equals(user) ) {
+//            throw new InvalidRequestException("Only requestor can hide requests.");
+//        }
+//        if ( !ad.isExpired() && request.getStatus() != RequestStatus.EXPIRED ) {
+//            throw new InvalidRequestException("Only expired requests (or expired ads) can be hidden.");
+//        }
+//        
+//        requestDao.hide(requestId);
+//    }
     
     @Override
     @Transactional
@@ -626,10 +620,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User user = getCurrentUser();
         Long userId = getCurrentUserId();
         
-        if (ad.getStatus() == AdStatus.ACTIVE) {
+        if (ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.IN_PROGRESS) {
             //continue
         } else {
-            //only ACTIVE status ads can be requested
+            //only ACTIVE or IN_PROGRESS status ads can be requested
             throw new InvalidAdStateException("Ad can't be requested as its state (" + ad.getStatus() + ") is not as expected!");
         }
         
@@ -644,7 +638,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.getAdData().getQuantity() <= 0 ) {
             throw new InvalidRequestException("No more available.");
         }
-        if ( ad.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+        if ( ad.getVisibleRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
             throw new InvalidRequestException("Max request limit reached.");
         }
         
@@ -655,10 +649,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         request = new Request();
+        request.setSent(false);
+        request.setReceived(false);
         request.setAd(ad);
         request.setUser(user);
         request.setStatus(RequestStatus.PENDING);
         Long requestId = requestDao.save(request);
+        
+        ad.setStatus(AdStatus.IN_PROGRESS);
         
         if ( !user.isBusinessAccount() ) {
             BigDecimal currentPendingNumber = calculatePendingNumber(user);
@@ -702,7 +700,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Ad ad = request.getAd();
         UserTransaction transaction;
         
-        if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED || ad.getStatus() == AdStatus.SELECTED ) {
+        if ( ad.getStatus() == AdStatus.IN_PROGRESS ) {
             //continue
         } else {
             throw new InvalidAdStateException("Request can't be cancelled as its ad state (" + ad.getStatus() + ") is not as expected!");
@@ -722,19 +720,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
-        request.unmarkAsSelected();
         if ( ad.getCreator().equals(user) ) {
-            //canceling by the ad owner
-            request.setStatus(RequestStatus.EXPIRED);
+            //canceling (declining) by the ad owner
+            ad.decline(request);
         } else {
+            if ( ad.getType() == AdType.MEMBER && request.isAccepted() ) {
+                //member typed ads accepted request cannot be cancelled
+                throw new InvalidRequestException("Request (requestId: " + requestId + ") is already accepted/selected, canceling not allowed.");
+            }
+            
             //canceling by the requestor
-            request.markAsDeleted();
+            ad.cancel(request);
         }
         
-        ad.unselect(); //increment available quantity
-        
-        transaction.setFinalized(true);
-        transaction.setFinalizedAt(new Date());
+        transaction.markAsFinalized();
         userTransactionDao.update(transaction);
     }
     
@@ -792,13 +791,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
-                if ( request.getStatus() == RequestStatus.ACCEPTED ) {
-                    Long fromUserId = request.getUser().getId();
-                    Long adId = request.getAd().getId();
-                    Rating rating = ratingDao.get(fromUserId, adId);
-                    if ( rating == null ) {
-                        result.add(new RequestDto(request));
-                    }
+                if ( !request.isAccepted() ) {
+                    continue;
+                }
+                
+                Long fromUserId = request.getUser().getId();
+                Long adId = request.getAd().getId();
+                Rating rating = ratingDao.get(fromUserId, adId);
+                if ( rating == null ) {
+                    result.add(new RequestDto(request));
                 }
             }
         }
@@ -817,14 +818,16 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !ad.getCreator().equals(user) ) {
             throw new InvalidRequestException("Only creator users can mark as sent.");
         }
+        if ( !request.isAccepted() ) {
+            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not accepted, cannot mark as sent.");
+        }
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
         }
         
-        ad.markAsSent();
+        request.markAsSent();
         
-        transaction.setFinalized(true);
-        transaction.setFinalizedAt(new Date());
+        transaction.markAsFinalized();
         userTransactionDao.update(transaction);
         
         UserPoint userPoint = user.getUserPoint();
@@ -844,14 +847,22 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.getUser().equals(user) ) {
             throw new InvalidRequestException("Only requestor can mark as received.");
         }
+        if ( !request.isSent() ) {
+            throw new InvalidRequestException("Cannot mark request (requestId: " + requestId + ") as received as it was not yet sent.");
+        }
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
-        ad.markAsReceived();
+        request.markAsReceived();
         
-        transaction.setFinalized(true);
-        transaction.setFinalizedAt(new Date());
+        if ( ad.getAdData().getQuantity() == 0 ) {
+            //ending ad if there are no more items
+            ad.markAsSold();
+            ad.setExpired(true);
+        }
+        
+        transaction.markAsFinalized();
         userTransactionDao.update(transaction);
         
         UserPoint userPoint = user.getUserPoint();
@@ -952,7 +963,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         if (ad.getSpamMarks().size() + 1 >= Constants.SPAMMARK_MAX_ALLOWED) {
             ad.markAsSpam();
-            ad.markAsDeleted();
+            //ad.markAsDeleted();
         }
 
         SpamMark newMark = new SpamMark(ad, currentUser);
@@ -978,7 +989,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
             // restore ad
             if (ad.getSpamMarks().size() < Constants.SPAMMARK_MAX_ALLOWED) {
-                ad.unmarkAsDeleted();
+                //ad.unmarkAsDeleted();
                 ad.unmarkAsSpam();
             }
 
@@ -1001,16 +1012,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         String text = ratingDto.getText();
         int ratingValue = ratingDto.getValue();
         
-        if ( ad.getStatus() == AdStatus.SENT || ad.getStatus() == AdStatus.RECEIVED ) {
-            //continue
-        } else {
-            throw new InvalidAdStateException("Ad can't be selected as its state (" + ad.getStatus() + ") is not as expected!");
-        }
-        
         if (ratingValue != -1 && ratingValue != 1) {
             throw new InvalidRateOperationException("Only '1' or '-1' can be used as rating values!");
-        } else if ( from.equals(to) ) {
+        }
+        if ( from.equals(to) ) {
             throw new InvalidRateOperationException("You cannot rate your ad for yourself.");
+        }
+        if ( !ad.getCreator().equals(from) && !ad.getCreator().equals(to) ) {
+            throw new InvalidRateOperationException("Invalid user to rate.");
         }
 
         for (Rating r : ad.getRatings()) {
@@ -1019,26 +1028,24 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
         }
         
-        if (ad.getCreator().equals(from) || ad.getCreator().equals(to)) {
-            Long adId = ad.getId();
-            Long userId;
-            if (ad.getCreator().equals(to)) {
-                userId = from.getId();
-            } else {
-                userId = to.getId();
-            }
-            
-            Request request = requestDao.get(userId, adId);
-            if ( request == null ) {
-                throw new InvalidRateOperationException("There is no request for user (userId: " + userId + ") on this ad (adId: " + adId + ")");
-            }
-            if ( request.getStatus() != RequestStatus.ACCEPTED ) {
-                throw new InvalidRateOperationException("The request is not selected on this ad (adId: " + adId + ")");
-            }
+        Long adId = ad.getId();
+        Long userId;
+        if (ad.getCreator().equals(to)) {
+            userId = from.getId();
         } else {
-            throw new InvalidRateOperationException("Invalid user to rate.");
+            userId = to.getId();
         }
-        
+
+        Request request = requestDao.get(userId, adId);
+        if ( request == null ) {
+            throw new InvalidRateOperationException("There is no request for user (userId: " + userId + ") on this ad (adId: " + adId + ")");
+        }
+        if ( !request.isAccepted() ) {
+            throw new InvalidRateOperationException("The request is not selected on this ad (adId: " + adId + ")");
+        }
+        if ( !request.isSent() && !request.isReceived() ) {
+            throw new InvalidRateOperationException("The request is not sent or received on this ad (adId: " + adId + ")");
+        }
 
         Rating rating = new Rating(ad, from, to, text, ratingValue);
         ratingDao.save(rating);
@@ -1187,16 +1194,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
-                switch ( request.getStatus() ) {
-                    case PENDING:
-                    case ACCEPTED: {
-                        result.add(request);
-                        break;
-                    }
-                    case EXPIRED:
-                    default: {
-                        //expired requests should not be returned
-                    }
+                if ( request.isActive() ) {
+                    result.add(request);
                 }
             }
         }
@@ -1207,23 +1206,24 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private void selectRequest(Request request, User selector) throws InvalidRequestException, InvalidAdStateException {
         Ad ad = request.getAd();
         
-        if ( ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.EXPIRED ) {
+        if ( ad.getStatus() == AdStatus.IN_PROGRESS ) {
             //continue
         } else {
+            //ad must be IN_PROGRESS to allow request selection
             throw new InvalidAdStateException("Ad can't be selected as its state (" + ad.getStatus() + ") is not as expected!");
         }
         if ( !ad.getCreator().equals(selector) ) {
-            throw new InvalidRequestException("Only owner can select a requestor!");
+            throw new InvalidRequestException("Only owner can select a request!");
         }
-        if ( request.isSelected() ) {
+        if ( request.isAccepted()) {
             throw new InvalidRequestException("Request already selected");
         }
+        if ( ad.getAdData().getQuantity() <= 0 ) {
+            throw new InvalidRequestException("No more available.");
+        }
         
-        request.setStatus(RequestStatus.ACCEPTED);
-        request.markAsSelected();
-        
-        ad.select(); //decrementing available quantity
-        ad.setExpiresAt(new Date()); //reset the expiration date
+        ad.select(request);
+        //ad.setExpiresAt(new Date()); //reset (???) the expiration date
     }
     
     
