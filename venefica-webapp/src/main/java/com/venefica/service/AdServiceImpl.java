@@ -802,31 +802,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public void markAsSent(Long requestId) throws RequestNotFoundException, InvalidRequestException {
-        Request request = validateRequest(requestId);
         User user = getCurrentUser();
-        Ad ad = request.getAd();
-        Long adId = ad.getId();
-        UserTransaction transaction = userTransactionDao.getByAd(user.getId(), adId);
-        
-        if ( !ad.getCreator().equals(user) ) {
-            throw new InvalidRequestException("Only creator users can mark as sent.");
-        }
-        if ( !request.isAccepted() ) {
-            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not accepted, cannot mark as sent.");
-        }
-        if ( transaction == null ) {
-            throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
-        }
-        
-        request.markAsSent();
-        
-        transaction.markAsFinalized();
-        userTransactionDao.update(transaction);
-        
-        UserPoint userPoint = user.getUserPoint();
-        userPoint.addNumber(transaction.getPendingNumber());
-        userPoint.addScore(transaction.getPendingScore());
-        userPointDao.update(userPoint);
+        markAsSent(user, requestId);
     }
     
     @Override
@@ -840,11 +817,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.getUser().equals(user) ) {
             throw new InvalidRequestException("Only requestor can mark as received.");
         }
-        if ( !request.isSent() ) {
-            throw new InvalidRequestException("Cannot mark request (requestId: " + requestId + ") as received as it was not yet sent.");
+        if ( !request.isAccepted()) {
+            throw new InvalidRequestException("Cannot mark request (requestId: " + requestId + ") as received as it is not selected/accepted.");
         }
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
+        }
+        
+        if ( request.getStatus() == RequestStatus.ACCEPTED ) {
+            //marking automatically as sent if the status remained as ACCEPTED (if the SENT was skipped)
+            User owner = ad.getCreator();
+            markAsSent(owner, requestId);
+        }
+        
+        if ( !request.isSent() ) {
+            throw new InvalidRequestException("Cannot mark request (requestId: " + requestId + ") as received as it was not yet sent.");
         }
         
         request.markAsReceived();
@@ -859,8 +846,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         userTransactionDao.update(transaction);
         
         UserPoint userPoint = user.getUserPoint();
-        userPoint.addNumber(transaction.getPendingNumber());
-        userPoint.addScore(transaction.getPendingScore());
+        userPoint.removeNumber(transaction.getPendingNumber());
+        userPoint.removeScore(transaction.getPendingScore());
         userPointDao.update(userPoint);
     }
     
@@ -1217,6 +1204,36 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         ad.select(request);
         //ad.setExpiresAt(new Date()); //reset (???) the expiration date
+    }
+    
+    private void markAsSent(User user, Long requestId) throws RequestNotFoundException, InvalidRequestException {
+        Request request = validateRequest(requestId);
+        Ad ad = request.getAd();
+        Long adId = ad.getId();
+        UserTransaction transaction = userTransactionDao.getByAd(user.getId(), adId);
+        
+        if ( !ad.getCreator().equals(user) ) {
+            throw new InvalidRequestException("Only creator users can mark as sent.");
+        }
+        if ( !request.isAccepted() ) {
+            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not accepted, cannot mark as sent.");
+        }
+        if ( transaction == null ) {
+            throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
+        }
+        if ( request.getStatus() != RequestStatus.ACCEPTED ) {
+            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not in accepted state, cannot mark as sent.");
+        }
+        
+        request.markAsSent();
+        
+        transaction.markAsFinalized();
+        userTransactionDao.update(transaction);
+        
+        UserPoint userPoint = user.getUserPoint();
+        userPoint.addNumber(transaction.getPendingNumber());
+        userPoint.addScore(transaction.getPendingScore());
+        userPointDao.update(userPoint);
     }
     
     

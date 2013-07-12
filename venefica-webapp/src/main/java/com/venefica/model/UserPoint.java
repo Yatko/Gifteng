@@ -63,11 +63,25 @@ public class UserPoint {
         number = number.add(n);
     }
     
+    public void removeNumber(BigDecimal n) {
+        if ( number == null ) {
+            number = BigDecimal.ZERO;
+        }
+        number = number.subtract(n);
+    }
+    
     public void addScore(BigDecimal s) {
         if ( score == null ) {
             score = BigDecimal.ZERO;
         }
         score = score.add(s);
+    }
+    
+    public void removeScore(BigDecimal s) {
+        if ( score == null ) {
+            score = BigDecimal.ZERO;
+        }
+        score = score.subtract(s);
     }
     
     public BigDecimal getPendingNumber() {
