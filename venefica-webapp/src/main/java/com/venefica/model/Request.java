@@ -92,6 +92,10 @@ public class Request {
         return status == RequestStatus.UNACCEPTED;
     }
     
+    public boolean isDeclined() {
+        return status == RequestStatus.DECLINED;
+    }
+    
     /**
      * If the request is having CANCELED or DECLINED status returns false.
      * Deleted and hidden request is also not active - returns false.

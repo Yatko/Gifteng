@@ -590,28 +590,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
     //* ad requests *
     //***************
     
-//    @Override
-//    @Transactional
-//    public boolean canRequest(Long adId) throws AdNotFoundException {
-//        //TODO
-//        return false;
-//    }
-    
-//    @Override
-//    public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
-//        Request request = validateRequest(requestId);
-//        User user = getCurrentUser();
-//        Ad ad = request.getAd();
-//        
-//        if ( !request.getUser().equals(user) ) {
-//            throw new InvalidRequestException("Only requestor can hide requests.");
-//        }
-//        if ( !ad.isExpired() && request.getStatus() != RequestStatus.EXPIRED ) {
-//            throw new InvalidRequestException("Only expired requests (or expired ads) can be hidden.");
-//        }
-//        
-//        requestDao.hide(requestId);
-//    }
+    @Override
+    public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
+        Request request = validateRequest(requestId);
+        User user = getCurrentUser();
+        Ad ad = request.getAd();
+        
+        if ( !request.getUser().equals(user) ) {
+            throw new InvalidRequestException("Only requestor can hide requests.");
+        }
+        if ( !ad.isExpired() && !request.isUnaccepted() && !request.isDeclined() ) {
+            throw new InvalidRequestException("Only 'expired' (unaccepted or declined) requests (or expired ads) can be hidden.");
+        }
+        
+        requestDao.hide(requestId);
+    }
     
     @Override
     @Transactional
