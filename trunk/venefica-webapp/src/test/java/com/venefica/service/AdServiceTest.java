@@ -10,7 +10,6 @@ import com.venefica.model.AdStatus;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
-import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
