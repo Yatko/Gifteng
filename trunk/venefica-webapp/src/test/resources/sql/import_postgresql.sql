@@ -66,7 +66,7 @@ insert into memberaddata ("id") values (1);
 
 -- Ads
 delete from ad;
-insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "sent", "received", "numexpire", "status", "expires") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 'f', 'f', 0, 'ACTIVE', 't');
+insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "numexpire", "status", "expires") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't');
 
 delete from user_transaction;
 insert into user_transaction ("finalized", "pendingNumber", "pendingScore", "ad_id", "user_id", "userPoint_id") values ('f', '2.2625', '0', 1, 1, 1);
