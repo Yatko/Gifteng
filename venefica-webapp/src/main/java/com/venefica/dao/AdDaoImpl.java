@@ -95,7 +95,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         AdType type = filter.getType();
         
         // Build query string
-        String queryStr = "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false";
+        String queryStr = "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false and a.sold = false";
 
         if (lastAdId >= 0) {
             queryStr += " and a.id < :lastId";

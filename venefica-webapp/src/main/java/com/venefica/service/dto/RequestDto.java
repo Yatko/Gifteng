@@ -42,6 +42,8 @@ public class RequestDto extends DtoBase {
     private ImageDto imageThumbnail;
     
     // out
+    private boolean accepted;
+    // out
     private boolean sent;
     // out
     private boolean received;
@@ -58,6 +60,7 @@ public class RequestDto extends DtoBase {
         this.type = request.getAd().getType();
         this.adStatus = request.getAd().getStatus();
         this.adExpiresAt = request.getAd().getExpiresAt();
+        this.accepted = request.isAccepted();
         this.sent = request.isSent();
         this.received = request.isReceived();
         
@@ -163,5 +166,13 @@ public class RequestDto extends DtoBase {
 
     public void setReceived(boolean received) {
         this.received = received;
+    }
+    
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }
