@@ -4,11 +4,14 @@ import com.venefica.dao.AdDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.ImageDao;
+import com.venefica.dao.RequestDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Image;
 import com.venefica.model.ImageType;
+import com.venefica.model.Request;
+import com.venefica.model.RequestStatus;
 import com.venefica.model.User;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AddressDto;
@@ -53,7 +56,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -70,6 +72,8 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     private CategoryDao categoryDao;
     @Inject
     private AdDao adDao;
+    @Inject
+    private RequestDao requestDao;
     @Inject
     private BookmarkDao bookmarkDao;
     @Inject
@@ -558,7 +562,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         client.markAsSpam(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
-        assertTrue("Ad must be marked as deleted!", updatedAd.isDeleted());
+        //assertTrue("Ad must be marked as deleted!", updatedAd.isDeleted());
         assertTrue("Ad must be marked as spam!", updatedAd.isSpam());
     }
 
@@ -568,7 +572,8 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         client.unmarkAsSpam(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
-        assertTrue("Ad must not be marked as deleted!", !updatedAd.isDeleted());
+        //assertTrue("Ad must not be marked as deleted!", !updatedAd.isDeleted());
+        assertTrue("Ad must not be marked as spam!", !updatedAd.isSpam());
     }
 
     //***********************
@@ -576,19 +581,19 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************
     
     @Test(expected = AdNotFoundException.class)
-    public void endUnexistingAdTest() throws AdNotFoundException, AuthorizationException {
+    public void endUnexistingAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.endAd(new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void endAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException {
+    public void endAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsSecondUser();
         client.endAd(ad.getId());
     }
 
     @Test
-    public void endAdTest() throws AdNotFoundException, AuthorizationException {
+    public void endAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.endAd(ad.getId());
 
@@ -597,9 +602,106 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         assertTrue("Ad must be marked as ended!", updatedAd.isSold());
         assertNotNull("Ad must contain the date of selling", updatedAd.getSoldAt());
         assertTrue("Ad must be marked as expired!", updatedAd.isExpired());
-        assertNotNull("Ad must contain the date of expiration!", updatedAd.getExpiresAt());
+        //assertNotNull("Ad must contain the date of expiration!", updatedAd.getExpiresAt());
     }
 
+    //***************
+    //* ad requests *
+    //***************
+    
+    @Test
+    public void happyDayTest() throws AdValidationException, AdNotFoundException, UserNotFoundException, AlreadyRequestedException, InvalidAdStateException, InvalidRequestException, RequestNotFoundException {
+        authenticateClientAsFirstUser();
+        
+        AdDto adDto = new AdDto();
+        adDto.setCategoryId(1L);
+        adDto.setTitle("Test happy day");
+        adDto.setDescription("Test description");
+        adDto.setPrice(new BigDecimal(5.0));
+        adDto.setPickUp(true);
+        
+        Long adId = client.placeAd(adDto);
+        assertNotNull("The ad should exist", client.getAdById(adId));
+        
+        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
+        assertTrue("The user ads should not be empty", ads != null && !ads.isEmpty());
+        boolean exists = false;
+        for ( AdDto ad : ads ) {
+            if ( ad.getId().equals(adId) ) {
+                exists = true;
+                adDto = ad;
+                break;
+            }
+        }
+        assertTrue("The user ads should contain the previously created ad", exists);
+        assertTrue("Ad statis should be ACTIVE", adDto.getStatus() == AdStatus.ACTIVE);
+        
+        List<RequestDto> requests = client.getRequests(adId);
+        assertTrue("The previously created ad should have no request yet", requests == null || requests.isEmpty());
+        
+        try {
+            client.requestAd(adId, "test message");
+            fail("Owned ads could not be requested");
+        } catch ( InvalidRequestException ex ) {
+            //it's OK
+        }
+        
+        authenticateClientAsSecondUser();
+        Long secondUserRequestId = client.requestAd(adId, "test message from 2nd user");
+        
+        try {
+            client.requestAd(adId, "test message from 2nd user");
+            fail("There is already a request for this ad by this user");
+        } catch ( AlreadyRequestedException ex ) {
+            //it's OK
+        }
+        
+        adDto = client.getAdById(adId);
+        assertTrue("After first request the ad status should be IN_PROGRESS", adDto.getStatus() == AdStatus.IN_PROGRESS);
+        
+        authenticateClientAsThirdUser();
+        Long thirdUserRequestId = client.requestAd(adId, "test message from 3rd user");
+        
+        authenticateClientAsFirstUser();
+        requests = client.getRequests(adId);
+        assertTrue("The number of requests should be 2", requests != null && requests.size() == 2);
+        for ( RequestDto request : requests ) {
+            assertTrue("Request status should be PENDING", request.getStatus() == RequestStatus.PENDING);
+        }
+        
+        client.selectRequest(secondUserRequestId);
+        RequestDto requestDto = client.getRequestById(secondUserRequestId);
+        assertTrue("Request should be accepted", requestDto.getStatus() == RequestStatus.ACCEPTED);
+        
+        requestDto = client.getRequestById(thirdUserRequestId);
+        assertTrue("Request should be marked as unaccepted", requestDto.getStatus() == RequestStatus.UNACCEPTED);
+        
+        try {
+            client.selectRequest(thirdUserRequestId);
+            fail("The second request selection should fail");
+        } catch ( InvalidRequestException ex ) {
+            //it's OK
+        }
+        
+        authenticateClientAsSecondUser();
+        
+        try {
+            client.cancelRequest(secondUserRequestId);
+            fail("Request cancelation should fail as it's already accepted by the owner");
+        } catch ( InvalidRequestException ex ) {
+            //it's OK
+        }
+        
+        authenticateClientAsFirstUser();
+        client.markAsSent(secondUserRequestId);
+        
+        authenticateClientAsSecondUser();
+        client.markAsReceived(secondUserRequestId);
+        
+        adDto = client.getAdById(adId);
+        assertTrue("Ad should be in FINALIZED state", adDto.getStatus() == AdStatus.FINALIZED);
+    }
+    
     //***********************************
     //* ad cruds (create/update/delete) *
     //***********************************
@@ -701,53 +803,61 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         client.rateAd(new RatingDto(new Long(-1), SECOND_USER_ID, 0));
     }
 
-//    @Test(expected = InvalidRateOperationException.class)
-//    public void rateAdByCreatorTest() throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
-//        authenticateClientAsFirstUser();
-//        client.rateAd(new RatingDto(ad.getId(), SECOND_USER_ID, 1));
-//    }
-
     @Test(expected = InvalidRateOperationException.class)
     public void rateAdWithInvalidValueTest() throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
-        makeAdSent();
         authenticateClientAsSecondUser();
         client.rateAd(new RatingDto(ad.getId(), SECOND_USER_ID, -10));
     }
     
     @Test
-    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException {
-        makeAdActive();
+    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException, AdValidationException {
+        authenticateClientAsFirstUser();
+        
+        AdDto adDto = new AdDto();
+        adDto.setCategoryId(1L);
+        adDto.setTitle("Test happy day");
+        adDto.setDescription("Test description");
+        adDto.setPrice(new BigDecimal(5.0));
+        adDto.setPickUp(true);
+        
+        Long adId = client.placeAd(adDto);
+        assertNotNull("The ad should exist", client.getAdById(adId));
+        
+        Ad ad_ = getAdById(adId);
+        
         authenticateClientAsThirdUser();
-        client.requestAd(FIRST_AD_ID, "Give me your gift please");
+        client.requestAd(adId, "Give me your gift please");
         
         List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
         assertNotNull(ads);
-        assertTrue("At least one ad might have returened!", !ads.isEmpty());
+        assertTrue("At least one ad might have returned!", !ads.isEmpty());
         
         authenticateClientAsSecondUser();
-        Long requestId = client.requestAd(FIRST_AD_ID, "I'm nicer than third user, so give me the gift.");
+        Long requestId = client.requestAd(adId, "I'm nicer than third user, so give me the gift.");
         
         authenticateClientAsFirstUser();
         client.selectRequest(requestId);
         
         List<RequestDto> unratedRequestsBefore = client.getRequestsForUserWithoutRating(FIRST_USER_ID);
-        assertEquals(1, unratedRequestsBefore.size());
-        assertEquals(SECOND_USER_ID, unratedRequestsBefore.get(0).getUser().getId());
+        unratedRequestsBefore = getRequestsByAd(unratedRequestsBefore, adId);
         
-        makeAdSent();
+        assertTrue("Unrated requests should not be empty", unratedRequestsBefore != null && !unratedRequestsBefore.isEmpty());
+        assertEquals(1, unratedRequestsBefore.size());
+        
+        client.markAsSent(requestId);
+        
         authenticateClientAsSecondUser();
         RatingDto ratingDto_1 = new RatingDto();
-        ratingDto_1.setAdId(FIRST_AD_ID);
+        ratingDto_1.setAdId(adId);
         ratingDto_1.setToUserId(FIRST_USER_ID);
         ratingDto_1.setValue(1); //positive
         ratingDto_1.setText("Delivery on time");
         client.rateAd(ratingDto_1);
         
+        Ad updatedAd = adDao.get(adId);
+        assertTrue("Rating value might have changed!", Math.abs(ad_.getRating() - updatedAd.getRating()) > EPSILON);
         
-        Ad updatedAd = adDao.get(ad.getId());
-        assertTrue("Rating value might have changed!", Math.abs(ad.getRating() - updatedAd.getRating()) > EPSILON);
-        
-        AdDto adDto = client.getAdById(ad.getId());
+        adDto = client.getAdById(adId);
         assertTrue("Multiple ratings not allowed!", !adDto.getCanRate());
         
         
@@ -756,6 +866,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<RatingDto> sentRatings_2 = client.getSentRatings(SECOND_USER_ID);
         List<RatingDto> receivedRatings_2 = client.getReceivedRatings(SECOND_USER_ID);
         List<RequestDto> unratedRequestsAfter = client.getRequestsForUserWithoutRating(FIRST_USER_ID);
+        
+        sentRatings_1 = getRatingsByAd(sentRatings_1, adId);
+        receivedRatings_1 = getRatingsByAd(receivedRatings_1, adId);
+        sentRatings_2 = getRatingsByAd(sentRatings_2, adId);
+        receivedRatings_2 = getRatingsByAd(receivedRatings_2, adId);
+        unratedRequestsAfter = getRequestsByAd(unratedRequestsAfter, adId);
         
         assertTrue(unratedRequestsAfter == null || unratedRequestsAfter.isEmpty());
         assertTrue(sentRatings_1 == null || sentRatings_1.isEmpty());
@@ -767,7 +883,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         authenticateClientAsFirstUser();
         RatingDto ratingDto_2 = new RatingDto();
-        ratingDto_2.setAdId(FIRST_AD_ID);
+        ratingDto_2.setAdId(adId);
         ratingDto_2.setToUserId(SECOND_USER_ID);
         ratingDto_2.setValue(1); //positive
         ratingDto_2.setText("Pickup on time");
@@ -778,6 +894,11 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<RatingDto> sentRatings_2_ = client.getSentRatings(SECOND_USER_ID);
         List<RatingDto> receivedRatings_2_ = client.getReceivedRatings(SECOND_USER_ID);
         
+        sentRatings_1_ = getRatingsByAd(sentRatings_1_, adId);
+        receivedRatings_1_ = getRatingsByAd(receivedRatings_1_, adId);
+        sentRatings_2_ = getRatingsByAd(sentRatings_2_, adId);
+        receivedRatings_2_ = getRatingsByAd(receivedRatings_2_, adId);
+        
         assertEquals(1, sentRatings_1_.size());
         assertEquals(1, receivedRatings_1_.size());
         assertEquals(1, sentRatings_2_.size());
@@ -785,7 +906,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         
         try {
-            client.rateAd(new RatingDto(ad.getId(), SECOND_USER_ID, -1));
+            client.rateAd(new RatingDto(adId, SECOND_USER_ID, -1));
             fail("Multiple ratings by the same user are not allowed!");
         } catch (AlreadyRatedException e) {
             // OK
@@ -804,15 +925,17 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     private void makeAdActive() {
         TransactionStatus status = beginNewTransaction();
+        
         try {
             Date expiresAt = DateUtils.addDays(new Date(), 10);
+            
             Ad ad_ = adDao.get(FIRST_AD_ID);
-            ad_.unmarkAsDeleted();
-            ad_.unmarkAsSold();
             ad_.unmarkAsSpam();
+            ad_.setDeleted(false);
             ad_.setExpired(false);
             ad_.setExpiresAt(expiresAt);
             ad_.setStatus(AdStatus.ACTIVE);
+            
             commitTransaction(status);
         } catch (Exception e) {
             rollbackTransaction(status);
@@ -822,16 +945,17 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     private void makeAdExpired() {
         TransactionStatus status = beginNewTransaction();
+        
         try {
             Date expiresAt = DateUtils.addDays(new Date(), 10);
             
             Ad ad_ = adDao.get(FIRST_AD_ID);
-            ad_.unmarkAsDeleted();
-            ad_.unmarkAsSold();
             ad_.unmarkAsSpam();
+            ad_.setDeleted(false);
             ad_.setExpired(true);
             ad_.setExpiresAt(expiresAt);
             ad_.setStatus(AdStatus.EXPIRED);
+            
             commitTransaction(status);
         } catch (Exception e) {
             rollbackTransaction(status);
@@ -839,40 +963,79 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         }
     }
     
-    private void makeAdSent() {
+    private Ad getAdById(Long adId) {
         TransactionStatus status = beginNewTransaction();
+
         try {
-            Date expiresAt = DateUtils.addDays(new Date(), 10);
+            Ad ad_ = adDao.get(adId);
             
-            Ad ad_ = adDao.get(FIRST_AD_ID);
-            ad_.unmarkAsDeleted();
-            ad_.unmarkAsSold();
-            ad_.unmarkAsSpam();
-            ad_.setExpired(true);
-            ad_.setExpiresAt(expiresAt);
-            ad_.setStatus(AdStatus.SENT);
             commitTransaction(status);
+            
+            return ad_;
         } catch (Exception e) {
             rollbackTransaction(status);
             throw new RuntimeException(e);
         }
     }
     
-    private void makeAdEnded() {
-        TransactionStatus status = beginNewTransaction();
-        try {
-            Date expiresAt = DateUtils.addDays(new Date(), -10);
-            
-            Ad ad_ = adDao.get(FIRST_AD_ID);
-            ad_.unmarkAsDeleted();
-            ad_.unmarkAsSold();
-            ad_.unmarkAsSpam();
-            ad_.setExpired(true);
-            ad_.setExpiresAt(expiresAt);
-            commitTransaction(status);
-        } catch (Exception e) {
-            rollbackTransaction(status);
-            throw new RuntimeException(e);
+    private List<RequestDto> getRequestsByAd(List<RequestDto> requests, Long adId) {
+        if ( requests == null ) {
+            return null;
         }
+        List<RequestDto> result = new LinkedList<RequestDto>();
+        for ( RequestDto request : requests ) {
+            if ( request.getAdId().equals(adId) ) {
+                result.add(request);
+            }
+        }
+        return result;
     }
+    
+    private List<RatingDto> getRatingsByAd(List<RatingDto> ratings, Long adId) {
+        if ( ratings == null ) {
+            return null;
+        }
+        List<RatingDto> result = new LinkedList<RatingDto>();
+        for ( RatingDto rating : ratings ) {
+            if ( rating.getAdId().equals(adId) ) {
+                result.add(rating);
+            }
+        }
+        return result;
+    }
+    
+//    private void makeRequestSent(Long requestId) {
+//        TransactionStatus status = beginNewTransaction();
+//        
+//        try {
+//            Request request = requestDao.get(requestId);
+//            request.setSent(true);
+//            request.setSentAt(new Date());
+//            
+//            commitTransaction(status);
+//        } catch (Exception e) {
+//            rollbackTransaction(status);
+//            throw new RuntimeException(e);
+//        }
+//    }
+    
+//    private void makeAdEnded() {
+//        TransactionStatus status = beginNewTransaction();
+//        
+//        try {
+//            Date expiresAt = DateUtils.addDays(new Date(), -10);
+//            
+//            Ad ad_ = adDao.get(FIRST_AD_ID);
+//            ad_.unmarkAsDeleted();
+//            ad_.unmarkAsSold();
+//            ad_.unmarkAsSpam();
+//            ad_.setExpired(true);
+//            ad_.setExpiresAt(expiresAt);
+//            
+//            commitTransaction(status);
+//        } catch (Exception e) {
+//            rollbackTransaction(status);
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
