@@ -161,6 +161,8 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setExpiresAt(model.getExpiresAt());
         adDto.setAvailableAt(model.getAvailableAt());
         adDto.setOwner(currentUser != null && model.getCreator().equals(currentUser));
+        adDto.setSold(model.isSold());
+        adDto.setSoldAt(model.getSoldAt());
         
         model.getAdData().updateAdDto(adDto);
         
