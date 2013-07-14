@@ -96,6 +96,10 @@ public class Request {
         return status == RequestStatus.DECLINED;
     }
     
+    public boolean isVisible() {
+        return !isHidden() && !isDeleted();
+    }
+    
     /**
      * If the request is having CANCELED or DECLINED status returns false.
      * Deleted and hidden request is also not active - returns false.
@@ -103,7 +107,7 @@ public class Request {
      * @return 
      */
     public boolean isActive() {
-        if ( isDeleted() || isHidden() ) {
+        if ( !isVisible() ) {
             return false;
         }
         

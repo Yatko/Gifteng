@@ -278,13 +278,9 @@ public class Ad {
         List<Request> result = new LinkedList<Request>();
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
-                if ( request.isHidden() ) {
-                    continue;
-                } else if ( request.isDeleted() ) {
-                    continue;
+                if ( request.isVisible() ) {
+                    result.add(request);
                 }
-                
-                result.add(request);
             }
         }
         return result;
