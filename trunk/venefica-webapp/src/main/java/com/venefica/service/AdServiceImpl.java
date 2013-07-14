@@ -464,7 +464,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public List<AdDto> getUserRequestedAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User currentUser = getCurrentUser();
-        List<Request> requests = getActiveRequestsByUser(userId);
+        List<Request> requests = getActiveRequestsByUser(userId, false);
         List<AdDto> result = new LinkedList<AdDto>();
         
         if ( includeRequests == null ) {
@@ -714,6 +714,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         if ( ad.getCreator().equals(user) ) {
+            if ( request.isDeclined() ) {
+                throw new InvalidRequestException("Request (requestId: " + requestId + ") is already canceled (declined)");
+            }
+            
             //canceling (declining) by the ad owner
             ad.decline(request);
         } else {
@@ -765,7 +769,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public List<RequestDto> getRequestsByUser(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
-        List<Request> requests = getActiveRequestsByUser(userId);
+        List<Request> requests = getActiveRequestsByUser(userId, true);
         List<RequestDto> result = new LinkedList<RequestDto>();
         
         for ( Request request : requests ) {
@@ -1163,19 +1167,27 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
     
     /**
-     * Returns all PENDING and ACCEPTED requests for the specified user.
+     * Returns all the visible requests for the specified user. The 2nd
+     * parameter should be used to explicitly set the active status. If is set
+     * to false visible (not hidden and not deleted) requests will be included.
      * 
      * @param user
      * @return 
      */
-    private List<Request> getActiveRequestsByUser(Long userId) {
+    private List<Request> getActiveRequestsByUser(Long userId, boolean includeOnlyActiveRequests) {
         List<Request> requests = requestDao.getByUser(userId);
         List<Request> result = new LinkedList<Request>();
         
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
-                if ( request.isActive() ) {
-                    result.add(request);
+                if ( includeOnlyActiveRequests ) {
+                    if ( request.isActive() ) {
+                        result.add(request);
+                    }
+                } else {
+                    if ( request.isVisible()) {
+                        result.add(request);
+                    }
                 }
             }
         }
