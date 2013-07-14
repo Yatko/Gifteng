@@ -22,11 +22,10 @@ class Ad_model extends CI_Model {
     const WEEKDAY_SATURDAY = 'SATURDAY';
     const WEEKDAY_SUNDAY = 'SUNDAY';
     
-    const STATUS_ACTIVE = 'ACTIVE';
+    const STATUS_ACTIVE = 'ACTIVE'; //there is no active request for this ad
+    const STATUS_IN_PROGRESS = 'IN_PROGRESS'; //there is an (one or more) active request for this ad
+    const STATUS_FINALIZED = 'FINALIZED';
     const STATUS_EXPIRED = 'EXPIRED';
-    const STATUS_SELECTED = 'SELECTED';
-    const STATUS_SENT = 'SENT';
-    const STATUS_RECEIVED = 'RECEIVED';
     
     var $id; //long
     var $categoryId; //long
@@ -42,12 +41,12 @@ class Ad_model extends CI_Model {
     var $createdAt; //long - timestamp
     var $owner; //boolean
     var $inBookmarks; //boolean
+    var $sold; //boolean
     var $expired; //boolean
-    var $sent; //boolean
-    var $received; //boolean
     var $requested; //boolean
     var $expires; //boolean
     var $availableAt; //long - timestamp
+    var $soldAt; //long - timestamp
     var $expiresAt; //long - timestamp
     var $canRate; //boolean
     var $creator; //User_model
@@ -58,8 +57,9 @@ class Ad_model extends CI_Model {
     var $type; //enum: MEMBER, BUSINESS
     var $comments; //array of Comment_model
     var $address; //Address_model
-    var $status; //enum: ACTIVE, EXPIRED, SELECTED, SENT, RECEIVED
+    var $status; //enum: ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED
     var $requests; //array of Request_model
+    var $canRequest; //boolean
     var $statistics; //AdStatistics_model
     
     // business ad data
@@ -87,15 +87,16 @@ class Ad_model extends CI_Model {
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
             $this->inBookmarks = getField($obj, 'inBookmarks');
+            $this->sold = getField($obj, 'sold');
             $this->expired = getField($obj, 'expired');
-            $this->sent = getField($obj, 'sent');
-            $this->received = getField($obj, 'received');
             $this->requested = getField($obj, 'requested');
             $this->expires = getField($obj, 'expires');
             $this->availableAt = getField($obj, 'availableAt');
+            $this->soldAt = getField($obj, 'soldAt');
             $this->expiresAt = getField($obj, 'expiresAt');
             $this->canRate = getField($obj, 'canRate');
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
+            $this->canRequest = getField($obj, 'canRequest');
             $this->freeShipping = getField($obj, 'freeShipping');
             $this->pickUp = getField($obj, 'pickUp');
             $this->place = getField($obj, 'place');
@@ -275,6 +276,40 @@ class Ad_model extends CI_Model {
         return null;
     }
     
+    /**
+     * Returns the first accepted request.
+     * 
+     * @return Request_model
+     */
+    public function getAcceptedRequest() {
+        if ( !$this->hasRequest() ) {
+            return null;
+        }
+        foreach ( $this->requests as $request ) {
+            if ( $request->accepted ) {
+                return $request;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the first sent request.
+     * 
+     * @return Request_model
+     */
+    public function getSentRequest() {
+        if ( !$this->hasRequest() ) {
+            return null;
+        }
+        foreach ( $this->requests as $request ) {
+            if ( $request->sent ) {
+                return $request;
+            }
+        }
+        return null;
+    }
+    
     public function hasRequest() {
         if ( $this->requests != null && count($this->requests) > 0 ) {
             return true;
@@ -282,10 +317,39 @@ class Ad_model extends CI_Model {
         return false;
     }
     
-    public function hasSelection() {
+    /**
+     * Verifies if there is at least one active request. Active requests are not
+     * having EXPIRED states, but they are PENDING or ACCEPTED.
+     * 
+     * @return boolean
+     */
+    public function hasActiveRequest() {
+        if ( !$this->hasRequest() ) {
+            return false;
+        }
+        foreach ( $this->requests as $request ) {
+            if ( $request->isActive() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function hasAcceptedRequest() {
         if ( $this->requests != null && count($this->requests) > 0 ) {
             foreach ( $this->requests as $request ) {
-                if ( $request->isSelected() ) {
+                if ( $request->accepted ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public function hasSentRequest() {
+        if ( $this->requests != null && count($this->requests) > 0 ) {
+            foreach ( $this->requests as $request ) {
+                if ( $request->sent ) {
                     return true;
                 }
             }

@@ -4,6 +4,22 @@ class Profile extends CI_Controller {
     
     private $initialized = false;
     
+    const TAB_GIFTS = 'gifts';
+    const TAB_CONNECTIONS = 'connections';
+    const TAB_ACCOUNT = 'account';
+    const TAB_BIO = 'bio';
+    
+    const MENU_GIVING = 'giving';
+    const MENU_RECEIVING = 'receiving';
+    const MENU_FAVORITE = 'favorite';
+    const MENU_FOLLOWING = 'following';
+    const MENU_FOLLOWER = 'follower';
+    const MENU_RATING = 'rating';
+    const MENU_NOTIFICATION = 'notification';
+    const MENU_MESSAGE = 'message';
+    const MENU_SETTING = 'setting';
+    const MENU_ABOUT = 'about';
+    
     public function view($name = null) {
         $this->init();
         
@@ -24,7 +40,8 @@ class Profile extends CI_Controller {
                     $user = $this->usermanagement_service->getUserByName($name);
                 }
             } else {
-                $user = $currentUser;
+                //needs to refresh the user as cached statistic data reflect incorrect values
+                $user = $this->usermanagement_service->refreshUser();
             }
         } catch ( Exception $ex ) {
             $user = null;
@@ -47,7 +64,7 @@ class Profile extends CI_Controller {
             $receivings = null;
         }
         
-        if ( key_exists('favorit', $_GET) ) {
+        if ( key_exists('favorite', $_GET) ) {
             $has_menu = true;
             $is_bookmark = true;
             try {
@@ -122,13 +139,13 @@ class Profile extends CI_Controller {
         $data['ratings'] = $ratings;
         
         if ( $is_bookmark ) {
-            $request_modal = $this->load->view('modal/request', array(), true);
+            $request_modal = $this->load->view('modal/request_create', array(), true);
         } else {
             $request_modal = '';
         }
         
         if ( $is_receiving ) {
-            $receiving_modal = $this->load->view('modal/message', array(), true);
+            $receiving_modal = $this->load->view('modal/request_view', array(), true);
         } else {
             $receiving_modal = '';
         }
@@ -156,7 +173,7 @@ class Profile extends CI_Controller {
         } else if ( isOwner($user) && $is_receiving ) {
             //only owner can see receiving list
             $this->load->view('pages/profile_receiving', $data);
-        } else if (  isOwner($user) && $is_bookmark ) {
+        } else if ( isOwner($user) && $is_bookmark ) {
             //only owner can see bookmark list
             $this->load->view('pages/profile_bookmark', $data);
         } else if ( $is_following ) {

@@ -34,7 +34,7 @@
                 if ( callerElement !== null ) {
                     var $element = $(callerElement);
                     $element.addClass('disabled');
-                    $element.trigger('request_cancelled', [requestId]);
+                    $element.trigger('request_canceled', [requestId]);
                 }
                 
                 if ( $('#requestContainer').length > 0 ) {
@@ -47,10 +47,61 @@
             //TODO
         });
     }
-    function request_select(requestId) {
+    function request_select(callerElement, requestId) {
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/select_request?requestId=' + requestId,
+            dataType: 'json',
+            cache: false
+        }).done(function(response) {
+            if ( !response || response === '' ) {
+                //TODO: empty result
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
+                //TODO
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    var $element = $(callerElement);
+                    $element.addClass('disabled');
+                    $element.trigger('request_selected', [requestId]);
+                }
+                
+                if ( $('#requestContainer').length > 0 ) {
+                    $('#requestContainer').modal('hide');
+                }
+            } else {
+                //TODO: unknown response received
+            }
+        }).fail(function(data) {
+            //TODO
+        });
+    }
+    
+    function request_send(requestId) {
+        $.ajax({
+            type: 'POST',
+            url: '<?=base_url()?>ajax/send_request?requestId=' + requestId,
+            dataType: 'json',
+            cache: false
+        }).done(function(response) {
+            if ( !response || response === '' ) {
+                //TODO: empty result
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
+                //TODO
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( $('#requestContainer').length > 0 ) {
+                    $('#requestContainer').modal('hide');
+                }
+            } else {
+                //TODO: unknown response received
+            }
+        }).fail(function(data) {
+            //TODO
+        });
+    }
+    function request_receive(requestId) {
+        $.ajax({
+            type: 'POST',
+            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId,
             dataType: 'json',
             cache: false
         }).done(function(response) {

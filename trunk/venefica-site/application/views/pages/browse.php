@@ -16,7 +16,20 @@
                 $container.imagesLoaded(function() {
                     $container.masonry({
                         itemSelector: '.ge-ad-item-box',
-                        isAnimated: false
+                        //columnWidth: function(containerWidth) {
+                        //    var width = $(window).width();
+                        //    var col;
+                        //    if ( width < 1200 && width >= 980 ) {
+                        //        col = 240;
+                        //    } else if ( width < 980 && width >= 768 ) {
+                        //        col = 186;
+                        //    } else {
+                        //        col = 300;
+                        //    }
+                        //    return col;
+                        //},
+                        isAnimated: false,
+                        isResizable: true
                     });
                 });
                 $container.infinitescroll({

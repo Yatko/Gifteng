@@ -18,7 +18,6 @@ if (!function_exists('distance_haversine')) {
         $c = asin(min(1, sqrt($a)));
         $distance = 2 * $earth_radius * $c;
         $distance = round($distance, $precision);
-
         return $distance;
     }
 }
@@ -71,5 +70,34 @@ if (!function_exists('getLocationByZipCode')) {
             'longitude' => $longitude,
             'latitude' => $latitude
         );
+    }
+}
+
+if (!function_exists('getDistance')) {
+    /**
+     * Calculates the distance between user address and ad location.
+     * 
+     * @param User_model $user
+     * @param Ad_model $ad
+     * @return float
+     */
+    function getDistance($user, $ad) {
+        $distance = null;
+        if (
+            $user->address != null &&
+            $user->address->latitude &&
+            $user->address->longitude &&
+            $ad->address != null &&
+            $ad->address->latitude &&
+            $ad->address->longitude
+        ) {
+            $distance = distance_haversine(
+                $user->address->latitude,
+                $user->address->longitude,
+                $ad->address->latitude,
+                $ad->address->longitude
+            );
+        }
+        return $distance;
     }
 }

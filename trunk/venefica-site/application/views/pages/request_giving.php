@@ -1,6 +1,5 @@
 <?
 
-$ad_id = $ad->id;
 $request_id = $request->id;
 $requestor_user = $request->user;
 $ad_title = trim($ad->title);
@@ -17,16 +16,27 @@ $ad_title = trim($ad->title);
         </div>
         
         
-        
-        <? if( $request->isSelected() ): ?>
+        <? if( $request->sent ): ?>
+            
+            <? /** ?>
+            <div class="row-fluid">
+                <div class="ge-action">
+                    <div class="span6">
+                        <button type="button" class="btn btn-small btn-block">Remove Gift</button>
+                    </div>
+                </div><!--./ge-action-->
+            </div>
+            <? /**/ ?>
+            
+        <? elseif( $request->accepted ): ?>
         
             <div class="row-fluid">
-                <div class=" ge-action">
+                <div class="ge-action">
                     <div class="span6">
-                        <button onclick="request_cancel(this, <?=$request_id?>);" class="btn btn-small btn-block">Decline Request</button>
+                        <button onclick="request_cancel(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
                     </div>
                     <div class="span6">
-                        <button onclick="ad_sent(<?=$ad_id?>);" class="btn btn-small btn-block btn-ge">Shipped/Handed Over</button>
+                        <button onclick="request_send(<?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Shipped/Handed Over</button>
                     </div>
                 </div><!--./ge-action-->
             </div>
@@ -34,12 +44,12 @@ $ad_title = trim($ad->title);
         <? else: ?>
         
             <div class="row-fluid">
-                <div class=" ge-action">
+                <div class="ge-action">
                     <div class="span6">
-                        <button onclick="request_cancel(this, <?=$request_id?>);" class="btn btn-small btn-block">Decline Request</button>
+                        <button onclick="request_cancel(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
                     </div>
                     <div class="span6">
-                        <button onclick="request_select(<?=$request_id?>);" class="btn btn-small btn-block btn-ge">Accept Request</button>
+                        <button onclick="request_select(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
                     </div>
                 </div><!--./ge-action-->
             </div>

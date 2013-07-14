@@ -24,9 +24,20 @@ class Request extends CI_Controller {
         
         if ( !validate_request($request) ) return;
         
-        $is_modal = key_exists('modal', $_GET) ? true : false;
         $user = $this->usermanagement_service->loadUser();
-        $messages = $this->message_service->getMessagesByAdAndUsers($ad->id, $request->user->id, $user->id);
+        
+        $is_modal = key_exists('modal', $_GET) ? true : false;
+        $is_giving = key_exists('giving', $_GET) ? true : false;
+        
+        if ( $is_giving ) {
+            $user1Id = $request->user->id;
+            $user2Id = $user->id;
+        } else {
+            $user1Id = $ad->creator->id;
+            $user2Id = $user->id;
+        }
+        
+        $messages = $this->message_service->getMessagesByAdAndUsers($ad->id, $user1Id, $user2Id);
         
         $data = array();
         $data['request'] = $request;
@@ -36,13 +47,21 @@ class Request extends CI_Controller {
         $data['is_modal'] = $is_modal;
         
         if ( $is_modal ) {
-            $this->load->view('pages/request', $data);
+            if ( $is_giving ) {
+                $this->load->view('pages/request_giving', $data);
+            } else {
+                $this->load->view('pages/request_receiving', $data);
+            }
         } else {
             $this->load->view('templates/'.TEMPLATES.'/header');
             $this->load->view('javascript/message');
             $this->load->view('javascript/ad');
             $this->load->view('javascript/request');
-            $this->load->view('pages/request', $data);
+            if ( $is_giving ) {
+                $this->load->view('pages/request_giving', $data);
+            } else {
+                $this->load->view('pages/request_receiving', $data);
+            }
             $this->load->view('templates/'.TEMPLATES.'/footer');
         }
     }

@@ -1,14 +1,5 @@
 <script langauge="javascript">
-    $(function() {
-        $('#messageContainer').on('shown', function() {
-            $("#message_post_form textarea[name=messageText]").focus();
-        });
-        //$('#messageContainer').on('hidden', function() {
-        //    $(this).removeData("modal");
-        //});
-    });
-    
-    function startMessage(callerElement, adId, toId) {
+    function startMessageModal(callerElement, adId, toId) {
         var $messageAdId = $("#message_post_form input[name=messageAdId]");
         var $messageToId = $("#message_post_form input[name=messageToId]");
         
@@ -17,6 +8,15 @@
 
         $('#messageContainer').modal('show');
     }
+    
+    $(function() {
+        $('#messageContainer').on('shown', function() {
+            $("#message_post_form textarea[name=messageText]").focus();
+        });
+        //$('#messageContainer').on('hidden', function() {
+        //    $(this).removeData("modal");
+        //});
+    });
 </script>
 
 <div id="messageContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">

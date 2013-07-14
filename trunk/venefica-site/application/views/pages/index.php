@@ -146,7 +146,7 @@
                         <i class="icon ge-icons geicon-heart"></i>
                     </div>
                     <div class="span6">
-                        <p class="lead">Currently there is no need for points to request a Gift. But the more you give the more Generosity Points you get. What does this mean? It means that these points will bring you surprises, and, of course, more great gifts!</p>
+                        <p class="lead">Currently, there is no need for points to request a Gift. But the more you give the higher your Generosity Score becomes. What does this mean? It means that the higher your score is, the more gifts will be waiting for you.</p>
                     </div>
                 </div>
                 <div class="row-fluid">

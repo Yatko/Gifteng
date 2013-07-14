@@ -2,13 +2,17 @@
     function request_view(requestId) {
         if ( $('#requestContainer').length > 0 ) {
             $('#requestContainer').modal({
-                remote: '<?=base_url()?>request/' + requestId + '?modal',
+                remote: '<?=base_url()?>request/' + requestId + '?modal&giving',
                 show: true
             });
         }
     }
 </script>
 
+
+<?
+$is_owner = isOwner($user);
+?>
 
 
 <div class="row">			
@@ -17,7 +21,8 @@
             <div class="ge-tile-view ge-browse">
 
             <? if( isset($givings) && is_array($givings) && count($givings) > 0 ): ?>
-            <? foreach( $givings as $ad ): ?>
+                
+                <? foreach( $givings as $ad ): ?>
                 
                 <div class="span3 ge-box">
                     <div class="well ge-well">
@@ -27,37 +32,54 @@
                                     
                                     <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
                                     
-                                    <? if( isOwner($user) ): ?>
-                                    <? if( $ad->expired ): ?>
+                    <? if( $is_owner ): ?>
+                        
+                        <? if( $ad->sold ): ?>
+                                    
+                                        <div class="row-fluid ge-text ge-description">
+                                            <div class="span12">
+                                                <p class="text-center">
+                                                    Inactive (sold out)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    
+                        <? elseif( $ad->expired ): ?>
 
                                         <div class="row-fluid ge-text ge-description">
                                             <div class="span6">
-                                                <button onclick="ad_relist(<?= $ad->id ?>)" class="btn btn-block btn-ge">RELIST</button>
+                                                <button onclick="ad_relist(<?= $ad->id ?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
                                             </div>
                                             <div class="span6">
-                                                <button class="btn btn-block btn-ge">HIDE</button>
+                                                <button onclick="ad_delete(<?= $ad->id ?>);" type="button" class="btn btn-small btn-block">HIDE</button>
                                             </div>
                                         </div>
                                         
-                                        <div class="row-fluid ge-text ge-description ge-user-image ge-action">
-                                    
-                                        <? if( $ad->requests != null ): ?>
-                                        <? foreach( $ad->requests as $request ): ?>
-                                            <?
-                                            $requestor_img = $request->user->getAvatarUrl();
-                                            ?>
-
-                                            <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded inactive"></div>
-                                        <? endforeach; ?>
+                                        <? if( $ad->requests != null && is_array($ad->requests) && count($ad->requests) > 0 ): ?>
+                                            
+                                            <div class="row-fluid ge-text ge-description ge-user-image ge-action">
+                                            
+                                            <? foreach( $ad->requests as $request ): ?>
+                                                <?
+                                                $requestor_img = $request->user->getAvatarUrl();
+                                                ?>
+                                                
+                                                <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded inactive"></div>
+                                            <? endforeach; ?>
+                                            
+                                            </div>
+                                            
                                         <? endif; ?>
                                         
-                                        </div>
-                                    
-                                    <? elseif( !$ad->hasRequest() ): ?>
+                        <? elseif( !$ad->hasActiveRequest() ): ?>
 
                                         <div class="row-fluid ge-text ge-description">
                                             <div class="span12">
-                                                <p class="text-center"><span class="fui-triangle-down"></span> Share to receive requests <span class="fui-triangle-down"></span></p>
+                                                <p class="text-center">
+                                                    <span class="fui-triangle-down"></span>
+                                                    Share to receive requests
+                                                    <span class="fui-triangle-down"></span>
+                                                </p>
                                             </div>
                                         </div>
 
@@ -73,7 +95,28 @@
                                             </div>
                                         </div><!--./ge-action-->
 
-                                    <? elseif( $ad->hasSelection() ): ?>
+                        
+                        <? elseif( $ad->hasSentRequest() ): ?>
+
+                                        <?
+                                        $request = $ad->getSentRequest();
+                                        $request_id = $request->id;
+                                        $requestor_img = $request->user->getAvatarUrl();
+                                        ?>
+                                        
+                                        <div class="row-fluid ge-text ge-description ge-user-image ge-action">
+                                            <div class="span4">
+                                                <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                                            </div>
+                                        </div>
+
+                        <? elseif( $ad->hasAcceptedRequest() ): ?>
+                                        
+                                        <?
+                                        $request = $ad->getAcceptedRequest();
+                                        $request_id = $request->id;
+                                        $requestor_img = $request->user->getAvatarUrl();
+                                        ?>
 
                                         <div class="row-fluid ge-text ge-description">
                                             <div class="span12">
@@ -83,29 +126,29 @@
 
                                         <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                                         
-                                        <? if( $ad->requests != null ): ?>
-                                        <? foreach( $ad->requests as $request ): ?>
-                                            <?
-                                            $request_id = $request->id;
-                                            $requestor_img = $request->user->getAvatarUrl();
-                                            $request_selected = $request->isSelected();
-                                            ?>
-
-                                            <? if( $request_selected ): ?>
-                                                <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
-                                            <? else: ?>
-                                                <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded inactive"></div>
-                                            <? endif; ?>
-                                        <? endforeach; ?>
-                                        <? endif; ?>
-
+                                            <div class="span4">
+                                                <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                                            </div>
+                                            <div class="span8">
+                                                <div class="row-fluid">
+                                                    <button onclick="request_cancel(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
+                                                </div>
+                                                <div class="row-fluid">
+                                                    <button onclick="request_send(<?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Gifted</button>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
 
-                                    <? else: ?>
+                        <? else: ?>
 
                                         <div class="row-fluid ge-text ge-description">
                                             <div class="span12">
-                                                <p class="text-center"><span class="fui-triangle-down"></span> Select recipient <span class="fui-triangle-down"></span></p>
+                                                <p class="text-center">
+                                                    <span class="fui-triangle-down"></span>
+                                                    Select recipient
+                                                    <span class="fui-triangle-down"></span>
+                                                </p>
                                             </div>
                                         </div><!--./ge-text ge-description-->
 
@@ -113,6 +156,10 @@
 
                                         <? foreach( $ad->requests as $request ): ?>
                                             <?
+                                            if ( $request->isExpired() ) {
+                                                continue;
+                                            }
+                                            
                                             $request_id = $request->id;
                                             $requestor_img = $request->user->getAvatarUrl();
                                             ?>
@@ -122,8 +169,9 @@
 
                                         </div><!--./ge-action-->
 
-                                    <? endif; ?>
-                                    <? endif; ?>
+                        <? endif; ?>
+                                        
+                    <? endif; ?>
                                     
                                 </div><!--./ge-item-->
                             </div>
@@ -131,7 +179,7 @@
                     </div>
                 </div><!--./ge-box-->
 
-            <? endforeach; ?>
+                <? endforeach; ?>
             <? else: ?>
                 
                 <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">

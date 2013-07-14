@@ -222,6 +222,44 @@ class Ajax extends CI_Controller {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
+    
+    public function send_request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $requestId = $_GET['requestId'];
+            $this->ad_service->markAsSent($requestId);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function receive_request() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $requestId = $_GET['requestId'];
+            $this->ad_service->markAsReceived($requestId);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
 
     // internal functions
     

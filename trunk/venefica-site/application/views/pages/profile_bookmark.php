@@ -3,7 +3,7 @@
         $('.ge-bookmark').on('bookmark_removed', function(event, adId) {
             $('#ad_' + adId).addClass('hide');
         });
-        $('.ge-request').on('requested', function(event, adId) {
+        $('.ge-request').on('request_created', function(event, adId) {
             $('#ad_' + adId).addClass('hide');
         });
     });
@@ -18,11 +18,11 @@
             <? foreach( $bookmarks as $ad ): ?>
                 <?
                 $ad_id = $ad->id;
-                $user_is_business = $user->businessAccount;
                 $ad_is_requested = $ad->requested;
                 $ad_is_business = $ad->isBusiness();
                 $ad_is_expired = $ad->expired;
                 $ad_is_owned = $ad->owner;
+                $ad_can_request = $ad->canRequest;
                 ?>
     
                 <div id="ad_<?=$ad_id?>">
@@ -52,8 +52,8 @@
                                             <p class="text-center">EXPIRED</p>
                                         <? elseif( $ad_is_requested ): ?>
                                             <p class="text-center">REQUESTED</p>
-                                        <? elseif ( !$user_is_business  ): ?>
-                                            <button onclick="startRequest(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="ge-request btn btn-small btn-block btn-ge">REQUEST GIFT</button>
+                                        <? elseif ( $ad_can_request  ): ?>
+                                            <button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="ge-request btn btn-small btn-block btn-ge">REQUEST GIFT</button>
                                         <? endif; ?>
                                         </div>
                                     </div><!--./ge-action-->					

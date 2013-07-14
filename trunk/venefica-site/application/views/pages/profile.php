@@ -5,26 +5,26 @@ $givings_num = $user->statistics->numGivings;
 $bookmarks_num = $user->statistics->numBookmarks;
 $followers_num = $user->statistics->numFollowers;
 $followings_num = $user->statistics->numFollowings;
-$ratings_num = $user->statistics->numRatings;
+//$ratings_num = $user->statistics->numRatings;
 
 $user_about = $user->about;
-
+$is_owner = isOwner($user);
 
 reset($_GET);
 $active_menu = key($_GET);
 if ( $active_menu == null ) {
-    $active_menu = 'giving';
+    $active_menu = Profile::MENU_GIVING;
 }
 
-$active_tab = 'gifts';
-if ( in_array($active_menu, array('giving', 'receiving', 'favorit')) ) {
-    $active_tab = 'gifts';
-} else if ( in_array($active_menu, array('following', 'follower', 'rating')) ) {
-    $active_tab = 'connections';
-} else if ( in_array($active_menu, array('notification', 'message', 'setting')) ) {
-    $active_tab = 'account';
-} else if ( in_array($active_menu, array('about')) ) {
-    $active_tab = 'bio';
+$active_tab = Profile::TAB_GIFTS;
+if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING, Profile::MENU_FAVORITE)) ) {
+    $active_tab = Profile::TAB_GIFTS;
+} else if ( in_array($active_menu, array(Profile::MENU_FOLLOWING, Profile::MENU_FOLLOWER, Profile::MENU_RATING)) ) {
+    $active_tab = Profile::TAB_CONNECTIONS;
+} else if ( in_array($active_menu, array(Profile::MENU_NOTIFICATION, Profile::MENU_MESSAGE, Profile::MENU_SETTING)) ) {
+    $active_tab = Profile::TAB_ACCOUNT;
+} else if ( in_array($active_menu, array(Profile::MENU_ABOUT)) ) {
+    $active_tab = Profile::TAB_BIO;
 }
 
 ?>
@@ -42,42 +42,42 @@ if ( in_array($active_menu, array('giving', 'receiving', 'favorit')) ) {
                     <div class="span6">
                         <div class="ge-info">
                             <ul class="nav nav-tabs nav-append-content hidden-phone">
-                                <li class="hidden-tablet <?= ($active_tab == 'gifts' ? 'active' : '') ?>">
+                                <li class="hidden-tablet <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
                                     <a href="#tab_gifts"><i class="ge-icon-giftbox"></i> Gifts</a>
                                 </li>
-                                <li class="hidden-tablet <?= ($active_tab == 'connections' ? 'active' : '') ?>">
+                                <li class="hidden-tablet <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
                                     <a href="#tab_connections"><i class="fui-heart"></i> Connections</a>
                                 </li>
                                 
-                                <? if( isOwner($user) ): ?>
-                                    <li class="hidden-tablet <?= ($active_tab == 'account' ? 'active' : '') ?>">
+                                <? if( $is_owner ): ?>
+                                    <li class="hidden-tablet <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                         <a href="#tab_account"><i class="fui-user"></i> Account</a>
                                     </li>
                                 <? endif; ?>
                                 
-                                <li class="hidden-tablet <?= ($active_tab == 'bio' ? 'active' : '') ?>">
+                                <li class="hidden-tablet <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
                                     <a href="#tab_bio"><i class="fui-bubble"></i> Bio</a>
                                 </li>
                             </ul><!-- /tabs -->
                             <div class="tab-content">
-                                <div id="tab_gifts" class="tab-pane <?= ($active_tab == 'gifts' ? 'active' : '') ?>">
+                                <div id="tab_gifts" class="tab-pane <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?giving" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_GIVING ?>" class="btn btn-small btn-block btn-ge">
                                                 Giving<br />
                                                 <?= $givings_num ?>
                                             </a>
                                         </div>
                                         
-                                        <? if( isOwner($user) ): ?>
+                                        <? if( $is_owner ): ?>
                                             <div class="span4">
-                                                <a href="<?= current_url() ?>?receiving" class="btn btn-small btn-block btn-ge">
+                                                <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge">
                                                     Receiving<br />
                                                     <?= $receivings_num ?>
                                                 </a>
                                             </div>
                                             <div class="span4">
-                                                <a href="<?= current_url() ?>?favorit" class="btn btn-small btn-block btn-ge">
+                                                <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge">
                                                     Favorites<br />
                                                     <?= $bookmarks_num ?>
                                                 </a>
@@ -85,23 +85,23 @@ if ( in_array($active_menu, array('giving', 'receiving', 'favorit')) ) {
                                         <? endif; ?>
                                     </div>
                                 </div><!-- /tab-->
-                                <div id="tab_connections" class="tab-pane <?= ($active_tab == 'connections' ? 'active' : '') ?>">
+                                <div id="tab_connections" class="tab-pane <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?following" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge">
                                                 <?= $followings_num ?><br />
                                                 Following
                                             </a>
                                         </div>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?follower" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge">
                                                 <?= $followers_num ?><br />
                                                 Followers
                                             </a>
                                         </div>
                                         <? /** ?>
                                         <div class="span4">
-                                            <a href="<?=current_url()?>?rating" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_RATING ?>" class="btn btn-small btn-block btn-ge">
                                                 <?=$ratings_num?><br />
                                                 Reviews
                                             </a>
@@ -109,7 +109,7 @@ if ( in_array($active_menu, array('giving', 'receiving', 'favorit')) ) {
                                         <? /* */ ?>
                                     </div>
                                 </div><!-- /tab-->
-                                <div id="tab_account" class="tab-pane <?= ($active_tab == 'account' ? 'active' : '') ?>">
+                                <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
                                             <button class="btn btn-small btn-block btn-ge">
@@ -131,7 +131,7 @@ if ( in_array($active_menu, array('giving', 'receiving', 'favorit')) ) {
                                         </div>
                                     </div>
                                 </div><!-- /tab-->
-                                <div id="tab_bio" class="tab-pane <?= ($active_tab == 'bio' ? 'active' : '') ?>">
+                                <div id="tab_bio" class="tab-pane <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <button class="btn btn-small btn-block btn-ge"><?= $user_about ?></button>
                                     </div>

@@ -44,9 +44,10 @@ class View extends CI_Controller {
         $data['user'] = $user;
         $data['comments'] = $comments;
         
-        $modal = $this->load->view('modal/request', array(), true);
+        $modal = $this->load->view('modal/request_create', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/ad');
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');

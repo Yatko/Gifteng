@@ -7,18 +7,26 @@
     
     $(function() {
         init_map(false);
+        
+        $('.ge-request').on('request_created', function(event, adId) {
+            location.reload();
+            //if ( $('#ad_control').length > 0 ) {
+            //    $('#ad_control').addClass('hide');
+            //}
+        });
     });
 </script>
 
 
 <?
 
+$distance = getDistance($user, $ad);
 $is_owner = $ad->owner;
-$user_is_business = $user->businessAccount;
 $ad_is_business = $ad->isBusiness();
 $ad_is_online = $ad->isOnline();
-$ad_is_requested = $ad->requested;
-$ad_has_request = $ad->hasRequest();
+
+$ad_can_edit = $is_owner && !$ad->hasActiveRequest();
+$ad_can_request = $ad->canRequest;
 
 if ( $ad->address != null ) {
     $ad_longitude = $ad->address->longitude;
@@ -74,30 +82,61 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 
         <div class="span6 ge-item">
             <div class="well ge-well">
-
-                <? if( $is_owner || (!$user_is_business && !$ad_is_requested) ): ?>
-
+                
                 <div id="ad_control" class="row-fluid ge-action">
                     <div class="span12">
                         <div class="control-group">
                             <div class="controls">
-                                <? if( $is_owner && !$ad_has_request ): ?>
-                                    <div class="span6">
-                                        <button class="btn btn-large btn-ge btn-block" type="button">EDIT GIFT</button>
-                                    </div>
-                                    <div class="span6">
-                                        <button class="btn btn-large btn-ge btn-block" type="button">DELETE GIFT</button>
-                                    </div>
-                                <? elseif ( !$user_is_business && !$ad_is_requested ): ?>
-                                    <button onclick="startRequest(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="ge-request btn btn-large btn-ge btn-block" type="button">REQUEST GIFT</button>
-                                <? endif; ?>
+                
+                <? if( $is_owner ): ?>
+                    
+                    <?
+                    if ( $ad_can_edit ) {
+                        $edit_js = 'onclick="ad_edit(' . $ad_id . ');"';
+                        $delete_js = 'onclick="ad_delete(' . $ad_id . ');"';
+                        
+                        $edit_class = 'class="btn btn-large btn-ge btn-block"';
+                        $delete_class = 'class="btn btn-large btn-ge btn-block"';
+                    } else {
+                        $edit_js = '';
+                        $delete_js = '';
+                        
+                        $edit_class = 'class="btn btn-large btn-block disabled"';
+                        $delete_class = 'class="btn btn-large btn-block disabled"';
+                    }
+                    ?>
+                    
+                                <div class="span6">
+                                    <button <?=$edit_js?> <?=$edit_class?> type="button">EDIT GIFT</button>
+                                </div>
+                                <div class="span6">
+                                    <button <?=$delete_js?> <?=$delete_class?> type="button">DELETE GIFT</button>
+                                </div>
+                                
+                <? else: ?>
+                
+                    <?
+                    if ( $ad_can_request ) {
+                        $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
+                        $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
+                        $request_text = 'REQUEST GIFT';
+                    } else {
+                        $request_js = '';
+                        $request_class = 'class="btn btn-large btn-block disabled"';
+                        $request_text = 'REQUEST SENT';
+                    }
+                    ?>
+                                
+                                <button <?=$request_js?> <?=$request_class?> type="button"><?=$request_text?></button>
+                                
+                <? endif; ?>
+                                
                             </div>
                         </div>
                     </div>
                 </div><!--./ge-action-->
-
-                <? endif; ?>
-
+                
+                
                 <div class="row-fluid">
                     <div class="ge-text ge-description">
                         <p class="ge-title">
@@ -147,16 +186,27 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 
 
                 <? if( $ad_is_business && $ad_is_online ): ?>
+                
                     <div class="row-fluid ge-map">
                         <img src="<?=BASE_PATH?>temp-sample/ge-map-online.png" class="img">
                     </div><!--./ge-map-->
+                    
                 <? else: ?>
+                    
                     <input id="marker_longitude" type="hidden" value="<?=$ad_longitude?>">
                     <input id="marker_latitude" type="hidden" value="<?=$ad_latitude?>">
 
                     <div class="row-fluid ge-map">
                         <div id="map"></div>
                     </div><!--./ge-map-->
+                    
+                    <? if ($distance != null && $distance != ''): ?>
+                        <p class="ge-location">
+                            <i class="fui-location"></i>
+                            <?= $distance ?> mi
+                        </p>
+                    <? endif; ?>
+                    
                 <? endif; ?>
 
             </div>
