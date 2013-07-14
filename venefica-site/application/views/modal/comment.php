@@ -1,4 +1,11 @@
 <script langauge="javascript">
+    function startCommentModal(callerElement, adId) {
+        var $commentAdId = $("#comment_post_form input[name=commentAdId]");
+        $commentAdId.val(adId);
+        
+        $('#commentContainer').modal('show');
+    }
+    
     $(function() {
         $('#commentContainer').on('shown', function() {
             $("#comment_post_form textarea[name=commentText]").focus();
@@ -7,13 +14,6 @@
         //    $(this).removeData("modal");
         //});
     });
-    
-    function startComment(callerElement, adId) {
-        var $commentAdId = $("#comment_post_form input[name=commentAdId]");
-        $commentAdId.val(adId);
-        
-        $('#commentContainer').modal('show');
-    }
 </script>
 
 <div id="commentContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">

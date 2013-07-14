@@ -1,7 +1,7 @@
 <script langauge="javascript">
     var requestCallerElement;
     
-    function startRequest(callerElement, type, adId) {
+    function startRequestModal(callerElement, type, adId) {
         requestCallerElement = callerElement;
         
         var $requestAdId = $("#" + type + "_request_post_form input[name=requestAdId]");
@@ -16,7 +16,7 @@
         }
     }
     
-    function request(type) {
+    function requestModal(type) {
         if ( $("#" + type + "_request_post_form").length === 0 ) {
             return;
         }
@@ -45,7 +45,7 @@
 
                 if ( requestCallerElement !== null ) {
                     var $element = $(requestCallerElement);
-                    $element.trigger('requested', [adId]);
+                    $element.trigger('request_created', [adId]);
                 }
 
                 if ( $('#requestContainer').length > 0 ) {
@@ -59,21 +59,18 @@
         });
     }
     
+    function showRequestStep1() {
+        $('#request_step_1').removeClass('hide');
+        $('#request_step_2').addClass('hide');
+    }
+    function showRequestStep2() {
+        $('#request_step_1').addClass('hide');
+        $('#request_step_2').removeClass('hide');
+    }
+    
     $(function() {
-        $('.ge-request').on('requested', function(event, adId) {
-            if ( $('#ad_control').length > 0 ) {
-                $('#ad_control').addClass('hide');
-            }
-        });
-        
-        
-        $('#request_step_1_submit').click(function() {
-            $('#request_step_1').addClass('hide');
-            $('#request_step_2').removeClass('hide');
-        });
         $('#requestContainer').on('hidden', function() {
-            $('#request_step_1').removeClass('hide');
-            $('#request_step_2').addClass('hide');
+            showRequestStep1();
         });
     });
 </script>
@@ -98,7 +95,7 @@
                     <div class="control-group control-form">
                         <div class="controls">
                             <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                            <button id="requestBtn" onclick="request('business');" type="button" class="span8 btn btn-ge">Send Request</button>
+                            <button onclick="requestModal('business');" type="button" class="span8 btn btn-ge">Send Request</button>
                         </div>
                     </div>
                 </div>
@@ -121,7 +118,7 @@
                     <div class="span12">
                         <div class="control-group control-form">
                             <div class="controls">
-                                <button type="button" id="request_step_1_submit" class="span8 pull-right btn btn-ge" >Got it!</button>
+                                <button onclick="showRequestStep2();" type="button" class="span8 pull-right btn btn-ge" >Got it!</button>
                             </div>
                         </div>
                     </div>
@@ -145,7 +142,7 @@
                         <div class="control-group control-form">
                             <div class="controls">
                                 <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                <button id="requestBtn" onclick="request('member');" type="button" class="span8 btn btn-ge">Send Request</button>
+                                <button onclick="requestModal('member');" type="button" class="span8 btn btn-ge">Send Request</button>
                             </div>
                         </div>
                     </div>

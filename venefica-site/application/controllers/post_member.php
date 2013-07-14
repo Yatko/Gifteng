@@ -375,6 +375,8 @@ class Post_member extends CI_Controller {
         try {
             $adId = $this->ad_service->placeAd($ad);
             log_message(INFO, 'Message created: ' . $adId);
+            
+            $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {
             $errors .= $ex->getMessage();
         }

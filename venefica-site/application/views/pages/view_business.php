@@ -1,4 +1,5 @@
 <?
+
 $user_is_business = $user->businessAccount;
 $ad_is_business = $ad->isBusiness();
 $ad_title = $ad->title;
@@ -25,8 +26,9 @@ if ( $ad_is_business ) {
     }
 }
 
-
 ?>
+
+!!! NOT IMPLEMENTED !!!
 
 <!--left side-->
 <div class="span6">

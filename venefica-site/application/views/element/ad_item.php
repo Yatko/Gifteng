@@ -58,7 +58,7 @@ if ( $ad->statistics != null ) {
                             <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
                         </button>
                     <? else: ?>
-                        <button onclick="startComment(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
+                        <button onclick="startCommentModal(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
                             <i class="fui-bubble"></i>
                             <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
                         </button>

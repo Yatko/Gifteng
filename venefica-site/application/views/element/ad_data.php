@@ -10,23 +10,7 @@
 $title = $ad->title;
 $subtitle = $ad->subtitle;
 $view_link = $ad->getViewUrl();
-
-$distance = null;
-if (
-    $user->address != null &&
-    $user->address->latitude &&
-    $user->address->longitude &&
-    $ad->address != null &&
-    $ad->address->latitude &&
-    $ad->address->longitude
-) {
-    $distance = distance_haversine(
-        $user->address->latitude,
-        $user->address->longitude,
-        $ad->address->latitude,
-        $ad->address->longitude
-    );
-}
+$distance = getDistance($user, $ad);
 
 $title = safe_content($title);
 //$title_as_parameter = safe_parameter($title);

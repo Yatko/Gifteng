@@ -1,6 +1,15 @@
 <script language="javascript">
+    function request_view(requestId) {
+        if ( $('#requestContainer').length > 0 ) {
+            $('#requestContainer').modal({
+                remote: '<?=base_url()?>request/' + requestId + '?modal&receiving',
+                show: true
+            });
+        }
+    }
+    
     $(function() {
-        $('.ge-request').on('request_cancelled', function(event, requestId) {
+        $('.ge-request').on('request_canceled', function(event, requestId) {
             $('#request_' + requestId).addClass('hide');
         });
     });
@@ -36,49 +45,80 @@
                                         
                                         <div class="row-fluid ge-action">
                                         
-                                        <? if( $ad->expired ): ?>
-                                            <div class="span4">
-                                                <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block fui-trash"></button>
-                                            </div>
-                                            <div class="span8">
-                                                <p class="text-center">GIFT EXPIRED</p>
-                                            </div>
-                                        <? elseif( $request->isExpired() ): ?>
-                                            <div class="span4">
-                                                <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block fui-trash"></button>
-                                            </div>
-                                            <div class="span8">
-                                                <p class="text-center">EXPIRED</p>
-                                            </div>
-                                        <? elseif( $request->isPending() ): ?>
-                                            <div class="span4">
-                                                <button class="btn btn-small btn-block disabled fui-mail"></button>
-                                            </div>
-                                            <div class="span4">
-                                                <button onclick="request_cancel(this, <?=$request_id?>);" class="ge-request btn btn-small btn-block fui-cross"></button>
-                                            </div>
-                                            <div class="span4">
-                                                <p class="text-center">PENDING</p>
-                                            </div>
-                                        <? elseif( $request->isSelected() ): ?>
+                    <? if( $ad->sold ): ?>
                                             
-                                            <? if( $ad->sent ): ?>
+                                            <div class="row-fluid ge-text ge-description">
+                                                <div class="span12">
+                                                    <p class="text-center">
+                                                        Inactive (sold out)
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                    <? elseif( $ad->expired || $request->isExpired() ): ?>
+                                            
+                                            <div class="row-fluid ge-text ge-description">
+                                                <div class="span12">
+                                                    <p class="text-center">
+                                                        <span class="fui-triangle-down"></span>
+                                                        Expired
+                                                        <span class="fui-triangle-down"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="span12">
+                                                <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block">
+                                                    Delete Gift
+                                                    <i class=" fui-trash pull-left"></i>
+                                                </button>
+                                            </div>
+                                            
+                    <? elseif( $request->isPending() ): ?>
+                                            
+                                            <div class="row-fluid ge-text ge-description">
+                                                <div class="span12">
+                                                    <p class="text-center">
+                                                        <span class="fui-triangle-down"></span>
+                                                        Pending
+                                                        <span class="fui-triangle-down"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="span12">
+                                                <button onclick="request_cancel(this, <?=$request_id?>);" class="ge-request btn btn-small btn-block">
+                                                    Cancel Request
+                                                    <i class="fui-cross pull-left"></i>
+                                                </button>
+                                            </div>
+                                            
+                    <? elseif( $request->accepted ): ?>
+                                            
+                                            <div class="row-fluid ge-text ge-description">
+                                                <div class="span12">
+                                                    <p class="text-center">
+                                                        <span class="fui-triangle-down"></span>
+                                                        Accepted
+                                                        <span class="fui-triangle-down"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row-fluid">
                                                 <div class="span4">
-                                                    <button onclick="startMessage(this, <?= $ad_id ?>, <?= $to_id ?>);" class="btn btn-small btn-block btn-ge fui-mail"></button>
+                                                    <button onclick="request_view(<?=$request_id?>);" class="btn btn-small btn-block btn-ge">
+                                                        <i class="fui-mail"></i>
+                                                    </button>
                                                 </div>
                                                 <div class="span8">
-                                                    <button class="btn btn-small btn-block btn-ge">RECEIVED</button>
+                                                    <button onclick="request_receive(<?=$request_id?>);" class="btn btn-small btn-block btn-ge">
+                                                        Mark Received
+                                                    </button>
                                                 </div>
-                                            <? else: ?>
-                                                <div class="span4">
-                                                    <button onclick="startMessage(this, <?= $ad_id ?>, <?= $to_id ?>);" class="btn btn-small btn-block btn-ge fui-mail"></button>
-                                                </div>
-                                                <div class="span8">
-                                                    <p class="text-center">ACCEPTED</p>
-                                                </div>
-                                            <? endif; ?>
+                                            </div>
                                             
-                                        <? endif; ?>
+                    <? endif; ?>
                                             
                                         </div><!--./ge-action-->
                                     </div><!--./ge-item-->

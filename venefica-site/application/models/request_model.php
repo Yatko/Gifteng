@@ -5,20 +5,27 @@
  */
 class Request_model extends CI_Model {
     
-    const STATUS_PENDING = 'PENDING';
-    const STATUS_EXPIRED = 'EXPIRED';
-    const STATUS_ACCEPTED = 'ACCEPTED';
+    const STATUS_PENDING = 'PENDING'; //REQUESTED - giver didn't make a decision (the starter status of a request)
+    const STATUS_ACCEPTED = 'ACCEPTED'; //SELECTED - the receiver/owner acceped the request
+    const STATUS_UNACCEPTED = 'UNACCEPTED'; //someone else selected by the owner and the available quantity is 0 (auto status)
+    const STATUS_CANCELED = 'CANCELED'; //the receiver/requestor cancelled the request (it's own request)
+    const STATUS_DECLINED = 'DECLINED'; //REJECTED - the giver/owner declined the request
+    const STATUS_SENT = 'SENT'; //the giver/owner clicked on 'Mark as shipped'
+    const STATUS_RECEIVED = 'RECEIVED'; //the receiver/requestor selected 'Received'
     
     var $id; //long
     var $adId; //long
     var $user; //User_model
     var $requestedAt; //long - timestamp
-    var $status; //enum: PENDING, EXPIRED, ACCEPTED
-    var $adStatus; //enum: ACTIVE, EXPIRED, SELECTED, SENT, RECEIVED (see Ad_model)
+    var $status; //enum: PENDING, ACCEPTED, UNACCEPTED, CANCELED, DECLINED, SENT, RECEIVED
+    var $adStatus; //enum: ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED (see Ad_model)
     var $adExpiresAt; //long - timestamp
     var $type; //enum: MEMBER, BUSINESS (see Ad_model)
     var $image; //Image_model
     var $imageThumbnail; //Image_model
+    var $accepted; //boolean
+    var $sent; //boolean
+    var $received; //boolean
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing Request_model");
@@ -30,6 +37,9 @@ class Request_model extends CI_Model {
             $this->status = getField($obj, 'status');
             $this->adStatus = getField($obj, 'adStatus');
             $this->adExpiresAt = getField($obj, 'adExpiresAt');
+            $this->accepted = getField($obj, 'accepted');
+            $this->sent = getField($obj, 'sent');
+            $this->received = getField($obj, 'received');
             if ( hasField($obj, 'user') ) {
                 $this->user = User_model::convertUser($obj->user);
             }
@@ -77,6 +87,25 @@ class Request_model extends CI_Model {
         return $this->user->getFullName();
     }
     
+    public function isActive() {
+        switch ( $this->status ) {
+            case Request_model::STATUS_PENDING:
+            case Request_model::STATUS_ACCEPTED:
+            case Request_model::STATUS_UNACCEPTED:
+            case Request_model::STATUS_SENT:
+            case Request_model::STATUS_RECEIVED:
+                return true;
+        }
+        return false;
+    }
+    
+    public function isDeclined() {
+        if ( $this->status == Request_model::STATUS_DECLINED ) {
+            return true;
+        }
+        return false;
+    }
+    
     public function isPending() {
         if ( $this->status == Request_model::STATUS_PENDING ) {
             return true;
@@ -84,15 +113,11 @@ class Request_model extends CI_Model {
         return false;
     }
     
-    public function isSelected() {
-        if ( $this->status == Request_model::STATUS_ACCEPTED ) {
-            return true;
-        }
-        return false;
-    }
-    
     public function isExpired() {
-        if ( $this->status == Request_model::STATUS_EXPIRED ) {
+        if (
+            $this->status == Request_model::STATUS_UNACCEPTED ||
+            $this->status == Request_model::STATUS_DECLINED
+        ) {
             return true;
         }
         return false;
