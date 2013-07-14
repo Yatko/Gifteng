@@ -58,6 +58,8 @@ public class AdDto extends DtoBase {
     // out
     private boolean inBookmarks;
     // out
+    private boolean sold;
+    // out
     private boolean expired;
     // out
     private boolean requested; //there is a valid request for this ad by the current user
@@ -65,6 +67,8 @@ public class AdDto extends DtoBase {
     private Boolean expires; //never expire?
     // in, out
     private Date availableAt;
+    // out
+    private Date soldAt;
     // in, out
     private Date expiresAt;
     // out
@@ -338,7 +342,7 @@ public class AdDto extends DtoBase {
         this.availableAt = availableAt;
     }
 
-    public Boolean isExpires() {
+    public Boolean getExpires() {
         return expires;
     }
 
@@ -456,5 +460,21 @@ public class AdDto extends DtoBase {
 
     public void setCanRequest(Boolean canRequest) {
         this.canRequest = canRequest;
+    }
+
+    public boolean isSold() {
+        return sold;
+    }
+
+    public void setSold(boolean sold) {
+        this.sold = sold;
+    }
+
+    public Date getSoldAt() {
+        return soldAt;
+    }
+
+    public void setSoldAt(Date soldAt) {
+        this.soldAt = soldAt;
     }
 }

@@ -139,7 +139,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             beforePendingNumber = calculatePendingNumber(currentUser);
         }
         
-        boolean expires = adDto.isExpires() != null ? adDto.isExpires() : true;
+        boolean expires = adDto.getExpires() != null ? adDto.getExpires() : true;
         Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
         Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
         
@@ -580,7 +580,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
 
         ad.markAsSold();
-        ad.setExpired(true);
+        //ad.setExpired(true);
         //ad.setExpiresAt(new Date());
     }
     
@@ -839,7 +839,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.getAdData().getQuantity() == 0 ) {
             //ending ad if there are no more items
             ad.markAsSold();
-            ad.setExpired(true);
+            //ad.setExpired(true);
         }
         
         transaction.markAsFinalized();
