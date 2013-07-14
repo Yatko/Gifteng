@@ -41,7 +41,8 @@ class Profile extends CI_Controller {
                 }
             } else {
                 //needs to refresh the user as cached statistic data reflect incorrect values
-                $user = $this->usermanagement_service->refreshUser();
+                $this->usermanagement_service->refreshUser();
+                $user = $this->usermanagement_service->loadUser();
             }
         } catch ( Exception $ex ) {
             $user = null;
