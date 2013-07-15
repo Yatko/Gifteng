@@ -510,6 +510,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 .setCurrentUser(currentUser)
                 .includeImages()
                 .includeCreator()
+                .includeRequests()
                 .includeCanMarkAsSpam()
                 .includeCanRate()
                 .includeCanRequest()
