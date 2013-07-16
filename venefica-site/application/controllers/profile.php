@@ -20,6 +20,8 @@ class Profile extends CI_Controller {
     const MENU_SETTING = 'setting';
     const MENU_ABOUT = 'about';
     
+    const ADS_NUM = 3;
+    
     public function view($name = null) {
         $this->init();
         
@@ -51,6 +53,8 @@ class Profile extends CI_Controller {
         if ( !validate_user($user) ) return;
         
         $has_menu = false;
+        $follow_users = null;
+        $follow_ads = null;
 
         if ( key_exists('receiving', $_GET) ) {
             $has_menu = true;
@@ -82,26 +86,60 @@ class Profile extends CI_Controller {
             $has_menu = true;
             $is_following = true;
             try {
-                $followings = $this->usermanagement_service->getFollowings($user->id);
+                $follow_users = $this->usermanagement_service->getFollowings($user->id);
+                
+                $follow_ads = array();
+                foreach ($follow_users as $following) {
+                    try {
+                        $ads = $this->ad_service->getUserAds($following->id, false);
+                        
+                        $follow_ads[$following->id] = array();
+                        foreach ($ads as $ad) {
+                            array_push($follow_ads[$following->id], $ad);
+                            if ( count($follow_ads[$following->id]) == Profile::ADS_NUM ) {
+                                //max to display reached
+                                break;
+                            }
+                        }
+                    } catch ( Exception $ex ) {
+                    }
+                }
             } catch ( Exception $ex ) {
-                $followings = null;
+                $follow_users = null;
+                $follow_ads = null;
             }
         } else {
             $is_following = false;
-            $followings = null;
         }
         
         if ( key_exists('follower', $_GET) ) {
             $has_menu = true;
             $is_follower = true;
             try {
-                $followers = $this->usermanagement_service->getFollowers($user->id);
+                $follow_users = $this->usermanagement_service->getFollowers($user->id);
+                
+                $follow_ads = array();
+                foreach ($follow_users as $follower) {
+                    try {
+                        $ads = $this->ad_service->getUserAds($follower->id, false);
+                        
+                        $follow_ads[$follower->id] = array();
+                        foreach ($ads as $ad) {
+                            array_push($follow_ads[$follower->id], $ad);
+                            if ( count($follow_ads[$follower->id]) == Profile::ADS_NUM ) {
+                                //max to display reached
+                                break;
+                            }
+                        }
+                    } catch ( Exception $ex ) {
+                    }
+                }
             } catch ( Exception $ex ) {
-                $followers = null;
+                $follow_users = null;
+                $follow_ads = null;
             }
         } else {
             $is_follower = false;
-            $followers = null;
         }
         
         if ( key_exists('rating', $_GET) ) {
@@ -136,8 +174,8 @@ class Profile extends CI_Controller {
         $data['givings'] = $givings;
         $data['receivings'] = $receivings;
         $data['bookmarks'] = $bookmarks;
-        $data['followers'] = $followers;
-        $data['followings'] = $followings;
+        $data['follow_users'] = $follow_users;
+        $data['follow_ads'] = $follow_ads;
         $data['ratings'] = $ratings;
         
         if ( $is_bookmark ) {
@@ -178,10 +216,8 @@ class Profile extends CI_Controller {
         } else if ( isOwner($user) && $is_bookmark ) {
             //only owner can see bookmark list
             $this->load->view('pages/profile_bookmark', $data);
-        } else if ( $is_following ) {
+        } else if ( $is_following || $is_follower ) {
             $this->load->view('pages/profile_following', $data);
-        } else if ( $is_follower ) {
-            $this->load->view('pages/profile_follower', $data);
         } else if ( $is_rating ) {
             $this->load->view('pages/profile_rating', $data);
         }
