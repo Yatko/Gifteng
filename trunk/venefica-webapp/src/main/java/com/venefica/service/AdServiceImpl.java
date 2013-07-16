@@ -417,7 +417,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeCreator(includeCreator != null ? includeCreator : false)
                     .build();
             adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
-            adDto.setRequested(ad.isRequested(currentUser));
+            adDto.setRequested(ad.isRequested(currentUser, false));
             
             result.add(adDto);
         }
@@ -484,7 +484,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             // @formatter:on
             
             adDto.setInBookmarks(inBookmarks(currentUser, ad));
-            adDto.setRequested(ad.isRequested(currentUser));
+            adDto.setRequested(ad.isRequested(currentUser, false));
             
             result.add(adDto);
         }
@@ -518,7 +518,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // @formatter:on
 
         adDto.setInBookmarks(inBookmarks(currentUser, ad));
-        adDto.setRequested(ad.isRequested(currentUser));
+        adDto.setRequested(ad.isRequested(currentUser, false));
         
         return adDto;
     }
@@ -920,7 +920,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                         .includeCreator(true) //TODO: maybe this is not needed
                         .build();
                 adDto.setInBookmarks(true);
-                adDto.setRequested(ad.isRequested(user));
+                adDto.setRequested(ad.isRequested(user, false));
                 result.add(adDto);
             }
         }

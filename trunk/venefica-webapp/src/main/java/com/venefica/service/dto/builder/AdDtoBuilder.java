@@ -264,7 +264,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                 }
             }
             if ( canRequest ) {
-                if ( model.isRequested(currentUser) ) {
+                if ( model.isRequested(currentUser, true) ) {
                     //an active request exists for this ad
                     canRequest = false;
                 }
