@@ -10,7 +10,7 @@
 </script>
 
 <div class="row">
-    <div class="container user-receiving_items">
+    <div class="container user-favorites">
         <div class="row">
             <div class="ge-tile-view ge-browse">
                 

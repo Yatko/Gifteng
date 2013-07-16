@@ -1,27 +1,70 @@
-<? /** ?>
-    <? if( $followings_num > 0 ): ?>
-    <div class="following">
-        <div class="title">Following</div>
-        <? foreach( $followings as $user ): ?>
-            <?
-            $user_img = $user->getAvatarUrl();
-            $user_name = $user->getFullName();
-            $user_joined = $user->getJoinDate();
-            $user_location = $user->getLocation();
+<div class="row">			
+    <div class="container user-follow">
+        <div class="row">
+            <div class="ge-tile-view ge-browse">
+            
+            <? if( isset($follow_users) && is_array($follow_users) && count($follow_users) > 0 ): ?>
+            <? foreach( $follow_users as $follow ): ?>
+                
+                <?
+                $user_id = $follow->id;
+                $ads = $follow_ads[$user_id];
+                ?>
+                
+                <div class="span3">
+                    <div class="ge-box">
+                        <div class="well ge-well">
+                            <div class="row-fluid">
+                                <div class="span12">
 
-            if ( trim($user_name) == '' ) $user_name = '&nbsp;';
-            if ( trim($user_location) == '' ) $user_location = '&nbsp;';
-            ?>
+                                    <div class="ge-user">
+                                        <? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
+                                    </div><!--./ge-user-->
 
-            <div class="profileBox">
-                <div class="profileImage" style="background: url(<?=$user_img?>);"></div>
-                <div class="details">
-                    <div class="username"><?=safe_content($user_name)?></div>
-                    <div class="age">Giftenger since <?=$user_joined?></div>
-                    <div class="location"><?=$user_location?></div>
+                                    <? if( count($ads) > 0 ): ?>
+                                    
+                                    <div class="ge-text ge-description ge-user-image ge-action">
+                                        <div class="row-fluid">
+                                        
+                                        <? foreach ($ads as $ad): ?>
+                                            
+                                            <?
+                                            $img = $ad->getImageUrl();
+                                            $view_link = $ad->getViewUrl();
+                                            $inactive = ($ad->status == Ad_model::STATUS_FINALIZED || $ad->status == Ad_model::STATUS_EXPIRED)
+                                            ?>
+                                            
+                                            <div class="span4">
+                                                <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                            </div>
+                                            
+                                        <? endforeach; ?>
+                                        
+                                        </div>
+                                    </div><!--./ge-action-->
+                                    
+                                    <? else: ?>
+                                    
+                                    <div class="ge-text ge-description ge-user-image ge-action">
+                                        <div class="row-fluid">
+                                            <div class="span4">
+                                                <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <? endif; ?>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--./ge-box-->
                 </div>
-            </div>
-        <? endforeach; ?>
-    </div>
-    <? endif; ?>
-<? /**/ ?>
+
+            <? endforeach; ?>
+            <? endif; ?>
+
+            </div><!--./ge-tile-view-->
+        </div><!--./row-->
+    </div><!--./container user-follow-->					
+</div>
