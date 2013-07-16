@@ -195,10 +195,22 @@ class Ajax extends CI_Controller {
         
         try {
             $requestId = $_GET['requestId'];
+            $adId = $_GET['adId'];
+            $userId = key_exists('userId', $_GET) ? $_GET['userId'] : null;
+            $is_giving = key_exists('giving', $_GET) ? true : false;
+            
             $this->ad_service->cancelRequest($requestId);
             $this->usermanagement_service->refreshUser();
+            $ad = $this->ad_service->getAdById($adId);
+            $request = $this->ad_service->getRequestById($requestId);
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            if ( $is_giving ) {
+                $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+            } else {
+                $result = $this->load->view('element/request_receiving', array('ad' => $ad, 'request' => $request), true);
+            }
+            
+            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -215,9 +227,14 @@ class Ajax extends CI_Controller {
         
         try {
             $requestId = $_GET['requestId'];
-            $this->ad_service->selectRequest($requestId);
+            $adId = $_GET['adId'];
+            $userId = $_GET['userId'];
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            $this->ad_service->selectRequest($requestId);
+            $ad = $this->ad_service->getAdById($adId);
+            
+            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -234,9 +251,14 @@ class Ajax extends CI_Controller {
         
         try {
             $requestId = $_GET['requestId'];
-            $this->ad_service->markAsSent($requestId);
+            $adId = $_GET['adId'];
+            $userId = $_GET['userId'];
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            $this->ad_service->markAsSent($requestId);
+            $ad = $this->ad_service->getAdById($adId);
+            
+            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -253,9 +275,14 @@ class Ajax extends CI_Controller {
         
         try {
             $requestId = $_GET['requestId'];
-            $this->ad_service->markAsReceived($requestId);
+            $adId = $_GET['adId'];
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            $this->ad_service->markAsReceived($requestId);
+            $ad = $this->ad_service->getAdById($adId);
+            $request = $this->ad_service->getRequestById($requestId);
+            
+            $result = $this->load->view('element/request_receiving', array('ad' => $ad, 'request' => $request), true);
+            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }

@@ -40,11 +40,11 @@
 
 <?
 
-$firstName = $user->firstName;
-$lastName = $user->lastName;
-$about = $user->about;
-$zipCode = $user->getZipCode();
-$email = $user->email;
+$firstName = $currentUser->firstName;
+$lastName = $currentUser->lastName;
+$about = $currentUser->about;
+$zipCode = $currentUser->getZipCode();
+$email = $currentUser->email;
 
 ?>
 

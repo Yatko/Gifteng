@@ -10,7 +10,7 @@ class Post_business extends CI_Controller {
     const STEP_PREVIEW = 'preview';
     const STEP_POST = 'post';
     
-    var $user;
+    var $currentUser;
     
     public function view() {
         $this->init();
@@ -21,6 +21,7 @@ class Post_business extends CI_Controller {
             safe_redirect("/post/member");
         }
         
+        $this->currentUser = $this->usermanagement_service->loadUser();
         $current_step = $this->getCurrentStep();
         $next_step = $this->getNextStep($current_step);
         $is_valid = $this->process($current_step);
@@ -39,7 +40,7 @@ class Post_business extends CI_Controller {
         }
         
         $data = array();
-        $data['user'] = $this->user;
+        $data['currentUser'] = $this->currentUser;
         $data['step'] = $step;
         
         if ( $step == Post_business::STEP_START ) {
@@ -64,8 +65,8 @@ class Post_business extends CI_Controller {
             $post_location_array = $this->session->flashdata("post_".Post_business::STEP_LOCATION);
             $files_location_array = $this->session->flashdata("files_".Post_business::STEP_LOCATION);
             
-            if ( $this->user->addresses && sizeof($this->user->addresses) > 0 ) {
-                foreach ( $this->user->addresses as $address ) {
+            if ( $this->currentUser->addresses && sizeof($this->currentUser->addresses) > 0 ) {
+                foreach ( $this->currentUser->addresses as $address ) {
                     $address_id = $address->id;
                     
                     $image = $this->getImageFileName($post_location_array, $files_location_array, 'image_'.$address_id);
@@ -110,7 +111,7 @@ class Post_business extends CI_Controller {
             return;
         }
         
-        $this->user = $this->usermanagement_service->loadUser();
+        $this->currentUser = $this->usermanagement_service->loadUser();
         
         $address = new Address_model();
         $address->name = $this->input->post('new_address_name');
@@ -120,12 +121,12 @@ class Post_business extends CI_Controller {
         $address->zipCode = $this->input->post('new_address_zipCode');
         
         try {
-            $this->user->addAddress($address);
-            $this->usermanagement_service->updateUser($this->user);
+            $this->currentUser->addAddress($address);
+            $this->usermanagement_service->updateUser($this->currentUser);
             $this->usermanagement_service->refreshUser();
-            $this->user = $this->usermanagement_service->loadUser();
+            $this->currentUser = $this->usermanagement_service->loadUser();
             
-            $data['obj'] = $this->user->getLastAddress();
+            $data['obj'] = $this->currentUser->getLastAddress();
             $this->load->view('json', $data);
         } catch ( Exception $ex ) {
         }
@@ -265,8 +266,8 @@ class Post_business extends CI_Controller {
         $this->post_form->set_rules('availableAllDay');
         $this->post_form->set_rules('website');
         
-        if ( $this->user->addresses && sizeof($this->user->addresses) > 0 ) {
-            foreach ( $this->user->addresses as $address ) {
+        if ( $this->currentUser->addresses && sizeof($this->currentUser->addresses) > 0 ) {
+            foreach ( $this->currentUser->addresses as $address ) {
                 $address_id = $address->id;
                 
                 if ( $_POST['quantity_'.$address_id] * 1 <= 0 ) {
@@ -315,8 +316,8 @@ class Post_business extends CI_Controller {
             
             array_push($ads, $ad);
         } elseif ( $post_start_array['place'] == Ad_model::PLACE_LOCATION ) {
-            if ( $this->user->addresses && sizeof($this->user->addresses) > 0 ) {
-                foreach ( $this->user->addresses as $address ) {
+            if ( $this->currentUser->addresses && sizeof($this->currentUser->addresses) > 0 ) {
+                foreach ( $this->currentUser->addresses as $address ) {
                     $address_id = $address->id;
                     
                     if ( $_POST['quantity_'.$address_id] * 1 <= 0 ) {
@@ -324,7 +325,7 @@ class Post_business extends CI_Controller {
                         continue;
                     }
                     
-                    $address = $this->user->getAddressById($address_id);
+                    $address = $this->currentUser->getAddressById($address_id);
                     
                     $image_file_name = $this->getImageFileName($post_location_array, $files_location_array, 'image_'.$address_id);
                     $image = Image_model::createImageModel($image_file_name);

@@ -40,7 +40,7 @@ class Profile extends CI_Controller {
                     $user = $this->usermanagement_service->getUserByName($name);
                 }
             } else {
-                //needs to refresh the user as cached statistic data reflect incorrect values
+                //needs to refresh the user as cached statistic data can reflect incorrect values
                 $this->usermanagement_service->refreshUser();
                 $user = $this->usermanagement_service->loadUser();
             }
@@ -131,6 +131,7 @@ class Profile extends CI_Controller {
         }
         
         $data = array();
+        $data['currentUser'] = $currentUser;
         $data['user'] = $user;
         $data['givings'] = $givings;
         $data['receivings'] = $receivings;
@@ -218,14 +219,14 @@ class Profile extends CI_Controller {
         $image = Image_model::createImageModel($image_file_name);
         
         try {
-            $user = $this->usermanagement_service->loadUser();
-            $user->avatar = $image;
+            $currentUser = $this->usermanagement_service->loadUser();
+            $currentUser->avatar = $image;
             
-            $this->usermanagement_service->updateUser($user);
+            $this->usermanagement_service->updateUser($currentUser);
             $this->usermanagement_service->refreshUser();
-            $user = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, $user->getAvatarUrl());
+            respond_ajax(AJAX_STATUS_RESULT, $currentUser->getAvatarUrl());
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->getMessage());
             respond_ajax(AJAX_STATUS_ERROR, 'Something went wrong !');

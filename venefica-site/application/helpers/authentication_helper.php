@@ -80,11 +80,13 @@ if ( ! function_exists('isOwner')) {
     /**
      * Checks the given user if is the one logged in.
      * 
-     * @param User_model $user
+     * @param User_model or long $user 
      * @return boolean
      */
     function isOwner($user) {
         if ( !isLogged() ) {
+            return false;
+        } else if ( $user == null ) {
             return false;
         }
         
@@ -92,8 +94,15 @@ if ( ! function_exists('isOwner')) {
         $CI->load->library('usermanagement_service');
         
         $currentUser = $CI->usermanagement_service->loadUser();
-        if ( $currentUser->id == $user->id ) {
-            return true;
+        
+        if ( $user instanceof User_model ) {
+            if ( $currentUser->id == $user->id ) {
+                return true;
+            }
+        } elseif (is_numeric ($user) ) {
+            if ( $currentUser->id == $user ) {
+                return true;
+            }
         }
         return false;
     }

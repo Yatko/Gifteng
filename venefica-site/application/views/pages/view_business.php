@@ -1,6 +1,6 @@
 <?
 
-$user_is_business = $user->businessAccount;
+$user_is_business = $currentUser->businessAccount;
 $ad_is_business = $ad->isBusiness();
 $ad_title = $ad->title;
 $ad_subtitle = $ad->subtitle;

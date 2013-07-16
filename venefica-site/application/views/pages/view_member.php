@@ -6,7 +6,7 @@
     }
     
     $(function() {
-        init_map(false);
+        init_map('view_map', 'view_longitude', 'view_latitude', 'view_marker_longitude', 'view_marker_latitude', false);
         
         $('.ge-request').on('request_created', function(event, adId) {
             location.reload();
@@ -20,13 +20,16 @@
 
 <?
 
-$distance = getDistance($user, $ad);
+$distance = getDistance($currentUser, $ad);
 $is_owner = $ad->owner;
 $ad_is_business = $ad->isBusiness();
 $ad_is_online = $ad->isOnline();
+$ad_is_sold = $ad->sold;
 
 $ad_can_edit = $is_owner && !$ad->hasActiveRequest();
 $ad_can_request = $ad->canRequest;
+
+$user_request = $ad->getRequestByUser($currentUser->id);
 
 if ( $ad->address != null ) {
     $ad_longitude = $ad->address->longitude;
@@ -34,6 +37,12 @@ if ( $ad->address != null ) {
 } else {
     $ad_longitude = 0;
     $ad_latitude = 0;
+}
+
+if ( $ad_is_sold || !$ad_can_request ) {
+    $canComment = false;
+} else {
+    $canComment = true;
 }
 
 $ad_id = $ad->id;
@@ -92,16 +101,19 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
                     
                     <?
                     if ( $ad_can_edit ) {
+                        //there is no active request for this ad
+                        
                         $edit_js = 'onclick="ad_edit(' . $ad_id . ');"';
-                        $delete_js = 'onclick="ad_delete(' . $ad_id . ');"';
-                        
                         $edit_class = 'class="btn btn-large btn-ge btn-block"';
-                        $delete_class = 'class="btn btn-large btn-ge btn-block"';
-                    } else {
-                        $edit_js = '';
-                        $delete_js = '';
                         
+                        $delete_class = 'class="btn btn-large btn-ge btn-block"';
+                        $delete_js = 'onclick="ad_delete(' . $ad_id . ');"';
+                    } else {
+                        //there is at least one active request
+                        $edit_js = '';
                         $edit_class = 'class="btn btn-large btn-block disabled"';
+                        
+                        $delete_js = '';
                         $delete_class = 'class="btn btn-large btn-block disabled"';
                     }
                     ?>
@@ -116,14 +128,26 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
                 <? else: ?>
                 
                     <?
-                    if ( $ad_can_request ) {
+                    if ( $ad_is_sold ) {
+                        $request_js = '';
+                        $request_class = 'class="btn btn-large btn-block disabled"';
+                        $request_text = 'SOLD OUT';
+                    } elseif ( $user_request != null && $user_request->isDeclined() ) {
+                        $request_js = '';
+                        $request_class = 'class="btn btn-large btn-block disabled"';
+                        $request_text = 'EXPIRED';
+                    } elseif ( $ad_can_request ) {
                         $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
                         $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
                         $request_text = 'REQUEST GIFT';
-                    } else {
+                    } else if ( $user_request != null ) {
                         $request_js = '';
                         $request_class = 'class="btn btn-large btn-block disabled"';
                         $request_text = 'REQUEST SENT';
+                    } else {
+                        $request_js = '';
+                        $request_class = 'class="btn btn-large btn-block disabled"';
+                        $request_text = 'INACTIVE';
                     }
                     ?>
                                 
@@ -193,11 +217,11 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
                     
                 <? else: ?>
                     
-                    <input id="marker_longitude" type="hidden" value="<?=$ad_longitude?>">
-                    <input id="marker_latitude" type="hidden" value="<?=$ad_latitude?>">
+                    <input id="view_marker_longitude" type="hidden" value="<?=$ad_longitude?>">
+                    <input id="view_marker_latitude" type="hidden" value="<?=$ad_latitude?>">
 
                     <div class="row-fluid ge-map">
-                        <div id="map"></div>
+                        <div id="view_map" class="map"></div>
                     </div><!--./ge-map-->
                     
                     <? if ($distance != null && $distance != ''): ?>
@@ -212,11 +236,15 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
             </div>
         </div><!--./ge-item details-->
 
+        <? if( (isset($comments) && is_array($comments) && count($comments) > 0) || $canComment ): ?>
+        
         <div class="span6 ge-item">
             <div class="well ge-well">
-                <? $this->load->view('element/comments', array('comments' => $comments, 'ad' => $ad, 'canComment' => true)); ?>
+                <? $this->load->view('element/comments', array('comments' => $comments, 'ad' => $ad, 'canComment' => $canComment)); ?>
             </div>
         </div>
+        
+        <? endif; ?>
     </div>
 
 </div><!-- ./row -->

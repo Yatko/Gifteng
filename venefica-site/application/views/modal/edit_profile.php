@@ -3,6 +3,7 @@
         $('#editProfileContainer').on('hidden', function() {
             //$(this).data('modal', null);
             $(this).removeData("modal");
+            $('#editProfileContainer > .modal-body').html('');
         });
     });
 </script>

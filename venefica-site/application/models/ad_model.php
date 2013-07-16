@@ -259,7 +259,7 @@ class Ad_model extends CI_Model {
     // requests related
     
     /**
-     * Gets the request made by the goven user for this ad.
+     * Gets the first request made by the given user for this ad.
      * 
      * @param long $userId
      * @return Request_model

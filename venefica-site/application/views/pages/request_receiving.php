@@ -1,7 +1,8 @@
 <?
 
+$ad_id = $ad->id;
 $request_id = $request->id;
-$owner_user = $ad->creator;
+$ad_creator = $ad->creator;
 $ad_title = trim($ad->title);
 
 ?>
@@ -11,17 +12,21 @@ $ad_title = trim($ad->title);
 
         <div class="row-fluid">
             <div class="ge-user">
-                <? $this->load->view('element/user', array('user' => $owner_user, 'canEdit' => false, 'small' => true)); ?>
+                <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
             </div>
         </div>
         
         
-        <? if( $request->accepted ): ?>
+        <? if( $ad->sold ): ?>
+        
+            
+        
+        <? elseif( $request->accepted ): ?>
         
             <div class="row-fluid">
                 <div class="ge-action">
                     <div class="span6">
-                        <button onclick="request_receive(<?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Received</button>
+                        <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Received</button>
                     </div>
                 </div><!--./ge-action-->
             </div>
@@ -40,7 +45,7 @@ $ad_title = trim($ad->title);
                         </div>
                     </div><!--./ge-subject-->
                     
-                    <? $this->load->view('element/messages', array('messages' => $messages, 'ad' => $ad, 'to' => $owner_user, 'canMessage' => true)); ?>
+                    <? $this->load->view('element/messages', array('messages' => $messages, 'ad' => $ad, 'to' => $ad_creator, 'canMessage' => true)); ?>
                     
                 </div>
             </div>

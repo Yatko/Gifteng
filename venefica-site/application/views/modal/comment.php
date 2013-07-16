@@ -10,9 +10,6 @@
         $('#commentContainer').on('shown', function() {
             $("#comment_post_form textarea[name=commentText]").focus();
         });
-        //$('#commentContainer').on('hidden', function() {
-        //    $(this).removeData("modal");
-        //});
     });
 </script>
 

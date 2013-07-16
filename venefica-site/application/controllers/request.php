@@ -24,17 +24,18 @@ class Request extends CI_Controller {
         
         if ( !validate_request($request) ) return;
         
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         
         $is_modal = key_exists('modal', $_GET) ? true : false;
         $is_giving = key_exists('giving', $_GET) ? true : false;
+        $userId = key_exists('userId', $_GET) ? $_GET['userId'] : null;
         
         if ( $is_giving ) {
             $user1Id = $request->user->id;
-            $user2Id = $user->id;
+            $user2Id = $currentUser->id;
         } else {
             $user1Id = $ad->creator->id;
-            $user2Id = $user->id;
+            $user2Id = $currentUser->id;
         }
         
         $messages = $this->message_service->getMessagesByAdAndUsers($ad->id, $user1Id, $user2Id);
@@ -42,9 +43,10 @@ class Request extends CI_Controller {
         $data = array();
         $data['request'] = $request;
         $data['ad'] = $ad;
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         $data['messages'] = $messages;
         $data['is_modal'] = $is_modal;
+        $data['userId'] = $userId;
         
         if ( $is_modal ) {
             if ( $is_giving ) {
