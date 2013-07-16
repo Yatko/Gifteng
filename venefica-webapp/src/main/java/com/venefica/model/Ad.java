@@ -307,7 +307,8 @@ public class Ad {
     }
     
     /**
-     * Verifies if a visible and active request is available for the given user.
+     * Verifies if a visible or active request is available for the given user.
+     * The active flag is configurable via include parameter.
      * 
      * Visible means that not hidden and not deleted.
      * Active means that is not DECLINED or CANCELED.
@@ -315,10 +316,16 @@ public class Ad {
      * @param user
      * @return 
      */
-    public boolean isRequested(User user) {
+    public boolean isRequested(User user, boolean includeOnlyActiveRequests) {
         for ( Request request : getVisibleRequests() ) {
-            if ( request.getUser().equals(user) && request.isActive() ) {
-                return true;
+            if ( request.getUser().equals(user) ) {
+                if ( includeOnlyActiveRequests && request.isActive() ) {
+                    //there is a visible and active request
+                    return true;
+                } else {
+                    //there is a visible request
+                    return true;
+                }
             }
         }
         return false;
