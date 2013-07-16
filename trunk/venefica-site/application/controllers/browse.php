@@ -13,14 +13,14 @@ class Browse extends CI_Controller {
         
         if ( !validate_login() ) return;
         
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         $lastAdId = -1;
         $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = false;
         $data['ads'] = $ads;
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         
         $modal = $this->load->view('modal/comment', array(), true);
         
@@ -42,14 +42,14 @@ class Browse extends CI_Controller {
             return;
         }
         
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         $lastAdId = $_GET['lastAdId'];
         $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM);
         
         $data = array();
         $data['is_ajax'] = true;
         $data['ads'] = $ads;
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         
         $this->load->view('pages/browse', $data);
     }
@@ -84,12 +84,12 @@ class Browse extends CI_Controller {
         // to mock
         
         $ads = array();
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         for ( $i = 1; $i <= $numberAds; $i++ ) {
             $ad = new Ad_model();
             $ad->id = $lastAdId + $i;
             $ad->owner = true;
-            $ad->creator = $user;
+            $ad->creator = $currentUser;
             $ad->title = 'Test';
             
             array_push($ads, $ad);

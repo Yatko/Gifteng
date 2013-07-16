@@ -1,8 +1,8 @@
 <script langauge="javascript">
     $(function() {
         $('#requestContainer').on('hidden', function() {
-            //$(this).data('modal', null);
             $(this).removeData("modal");
+            $('#requestContainer > .modal-body').html('');
         });
     });
 </script>

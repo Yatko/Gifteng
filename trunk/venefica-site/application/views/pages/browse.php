@@ -101,7 +101,7 @@
 
                             <div class="ge-item">
                                 <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => true, 'canShare' => true)); ?>
-                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $user)); ?>
+                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $currentUser)); ?>
                             </div><!--./ge-item-->
 
                             <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>

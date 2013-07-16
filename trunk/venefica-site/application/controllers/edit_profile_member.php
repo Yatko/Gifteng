@@ -20,10 +20,10 @@ class Edit_profile_member extends CI_Controller {
             redirect('/profile');
         }
         
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         
         $data = array();
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         $data['is_modal'] = $is_modal;
         
         if ( $is_modal ) {
@@ -74,27 +74,27 @@ class Edit_profile_member extends CI_Controller {
         if ( $is_valid ) {
             //form data valid after post
             
-            $user = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             $zipCode = $this->input->post('zipCode');
             $location = getLocationByZipCode($zipCode);
             
-            if ( $user->address == null ) {
+            if ( $currentUser->address == null ) {
                 $address = new Address_model();
             } else {
-                $address = $user->address;
+                $address = $currentUser->address;
             }
             
             $address->zipCode = $zipCode;
             $address->longitude = $location['longitude'];
             $address->latitude = $location['latitude'];
             
-            $user->firstName = $this->input->post('firstName');
-            $user->lastName = $this->input->post('lastName');
-            $user->about = $this->input->post('about');
-            $user->address = $address;
+            $currentUser->firstName = $this->input->post('firstName');
+            $currentUser->lastName = $this->input->post('lastName');
+            $currentUser->about = $this->input->post('about');
+            $currentUser->address = $address;
             
             try {
-                $this->usermanagement_service->updateUser($user);
+                $this->usermanagement_service->updateUser($currentUser);
                 $this->usermanagement_service->refreshUser();
                 
                 return array(

@@ -21,7 +21,6 @@ class Post_member extends CI_Controller {
         Post_member::STEP_POST
     );
     
-    var $user;
     var $unique_id;
     
     public function view() {
@@ -64,7 +63,6 @@ class Post_member extends CI_Controller {
         }
         
         $data = array();
-        $data['user'] = $this->user;
         $data['step'] = $step;
         $data['is_modal'] = $is_modal;
         $data['is_first'] = $is_first;
@@ -294,8 +292,16 @@ class Post_member extends CI_Controller {
     }
     
     private function post_details() {
+        $is_valid = true;
         $this->load->library('form_validation', null, 'post_form');
         $this->post_form->set_error_delimiters('<div class="error">', '</div>');
+        
+        if ( $this->input->post('pickUp') || $this->input->post('freeShipping') ) {
+            //we got at least one value
+        } else {
+            $this->post_form->setError(lang('post_member_delivery_missing'));
+            $is_valid = false;
+        }
         
         $this->post_form->set_rules('title', 'lang:post_title', 'trim|required');
         $this->post_form->set_rules('price', 'lang:post_price', 'trim|integer');
@@ -307,7 +313,9 @@ class Post_member extends CI_Controller {
         
         $this->post_form->set_message('required', lang('validation_required'));
         
-        $is_valid = $this->post_form->run();
+        if ( $is_valid ) {
+            $is_valid = $this->post_form->run();
+        }
         return $is_valid;
     }
     

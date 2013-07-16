@@ -13,9 +13,6 @@
         $('#messageContainer').on('shown', function() {
             $("#message_post_form textarea[name=messageText]").focus();
         });
-        //$('#messageContainer').on('hidden', function() {
-        //    $(this).removeData("modal");
-        //});
     });
 </script>
 

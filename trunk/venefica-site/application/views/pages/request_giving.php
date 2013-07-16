@@ -1,6 +1,8 @@
 <?
 
+$ad_id = $ad->id;
 $request_id = $request->id;
+$user_id = $userId;
 $requestor_user = $request->user;
 $ad_title = trim($ad->title);
 
@@ -33,10 +35,10 @@ $ad_title = trim($ad->title);
             <div class="row-fluid">
                 <div class="ge-action">
                     <div class="span6">
-                        <button onclick="request_cancel(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
+                        <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                     </div>
                     <div class="span6">
-                        <button onclick="request_send(<?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Shipped/Handed Over</button>
+                        <button onclick="request_send(<?=$request_id?>, <?=$ad_id?>, <?-$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Shipped/Handed Over</button>
                     </div>
                 </div><!--./ge-action-->
             </div>
@@ -46,10 +48,10 @@ $ad_title = trim($ad->title);
             <div class="row-fluid">
                 <div class="ge-action">
                     <div class="span6">
-                        <button onclick="request_cancel(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
+                        <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                     </div>
                     <div class="span6">
-                        <button onclick="request_select(this, <?=$request_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
+                        <button onclick="request_select(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
                     </div>
                 </div><!--./ge-action-->
             </div>

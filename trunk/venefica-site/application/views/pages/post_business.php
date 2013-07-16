@@ -425,8 +425,8 @@
                     
                     <div id="business_post_location_addresses">
 
-                    <? if( !is_empty($user->addresses) ): ?>
-                    <? foreach( $user->addresses as $address ): ?>
+                    <? if( !is_empty($currentUser->addresses) ): ?>
+                    <? foreach( $currentUser->addresses as $address ): ?>
                         
                         <? $this->load->view('element/address', array('address' => $address, 'image' => ${'image_'.$address->id}, 'bar_code' => ${'bar_code_'.$address->id})); ?>
                         

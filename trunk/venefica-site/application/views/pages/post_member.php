@@ -1,45 +1,20 @@
 <script langauge="javascript">
+    function edit_post() {
+        $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
+        $('#member_post_form').submit();
+    }
+    function another_post() {
+        $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
+        $('#member_post_form').submit();
+    }
+    
     $(function() {
-        init_map(true);
+        init_map('post_map', 'post_longitude', 'post_latitude', 'post_marker_longitude', 'post_marker_latitude', true);
         
-        $('#postImageBtn').on('file_selected', function() {
+        $('.ge-post-image-btn').on('file_selected', function() {
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             $("#member_post_form").submit();
         });
-        
-        $("#editBtn").click(function() {
-            $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
-            $('#member_post_form').submit();
-        });
-        $('#anotherBtn').click(function() {
-            $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
-            $('#member_post_form').submit();
-        });
-        
-        <? if( $is_modal ): ?>
-        init_select();
-        init_checkbox();
-        
-        $('#member_post_form').on('submit', function(e) {
-            e.preventDefault();
-            
-            var formData = new FormData($("#member_post_form").get(0));
-            
-            $.ajax({
-                type: "POST",
-                url: '<?=base_url()?>post/member?modal',
-                dataType: 'html',
-                cache: false,
-                data: formData,
-                processData: false,
-                contentType: false
-            }).done(function(response) {
-                $('#postContainer > .modal-body').html(response);
-            }).fail(function(data) {
-                //TODO
-            });
-        });
-        <? endif; ?>
     });
 </script>
 
@@ -64,17 +39,6 @@
             if ( $message == '' ) $message = 'You should give as you would receive, cheerfully, quickly, and without hesitation';
             ?>
             
-            <script language="javascript">
-                <? if( $is_modal ): ?>
-                $(function() {//needs manual event handling
-                    hide_file($('#ad_image'));
-                    open_file($('#postImageBtn'));
-                    open_file($('#postImageImg'));
-                    attach_file($('#postImageBtn'));
-                });
-                <? endif; ?>
-            </script>
-
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <label class="control-label">
@@ -87,12 +51,12 @@
                         <div class="span12">
                             <div class="control-group">
                                 <div class="controls">
-                                    <button id="postImageBtn" for="ad_image" type="button" class="btn btn-huge btn-block file">
+                                    <button for="ad_image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
                                         Upload a great photo
                                         <i class="fui-photo pull-right"></i>
                                     </button>
-                                    <input type="file" name="ad_image" id="ad_image" />
-                                    <input type="hidden" name="ad_image_posted" value="<?= $ad_image ?>" />
+                                    <input name="ad_image" id="ad_image" type="file" />
+                                    <input name="ad_image_posted" type="hidden" value="<?= $ad_image ?>" />
                                 </div>
                             </div>
                         </div>
@@ -103,9 +67,9 @@
                             <div class="span12">
                             
                             <? if( !is_empty($ad_image) ): ?>
-                                <img id="postImageImg" src="<?=base_url()?>get_photo/<?= $ad_image ?>" class="img img-rounded file" for="ad_image" />
+                                <img src="<?=base_url()?>get_photo/<?= $ad_image ?>" class="ge-post-image-img img img-rounded file" for="ad_image" />
                             <? else: ?>
-                                <img id="postImageImg" src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="img img-rounded file" for="ad_image" />
+                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="ad_image" />
                             <? endif; ?>
                             
                             </div>
@@ -257,11 +221,11 @@
             if ( empty($latitude) ) $latitude = hasElement($_POST, 'latitude') ? $_POST['latitude'] : $marker_latitude;
             ?>
             
-            <input id="marker_longitude" type="hidden" value="<?=$marker_longitude?>">
-            <input id="marker_latitude" type="hidden" value="<?=$marker_latitude?>">
+            <input id="post_marker_longitude" type="hidden" value="<?=$marker_longitude?>">
+            <input id="post_marker_latitude" type="hidden" value="<?=$marker_latitude?>">
             
-            <input id="longitude" name="longitude" type="hidden" value="<?=$longitude?>">
-            <input id="latitude" name="latitude" type="hidden" value="<?=$latitude?>">
+            <input id="post_longitude" name="longitude" type="hidden" value="<?=$longitude?>">
+            <input id="post_latitude" name="latitude" type="hidden" value="<?=$latitude?>">
             
             <div class="span6">
                 <div class="well ge-well ge-form">
@@ -273,7 +237,7 @@
                     
                     <div class="row-fluid ge-map">
                         <div class="span12">
-                            <div id="map"></div>
+                            <div id="post_map" class="map"></div>
                         </div>
                     </div><!--./ge-item-image-->
 
@@ -281,7 +245,10 @@
                         <div class="span12">
                             <div class="control-group control-form">
                                 <div class="controls">
-                                    <button type="submit" class="btn btn-huge btn-block btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                                    <? if( $is_modal ): ?>
+                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                    <? endif; ?>
+                                    <button type="submit" class="span10 btn btn-huge btn-block btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -341,7 +308,7 @@
                         <div class="span12">
                             <div class="control-group control-form">
                                 <div class="controls">
-                                    <button id="editBtn" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
+                                    <button onclick="edit_post();" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
                                     <button type="submit" class="span8 btn btn-huge btn-ge">POST MY GIFT<i class="fui-arrow-right pull-right"></i></button>
                                 </div>
                             </div>
@@ -384,7 +351,7 @@
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
                                             <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
-                                            <button id="anotherBtn" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                                            <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
                                         <? else: ?>
                                             <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
                                         <? endif; ?>

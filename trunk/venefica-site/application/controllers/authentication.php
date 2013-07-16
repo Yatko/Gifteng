@@ -13,15 +13,15 @@ class Authentication extends CI_Controller {
         
         $action = $this->getActionFromUri();
         $isLogged = isLogged();
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         
-        if ( isLogged() && $user ) {
+        if ( isLogged() && $currentUser ) {
             redirect('/profile');
         }
         
         $data = array();
         $data['isLogged'] = $isLogged;
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         
         $data = array_merge($data, $extra_data);
         

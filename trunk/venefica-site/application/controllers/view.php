@@ -23,7 +23,7 @@ class View extends CI_Controller {
         
         if ( !validate_ad($ad) ) return;
         
-        $user = $this->usermanagement_service->loadUser();
+        $currentUser = $this->usermanagement_service->loadUser();
         $comments = $this->message_service->getCommentsByAd($adId, -1, View::COMMENTS_NUM);
         
         /**
@@ -32,7 +32,7 @@ class View extends CI_Controller {
         $ad = new Ad_model();
         $ad->id = 1;
         $ad->owner = false;
-        $ad->creator = $user;
+        $ad->creator = $currentUser;
         $ad->title = 'Test';
         
         $comments = null;
@@ -41,7 +41,7 @@ class View extends CI_Controller {
         $data = array();
         $data['adId'] = $adId;
         $data['ad'] = $ad;
-        $data['user'] = $user;
+        $data['currentUser'] = $currentUser;
         $data['comments'] = $comments;
         
         $modal = $this->load->view('modal/request_create', array(), true);
@@ -79,6 +79,7 @@ class View extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             $this->load->model('comment_model');
+            $this->load->model('request_model');
             
             $this->initialized = true;
         }
