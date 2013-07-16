@@ -48,7 +48,11 @@ $request_id = $request->id;
 
                         <?
                         $accepted_request = $ad->getAcceptedRequest();
-                        $requestor_img = $accepted_request->user->getAvatarUrl();
+                        if ( $accepted_request != null ) {
+                            $requestor_img = $accepted_request->getUserAvatarUrl();
+                        } else {
+                            $requestor_img = DEFAULT_USER_URL;
+                        }
                         ?>
 
                         <div class="row-fluid ge-text ge-description">
