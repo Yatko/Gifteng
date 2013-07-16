@@ -26,7 +26,11 @@ $is_owner = isOwner($user_id);
 
         <?
         $accepted_request = $ad->getAcceptedRequest();
-        $requestor_img = $accepted_request->user->getAvatarUrl();
+        if ( $accepted_request != null ) {
+            $requestor_img = $accepted_request->getUserAvatarUrl();
+        } else {
+            $requestor_img = DEFAULT_USER_URL;
+        }
         ?>
 
                     <div class="row-fluid ge-text ge-description">
@@ -62,7 +66,7 @@ $is_owner = isOwner($user_id);
 
                     <? foreach( $ad->requests as $request ): ?>
                         <?
-                        $requestor_img = $request->user->getAvatarUrl();
+                        $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
                         <div class="span4"><img src="<?=$requestor_img?>" class="img img-rounded inactive"></div>
@@ -101,7 +105,7 @@ $is_owner = isOwner($user_id);
         <?
         $request = $ad->getSentRequest();
         $request_id = $request->id;
-        $requestor_img = $request->user->getAvatarUrl();
+        $requestor_img = $request->getUserAvatarUrl();
         ?>
 
                     <div class="row-fluid ge-text ge-description">
@@ -125,7 +129,7 @@ $is_owner = isOwner($user_id);
         <?
         $request = $ad->getAcceptedRequest();
         $request_id = $request->id;
-        $requestor_img = $request->user->getAvatarUrl();
+        $requestor_img = $request->getUserAvatarUrl();
         ?>
 
                     <div class="row-fluid ge-text ge-description">
@@ -169,7 +173,7 @@ $is_owner = isOwner($user_id);
                         }
 
                         $request_id = $request->id;
-                        $requestor_img = $request->user->getAvatarUrl();
+                        $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
                         <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
