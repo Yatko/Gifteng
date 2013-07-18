@@ -19,11 +19,9 @@ class Authentication extends CI_Controller {
             redirect('/profile');
         }
         
-        $data = array();
+        $data = $extra_data;
         $data['isLogged'] = $isLogged;
         $data['currentUser'] = $currentUser;
-        
-        $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         if ( $action == Authentication::ACTION_LOGIN ) {

@@ -11,13 +11,12 @@ class Registration extends CI_Controller {
     private $auto_login = false;
     
     public function user() {
-        $data = array();
         $extra_data = array();
         
         $this->init();
         $this->registerUser($extra_data);
         
-        $data = array_merge($data, $extra_data);
+        $data = $extra_data;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/registration_member', $data);
@@ -25,13 +24,12 @@ class Registration extends CI_Controller {
     }
     
     public function business() {
-        $data = array();
         $extra_data = array();
         
         $this->init();
         $this->registerBusiness($extra_data);
         
-        $data = array_merge($data, $extra_data);
+        $data = $extra_data;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         $this->load->view('pages/registration_business', $data);

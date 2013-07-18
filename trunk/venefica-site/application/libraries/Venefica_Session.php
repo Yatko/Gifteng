@@ -14,10 +14,13 @@ class Venefica_Session extends CI_Session {
         //NOTE:
         // any model that is stored into session should be read before session start
         // if not __php_incomplete_class error will be thrown when unserializing reference
-        get_instance()->load->model("image_model");
-        get_instance()->load->model('address_model');
-        get_instance()->load->model("user_model");
-        get_instance()->load->model('userstatistics_model');
+        $CI =& get_instance();
+        $CI->load->model("image_model");
+        $CI->load->model("address_model");
+        $CI->load->model("adstatistics_model");
+        $CI->load->model("userstatistics_model");
+        $CI->load->model("ad_model");
+        $CI->load->model("user_model");
         
         parent::__construct($params);
     }

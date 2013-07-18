@@ -38,6 +38,47 @@ class Image_model extends CI_Model {
             ."]";
     }
     
+    /**
+     * Checks if the present url reflects an uploaded file name.
+     * 
+     * @return boolean
+     */
+    public function isUploaded() {
+        if ( $this->url == null ) {
+            return false;
+        }
+        return startsWith($this->url, UPLOAD_FILE_PREFIX);
+    }
+    
+    /**
+     * Detectds and returnds the url of the image. This should be used at file
+     * upload.
+     * 
+     * @return string
+     */
+    public function getDetectedImageUrl() {
+        $url = null;
+        if ( $this->url != null ) {
+            if ( $this->isUploaded() ) {
+                $url = base_url() . 'get_photo/' . $this->url;
+            } else {
+                $url = SERVER_URL . $this->url;
+            }
+        }
+        return $url;
+    }
+    
+    /**
+     * Load the data if this was an uploded file.
+     */
+    public function safeLoadData() {
+        if ( $this->isUploaded() ) {
+            $image_file_name = $this->url;
+            $this->imgType = Image_model::getImgTypeByExtension($image_file_name);
+            $this->data = readFileAsString(TEMP_FOLDER .'/'. $image_file_name);
+        }
+    }
+    
     // static helpers
     
     public static function convertImages($imagesResult) {
@@ -57,7 +98,7 @@ class Image_model extends CI_Model {
         return new Image_model($image);
     }
     
-    public static function getImgType($image_file_name) {
+    public static function getImgTypeByExtension($image_file_name) {
         if ( endsWith(strtolower($image_file_name), "png") ) {
             return Image_model::IMGTYPE_PNG;
         }
@@ -69,7 +110,7 @@ class Image_model extends CI_Model {
             return null;
         }
         $image = new Image_model();
-        $image->imgType = Image_model::getImgType($image_file_name);
+        $image->imgType = Image_model::getImgTypeByExtension($image_file_name);
         $image->data = readFileAsString(TEMP_FOLDER .'/'. $image_file_name);
         return $image;
     }

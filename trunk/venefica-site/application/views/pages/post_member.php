@@ -20,6 +20,12 @@
 
 <?
 //print_r($this->session->all_userdata());
+
+if ( $is_new ) {
+    $form_action = '/post/member' . ($is_modal ? '?modal' : '');
+} else {
+    $form_action = '/edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
+}
 ?>
 
 <? if( !$is_modal ): ?>
@@ -29,7 +35,7 @@
 
 <? endif; ?>
     
-    <?=form_open_multipart('/post/member' . ($is_modal ? '?modal' : ''), array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id)) ?>
+    <?=form_open_multipart($form_action, array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id)) ?>
         
         <? if ($step == Post_member::STEP_START): ?>
             
@@ -51,12 +57,11 @@
                         <div class="span12">
                             <div class="control-group">
                                 <div class="controls">
-                                    <button for="ad_image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
+                                    <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
                                         Upload a great photo
                                         <i class="fui-photo pull-right"></i>
                                     </button>
-                                    <input name="ad_image" id="ad_image" type="file" />
-                                    <input name="ad_image_posted" type="hidden" value="<?= $ad_image ?>" />
+                                    <input name="image" id="image" type="file" />
                                 </div>
                             </div>
                         </div>
@@ -66,10 +71,10 @@
                         <div class="row-fluid">
                             <div class="span12">
                             
-                            <? if( !is_empty($ad_image) ): ?>
-                                <img src="<?=base_url()?>get_photo/<?= $ad_image ?>" class="ge-post-image-img img img-rounded file" for="ad_image" />
+                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
+                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
                             <? else: ?>
-                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="ad_image" />
+                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
                             <? endif; ?>
                             
                             </div>
@@ -263,6 +268,12 @@
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'One last step! Make sure everything is correct.<br /><small>(Note: with every gift you give your Generosity Score will increase.)</small>';
+            
+            if ( $is_new ) {
+                $submit_text = 'POST MY GIFT';
+            } else {
+                $submit_text = 'UPDATE MY GIFT';
+            }
             ?>
             
             <div class="span6">
@@ -274,7 +285,7 @@
                     </label>
                     
                     <div class="row-fluid ge-item-image">
-                        <img src="<?=base_url()?>get_photo/<?=$ad_image?>" class="img img-rounded" />
+                        <img src="<?=$image->getDetectedImageUrl()?>" class="img img-rounded" />
                     </div><!--./ge-item-image-->
 
                     <div id="item_description" class="row-fluid ge-text">
@@ -309,7 +320,7 @@
                             <div class="control-group control-form">
                                 <div class="controls">
                                     <button onclick="edit_post();" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
-                                    <button type="submit" class="span8 btn btn-huge btn-ge">POST MY GIFT<i class="fui-arrow-right pull-right"></i></button>
+                                    <button type="submit" class="span8 btn btn-huge btn-ge"><?=$submit_text?><i class="fui-arrow-right pull-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -331,6 +342,18 @@
                                 <p id="ajax_error"><?=$error?></p>
                             </blockquote>
                         </label>
+                        
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <? if( $is_modal ): ?>
+                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
+                                        <? endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div><!--./ge well-->
                 </div><!--./post-gift_5-->
                 
@@ -351,9 +374,14 @@
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
                                             <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
-                                            <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                                            
+                                            <? if( $is_new ): ?>
+                                                <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                                            <? endif; ?>
                                         <? else: ?>
-                                            <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
+                                            <? if( $is_new ): ?>
+                                                <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
+                                            <? endif; ?>
                                         <? endif; ?>
                                     </div>
                                 </div>

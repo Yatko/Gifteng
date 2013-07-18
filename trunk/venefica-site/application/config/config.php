@@ -263,7 +263,7 @@ CREATE TABLE venefica_session (
     ip_address VARCHAR(45) DEFAULT '0' NOT NULL,
     user_agent VARCHAR(120) NOT NULL,
     last_activity INT(10) DEFAULT 0 NOT NULL,
-    user_data VARCHAR(255) NOT NULL,
+    user_data BLOB NOT NULL,
     PRIMARY KEY (session_id)
 );
 /**/

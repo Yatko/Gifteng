@@ -12,10 +12,8 @@ class Invitation extends CI_Controller {
         
         $action = $this->getActionFromUri();
         
-        $data = array();
+        $data = $extra_data;
         $data['step'] = $this->getStepFromUri();
-        
-        $data = array_merge($data, $extra_data);
         
         $this->load->view('templates/'.TEMPLATES.'/header');
         if ( $action == Invitation::ACTION_REQUEST ) {
