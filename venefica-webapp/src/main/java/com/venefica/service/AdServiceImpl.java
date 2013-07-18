@@ -214,7 +214,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 image = imageDto.toImage();
                 imageDao.save(image);
                 ad.getAdData().setMainImage(image);
-            } else {
+            } else if ( imageDto.getUrl() == null || imageDto.getUrl().trim().isEmpty() ) {
                 throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
             }
         }
@@ -232,7 +232,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 thumbImage = thumbImageDto.toImage();
                 imageDao.save(thumbImage);
                 ad.getAdData().setThumbImage(thumbImage);
-            } else {
+            } else if ( thumbImageDto.getUrl() == null || thumbImageDto.getUrl().trim().isEmpty() ) {
                 throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
             }
         }
@@ -250,7 +250,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 barcodeImage = barcodeImageDto.toImage();
                 imageDao.save(barcodeImage);
                 ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
-            } else {
+            } else if ( barcodeImageDto.getUrl() == null || barcodeImageDto.getUrl().trim().isEmpty() ) {
                 throw new AdValidationException(AdField.BARCODE_IMAGE, "Invalid image specified!");
             }
         }
