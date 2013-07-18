@@ -103,7 +103,7 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
                     if ( $ad_can_edit ) {
                         //there is no active request for this ad
                         
-                        $edit_js = 'onclick="ad_edit(' . $ad_id . ');"';
+                        $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
                         $edit_class = 'class="btn btn-large btn-ge btn-block"';
                         
                         $delete_class = 'class="btn btn-large btn-ge btn-block"';

@@ -16,6 +16,18 @@ class Post extends CI_Controller {
         }
     }
     
+    public function edit_redirect($adId) {
+        $this->init();
+        
+        if ( !validate_login() ) return;
+        
+        if ( isBusinessAccount() ) {
+            safe_redirect("/edit_post/business/" . $adId);
+        } else {
+            safe_redirect("/edit_post/member/" . $adId);
+        }
+    }
+    
     // internal
     
     private function init() {

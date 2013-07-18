@@ -3,7 +3,7 @@
         init_select();
         init_checkbox();
         
-        hide_file($('#ad_image'));
+        hide_file($('#image'));
         open_file($('.ge-post-image-btn'));
         open_file($('.ge-post-image-img'));
         attach_file($('.ge-post-image-btn'));
@@ -37,6 +37,23 @@
             initPostModal();
         });
         
+        $('#postContainer').on('hide', function() {
+            var $unique_id = $("#member_post_form input[name=unique_id]");
+            
+            $.ajax({
+                type: "POST",
+                url: '<?=base_url()?>post/member/ajax/remove',
+                dataType: 'json',
+                cache: false,
+                data: {
+                    unique_id: $unique_id.val()
+                }
+            }).done(function(response) {
+                //
+            }).fail(function(data) {
+                //TODO
+            });
+        });
         $('#postContainer').on('hidden', function() {
             $(this).removeData("modal");
             $('#postContainer > .modal-body').html('');
@@ -44,6 +61,6 @@
     });
 </script>
 
-<div id="postContainer" class="modal hide fade" data-remote="<?= base_url() ?>post?modal" data-backdrop="static" data-keyboard="false">
+<div id="postContainer" class="modal hide fade" data-remote="<?=base_url()?>post?modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-body"></div>
 </div>

@@ -10,9 +10,6 @@ class Post_member extends CI_Controller {
     const STEP_PREVIEW = 'preview';
     const STEP_POST = 'post';
     
-    const SESSION_KEY_POST = 'post_';
-    const SESSION_KEY_FILES = 'files_';
-    
     var $steps = array(
         Post_member::STEP_START,
         Post_member::STEP_DETAILS,
@@ -21,9 +18,13 @@ class Post_member extends CI_Controller {
         Post_member::STEP_POST
     );
     
+    var $ad;
+    var $is_new;
+    var $adId;
+    var $is_first_page;
     var $unique_id;
     
-    public function view() {
+    public function create() {
         $this->init();
         
         if ( !validate_login() ) return;
@@ -32,15 +33,85 @@ class Post_member extends CI_Controller {
             safe_redirect("/post/business");
         }
         
-        $is_modal = key_exists('modal', $_GET);
-        $is_first = ($_POST || $_FILES ? false : true);
+        $this->is_new = true;
+        $this->adId = null;
         
-        if ( $is_first ) {
-            $this->unique_id = uniqid('gifteng_');
-        } else {
-            $this->unique_id = $this->input->post('unique_id');
+        $this->render();
+    }
+    
+    public function edit($adId) {
+        $this->init();
+        
+        if ( !validate_login() ) return;
+        
+        if ( isBusinessAccount() ) {
+            safe_redirect("/edit_post/business/" . $adId);
         }
         
+        $this->is_new = false;
+        $this->adId = $adId;
+        
+        if ( $this->is_first_page ) {
+            $ad = $this->ad_service->getAdById($adId);
+            $this->storeAd($ad);
+        }
+        
+        $this->render();
+    }
+    
+    public function remove() {
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        $this->unique_id = $this->input->post('unique_id');
+        $this->removeAd();
+        
+        respond_ajax(AJAX_STATUS_RESULT, 'OK');
+    }
+    
+    // internal
+    
+    private function init() {
+        if ( !$this->initialized ) {
+            //load translations
+            $this->lang->load('main');
+            $this->lang->load('post');
+            
+            $this->load->library('ad_service');
+            $this->load->library('usermanagement_service');
+            
+            $this->load->model('image_model');
+            $this->load->model('address_model');
+            $this->load->model('ad_model');
+            $this->load->model('adstatistics_model');
+            $this->load->model('user_model');
+            $this->load->model('userstatistics_model');
+            $this->load->model('category_model');
+            
+            $this->is_first_page = ($_POST || $_FILES ? false : true);
+            if ( $this->is_first_page ) {
+                $ad = new Ad_model();
+                $ad->type = Ad_model::ADTYPE_MEMBER;
+                $ad->quantity = 1;
+                $ad->address = new Address_model();
+                $ad->image = new Image_model();
+                
+                $this->unique_id = uniqid('gifteng_');
+                $this->storeAd($ad);
+            } else {
+                $this->unique_id = $this->input->post('unique_id');
+                $this->loadAd(); //loading Ad_model from the session
+            }
+            
+            $this->initialized = true;
+        }
+    }
+    
+    private function render() {
+        $is_modal = key_exists('modal', $_GET);
         $current_step = $this->getCurrentStep();
         $next_step = $this->getNextStep($current_step);
         $is_valid = $this->process($current_step);
@@ -48,37 +119,32 @@ class Post_member extends CI_Controller {
         if ( $is_valid ) {
             //form data valid after post
             $step = $next_step;
+            
             if ( $step == Post_member::STEP_POST ) {
-                //do not keep flash data on last step - to avoid retransmit upon page reload
+                $this->removeAd();
             } else {
-                $this->storePostData($current_step);
+                $this->storeAd();
             }
         } elseif ( $_POST ) {
             //form data not valid after post
             $step = $current_step;
-            $this->storePostData($current_step);
+            $this->storeAd();
         } else {
             //direct access of the page
             $step = $current_step;
         }
         
+        //print_r($this->ad);
+        
         $data = array();
         $data['step'] = $step;
         $data['is_modal'] = $is_modal;
-        $data['is_first'] = $is_first;
         $data['unique_id'] = $this->unique_id;
+        $data['is_new'] = $this->is_new;
+        $data['adId'] = $this->adId;
         
         if ( $step == Post_member::STEP_START ) {
-            $start_array = $this->loadPostData(Post_member::STEP_START);
-            $post_start_array = $start_array[Post_member::SESSION_KEY_POST];
-            $files_start_array = $start_array[Post_member::SESSION_KEY_FILES];
-            
-            $ad_image = $this->getImageFileName($post_start_array, $files_start_array, 'ad_image');
-            if ( is_empty($ad_image) ) {
-                $ad_image = null;
-            }
-            
-            $data['ad_image'] = $ad_image;
+            $data['image'] = $this->ad->image;
         } else if ( $step == Post_member::STEP_DETAILS ) {
             try {
                 $categories = $this->ad_service->getAllCategories();
@@ -86,30 +152,18 @@ class Post_member extends CI_Controller {
                 $categories = array();
             }
             
-            $details_array = $this->loadPostData(Post_member::STEP_DETAILS);
-            $post_details_array = $details_array[Post_member::SESSION_KEY_POST];
-            $files_details_array = $details_array[Post_member::SESSION_KEY_FILES];
-            
-            $data['title'] = $post_details_array['title'];
-            $data['description'] = $post_details_array['description'];
-            $data['category'] = $post_details_array['category'];
-            $data['price'] = $post_details_array['price'];
-            $data['zipCode'] = $post_details_array['zipCode'];
-            $data['pickUp'] = hasElement($post_details_array, 'pickUp') ? $post_details_array['pickUp'] : '0';
-            $data['freeShipping'] = hasElement($post_details_array, 'freeShipping') ? $post_details_array['freeShipping'] : '0';
+            $data['title'] = $this->ad->title;
+            $data['description'] = $this->ad->description;
+            $data['category'] = $this->ad->categoryId;
+            $data['price'] = $this->ad->price;
+            $data['zipCode'] = $this->ad->address->zipCode;
+            $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
+            $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';
             $data['categories'] = $categories;
         } else if ( $step == Post_member::STEP_MAP ) {
-            $details_array = $this->loadPostData(Post_member::STEP_DETAILS);
-            $post_details_array = $details_array[Post_member::SESSION_KEY_POST];
-            $files_details_array = $details_array[Post_member::SESSION_KEY_FILES];
-            
-            $map_array = $this->loadPostData(Post_member::STEP_MAP);
-            $post_map_array = $map_array[Post_member::SESSION_KEY_POST];
-            //$files_map_array = $map_array[Post_member::SESSION_KEY_FILES];
-            
-            $zipCode = $post_details_array['zipCode'];
-            $longitude = $post_map_array['longitude'];
-            $latitude = $post_map_array['latitude'];
+            $zipCode = $this->ad->address->zipCode;
+            $longitude = $this->ad->address->longitude;
+            $latitude = $this->ad->address->latitude;
             
             if ( empty($longitude) || empty($latitude) ) {
                 $location = getLocationByZipCode($zipCode);
@@ -134,21 +188,8 @@ class Post_member extends CI_Controller {
                 $categories = array();
             }
             
-            $start_array = $this->loadPostData(Post_member::STEP_START);
-            $post_start_array = $start_array[Post_member::SESSION_KEY_POST];
-            $files_start_array = $start_array[Post_member::SESSION_KEY_FILES];
-            
-            $details_array = $this->loadPostData(Post_member::STEP_DETAILS);
-            $post_details_array = $details_array[Post_member::SESSION_KEY_POST];
-            $files_details_array = $details_array[Post_member::SESSION_KEY_FILES];
-            
-            $ad_image = $this->getImageFileName($post_start_array, $files_start_array, 'ad_image');
-            if ( is_empty($ad_image) ) {
-                $ad_image = null;
-            }
-            
             $category = '';
-            $categoryId = $post_details_array['category'];
+            $categoryId = $this->ad->categoryId;
             foreach ($categories as $cat) {
                 if ( $categoryId == $cat->id ) {
                     $category = $cat->name;
@@ -156,21 +197,24 @@ class Post_member extends CI_Controller {
                 }
             }
             
-            $data['ad_image'] = $ad_image;
-            $data['title'] = $post_details_array['title'];
-            $data['description'] = $post_details_array['description'];
-            $data['price'] = $post_details_array['price'];
-            $data['pickUp'] = hasElement($post_details_array, 'pickUp') ? $post_details_array['pickUp'] : '0';
-            $data['freeShipping'] = hasElement($post_details_array, 'freeShipping') ? $post_details_array['freeShipping'] : '0';
-            $data['categoryId'] = $categoryId;
+            $data['image'] = $this->ad->image;
+            $data['title'] = $this->ad->title;
+            $data['description'] = $this->ad->description;
+            $data['price'] = $this->ad->price;
+            $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
+            $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';
             $data['category'] = $category;
         } else if ( $step == Post_member::STEP_POST ) {
-            $error = $this->create_ad();
+            if ( $this->is_new ) {
+                $error = $this->create_ad();
+            } else {
+                $error = $this->update_ad();
+            }
             $data['error'] = $error;
         }
         
         if ( $is_modal ) {
-            if ( $is_first ) {
+            if ( $this->is_first_page ) {
                 $this->load->view('javascript/map');
             }
             
@@ -183,37 +227,9 @@ class Post_member extends CI_Controller {
         }
     }
     
-    // internal
-    
-    private function init() {
-        if ( !$this->initialized ) {
-            //load translations
-            $this->lang->load('main');
-            $this->lang->load('post');
-            
-            $this->load->library('ad_service');
-            $this->load->library('usermanagement_service');
-            
-            $this->load->model('image_model');
-            $this->load->model('address_model');
-            $this->load->model('ad_model');
-            $this->load->model('adstatistics_model');
-            $this->load->model('user_model');
-            $this->load->model('userstatistics_model');
-            $this->load->model('category_model');
-            
-            $this->initialized = true;
-        }
-    }
-    
     private function getCurrentStep() {
         if ( $_POST ) {
             return $this->input->post('step');
-        } else {
-            $step = $this->session->flashdata($this->unique_id . '_step');
-            if ( $step ) {
-                return $step;
-            }
         }
         return Post_member::STEP_START;
     }
@@ -238,26 +254,31 @@ class Post_member extends CI_Controller {
         return null;
     }
     
-    private function storePostData($current_step) {
-        foreach ( $this->steps as $step ) {
-            $this->session->keep_flashdata($this->unique_id . '_post_' . $step);
-            $this->session->keep_flashdata($this->unique_id . '_files_' . $step);
+    private function storeAd($ad = null) {
+        if ( $ad == null ) {
+            $ad = $this->ad;
+        } else {
+            $this->ad = $ad;
         }
         
-        if ( $current_step != null ) {
-            $this->session->set_flashdata($this->unique_id . '_post_' . $current_step, $_POST);
-            $this->session->set_flashdata($this->unique_id . '_files_' . $current_step, $_FILES);
-        }
+        //log_message(ERROR, 'storing ad: ' . print_r($ad, true));
+        $key = $this->unique_id . '_ad';
+        storeIntoSession($key, $ad);
+        
+        //$this->session->set_flashdata($this->unique_id . '_ad', $ad);
     }
     
-    private function loadPostData($step) {
-        $post_array = $this->session->flashdata($this->unique_id . '_post_' . $step);
-        $files_array = $this->session->flashdata($this->unique_id . '_files_' . $step);
-        
-        return array(
-            Post_member::SESSION_KEY_POST => $post_array,
-            Post_member::SESSION_KEY_FILES => $files_array
-        );
+    private function loadAd() {
+        //$ad = $this->session->userdata($this->unique_id . '_ad');
+        $key = $this->unique_id . '_ad';
+        $ad = loadFromSession($key);
+        //log_message(ERROR, 'loading ad: ' . print_r($ad, true));
+        $this->ad = $ad;
+    }
+    
+    private function removeAd() {
+        $key = $this->unique_id . '_ad';
+        removeFromSession($key);
     }
     
     private function process($current_step) {
@@ -277,15 +298,7 @@ class Post_member extends CI_Controller {
         $this->load->library('form_validation', null, 'post_form');
         $this->post_form->set_error_delimiters('<div class="error">', '</div>');
         
-        $this->post_form->set_rules('ad_image_posted');
-        
-        if ( empty($_FILES['ad_image']['name']) ) {
-            if ( empty($_POST['ad_image_posted']) ) {
-                $this->post_form->set_rules('ad_image', 'lang:post_image', 'required');
-            }
-        } else {
-            $this->post_form->set_rules('ad_image', 'lang:post_image', 'callback_file_upload[ad_image]');
-        }
+        $this->post_form->set_rules('image', 'lang:post_image', 'callback_file_upload[image]');
         
         $is_valid = $this->post_form->run();
         return $is_valid;
@@ -304,7 +317,7 @@ class Post_member extends CI_Controller {
         }
         
         $this->post_form->set_rules('title', 'lang:post_title', 'trim|required');
-        $this->post_form->set_rules('price', 'lang:post_price', 'trim|integer');
+        $this->post_form->set_rules('price', 'lang:post_price', 'trim|decimal');
         $this->post_form->set_rules('category', 'lang:post_category', 'required');
         $this->post_form->set_rules('description');
         $this->post_form->set_rules('zipCode');
@@ -316,6 +329,17 @@ class Post_member extends CI_Controller {
         if ( $is_valid ) {
             $is_valid = $this->post_form->run();
         }
+        
+        if ( $is_valid ) {
+            $this->ad->title = $this->input->post('title');
+            $this->ad->description = $this->input->post('description');
+            $this->ad->categoryId = $this->input->post('category');
+            $this->ad->price = $this->input->post('price');
+            $this->ad->address->zipCode = $this->input->post('zipCode');
+            $this->ad->pickUp = hasElement($_POST, 'pickUp') && $this->input->post('pickUp') == '1' ? true : false;
+            $this->ad->freeShipping = hasElement($_POST, 'freeShipping') && $this->input->post('freeShipping') == '1' ? true : false;;
+        }
+        
         return $is_valid;
     }
     
@@ -327,6 +351,12 @@ class Post_member extends CI_Controller {
         $this->post_form->set_rules('latitude', 'lang:post_latitude', 'trim|required');
         
         $is_valid = $this->post_form->run();
+        
+        if ( $is_valid ) {
+            $this->ad->address->longitude = $this->input->post('longitude');
+            $this->ad->address->latitude = $this->input->post('latitude');
+        }
+        
         return $is_valid;
     }
     
@@ -341,48 +371,12 @@ class Post_member extends CI_Controller {
     }
     
     private function create_ad() {
-        $start_array = $this->loadPostData(Post_member::STEP_START);
-        $details_array = $this->loadPostData(Post_member::STEP_DETAILS);
-        $map_array = $this->loadPostData(Post_member::STEP_MAP);
-        
-        $post_start_array = $start_array[Post_member::SESSION_KEY_POST];
-        $post_details_array = $details_array[Post_member::SESSION_KEY_POST];
-        $post_map_array = $map_array[Post_member::SESSION_KEY_POST];
-        
-        $files_start_array = $start_array[Post_member::SESSION_KEY_FILES];
-        //$files_details_array = $details_array[Post_member::SESSION_KEY_FILES];
-        //$files_map_array = $map_array[Post_member::SESSION_KEY_FILES];
-        
-        if ( empty($post_start_array) ) {
-            return '';
-        }
-        
-        $image_file_name = $this->getImageFileName($post_start_array, $files_start_array, 'ad_image');
-        $ad_image = Image_model::createImageModel($image_file_name);
-        
-        $address = new Address_model();
-        $address->zipCode = $post_details_array['zipCode'];
-        $address->longitude = $post_map_array['longitude'];
-        $address->latitude = $post_map_array['latitude'];
-        
-        $ad = new Ad_model();
-        $ad->type = Ad_model::ADTYPE_MEMBER;
-        $ad->title = $post_details_array['title'];
-        $ad->categoryId = $post_details_array['category'];
-        $ad->price = hasElement($post_details_array, 'price') ? getElement($post_details_array, 'price') * 1 : 0;
-        $ad->description = $post_details_array['description'];
-        $ad->quantity = 1;
-        $ad->pickUp = hasElement($post_details_array, 'pickUp') && $post_details_array['pickUp'] == '1' ? true : false;
-        $ad->freeShipping = hasElement($post_details_array, 'freeShipping') && $post_details_array['freeShipping'] == '1' ? true : false;
-        $ad->image = $ad_image;
-        $ad->address = $address;
-        
-        //print_r($ad);
+        $this->fixAd();
         
         $errors = '';
         try {
-            $adId = $this->ad_service->placeAd($ad);
-            log_message(INFO, 'Message created: ' . $adId);
+            $adId = $this->ad_service->placeAd($this->ad);
+            log_message(INFO, 'Ad created: ' . $adId);
             
             $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {
@@ -391,15 +385,25 @@ class Post_member extends CI_Controller {
         return $errors;
     }
     
-    private function getImageFileName($post_array, $files_array, $field) {
-        if (hasElement($files_array[$field], 'data') ) {
-            $image_file_name = $files_array[$field]['data']['file_name'];
-        } else if (hasElement($post_array, $field.'_posted') ) {
-            $image_file_name = $post_array[$field.'_posted'];
-        } else {
-            $image_file_name = null;
+    private function update_ad() {
+        $this->fixAd();
+        
+        $errors = '';
+        try {
+            $this->ad_service->updateAd($this->ad);
+            log_message(INFO, 'Ad updated');
+            
+            $this->usermanagement_service->refreshUser();
+        } catch ( Exception $ex ) {
+            $errors .= $ex->getMessage();
         }
-        return $image_file_name;
+        return $errors;
+    }
+    
+    private function fixAd() {
+        $this->ad->image->safeLoadData();
+        $this->ad->creator = null;
+        $this->ad->statistics = null;
     }
     
     // internal validation methods
@@ -407,6 +411,12 @@ class Post_member extends CI_Controller {
     public function file_upload($value, $field) {
         if ( !isset($_FILES[$field]) || $_FILES[$field]['error'] == 4 ) {
             //no file selected for upload
+            
+            if ( empty($this->ad->$field) ) {
+                //ad image should not be empty
+                $this->post_form->set_message('file_upload', 'Image is required');
+                return FALSE;
+            }
             return TRUE;
         }
         
@@ -422,7 +432,12 @@ class Post_member extends CI_Controller {
         }
         
         $data = $this->upload->data();
-        $_FILES[$field]['data'] = $data; //extending super global to store CI upload data in the session
+        $file_name = $data['file_name'];
+        
+        $image = new Image_model();
+        $image->url = $file_name;
+        
+        $this->ad->$field = $image;
         
         return TRUE;
     }

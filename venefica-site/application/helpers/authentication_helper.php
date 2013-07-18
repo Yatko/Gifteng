@@ -163,6 +163,14 @@ if ( ! function_exists('loadFromSession')) {
     }
 }
 
+if ( ! function_exists('removeFromSession')) {
+    function removeFromSession($key) {
+        $CI =& get_instance();
+        $CI->load->library('session');
+        return $CI->session->unset_userdata($key);
+    }
+}
+
 if ( ! function_exists('destroySession')) {
     function destroySession() {
         $CI =& get_instance();
