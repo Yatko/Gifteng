@@ -8,6 +8,7 @@ import com.venefica.service.fault.CommentNotFoundException;
 import com.venefica.service.fault.CommentValidationException;
 import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
+import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
 import javax.jws.WebMethod;
@@ -82,15 +83,35 @@ public interface MessageService {
     //*************
     
     /**
-     * Returns all messages associated with the given ad.
+     * Returns the last message for every request.
      * 
-     * @param adId
-     * @return
-     * @throws AdNotFoundException 
+     * @return 
      */
-    @WebMethod(operationName = "GetMessagesByAd")
+    @WebMethod(operationName = "GetLastMessagePerRequest")
     @WebResult(name = "message")
-    List<MessageDto> getMessagesByAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
+    List<MessageDto> getLastMessagePerRequest();
+    
+//    /**
+//     * Returns all messages associated with the given ad.
+//     * 
+//     * @param adId
+//     * @return
+//     * @throws AdNotFoundException 
+//     */
+//    @WebMethod(operationName = "GetMessagesByAd")
+//    @WebResult(name = "message")
+//    List<MessageDto> getMessagesByAd(@WebParam(name = "adId") @NotNull Long adId) throws AdNotFoundException;
+    
+    /**
+     * Returns all messages associated with the given request.
+     * 
+     * @param requestId
+     * @return
+     * @throws RequestNotFoundException 
+     */
+    @WebMethod(operationName = "GetMessagesByRequest")
+    @WebResult(name = "message")
+    List<MessageDto> getMessagesByRequest(@WebParam(name = "requestId") @NotNull Long requestId) throws RequestNotFoundException, AuthorizationException;
     
     /**
      * Returns all the messages between the two given users.
@@ -136,7 +157,7 @@ public interface MessageService {
     @WebMethod(operationName = "SendMessage")
     @WebResult(name = "messageId")
     Long sendMessage(@WebParam(name = "message") @NotNull MessageDto messageDto)
-            throws UserNotFoundException, AdNotFoundException, MessageValidationException;
+            throws UserNotFoundException, RequestNotFoundException, MessageValidationException;
 
     /**
      * Updates message sent by the current user.

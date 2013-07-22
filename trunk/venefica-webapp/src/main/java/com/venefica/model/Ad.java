@@ -1,10 +1,10 @@
 package com.venefica.model;
 
 import com.venefica.config.Constants;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -72,17 +72,17 @@ public class Ad {
     
     private long numViews;
     @OneToMany(mappedBy = "ad")
-    private List<Viewer> viewers;
+    private Set<Viewer> viewers;
     
     private float rating;
     @OneToMany(mappedBy = "ad")
     @OrderBy
-    private List<Rating> ratings;
+    private Set<Rating> ratings;
     
     private boolean spam;
     @OneToMany(mappedBy = "ad")
     @OrderBy
-    private List<SpamMark> spamMarks;
+    private Set<SpamMark> spamMarks;
     
     private boolean reviewed; //reviewed by a power-user (admin)
     @Temporal(TemporalType.TIMESTAMP)
@@ -92,15 +92,15 @@ public class Ad {
     
     @OneToMany(mappedBy = "ad")
     @OrderBy
-    private List<Comment> comments;
+    private Set<Comment> comments;
     
     @OneToMany(mappedBy = "ad")
     @OrderBy
-    private List<Request> requests;
+    private Set<Request> requests;
     
     @OneToMany(mappedBy = "ad")
     @OrderBy
-    private List<Bookmark> bookmarks;
+    private Set<Bookmark> bookmarks;
     
     @Enumerated(EnumType.STRING)
     private AdStatus status;
@@ -115,11 +115,11 @@ public class Ad {
             adData = new BusinessAdData();
         }
         
-        ratings = new LinkedList<Rating>();
-        spamMarks = new LinkedList<SpamMark>();
-        comments = new LinkedList<Comment>();
-        bookmarks = new LinkedList<Bookmark>();
-        viewers = new ArrayList<Viewer>(0);
+        ratings = new LinkedHashSet<Rating>();
+        spamMarks = new LinkedHashSet<SpamMark>();
+        comments = new LinkedHashSet<Comment>();
+        bookmarks = new LinkedHashSet<Bookmark>();
+        viewers = new HashSet<Viewer>(0);
         createdAt = new Date();
         rating = 0.0f;
         numViews = 0;
@@ -274,8 +274,8 @@ public class Ad {
      * 
      * @return 
      */
-    public List<Request> getVisibleRequests() {
-        List<Request> result = new LinkedList<Request>();
+    public Set<Request> getVisibleRequests() {
+        Set<Request> result = new LinkedHashSet<Request>();
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
                 if ( request.isVisible() ) {
@@ -294,8 +294,8 @@ public class Ad {
      * 
      * @return 
      */
-    public List<Request> getActiveRequests() {
-        List<Request> result = new LinkedList<Request>();
+    public Set<Request> getActiveRequests() {
+        Set<Request> result = new LinkedHashSet<Request>();
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
                 if ( request.isActive() ) {
@@ -452,19 +452,19 @@ public class Ad {
         this.rating = rating;
     }
 
-    public List<Rating> getRatings() {
+    public Set<Rating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<Rating> ratings) {
+    public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
 
-    public List<SpamMark> getSpamMarks() {
+    public Set<SpamMark> getSpamMarks() {
         return spamMarks;
     }
 
-    public void setSpamMarks(List<SpamMark> spamMarks) {
+    public void setSpamMarks(Set<SpamMark> spamMarks) {
         this.spamMarks = spamMarks;
     }
 
@@ -500,27 +500,27 @@ public class Ad {
         this.numAvailProlongations = numAvailProlongations;
     }
 
-    public List<Comment> getComments() {
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 
-    public List<Viewer> getViewers() {
+    public Set<Viewer> getViewers() {
         return viewers;
     }
 
-    public void setViewers(List<Viewer> viewers) {
+    public void setViewers(Set<Viewer> viewers) {
         this.viewers = viewers;
     }
 
-    public List<Request> getRequests() {
+    public Set<Request> getRequests() {
         return requests;
     }
 
-    public void setRequests(List<Request> requests) {
+    public void setRequests(Set<Request> requests) {
         this.requests = requests;
     }
 
@@ -572,11 +572,11 @@ public class Ad {
         this.adData = adData;
     }
 
-    public List<Bookmark> getBookmarks() {
+    public Set<Bookmark> getBookmarks() {
         return bookmarks;
     }
 
-    public void setBookmarks(List<Bookmark> bookmarks) {
+    public void setBookmarks(Set<Bookmark> bookmarks) {
         this.bookmarks = bookmarks;
     }
 }

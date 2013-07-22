@@ -72,8 +72,6 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Inject
     private AdDao adDao;
     @Inject
-    private RequestDao requestDao;
-    @Inject
     private BookmarkDao bookmarkDao;
     @Inject
     private ImageDao imageDao;

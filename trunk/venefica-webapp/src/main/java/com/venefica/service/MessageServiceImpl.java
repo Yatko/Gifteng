@@ -5,6 +5,7 @@ import com.venefica.dao.MessageDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Comment;
 import com.venefica.model.Message;
+import com.venefica.model.Request;
 import com.venefica.model.User;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.MessageDto;
@@ -17,6 +18,7 @@ import com.venefica.service.fault.CommentValidationException;
 import com.venefica.service.fault.MessageField;
 import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
+import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
 import java.util.LinkedList;
@@ -95,9 +97,28 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     //*************
 
     @Override
-    public List<MessageDto> getMessagesByAd(Long adId) throws AdNotFoundException {
-        Ad ad = validateAd(adId);
-        List<Message> messages = messageDao.getByAd(adId);
+    public List<MessageDto> getLastMessagePerRequest() {
+        List<Message> messages = messageDao.getLastMessagePerRequestByUser(getCurrentUserId());
+        return buildMessages(messages);
+    }
+    
+//    @Override
+//    public List<MessageDto> getMessagesByAd(Long adId) throws AdNotFoundException {
+//        Ad ad = validateAd(adId);
+//        List<Message> messages = messageDao.getByAd(adId);
+//        return buildMessages(messages);
+//    }
+    
+    @Override
+    public List<MessageDto> getMessagesByRequest(Long requestId) throws RequestNotFoundException, AuthorizationException {
+        Request request = validateRequest(requestId);
+        User currentUser = getCurrentUser();
+        
+        if ( !request.getUser().equals(currentUser) && !request.getAd().getCreator().equals(currentUser) ) {
+            throw new AuthorizationException("You can access only implied ads/requests");
+        }
+        
+        List<Message> messages = messageDao.getByRequest(requestId);
         return buildMessages(messages);
     }
     
@@ -120,14 +141,14 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, AdNotFoundException, MessageValidationException {
+    public Long sendMessage(MessageDto messageDto) throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         validateMessageDto(messageDto);
         
         User currentUser = getCurrentUser();
         
-        Ad ad = null;
-        if ( messageDto.getAdId() != null ) {
-            ad = validateAd(messageDto.getAdId());
+        Request request = null;
+        if ( messageDto.getRequestId() != null ) {
+            request = validateRequest(messageDto.getRequestId());
         }
         
         User to = null;
@@ -135,8 +156,8 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             to = validateUser(messageDto.getToName());
         } else if ( messageDto.getToId() != null ) {
             to = validateUser(messageDto.getToId());
-        } else if ( ad != null ) {
-            to = ad.getCreator();
+        } else if ( request != null ) {
+            to = request.getAd().getCreator();
         }
 
         if ( to == null ) {
@@ -150,7 +171,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         Message message = new Message(messageDto.getText());
         message.setTo(to);
         message.setFrom(currentUser);
-        message.setAd(ad);
+        message.setRequest(request);
 
         return messageDao.save(message);
     }

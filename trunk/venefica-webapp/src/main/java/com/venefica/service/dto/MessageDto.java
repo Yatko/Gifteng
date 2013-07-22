@@ -1,6 +1,5 @@
 package com.venefica.service.dto;
 
-import com.venefica.model.Message;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,6 +15,8 @@ public class MessageDto extends DtoBase {
     // in, out
     private Long id;
     // in, out
+    private Long requestId;
+    // out
     private Long adId;
     // in, out
     private String text;
@@ -163,5 +164,13 @@ public class MessageDto extends DtoBase {
 
     public void setFromId(Long fromId) {
         this.fromId = fromId;
+    }
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 }

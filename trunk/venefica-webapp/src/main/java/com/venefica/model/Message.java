@@ -30,19 +30,18 @@ public class Message {
     private Long id;
     
     @ManyToOne
-    @ForeignKey(name = "message_ad_fk")
-    private Ad ad;
+    @ForeignKey(name = "message_request_fk")
+    private Request request;
     
     @ManyToOne(optional = false)
     @ForeignKey(name = "message_to_fk")
     private User to;
     
-    private boolean hiddenByRecipient;
-    
     @ManyToOne(optional = false)
     @ForeignKey(name = "message_from_fk")
     private User from;
     
+    private boolean hiddenByRecipient;
     private boolean hiddenBySender;
     
     @Basic(optional = false)
@@ -144,12 +143,12 @@ public class Message {
         this.updatedAt = updatedAt;
     }
 
-    public Ad getAd() {
-        return ad;
+    public Request getRequest() {
+        return request;
     }
 
-    public void setAd(Ad ad) {
-        this.ad = ad;
+    public void setRequest(Request request) {
+        this.request = request;
     }
 
     public boolean isDeleted() {

@@ -6,10 +6,13 @@ package com.venefica.service;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.dao.AdDao;
+import com.venefica.dao.RequestDao;
 import com.venefica.dao.UserDao;
 import com.venefica.model.Ad;
+import com.venefica.model.Request;
 import com.venefica.model.User;
 import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -39,6 +42,8 @@ public abstract class AbstractService {
     
     @Inject
     protected AdDao adDao;
+    @Inject
+    protected RequestDao requestDao;
     @Inject
     protected UserDao userDao;
     
@@ -136,4 +141,15 @@ public abstract class AbstractService {
         return ad;
     }
     
+    protected Request validateRequest(Long requestId) throws RequestNotFoundException {
+        if (requestId == null) {
+            throw new NullPointerException("requestId is null!");
+        }
+        
+        Request request = requestDao.get(requestId);
+        if (request == null) {
+            throw new RequestNotFoundException(requestId);
+        }
+        return request;
+    }
 }

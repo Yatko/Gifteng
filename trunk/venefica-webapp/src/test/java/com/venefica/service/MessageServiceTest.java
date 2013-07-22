@@ -4,22 +4,32 @@ import com.venefica.dao.AdDao;
 import com.venefica.dao.CommentDao;
 import com.venefica.dao.MessageDao;
 import com.venefica.model.Ad;
+import com.venefica.model.AdType;
 import com.venefica.model.Comment;
 import com.venefica.model.Message;
+import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.MessageDto;
 import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.AdValidationException;
+import com.venefica.service.fault.AlreadyRequestedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.CommentNotFoundException;
 import com.venefica.service.fault.CommentValidationException;
+import com.venefica.service.fault.InvalidAdStateException;
+import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
+import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import org.apache.cxf.endpoint.Client;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +52,12 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     @Inject
     private MessageDao messageDao;
     
+    @Resource(name = "adPublishedUrl")
+    private String adEndpointAddress;
+    
     private Ad ad;
     //private Message message;
-
+    
     public MessageServiceTest() {
         super(MessageService.class);
     }
@@ -135,28 +148,28 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void sendMessageToUnexistingUserTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
+    public void sendMessageToUnexistingUserTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto("UnexisingUserName", "Test message");
         client.sendMessage(messageDto);
     }
 
     @Test(expected = MessageValidationException.class)
-    public void sendInvalidMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
+    public void sendInvalidMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), null);
         client.sendMessage(messageDto);
     }
 
     @Test(expected = MessageValidationException.class)
-    public void sendMessageToMyselfTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
+    public void sendMessageToMyselfTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getFirstUser().getName(), "Test message");
         client.sendMessage(messageDto);
     }
 
     @Test
-    public void sendMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException {
+    public void sendMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "This is a test message");
         Long messageId = client.sendMessage(messageDto);
@@ -235,7 +248,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void hideMessageWithTirdUserTest() throws UserNotFoundException, AdNotFoundException,
+    public void hideMessageWithTirdUserTest() throws UserNotFoundException, RequestNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Second message");
@@ -246,7 +259,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void hideMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException,
+    public void hideMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Third message");
@@ -272,7 +285,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteMessageByTirdUserTest() throws UserNotFoundException, AdNotFoundException,
+    public void deleteMessageByTirdUserTest() throws UserNotFoundException, RequestNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Four message"));
@@ -281,7 +294,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void deleteMessageTest() throws UserNotFoundException, AdNotFoundException, MessageValidationException,
+    public void deleteMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Five message"));
@@ -289,5 +302,99 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
 
         Message deletedMessage = messageDao.get(messageId);
         assertTrue("Message has not been deleted!", deletedMessage.isDeleted());
+    }
+    
+    @Test
+    public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException {
+        Class adServiceClass = AdService.class;
+        AdService adService = (AdService) createClient(adEndpointAddress, adServiceClass);
+        Client adServiceCxfClient = getCxfClient(adService);
+        configureTimeouts(adServiceCxfClient);
+        
+        authenticateClientWithToken(adService, firstUserAuthToken);
+        
+        MessageDto messageDto;
+        Long messageId;
+        List<MessageDto> messages;
+        
+        AdDto adDto = new AdDto();
+        adDto.setTitle("Test ad title");
+        adDto.setDescription("Test ad description");
+        adDto.setCategoryId(1L);
+        adDto.setQuantity(1);
+        adDto.setPrice(BigDecimal.TEN);
+        adDto.setType(AdType.MEMBER);
+        
+        Long adId = adService.placeAd(adDto);
+        assertNotNull("Ad has to be created", adId);
+        
+        authenticateClientWithToken(adService, secondUserAuthToken);
+        
+        Long requestId_1 = adService.requestAd(adId, "Please choose me (second user).");
+        assertNotNull("The second user request should succeed", requestId_1);
+        
+        authenticateClientWithToken(adService, thirdUserAuthToken);
+        
+        Long requestId_2 = adService.requestAd(adId, "Please choose me (third user).");
+        assertNotNull("The third user request should succeed", requestId_2);
+        
+        authenticateClientAsFirstUser();
+        
+        messageDto = new MessageDto();
+        messageDto.setText("Give me a reason user 2.");
+        messageDto.setRequestId(requestId_1);
+        messageDto.setToName(SECOND_USER_NAME);
+        
+        messageId = client.sendMessage(messageDto);
+        assertNotNull("The message to user 2 should succeed", messageId);
+        
+        messageDto = new MessageDto();
+        messageDto.setText("Give me a reason user 3.");
+        messageDto.setRequestId(requestId_2);
+        messageDto.setToName(THIRD_USER_NAME);
+        
+        messageId = client.sendMessage(messageDto);
+        assertNotNull("The message to user 3 should succeed", messageId);
+        
+        authenticateClientAsSecondUser();
+        
+        messageDto = new MessageDto();
+        messageDto.setText("Because I deserve it - user 2.");
+        messageDto.setRequestId(requestId_1);
+        messageDto.setToName(FIRST_USER_NAME);
+        
+        messageId = client.sendMessage(messageDto);
+        assertNotNull("The message from user 2 should succeed", messageId);
+        
+        authenticateClientAsThirdUser();
+        
+        messageDto = new MessageDto();
+        messageDto.setText("Because I deserve it - user 3.");
+        messageDto.setRequestId(requestId_2);
+        messageDto.setToName(FIRST_USER_NAME);
+        
+        messageId = client.sendMessage(messageDto);
+        assertNotNull("The message from user 3 should succeed", messageId);
+        
+        
+        
+        
+        authenticateClientAsFirstUser();
+        
+        messages = client.getLastMessagePerRequest();
+        System.out.println("messages: " + messages);
+        assertEquals("The size should be 2", 2, messages.size());
+        
+        authenticateClientAsSecondUser();
+        
+        messages = client.getLastMessagePerRequest();
+        System.out.println("messages: " + messages);
+        assertEquals("The size should be 1", 1, messages.size());
+        
+        authenticateClientAsThirdUser();
+        
+        messages = client.getLastMessagePerRequest();
+        System.out.println("messages: " + messages);
+        assertEquals("The size should be 1", 1, messages.size());
     }
 }

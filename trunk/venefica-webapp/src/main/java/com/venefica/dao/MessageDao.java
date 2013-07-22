@@ -42,6 +42,14 @@ public interface MessageDao {
     List<Message> getByAd(Long adId);
     
     /**
+     * Extracts messages for the specified request.
+     * 
+     * @param requestId
+     * @return 
+     */
+    List<Message> getByRequest(Long requestId);
+    
+    /**
      * Returns all conversations between the given users.
      * 
      * @param user1
@@ -60,4 +68,13 @@ public interface MessageDao {
      * @return 
      */
     List<Message> getByAdAndUsers(Long adId, Long user1, Long user2);
+    
+    /**
+     * Returns the last message for every request conversations. The given
+     * user can be on requestor or creator side.
+     * 
+     * @param userId
+     * @return 
+     */
+    List<Message> getLastMessagePerRequestByUser(Long userId);
 }

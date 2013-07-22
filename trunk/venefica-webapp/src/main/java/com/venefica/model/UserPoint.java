@@ -5,7 +5,7 @@
 package com.venefica.model;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,7 +41,7 @@ public class UserPoint {
     private User user;
     
     @OneToMany(mappedBy = "userPoint")
-    private List<UserTransaction> transactions;
+    private Set<UserTransaction> transactions;
     
     private BigDecimal number; //generosity number
     private BigDecimal score; //generosity score
@@ -290,11 +290,11 @@ public class UserPoint {
         this.number = number;
     }
 
-    public List<UserTransaction> getTransactions() {
+    public Set<UserTransaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<UserTransaction> transactions) {
+    public void setTransactions(Set<UserTransaction> transactions) {
         this.transactions = transactions;
     }
 }

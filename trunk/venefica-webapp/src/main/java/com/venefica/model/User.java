@@ -3,11 +3,9 @@ package com.venefica.model;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.vividsolutions.jts.geom.Point;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,9 +53,9 @@ public class User {
     private Date lastLoginAt;
     
     @OneToMany(mappedBy = "creator")
-    private List<Ad> ads;
+    private Set<Ad> ads;
     @OneToMany(mappedBy = "user")
-    private List<Request> requests;
+    private Set<Request> requests;
     
     @OneToOne
     @ForeignKey(name = "userdata_fk")
@@ -82,11 +80,11 @@ public class User {
     
     @OneToMany(mappedBy = "from")
     @OrderBy
-    private List<Message> sentMessages;
+    private Set<Message> sentMessages;
     
     @OneToMany(mappedBy = "to")
     @OrderBy
-    private List<Message> receivedMessages;
+    private Set<Message> receivedMessages;
     
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
@@ -96,8 +94,8 @@ public class User {
         password = RandomGenerator.generateNumeric(Constants.USER_DEFAULT_PASSWORD_LENGTH);
         followers = new HashSet<User>(0);
         followings = new HashSet<User>(0);
-        sentMessages = new LinkedList<Message>();
-        receivedMessages = new LinkedList<Message>();
+        sentMessages = new LinkedHashSet<Message>();
+        receivedMessages = new LinkedHashSet<Message>();
     }
 
     public User(String name, String email) {
@@ -183,14 +181,14 @@ public class User {
     
     public void addAd(Ad ad) {
         if ( ads == null ) {
-            ads = new ArrayList<Ad>(0);
+            ads = new HashSet<Ad>(0);
         }
         ads.add(ad);
     }
     
     public void addRequest(Request request) {
         if ( requests == null ) {
-            requests = new ArrayList<Request>(0);
+            requests = new HashSet<Request>(0);
         }
         requests.add(request);
     }
@@ -277,19 +275,19 @@ public class User {
         this.avatar = avatar;
     }
 
-    public List<Message> getSentMessages() {
+    public Set<Message> getSentMessages() {
         return sentMessages;
     }
 
-    public void setSentMessages(List<Message> sentMessages) {
+    public void setSentMessages(Set<Message> sentMessages) {
         this.sentMessages = sentMessages;
     }
 
-    public List<Message> getReceivedMessages() {
+    public Set<Message> getReceivedMessages() {
         return receivedMessages;
     }
 
-    public void setReceivedMessages(List<Message> receivedMessages) {
+    public void setReceivedMessages(Set<Message> receivedMessages) {
         this.receivedMessages = receivedMessages;
     }
     
@@ -325,19 +323,19 @@ public class User {
         this.userPoint = userPoint;
     }
 
-    public List<Ad> getAds() {
+    public Set<Ad> getAds() {
         return ads;
     }
 
-    public void setAds(List<Ad> ads) {
+    public void setAds(Set<Ad> ads) {
         this.ads = ads;
     }
 
-    public List<Request> getRequests() {
+    public Set<Request> getRequests() {
         return requests;
     }
 
-    public void setRequests(List<Request> requests) {
+    public void setRequests(Set<Request> requests) {
         this.requests = requests;
     }
 }
