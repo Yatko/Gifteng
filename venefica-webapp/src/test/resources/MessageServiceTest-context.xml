@@ -14,12 +14,22 @@
     <import resource="common-context.xml" />
 
     <bean id="messageService" class="com.venefica.service.MessageServiceImpl" />
+    <bean id="adService" class="com.venefica.service.AdServiceImpl" />
 
     <bean id="publishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'MessageService'}" />
     </bean>
+    <bean id="adPublishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'AdService'}" />
+    </bean>
 
     <jaxws:endpoint id="messageServiceEndpoint" implementor="#messageService" address="#publishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="adServiceEndpoint" implementor="#adService" address="#adPublishedUrl">
         <jaxws:inInterceptors>
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>

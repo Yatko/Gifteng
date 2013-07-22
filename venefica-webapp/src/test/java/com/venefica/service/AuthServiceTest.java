@@ -19,8 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = "/AuthServiceTest-context.xml")
 public class AuthServiceTest extends ServiceTestBase<AuthService> {
 
-    private static final String FIRST_USER_NAME = "first";
-    
     private static final String UNEXISTING_USER_NAME = "unexistingTestUser";
     
     private static final String RIGHT_PASSWORD = "12345";

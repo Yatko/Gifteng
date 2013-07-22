@@ -1,6 +1,8 @@
 package com.venefica.dao;
 
 import com.venefica.model.Message;
+import com.venefica.model.Request;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -36,16 +38,30 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
 
     @Override
     public List<Message> getByAd(Long adId) {
-         List<Message> messages = createQuery(""
-                 + "from " + getDomainClassName() + " m "
-                 + "where "
-                 + "m.ad.id = :adId and "
-                 + "m.deleted = false "
-                 + "order by m.createdAt asc"
-                 + "")
+        List<Message> messages = createQuery(""
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.request.ad.id = :adId and "
+                + "m.deleted = false "
+                + "order by m.createdAt asc "
+                + "")
                 .setParameter("adId", adId)
                 .list();
-         return messages;
+        return messages;
+    }
+    
+    @Override
+    public List<Message> getByRequest(Long requestId) {
+        List<Message> messages = createQuery(""
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.request.id = :requestId and "
+                + "m.deleted = false "
+                + "order by m.createdAt asc "
+                + "")
+                .setParameter("requestId", requestId)
+                .list();
+        return messages;
     }
 
     @Override
@@ -58,12 +74,12 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "(m.to.id = :user1Id and m.from.id = :user2Id) or "
                 + "(m.to.id = :user2Id and m.from.id = :user1Id)"
                 + ") "
-                + "order by m.createdAt asc"
+                + "order by m.createdAt asc "
                 + "")
                 .setParameter("user1Id", user1)
                 .setParameter("user2Id", user2)
                 .list();
-         return messages;
+        return messages;
     }
 
     @Override
@@ -72,17 +88,66 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "from " + getDomainClassName() + " m "
                 + "where "
                 + "m.deleted = false and "
-                + "m.ad.id = :adId and "
+                + "m.request.ad.id = :adId and "
                 + "("
                 + "(m.to.id = :user1Id and m.from.id = :user2Id) or "
                 + "(m.to.id = :user2Id and m.from.id = :user1Id)"
                 + ") "
-                + "order by m.createdAt asc"
+                + "order by m.createdAt asc "
                 + "")
                 .setParameter("adId", adId)
                 .setParameter("user1Id", user1)
                 .setParameter("user2Id", user2)
                 .list();
-         return messages;
+        return messages;
+    }
+    
+    @Override
+    public List<Message> getLastMessagePerRequestByUser(Long userId) {
+        /**
+        List<Message> messages = createQuery(""
+                + "select m "
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.deleted = false and "
+                + "(m.from.id = :userId or m.to.id = :userId) "
+                + "group by m.request "
+                + "order by m.createdAt desc, m.id desc "
+                + "")
+                .setParameter("userId", userId)
+                .list();
+        /**/
+        
+        /**/
+        List<Message> messages = new ArrayList<Message>(0);
+        List<Request> requests = createQuery(""
+                + "select m.request "
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.deleted = false and "
+                + "(m.request.ad.creator.id = :userId or m.request.user.id = :userId) "
+                + "group by m.request "
+                + "")
+                .setParameter("userId", userId)
+                .list();
+        for ( Request request : requests ) {
+            List<Message> message = createQuery(""
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.request = :request and "
+                + "m.deleted = false and "
+                + "m.from.id != :fromId "
+                + "order by m.createdAt desc, m.id desc "
+                + "")
+                .setParameter("request", request)
+                .setParameter("fromId", userId)
+                .setMaxResults(1)
+                .list();
+            if ( message != null && !message.isEmpty() ) {
+                messages.add(message.get(0));
+            }
+        }
+        /**/
+        return messages;
     }
 }

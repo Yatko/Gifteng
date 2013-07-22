@@ -22,9 +22,8 @@ public class ProfileController {
     
     @Inject
     private UserDao userDao;
-    
     @Inject
-    TokenEncryptor tokenEncryptor;
+    private TokenEncryptor tokenEncryptor;
 
     @RequestMapping(method = RequestMethod.GET)
     public void profile(@RequestParam("token") String encryptedToken, Model model) {

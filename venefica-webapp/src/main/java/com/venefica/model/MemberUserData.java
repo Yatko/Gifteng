@@ -82,7 +82,15 @@ public class MemberUserData extends UserData {
     
     @Override
     public String getFullName() {
-        return firstName + " " + lastName;
+        if ( firstName != null && lastName != null ) {
+            return firstName + " " + lastName;
+        } else if ( firstName != null ) {
+            return firstName;
+        } else if ( lastName != null ) {
+            return lastName;
+        } else {
+            return "";
+        }
     }
     
     // getters/setters

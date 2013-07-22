@@ -53,13 +53,13 @@ public abstract class ServiceTestBase<T> {
     private UserDao userDao;
     
     private User firstUser;
-    private String firstUserAuthToken;
+    protected String firstUserAuthToken;
     
     private User secondUser;
-    private String secondUserAuthToken;
+    protected String secondUserAuthToken;
     
     private User thirdUser;
-    private String thirdUserAuthToken;
+    protected String thirdUserAuthToken;
     
     @Resource(name = "publishedUrl")
     private String endpointAddress;

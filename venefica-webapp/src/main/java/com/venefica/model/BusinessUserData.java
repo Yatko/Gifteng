@@ -7,8 +7,9 @@ package com.venefica.model;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.UserDto;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -37,7 +38,7 @@ public class BusinessUserData  extends UserData {
     
     @OneToMany
     @ForeignKey(name = "businessuserdata_userdata_fk", inverseName = "businessuserdata_address_fk")
-    private List<AddressWrapper> addresses;
+    private Set<AddressWrapper> addresses;
 
     public BusinessUserData() {
         super();
@@ -54,7 +55,7 @@ public class BusinessUserData  extends UserData {
         contactName = userDto.getContactName();
         
         if ( userDto.getAddresses() != null && !userDto.getAddresses().isEmpty() ) {
-            addresses = new LinkedList<AddressWrapper>();
+            addresses = new LinkedHashSet<AddressWrapper>();
             for ( AddressDto addressDto : userDto.getAddresses() ) {
                 AddressWrapper addressWrapper = addressDto.getAddressWrapper();
                 addresses.add(addressWrapper);
@@ -70,11 +71,11 @@ public class BusinessUserData  extends UserData {
         userDto.setBusinessCategory(category.getName());
         
         if ( addresses != null && !addresses.isEmpty() ) {
-            List<AddressDto> addressesDto = new LinkedList<AddressDto>();
+            Set<AddressDto> addressesDto = new LinkedHashSet<AddressDto>();
             for ( AddressWrapper addressWrapper : addresses ) {
                 addressesDto.add(new AddressDto(addressWrapper));
             }
-            userDto.setAddresses(addressesDto);
+            userDto.setAddresses(new ArrayList<AddressDto>(addressesDto));
         }
     }
     
@@ -100,7 +101,7 @@ public class BusinessUserData  extends UserData {
     
     private void initAddresses() {
         if ( addresses == null ) {
-            addresses = new ArrayList<AddressWrapper>(0);
+            addresses = new HashSet<AddressWrapper>(0);
         }
     }
     
@@ -130,11 +131,11 @@ public class BusinessUserData  extends UserData {
         this.verified = verified;
     }
 
-    public List<AddressWrapper> getAddresses() {
+    public Set<AddressWrapper> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<AddressWrapper> addresses) {
+    public void setAddresses(Set<AddressWrapper> addresses) {
         this.addresses = addresses;
     }
 

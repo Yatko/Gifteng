@@ -7,8 +7,8 @@ package com.venefica.model;
 import com.venefica.service.dto.AdDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -59,7 +59,7 @@ public abstract class AdData {
     @OrderBy
     @JoinTable(name = "ad_image")
     @ForeignKey(name = "ad_image_ad_fk", inverseName = "ad_image_image_fk")
-    private List<Image> images;
+    private Set<Image> images;
     
     @Column(length = 500, nullable = false)
     private String title;
@@ -90,7 +90,7 @@ public abstract class AdData {
     }
     
     public AdData(AdType adType) {
-        images = new LinkedList<Image>();
+        images = new LinkedHashSet<Image>();
         type = adType;
     }
     
@@ -108,14 +108,14 @@ public abstract class AdData {
     
     public void addImage(Image image) {
         if ( images == null ) {
-            images = new LinkedList<Image>();
+            images = new LinkedHashSet<Image>();
         }
         images.add(image);
     }
     
     public void removeImage(Image image) {
         if ( images == null ) {
-            images = new LinkedList<Image>();
+            images = new LinkedHashSet<Image>();
         }
         images.remove(image);
     }
@@ -187,11 +187,11 @@ public abstract class AdData {
         this.thumbImage = thumbImage;
     }
 
-    public List<Image> getImages() {
+    public Set<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(Set<Image> images) {
         this.images = images;
     }
     

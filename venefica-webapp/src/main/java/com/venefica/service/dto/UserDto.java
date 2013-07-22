@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -135,7 +136,7 @@ public class UserDto extends DtoBase {
         }
         
         if ( user.isBusinessAccount() ) {
-            List<AddressWrapper> addressWrappers = ((BusinessUserData) user.getUserData()).getAddresses();
+            Set<AddressWrapper> addressWrappers = ((BusinessUserData) user.getUserData()).getAddresses();
             if ( addressWrappers != null && !addressWrappers.isEmpty() ) {
                 for ( AddressWrapper addressWrapper : addressWrappers ) {
                     addressWrapperDao.saveOrUpdate(addressWrapper);

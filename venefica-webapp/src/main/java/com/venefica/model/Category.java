@@ -1,7 +1,7 @@
 package com.venefica.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +35,7 @@ public class Category {
     
     @OneToMany(mappedBy = "parent")
     @OrderBy
-    private List<Category> subcategories;
+    private Set<Category> subcategories;
     
     @Column(nullable = false)
     private String name;
@@ -46,13 +46,13 @@ public class Category {
     private boolean hidden;
 
     public Category() {
-        subcategories = new LinkedList<Category>();
+        subcategories = new LinkedHashSet<Category>();
     }
 
     public Category(Category parent, String name) {
         this.parent = parent;
         this.name = name;
-        subcategories = new LinkedList<Category>();
+        subcategories = new LinkedHashSet<Category>();
     }
 
     public Long getId() {
@@ -72,11 +72,11 @@ public class Category {
         this.parent = parent;
     }
 
-    public List<Category> getSubcategories() {
+    public Set<Category> getSubcategories() {
         return subcategories;
     }
 
-    public void setSubcategories(List<Category> subcategories) {
+    public void setSubcategories(Set<Category> subcategories) {
         this.subcategories = subcategories;
     }
 

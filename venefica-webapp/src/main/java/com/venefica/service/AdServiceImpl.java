@@ -8,7 +8,6 @@ import com.venefica.dao.CommentDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.MessageDao;
 import com.venefica.dao.RatingDao;
-import com.venefica.dao.RequestDao;
 import com.venefica.dao.SpamMarkDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserTransactionDao;
@@ -88,8 +87,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private MessageDao messageDao;
     @Inject
     private ViewerDao viewerDao;
-    @Inject
-    private RequestDao requestDao;
     @Inject
     private UserPointDao userPointDao;
     @Inject
@@ -668,7 +665,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             Message message = new Message(text);
             message.setTo(ad.getCreator());
             message.setFrom(user);
-            message.setAd(ad);
+            message.setRequest(request);
             messageDao.save(message);
         }
         
@@ -1081,18 +1078,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     // internal helpers
     
-    private Request validateRequest(Long requestId) throws RequestNotFoundException {
-        if (requestId == null) {
-            throw new NullPointerException("requestId is null!");
-        }
-        
-        Request request = requestDao.get(requestId);
-        if (request == null) {
-            throw new RequestNotFoundException(requestId);
-        }
-        return request;
-    }
-    
     private Image validateImage(Long imageId) throws ImageNotFoundException {
         Image image = imageDao.get(imageId);
         if (image == null) {
@@ -1252,8 +1237,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     
     private BigDecimal calculatePendingNumber(User user) {
-        BigDecimal beforeNumber = UserPoint.getGenerosityNumber(user, false);
-        BigDecimal beforePendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(beforeNumber);
-        return beforePendingNumber;
+        BigDecimal number = UserPoint.getGenerosityNumber(user, false);
+        BigDecimal pendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(number);
+        return pendingNumber;
     }
 }
