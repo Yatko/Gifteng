@@ -1,3 +1,14 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * registration_success: boolean
+ * categories: array of BusinessCategory_model
+ */
+
+?>
+
 <? if( isset($registration_success) && $registration_success ): ?>
 
 <div class="container ge-container">

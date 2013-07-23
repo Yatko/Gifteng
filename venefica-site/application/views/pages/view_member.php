@@ -1,3 +1,15 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * currentUser: User_model
+ * ad: Ad_model
+ * comments: array of Comment_model
+ */
+
+?>
+
 <script langauge="javascript">
     function show_description_rest(callerElement) {
         $('.description_separator').addClass('hide');

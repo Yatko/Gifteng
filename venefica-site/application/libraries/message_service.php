@@ -85,14 +85,13 @@ class Message_service {
     
     /**
      * 
-     * @param long $adId
      * @return array of Message_model
      * @throws Exception
      */
-    public function getMessagesByAd($adId) {
+    public function getLastMessagePerRequest() {
         try {
             $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $messageService->getMessagesByAd(array("adId" => $adId));
+            $result = $messageService->getLastMessagePerRequest();
             
             $messages = array();
             if ( hasField($result, 'message') && $result->message ) {
@@ -100,7 +99,51 @@ class Message_service {
             }
             return $messages;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Messages request for ad (adId: '.$adId.') failed! '.$ex->faultstring);
+            log_message(ERROR, 'Last messages per request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+//    /**
+//     * 
+//     * @param long $adId
+//     * @return array of Message_model
+//     * @throws Exception
+//     */
+//    public function getMessagesByAd($adId) {
+//        try {
+//            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $result = $messageService->getMessagesByAd(array("adId" => $adId));
+//            
+//            $messages = array();
+//            if ( hasField($result, 'message') && $result->message ) {
+//                $messages = Message_model::convertMessages($result->message);
+//            }
+//            return $messages;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Messages request for ad (adId: '.$adId.') failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
+    
+    /**
+     * 
+     * @param long $requestId
+     * @return array of Message_model
+     * @throws Exception
+     */
+    public function getMessagesByRequest($requestId) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $messageService->getMessagesByRequest(array("requestId" => $requestId));
+            
+            $messages = array();
+            if ( hasField($result, 'message') && $result->message ) {
+                $messages = Message_model::convertMessages($result->message);
+            }
+            return $messages;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting messages for request (requestId: '.$requestId.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }

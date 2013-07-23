@@ -148,18 +148,19 @@ class User_model extends CI_Model {
         return $name;
     }
     
-    public function getJoinDate() {
-        if ( $this->joinedAt == null ) {
-            return '';
-        }
-        return date(DATE_FORMAT, $this->joinedAt / 1000);
-    }
+//    public function getJoinDate() {
+//        if ( $this->joinedAt == null ) {
+//            return '';
+//        }
+//        return date(DATE_FORMAT, $this->joinedAt / 1000);
+//    }
     
     public function getJoinDateHumanTiming() {
         if ( $this->joinedAt == null ) {
             return '';
         }
-        return humanTiming($this->joinedAt / 1000);
+        //return humanTiming($this->joinedAt / 1000);
+        return convertTimestampToDateForProfile($this->joinedAt / 1000);
     }
     
     public function getLocation() {

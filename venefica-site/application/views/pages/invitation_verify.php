@@ -1,3 +1,14 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * step: integer
+ * invitation_code: string
+ */
+
+?>
+
 <div class="container">
     <div class="row">
     

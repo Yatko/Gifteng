@@ -1,3 +1,14 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * follow_users: array of User_model
+ * follow_ads: array of Ad_model
+ */
+
+?>
+
 <div class="row">			
     <div class="container user-follow">
         <div class="row">
@@ -48,7 +59,7 @@
                                     <div class="ge-text ge-description ge-user-image ge-action">
                                         <div class="row-fluid">
                                             <div class="span4">
-                                                <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                                                <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img img-rounded">
                                             </div>
                                         </div>
                                     </div>

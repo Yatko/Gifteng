@@ -10,7 +10,7 @@
             return;
         }
 
-        var $messageAdId = $("#message_post_form input[name=messageAdId]");
+        var $messageRequestId = $("#message_post_form input[name=messageRequestId]");
         var $messageToId = $("#message_post_form input[name=messageToId]");
         var $messageText = $("#message_post_form textarea[name=messageText]");
 
@@ -20,7 +20,7 @@
             dataType: 'json',
             cache: false,
             data: {
-                messageAdId: $messageAdId.val(),
+                messageRequestId: $messageRequestId.val(),
                 messageToId: $messageToId.val(),
                 messageText: $messageText.val()
             }
@@ -30,7 +30,7 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                $messageAdId.val('');
+                $messageRequestId.val('');
                 $messageToId.val('');
                 $messageText.val('');
 

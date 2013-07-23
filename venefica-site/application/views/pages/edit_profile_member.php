@@ -1,3 +1,14 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * is_modal: boolean
+ * currentUser: User_modal
+ */
+
+?>
+
 <script langauge="javascript">
     $(function() {
         $('#email').focus(function() {
@@ -22,7 +33,7 @@
                 data: $(this).serialize(),
                 dataType: 'json'
             }).done(function(response) {
-                if ( !response || response == '' ) {
+                if ( !response || response === '' ) {
                     //TODO: empty result
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                     $('#ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
@@ -118,7 +129,7 @@ $email = $currentUser->email;
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="control-group">
-                                        <label class="control-label" for="email">My Email <span id="email_change_notification" class="text-danger">- confirm your change by checking your (old) email address.</span></label>
+                                        <label class="control-label" for="email">My Email <span id="email_change_notification" class="text-danger" style="display: none;">- confirm your change by checking your (old) email address.</span></label>
                                         <div class="controls">
                                             <input id="email" name="email" type="text" value="<?=set_value('email', $email)?>" placeholder="Email" class="input-block-level" required="" readonly="readonly">
                                         </div>
@@ -137,7 +148,7 @@ $email = $currentUser->email;
                                 </div>
                                 <div class="span8">
                                     <div class="control-group">
-                                        <label class="control-label" for="password">New Password <span id="password_change_notification" class="text-danger">- please confirm by email.</span></label>
+                                        <label class="control-label" for="password">New Password <span id="password_change_notification" class="text-danger" style="display: none;">- please confirm by email.</span></label>
                                         <div class="row-fluid">
                                             <div class="span6">
                                                 <div class="controls">

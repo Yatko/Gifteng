@@ -4,16 +4,22 @@
  * Input params:
  * 
  * message: Message_model
+ * showTitle: boolean
+ * showDelete: boolean
  */
 
+if ( !isset($showTitle) ) $showTitle = false;
+if ( !isset($showDelete) ) $showDelete = false;
 $profile_link = $message->getFromProfileUrl();
 $img = $message->getFromAvatarUrl();
 $name = $message->fromFullName;
 $since = $message->getCreateDateHumanTiming();
 $text = trim($message->text);
 $id = $message->id;
+$ad_title = $message->adTitle;
+$request_id = $message->requestId;
 
-if (trim($since) != '') $since = $since . ' ago';
+if ( trim($ad_title) == '' ) $ad_title = '-';
 
 if (strlen($text) > MESSAGE_MAX_LENGTH) {
     $text_rest = substr($text, MESSAGE_MAX_LENGTH);
@@ -31,6 +37,15 @@ if (strlen($text) > MESSAGE_MAX_LENGTH) {
     <div class="ge-text">
         <a class="ge-name" href="<?= $profile_link ?>"><?= $name ?></a>
         <span class="ge-date"><?= $since ?></span>
+        
+        <? if( $showDelete ): ?>
+            <a class="fui-trash"></a>
+        <? endif; ?>
+        
+        <? if( $showTitle ): ?>
+            <a href="<?=base_url()?>profile?message&<?=$request_id?>" class="ge-title ge-block"><?= $ad_title ?></a>
+        <? endif; ?>
+        
         <span class="ge-block">
             <?= $text ?>
 

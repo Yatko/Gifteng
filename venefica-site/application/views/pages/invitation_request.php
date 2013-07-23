@@ -1,5 +1,14 @@
 <?
 
+/**
+ * Input params:
+ * 
+ * invitation_country: string
+ * step: integer
+ * invitation_email: string
+ * invitation_source: string
+ */
+
 $country_condition = 'United States';
 $source_condition = 'other';
 

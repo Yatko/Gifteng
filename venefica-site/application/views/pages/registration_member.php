@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * invitation_code: string
+ */
+
+?>
+
 <div class="container">
     <div class="row">
         

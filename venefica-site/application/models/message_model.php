@@ -6,7 +6,9 @@
 class Message_model extends CI_Model {
     
     var $id; //long
+    var $requestId; //long
     var $adId; //long
+    var $adTitle; //string
     var $text; //string
     var $owner; //boolean
     var $toId; //long
@@ -25,7 +27,9 @@ class Message_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->requestId = getField($obj, 'requestId');
             $this->adId = getField($obj, 'adId');
+            $this->adTitle = getField($obj, 'adTitle');
             $this->text = getField($obj, 'text');
             $this->owner = getField($obj, 'owner');
             $this->toName = getField($obj, 'toName');
@@ -79,18 +83,19 @@ class Message_model extends CI_Model {
     
     //
     
-    public function getCreateDate() {
-        if ( $this->createdAt == null ) {
-            return '';
-        }
-        return date(DATE_FORMAT, $this->createdAt / 1000);
-    }
+//    public function getCreateDate() {
+//        if ( $this->createdAt == null ) {
+//            return '';
+//        }
+//        return date(DATE_FORMAT, $this->createdAt / 1000);
+//    }
     
     public function getCreateDateHumanTiming() {
         if ( $this->createdAt == null ) {
             return '';
         }
-        return humanTiming($this->createdAt / 1000);
+        //return humanTiming($this->createdAt / 1000) . ' ago';
+        return convertTimestampToDateForMessage($this->createdAt / 1000);
     }
     
     // static helpers

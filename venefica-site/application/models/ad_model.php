@@ -197,19 +197,19 @@ class Ad_model extends CI_Model {
         return $this->creator->getFullName();
     }
     
-    public function getCreatorJoinDate() {
-        if ( $this->creator == null ) {
-            return '';
-        }
-        return $this->creator->getJoinDate();
-    }
+//    public function getCreatorJoinDate() {
+//        if ( $this->creator == null ) {
+//            return '';
+//        }
+//        return $this->creator->getJoinDate();
+//    }
     
-    public function getCreatorJoinDateHumanTiming() {
-        if ( $this->creator == null ) {
-            return '';
-        }
-        return $this->creator->getJoinDateHumanTiming();
-    }
+//    public function getCreatorJoinDateHumanTiming() {
+//        if ( $this->creator == null ) {
+//            return '';
+//        }
+//        return $this->creator->getJoinDateHumanTiming();
+//    }
     
     public function getCreatorLocation() {
         if ( $this->creator == null ) {
@@ -235,12 +235,12 @@ class Ad_model extends CI_Model {
         return $this->place == Ad_model::PLACE_ONLINE;
     }
     
-    public function getCreateDate() {
-        if ( $this->createdAt == null ) {
-            return '';
-        }
-        return date(DATE_FORMAT, $this->createdAt / 1000);
-    }
+//    public function getCreateDate() {
+//        if ( $this->createdAt == null ) {
+//            return '';
+//        }
+//        return date(DATE_FORMAT, $this->createdAt / 1000);
+//    }
     
     public function getExpireDate() {
         if ( $this->expiresAt == null ) {

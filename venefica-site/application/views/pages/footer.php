@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * 
+ */
+
+?>
+
 <div class="bottom-menu bottom-menu-inverse">
     <div class="container">
         <div class="row">

@@ -1,10 +1,20 @@
 <?
 
+/**
+ * Input params:
+ * 
+ * ad: Ad_model
+ * request: Request_model
+ * userId: long
+ * messages: array of Message_model
+ */
+
 $ad_id = $ad->id;
 $request_id = $request->id;
 $user_id = $userId;
 $requestor_user = $request->user;
 $ad_title = trim($ad->title);
+$view_link = $ad->getViewUrl();
 
 ?>
 
@@ -66,11 +76,11 @@ $ad_title = trim($ad->title);
 
                     <div class="row-fluid">
                         <div class="ge-subject">
-                            <a class="ge-title"><?=$ad_title?></a>
+                            <a href="<?=$view_link?>" class="ge-title"><?=$ad_title?></a>
                         </div>
                     </div><!--./ge-subject-->
                     
-                    <? $this->load->view('element/messages', array('messages' => $messages, 'ad' => $ad, 'to' => $requestor_user, 'canMessage' => true)); ?>
+                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $requestor_user, 'canMessage' => true)); ?>
                     
                 </div>
             </div>

@@ -4,17 +4,17 @@
  * Input params:
  * 
  * messages: array of Message_model
- * ad: Ad_model
+ * request: Request_model
  * to: User_model
  * canMessage: boolean (default: true)
  */
 
 if ( !isset($canMessage) ) $canMessage = false;
 
-if ( $ad != null ) {
-    $ad_id = $ad->id;
+if ( $request != null ) {
+    $request_id = $request->id;
 } else {
-    $ad_id = '';
+    $request_id = '';
 }
 
 if ( $to != null ) {
@@ -37,7 +37,7 @@ if ( $to != null ) {
                         
                         <? foreach ($messages as $message): ?>
                             
-                            <? $this->load->view('element/message', array('message' => $message)); ?>
+                            <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false)); ?>
 
                         <? endforeach; ?>
                         
@@ -50,7 +50,7 @@ if ( $to != null ) {
             
                 <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
                 
-                <input type="hidden" name="messageAdId" value="<?= $ad_id ?>"/>
+                <input type="hidden" name="messageRequestId" value="<?= $request_id ?>"/>
                 <input type="hidden" name="messageToId" value="<?= $to_id ?>"/>
 
                 <div class="row-fluid ge-input">
