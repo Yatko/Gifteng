@@ -6,6 +6,7 @@
  * is_ajax: boolean
  * ads: array of Ad_model
  * currentUser: User_model
+ * query: string
  */
 
 ?>
@@ -62,7 +63,7 @@
                         
                         var lastAdId = $(".ge-ad-id:last").attr("id");
                         lastAdId = lastAdId.split('_')[1];
-                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId];
+                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>'];
                     },
                     prefill: true
                 }, function(newElements) {
