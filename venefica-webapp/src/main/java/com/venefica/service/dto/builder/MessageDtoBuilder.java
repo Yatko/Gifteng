@@ -1,5 +1,6 @@
 package com.venefica.service.dto.builder;
 
+import com.venefica.model.Ad;
 import com.venefica.model.Image;
 import com.venefica.model.Message;
 import com.venefica.model.User;
@@ -24,11 +25,13 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
         boolean owner = currentUser != null ? currentUser.equals(model.getFrom()) : false;
         Image toAvatar = model.getTo().getAvatar();
         Image fromAvatar = model.getFrom().getAvatar();
+        Ad ad = model.getRequest() != null ? model.getRequest().getAd() : null;
         
         MessageDto messageDto = new MessageDto();
         messageDto.setId(model.getId());
         messageDto.setRequestId(model.getRequest() != null ? model.getRequest().getId() : null);
-        messageDto.setAdId(model.getRequest() != null && model.getRequest().getAd() != null ? model.getRequest().getAd().getId() : null);
+        messageDto.setAdId(ad != null ? ad.getId() : null);
+        messageDto.setAdTitle(ad != null ? ad.getAdData().getTitle() : "");
         messageDto.setText(model.getText());
         messageDto.setOwner(owner);
         messageDto.setToId(model.getTo().getId());
