@@ -103,9 +103,15 @@ $subpage = key($_GET); //gets the first element from the array
 
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
+        
+        <div class="text-center">
+            <form id="browse_form" action="<?=base_url()?>browse" method="get">
+                <input type="text" name="q" placeholder="Search" value="<?= key_exists('q', $_GET) ? $_GET['q'] : '' ?>" />
+            </form>
+        </div>
+        
         <div>
             <ul>
-                <li><input type="text" placeholder="Search" /></li>
                 <li>
                     <div class="row-fluid ge-user">
                         <?

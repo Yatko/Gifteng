@@ -64,6 +64,15 @@ $(function() {
         });
     }
     
+    if ( $('form#browse_form').length > 0 ) {
+        $('form#browse_form input[name=q]').keypress(function(e) {
+            if (e.which === 13) {
+                $('form#browse_form').submit();
+                return false;
+            }
+        });
+    }
+    
     if ( $('#form_wrapper').length > 0 ) {
         //form fader
         //the form wrapper (includes all forms)

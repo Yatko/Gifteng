@@ -389,7 +389,7 @@ class Profile extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
-    // ajax call
+    //ajax call
     public function change_avatar() {
         $this->init();
         

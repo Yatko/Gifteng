@@ -96,6 +96,7 @@ class Post_business extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
+    //ajax call
     public function new_address() {
         $this->init();
         

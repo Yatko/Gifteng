@@ -14,11 +14,14 @@ class Browse extends CI_Controller {
         if ( !validate_login() ) return;
         
         $currentUser = $this->usermanagement_service->loadUser();
+        $query = key_exists('q', $_GET) ? $_GET['q'] : '';
         $lastAdId = -1;
-        $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM);
+        $filter = $this->buildFilter($query);
+        $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM, $filter);
         
         $data = array();
         $data['is_ajax'] = false;
+        $data['query'] = $query;
         $data['ads'] = $ads;
         $data['currentUser'] = $currentUser;
         
@@ -43,11 +46,14 @@ class Browse extends CI_Controller {
         }
         
         $currentUser = $this->usermanagement_service->loadUser();
+        $query = key_exists('q', $_GET) ? $_GET['q'] : '';
         $lastAdId = $_GET['lastAdId'];
-        $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM);
+        $filter = $this->buildFilter($query);
+        $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM, $filter);
         
         $data = array();
         $data['is_ajax'] = true;
+        $data['query'] = $query;
         $data['ads'] = $ads;
         $data['currentUser'] = $currentUser;
         
@@ -74,12 +80,13 @@ class Browse extends CI_Controller {
             $this->load->model('userstatistics_model');
             $this->load->model('comment_model');
             $this->load->model('request_model');
+            $this->load->model('filter_model');
             
             $this->initialized = true;
         }
     }
     
-    private function getAds($lastAdId, $numberAds) {
+    private function getAds($lastAdId, $numberAds, $filter = null) {
         /**
         // to mock
         
@@ -98,9 +105,18 @@ class Browse extends CI_Controller {
         /**/
         
         try {
-            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, null, true, true, Browse::COMMENTS_NUM);
+            return $this->ad_service->getAdsExDetail($lastAdId, $numberAds, $filter, true, true, Browse::COMMENTS_NUM);
         } catch ( Exception $ex ) {
             return $ex->getMessage();
         }
+    }
+    
+    private function buildFilter($query) {
+        if ( $query == null || trim($query) == '' ) {
+            return null;
+        }
+        $filter = new Filter_model();
+        $filter->searchString = $query;
+        return $filter;
     }
 }
