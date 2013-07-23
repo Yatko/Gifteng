@@ -83,13 +83,13 @@ class Ajax extends CI_Controller {
         }
         
         try {
-            $adId = $this->input->post('messageAdId');
+            $requestId = $this->input->post('messageRequestId');
             $toId = $this->input->post('messageToId');
             $text = $this->input->post('messageText');
             
             $message = new Message_model();
             $message->text = $text;
-            $message->adId = $adId;
+            $message->requestId = $requestId;
             $message->toId = $toId;
             
             $this->message_service->sendMessage($message);

@@ -1,3 +1,15 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * is_ajax: boolean
+ * ads: array of Ad_model
+ * currentUser: User_model
+ */
+
+?>
+
 <? if ( isset($is_ajax) && $is_ajax ): ?>
     <?
     $boxContainer_exists = true;

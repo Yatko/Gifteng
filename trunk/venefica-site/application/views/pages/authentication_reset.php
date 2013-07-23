@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * reset_password_code: string
+ */
+
+?>
+
 <div class="container">
     <div class="row">
         

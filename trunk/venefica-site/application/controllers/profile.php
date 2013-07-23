@@ -31,8 +31,7 @@ class Profile extends CI_Controller {
             $currentUser = $this->usermanagement_service->loadUser();
             
             if (
-                $name != null &&
-                !empty($name) &&
+                $name != null && !empty($name) &&
                 $name != $currentUser->name &&
                 $name != $currentUser->id
             ) {
@@ -52,154 +51,46 @@ class Profile extends CI_Controller {
         
         if ( !validate_user($user) ) return;
         
-        $has_menu = false;
-        $follow_users = null;
-        $follow_ads = null;
-
-        if ( key_exists('receiving', $_GET) ) {
-            $has_menu = true;
-            $is_receiving = true;
-            try {
-                $receivings = $this->ad_service->getUserRequestedAds($user->id, true);
-            } catch ( Exception $ex ) {
-                $receivings = null;
-            }
+        if ( key_exists(Profile::MENU_NOTIFICATION, $_GET) ) {
+            $this->notification($user);
+        } else if ( key_exists(Profile::MENU_SETTING, $_GET) ) {
+            $this->setting($user);
+        } else if ( key_exists(Profile::MENU_MESSAGE, $_GET) ) {
+            $this->message($user);
+        } else if ( key_exists(Profile::MENU_FAVORITE, $_GET) ) {
+            $this->favorite($user);
+        } else if ( key_exists(Profile::MENU_RECEIVING, $_GET) ) {
+            $this->receiving($user);
+        } else if ( key_exists(Profile::MENU_RATING, $_GET) ) {
+            $this->rating($user);
+        } else if ( key_exists(Profile::MENU_FOLLOWING, $_GET) ) {
+            $this->following($user);
+        } else if ( key_exists(Profile::MENU_FOLLOWER, $_GET) ) {
+            $this->follower($user);
+        } else if ( key_exists(Profile::MENU_GIVING, $_GET) ) {
+            $this->giving($user);
         } else {
-            $is_receiving = false;
-            $receivings = null;
+            $this->giving($user);
         }
-        
-        if ( key_exists('favorite', $_GET) ) {
-            $has_menu = true;
-            $is_bookmark = true;
-            try {
-                $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
-            } catch ( Exception $ex ) {
-                $bookmarks = null;
-            }
-        } else {
-            $is_bookmark = false;
-            $bookmarks = null;
-        }
-        
-        if ( key_exists('following', $_GET) ) {
-            $has_menu = true;
-            $is_following = true;
-            try {
-                $follow_users = $this->usermanagement_service->getFollowings($user->id);
-                
-                $follow_ads = array();
-                foreach ($follow_users as $following) {
-                    try {
-                        $ads = $this->ad_service->getUserAds($following->id, false);
-                        
-                        $follow_ads[$following->id] = array();
-                        foreach ($ads as $ad) {
-                            array_push($follow_ads[$following->id], $ad);
-                            if ( count($follow_ads[$following->id]) == Profile::ADS_NUM ) {
-                                //max to display reached
-                                break;
-                            }
-                        }
-                    } catch ( Exception $ex ) {
-                    }
-                }
-            } catch ( Exception $ex ) {
-                $follow_users = null;
-                $follow_ads = null;
-            }
-        } else {
-            $is_following = false;
-        }
-        
-        if ( key_exists('follower', $_GET) ) {
-            $has_menu = true;
-            $is_follower = true;
-            try {
-                $follow_users = $this->usermanagement_service->getFollowers($user->id);
-                
-                $follow_ads = array();
-                foreach ($follow_users as $follower) {
-                    try {
-                        $ads = $this->ad_service->getUserAds($follower->id, false);
-                        
-                        $follow_ads[$follower->id] = array();
-                        foreach ($ads as $ad) {
-                            array_push($follow_ads[$follower->id], $ad);
-                            if ( count($follow_ads[$follower->id]) == Profile::ADS_NUM ) {
-                                //max to display reached
-                                break;
-                            }
-                        }
-                    } catch ( Exception $ex ) {
-                    }
-                }
-            } catch ( Exception $ex ) {
-                $follow_users = null;
-                $follow_ads = null;
-            }
-        } else {
-            $is_follower = false;
-        }
-        
-        if ( key_exists('rating', $_GET) ) {
-            $has_menu = true;
-            $is_rating = true;
-            try {
-                $ratings = $this->ad_service->getReceivedRatings($user->id);
-            } catch ( Exception $ex ) {
-                $ratings = null;
-            }
-        } else {
-            $is_rating = false;
-            $ratings = null;
-        }
-        
-        if ( !$has_menu || key_exists('giving', $_GET) ) {
-            $has_menu = true;
-            $is_giving = true;
-            try {
-                $givings = $this->ad_service->getUserAds($user->id, true);
-            } catch ( Exception $ex ) {
-                $givings = null;
-            }
-        } else {
-            $is_giving = false;
+    }
+    
+    /**
+     * Giving profile submenu.
+     * @param User_model $user
+     */
+    public function giving($user) {
+        try {
+            $givings = $this->ad_service->getUserAds($user->id, true);
+        } catch ( Exception $ex ) {
             $givings = null;
         }
         
+        $modal = $this->getProfileModal();
+        $modal .= $this->load->view('modal/request_view', array(), true);
+        
         $data = array();
-        $data['currentUser'] = $currentUser;
         $data['user'] = $user;
         $data['givings'] = $givings;
-        $data['receivings'] = $receivings;
-        $data['bookmarks'] = $bookmarks;
-        $data['follow_users'] = $follow_users;
-        $data['follow_ads'] = $follow_ads;
-        $data['ratings'] = $ratings;
-        
-        if ( $is_bookmark ) {
-            $request_modal = $this->load->view('modal/request_create', array(), true);
-        } else {
-            $request_modal = '';
-        }
-        
-        if ( $is_receiving ) {
-            $receiving_modal = $this->load->view('modal/request_view', array(), true);
-        } else {
-            $receiving_modal = '';
-        }
-        
-        if ( $is_giving ) {
-            $giving_modal = $this->load->view('modal/request_view', array(), true);
-        } else {
-            $giving_modal = '';
-        }
-        
-        $avatar_modal = $this->load->view('modal/avatar', array(), true); //permanent
-        $edit_profile_modal = $this->load->view('modal/edit_profile', array(), true); //permanent
-        
-        $modal = $request_modal . $receiving_modal . $giving_modal . $avatar_modal . $edit_profile_modal;
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
@@ -208,22 +99,297 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        if ( $is_giving ) {
-            $this->load->view('pages/profile_giving', $data);
-        } else if ( isOwner($user) && $is_receiving ) {
+        $this->load->view('pages/profile_giving', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Receiving profile submenu.
+     * @param User_model $user
+     */
+    public function receiving($user) {
+        try {
+            $receivings = $this->ad_service->getUserRequestedAds($user->id, true);
+        } catch ( Exception $ex ) {
+            $receivings = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        $modal .= $this->load->view('modal/request_view', array(), true);
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['receivings'] = $receivings;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        if ( isOwner($user) ) {
             //only owner can see receiving list
             $this->load->view('pages/profile_receiving', $data);
-        } else if ( isOwner($user) && $is_bookmark ) {
-            //only owner can see bookmark list
-            $this->load->view('pages/profile_bookmark', $data);
-        } else if ( $is_following || $is_follower ) {
-            $this->load->view('pages/profile_following', $data);
-        } else if ( $is_rating ) {
-            $this->load->view('pages/profile_rating', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
+    /**
+     * Favorite/bookmark profile submenu.
+     * @param User_model $user
+     */
+    public function favorite($user) {
+        try {
+            $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
+        } catch ( Exception $ex ) {
+            $bookmarks = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        $modal .= $this->load->view('modal/request_create', array(), true);
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['bookmarks'] = $bookmarks;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        if ( isOwner($user) ) {
+            //only owner can see bookmark list
+            $this->load->view('pages/profile_bookmark', $data);
+        }
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Rating profile submenu.
+     * @param User_model $user
+     */
+    public function rating($user) {
+        try {
+            $ratings = $this->ad_service->getReceivedRatings($user->id);
+        } catch ( Exception $ex ) {
+            $ratings = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['ratings'] = $ratings;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_rating', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Following profile submenu.
+     * @param User_model $user
+     */
+    public function following($user) {
+        try {
+            $follow_users = $this->usermanagement_service->getFollowings($user->id);
+
+            $follow_ads = array();
+            foreach ($follow_users as $following) {
+                try {
+                    $ads = $this->ad_service->getUserAds($following->id, false);
+
+                    $follow_ads[$following->id] = array();
+                    foreach ($ads as $ad) {
+                        array_push($follow_ads[$following->id], $ad);
+                        if ( count($follow_ads[$following->id]) == Profile::ADS_NUM ) {
+                            //max to display reached
+                            break;
+                        }
+                    }
+                } catch ( Exception $ex ) {
+                }
+            }
+        } catch ( Exception $ex ) {
+            $follow_users = null;
+            $follow_ads = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['follow_users'] = $follow_users;
+        $data['follow_ads'] = $follow_ads;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_following', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Follower profile submenu.
+     * @param User_model $user
+     */
+    public function follower($user) {
+        try {
+            $follow_users = $this->usermanagement_service->getFollowers($user->id);
+
+            $follow_ads = array();
+            foreach ($follow_users as $follower) {
+                try {
+                    $ads = $this->ad_service->getUserAds($follower->id, false);
+
+                    $follow_ads[$follower->id] = array();
+                    foreach ($ads as $ad) {
+                        array_push($follow_ads[$follower->id], $ad);
+                        if ( count($follow_ads[$follower->id]) == Profile::ADS_NUM ) {
+                            //max to display reached
+                            break;
+                        }
+                    }
+                } catch ( Exception $ex ) {
+                }
+            }
+        } catch ( Exception $ex ) {
+            $follow_users = null;
+            $follow_ads = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['follow_users'] = $follow_users;
+        $data['follow_ads'] = $follow_ads;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_following', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Notification profile submenu.
+     * @param User_model $user
+     */
+    public function notification($user) {
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        //TODO
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+        
+    }
+    
+    /**
+     * Message profile submenu.
+     * @param User_model $user
+     */
+    public function message($user) {
+        try {
+            $messages = $this->message_service->getLastMessagePerRequest();
+        } catch ( Exception $ex ) {
+            $messages = null;
+        }
+        
+        if ( count($_GET) > 1 ) {
+            $requestId = key(array_slice($_GET, 1, 1, true));
+            
+            try {
+                $request = $this->ad_service->getRequestById($requestId);
+            } catch ( Exception $ex ) {
+                $request = null;
+            }
+            
+            try {
+                $ad = $this->ad_service->getAdById($request->adId);
+            } catch ( Exception $ex ) {
+                $ad = null;
+            }
+            
+            try {
+                $request_messages = $this->message_service->getMessagesByRequest($requestId);
+            } catch ( Exception $ex ) {
+                $request_messages = null;
+            }
+        } else {
+            $request = null;
+            $ad = null;
+            $request_messages = null;
+        }
+        
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        $data['messages'] = $messages;
+        $data['request'] = $request;
+        $data['ad'] = $ad;
+        $data['request_messages'] = $request_messages;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_message', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    /**
+     * Setting profile submenu.
+     * @param User_model $user
+     */
+    public function setting($user) {
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('javascript/follow');
+        $this->load->view('javascript/bookmark');
+        $this->load->view('javascript/message');
+        $this->load->view('javascript/ad');
+        $this->load->view('javascript/request');
+        $this->load->view('pages/profile', $data);
+        //TODO
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    // ajax call
     public function change_avatar() {
         $this->init();
         
@@ -260,7 +426,7 @@ class Profile extends CI_Controller {
             
             $this->usermanagement_service->updateUser($currentUser);
             $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $this->usermanagement_service->loadUser();
             
             respond_ajax(AJAX_STATUS_RESULT, $currentUser->getAvatarUrl());
         } catch ( Exception $ex ) {
@@ -279,6 +445,7 @@ class Profile extends CI_Controller {
             
             $this->load->library('ad_service');
             $this->load->library('usermanagement_service');
+            $this->load->library('message_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');
@@ -288,8 +455,17 @@ class Profile extends CI_Controller {
             $this->load->model('userstatistics_model');
             $this->load->model('rating_model');
             $this->load->model('request_model');
+            $this->load->model('message_model');
             
             $this->initialized = true;
         }
+    }
+    
+    private function getProfileModal() {
+        $avatar_modal = $this->load->view('modal/avatar', array(), true); //permanent
+        $edit_profile_modal = $this->load->view('modal/edit_profile', array(), true); //permanent
+        
+        $modal = $avatar_modal . $edit_profile_modal;
+        return $modal;
     }
 }

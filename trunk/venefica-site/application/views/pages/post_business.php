@@ -1,3 +1,17 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * step: string
+ * categories: array of BusinessCategory_model
+ * image: string
+ * currentUser: User_model
+ * error: string
+ */
+
+?>
+
 <script langauge="javascript">
     $(function() {
         $("#expires").change(function() {

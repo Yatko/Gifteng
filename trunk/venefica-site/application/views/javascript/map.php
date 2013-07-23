@@ -19,7 +19,7 @@
             var locationMarker = L.marker([marker_latitude, marker_longitude], {
                 icon: locationIcon,
                 draggable: canDrag,
-                title: (canDrag ? 'Drag me to the exact location' : ''),
+                title: (canDrag ? 'Drag me to the exact location' : '')
             });
             if ( canDrag ) {
                 locationMarker.on('dragend', function() {

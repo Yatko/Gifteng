@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * 
+ */
+
+?>
+
 <div class="container">
     <div class="row ge-welcome">
         <div class="span12">

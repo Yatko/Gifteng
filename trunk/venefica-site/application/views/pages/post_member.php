@@ -1,3 +1,31 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * is_new: boolean
+ * is_modal: boolean
+ * adId: long
+ * step: string
+ * unique_id: string
+ * image: string
+ * title: string
+ * description: string
+ * category: long
+ * price: float
+ * zipCode: string
+ * pickUp: 1 or 0
+ * freeShipping: 1 or 0
+ * categories: array of Category_model
+ * longitude: float
+ * latitude: float
+ * marker_longitude: float
+ * marker_latitude: float
+ * error: string
+ */
+
+?>
+
 <script langauge="javascript">
     function edit_post() {
         $('input[name=next_step]').val('<?=Post_member::STEP_START?>');

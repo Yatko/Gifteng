@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * users: array of User_model
+ */
+
+?>
+
 <div class="container ge-topspace">
     <div class="span12">
         

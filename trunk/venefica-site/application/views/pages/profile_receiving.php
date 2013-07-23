@@ -1,3 +1,14 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * user: User_model
+ * receivings: array of Ad_model
+ */
+
+?>
+
 <script language="javascript">
     function request_view(requestId) {
         if ( $('#requestContainer').length > 0 ) {
@@ -35,7 +46,7 @@
                     
                 <? else: ?>
                 
-                    <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                    <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img img-rounded">
                 
                 <? endif; ?>
                 

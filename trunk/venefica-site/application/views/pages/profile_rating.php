@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * 
+ */
+
+?>
+
 <? /** ?>
     <? if( $ratings_num > 0 ): ?>
     <div class="review">

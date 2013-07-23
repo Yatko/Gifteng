@@ -19,13 +19,6 @@
     height: 254px;
 }
 
-#email_change_notification {
-    display: none;
-}
-#password_change_notification {
-    display: none;
-}
-
 /**
 .ge-item {
     margin-left: 12px !important;

@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * authentication_forgot_password_requested: boolean
+ */
+
+?>
+
 <div class="container">
     <div class="row">
         

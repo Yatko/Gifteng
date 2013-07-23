@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * bookmarks: array of Ad_model
+ */
+
+?>
+
 <script language="javascript">
     $(function() {
         $('.ge-bookmark').on('bookmark_removed', function(event, adId) {
@@ -70,7 +80,7 @@
             <? endforeach; ?>
             <? else: ?>
                 
-                <img src="<?=BASE_PATH?>temp-sample/ge-no-gift.png" class="img img-rounded">
+                <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img img-rounded">
                 
             <? endif; ?>
                 

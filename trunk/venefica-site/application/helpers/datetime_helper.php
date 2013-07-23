@@ -16,6 +16,29 @@ if ( ! function_exists('convertTimestampToDate')) {
     }
 }
 
+
+// various datetime formatters based on its usage
+
+if ( ! function_exists('convertTimestampToDateForProfile')) {
+    function convertTimestampToDateForProfile($timestamp) {
+        $strDate = date("F Y", $timestamp);
+        return $strDate;
+    }
+}
+if ( ! function_exists('convertTimestampToDateForComment')) {
+    function convertTimestampToDateForComment($timestamp) {
+        return humanTiming($timestamp);
+    }
+}
+if ( ! function_exists('convertTimestampToDateForMessage')) {
+    function convertTimestampToDateForMessage($timestamp) {
+        $strDate = date("F j, Y", $timestamp);
+        return $strDate;
+    }
+}
+
+
+
 if ( ! function_exists('convertHourToTimestamp')) {
     function convertHourToTimestamp($strDate) {
         $date = date_create_from_format('G', $strDate);

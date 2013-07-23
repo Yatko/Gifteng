@@ -13,8 +13,6 @@ $id = $comment->id;
 $text = trim($comment->text);
 $since = $comment->getCreateDateHumanTiming();
 
-if (trim($since) != '') $since = $since . ' ago';
-
 if (strlen($text) > COMMENT_MAX_LENGTH) {
     $text_rest = substr($text, COMMENT_MAX_LENGTH);
     $text = substr($text, 0, COMMENT_MAX_LENGTH);

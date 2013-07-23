@@ -1,9 +1,9 @@
 <script langauge="javascript">
-    function startMessageModal(callerElement, adId, toId) {
-        var $messageAdId = $("#message_post_form input[name=messageAdId]");
+    function startMessageModal(callerElement, requestId, toId) {
+        var $messageRequestId = $("#message_post_form input[name=messageRequestId]");
         var $messageToId = $("#message_post_form input[name=messageToId]");
         
-        $messageAdId.val(adId);
+        $messageRequestId.val(requestId);
         $messageToId.val(toId);
 
         $('#messageContainer').modal('show');
@@ -30,7 +30,7 @@
         
         <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
         
-            <input type="hidden" name="messageAdId" value=""/>
+            <input type="hidden" name="messageRequestId" value=""/>
             <input type="hidden" name="messageToId" value=""/>
 
             <div class="row-fluid ge-message ge-input ge-text">

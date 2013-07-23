@@ -55,18 +55,19 @@ class Comment_model extends CI_Model {
     
     //
     
-    public function getCreateDate() {
-        if ( $this->createdAt == null ) {
-            return '';
-        }
-        return date(DATE_FORMAT, $this->createdAt / 1000);
-    }
+//    public function getCreateDate() {
+//        if ( $this->createdAt == null ) {
+//            return '';
+//        }
+//        return date(DATE_FORMAT, $this->createdAt / 1000);
+//    }
     
     public function getCreateDateHumanTiming() {
         if ( $this->createdAt == null ) {
             return '';
         }
-        return humanTiming($this->createdAt / 1000);
+        //return humanTiming($this->createdAt / 1000) . ' ago';
+        return convertTimestampToDateForComment($this->createdAt / 1000) . ' ago';
     }
     
     // static helpers

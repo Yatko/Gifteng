@@ -2,8 +2,8 @@
 
 $page = $this->uri->segment(1, null);
 
-reset($_GET);
-$subpage = key($_GET);
+reset($_GET); //reset the array pointer
+$subpage = key($_GET); //gets the first element from the array
 
 ?>
 
@@ -25,7 +25,7 @@ $subpage = key($_GET);
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>snap.css" />
-    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>temp-gifteng-addon.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng-addon.css" />
     
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
     <!--[if lte IE 8]>
@@ -120,8 +120,8 @@ $subpage = key($_GET);
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
                 <li<?=($page == "profile" && $subpage == "following" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-heart"></i> Connections</a></li>
-                <li><a href="#"><i class="fui-mail"></i> Messages</a></li>
-                <li><a href="#"><i class="fui-alert"></i> Notifications</a></li>
+                <li<?=($page == "profile" && $subpage == "message" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?message"><i class="fui-mail"></i> Messages</a></li>
+                <li<?=($page == "profile" && $subpage == "notification" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?notification"><i class="fui-alert"></i> Notifications</a></li>
                 <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
             </ul>
         </div>

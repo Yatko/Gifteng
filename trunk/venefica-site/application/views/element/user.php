@@ -32,6 +32,19 @@ if ( $small == false ) {
 
 <div class="ge-user-image">
     <? if( $canEdit && $is_owner ): ?>
+        
+        <!--
+        <div class="row-fluid">
+            <div class="span12 ge-action">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <button class="btn btn-small btn-block btn-ge">Your Profile Picture</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+        
         <a data-toggle="modal" href="#avatarContainer">
             <img id="avatarImage" src="<?=$img?>" class="img-rounded">
         </a>

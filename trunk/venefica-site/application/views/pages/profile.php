@@ -1,5 +1,11 @@
 <?
 
+/**
+ * Input params:
+ * 
+ * user: User_model
+ */
+
 $receivings_num = $user->statistics->numReceivings;
 $givings_num = $user->statistics->numGivings;
 $bookmarks_num = $user->statistics->numBookmarks;
@@ -112,22 +118,22 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                 <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <button class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge">
                                                 <i class="fui-alert"></i>
                                                 <br />Notifications
-                                            </button>
+                                            </a>
                                         </div>
                                         <div class="span4">
-                                            <button class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge">
                                                 <i class="fui-mail"></i>
                                                 <br />Messages
-                                            </button>
+                                            </a>
                                         </div>
                                         <div class="span4">
-                                            <button class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_SETTING ?>" class="btn btn-small btn-block btn-ge">
                                                 <i class="fui-gear"></i>
                                                 <br />Settings
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div><!-- /tab-->

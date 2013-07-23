@@ -1,5 +1,12 @@
 <?
 
+/**
+ * Input params:
+ * 
+ * currentUser: User_model
+ * ad: Ad_model
+ */
+
 $user_is_business = $currentUser->businessAccount;
 $ad_is_business = $ad->isBusiness();
 $ad_title = $ad->title;
