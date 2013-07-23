@@ -18,6 +18,8 @@ public class MessageDto extends DtoBase {
     private Long requestId;
     // out
     private Long adId;
+    // out
+    private String adTitle;
     // in, out
     private String text;
     // out
@@ -172,5 +174,13 @@ public class MessageDto extends DtoBase {
 
     public void setRequestId(Long requestId) {
         this.requestId = requestId;
+    }
+
+    public String getAdTitle() {
+        return adTitle;
+    }
+
+    public void setAdTitle(String adTitle) {
+        this.adTitle = adTitle;
     }
 }
