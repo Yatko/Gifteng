@@ -76,7 +76,8 @@ class Edit_profile_member extends CI_Controller {
             
             $currentUser = $this->usermanagement_service->loadUser();
             $zipCode = $this->input->post('zipCode');
-            $location = getLocationByZipCode($zipCode);
+            //$location = getLocationByZipCode($zipCode);
+            $addressLocation = getAddressByZipCode($zipCode);
             
             if ( $currentUser->address == null ) {
                 $address = new Address_model();
@@ -85,8 +86,13 @@ class Edit_profile_member extends CI_Controller {
             }
             
             $address->zipCode = $zipCode;
-            $address->longitude = $location['longitude'];
-            $address->latitude = $location['latitude'];
+            //$address->longitude = $location['longitude'];
+            //$address->latitude = $location['latitude'];
+            $address->longitude = $addressLocation->longitude;
+            $address->latitude = $addressLocation->latitude;
+            $address->city = $addressLocation->city;
+            $address->state = $addressLocation->state;
+            $address->stateAbbreviation = $addressLocation->stateAbbreviation;
             
             $currentUser->firstName = $this->input->post('firstName');
             $currentUser->lastName = $this->input->post('lastName');

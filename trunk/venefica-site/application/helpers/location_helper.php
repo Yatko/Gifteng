@@ -22,56 +22,69 @@ if (!function_exists('distance_haversine')) {
     }
 }
 
-if (!function_exists('getLocationByZipCode')) {
-    
-    /**
-     * Returns an assiciative array as:
-     * 
-     * array(
-     *      'longitude' => xxx,
-     *      'latitude' => yyy
-     * )
-     * 
-     * If the given zip code is empty  a (0, 0) coordinated location is returned
-     * which is invalid.
-     * 
-     * @param string $zipCode
-     * @return array
-     */
-    function getLocationByZipCode($zipCode) {
-        if ( empty($zipCode) ) {
-            return array(
-                'longitude' => '0',
-                'latitude' => '0'
-            );
+if (!function_exists('getAddressByZipCode')) {
+    function getAddressByZipCode($zipCode) {
+        $CI =& get_instance();
+        $CI->load->library('utility_service');
+        
+        try {
+            $address = $CI->utility_service->getAddressByZipcode($zipCode);
+            return $address;
+        } catch ( Exception $ex ) {
+            return null;
         }
-        
-        /**
-        Samples: http://maps.huge.info/
-
-        Simple result for: http://www.usnaviguide.com/zip.pl?ZIP=08904
-
-        <polylines>
-            <marker1 lat="40.50316" lng="-74.42666"/>
-            <info hitrem="134" zipname="Highland Park" zipcode="08904" county="23" ctyname="Middlesex" uspsst="NJ" stname="New Jersey" complex="732/848" pointzip="0"/>
-        </polylines>
-        /**/
-
-        $url = 'http://www.usnaviguide.com/zip.pl?ZIP=' . $zipCode;
-        $fileContents = file_get_contents($url);
-        $fileContents = str_replace(array("\n", "\r", "\t"), '', $fileContents);
-        $fileContents = trim(str_replace('"', "'", $fileContents));
-        $simpleXml = simplexml_load_string($fileContents);
-        
-        $longitude = $simpleXml->marker1['lng'];
-        $latitude = $simpleXml->marker1['lat'];
-        
-        return array(
-            'longitude' => $longitude,
-            'latitude' => $latitude
-        );
     }
 }
+
+//if (!function_exists('getLocationByZipCode')) {
+//    /**
+//     * Returns an assiciative array as:
+//     * 
+//     * array(
+//     *      'longitude' => xxx,
+//     *      'latitude' => yyy
+//     * )
+//     * 
+//     * If the given zip code is empty  a (0, 0) coordinated location is returned
+//     * which is invalid.
+//     * 
+//     * @param string $zipCode
+//     * @return array
+//     */
+//    function getLocationByZipCode($zipCode) {
+//        if ( empty($zipCode) ) {
+//            return array(
+//                'longitude' => '0',
+//                'latitude' => '0'
+//            );
+//        }
+//        
+//        /**
+//        Samples: http://maps.huge.info/
+//
+//        Simple result for: http://www.usnaviguide.com/zip.pl?ZIP=08904
+//
+//        <polylines>
+//            <marker1 lat="40.50316" lng="-74.42666"/>
+//            <info hitrem="134" zipname="Highland Park" zipcode="08904" county="23" ctyname="Middlesex" uspsst="NJ" stname="New Jersey" complex="732/848" pointzip="0"/>
+//        </polylines>
+//        /**/
+//
+//        $url = 'http://www.usnaviguide.com/zip.pl?ZIP=' . $zipCode;
+//        $fileContents = file_get_contents($url);
+//        $fileContents = str_replace(array("\n", "\r", "\t"), '', $fileContents);
+//        $fileContents = trim(str_replace('"', "'", $fileContents));
+//        $simpleXml = simplexml_load_string($fileContents);
+//        
+//        $longitude = $simpleXml->marker1['lng'];
+//        $latitude = $simpleXml->marker1['lat'];
+//        
+//        return array(
+//            'longitude' => $longitude,
+//            'latitude' => $latitude
+//        );
+//    }
+//}
 
 if (!function_exists('getDistance')) {
     /**
