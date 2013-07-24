@@ -61,7 +61,10 @@ public interface Constants {
             
             //InvitationService: invitation related
             "RequestInvitation",
-            "IsInvitationValid"
+            "IsInvitationValid",
+            
+            //UtilityService
+            "GetAddressByZipcode"
     ));
     
 }

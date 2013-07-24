@@ -5,4 +5,5 @@
   <endpoint implementation="com.venefica.service.MessageServiceImpl" name="MessageServiceImplService" url-pattern="/MessageServiceImplService"/>
   <endpoint implementation="com.venefica.service.AuthServiceImpl" name="AuthServiceImplService" url-pattern="/AuthServiceImplService"/>
   <endpoint implementation="com.venefica.service.InvitationServiceImpl" name="InvitationServiceImplService" url-pattern="/InvitationServiceImplService"/>
+  <endpoint implementation="com.venefica.service.UtilityServiceImpl" name="UtilityServiceImplService" url-pattern="/UtilityServiceImplService"/>
 </endpoints>
