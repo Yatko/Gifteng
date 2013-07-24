@@ -54,6 +54,7 @@
         $requestor_user = $request->user;
         $ad_title = trim($ad->title);
         $view_link = $ad->getViewUrl();
+        $to_user = $ad->owner ? $requestor_user : $ad->creator;
         ?>
     
         <div class="span5"><!--conversation-->
@@ -77,7 +78,7 @@
                                 </div><!--./ge-subject-->
                             </div>
 
-                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $requestor_user, 'canMessage' => true)); ?>
+                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true)); ?>
 
                         </div>
                     </div><!--./ge-messages-->
