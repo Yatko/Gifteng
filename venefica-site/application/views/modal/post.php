@@ -2,11 +2,7 @@
     function initPostModal() {
         init_select();
         init_checkbox();
-        
-        hide_file($('#image'));
-        open_file($('.ge-post-image-btn'));
-        open_file($('.ge-post-image-img'));
-        attach_file($('.ge-post-image-btn'));
+        init_files();
         
         $('#member_post_form').on('submit', function(e) {
             e.preventDefault();

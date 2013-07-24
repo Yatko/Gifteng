@@ -2,14 +2,19 @@
     $(function() {
         $('#avatar').on('file_selected', function() {
             var $this = $(this);
-            var formData = new FormData($("#avatar_post_form").get(0));
-
+            
+            if ( get_file_size($('#avatar_image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
+                alert('File too big!');
+                $this.html($this.attr('original_text'));
+                return;
+            }
+            
             $.ajax({
                 type: 'POST',
                 url: '<?= base_url() ?>profile/ajax/change_avatar',
                 dataType: 'json',
                 cache: false,
-                data: formData,
+                data: new FormData($("#avatar_post_form").get(0)),
                 processData: false,
                 contentType: false
             }).done(function(response) {
@@ -23,7 +28,7 @@
                     //TODO: unknown response received
                 }
 
-                $this.text($this.attr('original_text'));
+                $this.html($this.attr('original_text'));
                 $("#avatarContainer").modal('hide');
             }).fail(function(data) {
                 //TODO

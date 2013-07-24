@@ -40,6 +40,13 @@
         init_map('post_map', 'post_longitude', 'post_latitude', 'post_marker_longitude', 'post_marker_latitude', true);
         
         $('.ge-post-image-btn').on('file_selected', function() {
+            var $this = $(this);
+            
+            if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
+                alert('File too big!');
+                $this.html($this.attr('original_text'));
+                return;
+            }
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             $("#member_post_form").submit();
         });
