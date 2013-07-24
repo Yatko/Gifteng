@@ -423,6 +423,7 @@ class Post_member extends CI_Controller {
         $config['upload_path'] = TEMP_FOLDER;
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['encrypt_name'] = true;
+        $config['max_size'] = UPLOAD_FILE_MAX_SIZE;
         
         $this->load->library('upload', $config);
         if ( !$this->upload->do_upload($field)) {

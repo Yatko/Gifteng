@@ -1,42 +1,6 @@
-function hide_file($file) {
-    $file.wrap($('<div/>').css({
-        height: 0,
-        width: 0,
-        'overflow': 'hidden'
-    }));
-}
-function open_file($button) {
-    var fileInputId = $button.attr('for');
-    var fileInput = $('#' + fileInputId);
-    
-    $button.click(function() {
-        fileInput.click();
-    }).show();
-}
-function attach_file($button) {
-    var fileInputId = $button.attr('for');
-    var fileInput = $('#' + fileInputId);
-    
-    fileInput.change(function() {
-        //var fileName = fileInput.val().replace(/C:\\fakepath\\/i, '');
-        //$file.text(fileName);
-        
-        $button.addClass('btn-ge');
-        if ( !$button.attr('original_text') ) {
-            //saving original text to be used later
-            $button.attr('original_text', $button.text());
-        }
-        $button.text('Done');
-        //$file.prop('disabled', true);
-        $button.trigger('file_selected');
-    });
-}
-
-
-$(function() {
-    
-    if ( $(':file').length > 0 ) {
-        $(':file').each(function() {
+function init_files() {
+    if ( $('[type="file"]').length > 0 ) {
+        $('[type="file"]').each(function() {
             var $this = $(this);
             hide_file($this);
         });
@@ -45,10 +9,62 @@ $(function() {
     if ( $('.file').length > 0 ) {
         $('.file').each(function() {
             var $this = $(this);
-            open_file($this);
             attach_file($this);
         });
     }
+}
+
+function hide_file($file) {
+    if ( !$file.attr('already_processed') ) {
+        $file.wrap($('<div/>').css({
+            height: 0,
+            width: 0,
+            'overflow': 'hidden'
+        }));
+        $file.attr('already_processed', 1);
+    }
+}
+function attach_file($button) {
+    var fileInputId = $button.attr('for');
+    var fileInput = $('#' + fileInputId);
+    
+    if ( !$button.attr('already_processed') ) {
+        $button.click(function() {
+            fileInput.click();
+        }).show();
+        fileInput.change(function() {
+            if ( $button.is("button") ) {
+                $button.addClass('btn-ge');
+                if ( !$button.attr('original_text') ) {
+                    //saving original text to be used later
+                    $button.attr('original_text', $button.html());
+                }
+                $button.text('Done');
+            }
+            $button.trigger('file_selected');
+        });
+        
+        $button.attr('already_processed', 1);
+    }
+}
+
+function get_file_size(file) {
+    if ( !window.FileReader ) {
+        //The file API isn't supported on this browser yet.
+        return -1;
+    } else if ( !file.files ) {
+        //This browser doesn't seem to support the `files` property of file inputs.
+        return -1;
+    } else if ( !file.files[0] ) {
+        //No file is selected.
+        return -1;
+    }
+    return file.files[0].size;
+}
+
+$(function() {
+    
+    init_files();
     
     if ( $('.modal').length > 0 ) {
         //making auto height of the body for every modal
