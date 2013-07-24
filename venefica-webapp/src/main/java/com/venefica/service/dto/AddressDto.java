@@ -34,15 +34,17 @@ public class AddressDto {
     // in, out
     private String country;
     // in, out
+    private String stateAbbreviation;
+    // in, out
     private String state;
     // in, out
     private String area;
     // in, out
     private String zipCode;
     
-    // in,out
+    // in, out
     private Double longitude;
-    // in,out
+    // in, out
     private Double latitude;
     
     // WARNING: required for JAX-WS
@@ -92,6 +94,7 @@ public class AddressDto {
         address.setCounty(county);
         address.setCountry(country);
         address.setState(state);
+        address.setStateAbbreviation(stateAbbreviation);
         address.setArea(area);
         address.setZipCode(zipCode);
         return address;
@@ -113,6 +116,7 @@ public class AddressDto {
             city = address.getCity();
             county = address.getCounty();
             country = address.getCountry();
+            stateAbbreviation = address.getStateAbbreviation();
             state = address.getState();
             area = address.getArea();
             zipCode = address.getZipCode();
@@ -223,5 +227,13 @@ public class AddressDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getStateAbbreviation() {
+        return stateAbbreviation;
+    }
+
+    public void setStateAbbreviation(String stateAbbreviation) {
+        this.stateAbbreviation = stateAbbreviation;
     }
 }

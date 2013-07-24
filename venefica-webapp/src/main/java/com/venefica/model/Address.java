@@ -20,6 +20,7 @@ public class Address implements Serializable {
     private String city;
     private String county;
     private String country;
+    private String stateAbbreviation;
     @Column(name = "statee")
     private String state;
     private String area;
@@ -90,5 +91,13 @@ public class Address implements Serializable {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public String getStateAbbreviation() {
+        return stateAbbreviation;
+    }
+
+    public void setStateAbbreviation(String stateAbbreviation) {
+        this.stateAbbreviation = stateAbbreviation;
     }
 }
