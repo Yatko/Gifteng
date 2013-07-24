@@ -3,11 +3,13 @@
 //define('SERVER_URL',                'http://veneficalabs.com:8080/venefica');
 define('SERVER_URL',                'http://veneficalabs.com:8080/gifteng');
 //define('SERVER_URL',                'http://gifteng.jelastic.servint.net/gifteng');
+
 define('AUTH_SERVICE_WSDL',         SERVER_URL.'/services/AuthService?wsdl');
 define('AD_SERVICE_WSDL',           SERVER_URL.'/services/AdService?wsdl');
 define('INVITATION_SERVICE_WSDL',   SERVER_URL.'/services/InvitationService?wsdl');
 define('MESSAGE_SERVICE_WSDL',      SERVER_URL.'/services/MessageService?wsdl');
 define('USER_SERVICE_WSDL',         SERVER_URL.'/services/UserManagementService?wsdl');
+define('UTILITY_SERVICE_WSDL',      SERVER_URL.'/services/UtilityService?wsdl');
 
 define('DEBUG', 'debug');
 define('INFO',  'info');

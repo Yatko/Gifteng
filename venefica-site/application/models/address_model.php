@@ -14,6 +14,7 @@ class Address_model extends CI_Model {
     var $city; //string
     var $county; //string
     var $country; //string
+    var $stateAbbreviation; //string (2 chars)
     var $state; //string
     var $area; //string
     var $zipCode; //string
@@ -31,6 +32,7 @@ class Address_model extends CI_Model {
             $this->city = getField($obj, 'city');
             $this->county = getField($obj, 'county');
             $this->country = getField($obj, 'country');
+            $this->stateAbbreviation = getField($obj, 'stateAbbreviation');
             $this->state = getField($obj, 'state');
             $this->area = getField($obj, 'area');
             $this->zipCode = getField($obj, 'zipCode');
@@ -47,7 +49,7 @@ class Address_model extends CI_Model {
     
     public function getLocation() {
         $separator = ', ';
-        $ret = $this->city . $separator . $this->country;
+        $ret = $this->city . $separator . $this->stateAbbreviation;
         if ( trim($ret) == trim($separator) ) {
             $ret = '';
         }

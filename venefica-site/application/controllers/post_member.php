@@ -166,9 +166,12 @@ class Post_member extends CI_Controller {
             $latitude = $this->ad->address->latitude;
             
             if ( empty($longitude) || empty($latitude) ) {
-                $location = getLocationByZipCode($zipCode);
-                $marker_longitude = $location['longitude'];
-                $marker_latitude = $location['latitude'];
+                //$location = getLocationByZipCode($zipCode);
+                //$marker_longitude = $location['longitude'];
+                //$marker_latitude = $location['latitude'];
+                $addressLocation = getAddressByZipCode($zipCode);
+                $marker_longitude = $addressLocation->longitude;
+                $marker_latitude = $addressLocation->latitude;
             } else {
                 $marker_longitude = $longitude;
                 $marker_latitude = $latitude;
