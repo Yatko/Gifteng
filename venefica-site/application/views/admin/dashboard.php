@@ -57,7 +57,7 @@
                     </label>
                     <thead>
                         <tr>
-                            <th><label class="checkbox no-label toggle-all" for="checkbox-table-1"><input type="checkbox" value="" id="checkbox-table-1" data-toggle="checkbox"></label></th>
+                            <th><label class="checkbox no-label toggle-all" for="user-table"><input type="checkbox" id="user-table" data-toggle="checkbox"></label></th>
                             <th>Company</th>
                             <th>Contact</th>
                             <th>Phone</th>

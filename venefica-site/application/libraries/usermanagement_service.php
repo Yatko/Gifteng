@@ -258,7 +258,42 @@ class Usermanagement_service {
         }
     }
     
+    //*****************
+    //* user settings *
+    //*****************
     
+    /**
+     * 
+     * @return UserSetting_model
+     * @throws Exception
+     */
+    public function getUserSetting() {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getUserSetting();
+            
+            $userSetting = UserSetting_model::convertUserSetting($result->setting);
+            return $userSetting;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "User setting request failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param UserSetting_model $userSetting
+     * @throws Exception
+     */
+    public function saveUserSetting($userSetting) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->saveUserSetting(array("setting" => $userSetting));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "Saving user setting failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
     
     
     

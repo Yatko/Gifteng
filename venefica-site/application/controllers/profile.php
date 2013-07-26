@@ -294,10 +294,32 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     public function notification($user) {
+        if ( $_POST ) {
+            $user_setting = new \UserSetting_model();
+            $user_setting->userId = $this->input->post('userId');
+            $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
+            
+            try {
+                $this->usermanagement_service->saveUserSetting($user_setting);
+            } catch ( Exception $ex ) {
+            }
+            
+            redirect('/profile?notification');
+        }
+        
+        try {
+            $user_setting = $this->usermanagement_service->getUserSetting();
+        } catch ( Exception $ex ) {
+            $user_setting = null;
+        }
+        
         $modal = $this->getProfileModal();
         
         $data = array();
         $data['user'] = $user;
+        $data['user_setting'] = $user_setting;
+        
+        $this->lang->load('notification');
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
@@ -306,7 +328,9 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        //TODO
+        if ( isOwner($user) ) {
+            $this->load->view('pages/profile_notification', $data);
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
         
     }
@@ -364,7 +388,9 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        $this->load->view('pages/profile_message', $data);
+        if ( isOwner($user) ) {
+            $this->load->view('pages/profile_message', $data);
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -385,7 +411,9 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        //TODO
+        if ( isOwner($user) ) {
+            //TODO
+        }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
@@ -454,6 +482,7 @@ class Profile extends CI_Controller {
             $this->load->model('adstatistics_model');
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
+            $this->load->model('usersetting_model');
             $this->load->model('rating_model');
             $this->load->model('request_model');
             $this->load->model('message_model');
