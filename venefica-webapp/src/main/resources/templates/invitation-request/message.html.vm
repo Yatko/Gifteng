@@ -434,7 +434,7 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td class="mcnImageContent" valign="top" style="padding-right: 9px;padding-left: 9px;padding-top: 0;padding-bottom: 0;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                                                                <img align="left" alt="" src="http://veneficalabs.com/venefica/assets/2/img/mail/header.png" width="564" style="max-width: 770px;padding-bottom: 0;display: inline !important;vertical-align: bottom;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;" class="mcnImage"/>
+                                                                                <img align="left" alt="" src="http://veneficalabs.com/gifteng/assets/2/img/mail/header.png" width="564" style="max-width: 770px;padding-bottom: 0;display: inline !important;vertical-align: bottom;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;" class="mcnImage"/>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -500,7 +500,7 @@
                                                                             <td valign="top" class="mcnTextContent" style="padding: 9px 18px;color: #687474;font-family: Tahoma, Verdana, Segoe, sans-serif;font-size: 12px;font-weight: normal;line-height: 150%;text-align: center;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                                                                                 <p>
                                                                                     You can also click on the link below, to log in to your account:<br/>
-                                                                                    <a href="http://veneficalabs.com/venefica/invitation/verify" target="_self" style="color: #EB4102;font-weight: normal;text-decoration: underline;word-wrap: break-word !important;">http://veneficalabs.com/venefica/invitation/verify</a><br/>
+                                                                                    <a href="${baseUrl}invitation/verify" target="_self" style="color: #EB4102;font-weight: normal;text-decoration: underline;word-wrap: break-word !important;">${baseUrl}invitation/verify</a><br/>
                                                                                     <br/><br/>
                                                                                     Hurry, gifts are waiting for you!<br/>
                                                                                     Welcome to Gifteng!
@@ -539,7 +539,7 @@
                                                                         <tr>
                                                                             <td valign="top" class="mcnTextContent" style="padding: 9px 18px;color: #38CECD;font-family: Tahoma, Verdana, Segoe, sans-serif;font-size: 12px;text-align: center;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;line-height: 150%;">
                                                                                 Share your invite:<br/>
-                                                                                &nbsp;<a href="http://www.facebook.com/gifteng" style="color: #EB4102;font-weight: normal;text-decoration: underline;word-wrap: break-word !important;"><img align="none" alt="Facebook" height="24" src="http://veneficalabs.com/venefica/assets/2/img/mail/facebook.png" style="width: 24px;height: 24px;border: 0;line-height: 100%;outline: none;text-decoration: none;" width="24"/></a>&nbsp;&nbsp;<img align="none" alt="Twitter" height="24" src="http://veneficalabs.com/venefica/assets/2/img/mail/twitter.png" style="width: 24px;height: 24px;border: 0;line-height: 100%;outline: none;text-decoration: none;" width="24"/>
+                                                                                &nbsp;<a href="http://www.facebook.com/gifteng" style="color: #EB4102;font-weight: normal;text-decoration: underline;word-wrap: break-word !important;"><img align="none" alt="Facebook" height="24" src="http://veneficalabs.com/gifteng/assets/2/img/mail/facebook.png" style="width: 24px;height: 24px;border: 0;line-height: 100%;outline: none;text-decoration: none;" width="24"/></a>&nbsp;&nbsp;<img align="none" alt="Twitter" height="24" src="http://veneficalabs.com/gifteng/assets/2/img/mail/twitter.png" style="width: 24px;height: 24px;border: 0;line-height: 100%;outline: none;text-decoration: none;" width="24"/>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>

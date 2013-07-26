@@ -94,7 +94,7 @@ public class TestDataConfig {
         return factoryBuilder.buildSessionFactory();
     }
 
-    @Bean(name = "transactionManager")
+    @Bean
     public PlatformTransactionManager transactionManager() {
         return new HibernateTransactionManager(sessionFactory());
     }

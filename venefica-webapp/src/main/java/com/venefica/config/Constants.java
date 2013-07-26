@@ -27,9 +27,11 @@ public interface Constants {
     public static final int REQUEST_MAX_ALLOWED = 3; //number of allowed requests for an ad
     
     public static final int INVITATION_MAX_ALLOWED_USE = 5; //max allowed user creation with the same invitation
-    public static final int INVITATION_EXPIRATION_PERIOD_DAYS = 3; //the default expiration in days of an invitation
     public static final int INVITATION_DEFAULT_CODE_LENGTH = 4; //default invitation code size
+    public static final int INVITATION_EXPIRATION_PERIOD_DAYS = 3; //the default expiration in days of an invitation
+    public static final int INVITATION_EXPIRATION_REMINDER_DAYS = 1; //the days when invitation will expire
     public static final int INVITATION_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60 * 60; // default: 1 hour
+    public static final int INVITATION_EXPIRATION_REMINDER_CHECK_SECS = 4 * 60 * 60; // default: 4 hour
     
     public static final String MODEL_PACKAGE = "com.venefica.model";
     
@@ -39,6 +41,7 @@ public interface Constants {
     public static final String AD_DAO = "AdDao";
     public static final String INVITATION_DAO = "InvitationDao";
     public static final String FORGOT_PASSWORD_DAO = "ForgotPasswordDao";
+    public static final String EMAIL_SENDER = "EmailSender";
     
     public static final String DEFAULT_CHARSET = "UTF-8";
     

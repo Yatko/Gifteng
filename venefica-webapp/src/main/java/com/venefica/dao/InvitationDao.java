@@ -5,6 +5,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Invitation;
+import java.util.List;
 
 /**
  * Data access interface for {@link Invitation} entity.
@@ -49,4 +50,13 @@ public interface InvitationDao {
      */
     void markExpiredInvitations();
     
+    /**
+     * Returns a list of un-expired invitations that will expire within
+     * the specified number of day. Useful if you want to get all the invitations
+     * that will expire soon or having a close expiration date.
+     * 
+     * @param day number of day to consider
+     * @return 
+     */
+    List<Invitation> getByRemainingDay(int day);
 }

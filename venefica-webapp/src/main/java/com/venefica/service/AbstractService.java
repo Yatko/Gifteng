@@ -5,9 +5,11 @@
 package com.venefica.service;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
+import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.UserDao;
+import com.venefica.dao.UserSettingDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Request;
 import com.venefica.model.User;
@@ -46,6 +48,10 @@ public abstract class AbstractService {
     protected RequestDao requestDao;
     @Inject
     protected UserDao userDao;
+    @Inject
+    protected UserSettingDao userSettingDao;
+    @Inject
+    protected EmailSender emailSender;
     
     @Inject
     protected ThreadSecurityContextHolder securityContextHolder;

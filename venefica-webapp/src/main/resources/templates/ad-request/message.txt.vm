@@ -1,0 +1,11 @@
+Hi ${ad.creator.getFullName()},
+
+${request.user.getFullName()} is excited to have your Gift!
+
+To view request access the following address:
+${baseUrl}request/${request.id}
+
+Happy gifting!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

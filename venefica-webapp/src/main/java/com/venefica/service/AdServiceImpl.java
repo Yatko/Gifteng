@@ -21,6 +21,7 @@ import com.venefica.model.Category;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Message;
+import com.venefica.model.NotificationType;
 import com.venefica.model.Rating;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
@@ -57,8 +58,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.apache.commons.lang.time.DateUtils;
@@ -171,6 +175,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
             transaction.setPendingNumber(currentPendingNumber);
             transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
+        }
+        
+        //all followers should be notified (if configured) about the new ad
+        Set<User> followers = currentUser.getFollowers();
+        if ( followers != null && !followers.isEmpty() ) {
+            for ( User follower : followers ) {
+                Map<String, Object> vars = new HashMap<String, Object>(0);
+                vars.put("ad", ad);
+                vars.put("follower", follower);
+                
+                emailSender.sendNotification(NotificationType.FOLLOWER_AD_CREATED, follower, vars);
+            }
         }
         
         return adId;
@@ -610,6 +626,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Ad ad = validateAd(adId);
         User user = getCurrentUser();
         Long userId = getCurrentUserId();
+        User creator = ad.getCreator();
         
         if (ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.IN_PROGRESS) {
             //continue
@@ -623,7 +640,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + userId + ")");
         }
         
-        if ( ad.getCreator().equals(user) ) {
+        if ( creator.equals(user) ) {
             throw new InvalidRequestException("Cannot request owned ads.");
         }
         if ( ad.getAdData().getQuantity() <= 0 ) {
@@ -663,7 +680,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if ( text != null && !text.trim().isEmpty() ) {
             Message message = new Message(text);
-            message.setTo(ad.getCreator());
+            message.setTo(creator);
             message.setFrom(user);
             message.setRequest(request);
             messageDao.save(message);
@@ -680,13 +697,19 @@ public class AdServiceImpl extends AbstractService implements AdService {
             selectRequest(request, ad.getCreator());
         }
         
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("ad", ad);
+        vars.put("request", request);
+        
+        emailSender.sendNotification(NotificationType.AD_REQUESTED, creator, vars);
+        
         return requestId;
     }
     
     @Override
     @Transactional
     public void cancelRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException {
-        User user = getCurrentUser();
+        User currentUser = getCurrentUser();
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();
         UserTransaction transaction;
@@ -697,12 +720,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidAdStateException("Request can't be cancelled as its ad state (" + ad.getStatus() + ") is not as expected!");
         }
         
-        if ( ad.getCreator().equals(user) ) {
+        if ( ad.getCreator().equals(currentUser) ) {
             //the ad creator cancelling the request
             transaction = userTransactionDao.getByRequest(request.getUser().getId(), requestId);
-        } else if ( request.getUser().equals(user) ) {
+        } else if ( request.getUser().equals(currentUser) ) {
             //the requestor cancelling the request
-            transaction = userTransactionDao.getByRequest(user.getId(), requestId);
+            transaction = userTransactionDao.getByRequest(currentUser.getId(), requestId);
         } else {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
@@ -711,7 +734,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
-        if ( ad.getCreator().equals(user) ) {
+        if ( ad.getCreator().equals(currentUser) ) {
             if ( request.isDeclined() ) {
                 throw new InvalidRequestException("Request (requestId: " + requestId + ") is already canceled (declined)");
             }
@@ -730,6 +753,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         transaction.markAsFinalized();
         userTransactionDao.update(transaction);
+        
+        if ( ad.getCreator().equals(currentUser) ) {
+            Map<String, Object> vars = new HashMap<String, Object>(0);
+            vars.put("user", request.getUser());
+            vars.put("ad", ad);
+            
+            emailSender.sendNotification(NotificationType.REQUEST_DECLINED, request.getUser(), vars);
+        } else {
+            Map<String, Object> vars = new HashMap<String, Object>(0);
+            vars.put("user", ad.getCreator());
+            vars.put("ad", ad);
+            
+            emailSender.sendNotification(NotificationType.REQUEST_CANCELED, ad.getCreator(), vars);
+        }
     }
     
     @Override
@@ -805,7 +842,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public void markAsSent(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         User user = getCurrentUser();
-        markAsSent(user, requestId);
+        Request request = validateRequest(requestId);
+        markAsSent(user, request);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", request.getUser());
+        vars.put("request", request);
+        
+        emailSender.sendNotification(NotificationType.REQUEST_SENT, request.getUser(), vars);
     }
     
     @Override
@@ -829,7 +873,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( request.getStatus() == RequestStatus.ACCEPTED ) {
             //marking automatically as sent if the status remained as ACCEPTED (if the SENT was skipped)
             User owner = ad.getCreator();
-            markAsSent(owner, requestId);
+            markAsSent(owner, request);
         }
         
         if ( !request.isSent() ) {
@@ -1202,10 +1246,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         ad.select(request);
         //ad.setExpiresAt(new Date()); //reset (???) the expiration date
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", request.getUser());
+        vars.put("request", request);
+        
+        emailSender.sendNotification(NotificationType.REQUEST_ACCEPTED, request.getUser(), vars);
     }
     
-    private void markAsSent(User user, Long requestId) throws RequestNotFoundException, InvalidRequestException {
-        Request request = validateRequest(requestId);
+    private void markAsSent(User user, Request request) throws RequestNotFoundException, InvalidRequestException {
         Ad ad = request.getAd();
         Long adId = ad.getId();
         UserTransaction transaction = userTransactionDao.getByAd(user.getId(), adId);
@@ -1214,13 +1263,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Only creator users can mark as sent.");
         }
         if ( !request.isAccepted() ) {
-            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not accepted, cannot mark as sent.");
+            throw new InvalidRequestException("The request (requestId: " + request.getId() + ") is not accepted, cannot mark as sent.");
         }
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
         }
         if ( request.getStatus() != RequestStatus.ACCEPTED ) {
-            throw new InvalidRequestException("The request (requestId: " + requestId + ") is not in accepted state, cannot mark as sent.");
+            throw new InvalidRequestException("The request (requestId: " + request.getId() + ") is not in accepted state, cannot mark as sent.");
         }
         
         request.markAsSent();

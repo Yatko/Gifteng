@@ -1,0 +1,15 @@
+Hi,
+
+We wanted to let you know that your Gifteng invitation code
+
+${invitationCode}
+
+will expire in 24 hours.
+
+Click <a href="${baseUrl}invitation/verify">here</a> to activate your account.
+
+You can also copy and paste this link into your browser:
+${baseUrl}invitation/verify
+
+Happy giving & receiving, 
+The Gifteng Team

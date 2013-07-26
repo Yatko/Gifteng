@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,10 +37,9 @@ public class MemberUserData extends UserData {
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     
-    //configurations
-    private boolean emailsAllowed;
-    private boolean smsAllowed;
-    private boolean callsAllowed;
+    @OneToOne
+    @ForeignKey(name = "usersetting_fk")
+    private UserSetting userSetting;
     
     public MemberUserData() {
         super();
@@ -119,30 +119,6 @@ public class MemberUserData extends UserData {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public boolean areEmailsAllowed() {
-        return emailsAllowed;
-    }
-
-    public void setEmailsAllowed(boolean emailsAllowed) {
-        this.emailsAllowed = emailsAllowed;
-    }
-
-    public boolean areSmsAllowed() {
-        return smsAllowed;
-    }
-
-    public void setSmsAllowed(boolean smsAllowed) {
-        this.smsAllowed = smsAllowed;
-    }
-
-    public boolean areCallsAllowed() {
-        return callsAllowed;
-    }
-
-    public void setCallsAllowed(boolean callsAllowed) {
-        this.callsAllowed = callsAllowed;
-    }
-
     public Gender getGender() {
         return gender;
     }
@@ -165,5 +141,13 @@ public class MemberUserData extends UserData {
 
     public void setMaritalStatus(MaritalStatus maritalStatus) {
         this.maritalStatus = maritalStatus;
+    }
+
+    public UserSetting getUserSetting() {
+        return userSetting;
+    }
+
+    public void setUserSetting(UserSetting userSetting) {
+        this.userSetting = userSetting;
     }
 }

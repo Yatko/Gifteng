@@ -1,0 +1,11 @@
+Hi ${user.getFullName()},
+
+Congratulations, you received a Gift!
+
+To finalize the transaction access the following address:
+${baseUrl}request/${request.id}
+
+Happy receiving!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

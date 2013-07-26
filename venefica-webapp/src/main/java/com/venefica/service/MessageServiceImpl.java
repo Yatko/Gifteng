@@ -5,6 +5,7 @@ import com.venefica.dao.MessageDao;
 import com.venefica.model.Ad;
 import com.venefica.model.Comment;
 import com.venefica.model.Message;
+import com.venefica.model.NotificationType;
 import com.venefica.model.Request;
 import com.venefica.model.User;
 import com.venefica.service.dto.CommentDto;
@@ -21,8 +22,10 @@ import com.venefica.service.fault.MessageValidationException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.springframework.social.facebook.api.Facebook;
@@ -54,13 +57,24 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException, CommentValidationException {
         validateCommentDto(commentDto);
         Ad ad = validateAd(adId);
+        User creator = ad.getCreator();
+        User currentUser = getCurrentUser();
         
-        Comment comment = new Comment(ad, getCurrentUser(), commentDto.getText());
-        commentDao.save(comment);
+        Comment comment = new Comment(ad, currentUser, commentDto.getText());
+        Long commentId = commentDao.save(comment);
 
         // Attach the comment to the ad
         ad.getComments().add(comment);
-        return comment.getId();
+        
+        if ( !creator.equals(currentUser) ) {
+            Map<String, Object> vars = new HashMap<String, Object>(0);
+            vars.put("ad", ad);
+            vars.put("comment", comment);
+
+            emailSender.sendNotification(NotificationType.AD_COMMENTED, creator, vars);
+        }
+        
+        return commentId;
     }
 
     @Override
@@ -172,8 +186,16 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         message.setTo(to);
         message.setFrom(currentUser);
         message.setRequest(request);
+        Long messageId = messageDao.save(message);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("to", to);
+        vars.put("from", currentUser);
+        vars.put("request", request);
 
-        return messageDao.save(message);
+        emailSender.sendNotification(NotificationType.REQUEST_MESSAGED, to, vars);
+        
+        return messageId;
     }
 
     @Override

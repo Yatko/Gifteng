@@ -5,7 +5,9 @@
 package com.venefica.dao;
 
 import com.venefica.model.Invitation;
+import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -28,7 +30,6 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
         if (invitationId == null) {
             throw new NullPointerException("invitationId");
         }
-
         return getEntity(invitationId);
     }
     
@@ -44,24 +45,47 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
 
     @Override
     public Invitation findByCode(String code) {
-        List<Invitation> invitations = createQuery("from " + getDomainClassName() + " i where i.code=:code")
+        List<Invitation> invitations = createQuery(""
+                + "from " + getDomainClassName() + " i "
+                + "where i.code=:code "
+                + "")
                 .setParameter("code", code)
                 .list();
-
         return invitations.isEmpty() ? null : invitations.get(0);
     }
     
     @Override
     public void markExpiredInvitations() {
-        // @formatter:off		
-        int numRows = createQuery(
-                "update " + getDomainClassName() + " i set i.expired = true where i.expiresAt < current_date() "
-                + "and i.expired = false")
+        int numRows = createQuery(""
+                + "update " + getDomainClassName() + " i "
+                + "set i.expired = true "
+                + "where "
+                + "i.expired = false and "
+                + "i.numAvailUse > 0 and "
+                + "i.expiresAt <= current_date() "
+                + "")
                 .executeUpdate();
-        // @formatter:on
-
         if (numRows > 0) {
             log.info(numRows + " invitations marked as expired.");
         }
+    }
+    
+    @Override
+    public List<Invitation> getByRemainingDay(int day) {
+        Date dateTo = new Date();
+        Date dateFrom = DateUtils.addDays(dateTo, -day);
+        
+        List<Invitation> invitations = createQuery(""
+                + "from " + getDomainClassName() + " i "
+                + "where "
+                + "i.expired = false and "
+                + "i.numAvailUse > 0 and "
+                + "i.expiresAt > :dateFrom and "
+                + "i.expiresAt <= :dateTo "
+                + "")
+                .setParameter("dateFrom", dateFrom)
+                .setParameter("dateTo", dateTo)
+                .list();
+        return invitations;
     }
 }

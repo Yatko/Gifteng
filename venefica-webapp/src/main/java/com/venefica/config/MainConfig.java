@@ -3,12 +3,14 @@ package com.venefica.config;
 import com.venefica.auth.MessageEncryptor;
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.auth.TokenEncryptor;
+import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.job.AdExpirationJob;
 import com.venefica.job.ForgotPasswordExpirationJob;
 import com.venefica.job.InvitationExpirationJob;
+import com.venefica.job.InvitationReminderJob;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
@@ -46,6 +48,9 @@ public class MainConfig {
     private static final String INVITATION_JOB_KEY = "invitationExpirationJob";
     private static final String INVITATION_TRIGGER_KEY = "invitationExpirationTrigger";
     
+    private static final String INVITATION_REMINDER_JOB_KEY = "invitationReminderJob";
+    private static final String INVITATION_REMINDER_TRIGGER_KEY = "invitationReminderTrigger";
+    
     private static final String FORGOT_PASSWORD_JOB_KEY = "forgotPasswordExpirationJob";
     private static final String FORGOT_PASSWORD_TRIGGER_KEY = "forgotPasswordExpirationTrigger";
     
@@ -60,13 +65,15 @@ public class MainConfig {
     private InvitationDao invitationDao;
     @Inject
     private ForgotPasswordDao forgotPasswordDao;
+    @Inject
+    private EmailSender emailSender;
 
-    @Bean(name = "tokenEncryptor")
+    @Bean
     public TokenEncryptor tokenEncryptor() throws NoSuchAlgorithmException, NoSuchPaddingException {
         return new TokenEncryptor(environment.getProperty("authentication.secretkey"));
     }
     
-    @Bean(name = "messageEncryptor")
+    @Bean
     public MessageEncryptor messageEncryptor() throws NoSuchAlgorithmException, NoSuchPaddingException {
         return new MessageEncryptor();
     }
@@ -76,53 +83,67 @@ public class MainConfig {
         return new ThreadSecurityContextHolder();
     }
 
-    @Bean(name = "scheduler", initMethod = "start", destroyMethod = "shutdown")
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Scheduler scheduler() throws SchedulerException {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.scheduleJob(adExpirationJobDetail(), adExpirationTrigger());
         scheduler.scheduleJob(invitationExpirationJobDetail(), invitationExpirationTrigger());
+        scheduler.scheduleJob(invitationReminderJobDetail(), invitationReminderTrigger());
         scheduler.scheduleJob(forgotPasswordExpirationJobDetail(), forgotPasswordExpirationTrigger());
         return scheduler;
     }
     
     // Ad related job config
     
-    @Bean(name = "adExpirationJobDetail")
+    @Bean
     public JobDetail adExpirationJobDetail() {
         JobDetail job = createJobDetail(AdExpirationJob.class, AD_JOB_KEY);
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
         return job;
     }
 
-    @Bean(name = "adExpirationTrigger")
+    @Bean
     public Trigger adExpirationTrigger() {
         return createTrigger(AD_TRIGGER_KEY, Constants.AD_EXPIRATION_INTERVAL_CHECK_SECS);
     }
     
     // Invitation related job config
     
-    @Bean(name = "invitationExpirationJobDetail")
+    @Bean
     public JobDetail invitationExpirationJobDetail() {
         JobDetail job = createJobDetail(InvitationExpirationJob.class, INVITATION_JOB_KEY);
         job.getJobDataMap().put(Constants.INVITATION_DAO, invitationDao);
         return job;
     }
     
-    @Bean(name = "invitationExpirationTrigger")
+    @Bean
     public Trigger invitationExpirationTrigger() {
         return createTrigger(INVITATION_TRIGGER_KEY, Constants.INVITATION_EXPIRATION_INTERVAL_CHECK_SECS);
     }
     
+    @Bean
+    public JobDetail invitationReminderJobDetail() {
+        JobDetail job = createJobDetail(InvitationReminderJob.class, INVITATION_REMINDER_JOB_KEY);
+        job.getJobDataMap().put(Constants.INVITATION_DAO, invitationDao);
+        job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
+        return job;
+    }
+    
+    @Bean
+    public Trigger invitationReminderTrigger() {
+        return createTrigger(INVITATION_REMINDER_TRIGGER_KEY, Constants.INVITATION_EXPIRATION_REMINDER_CHECK_SECS);
+    }
+    
     // ForgotPassword requests related job config
     
-    @Bean(name = "forgotPasswordExpirationJobDetail")
+    @Bean
     public JobDetail forgotPasswordExpirationJobDetail() {
         JobDetail job = createJobDetail(ForgotPasswordExpirationJob.class, FORGOT_PASSWORD_JOB_KEY);
         job.getJobDataMap().put(Constants.FORGOT_PASSWORD_DAO, forgotPasswordDao);
         return job;
     }
     
-    @Bean(name = "forgotPasswordExpirationTrigger")
+    @Bean
     public Trigger forgotPasswordExpirationTrigger() {
         return createTrigger(FORGOT_PASSWORD_TRIGGER_KEY, Constants.FORGOT_PASSWORD_EXPIRATION_INTERVAL_CHECK_SECS);
     }

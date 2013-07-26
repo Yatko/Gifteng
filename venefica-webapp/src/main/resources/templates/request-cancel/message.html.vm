@@ -1,0 +1,10 @@
+Hi ${user.getFullName()},
+
+Very sorry, but your request was canceled.
+
+Click <a href="${baseUrl}view/${ad.id}">here</a> to view the gift you requested.
+
+Happy receiving!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

@@ -1,0 +1,11 @@
+Hi ${user.getFullName()},
+
+We received a request to reset your password.
+If you didn’t make this request, simply ignore this email. 
+
+To reset password access the following address:
+${baseUrl}authentication/reset/${code}
+
+Please do this within 24 hours, otherwise the link above will expire! 
+
+Happy gifting! 
