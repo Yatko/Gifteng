@@ -1,0 +1,10 @@
+Hi ${follower.getFullName()},
+
+${ad.creator.getFullName()} posted a new Gift!
+
+Click <a href="${baseUrl}view/${ad.id}">here</a> to view the gift!
+
+Happy gifting!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

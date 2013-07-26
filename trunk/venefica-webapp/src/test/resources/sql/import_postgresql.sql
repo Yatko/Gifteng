@@ -13,10 +13,10 @@ insert into userdata ("id", "phoneNumber") values (nextval('userdata_seq'), '000
 
 -- Member user data
 delete from memberuserdata;
-insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (1, 'f', 'f', 'f');
-insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (2, 'f', 'f', 'f');
-insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (3, 'f', 'f', 'f');
-insert into memberuserdata ("id", "callsAllowed", "emailsAllowed", "smsAllowed") values (4, 'f', 'f', 'f');
+insert into memberuserdata ("id", "firstName", "lastName") values (1, 'First', 'User');
+insert into memberuserdata ("id", "firstName", "lastName") values (2, 'Second', 'User');
+insert into memberuserdata ("id", "firstName", "lastName") values (3, 'Third', 'User');
+insert into memberuserdata ("id", "firstName", "lastName") values (4, 'Null', 'User');
 
 -- Users
 delete from local_user;

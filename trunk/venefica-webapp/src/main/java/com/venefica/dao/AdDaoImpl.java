@@ -102,7 +102,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         }
 
         if (searchString != null) {
-            queryStr += " and lower(a.adData.title) like '%' || :searchstr || '%'";
+            queryStr += " and "
+                    + "("
+                    + "lower(a.adData.title) like '%' || :searchstr || '%' or "
+                    + "lower(a.adData.subtitle) like '%' || :searchstr || '%' or "
+                    + "lower(a.adData.description) like '%' || :searchstr || '%' "
+                    + ")";
         }
 
         if (categories != null && !categories.isEmpty()) {

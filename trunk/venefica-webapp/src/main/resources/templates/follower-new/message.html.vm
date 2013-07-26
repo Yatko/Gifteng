@@ -1,0 +1,8 @@
+Hi ${user.getFullName()},
+
+Click <a href="${baseUrl}profile?follower">here</a> to find out who is your new follower!
+
+Happy gifting!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

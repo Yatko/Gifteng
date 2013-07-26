@@ -16,17 +16,17 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("classpath:cxf-services.xml")
 public class CxfConfig {
 
-    @Bean(name = "securityContextCleaner")
+    @Bean
     public SecurityContextCleaner securityContextCleaner() {
         return new SecurityContextCleaner();
     }
 
-    @Bean(name = "tokenAuthorizationInterceptor")
-    public TokenAuthorizationInterceptor tokenAuthenticationInterceptor() {
+    @Bean
+    public TokenAuthorizationInterceptor tokenAuthorizationInterceptor() {
         return new TokenAuthorizationInterceptor();
     }
     
-    @Bean(name = "messageSignatureInterceptor")
+    @Bean
     public MessageSignatureInterceptor messageSignatureInterceptor() {
         return new MessageSignatureInterceptor();
     }

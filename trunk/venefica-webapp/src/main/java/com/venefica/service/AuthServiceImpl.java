@@ -3,13 +3,15 @@ package com.venefica.service;
 import com.venefica.auth.Token;
 import com.venefica.auth.TokenEncryptionException;
 import com.venefica.auth.TokenEncryptor;
-import com.venefica.common.EmailSender;
 import com.venefica.common.MailException;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.venefica.dao.ForgotPasswordDao;
+import com.venefica.dao.UserDataDao;
 import com.venefica.model.ForgotPassword;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
+import com.venefica.model.UserSetting;
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.GeneralException;
@@ -27,16 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AuthService")
 public class AuthServiceImpl extends AbstractService implements AuthService {
 
-    private static final String FORGOT_PASSWORD_SUBJECT_TEMPLATE = "forgot-password-subject.vm";
-    private static final String FORGOT_PASSWORD_HTML_MESSAGE_TEMPLATE = "forgot-password-message.html.vm";
-    private static final String FORGOT_PASSWORD_PLAIN_MESSAGE_TEMPLATE = "forgot-password-message.txt.vm";
+    private static final String FORGOT_PASSWORD_TEMPLATE = "forgot-password/";
+    private static final String FORGOT_PASSWORD_SUBJECT_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "subject.vm";
+    private static final String FORGOT_PASSWORD_HTML_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.html.vm";
+    private static final String FORGOT_PASSWORD_PLAIN_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.txt.vm";
     
     @Inject
     private TokenEncryptor tokenEncryptor;
     @Inject
-    private EmailSender emailSender;
-    @Inject
     private ForgotPasswordDao forgotPasswordDao;
+    @Inject
+    private UserDataDao userDataDao;
 
     @Override
     public String authenticate(String name, String password) throws AuthenticationException {
@@ -131,6 +134,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
         try {
             Map<String, Object> vars = new HashMap<String, Object>(0);
             vars.put("code", forgotPassword.getCode());
+            vars.put("user", user);
 
             emailSender.sendHtmlEmailByTemplates(
                     FORGOT_PASSWORD_SUBJECT_TEMPLATE,
@@ -159,6 +163,19 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             if (user.getPassword().equals(password)) {
                 Token token = new Token(user.getId());
                 String encryptedToken = tokenEncryptor.encrypt(token);
+                
+                //automatically creating user setting if not present
+                if ( !user.isBusinessAccount() ) {
+                    MemberUserData userData = (MemberUserData) user.getUserData();
+                    UserSetting userSetting = userData.getUserSetting();
+                    if ( userSetting == null ) {
+                        userSetting = new UserSetting();
+                        userSettingDao.save(userSetting);
+                        
+                        userData.setUserSetting(userSetting);
+                        userDataDao.update(userData);
+                    }
+                }
                 
                 user.setLastLoginAt(new Date());
                 userDao.update(user);

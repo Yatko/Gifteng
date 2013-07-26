@@ -6,6 +6,8 @@ package com.venefica.config.email;
 
 import com.venefica.common.EmailSender;
 import com.venefica.common.MailChimpSender;
+import java.util.HashSet;
+import java.util.Set;
 import javax.inject.Inject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +30,6 @@ public class EmailConfig {
         int smtpPort = environment.getProperty("email.smtpPort", int.class);
         int smtpPortSSL = environment.getProperty("email.smtpPortSSL", int.class);
         String charset = environment.getProperty("email.charset");
-        String imagesBaseUrl = environment.getProperty("email.imagesBaseUrl");
         String hostName = environment.getProperty("email.hostName");
         String username = environment.getProperty("email.username");
         String password = environment.getProperty("email.password");
@@ -37,6 +38,24 @@ public class EmailConfig {
         String fromName = environment.getProperty("email.fromName");
         String undeliveredEmailAddress = environment.getProperty("email.undeliveredEmailAddress");
         boolean enabled = environment.getProperty("email.enabled", boolean.class);
+        
+        String[] imagesBaseUrls;
+        if ( environment.containsProperty("email.imagesBaseUrl") ) {
+            imagesBaseUrls = new String[] {environment.getProperty("email.imagesBaseUrl")};
+        } else {
+            Set<String> urls = new HashSet<String>(0);
+            for ( int i = 0; i < 10; i++ ) {
+                String key = "email.imagesBaseUrl." + i;
+                if ( !environment.containsProperty(key) ) {
+                    continue;
+                }
+                String value = environment.getProperty(key);
+                if ( value != null && !value.trim().isEmpty() ) {
+                    urls.add(value);
+                }
+            }
+            imagesBaseUrls = urls.toArray(new String[0]);
+        }
         
         EmailSender emailService = new EmailSender();
         emailService.setSmtpPort(smtpPort);
@@ -49,7 +68,7 @@ public class EmailConfig {
         emailService.setFromEmailAddress(fromEmailAddress);
         emailService.setFromName(fromName);
         emailService.setUndeliveredEmailAddress(undeliveredEmailAddress);
-        emailService.setImagesBaseUrl(imagesBaseUrl);
+        emailService.setImagesBaseUrls(imagesBaseUrls);
         emailService.setEnabled(enabled);
         return emailService;
     }

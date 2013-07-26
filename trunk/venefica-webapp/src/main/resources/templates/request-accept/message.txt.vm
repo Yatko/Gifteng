@@ -1,0 +1,11 @@
+Hi ${user.getFullName()},
+
+Congratulations, your request was accepted!
+
+To arrange an exchange access the following address:
+${baseUrl}request/${request.id}
+
+Happy receiving!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

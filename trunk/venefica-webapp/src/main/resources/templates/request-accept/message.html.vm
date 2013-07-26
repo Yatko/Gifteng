@@ -1,0 +1,10 @@
+Hi ${user.getFullName()},
+
+Congratulations, your request was accepted!
+
+Click <a href="${baseUrl}request/${request.id}">here</a> to arrange an exchange.
+
+Happy receiving!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

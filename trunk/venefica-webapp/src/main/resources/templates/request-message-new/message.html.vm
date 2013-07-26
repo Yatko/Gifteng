@@ -1,0 +1,10 @@
+Hi ${to.getFullName()},
+
+You received a new message from ${from.getFullName()}.
+
+Click <a href="${baseUrl}request/${request.id}">here</a> to view the message!
+
+Happy gifting!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

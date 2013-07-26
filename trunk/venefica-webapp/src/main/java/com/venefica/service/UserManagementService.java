@@ -2,6 +2,7 @@ package com.venefica.service;
 
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.dto.UserSettingDto;
 import com.venefica.service.dto.UserStatisticsDto;
 import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
@@ -53,8 +54,8 @@ public interface UserManagementService {
     @WebMethod(operationName = "RegisterBusinessUser")
     @WebResult(name = "userId")
     public Long registerBusinessUser(
-            @WebParam(name = "user") UserDto userDto,
-            @WebParam(name = "password") String password) throws UserAlreadyExistsException, GeneralException;
+            @WebParam(name = "user") @NotNull UserDto userDto,
+            @WebParam(name = "password") @NotNull String password) throws UserAlreadyExistsException, GeneralException;
     
     /**
      * Registers new local user not connected to any social network.
@@ -71,9 +72,9 @@ public interface UserManagementService {
     @WebMethod(operationName = "RegisterUser")
     @WebResult(name = "userId")
     public Long registerUser(
-            @WebParam(name = "user") UserDto userDto,
-            @WebParam(name = "password") String password,
-            @WebParam(name = "invitationCode") String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException;
+            @WebParam(name = "user") @NotNull UserDto userDto,
+            @WebParam(name = "password") @NotNull String password,
+            @WebParam(name = "invitationCode")  @NotNull String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException;
     
     /**
      * Updates user information.
@@ -83,8 +84,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "UpdateUser")
     @WebResult(name = "complete")
-    public boolean updateUser(@WebParam(name = "user") UserDto userDto)
-            throws UserAlreadyExistsException;
+    public boolean updateUser(@WebParam(name = "user") @NotNull UserDto userDto) throws UserAlreadyExistsException;
     
     /**
      * Returns true if all required information is gathered for the current
@@ -139,7 +139,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetUserByName")
     @WebResult(name = "user")
-    public UserDto getUserByName(@WebParam(name = "name") String name) throws UserNotFoundException;
+    public UserDto getUserByName(@WebParam(name = "name") @NotNull String name) throws UserNotFoundException;
     
     /**
      * Retrieves information about the user by his email address.
@@ -151,7 +151,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetUserByEmail")
     @WebResult(name = "user")
-    public UserDto getUserByEmail(@WebParam(name = "email") String email) throws UserNotFoundException;
+    public UserDto getUserByEmail(@WebParam(name = "email") @NotNull String email) throws UserNotFoundException;
     
     /**
      * Retrieves information about the user by his phone number.
@@ -163,7 +163,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetUserByPhone")
     @WebResult(name = "user")
-    public UserDto getUserByPhone(@WebParam(name = "phone") String phone) throws UserNotFoundException;
+    public UserDto getUserByPhone(@WebParam(name = "phone") @NotNull String phone) throws UserNotFoundException;
     
     /**
      * 
@@ -173,7 +173,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetUserById")
     @WebResult(name = "user")
-    public UserDto getUserById(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    public UserDto getUserById(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
 
     
     
@@ -188,7 +188,7 @@ public interface UserManagementService {
      * @throws UserNotFoundException the given user could not be found
      */
     @WebMethod(operationName = "Follow")
-    public void follow(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    public void follow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
     
     /**
      * Removes the given user from the followers list of the actual one.
@@ -197,7 +197,7 @@ public interface UserManagementService {
      * @throws UserNotFoundException the given user could not be found
      */
     @WebMethod(operationName = "Unfollow")
-    public void unfollow(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    public void unfollow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
     
     /**
      * Returns the list of users that are following the given one.
@@ -208,7 +208,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetFollowers")
     @WebResult(name = "follower")
-    public List<UserDto> getFollowers(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    public List<UserDto> getFollowers(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
     
     /**
      * Returns a list of users that the given one is following.
@@ -219,7 +219,33 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetFollowings")
     @WebResult(name = "following")
-    public List<UserDto> getFollowings(@WebParam(name = "userId") Long userId) throws UserNotFoundException;
+    public List<UserDto> getFollowings(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    
+    
+    
+    //*****************
+    //* user settings *
+    //*****************
+    
+    /**
+     * Returns the current user settings.
+     * 
+     * @return
+     * @throws GeneralException if the user is not member type
+     */
+    @WebMethod(operationName = "GetUserSetting")
+    @WebResult(name = "setting")
+    public UserSettingDto getUserSetting() throws GeneralException;
+    
+    /**
+     * Saves/updates the given settings for the given and current user.
+     * 
+     * @param userSettingDto
+     * @throws GeneralException if the current user is business type, or the current
+     * user is not the same as the updating one
+     */
+    @WebMethod(operationName = "SaveUserSetting")
+    public void saveUserSetting(@WebParam(name = "setting") @NotNull UserSettingDto userSettingDto) throws GeneralException;
     
     
     

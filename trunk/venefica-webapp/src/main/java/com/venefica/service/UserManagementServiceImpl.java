@@ -9,10 +9,14 @@ import com.venefica.dao.UserPointDao;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
+import com.venefica.model.MemberUserData;
+import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
+import com.venefica.model.UserSetting;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
+import com.venefica.service.dto.UserSettingDto;
 import com.venefica.service.dto.UserStatisticsDto;
 import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidInvitationException;
@@ -21,9 +25,11 @@ import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
@@ -120,11 +126,16 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
         
+        UserSetting userSetting = new UserSetting();
+        userSettingDao.save(userSetting);
+        
         invitation.use();
         invitationDao.update(invitation);
         
-        user.getUserData().setInvitation(invitation);
-        userDataDao.save(user.getUserData());
+        MemberUserData userData = ((MemberUserData) user.getUserData());
+        userData.setInvitation(invitation);
+        userData.setUserSetting(userSetting);
+        userDataDao.save(userData);
         
         UserPoint userPoint = new UserPoint(0, 0);
         userPoint.setUser(user);
@@ -287,6 +298,12 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
         
         user.addFollowing(following);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", following);
+        vars.put("follower", user);
+
+        emailSender.sendNotification(NotificationType.FOLLOWER_ADDED, following, vars);
     }
     
     @Override
@@ -338,6 +355,62 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
         
         return result;
+    }
+    
+    
+    
+    //*****************
+    //* user settings *
+    //*****************
+    
+    @Override
+    public UserSettingDto getUserSetting() throws GeneralException {
+        User currentUser = getCurrentUser();
+        
+        if ( currentUser.isBusinessAccount() ) {
+            throw new GeneralException("User is a business type, there is no setting for it.");
+        }
+        
+        MemberUserData userData = (MemberUserData) currentUser.getUserData();
+        UserSetting userSetting = userData.getUserSetting();
+        
+        //automatically creating user setting if not present
+        if ( userSetting == null ) {
+            userSetting = new UserSetting();
+            userSettingDao.save(userSetting);
+            
+            userData.setUserSetting(userSetting);
+            userDataDao.update(userData);
+        }
+        
+        return new UserSettingDto(currentUser, userSetting);
+    }
+    
+    @Override
+    public void saveUserSetting(UserSettingDto userSettingDto) throws GeneralException {
+        User currentUser = getCurrentUser();
+        
+        if ( currentUser.isBusinessAccount() ) {
+            throw new GeneralException("User is a business type, there is no setting for it.");
+        }
+        if ( !currentUser.getId().equals(userSettingDto.getUserId()) ) {
+            throw new GeneralException("Cannot update different user setting.");
+        }
+        
+        MemberUserData userData = (MemberUserData) currentUser.getUserData();
+        UserSetting userSetting = userData.getUserSetting();
+        
+        //automatically creating user setting if not present
+        if ( userSetting == null ) {
+            userSetting = new UserSetting();
+            userSettingDao.save(userSetting);
+            
+            userData.setUserSetting(userSetting);
+            userDataDao.update(userData);
+        }
+        
+        userSetting.setNotifiableTypes(userSettingDto.getNotifiableTypes());
+        userSettingDao.update(userSetting);
     }
     
     

@@ -8,7 +8,7 @@ Your Invitation Code: ${invitationCode}
 
 
 Access the link below, to log in to your account:
-http://veneficalabs.com/venefica/invitation/verify
+${baseUrl}invitation/verify
 
 
 Hurry, gifts are waiting for you!

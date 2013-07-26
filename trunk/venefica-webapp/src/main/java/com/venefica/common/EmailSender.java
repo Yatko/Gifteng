@@ -5,17 +5,25 @@
 package com.venefica.common;
 
 import com.venefica.config.Constants;
+import com.venefica.model.MemberUserData;
+import com.venefica.model.NotificationType;
+import com.venefica.model.User;
+import com.venefica.model.UserSetting;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.mail.DataSourceResolver;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.ImageHtmlEmail;
+import org.apache.commons.mail.resolver.DataSourceCompositeResolver;
 import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -35,6 +43,7 @@ public class EmailSender {
     private static final Log logger = LogFactory.getLog(EmailSender.class);
     
     private static final String TEMPLATES_FOLDER = "templates/";
+    private static final String BASE_URL = "http://veneficalabs.com/gifteng/";
     
     private int smtpPort;
     private int smtpPortSSL;
@@ -46,10 +55,11 @@ public class EmailSender {
     private String fromEmailAddress;
     private String fromName;
     private String undeliveredEmailAddress;
-    private String imagesBaseUrl;
+    private String[] imagesBaseUrls;
     private boolean enabled;
     
     private VelocityEngine velocityEngine;
+    private DataSourceResolver dataSourceResolver;
     
     public void init() {
         try {
@@ -73,6 +83,20 @@ public class EmailSender {
         } catch ( Exception ex ) {
             logger.error(ex.getClass().getSimpleName() + " thrown when trying to initialize the velocity engine", ex);
         }
+        
+        List<DataSourceResolver> resolvers = new ArrayList<DataSourceResolver>(0);
+        if ( imagesBaseUrls != null && imagesBaseUrls.length > 0 ) {
+            for ( String imagesBaseUrl : imagesBaseUrls ) {
+                try {
+                    DataSourceResolver resolver = new DataSourceUrlResolver(new URL(imagesBaseUrl));
+                    resolvers.add(resolver);
+                } catch ( MalformedURLException ex ) {
+                    logger.error("The given image base URL (" + imagesBaseUrl + ") is invalid.", ex);
+                }
+            }
+        }
+        
+        dataSourceResolver = new DataSourceCompositeResolver(resolvers.toArray(new DataSourceResolver[0]), true);
     }
     
     /**
@@ -81,6 +105,37 @@ public class EmailSender {
      */
     public boolean isEnabled() {
         return enabled;
+    }
+    
+    /**
+     * Send notification email to the given user if is configured for the
+     * specified notification type.
+     * 
+     * @param notificationType
+     * @param user
+     * @param vars 
+     */
+    public void sendNotification(NotificationType notificationType, User user, Map<String, Object> vars) {
+        if ( user.isBusinessAccount() ) {
+            logger.info("User (id: " + user.getId() + ") is a business account, no notification mail will be sent.");
+            return;
+        }
+        
+        try {
+            MemberUserData userData = (MemberUserData) user.getUserData();
+            UserSetting userSetting = userData.getUserSetting();
+            if ( userSetting != null && userSetting.notificationExists(notificationType) ) {
+                sendHtmlEmailByTemplates(
+                        notificationType.getSubjectVelocityTemplate(),
+                        notificationType.getHtmlMessageVelocityTemplate(),
+                        notificationType.getPlainMessageVelocityTemplate(),
+                        user.getEmail(),
+                        vars
+                        );
+            }
+        } catch ( MailException ex ) {
+            logger.error("Could not send notification email (email: " + user.getEmail() + ", type: " + notificationType + ")", ex);
+        }
     }
     
     /**
@@ -111,7 +166,7 @@ public class EmailSender {
      * not support html)
      * @param toEmailAddress recipient email address
      * @throws MailException can be thrown in multiple cases: wrong email address,
-     * invalid message
+     * invalid message, error when sending
      */
     public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws MailException {
         if ( !enabled ) {
@@ -120,11 +175,7 @@ public class EmailSender {
         }
         
         ImageHtmlEmail email = new ImageHtmlEmail();
-        try {
-            email.setDataSourceResolver(new DataSourceUrlResolver(new URL(imagesBaseUrl)));
-        } catch ( MalformedURLException ex ) {
-            logger.error("The given image base URL (" + imagesBaseUrl + ") is invalid. Email sending is not skipped.", ex);
-        }
+        email.setDataSourceResolver(dataSourceResolver);
         email.setHostName(hostName);
         email.setSmtpPort(smtpPort);
         email.setSslSmtpPort(Integer.toString(smtpPortSSL));
@@ -170,6 +221,8 @@ public class EmailSender {
         try {
             Template template = velocityEngine.getTemplate(templateName);
             VelocityContext context = new VelocityContext();
+            context.put("baseUrl", BASE_URL); //global key available for all templates
+            
             if ( vars != null && !vars.isEmpty() ) {
                 for ( Map.Entry<String, Object> entry : vars.entrySet() ) {
                     String key = entry.getKey();
@@ -236,8 +289,8 @@ public class EmailSender {
         this.undeliveredEmailAddress = undeliveredEmailAddress;
     }
 
-    public void setImagesBaseUrl(String imagesBaseUrl) {
-        this.imagesBaseUrl = imagesBaseUrl;
+    public void setImagesBaseUrls(String[] imagesBaseUrls) {
+        this.imagesBaseUrls = imagesBaseUrls;
     }
 
     public void setEnabled(boolean enabled) {
