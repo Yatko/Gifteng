@@ -26,9 +26,27 @@ class Request extends CI_Controller {
         
         $currentUser = $this->usermanagement_service->loadUser();
         
+        if (
+            $currentUser->id != $request->user->id &&
+            $currentUser->id != $ad->creator->id
+        ) {
+            // if the logged used it has nothing to do with the request (is not the ad creator neather the requestor)
+            if ( !validate_request(null) ) return;
+        }
+        
         $is_modal = key_exists('modal', $_GET) ? true : false;
-        $is_giving = key_exists('giving', $_GET) ? true : false;
         $userId = key_exists('userId', $_GET) ? $_GET['userId'] : null;
+        
+        if ( key_exists('giving', $_GET) ) {
+            $is_giving = true;
+        } else if ( $currentUser->id == $request->user->id ) {
+            $is_giving = false;
+        } else if ( $currentUser->id == $ad->creator->id ) {
+            $is_giving = true;
+        } else {
+            //impossible situation
+            $is_giving = false;
+        }
         
         if ( $is_giving ) {
             $user1Id = $request->user->id;

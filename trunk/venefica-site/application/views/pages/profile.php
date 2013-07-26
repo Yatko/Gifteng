@@ -55,11 +55,11 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                     <a href="#tab_connections"><i class="fui-heart"></i> Connections</a>
                                 </li>
                                 
-                                <? if( $is_owner ): ?>
-                                    <li class="hidden-tablet <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
-                                        <a href="#tab_account"><i class="fui-user"></i> Account</a>
-                                    </li>
-                                <? endif; ?>
+<? if( $is_owner ): ?>
+                                <li class="hidden-tablet <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
+                                    <a href="#tab_account"><i class="fui-user"></i> Account</a>
+                                </li>
+<? endif; ?>
                                 
                                 <li class="hidden-tablet <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
                                     <a href="#tab_bio"><i class="fui-bubble"></i> Bio</a>
@@ -75,7 +75,7 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                             </a>
                                         </div>
                                         
-                                        <? if( $is_owner ): ?>
+<? if( $is_owner ): ?>
                                             <div class="span4">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge">
                                                     Receiving<br />
@@ -88,7 +88,8 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                                     <?= $bookmarks_num ?>
                                                 </a>
                                             </div>
-                                        <? endif; ?>
+<? endif; ?>
+                                        
                                     </div>
                                 </div><!-- /tab-->
                                 <div id="tab_connections" class="tab-pane <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
@@ -115,6 +116,8 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                         <? /* */ ?>
                                     </div>
                                 </div><!-- /tab-->
+                                
+<? if( $is_owner ): ?>
                                 <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
@@ -129,14 +132,18 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                                 <br />Messages
                                             </a>
                                         </div>
+                                        <? /** ?>
                                         <div class="span4">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_SETTING ?>" class="btn btn-small btn-block btn-ge">
                                                 <i class="fui-gear"></i>
                                                 <br />Settings
                                             </a>
                                         </div>
+                                        <? /**/ ?>
                                     </div>
                                 </div><!-- /tab-->
+<? endif; ?>
+                                
                                 <div id="tab_bio" class="tab-pane <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <button class="btn btn-small btn-block btn-ge"><?= $user_about ?></button>

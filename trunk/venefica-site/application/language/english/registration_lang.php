@@ -1,7 +1,7 @@
 <?php
 
 $lang['registration_firstname_hint'] = "First name";
-$lang['registration_lastname_hint'] = "First name";
+$lang['registration_lastname_hint'] = "Last name";
 $lang['registration_email_hint'] = "Email";
 $lang['registration_password_hint'] = "Password";
 $lang['registration_join_button'] = "Join";
