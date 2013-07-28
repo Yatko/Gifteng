@@ -78,6 +78,12 @@ if ( $is_new ) {
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'You should give as you would receive, cheerfully, quickly, and without hesitation';
+            
+            if ( $is_new ) {
+                $image_text = 'Add photo';
+            } else {
+                $image_text = 'Change photo';
+            }
             ?>
             
             <div class="span6">
@@ -93,7 +99,7 @@ if ( $is_new ) {
                             <div class="control-group">
                                 <div class="controls">
                                     <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
-                                        Upload a great photo
+                                        <?=$image_text?>
                                         <i class="fui-photo pull-right"></i>
                                     </button>
                                     <input name="image" id="image" type="file" />
@@ -179,7 +185,7 @@ if ( $is_new ) {
                     <div class="row-fluid">
                         <div class="span12">
                             <select id="category" name="category" placeholder="Gift category" class="select-block mbl select-info" data-size="5">
-                                <option>Select category</option>
+                                <option value="">Select category</option>
                                 <? foreach ($categories as $cat): ?>
                                     <?
                                     $category_id = $cat->id;
@@ -383,7 +389,7 @@ if ( $is_new ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
+                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
                                         <? endif; ?>
                                     </div>
                                 </div>
@@ -408,7 +414,7 @@ if ( $is_new ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>DONE</button>
+                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
                                             
                                             <? if( $is_new ): ?>
                                                 <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>

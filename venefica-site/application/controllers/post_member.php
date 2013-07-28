@@ -170,8 +170,8 @@ class Post_member extends CI_Controller {
                 //$marker_longitude = $location['longitude'];
                 //$marker_latitude = $location['latitude'];
                 $addressLocation = getAddressByZipCode($zipCode);
-                $marker_longitude = $addressLocation->longitude;
-                $marker_latitude = $addressLocation->latitude;
+                $marker_longitude = $addressLocation != null ? $addressLocation->longitude : 0;
+                $marker_latitude = $addressLocation != null ? $addressLocation->latitude : 0;
             } else {
                 $marker_longitude = $longitude;
                 $marker_latitude = $latitude;
@@ -320,10 +320,10 @@ class Post_member extends CI_Controller {
         }
         
         $this->post_form->set_rules('title', 'lang:post_title', 'trim|required');
-        $this->post_form->set_rules('price', 'lang:post_price', 'trim|decimal');
+        $this->post_form->set_rules('price', 'lang:post_price', 'trim|numeric');
         $this->post_form->set_rules('category', 'lang:post_category', 'required');
         $this->post_form->set_rules('description');
-        $this->post_form->set_rules('zipCode');
+        $this->post_form->set_rules('zipCode', 'lang:post_zipCode', 'required');
         $this->post_form->set_rules('pickUp');
         $this->post_form->set_rules('freeShipping');
         
@@ -415,7 +415,7 @@ class Post_member extends CI_Controller {
         if ( !isset($_FILES[$field]) || $_FILES[$field]['error'] == 4 ) {
             //no file selected for upload
             
-            if ( empty($this->ad->$field) ) {
+            if ( empty($this->ad->$field) || empty($this->ad->$field->url) ) {
                 //ad image should not be empty
                 $this->post_form->set_message('file_upload', 'Image is required');
                 return FALSE;

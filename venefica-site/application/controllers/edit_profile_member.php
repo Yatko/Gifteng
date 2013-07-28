@@ -88,11 +88,11 @@ class Edit_profile_member extends CI_Controller {
             $address->zipCode = $zipCode;
             //$address->longitude = $location['longitude'];
             //$address->latitude = $location['latitude'];
-            $address->longitude = $addressLocation->longitude;
-            $address->latitude = $addressLocation->latitude;
-            $address->city = $addressLocation->city;
-            $address->state = $addressLocation->state;
-            $address->stateAbbreviation = $addressLocation->stateAbbreviation;
+            $address->longitude = $addressLocation != null ? $addressLocation->longitude : 0;
+            $address->latitude = $addressLocation != null ? $addressLocation->latitude : 0;
+            $address->city = $addressLocation != null ? $addressLocation->city : '';
+            $address->state = $addressLocation != null ? $addressLocation->state : '';
+            $address->stateAbbreviation = $addressLocation != null ? $addressLocation->stateAbbreviation : '';
             
             $currentUser->firstName = $this->input->post('firstName');
             $currentUser->lastName = $this->input->post('lastName');

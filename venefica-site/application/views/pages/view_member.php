@@ -38,7 +38,21 @@ $ad_is_business = $ad->isBusiness();
 $ad_is_online = $ad->isOnline();
 $ad_is_sold = $ad->sold;
 
-$ad_can_edit = $is_owner && !$ad->hasActiveRequest();
+if ( $comments == null || !is_array($comments) ) {
+    $comments = array();
+}
+
+if ( $ad->statistics != null ) {
+    $num_bookmarks = $ad->statistics->numBookmarks;
+    $num_comments = $ad->statistics->numComments;
+    $num_shares = $ad->statistics->numShares;
+} else {
+    $num_bookmarks = 0;
+    $num_comments = 0;
+    $num_shares = 0;
+}
+
+$ad_can_edit = $is_owner && !$ad->hasActiveRequest() && $num_bookmarks == 0 && $num_comments == 0 && $num_shares == 0;
 $ad_can_request = $ad->canRequest;
 
 $user_request = $ad->getRequestByUser($currentUser->id);
