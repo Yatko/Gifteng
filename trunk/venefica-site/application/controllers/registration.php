@@ -51,13 +51,28 @@ class Registration extends CI_Controller {
         
         $is_valid = $this->registration_form->run();
         if ( $is_valid ) {
-            redirect('/browse');
+            //form data valid after post
+            if ( $this->auto_login ) {
+                //logging in into system automatically
+                $email = $this->input->post('registration_email');
+                $password = $this->input->post('registration_password');
+
+                if ( login($email, $password) ) {
+                    redirect('/browse');
+                } else {
+                    log_message(ERROR, 'Newly created business cannot auto login into system');
+                }
+            } else {
+                redirect('/browse');
+            }
         } elseif ( $_POST ) {
+            //form data not valid after post
             $code = $this->input->post('invitation_code');
             $this->session->set_flashdata('invitation_code', $code);
             
             $extra_data['invitation_code'] = $code;
         } else {
+            //direct access of the page
             $code = $this->session->flashdata('invitation_code');
             if ( $code ) {
                 $extra_data['invitation_code'] = $code;
@@ -122,6 +137,7 @@ class Registration extends CI_Controller {
         $extra_data['categories'] = $categories;
     }
     
+    //callback
     public function register_user($password) {
         if ( $this->registration_form->hasErrors() ) {
             //$this->registration_form->set_message('register_user', 'Cannot register user!');
@@ -147,6 +163,7 @@ class Registration extends CI_Controller {
         return TRUE;
     }
     
+    //callback
     public function register_business($password) {
         if ( $this->registration_form->hasErrors() ) {
             $this->registration_form->set_message('register_business', '');

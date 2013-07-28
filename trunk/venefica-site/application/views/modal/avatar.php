@@ -9,6 +9,9 @@
                 return;
             }
             
+            $this.html("Please wait...");
+            $this.attr('disabled', 'disabled')
+            
             $.ajax({
                 type: 'POST',
                 url: '<?= base_url() ?>profile/ajax/change_avatar',
@@ -29,6 +32,9 @@
                 }
 
                 $this.html($this.attr('original_text'));
+                $this.removeClass('btn-ge');
+                $this.removeAttr('disabled');
+                
                 $("#avatarContainer").modal('hide');
             }).fail(function(data) {
                 //TODO
