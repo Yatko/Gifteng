@@ -12,7 +12,7 @@
 <script language="javascript">
     function request_view(requestId) {
         if ( $('#requestContainer').length > 0 ) {
-            $('#requestContainer').modal({
+            $('#requestContainer').removeData('modal').modal({
                 remote: '<?=base_url()?>request/' + requestId + '?modal&receiving&userId=<?=$user->id?>',
                 show: true
             });
