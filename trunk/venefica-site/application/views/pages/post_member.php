@@ -444,3 +444,10 @@ if ( $is_new ) {
 </div>
 
 <? endif; ?>
+
+
+<? if( $is_modal ): ?>
+<script language="javascript">
+    initPostModal();
+</script>
+<? endif; ?>

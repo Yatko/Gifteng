@@ -30,7 +30,7 @@
     
     $(function() {
         $('#postContainer').on('shown', function() {
-            initPostModal();
+            //initPostModal();
         });
         
         $('#postContainer').on('hide', function() {
