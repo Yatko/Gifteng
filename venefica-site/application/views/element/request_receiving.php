@@ -59,17 +59,19 @@ $request_id = $request->id;
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-triangle-down"></span>
-                                    Given to
+                                    RECEIVED
                                     <span class="fui-triangle-down"></span>
                                 </p>
                             </div>
                         </div>
-
+                        
+                        <? /** ?>
                         <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                             <div class="span4">
                                 <img src="<?=$requestor_img?>" class="img img-rounded">
                             </div>
                         </div>
+                        <? /**/ ?>
 
 <? elseif( $request->isPending() ): ?>
 

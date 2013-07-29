@@ -48,7 +48,7 @@
                                 </div><!--./ge-user-->
 
                                 <div class="ge-item">
-                                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => false, 'canComment' => false, 'canShare' => true)); ?>
+                                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => false, 'canComment' => false, 'canShare' => false)); ?>
                                     
                                     <div class="row-fluid ge-text ge-description ge-action">
                                         <div class="span4">

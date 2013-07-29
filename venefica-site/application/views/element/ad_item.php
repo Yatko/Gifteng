@@ -35,49 +35,54 @@ if ( $ad->statistics != null ) {
     <div class="row-fluid">
         <div class="ge-icon-ribbon"></div>
     </div>
-    <div class="row-fluid">
-        <div class="span12 ge-action">
-            <div class="row-fluid">
-                <div class="span4">
-                    <? if( !$canBookmark || $is_bookmarked || $is_owner ): ?>
-                        <button class="btn btn-small btn-block btn-ge disabled">
-                            <i class="fui-star-2"></i>
-                            <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
-                        </button>
-                    <? else: ?>
-                        <button onclick="bookmark(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
-                            <i class="fui-star-2"></i>
-                            <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
-                        </button>
-                    <? endif; ?>
-                </div>
-                <div class="span4">
-                    <? if( !$canComment ): ?>
-                        <button class="btn btn-small btn-block btn-ge disabled">
-                            <i class="fui-bubble"></i>
-                            <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
-                        </button>
-                    <? else: ?>
-                        <button onclick="startCommentModal(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
-                            <i class="fui-bubble"></i>
-                            <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
-                        </button>
-                    <? endif; ?>
-                </div>
-                <div class="span4">
-                    <? if( !$canShare ): ?>
-                        <button class="btn btn-small btn-block btn-ge disabled">
-                            <i class="ge-icon-share"></i>
-                            <?= $num_shares ?>
-                        </button>
-                    <? else: ?>
-                        <button class="btn btn-small btn-block btn-ge">
-                            <i class="ge-icon-share"></i>
-                            <?= $num_shares ?>
-                        </button>
-                    <? endif; ?>
+    
+    <? if( !$canBookmark && !$canComment && !$canShare ): ?>
+        
+    <? else: ?>
+        <div class="row-fluid">
+            <div class="span12 ge-action">
+                <div class="row-fluid">
+                    <div class="span4">
+                        <? if( !$canBookmark || $is_bookmarked || $is_owner ): ?>
+                            <button class="btn btn-small btn-block btn-ge disabled">
+                                <i class="fui-star-2"></i>
+                                <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
+                            </button>
+                        <? else: ?>
+                            <button onclick="bookmark(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
+                                <i class="fui-star-2"></i>
+                                <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
+                            </button>
+                        <? endif; ?>
+                    </div>
+                    <div class="span4">
+                        <? if( !$canComment ): ?>
+                            <button class="btn btn-small btn-block btn-ge disabled">
+                                <i class="fui-bubble"></i>
+                                <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
+                            </button>
+                        <? else: ?>
+                            <button onclick="startCommentModal(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
+                                <i class="fui-bubble"></i>
+                                <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
+                            </button>
+                        <? endif; ?>
+                    </div>
+                    <div class="span4">
+                        <? if( !$canShare ): ?>
+                            <button class="btn btn-small btn-block btn-ge disabled">
+                                <i class="ge-icon-share"></i>
+                                <?= $num_shares ?>
+                            </button>
+                        <? else: ?>
+                            <button class="btn btn-small btn-block btn-ge">
+                                <i class="ge-icon-share"></i>
+                                <?= $num_shares ?>
+                            </button>
+                        <? endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <? endif; ?>
 </div><!--./ge-item-image-->

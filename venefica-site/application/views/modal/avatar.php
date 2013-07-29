@@ -48,7 +48,7 @@
         <label class="control-label" for="fieldset">
             <blockquote>
                 <p>
-                    Choose your new avatar image
+                    Choose your profile picture
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </p>
             </blockquote>
@@ -59,7 +59,7 @@
     <?= form_open_multipart('/profile/ajax/change_avatar', array('id' => 'avatar_post_form')) ?>
 
         <button id="avatar" for="avatar_image" type="button" class="btn btn-huge btn-block file">
-            Upload a great photo
+            Upload photo
             <i class="fui-photo pull-right"></i>
         </button>
         <input type="file" name="avatar_image" id="avatar_image" />
