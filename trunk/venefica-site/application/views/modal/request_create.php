@@ -12,6 +12,7 @@
         $("#" + type + "_request_post_form").removeClass('hide');
         
         if ( $('#requestContainer').length > 0 ) {
+            showRequestStep2();
             $('#requestContainer').modal('show');
         }
     }
@@ -70,7 +71,8 @@
     
     $(function() {
         $('#requestContainer').on('hidden', function() {
-            showRequestStep1();
+            //showRequestStep1();
+            showRequestStep2();
         });
     });
 </script>
