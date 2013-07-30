@@ -4,7 +4,6 @@ import com.venefica.dao.AdDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.ImageDao;
-import com.venefica.dao.RequestDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Bookmark;
@@ -35,6 +34,7 @@ import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
@@ -262,6 +262,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = SOAPFaultException.class)
+    @SuppressWarnings({"null", "ConstantConditions"})
     public void addImageWithNullAdTest() throws AdNotFoundException, ImageValidationException {
         authenticateClientAsFirstUser();
         ImageDto image = new ImageDto(ImageType.JPEG, new byte[]{0x01, 0x02});
@@ -269,6 +270,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = SOAPFaultException.class)
+    @SuppressWarnings({"null", "ConstantConditions"})
     public void addImageWithNullImageTest() throws AdNotFoundException, ImageValidationException {
         authenticateClientAsFirstUser();
         client.addImageToAd(ad.getId(), null);
@@ -315,10 +317,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
         client.deleteImageFromAd(FIRST_AD_ID, newImageId);
     }
-
+    
     @Test
     public void deleteImageFromAdTest() throws AdNotFoundException, ImageValidationException,
-            AuthorizationException, ImageNotFoundException {
+            AuthorizationException, ImageNotFoundException, IOException {
         authenticateClientAsFirstUser();
         Long imageId = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[]{0x01,
                     0x02, 0x03}));
@@ -329,7 +331,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test
-    public void deleteImagesFromAdTest() throws AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException {
+    public void deleteImagesFromAdTest() throws AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException, IOException {
         authenticateClientAsFirstUser();
         
         Long imageId_1 = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[] {0x01, 0x02, 0x03}));
@@ -636,10 +638,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
         assertTrue("The user ads should not be empty", ads != null && !ads.isEmpty());
         boolean exists = false;
-        for ( AdDto ad : ads ) {
-            if ( ad.getId().equals(adId) ) {
+        for ( AdDto ad_ : ads ) {
+            if ( ad_.getId().equals(adId) ) {
                 exists = true;
-                adDto = ad;
+                adDto = ad_;
                 break;
             }
         }

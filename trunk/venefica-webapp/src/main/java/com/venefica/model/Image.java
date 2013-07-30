@@ -1,17 +1,13 @@
 package com.venefica.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import org.hibernate.annotations.Type;
+import javax.persistence.Transient;
 
 /**
  * Describes an image stored in the database.
@@ -31,10 +27,11 @@ public class Image {
     @Enumerated(EnumType.STRING)
     private ImageType imgType;
     
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "dataa")
-    @Type(type = "org.hibernate.type.PrimitiveByteArrayBlobType")
+//    @javax.persistence.Lob
+//    @javax.persistence.Basic(fetch = javax.persistence.FetchType.LAZY)
+//    @javax.persistence.Column(name = "dataa")
+//    @org.hibernate.annotations.Type(type = "org.hibernate.type.PrimitiveByteArrayBlobType")
+    @Transient
     private byte[] data;
 
     public Image() {

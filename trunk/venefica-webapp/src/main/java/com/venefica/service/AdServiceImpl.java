@@ -54,6 +54,7 @@ import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -213,58 +214,70 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         ad.getAdData().setCategory(category);
 
-        if (adDto.getImage() != null) {
-            ImageDto imageDto = adDto.getImage();
-            if (imageDto.isValid()) {
-                Image image = ad.getAdData().getMainImage();
+        try {
+            if (adDto.getImage() != null) {
+                ImageDto imageDto = adDto.getImage();
+                if (imageDto.isValid()) {
+                    Image image = ad.getAdData().getMainImage();
 
-                if (image != null) {
-                    ad.getAdData().setMainImage(null);
-                    imageDao.delete(image);
+                    if (image != null) {
+                        ad.getAdData().setMainImage(null);
+                        imageDao.delete(image);
+                    }
+
+                    image = imageDto.toImage();
+                    imageDao.save(image);
+                    ad.getAdData().setMainImage(image);
+                } else if ( imageDto.getUrl() == null || imageDto.getUrl().trim().isEmpty() ) {
+                    throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
                 }
-
-                image = imageDto.toImage();
-                imageDao.save(image);
-                ad.getAdData().setMainImage(image);
-            } else if ( imageDto.getUrl() == null || imageDto.getUrl().trim().isEmpty() ) {
-                throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
             }
+        } catch ( IOException ex ) {
+            logger.error("Exception when saving ad main image", ex);
         }
 
-        if (adDto.getImageThumbnail() != null) {
-            ImageDto thumbImageDto = adDto.getImageThumbnail();
-            if (thumbImageDto.isValid()) {
-                Image thumbImage = ad.getAdData().getThumbImage();
+        try {
+            if (adDto.getImageThumbnail() != null) {
+                ImageDto thumbImageDto = adDto.getImageThumbnail();
+                if (thumbImageDto.isValid()) {
+                    Image thumbImage = ad.getAdData().getThumbImage();
 
-                if (thumbImage != null) {
-                    ad.getAdData().setThumbImage(null);
-                    imageDao.delete(thumbImage);
+                    if (thumbImage != null) {
+                        ad.getAdData().setThumbImage(null);
+                        imageDao.delete(thumbImage);
+                    }
+
+                    thumbImage = thumbImageDto.toImage();
+                    imageDao.save(thumbImage);
+                    ad.getAdData().setThumbImage(thumbImage);
+                } else if ( thumbImageDto.getUrl() == null || thumbImageDto.getUrl().trim().isEmpty() ) {
+                    throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
                 }
-
-                thumbImage = thumbImageDto.toImage();
-                imageDao.save(thumbImage);
-                ad.getAdData().setThumbImage(thumbImage);
-            } else if ( thumbImageDto.getUrl() == null || thumbImageDto.getUrl().trim().isEmpty() ) {
-                throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
             }
+        } catch ( IOException ex ) {
+            logger.error("Exception when saving ad thumbnail image", ex);
         }
         
-        if (ad.getType() == AdType.BUSINESS && adDto.getImageBarcode() != null) {
-            ImageDto barcodeImageDto = adDto.getImageBarcode();
-            if (barcodeImageDto.isValid()) {
-                Image barcodeImage = ((BusinessAdData) ad.getAdData()).getBarcodeImage();
+        try {
+            if (ad.getType() == AdType.BUSINESS && adDto.getImageBarcode() != null) {
+                ImageDto barcodeImageDto = adDto.getImageBarcode();
+                if (barcodeImageDto.isValid()) {
+                    Image barcodeImage = ((BusinessAdData) ad.getAdData()).getBarcodeImage();
 
-                if (barcodeImage != null) {
-                    ad.getAdData().setThumbImage(null);
-                    imageDao.delete(barcodeImage);
+                    if (barcodeImage != null) {
+                        ad.getAdData().setThumbImage(null);
+                        imageDao.delete(barcodeImage);
+                    }
+
+                    barcodeImage = barcodeImageDto.toImage();
+                    imageDao.save(barcodeImage);
+                    ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
+                } else if ( barcodeImageDto.getUrl() == null || barcodeImageDto.getUrl().trim().isEmpty() ) {
+                    throw new AdValidationException(AdField.BARCODE_IMAGE, "Invalid image specified!");
                 }
-
-                barcodeImage = barcodeImageDto.toImage();
-                imageDao.save(barcodeImage);
-                ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
-            } else if ( barcodeImageDto.getUrl() == null || barcodeImageDto.getUrl().trim().isEmpty() ) {
-                throw new AdValidationException(AdField.BARCODE_IMAGE, "Invalid image specified!");
             }
+        } catch ( IOException ex ) {
+            logger.error("Exception when saving business ad barcode image", ex);
         }
         
         adDataDao.update(ad.getAdData());
@@ -319,7 +332,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         // Save and attache the image to the ad
         Image image = imageDto.toImage();
-        imageDao.save(image);
+        try {
+            imageDao.save(image);
+        } catch ( IOException ex ) {
+            logger.error("Exception when adding image to ad (adId: " + adId + ")", ex);
+            throw new ImageValidationException(ImageField.DATA, "Image cannot be added to ad (adId: " + adId + ")");
+        }
         ad.addImage(image);
 
         return image.getId();
@@ -354,8 +372,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 throw new AuthorizationException("Image doesn't belong to the specified ad!");
             }
             
+            try {
+                imageDao.delete(image);
+            } catch ( IOException ex ) {
+                logger.error("Exception when removing image (imageId: " + imageId + ") from ad (adId: " + adId + ")", ex);
+                throw new ImageNotFoundException("Image (imageId: " + imageId + ") cannot be removed");
+            }
+            
             ad.removeImage(image);
-            imageDao.delete(image);
             adDataDao.update(ad.getAdData());
         } else {
             //some exceptions are not thrown, instead are captured and continued with the next image
@@ -373,8 +397,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     continue;
                 }
 
-                ad.removeImage(image);
-                imageDao.delete(image);
+                try {
+                    imageDao.delete(image);
+                    ad.removeImage(image);
+                } catch ( IOException ex ) {
+                    logger.error("Exception when removing image (imageId: " + imageId + ") from ad (adId: " + adId + ")", ex);
+                }
             }
             adDataDao.update(ad.getAdData());
         }
@@ -1134,7 +1162,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
     // internal helpers
     
     private Image validateImage(Long imageId) throws ImageNotFoundException {
-        Image image = imageDao.get(imageId);
+        Image image = null;
+        try {
+            image = imageDao.get(imageId);
+        } catch ( IOException ex ) {
+            logger.error("Could not load image (imageId: " + imageId + ")", ex);
+            throw new ImageNotFoundException(imageId);
+        }
         if (image == null) {
             throw new ImageNotFoundException(imageId);
         }
@@ -1158,12 +1192,17 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     private Image saveImage(ImageDto imageDto, AdField field) throws AdValidationException {
         if (imageDto != null) {
-            if (imageDto.isValid()) {
+            if ( !imageDto.isValid() ) {
+                throw new AdValidationException(field, "Invalid image specified!");
+            }
+            
+            try {
                 Image image = imageDto.toImage();
                 imageDao.save(image);
                 return image;
-            } else {
-                throw new AdValidationException(field, "Invalid image specified!");
+            } catch ( IOException ex ) {
+                logger.error("Exception when saving image", ex);
+                throw new AdValidationException(field, "Could not save image!");
             }
         }
         return null;

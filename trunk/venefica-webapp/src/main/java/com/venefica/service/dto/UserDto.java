@@ -8,6 +8,7 @@ import com.venefica.model.Gender;
 import com.venefica.model.Image;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
@@ -123,19 +124,23 @@ public class UserDto extends DtoBase {
         user.setLocation(address != null ? address.getLocation() : null);
         user.getUserData().updateUser(this);
         
-        // Handle avatar image
-        if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
-            if (user.getAvatar() != null) {
-                Image avatarImage = user.getAvatar();
-                user.setAvatar(null);
-                imageDao.delete(avatarImage);
+        try {
+            // Handle avatar image
+            if (avatar != null && avatar.getImgType() != null && avatar.getData() != null) {
+                if (user.getAvatar() != null) {
+                    Image avatarImage = user.getAvatar();
+                    user.setAvatar(null);
+                    imageDao.delete(avatarImage);
+                }
+
+                Image avatarImage = avatar.toImage();
+                imageDao.save(avatarImage);
+
+                // Set new avatar image
+                user.setAvatar(avatarImage);
             }
-
-            Image avatarImage = avatar.toImage();
-            imageDao.save(avatarImage);
-
-            // Set new avatar image
-            user.setAvatar(avatarImage);
+        } catch ( IOException ex ) {
+            //TODO: needs logging?
         }
         
         if ( user.isBusinessAccount() ) {
