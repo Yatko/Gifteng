@@ -27,10 +27,10 @@ insert into `local_user` (`name`, `password`, `email`, `userData_id`) values ('n
 
 -- User point
 delete from `user_point`;
-insert into `user_point` (`id`, `number`, `score`) values (1, '0', '0');
-insert into `user_point` (`id`, `number`, `score`) values (2, '0', '0');
-insert into `user_point` (`id`, `number`, `score`) values (3, '0', '0');
-insert into `user_point` (`id`, `number`, `score`) values (4, '0', '0');
+insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (1, '0', '0');
+insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (2, '0', '0');
+insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (3, '0', '0');
+insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (4, '0', '0');
 
 update `local_user` set `userPoint_id`=1 where `id`=1;
 update `local_user` set `userPoint_id`=2 where `id`=2;
@@ -69,7 +69,7 @@ delete from `ad`;
 insert into `ad` (`adData_id`, `creator_id`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `numexpire`, `status`, `expires`) values (1, 1, now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', 'ACTIVE', '1');
 
 delete from `user_transaction`;
-insert into `user_transaction` (`finalized`, `pendingNumber`, `pendingScore`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '2.2625', '0', 1, 1, 1);
+insert into `user_transaction` (`finalized`, `pendingGivingNumber`, `pendingReceivingNumber`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '2.2625', '0', 1, 1, 1);
 
 -- Bookmarks
 delete from `bookmark`;

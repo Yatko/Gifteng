@@ -1,0 +1,8 @@
+Hi,
+
+${user.getFullName()} received yout gift.
+
+Happy giving!
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

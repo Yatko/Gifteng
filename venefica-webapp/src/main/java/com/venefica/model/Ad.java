@@ -1,6 +1,7 @@
 package com.venefica.model;
 
 import com.venefica.config.Constants;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -329,6 +330,23 @@ public class Ad {
             }
         }
         return false;
+    }
+    
+    /**
+     * Returns the ad value by using a very simple calculation.
+     * The actual math algorithm is 10 % of the ad price.
+     * 
+     * @return 
+     */
+    public BigDecimal getNumber() {
+        BigDecimal price = adData.getPrice();
+        if ( price == null ) {
+            price = BigDecimal.ZERO;
+        }
+        
+        BigDecimal HUNDRED = new BigDecimal(100);
+        BigDecimal number = price.multiply(BigDecimal.TEN).divide(HUNDRED);
+        return number;
     }
     
     @Override
