@@ -18,6 +18,9 @@ define('ERROR', 'error');
 define('AJAX_STATUS_RESULT', 'result');
 define('AJAX_STATUS_ERROR', 'error');
 
+define('AD_BOOKMARKS_NUM', 'ad_bookmarks_num');
+define('USER_BOOKMARKS_NUM', 'user_bookmarks_num');
+
 //define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
 define('DESCRIPTION_MAX_LENGTH', 100);
 define('COMMENT_MAX_LENGTH', 100);

@@ -71,7 +71,7 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                         <div class="span4">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_GIVING ?>" class="btn btn-small btn-block btn-ge">
                                                 Giving<br />
-                                                <?= $givings_num ?>
+                                                <span class="user_giving"><?= $givings_num ?></span>
                                             </a>
                                         </div>
                                         
@@ -79,13 +79,13 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                             <div class="span4">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge">
                                                     Receiving<br />
-                                                    <?= $receivings_num ?>
+                                                    <span class="user_receiving"><?= $receivings_num ?></span>
                                                 </a>
                                             </div>
                                             <div class="span4">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge">
                                                     Favorites<br />
-                                                    <?= $bookmarks_num ?>
+                                                    <span class="user_bookmark"><?= $bookmarks_num ?></span>
                                                 </a>
                                             </div>
 <? endif; ?>
@@ -96,13 +96,13 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                     <div class="row-fluid">
                                         <div class="span4">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge">
-                                                <?= $followings_num ?><br />
+                                                <span class="user_following"><?= $followings_num ?></span><br />
                                                 Following
                                             </a>
                                         </div>
                                         <div class="span4">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge">
-                                                <?= $followers_num ?><br />
+                                                <span class="user_follower"><?= $followers_num ?></span><br />
                                                 Followers
                                             </a>
                                         </div>

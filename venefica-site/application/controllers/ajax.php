@@ -65,9 +65,9 @@ class Ajax extends CI_Controller {
             $comment->text = $text;
             
             $this->message_service->addCommentToAd($adId, $comment);
-            $statistics = $this->ad_service->getStatistics($adId);
+            $ad_statistics = $this->ad_service->getStatistics($adId);
             
-            respond_ajax(AJAX_STATUS_RESULT, $statistics->numComments);
+            respond_ajax(AJAX_STATUS_RESULT, $ad_statistics->numComments);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -112,10 +112,20 @@ class Ajax extends CI_Controller {
         try {
             $adId = $_GET['adId'];
             $this->ad_service->bookmarkAd($adId);
-            $statistics = $this->ad_service->getStatistics($adId);
+            $ad_statistics = $this->ad_service->getStatistics($adId);
             $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, $statistics->numBookmarks);
+            //respond_ajax(AJAX_STATUS_RESULT, $ad_statistics->numBookmarks);
+//            respond_ajax_array(array(
+//                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
+//                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
+//            ));
+            
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
+                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -133,10 +143,20 @@ class Ajax extends CI_Controller {
         try {
             $adId = $_GET['adId'];
             $this->ad_service->removeBookmark($adId);
-            $statistics = $this->ad_service->getStatistics($adId);
+            $ad_statistics = $this->ad_service->getStatistics($adId);
             $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, $statistics->numBookmarks);
+            //respond_ajax(AJAX_STATUS_RESULT, $ad_statistics->numBookmarks);
+//            respond_ajax_array(array(
+//                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
+//                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
+//            ));
+            
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
+                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
