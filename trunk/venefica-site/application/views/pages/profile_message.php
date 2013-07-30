@@ -52,7 +52,7 @@
     
         <?
         $requestor_user = $request->user;
-        $ad_title = trim($ad->title);
+        $ad_title = $ad->getSafeTitle();
         $view_link = $ad->getViewUrl();
         $to_user = $ad->owner ? $requestor_user : $ad->creator;
         ?>

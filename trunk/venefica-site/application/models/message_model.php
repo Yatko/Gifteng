@@ -98,6 +98,14 @@ class Message_model extends CI_Model {
         return convertTimestampToDateForMessage($this->createdAt / 1000);
     }
     
+    public function getSafeText() {
+        return safe_content($this->text);
+    }
+    
+    public function getSafeAdTitle() {
+        return safe_content($this->adTitle);
+    }
+    
     // static helpers
     
     public static function convertMessages($messagesResult) {

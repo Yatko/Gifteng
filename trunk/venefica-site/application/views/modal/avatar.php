@@ -10,7 +10,7 @@
             }
             
             $this.html("Please wait...");
-            $this.attr('disabled', 'disabled')
+            $this.attr('disabled', 'disabled');
             
             $.ajax({
                 type: 'POST',

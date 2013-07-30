@@ -11,7 +11,7 @@
 $ad_id = $ad->id;
 $request_id = $request->id;
 $ad_creator = $ad->creator;
-$ad_title = trim($ad->title);
+$ad_title = $ad->getSafeTitle();
 $view_link = $ad->getViewUrl();
 
 ?>

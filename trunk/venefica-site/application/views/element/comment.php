@@ -10,7 +10,7 @@ $img = $comment->getPublisherAvatarUrl();
 $name = $comment->publisherFullName;
 $profile_link = $comment->getPublisherProfileUrl();
 $id = $comment->id;
-$text = trim($comment->text);
+$text = $comment->getSafeText();
 $since = $comment->getCreateDateHumanTiming();
 
 if (strlen($text) > COMMENT_MAX_LENGTH) {

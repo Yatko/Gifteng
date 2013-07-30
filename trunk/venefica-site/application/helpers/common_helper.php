@@ -66,12 +66,23 @@ if ( ! function_exists('safe_redirect')) {
 
 if ( ! function_exists('safe_content')) {
     function safe_content($str) {
-        $str = strip_tags($str);
+        if ( $str == null ) {
+            return "";
+        }
+        
+        $str = trim($str);
+        $str = trim(strip_tags($str));
+        $str = str_replace("\n\n", "\n", $str);
+        $str = str_replace("\r\r", "\r", $str);
+        $str = str_replace("\r\n\r\n", "\r\n", $str);
+        $str = str_replace("\n\r\n\r", "\n\r", $str);
+        $str = str_replace("\n", "<br />", $str);
         return $str;
     }
 }
 if ( ! function_exists('safe_parameter')) {
     function safe_parameter($str) {
+        $str = safe_content($str);
         $str = strip_slashes($str);
         return $str;
     }

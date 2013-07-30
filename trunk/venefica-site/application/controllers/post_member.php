@@ -152,8 +152,8 @@ class Post_member extends CI_Controller {
                 $categories = array();
             }
             
-            $data['title'] = $this->ad->title;
-            $data['description'] = $this->ad->description;
+            $data['title'] = $this->ad->getSafeTitle();
+            $data['description'] = $this->ad->getSafeDescription();
             $data['category'] = $this->ad->categoryId;
             $data['price'] = $this->ad->price;
             $data['zipCode'] = $this->ad->address->zipCode;
@@ -201,8 +201,8 @@ class Post_member extends CI_Controller {
             }
             
             $data['image'] = $this->ad->image;
-            $data['title'] = $this->ad->title;
-            $data['description'] = $this->ad->description;
+            $data['title'] = $this->ad->getSafeTitle();
+            $data['description'] = $this->ad->getSafeDescription();
             $data['price'] = $this->ad->price;
             $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
             $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';

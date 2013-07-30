@@ -72,13 +72,13 @@ if ( $ad_is_sold || !$ad_can_request ) {
 }
 
 $ad_id = $ad->id;
-$ad_title = trim($ad->title);
-$ad_subtitle = trim($ad->subtitle);
+$ad_title = $ad->getSafeTitle();
+$ad_subtitle = $ad->getSafeSubtitle();
 $ad_category = trim($ad->category);
 $ad_price = trim($ad->price);
 $ad_pickUp = $ad->pickUp;
 $ad_freeShipping = $ad->freeShipping;
-$ad_description = trim($ad->description);
+$ad_description = $ad->getSafeDescription();
 
 
 if ( $ad_subtitle != '' ) $ad_subtitle = $ad_subtitle . ' % off the bill';

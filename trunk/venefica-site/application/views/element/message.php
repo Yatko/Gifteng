@@ -14,9 +14,9 @@ $profile_link = $message->getFromProfileUrl();
 $img = $message->getFromAvatarUrl();
 $name = $message->fromFullName;
 $since = $message->getCreateDateHumanTiming();
-$text = trim($message->text);
+$text = $message->getSafeText();
 $id = $message->id;
-$ad_title = $message->adTitle;
+$ad_title = $message->getSafeAdTitle();
 $request_id = $message->requestId;
 
 if ( trim($ad_title) == '' ) $ad_title = '-';

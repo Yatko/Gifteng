@@ -9,9 +9,9 @@
 
 $user_is_business = $currentUser->businessAccount;
 $ad_is_business = $ad->isBusiness();
-$ad_title = $ad->title;
-$ad_subtitle = $ad->subtitle;
-$ad_description = $ad->description;
+$ad_title = $ad->getSafeTitle();
+$ad_subtitle = $ad->getSafeSubtitle();
+$ad_description = $ad->getSafeDescription();
 $creator_phone_number = $ad->creator->phoneNumber;
 
 if ( !empty($ad->expires) && $ad->expires ) {
