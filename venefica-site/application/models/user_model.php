@@ -178,11 +178,9 @@ class User_model extends CI_Model {
     }
     
     public function getPoints() {
-        $points = $this->score;
-        if ( $this->pendingScore ) {
-            $points = $points . '/' . $this->pendingScore;
-        }
-        return $points;
+        $score = round($this->score != null && is_numeric($this->score) ? $this->score : 0);
+        $pendingScore = round($this->pendingScore != null && is_numeric($this->pendingScore) ? $this->pendingScore : 0);
+        return $score . ($pendingScore > 0 ? '/'.$pendingScore : '');
     }
     
     public function toString() {

@@ -7,16 +7,14 @@
  * user: User_model
  */
 
-$title = $ad->title;
-$subtitle = $ad->subtitle;
+$title = $ad->getSafeTitle();
+$subtitle = $ad->getSafeSubtitle();
 $view_link = $ad->getViewUrl();
 $distance = getDistance($user, $ad);
 
-$title = safe_content($title);
 //$title_as_parameter = safe_parameter($title);
-$subtitle = safe_content($subtitle);
 
-if ( trim($subtitle) != '' ) $subtitle = $subtitle.' % off';
+if ( $subtitle != '' ) $subtitle = $subtitle . ' % off';
 
 ?>
 

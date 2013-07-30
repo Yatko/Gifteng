@@ -69,7 +69,7 @@ $(function() {
     if ( $('.modal').length > 0 ) {
         //making auto height of the body for every modal
         $('.modal').each(function() {
-            $this = $(this);
+            var $this = $(this);
             $this.on('show', function () {
                 $('.modal-body', this).css({
                     width: 'auto',

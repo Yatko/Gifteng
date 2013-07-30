@@ -6,7 +6,12 @@
         
         $('#member_post_form').on('submit', function(e) {
             e.preventDefault();
-
+            
+            $("#member_post_form").find(':submit').each(function() {
+                var $this = $(this);
+                $this.attr('disabled', 'disabled');
+            });
+            
             var formData = new FormData($("#member_post_form").get(0));
 
             $.ajax({
@@ -29,10 +34,6 @@
     }
     
     $(function() {
-        $('#postContainer').on('shown', function() {
-            //initPostModal();
-        });
-        
         $('#postContainer').on('hide', function() {
             var $unique_id = $("#member_post_form input[name=unique_id]");
             

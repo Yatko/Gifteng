@@ -70,6 +70,10 @@ class Comment_model extends CI_Model {
         return convertTimestampToDateForComment($this->createdAt / 1000) . ' ago';
     }
     
+    public function getSafeText() {
+        return safe_content($this->text);
+    }
+    
     // static helpers
     
     public static function convertComments($commentsResult) {
