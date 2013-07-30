@@ -61,10 +61,10 @@ public class ImageDto extends DtoBase {
         return new Image(imgType, data);
     }
 
-    public void update(Image image) {
-        image.setImgType(imgType);
-        image.setData(data);
-    }
+//    public void update(Image image) {
+//        image.setImgType(imgType);
+//        image.setData(data);
+//    }
     
     public Long getId() {
         return id;
