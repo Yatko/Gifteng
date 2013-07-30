@@ -404,7 +404,7 @@ class Post_member extends CI_Controller {
     }
     
     private function fixAd() {
-        $this->ad->image->safeLoadData();
+        $this->ad->imageSafeLoadData();
         $this->ad->creator = null;
         $this->ad->statistics = null;
     }

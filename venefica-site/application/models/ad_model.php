@@ -256,6 +256,12 @@ class Ad_model extends CI_Model {
         return $this->address->getLocation();
     }
     
+    public function imageSafeLoadData() {
+        if ( $this->image != null ) {
+            $this->image->safeLoadData();
+        }
+    }
+    
     public function getSafeTitle() {
         return safe_content($this->title);
     }
