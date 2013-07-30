@@ -183,11 +183,24 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test
     public void getAdsTest() {
         authenticateClientAsFirstUser();
-        List<AdDto> ads = client.getAds(new Long(-1), 10);
+        List<AdDto> ads = client.getAds(-1L, 10);
         assertTrue("There must be at least one ad in the collection.", ads != null
                 && ads.size() > 0);
 
-        ads = client.getAds(new Long(1), 10);
+        ads = client.getAds(1L, 10);
+        assertTrue(ads == null || ads.isEmpty());
+        
+        FilterDto filter = new FilterDto();
+        filter.setSearchString("test");
+        
+        ads = client.getAds(-1L, 10, filter);
+        assertTrue(ads != null && !ads.isEmpty());
+        
+        filter = new FilterDto();
+        filter.setSearchString("first");
+        
+        ads = client.getAds(-1L, 10, filter);
+        System.out.println("ads: " + ads);
     }
 
     @Test(expected = AdNotFoundException.class)

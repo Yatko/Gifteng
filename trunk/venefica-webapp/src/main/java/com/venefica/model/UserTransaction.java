@@ -44,8 +44,11 @@ public class UserTransaction {
     @ForeignKey(name = "usertransaction_request_fk")
     private Request request;
     
-    private BigDecimal pendingNumber; //pending generosity number
-    private BigDecimal pendingScore; //pending generosity score
+    private BigDecimal pendingGivingNumber;
+    private BigDecimal pendingReceivingNumber;
+    
+//    private BigDecimal pendingNumber; //pending generosity number
+//    private BigDecimal pendingScore; //pending generosity score
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -58,10 +61,14 @@ public class UserTransaction {
 
     public UserTransaction(Ad ad) {
         this.ad = ad;
+        this.pendingGivingNumber = UserPoint.getGivingNumber(ad);
+        this.pendingReceivingNumber = BigDecimal.ZERO;
     }
 
     public UserTransaction(Request request) {
         this.request = request;
+        this.pendingGivingNumber = BigDecimal.ZERO;
+        this.pendingReceivingNumber = UserPoint.getReceivingNumber(request);
     }
     
     public void markAsFinalized() {
@@ -96,21 +103,21 @@ public class UserTransaction {
         this.request = request;
     }
 
-    public BigDecimal getPendingNumber() {
-        return pendingNumber;
-    }
-
-    public void setPendingNumber(BigDecimal pendingNumber) {
-        this.pendingNumber = pendingNumber;
-    }
-
-    public BigDecimal getPendingScore() {
-        return pendingScore;
-    }
-
-    public void setPendingScore(BigDecimal pendingScore) {
-        this.pendingScore = pendingScore;
-    }
+//    public BigDecimal getPendingNumber() {
+//        return pendingNumber;
+//    }
+//
+//    public void setPendingNumber(BigDecimal pendingNumber) {
+//        this.pendingNumber = pendingNumber;
+//    }
+//
+//    public BigDecimal getPendingScore() {
+//        return pendingScore;
+//    }
+//
+//    public void setPendingScore(BigDecimal pendingScore) {
+//        this.pendingScore = pendingScore;
+//    }
 
     public boolean isFinalized() {
         return finalized;
@@ -151,4 +158,21 @@ public class UserTransaction {
     public void setUserPoint(UserPoint userPoint) {
         this.userPoint = userPoint;
     }
+
+    public BigDecimal getPendingGivingNumber() {
+        return pendingGivingNumber;
+    }
+
+    public void setPendingGivingNumber(BigDecimal pendingGivingNumber) {
+        this.pendingGivingNumber = pendingGivingNumber;
+    }
+
+    public BigDecimal getPendingReceivingNumber() {
+        return pendingReceivingNumber;
+    }
+
+    public void setPendingReceivingNumber(BigDecimal pendingReceivingNumber) {
+        this.pendingReceivingNumber = pendingReceivingNumber;
+    }
+
 }

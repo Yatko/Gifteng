@@ -25,6 +25,9 @@ public class UtilityServiceImpl extends AbstractService implements UtilityServic
     @Override
     public AddressDto getAddressByZipcode(String zipcode) {
         Location location = locationDao.findByZipcode(zipcode);
+        if ( location == null ) {
+            return null;
+        }
         
         AddressDto address = new AddressDto();
         address.setCity(location.getCity());

@@ -4,6 +4,8 @@ import com.venefica.model.Ad;
 import com.venefica.common.GeoUtils;
 import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
+import com.venefica.model.BusinessUserData;
+import com.venefica.model.MemberUserData;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
@@ -106,7 +108,9 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     + "("
                     + "lower(a.adData.title) like '%' || :searchstr || '%' or "
                     + "lower(a.adData.subtitle) like '%' || :searchstr || '%' or "
-                    + "lower(a.adData.description) like '%' || :searchstr || '%' "
+                    + "lower(a.adData.description) like '%' || :searchstr || '%' or "
+                    + "a.creator.userData in (select ud from " + MemberUserData.class.getSimpleName() + " ud where ud.firstName like '%' || :searchstr || '%' or ud.lastName like '%' || :searchstr || '%') or "
+                    + "a.creator.userData in (select ud from " + BusinessUserData.class.getSimpleName() + " ud where ud.businessName like '%' || :searchstr || '%' or ud.contactName like '%' || :searchstr || '%')"
                     + ")";
         }
 

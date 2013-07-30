@@ -54,7 +54,6 @@ import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -134,11 +133,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // ++
         
         User currentUser = getCurrentUser();
-        BigDecimal beforePendingNumber = null;
+//        BigDecimal beforePendingNumber = null;
         
-        if ( !currentUser.isBusinessAccount() ) {
-            beforePendingNumber = calculatePendingNumber(currentUser);
-        }
+//        if ( !currentUser.isBusinessAccount() ) {
+//            beforePendingNumber = calculatePendingNumber(currentUser);
+//        }
         
         boolean expires = adDto.getExpires() != null ? adDto.getExpires() : true;
         Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
@@ -166,14 +165,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Long adId = adDao.save(ad);
         
         if ( !currentUser.isBusinessAccount() ) {
-            BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
-            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+//            BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
+//            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
 
             UserTransaction transaction = new UserTransaction(ad);
             transaction.setUser(currentUser);
             transaction.setUserPoint(currentUser.getUserPoint());
-            transaction.setPendingNumber(currentPendingNumber);
-            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+//            transaction.setPendingNumber(currentPendingNumber);
+//            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
         }
         
@@ -640,6 +639,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + userId + ")");
         }
         
+        if ( user.isBusinessAccount() ) {
+            throw new InvalidRequestException("Business users cannot request ads.");
+        }
         if ( creator.equals(user) ) {
             throw new InvalidRequestException("Cannot request owned ads.");
         }
@@ -650,11 +652,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Max request limit reached.");
         }
         
-        BigDecimal beforePendingNumber = null;
+//        BigDecimal beforePendingNumber = null;
         
-        if ( !user.isBusinessAccount() ) {
-            beforePendingNumber = calculatePendingNumber(user);
-        }
+//        if ( !user.isBusinessAccount() ) {
+//            beforePendingNumber = calculatePendingNumber(user);
+//        }
         
         request = new Request();
         request.setSent(false);
@@ -667,14 +669,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.setStatus(AdStatus.IN_PROGRESS);
         
         if ( !user.isBusinessAccount() ) {
-            BigDecimal currentPendingNumber = calculatePendingNumber(user);
-            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
+//            BigDecimal currentPendingNumber = calculatePendingNumber(user);
+//            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
 
             UserTransaction transaction = new UserTransaction(request);
             transaction.setUser(user);
             transaction.setUserPoint(user.getUserPoint());
-            transaction.setPendingNumber(currentPendingNumber);
-            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
+//            transaction.setPendingNumber(currentPendingNumber);
+//            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
         }
         
@@ -892,9 +894,17 @@ public class AdServiceImpl extends AbstractService implements AdService {
         userTransactionDao.update(transaction);
         
         UserPoint userPoint = user.getUserPoint();
-        userPoint.removeNumber(transaction.getPendingNumber());
-        userPoint.removeScore(transaction.getPendingScore());
+        userPoint.addGivingNumber(transaction.getPendingGivingNumber());
+        userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
+//        userPoint.removeNumber(transaction.getPendingNumber());
+//        userPoint.removeScore(transaction.getPendingScore());
         userPointDao.update(userPoint);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", request.getUser());
+        vars.put("request", request);
+        
+        emailSender.sendNotification(NotificationType.REQUEST_RECEIVED, ad.getCreator(), vars);
     }
     
     
@@ -959,6 +969,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 AdDto adDto = new AdDtoBuilder(ad)
                         .setCurrentUser(user)
                         .includeCreator(true) //TODO: maybe this is not needed
+                        .includeCanRequest()
                         .build();
                 adDto.setInBookmarks(true);
                 adDto.setRequested(ad.isRequested(user, false));
@@ -1278,16 +1289,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
         userTransactionDao.update(transaction);
         
         UserPoint userPoint = user.getUserPoint();
-        userPoint.addNumber(transaction.getPendingNumber());
-        userPoint.addScore(transaction.getPendingScore());
+        userPoint.addGivingNumber(transaction.getPendingGivingNumber());
+        userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
+//        userPoint.addNumber(transaction.getPendingNumber());
+//        userPoint.addScore(transaction.getPendingScore());
         userPointDao.update(userPoint);
     }
     
     
     
-    private BigDecimal calculatePendingNumber(User user) {
-        BigDecimal number = UserPoint.getGenerosityNumber(user, false);
-        BigDecimal pendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(number);
-        return pendingNumber;
-    }
+//    private BigDecimal calculatePendingNumber(User user) {
+//        BigDecimal number = UserPoint.getGenerosityNumber(user, false);
+//        BigDecimal pendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(number);
+//        return pendingNumber;
+//    }
 }

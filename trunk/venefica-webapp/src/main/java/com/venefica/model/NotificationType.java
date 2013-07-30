@@ -25,6 +25,7 @@ public enum NotificationType {
     REQUEST_MESSAGED("request-message-new"), //someone sent a private message, without changing any giving or receiving status
     REQUEST_ACCEPTED("request-accept"), //the giver accepted your gift request
     REQUEST_SENT("request-sent"), //the giver gifted the gift
+    REQUEST_RECEIVED("request-received"), //the requestor received the gift
     REQUEST_CANCELED("request-cancel"), //the requestor cancelled the request
     REQUEST_DECLINED("request-decline"), //the giver cancelled your request
     FOLLOWER_AD_CREATED("follower-ad-new"), //a member I follow posted a new gift

@@ -88,6 +88,7 @@ public class UserDto extends DtoBase {
         this(user, true);
     }
     
+    @SuppressWarnings("LeakingThisInConstructor")
     public UserDto(User user, boolean includeUserPoints) {
         id = user.getId();
         name = user.getName();
@@ -101,8 +102,10 @@ public class UserDto extends DtoBase {
         user.getUserData().updateUserDto(this);
         
         if ( includeUserPoints && user.getUserPoint() != null ) {
-            score = user.getUserPoint().getScore();
-            pendingScore = user.getUserPoint().getPendingScore();
+            score = user.getUserPoint().getGivingNumber();
+            pendingScore = user.getUserPoint().getPendingGivingNumber();
+//            score = user.getUserPoint().getScore();
+//            pendingScore = user.getUserPoint().getPendingScore();
         }
     }
 
