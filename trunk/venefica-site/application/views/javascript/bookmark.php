@@ -18,8 +18,12 @@
                 }
                 
                 if ( $('.ad_bookmark_' + adId).length > 0 ) {
-                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>;
+                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>.<?=AD_BOOKMARKS_NUM?>;
                     $('.ad_bookmark_' + adId).text(num_bookmarks);
+                }
+                if ( $('.user_bookmark').length > 0 ) {
+                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>.<?=USER_BOOKMARKS_NUM?>;
+                    $('.user_bookmark').text(num_bookmarks);
                 }
             } else {
                 //TODO: unknown response received
@@ -48,8 +52,12 @@
                 }
                 
                 if ( $('.ad_bookmark_' + adId).length > 0 ) {
-                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>;
+                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>.<?=AD_BOOKMARKS_NUM?>;
                     $('.ad_bookmark_' + adId).text(num_bookmarks);
+                }
+                if ( $('.user_bookmark').length > 0 ) {
+                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>.<?=USER_BOOKMARKS_NUM?>;
+                    $('.user_bookmark').text(num_bookmarks);
                 }
             } else {
                 //TODO: unknown response received
