@@ -1,0 +1,307 @@
+/* CSS Document */
+
+html, body{height:100%;font-family:'Lato', sans-serif;font-size: 12px;margin:0px;-webkit-text-size-adjust:none;background:#424242}
+
+/* apply a natural box layout model to all elements */
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+div {box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}
+a:link, a:hover, a:active {text-decoration: none;}
+
+
+/* COLORS all used colors must be listed here! */
+.aColor-6 {color: #000000 !important;} /* black */
+.aColor-5 {color: #212121 !important;} 
+.aColor-4 {color: #333333 !important;}
+.aColor-3 {color: #424242 !important;}
+.aColor-2 {color: #6b6b6b !important;}
+.aColor-1 {color: #6f6f6f !important;}
+.aColor0 {color: #a3a3a3 !important;}
+.aColor1 {color: #aaaaaa !important;}
+.aColor2 {color: #fafafa !important;}
+.aColor3 {color: #ffffff !important;} /* white */
+
+.bColor0 {color: #eeedea !important;} /* ex. Stage Background */
+
+.cColor-2 {color: #008b96 !important;}
+.cColor0 {color: #00bebe !important;} /* ex. Green Button */
+.cColor1 {color: #3cd6d3 !important;}
+.cColor2 {color: #3eddda !important;}
+
+.dColor0 {color: #cc6666 !important;} /* ex. Red Button */
+.dColor1 {color: #da7a76 !important;}
+.dColor2 {color: #e57f7f !important;}
+
+/* COLORS all newly added colors must be listed here! */
+
+
+
+
+/* TEXTS */
+h1 {text-align: center;font-size: 180%;font-style:italic;font-weight: 300;color:#6b6b6b;margin:32px !important;}
+h2 {text-align: center;font-size: 142%;font-style:normal;font-weight: 300 !important;color:#6b6b6b;margin:32px !important;}
+h3{margin:0;font-size:100%px;}
+.headline {font-size: 160%;font-weight:400;color:#cc6666;margin: 0 0 24px 0 !important;}
+.small {font-size:90%;}
+.big {font-size:120%;}
+.note {color:#969696;padding:3px 3px 6px 3px;}
+.tLabel {color:#a6a6a6; font-weight:400;font-size: 136%;} /* TODO label renamed to tLabel*/
+
+
+/* INPUT Global */
+input { display: block;
+        -moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;
+        width: 100%;
+        -moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;
+        font-size:136%;
+        font-weight:200;
+        text-decoration:none;
+        margin-bottom: 12px;
+        }
+
+input[type=text], input[type=password], input[type=date] {
+        border: 1px solid #e4e4e4;
+        box-shadow: inset 0 1px 0 #eee,#fff 0 1px 0;
+        background: #faf9f8;
+        color:#a6a6a6;
+        text-shadow:1px 1px 0 rgba(255, 255, 255, 0.7);
+        padding:12px 24px;
+        }
+input[type=text]:hover, input[type=password]:hover, input[type=date]:hover {background:#fff;color:#999;}
+
+input[type=submit] {
+        border:0px;
+        color:#fff;
+        padding:12px 48px;
+        }
+
+
+/* MENU */
+#menu {width: 165px;height: 100%;display: block !important;float: left;}
+#menu ul {margin: 0;padding: 0;width: inherit;}
+#menu ul li {list-style-type: none;margin: 0px 0;}
+#menu ul li a:link, #menu ul li a:visited {
+  border-bottom: solid #333 1px;
+  box-shadow: 0 1px 0 #6b6b6b;
+  color: #fff;
+  font-size: 100%;
+  width: 165px;
+  display: block;
+  padding: 10px 0px 10px 20px;
+  text-shadow: 0px 1px 1px #000000;
+}
+#menu ul li a:hover, #menu ul li a:active {background-color: #6b6b6b;}
+.active {background-color: #333333;background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #212121), color-stop(21%, #333333));}
+
+
+/* HEADER */
+.logo {display:block;margin:0px auto;padding-top:3px;text-align: center;}
+.menuButton { 
+color: #ff0000;
+background:url(navigator.png) no-repeat;width:24px; height:24px;display:block;
+background-position:0 0;
+background-position:0 -24px;
+background-position:0 -48px;
+} /* TODO why does menu button inherit menu css, apply the originbal sprite image and css to menu button */
+
+
+
+/* STAGE */ /* TODO make it 100% width 100% height */
+#stage {min-height:100%;width:100%;margin:0px auto;padding:66px 0 0 0;text-align:center;background:url('stageBackground.png') #eeedea;}
+.container {display:block;width:100%;overflow:auto;}
+.box1 {display:inline-block;min-width:236px;margin:9px;background-color:#fff;border-radius:3px;box-shadow:0px 2px 3px #cbc8c3;vertical-align:top;text-align:left;color: #424242;} /*TODO rewrite source to use box1 instead of box*/
+.box2 {display:inline-block;width:auto;margin:9px;padding:21px;background-color:#fff;border-radius:3px;box-shadow:0px 2px 3px #cbc8c3;vertical-align:top;text-align:left;color: #424242;} /*TODO rewrite source to use box2 instead of form*/
+.box3 {display:block;width:100%;overflow:auto;background: #fafafa;border-top:1px solid #eeede9;}
+.transparentBox {display:inline-block;width:auto;margin:9px;padding:21px;vertical-align:top;text-align:left;color: #424242;}
+.tile {display:inline-block;text-align: center;color:#a3a3a3; border-right:1px solid #eeede9;}
+.tile p {margin: 0px;}
+
+
+.username {font-weight:800;color:#000;}
+.message {font-size:90%;}
+.location {font-size:80%;font-weight:100;text-decoration:none;color:#60cfda;text-align:right;}
+.location li {list-style-image:url('icon_location.png');}
+.age {font-size:80%;}
+.details {display:table;width:auto;padding:0 9px;}
+.points {color:#a3a3a3;}
+.profileImage {float:left;border-radius:3px;-moz-box-shadow:inset 0 0 3px #666;-webkit-box-shadow:inset 0 0 3px #666;box-shadow:inner 0 0 3px #666;background:no-repeat;}
+.thumbnail {width:100%;padding:0px;text-align:center;}
+.thumbnail img {width:236px;}
+.title {width:100%;padding:6px 9px 3px 9px;}
+.title a, .title a:hover {font-size:120%;font-weight:100;text-decoration:none;color:#6f6f6f;}
+.description {width:100%;padding:0 9px;font-size:90%;font-weight:100;text-decoration:none;}
+.loginBox {display:block;overflow:auto;width:100%;text-decoration:none;text-align:center;}
+.profileBox1, .profileBox2, .profileBox3 {display:block;overflow:auto !important;width:100%;padding:6px 9px;text-decoration:none;}
+.profileBox1 {padding:12px;}
+.profileBox1 .profileImage {width:100px;height:100px;background-size:100px 100px;}
+.profileBox1 .username {font-size: 180%;font-weight:400;color:#6f6f6f;}
+.profileBox1 .age {font-size: 100%;font-weight:400;color:#a3a3a3;padding:3px 0;}
+.profileBox1 .location {font-size: 100%;font-weight:400;text-align:left;}
+.profileBox1 .points {font-size: 136%;font-weight:400;padding-top:18px;}
+
+.profileBox2 .profileImage {width:38px;height:38px;background-size:38px 38px;}
+.profileBox3 .profileImage {width:38px;height:38px;background-size:38px 38px;}
+.profileBox .location {text-align:left;}
+.itemBox {display:block;overflow: auto;width:100%;}
+.itemBox .location {text-align:right;padding:6px 9px 0 9px;background: url('icon_location.png') no-repeat 76% center;}
+.messageContainer {display:block;overflow:auto;border-top:3px double #e4e4e4;background-color:#fafafa;width:100%;text-decoration: none;margin-top: 3px;}
+.messageBox {display:block;overflow:auto;width:100%;padding:6px 9px;border-bottom:1px solid #e4e4e4;text-decoration:none;}
+.messageBox .profileImage {width:24px;height:24px;background-size:24px 24px;} /*TODO background size does not work*/
+.showMore {width: 100%;height:18px;padding-top:6px;background:url('messageMore.png') no-repeat center #fff;}
+
+.dataBox {padding:12px;margin:12px;background:#fafafa;color:#a3a3a3;}
+
+        
+/* BUTTONS */ /*TODO rewrite source to use button1 instead of green*/
+.button1[type=submit] {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3cd6d3), color-stop(1, #00bebe));
+        background:-moz-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);
+        background:-webkit-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);
+        background:-o-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);
+        background:-ms-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);
+        background:linear-gradient(to bottom, #3cd6d3 5%, #00bebe 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3cd6d3', endColorstr='#00bebe',GradientType=0);
+        background-color:#3cd6d3;
+        }      
+.button1[type=submit]:hover, button1[type=submit]:active {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3eddda), color-stop(1, #00bebe));
+        background:-moz-linear-gradient(top, #3eddda 5%, #00bebe 100%);
+        background:-webkit-linear-gradient(top, #3eddda 5%, #00bebe 100%);
+        background:-o-linear-gradient(top, #3eddda 5%, #00bebe 100%);
+        background:-ms-linear-gradient(top, #3eddda 5%, #00bebe 100%);
+        background:linear-gradient(to bottom, #3eddda 5%, #00bebe 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3eddda', endColorstr='#00bebe',GradientType=0);
+        background-color:#3eddda;
+        }
+ /*TODO rewrite source to use button1 instead of red*/
+.button2[type=submit] {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #da7a76), color-stop(1, #cc6666));
+        background:-moz-linear-gradient(top, #da7a76 5%, #cc6666 100%);
+        background:-webkit-linear-gradient(top, #da7a76 5%, #cc6666 100%);
+        background:-o-linear-gradient(top, #da7a76 5%, #cc6666 100%);
+        background:-ms-linear-gradient(top, #da7a76 5%, #cc6666 100%);
+        background:linear-gradient(to bottom, #da7a76 5%, #cc6666 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#da7a76', endColorstr='#cc6666',GradientType=0);
+        background-color:#da7a76;
+        }
+.button2[type=submit]:hover, .button2[type=submit]:active {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e57f7f), color-stop(1, #cc6666));
+        background:-moz-linear-gradient(top, #e57f7f 5%, #cc6666 100%);
+        background:-webkit-linear-gradient(top, #e57f7f 5%, #cc6666 100%);
+        background:-o-linear-gradient(top, #e57f7f 5%, #cc6666 100%);
+        background:-ms-linear-gradient(top, #e57f7f 5%, #cc6666 100%);
+        background:linear-gradient(to bottom, #e57f7f 5%, #cc6666 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e57f7f', endColorstr='#cc6666',GradientType=0);
+        background-color:#e57f7f;
+        }
+.button3[type=submit] {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fdfdfd), color-stop(1, #f6f6f3));
+        background:-moz-linear-gradient(top, #fdfdfd 5%, #f6f6f3 100%);
+        background:-webkit-linear-gradient(top, #fdfdfd 5%, #f6f6f3 100%);
+        background:-o-linear-gradient(top, #fdfdfd 5%, #f6f6f3 100%);
+        background:-ms-linear-gradient(top, #fdfdfd 5%, #f6f6f3 100%);
+        background:linear-gradient(to bottom, #fdfdfd 5%, #f6f6f3 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdfdfd', endColorstr='#f6f6f3',GradientType=0);
+        background-color:#fdfdfd;
+        border: 1px solid #dedede;
+        border-bottom: 2px solid #dedede;
+        color: #6f6f6f;
+        font-size:100%;
+        font-weight:200;
+        padding:3px 24px;
+        width: auto;
+        display: inline-block;
+        }      
+.button3[type=submit]:hover, button3[type=submit]:active {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f3));
+        background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f3 100%);
+        background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f3 100%);
+        background:-o-linear-gradient(top, #ffffff 5%, #f6f6f3 100%);
+        background:-ms-linear-gradient(top, #ffffff 5%, #f6f6f3 100%);
+        background:linear-gradient(to bottom, #ffffff 5%, #f6f6f3 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f3',GradientType=0);
+        background-color:#ffffff;
+        border: 1px solid #dedede;
+        border-bottom: 2px solid #dedede;
+        color: #6f6f6f;
+        }
+
+/* SHARE */
+.share {background:no-repeat;width:64px; height:64px;display:inline-block;margin:3px;}
+.facebook {background:url('facebook2.png')}
+.twitter {background:url('twitter2.png')}
+.linkedin {background:url('linkedin2.png')}
+.email {background:url('email2.png')}
+.facebook:hover {background:url('facebook.png')}
+.twitter:hover {background:url('twitter.png')}
+.linkedin:hover {background:url('linkedin.png')}
+.email:hover {background:url('email.png')}
+
+
+
+/* SPACE */
+.squareSpace1{padding: 3px;}
+.squareSpace2{padding: 6px;}
+.squareSpace3{padding: 9px;}
+.squareSpace4{padding: 12px;}
+.space1{padding: 3px 6px;}
+.space2{padding: 6px 12px;}
+.space3{padding: 9px 18px;}
+.space4{padding: 12px 24px;}
+
+.vSpace1{padding:3px 0 6px 0;}
+.vspave2{}
+
+.roundTop {}
+.roundBottom {border-bottom-right-radius: 3px;border-bottom-left-radius: 3px;}
+
+
+/* TODO a little more info about the CSS below */
+
+.ui-body-c{
+	background-color:#fff;
+	line-height:18px;
+}
+.ui-bar-a{
+	background-color:#3cd6d3;background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3cd6d3), color-stop(1, #00bebe));background:-moz-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);background:-webkit-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);background:-o-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);background:-ms-linear-gradient(top, #3cd6d3 5%, #00bebe 100%);background:linear-gradient(to bottom, #3cd6d3 5%, #00bebe 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3cd6d3', endColorstr='#00bebe',GradientType=0);
+	border: none !important;
+	border-bottom:1px solid #30b6b6 !important;
+	height:50px !important;	
+}
+
+.ui-btn-corner-all {
+	-webkit-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+
+
+
+
+/* TODO remove these after changing source and/or using them as sample 
+DO NOT REMOVE before testing against live site! (leave it for now) */
+
+#navigator .left  {float:left;text-align:left;height:100%;padding:16px 21px 9px 21px;}
+#navigator .right {float:right;text-align:right;height:100%;padding:16px 21px 9px 21px;}
+#navigator .left:hover, .left:active, .right:hover, .right:active {color:#fff;background: #3cd6d3;}
+#navigator a {color:#008b96;}
+#navigator a:hover, a:active {color:#fff;}
+#navigator span {background:url(navigator.png) no-repeat;width:24px; height:24px;display:block;}
+
+#navigator .search {background-position:-24px 0;}
+#navigator .location {background-position:-48px 0;}
+#navigator .give {background-position:-72px 0;}
+
+#navigator .search:hover {background-position:-24px -24px;}
+#navigator .location:hover {background-position:-48px -24px;}
+#navigator .give:hover {background-position:-72px -24px;}
+#navigator .search:active {background-position:-24px -48px;}
+#navigator .location:active {background-position:-48px -48px;}
+#navigator .give:active {background-position:-72px -48px;}
+
+#loading {display:none;position:fixed;color:#cfcfcf;right:3px;padding:6px;top:98px;}
+#no-more {display:none;position:fixed;color:#ff0000;right:3px;padding:6px;top:98px;}
+
+.green{color:#00bebe;} /* TODO replace with .mainColorB0 */
+.red{color:#cc6666;font-size:130%;}  /* TODO replace with .mainColorC0 remove font-size */
+
+.whiteBg {background: #fff !important;}
+.frame {display:block;overflow:auto;border:1px solid #e4e4e4;background-color:#fff;width:100%;height:100%;padding:21px;}
