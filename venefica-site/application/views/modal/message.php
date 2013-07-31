@@ -6,7 +6,7 @@
         $messageRequestId.val(requestId);
         $messageToId.val(toId);
 
-        $('#messageContainer').modal('show');
+        $('#messageContainer').removeData("modal").modal('show');
     }
     
     $(function() {

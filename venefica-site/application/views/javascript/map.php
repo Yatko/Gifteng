@@ -2,8 +2,6 @@
     function init_map(mapId, longitudeId, latitudeId, markerLongitudeId, markerLatitudeId, canDrag) {
         try {
             
-            //alert('init_map: ' + mapId);
-            
             if ( $('#' + mapId).length === 0 ) {
                 return;
             }

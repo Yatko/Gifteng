@@ -35,7 +35,7 @@ if ( $ad_is_business ) {
 
 ?>
 
-!!! NOT IMPLEMENTED !!!
+!!! NOT YET IMPLEMENTED !!!
 
 <!--left side-->
 <div class="span6">

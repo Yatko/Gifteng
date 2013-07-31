@@ -56,7 +56,7 @@ $is_owner = isOwner($user_id);
                             <button onclick="ad_relist(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
                         </div>
                         <div class="span6">
-                            <button onclick="ad_delete(<?=$ad_id?>);" type="button" class="btn btn-small btn-block">DELETE</button>
+                            <button onclick="startAdDeleteModal(this, <?=$ad_id?>);" type="button" class="ge-ad btn btn-small btn-block">DELETE</button>
                         </div>
                     </div>
 

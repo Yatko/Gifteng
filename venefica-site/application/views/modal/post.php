@@ -1,4 +1,7 @@
 <script langauge="javascript">
+    function startPostModal() {
+        $('#postContainer').removeData("modal").modal('show');
+    }
     function initPostModal() {
         init_select();
         init_checkbox();
@@ -7,12 +10,14 @@
         $('#member_post_form').on('submit', function(e) {
             e.preventDefault();
             
-            $("#member_post_form").find(':submit').each(function() {
+            var $form = $("#member_post_form");
+            
+            $form.find(':submit').each(function() {
                 var $this = $(this);
                 $this.attr('disabled', 'disabled');
             });
             
-            var formData = new FormData($("#member_post_form").get(0));
+            var formData = new FormData($form.get(0));
 
             $.ajax({
                 type: "POST",
@@ -24,9 +29,6 @@
                 contentType: false
             }).done(function(response) {
                 $('#postContainer > .modal-body').html(response);
-                
-                //should reattach events for the new content
-                initPostModal();
             }).fail(function(data) {
                 //TODO
             });
@@ -50,10 +52,6 @@
             }).fail(function(data) {
                 //TODO
             });
-        });
-        $('#postContainer').on('hidden', function() {
-            $(this).removeData("modal");
-            $('#postContainer > .modal-body').html('');
         });
     });
 </script>

@@ -44,10 +44,10 @@ class View extends CI_Controller {
         $data['currentUser'] = $currentUser;
         $data['comments'] = $comments;
         
-        $request_modal = $this->load->view('modal/request_create', array(), true);
-        $edit_post_modal = $this->load->view('modal/edit_post', array(), true);
-        
-        $modal = $request_modal . $edit_post_modal;
+        $modal = '';
+        $modal .= $this->load->view('modal/request_create', array(), true);
+        $modal .= $this->load->view('modal/edit_post', array(), true);
+        $modal .= $this->load->view('modal/ad', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/ad');

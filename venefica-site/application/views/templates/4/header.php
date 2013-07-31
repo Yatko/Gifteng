@@ -222,10 +222,16 @@ $subpage = key($_GET); //gets the first element from the array
                     </span>
                     
                     <? if( isLogged() ): ?>
+                    
                         <div class="pull-right">
+                            <button onclick="startPostModal()" class="btn btn-small btn-block btn-ge"><i class="ge-icon-giftbox"></i></button>
+                            <? /** ?>
                             <a href="<?=base_url()?>post" data-target="#postContainer" data-toggle="modal"><i class="ge-icon-giftbox"></i></a>
+                            <? /**/ ?>
                         </div>
+                    
                     <? else: ?>
+                    
                         <ul class="nav pull-right">
                             <li class="dropdown">
                                 <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
@@ -241,6 +247,7 @@ $subpage = key($_GET); //gets the first element from the array
                                 </div>
                             </li>
                         </ul>
+                    
                     <? endif; ?>
                 </div>
             </div>
