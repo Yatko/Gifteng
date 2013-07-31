@@ -291,6 +291,12 @@ line-height: 0.99em;
 
 /* NAV */
 /*.snap-content > .navbar.ge-navbar {position:static !important;z-index:1000;}*/
+.snap-content > .navbar.ge-navbar {position:absolute !important;z-index:1000;
+-webkit-transition: all 500ms ease;
+-moz-transition: all 500ms ease;
+-ms-transition: all 500ms ease;
+-o-transition: all 500ms ease;
+transition: all 500ms ease;}
 .ge-navbar .nav sup {text-shadow:none;color: #ffffff;}
 .ge-navbar, .ge-navbar .navbar-inner {background-color:#00bebe;border-radius:0px;height:52px;}
 .ge-navbar {font-size: 16.996px; /* 17px */}

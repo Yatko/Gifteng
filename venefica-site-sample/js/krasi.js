@@ -1,3 +1,0 @@
-$(function() {
-	$('#open-left').snap();
-})

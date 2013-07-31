@@ -30,3 +30,12 @@ $.fn.snap = function() {
 		}
 	});
 };
+$(function() {
+	$('#content').scroll(function(){
+        $('.ge-navbar').css('top',$('#content').scrollTop());   
+   });
+});
+
+$(function() {
+	$('#open-left').snap();
+})
