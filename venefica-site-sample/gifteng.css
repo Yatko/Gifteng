@@ -306,35 +306,6 @@ line-height: 0.99em;
 .login-drop label{color: #ffffff; text-shadow: none;padding-left:10px;float:left;}
 .login-drop .btn{clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;}
 
-/* Bootstrap extension for better mobile responsiveness */
-.row-fluid .mobile-one {
-  width: 31.491712707182323%;
-  *width: 31.43852121782062%;
-}
-
-.row-fluid .mobile-three {
-  width: 65.74585635359117%;
-  *width: 65.69266486422946%;
-}
-
-.row-fluid .mobile-two {
-  width: 48.61878453038674%;
-  *width: 48.56559304102504%;
-}
-
-.row-fluid .mobile-four {
-	width: 100%;
-	*width: 99.94680851063829%;
-}
-
-.row-fluid .mobile-one,
-.row-fluid .mobile-two,
-.row-fluid .mobile-three,
-.row-fluid .mobile-four {
-  float:left;
-  margin-left: 2.7624309392265194%;
-  *margin-left: 2.709239449864817%;
-}
 
 /* Responsiveness fixes */
 @media (max-width: 767px) {
@@ -359,5 +330,42 @@ line-height: 0.99em;
 	}
 	.btn.btn-huge {
 		font-size:20px;
+	}
+	/* Bootstrap extension for better mobile responsiveness */
+	.row-fluid .mobile-one {
+	  width: 31.491712707182323%;
+	  *width: 31.43852121782062%;
+	}
+	
+	.row-fluid .mobile-three {
+	  width: 65.74585635359117%;
+	  *width: 65.69266486422946%;
+	}
+	
+	.row-fluid .mobile-two {
+	  width: 48.61878453038674%;
+	  *width: 48.56559304102504%;
+	}
+	
+	.row-fluid .mobile-four {
+		width: 100%;
+		*width: 99.94680851063829%;
+	}
+	
+	.row-fluid .mobile-one,
+	.row-fluid .mobile-two,
+	.row-fluid .mobile-three,
+	.row-fluid .mobile-four {
+	  float:left;
+	  margin-left: 2.7624309392265194%;
+	  *margin-left: 2.709239449864817%;
+	}
+	
+	select.select-block {
+		display:block !important;
+		width:100% !important;
+	}
+	div.select-block {
+		display:none !important;
 	}
 }
