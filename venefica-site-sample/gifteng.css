@@ -24,7 +24,7 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-well .control-label, .ge-well .label, .ge-well label {color: #bdc3c7;}
 .ge-well i.lead {color:#00bebe;padding: 9px;}
 .ge-well .ge-item {padding:0px;}
-.ge-well .ge-action {padding:9px;}
+.ge-well .ge-action {padding:9px;width:100%;}
 .ge-well .ge-item .ge-item-image .ge-action {position:absolute;bottom:0;left:0;z-index:5;}
 
 /* USER */
@@ -136,7 +136,7 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
   filter: unquote("progid:DXImageTransform.Microsoft.gradient(enabled = false)");
 }
 .progress .bar {padding-top: 6px;font-size: 80%;}
-
+.btn-social-facebook {color:#ffffff;}
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}
 .user-giving_recipient .ge-user .ge-points a {font-size: 70%;vertical-align: super;}
@@ -157,19 +157,19 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 
 /* FONT - no need to review below */
 @font-face {
-	font-family: 'gifteng';
-	src:url('fonts/gifteng.eot');
-	src:url('fonts/gifteng.eot?#iefix') format('embedded-opentype'),
-		url('fonts/gifteng.woff') format('woff'),
-		url('fonts/gifteng.ttf') format('truetype'),
-		url('fonts/gifteng.svg#gifteng') format('svg');
+	font-family: 'gifteng-icons';
+	src:url('fonts/gifteng-icons.eot');
+	src:url('fonts/gifteng-icons.eot?#iefix') format('embedded-opentype'),
+		url('fonts/gifteng-icons.woff') format('woff'),
+		url('fonts/gifteng-icons.ttf') format('truetype'),
+		url('fonts/gifteng-icons.svg#gifteng-icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 [data-icon]:before {
-	font-family: 'gifteng';
+	font-family: 'gifteng-icons';
 	content: attr(data-icon);
 	speak: none;
 	font-weight: normal;
@@ -185,8 +185,8 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="ge-icon-"] {
 */
-.ge-icon-gifteng, .ge-icon-gifteng-logo, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-heart, .ge-icon-gifteng-pin, .ge-icon-pin, .ge-icon-smiley, .ge-icon-share, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest, .ge-icon-clover, .ge-icon-press, .ge-icon-business, .ge-icon-check, .ge-icon-pencil {
-	font-family: 'gifteng';
+.ge-icon-gifteng, .ge-icon-logo, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-heart, .ge-icon-g-pin, .ge-icon-pin, .ge-icon-star, .ge-icon-bubble, .ge-icon-share, .ge-icon-smiley, .ge-icon-check, .ge-icon-pencil, .ge-icon-businesses, .ge-icon-press, .ge-icon-clover, .ge-icon-list, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest {
+	font-family: 'gifteng-icons';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -196,55 +196,64 @@ you can use the generic selector below, but it's slower:
 	-webkit-font-smoothing: antialiased;
 }
 .ge-icon-gifteng:before {
-	content: "\e046";
+	content: "\e000";
 }
-.ge-icon-gifteng-logo:before {
+.ge-icon-logo:before {
 	content: "\e001";
 }
 .ge-icon-giftbox:before {
-	content: "\e000";
-}
-.ge-icon-ribbon:before {
 	content: "\e002";
 }
-.ge-icon-heart:before {
+.ge-icon-ribbon:before {
 	content: "\e003";
 }
-.ge-icon-gifteng-pin:before {
+.ge-icon-heart:before {
 	content: "\e004";
 }
-.ge-icon-pin:before {
+.ge-icon-g-pin:before {
 	content: "\e005";
 }
-.ge-icon-smiley:before {
+.ge-icon-pin:before {
 	content: "\e006";
 }
-.ge-icon-share:before {
+.ge-icon-star:before {
 	content: "\e007";
 }
-.ge-icon-facebook:before {
+.ge-icon-bubble:before {
 	content: "\e008";
 }
-.ge-icon-twitter:before {
+.ge-icon-share:before {
 	content: "\e009";
 }
-.ge-icon-pinterest:before {
+.ge-icon-smiley:before {
 	content: "\e00a";
 }
-.ge-icon-clover:before {
+.ge-icon-check:before {
 	content: "\e00b";
 }
-.ge-icon-press:before {
+.ge-icon-pencil:before {
 	content: "\e00c";
 }
-.ge-icon-business:before {
+.ge-icon-businesses:before {
 	content: "\e00d";
 }
-.ge-icon-check:before {
+.ge-icon-press:before {
+	content: "\e042";
+}
+.ge-icon-clover:before {
+	content: "\e03f";
+}
+.ge-icon-list:before {
 	content: "\e00e";
 }
-.ge-icon-pencil:before {
-	content: "\e00f";
+.ge-icon-facebook:before {
+	content: "\e046";
+}
+.ge-icon-twitter:before {
+	content: "\e036";
+}
+.ge-icon-pinterest:before {
+	content: "\e029";
 }
 
 .ge-icon-gifteng-large {
@@ -264,12 +273,12 @@ line-height: 0.99em;
 }
 
 .ge-icon-ribbon-large {
-color: #00bebe;
-font-size: 4em;
-vertical-align: top;
-text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-margin: 0 0 0 15px;
-line-height:0.99em;
+	color: #00bebe;
+	font-size: 4em;
+	vertical-align: top;
+	text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+	margin: 0 0 0 15px;
+	line-height:0.99em;
 }
 
 
@@ -281,5 +290,11 @@ line-height:0.99em;
 .ge-navbar .nav > li > a:active, a:hover, a:focus, a:visited {color: #34495e !important;}
 .ge-navbar .btn-navbar {color: #ffffff;margin: 7px 10px;}
 .ge-navbar .nav > li:first-child.active > a {padding-left: 20px;}
-
+.ge-navbar i.ge-icon-gifteng {font-size: 4.6em;line-height:9px;color: #ffffff;text-shadow:none;}
+.ge-navbar i.ge-icon-gifteng sup {font-size: 11px;padding:0 0 0 3px;vertical-align:middle;}
 .bottom-menu-inverse {text-shadow:none;}
+/* NAV login-drop */
+.login-drop {padding: 15px !important; padding-bottom: 0px !important;}
+.login-drop input[type="text"],.login-drop input[type="password"] {width: 142px; margin-bottom: 15px;}
+.login-drop label{color: #ffffff; text-shadow: none;padding-left:10px;float:left;}
+.login-drop .btn{clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;}
