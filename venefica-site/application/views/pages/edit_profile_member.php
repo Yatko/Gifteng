@@ -27,22 +27,26 @@
         $('#edit_profile_form').on('submit', function(e) {
             e.preventDefault();
             
+            var $this = $(this);
+            
             $.ajax({
                 type: "POST",
                 url: '<?=base_url()?>edit_profile/ajax/member',
-                data: $(this).serialize(),
+                data: $this.serialize(),
                 dataType: 'json'
             }).done(function(response) {
                 if ( !response || response === '' ) {
                     //TODO: empty result
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
-                    $('#ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
+                    $('#edit_profile_ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                     $('.modal').modal('hide');
-                    location.reload(true);
+                    self.location.reload(true);
                 } else {
                     //TODO: unknown response received
                 }
+            }).fail(function(data) {
+                //TODO:
             });
         });
         <? endif; ?>
@@ -79,7 +83,7 @@ $email = $currentUser->email;
 
                         <label class="control-label" for="fieldset">
                             <blockquote>
-                                <div id="ajax_error"><p><?=$message?></p></div>
+                                <div id="edit_profile_ajax_error"><p><?=$message?></p></div>
                             </blockquote>
                         </label>
 

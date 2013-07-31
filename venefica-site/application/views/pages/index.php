@@ -45,7 +45,7 @@
                                     <div class="span10 offset1">
                                         
                                         <div id="form_wrapper" class="form_wrapper">
-                                            <?=form_open('/invitation/request/1', 'id="requestInvitation" class="request active"')?>
+                                            <?=form_open('/invitation/request/1', array('id' => 'requestInvitation', 'class' => 'request active'))?>
                                             <div class="control-group">
                                                 <div class="controls">
                                                     <div class="input">
@@ -65,7 +65,7 @@
                                             </div>
                                             <?=form_close()?>
                                             
-                                            <?=form_open('/invitation/verify/1', 'id="verifyInvitation" class="verify"')?>
+                                            <?=form_open('/invitation/verify/1', array('id' => 'verifyInvitation', 'class' => 'verify'))?>
                                             <div class="control-group">
                                                 <div class="controls">
                                                     <div class="input">

@@ -38,21 +38,19 @@ class Authentication extends CI_Controller {
     
     public function login() {
         $this->init();
-        $action = $this->getActionFromUri();
         
         $is_valid = $this->login_login();
         
         if ( $is_valid ) {
-            //$email = $this->input->post('login_email');
-            //$password = $this->input->post('login_password');
             //$remember_me = $this->input->post('login_remember_me');
             
+            if ( $this->agent->is_referral() ) {
+                redirect($this->agent->referrer());
+            }
             redirect('/authentication/login');
         }
         
-        if ( $is_valid == FALSE ) {
-            $this->view();
-        }
+        $this->view();
     }
     
     public function forgot() {
@@ -269,6 +267,8 @@ class Authentication extends CI_Controller {
             //load translations
             $this->lang->load('main');
             $this->lang->load('authentication');
+            
+            $this->load->library('user_agent');
             
             $this->load->library('auth_service');
             $this->load->library('usermanagement_service');
