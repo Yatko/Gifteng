@@ -427,8 +427,11 @@ class Post_member extends CI_Controller {
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['encrypt_name'] = true;
         $config['max_size'] = UPLOAD_FILE_MAX_SIZE;
+        $config['min_width'] = UPLOAD_IMAGE_MIN_WIDTH;
+        $config['min_height'] = UPLOAD_IMAGE_MIN_HEIGHT;
         
         $this->load->library('upload', $config);
+        
         if ( !$this->upload->do_upload($field)) {
             $error = $this->upload->display_errors();
             $this->post_form->set_message('file_upload', $error);

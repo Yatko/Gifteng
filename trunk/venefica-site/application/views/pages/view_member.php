@@ -21,7 +21,7 @@
         init_map('view_map', 'view_longitude', 'view_latitude', 'view_marker_longitude', 'view_marker_latitude', false);
         
         $('.ge-request').on('request_created', function(event, adId) {
-            location.reload();
+            self.location.reload();
             //if ( $('#ad_control').length > 0 ) {
             //    $('#ad_control').addClass('hide');
             //}

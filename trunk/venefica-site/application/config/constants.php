@@ -26,6 +26,8 @@ define('DESCRIPTION_MAX_LENGTH', 100);
 define('COMMENT_MAX_LENGTH', 100);
 define('MESSAGE_MAX_LENGTH', 100);
 define('UPLOAD_FILE_MAX_SIZE', 2 * 1024 * 1024); //in bytes
+define('UPLOAD_IMAGE_MIN_WIDTH', 400); //in pixels
+define('UPLOAD_IMAGE_MIN_HEIGHT', 400); //in pixels
 define('UPLOAD_FILE_PREFIX', 'gifteng_');
 define('TEMPLATES', 4);
 define('TEMP_FOLDER', sys_get_temp_dir());

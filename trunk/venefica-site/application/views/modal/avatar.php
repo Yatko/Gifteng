@@ -2,9 +2,14 @@
     $(function() {
         $('#avatar').on('file_selected', function() {
             var $this = $(this);
+            var $error = $(".avatar_ajax_error");
             
             if ( get_file_size($('#avatar_image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                alert('File too big!');
+                if ( !$error.attr('original_text') ) {
+                    $error.attr('original_text', $error.html());
+                }
+                $error.html("<div class='error'>Please limit photo size to 2MB !</div>");
+                
                 $this.html($this.attr('original_text'));
                 return;
             }
@@ -31,6 +36,8 @@
                     //TODO: unknown response received
                 }
 
+                $error.html($error.attr('original_text'));
+                
                 $this.html($this.attr('original_text'));
                 $this.removeClass('btn-ge');
                 $this.removeAttr('disabled');
@@ -40,6 +47,12 @@
                 //TODO
             });
         });
+        $('#avatarContainer').on('hidden', function() {
+            var $error = $(".avatar_ajax_error");
+            if ( $error.attr('original_text') ) {
+                $error.html($error.attr('original_text'));
+            }
+        });
     });
 </script>
 
@@ -47,10 +60,7 @@
     <div class="modal-header">
         <label class="control-label" for="fieldset">
             <blockquote>
-                <p>
-                    Choose your profile picture
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </p>
+                <div class="avatar_ajax_error">Choose your profile picture</div>
             </blockquote>
         </label>
     </div>

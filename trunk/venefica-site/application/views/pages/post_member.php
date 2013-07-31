@@ -27,15 +27,6 @@
 ?>
 
 <script langauge="javascript">
-    function edit_post() {
-        $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
-        $('#member_post_form').submit();
-    }
-    function another_post() {
-        $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
-        $('#member_post_form').submit();
-    }
-    
     $(function() {
         init_map('post_map', 'post_longitude', 'post_latitude', 'post_marker_longitude', 'post_marker_latitude', true);
         
@@ -43,7 +34,7 @@
             var $this = $(this);
             
             if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                alert('File too big!');
+                $(".post_ajax_error").html("<div class='error'>Please limit photo size to 2MB !</div>");
                 $this.html($this.attr('original_text'));
                 return;
             }
@@ -90,7 +81,7 @@ if ( $is_new ) {
                 <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
-                            <p id="ajax_error"><?=$message?></p>
+                            <div class="post_ajax_error"><?=$message?></div>
                         </blockquote>
                     </label>
                     
@@ -158,7 +149,7 @@ if ( $is_new ) {
                 <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
-                            <p id="ajax_error"><?=$message?></p>
+                            <div class="post_ajax_error"><?=$message?></div>
                         </blockquote>
                     </label>
                     
@@ -277,7 +268,7 @@ if ( $is_new ) {
                 <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
-                            <p id="ajax_error"><?=$message?></p>
+                            <div class="post_ajax_error"><?=$message?></div>
                         </blockquote>
                     </label>
                     
@@ -321,7 +312,7 @@ if ( $is_new ) {
                 <div class="well ge-well ge-form">
                     <label class="control-label">
                         <blockquote>
-                            <p id="ajax_error"><?=$message?></p>
+                            <div class="post_ajax_error"><?=$message?></div>
                         </blockquote>
                     </label>
                     
@@ -380,7 +371,7 @@ if ( $is_new ) {
                     <div class="well ge-well ge-form">
                         <label class="control-label">
                             <blockquote>
-                                <p id="ajax_error"><?=$error?></p>
+                                <div class="post_ajax_error"><?=$error?></div>
                             </blockquote>
                         </label>
                         

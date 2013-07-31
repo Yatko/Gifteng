@@ -94,9 +94,14 @@ $subpage = key($_GET); //gets the first element from the array
 
 <?= isset($modal) ? $modal : '' ?>
 
+
 <? if( isLogged() ): ?>
+    
+    <? $this->load->view('javascript/post'); ?>
     <? $this->load->view('modal/post'); ?>
+    
 <? endif; ?>
+
 
 
 <? if( isLogged() ): ?>
@@ -226,13 +231,13 @@ $subpage = key($_GET); //gets the first element from the array
                                 <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
 
                                 <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
-                                    <form action="<?=base_url()?>authentication/login" method="post" accept-charset="UTF-8">
+                                    <?=form_open('/authentication/login')?>
                                         <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
                                         <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
                                         <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
                                         <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
                                         <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
-                                    </form>
+                                    <?=form_close()?>
                                 </div>
                             </li>
                         </ul>
