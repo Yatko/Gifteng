@@ -753,6 +753,8 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
     @Test(expected = AuthorizationException.class)
     public void relistAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+        makeAdActive();
+        
         authenticateClientAsSecondUser();
         client.relistAd(ad.getId());
     }
