@@ -80,7 +80,8 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-detail-view .ge-user .ge-detail {font-size: 100%;}
 .ge-detail-view .ge-user .ge-detail .ge-name a {margin:12px 0 19px 0;} /* TODO margin does not work! */
 .ge-detail-view .ge-item .ge-item-image {min-height:420px;margin:19px 0 0 0;}
-.ge-detail-view .ge-item .ge-action, .ge-detail-view .ge-item .ge-description {padding:0 19px;}
+.ge-detail-view .ge-item .ge-action {padding:0 19px 19px 19px;}
+.ge-detail-view .ge-item .ge-description {padding:0 19px;}
 .ge-detail-view .ge-item .ge-map img {min-height: 195px;}
 .ge-detail-view .ge-messagelist {max-height:589px;}
 
@@ -90,12 +91,12 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-messages .ge-input {padding: 0px;}
 .ge-messages .ge-input .ge-text textarea, .ge-comments .ge-input .ge-text textarea {font-size: 11px;line-height:130%}
 .ge-messages .ge-input .ge-text textarea:focus {border-color: #bdc3c7;}
-.ge-messages .ge-input .btn {color: #fff;padding: 14px 3px !important;}
+.ge-messages .ge-input .btn, .ge-comments .ge-input .btn {color: #fff;padding: 14px 3px !important;}
 .ge-messages .ge-title, .ge-message a.ge-title {font-weight:600;color:#aaaaaa;}
 .ge-messages .ge-subject {padding:9px;}
 .ge-messagelist, .ge-conversation {max-height:117px;overflow: scroll;border-top: 1px solid #e4e4e4;}
 .ge-messagelist .ge-message a.fui-trash, .ge-conversation .ge-message a.fui-trash {float: right;color: #e4e4e4;}
-.ge-message {padding: 9px;background-color: #fafafa;border-bottom: 1px solid #e4e4e4;}
+.ge-message {padding: 9px;min-height:60px;background-color: #fafafa;border-bottom: 1px solid #e4e4e4;}
 .ge-message .ge-user-image {float:left;width:50px;width:50px;width:50px;}
 .ge-message .ge-text {display:table;font-size: 100%;text-shadow: none;}
 .ge-message .ge-text .ge-name {color:#34495e;font-weight:600;} 
@@ -137,6 +138,9 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 }
 .progress .bar {padding-top: 6px;font-size: 80%;}
 .btn-social-facebook {color:#ffffff;}
+.navbar .nav > li > a {font-weight: normal !important;}
+.snap-drawer ul li form > input {background: #34495e;border: 1px solid #bdc3c7;display: block;margin: 15px auto;color: #ffffff;} /*style for Search box*/
+
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}
 .user-giving_recipient .ge-user .ge-points a {font-size: 70%;vertical-align: super;}
@@ -284,7 +288,7 @@ line-height: 0.99em;
 
 /* NAV */
 .ge-navbar .nav sup {text-shadow:none;color: #ffffff;}
-.ge-navbar, .ge-navbar .navbar-inner {background-color:#00bebe;border-radius:0px;}
+.ge-navbar, .ge-navbar .navbar-inner {background-color:#00bebe;border-radius:0px;height:52px;}
 .ge-navbar {font-size: 16.996px; /* 17px */}
 .ge-navbar .nav > li > a {font-size: 16.002px;/* 16px */color: #ffffff;padding: 16px 20px 15px;}
 .ge-navbar .nav > li > a:active, a:hover, a:focus, a:visited {color: #34495e !important;}
