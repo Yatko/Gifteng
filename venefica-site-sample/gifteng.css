@@ -290,6 +290,7 @@ line-height: 0.99em;
 
 
 /* NAV */
+/*.snap-content > .navbar.ge-navbar {position:static !important;z-index:1000;}*/
 .ge-navbar .nav sup {text-shadow:none;color: #ffffff;}
 .ge-navbar, .ge-navbar .navbar-inner {background-color:#00bebe;border-radius:0px;height:52px;}
 .ge-navbar {font-size: 16.996px; /* 17px */}
