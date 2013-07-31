@@ -10,14 +10,6 @@ class Post_member extends CI_Controller {
     const STEP_PREVIEW = 'preview';
     const STEP_POST = 'post';
     
-    var $steps = array(
-        Post_member::STEP_START,
-        Post_member::STEP_DETAILS,
-        Post_member::STEP_MAP,
-        Post_member::STEP_PREVIEW,
-        Post_member::STEP_POST
-    );
-    
     var $ad;
     var $is_new;
     var $adId;

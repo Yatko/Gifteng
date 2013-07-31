@@ -4,7 +4,7 @@
         $adId.val(adId);
         
         if ( $('#editPostContainer').length > 0 ) {
-            $('#editPostContainer').modal('show');
+            $('#editPostContainer').removeData("modal").modal('show');
         }
     }
     

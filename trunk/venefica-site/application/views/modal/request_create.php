@@ -13,7 +13,7 @@
         
         if ( $('#requestContainer').length > 0 ) {
             showRequestStep2();
-            $('#requestContainer').modal('show');
+            $('#requestContainer').removeData("modal").modal('show');
         }
     }
     

@@ -20,6 +20,9 @@
     }
     
     $(function() {
+        $('.ge-ad').on('ad_deleted', function(event, adId) {
+            $('#ad_' + adId).addClass('hide');
+        });
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#ad_' + adId).html(result);
         });

@@ -3,7 +3,7 @@
         var $commentAdId = $("#comment_post_form input[name=commentAdId]");
         $commentAdId.val(adId);
         
-        $('#commentContainer').modal('show');
+        $('#commentContainer').removeData("modal").modal('show');
     }
     
     $(function() {

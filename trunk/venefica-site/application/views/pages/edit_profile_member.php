@@ -41,7 +41,7 @@
                     $('#edit_profile_ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                     $('.modal').modal('hide');
-                    self.location.reload(true);
+                    window.location.reload(true);
                 } else {
                     //TODO: unknown response received
                 }

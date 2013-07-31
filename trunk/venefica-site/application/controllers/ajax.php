@@ -8,6 +8,8 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    // user related
+    
     public function follow() {
         $this->init();
         
@@ -48,6 +50,8 @@ class Ajax extends CI_Controller {
         }
     }
     
+    // comment related
+    
     public function comment() {
         $this->init();
         
@@ -72,6 +76,8 @@ class Ajax extends CI_Controller {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
+    
+    // message related
     
     public function message() {
         $this->init();
@@ -100,6 +106,8 @@ class Ajax extends CI_Controller {
         }
     }
     
+    // ad related
+    
     public function bookmark() {
         $this->init();
         
@@ -115,12 +123,6 @@ class Ajax extends CI_Controller {
             $ad_statistics = $this->ad_service->getStatistics($adId);
             $this->usermanagement_service->refreshUser();
             $currentUser = $this->usermanagement_service->loadUser();
-            
-            //respond_ajax(AJAX_STATUS_RESULT, $ad_statistics->numBookmarks);
-//            respond_ajax_array(array(
-//                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
-//                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
-//            ));
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
@@ -147,12 +149,6 @@ class Ajax extends CI_Controller {
             $this->usermanagement_service->refreshUser();
             $currentUser = $this->usermanagement_service->loadUser();
             
-            //respond_ajax(AJAX_STATUS_RESULT, $ad_statistics->numBookmarks);
-//            respond_ajax_array(array(
-//                AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
-//                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
-//            ));
-            
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
                 USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
@@ -161,6 +157,28 @@ class Ajax extends CI_Controller {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
+    
+    public function delete_ad() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('adId');
+            $this->ad_service->deleteAd($adId);
+            $this->usermanagement_service->refreshUser();
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    // request related
     
     public function request() {
         $this->init();

@@ -75,7 +75,7 @@
                         return;
                     }
                     
-                    $container.append($newElems);
+                    $container.append($(newElements));
                     
                     /**
                     var $newElems = $(newElements).css({opacity: 0});
