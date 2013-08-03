@@ -12,7 +12,7 @@
     <div class="container">
         <div class="row">
             <div class="span2 brand">
-                <a href="<?=base_url()?>index" class="gifteng2"></a>
+                <a href="<?=base_url()?>index" class="gifteng2">&nbsp;</a>
             </div>
             <div class="span2 offset8">
                 <ul class="bottom-icons">
