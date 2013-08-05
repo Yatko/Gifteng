@@ -75,7 +75,7 @@
                         return;
                     }
                     
-                    $container.append($(newElements));
+                    $container.append($newElems);
                     
                     /**
                     var $newElems = $(newElements).css({opacity: 0});
@@ -110,25 +110,28 @@
         ?>
 
         <div class="ge-ad-item-box">
-            <div class="span4 ge-box">
-                <div class="well ge-well">
-                    <div class="ge-ad-id hide" id="ad_<?=$ad_id?>"></div>
-                    <div class="row-fluid">
-                        <div class="span12">
-
-                            <div class="ge-user">
-                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
-                            </div>
-
-                            <div class="ge-item">
-                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => true, 'canShare' => true)); ?>
-                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $currentUser)); ?>
-                            </div><!--./ge-item-->
-
-                            <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
-                        </div>
-                    </div>
-                </div>
+            <div class="span4">
+            	<div class="ge-box">
+	                <div class="well ge-well">
+	                    <div class="ge-ad-id hide" id="ad_<?=$ad_id?>"></div>
+		                    <div class="row-fluid">
+		                        <div class="span12">
+		
+		                            <div class="ge-user">
+		                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
+		                            </div>
+		
+		                            <div class="ge-item">
+		                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => true, 'canShare' => true)); ?>
+		                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $currentUser)); ?>
+		                            </div><!--./ge-item-->
+		
+		                            <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
+		                        </div>
+		                    </div>
+						</div>
+	                </div>
+				</div>
             </div>
         </div>
 

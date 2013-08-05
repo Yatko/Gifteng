@@ -10,9 +10,9 @@
 ?>
 
 <div class="row">			
-    <div class="container user-follow">
-        <div class="row">
-            <div class="ge-tile-view ge-browse">
+	<div class="container user-follow">
+		<div class="row">
+			<div class="ge-tile-view ge-browse">
             
             <? if( isset($follow_users) && is_array($follow_users) && count($follow_users) > 0 ): ?>
             <? foreach( $follow_users as $follow ): ?>
@@ -21,23 +21,31 @@
                 $user_id = $follow->id;
                 $ads = $follow_ads[$user_id];
                 ?>
-                
-                <div class="span3">
-                    <div class="ge-box">
-                        <div class="well ge-well">
-                            <div class="row-fluid">
-                                <div class="span12">
-
-                                    <div class="ge-user">
-                                        <? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
-                                    </div><!--./ge-user-->
-
+				
+				<div class="span3">
+					<div class="ge-box">
+						<div class="well ge-well">
+							
+							<div class="row-fluid">
+								<div class="span12">
+									
+									<div class="ge-user">
+										<? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
+									</div><!--./ge-user-->
+									
+									<div class="ge-action">
+										<div class="row-fluid">
+											<div class="span12">
+												<a href="#fakelink" class="btn btn-small btn-block">Following</a>
+											</div>
+										</div>
+									</div><!--./ge-action-->
+									
                                     <? if( count($ads) > 0 ): ?>
                                     
-                                    <div class="ge-text ge-description ge-user-image ge-action">
-                                        <div class="row-fluid">
-                                        
-                                        <? foreach ($ads as $ad): ?>
+									<div class="ge-text ge-description ge-user-image ge-action">
+										<div class="row-fluid">
+										<? foreach ($ads as $ad): ?>
                                             
                                             <?
                                             $img = $ad->getImageUrl();
@@ -56,26 +64,27 @@
                                     
                                     <? else: ?>
                                     
-                                    <div class="ge-text ge-description ge-user-image ge-action">
-                                        <div class="row-fluid">
+									<div class="ge-text ge-description ge-user-image ge-action">
+										<div class="row-fluid">
                                             <div class="span4">
                                                 <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img img-rounded">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><!--./ge-action-->
                                     
                                     <? endif; ?>
                                     
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--./ge-box-->
-                </div>
+								</div>
+							</div>
+					
+						</div>
+					</div><!--./ge-box-->
+				</div>
 
             <? endforeach; ?>
             <? endif; ?>
-
-            </div><!--./ge-tile-view-->
-        </div><!--./row-->
-    </div><!--./container user-follow-->					
+            
+			</div><!--./ge-tile-view-->
+		</div><!--./row-->
+	</div><!--./container user-follow-->					
 </div>
