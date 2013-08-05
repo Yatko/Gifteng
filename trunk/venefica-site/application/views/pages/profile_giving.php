@@ -20,9 +20,6 @@
     }
     
     $(function() {
-        $('.ge-ad').on('ad_deleted', function(event, adId) {
-            $('#ad_' + adId).addClass('hide');
-        });
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#ad_' + adId).html(result);
         });
@@ -60,25 +57,29 @@
                                         <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img" />
 
                                         <div class="row-fluid">
-                                            <div class="span12 ge-action">
-                                                <div class="row-fluid">
-                                                    <div class="span12">
-                                                        <button data-target="#postContainer" data-toggle="modal" class="btn btn-small btn-block btn-ge">
-                                                            <i class="ge-icon-giftbox"></i>
-                                                            Post Your First Gift Now!
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                        	<div class="ge-action">
+	                                            <div class="span12">
+	                                                <div class="row-fluid">
+	                                                    <div class="span12">
+	                                                        <button data-target="#postContainer" data-toggle="modal" class="btn btn-small btn-block btn-ge">
+	                                                            <i class="ge-icon-giftbox"></i>
+	                                                            Post Your First Gift Now!
+	                                                        </button>
+	                                                    </div>
+	                                                </div>
+	                                            </div>
                                             </div>
                                         </div>
                                     </div><!--./ge-item-image-->
-
-                                    <div class="row-fluid ge-text ge-description">
-                                        <div class="row-fluid">
-                                            <p class="ge-title"> 
-                                                <span class="ge-subtitle">You don't have anything to give at this time. Start by posting your first Gift now :)</span>
-                                            </p>
-                                        </div><!--/text-->
+									
+									<div class="ge-text ge-description">
+	                                    <div class="row-fluid">
+	                                        <div class="row-fluid">
+	                                            <p class="ge-title"> 
+	                                                <span class="ge-subtitle">You don't have anything to give at this time. Start by posting your first Gift now :)</span>
+	                                            </p>
+	                                        </div><!--/text-->
+	                                    </div>
                                     </div>
                                 </div><!--./ge-item-->
 

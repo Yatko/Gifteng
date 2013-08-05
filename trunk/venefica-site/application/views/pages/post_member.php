@@ -45,6 +45,8 @@
 </script>
 
 <?
+//print_r($this->session->all_userdata());
+
 if ( $is_new ) {
     $form_action = '/post/member' . ($is_modal ? '?modal' : '');
 } else {
@@ -161,13 +163,15 @@ if ( $is_new ) {
                         </div>
                     </div><!--./gift-->
 
-                    <div class="row-fluid ge-description">
-                        <div class="span12">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <textarea id="description" name="description" rows="4" maxlength="1500" placeholder="Describe it ..."><?=$description?></textarea>
-                                </div>
-                            </div>
+                    <div class="row-fluid">
+                    	<div class="ge-description">
+	                        <div class="span12">
+	                            <div class="control-group">
+	                                <div class="controls">
+	                                    <textarea id="description" name="description" rows="4" maxlength="1500" placeholder="Describe it ..."><?=$description?></textarea>
+	                                </div>
+	                            </div>
+	                        </div>
                         </div>
                     </div><!--/description-->
 
@@ -314,35 +318,39 @@ if ( $is_new ) {
                         </blockquote>
                     </label>
                     
-                    <div class="row-fluid ge-item-image">
+                    <div class="row-fluid">
+                    	<div class="ge-item-image">
                         <img src="<?=$image->getDetectedImageUrl()?>" class="img img-rounded" />
+                    	</div>
                     </div><!--./ge-item-image-->
 
-                    <div id="item_description" class="row-fluid ge-text">
-                        <p class="ge-title" style="margin-top: 0px;padding-top: 0px;line-height: 16px;"><?=$title?></p>
-                        <p class="ge-description">
-                            <em>Description:</em> <?=$description?>
-                        </p>
-                        <p class="ge-details">
-                            <ul>
-                                <li><em>Category: </em><?=$category?></li>
-                                <li><em>Current value: $</em><?=$price?></li>
-                            </ul>
-                            <div class="row-fluid">
-                                <div class="span6">
-                                    <label class="checkbox">
-                                        <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-                                        Pick up
-                                    </label>
-                                </div>
-                                <div class="span6">
-                                    <label class="checkbox">
-                                        <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-                                        Free shipping
-                                    </label>	
-                                </div>	
-                            </div>
-                        </p>
+                    <div id="item_description" class="row-fluid">
+                    	<div class="ge-text">
+	                        <div class="ge-title"><?=$title?></div>
+	                        <div class="ge-description">
+	                            <em>Description:</em> <?=$description?>
+	                        </div>
+	                        <div class="ge-details">
+	                            <ul>
+	                                <li><em>Category: </em><?=$category?></li>
+	                                <li><em>Current value: $</em><?=$price?></li>
+	                            </ul>
+	                            <div class="row-fluid">
+	                                <div class="span6">
+	                                    <label class="checkbox">
+	                                        <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+	                                        Pick up
+	                                    </label>
+	                                </div>
+	                                <div class="span6">
+	                                    <label class="checkbox">
+	                                        <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+	                                        Free shipping
+	                                    </label>	
+	                                </div>	
+	                            </div>
+	                        </div>
+                        </div>
                     </div><!--./ge-text-->
 
                     <div class="row-fluid">
