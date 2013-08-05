@@ -36,7 +36,7 @@
                                     <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true)); ?>
                                     
                                 <? endforeach; ?>
-                                
+
                                 </div>
                             </div><!--./ge-conversation-->
                         </div>
@@ -50,7 +50,7 @@
 
     <? if( $request != null ): ?>
     
-        <?
+        <? 
         $requestor_user = $request->user;
         $ad_title = $ad->getSafeTitle();
         $view_link = $ad->getViewUrl();
