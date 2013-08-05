@@ -27,7 +27,7 @@ public class LocationDaoImpl extends DaoBase<Location> implements LocationDao {
         List<Location> locations = createQuery(""
                 + "select l "
                 + "from " + getDomainClassName() + " l "
-                + "where l.zipcode = :zipcode"
+                + "where l.zipcode like '%' || :zipcode || '%' "
                 + "")
                 .setParameter("zipcode", zipcode)
                 .setMaxResults(1)

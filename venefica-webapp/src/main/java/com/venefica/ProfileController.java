@@ -26,7 +26,9 @@ public class ProfileController {
     private TokenEncryptor tokenEncryptor;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void profile(@RequestParam("token") String encryptedToken, Model model) {
+    public void profile(
+            @RequestParam("token") String encryptedToken,
+            Model model) {
         try {
             Token token = tokenEncryptor.decrypt(encryptedToken);
             if (token != null) {

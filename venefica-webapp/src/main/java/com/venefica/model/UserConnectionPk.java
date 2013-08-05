@@ -17,9 +17,11 @@ public class UserConnectionPk implements Serializable {
 
     @Column(nullable = false)
     private String userId;
+    
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Provider providerId;
+    
     @Column(nullable = false)
     private String providerUserId;
 
@@ -27,7 +29,6 @@ public class UserConnectionPk implements Serializable {
     }
 
     public UserConnectionPk(String userId, Provider providerId, String providerUserId) {
-        super();
         this.userId = userId;
         this.providerId = providerId;
         this.providerUserId = providerUserId;

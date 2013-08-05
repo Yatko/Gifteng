@@ -2,6 +2,7 @@ package com.venefica.config;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.connect.ConnectSupport;
+import com.venefica.connect.DummySignUpAdapter;
 import com.venefica.connect.UserSignInAdapter;
 import com.venefica.connect.UserSignUpAdapter;
 import javax.inject.Inject;
@@ -15,18 +16,19 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
-import org.springframework.social.vkontakte.connect.VKontakteConnectionFactory;
+import org.springframework.web.context.WebApplicationContext;
+//import org.springframework.social.vkontakte.connect.VKontakteConnectionFactory;
 
 /**
  * Spring social configuration.
  *
  * @author Sviatoslav Grebenchukov
- *
  */
 @Configuration
 public class SocialConfig {
@@ -52,35 +54,41 @@ public class SocialConfig {
         String twitterConsumerKey = environment.getProperty("twitter.consumerKey");
         String twitterConsumerSecret = environment.getProperty("twitter.consumerSecret");
         
-        String vkontakteClientId = environment.getProperty("vkontakte.clientId");
-        String vkontakteClientSecret = environment.getProperty("vkontakte.clientSecret");
+//        String vkontakteClientId = environment.getProperty("vkontakte.clientId");
+//        String vkontakteClientSecret = environment.getProperty("vkontakte.clientSecret");
         
         ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
         registry.addConnectionFactory(new FacebookConnectionFactory(facebookClientId, facebookClientSecret));
         registry.addConnectionFactory(new TwitterConnectionFactory(twitterConsumerKey, twitterConsumerSecret));
-        registry.addConnectionFactory(new VKontakteConnectionFactory(vkontakteClientId, vkontakteClientSecret));
+//        registry.addConnectionFactory(new VKontakteConnectionFactory(vkontakteClientId, vkontakteClientSecret));
         
         return registry;
     }
 
     /**
-     * Singleton data access object providing access to connections across all
-     * users.
+     * Singleton data access object providing access to connections across
+     * all users.
      */
     @Bean
     public UsersConnectionRepository usersConnectionRepository() {
-        JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource,
-                connectionFactoryLocator(), Encryptors.noOpText());
+        JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator(), Encryptors.noOpText());
         repository.setConnectionSignUp(userSignUpAdapter());
         return repository;
     }
 
+    /**
+     * A proxy to a request-scoped object.
+     * 
+     * @return 
+     */
     @Bean
-    @Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
+    @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.INTERFACES)
     public ConnectionRepository connectionRepository() {
-        Long userId = securityContextHolder.getContext().getUserId();
-        return userId != null ? usersConnectionRepository().createConnectionRepository(
-                userId.toString()) : null;
+        Long userId = securityContextHolder.getContext() != null ? securityContextHolder.getContext().getUserId() : null;
+        if ( userId != null ) {
+            return usersConnectionRepository().createConnectionRepository(userId.toString());
+        }
+        return null;
     }
 
     /**
@@ -96,8 +104,9 @@ public class SocialConfig {
      * Creates partially completed user and stores him in the database.
      */
     @Bean
-    public UserSignUpAdapter userSignUpAdapter() {
-        return new UserSignUpAdapter();
+    public ConnectionSignUp userSignUpAdapter() {
+        //return new UserSignUpAdapter();
+        return new DummySignUpAdapter();
     }
 
     /**

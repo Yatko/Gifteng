@@ -41,23 +41,23 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-core</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>1.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-web</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>1.0.3.RELEASE</version>
         </dependency>
         <!-- SaaS providers -->
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-facebook</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>1.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-twitter</artifactId>
-            <version>1.0.3.RELEASE</version>
+            <version>1.0.5.RELEASE</version>
         </dependency>
         
         <dependency>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-test</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>1.0.3.RELEASE</version>
             <scope>test</scope>
         </dependency>
         

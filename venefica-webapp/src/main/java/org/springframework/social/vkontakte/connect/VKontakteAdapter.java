@@ -25,36 +25,42 @@ import org.springframework.social.vkontakte.api.VKontakteProfile;
 
 /**
  * VKontakte ApiAdapter implementation.
+ * 
  * @author vkolodrevskiy
  */
 public class VKontakteAdapter implements ApiAdapter<VKontakte> {
-	public boolean test(VKontakte vkontakte) {
-		try {
-			vkontakte.usersOperations().getProfile();
-			return true;
-		} catch (ApiException e) {
-			return false;
-		}
-	}
 
-	public void setConnectionValues(VKontakte vkontakte, ConnectionValues values) {
-		VKontakteProfile profile = vkontakte.usersOperations().getProfile();
-		values.setProviderUserId(profile.getUid());
-		values.setDisplayName(profile.getFirstName() + " " + profile.getLastName());
-		values.setProfileUrl("http://vkontakte.ru/id" + profile.getUid());
-		values.setImageUrl(profile.getPhoto());
-	}
+    @Override
+    public boolean test(VKontakte vkontakte) {
+        try {
+            vkontakte.usersOperations().getProfile();
+            return true;
+        } catch (ApiException e) {
+            return false;
+        }
+    }
 
-	public UserProfile fetchUserProfile(VKontakte vkontakte) {
-		VKontakteProfile profile = vkontakte.usersOperations().getProfile();
-		return new UserProfileBuilder()
+    @Override
+    public void setConnectionValues(VKontakte vkontakte, ConnectionValues values) {
+        VKontakteProfile profile = vkontakte.usersOperations().getProfile();
+        values.setProviderUserId(profile.getUid());
+        values.setDisplayName(profile.getFirstName() + " " + profile.getLastName());
+        values.setProfileUrl("http://vkontakte.ru/id" + profile.getUid());
+        values.setImageUrl(profile.getPhoto());
+    }
+
+    @Override
+    public UserProfile fetchUserProfile(VKontakte vkontakte) {
+        VKontakteProfile profile = vkontakte.usersOperations().getProfile();
+        return new UserProfileBuilder()
                 .setFirstName(profile.getFirstName())
                 .setLastName(profile.getLastName())
                 .setName(profile.getFirstName() + " " + profile.getLastName())
                 .build();
-	}
+    }
 
-	public void updateStatus(VKontakte vkontakte, String message) {
-		vkontakte.wallOperations().post(message);
-	}
+    @Override
+    public void updateStatus(VKontakte vkontakte, String message) {
+        vkontakte.wallOperations().post(message);
+    }
 }
