@@ -72,8 +72,8 @@
         <? if ($step == Post_business::STEP_START): ?>
             
             
-            <div id="business_post_start" class="span6 ge-form">
-            <div class="well ge-well">
+            <div id="business_post_start" class="span6">
+            <div class="well ge-well ge-form">
             
             <div class="row-fluid">
                 <div class="span12">
@@ -213,16 +213,18 @@
 
 
             <div id="business_post_online" class="span6 ge-form">
-            <div class="well ge-well">
+            <div class="well ge-well ge-form">
             
-            <div class="row-fluid ge-terms">
-                <div class="span12">
-                    <div class="control-group">
-                        <label class="control-label" for="description">Terms & conditions</label>
-                        <div class="controls">
-                            <textarea id="description" name="description" rows="4"><?=set_value('description') ?></textarea>
-                        </div>
-                    </div>
+            <div class="row-fluid">
+            	<div class="ge-terms">
+	                <div class="span12">
+	                    <div class="control-group">
+	                        <label class="control-label" for="description">Terms &amp; conditions</label>
+	                        <div class="controls">
+	                            <textarea id="description" name="description" rows="4"><?=set_value('description') ?></textarea>
+	                        </div>
+	                    </div>
+	                </div>
                 </div>
             </div><!--/terms-->
             
@@ -284,11 +286,11 @@
                 </div>
             </div><!--./photo -->
             
-            <div class="row-fluid ge-submit">
+            <div class="row-fluid">
                 <div class="span12">
                     <div class="control-group">
                         <div class="controls">
-                            <button type="submit" class="btn btn-huge btn-block btn-primary">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                            <button type="submit" class="btn ge-submit btn-huge btn-block btn-primary">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -313,168 +315,178 @@
             $availableToTime_AM_NEXTDAY = array('24' => '12:00 AM');
             ?>
 
-            <div id="business_post_location" class="span6 ge-form">
-            <div class="well ge-well">
+            <div id="business_post_location" class="span6">
+            <div class="well ge-well ge-form">
             
-            <div class="row-fluid ge-terms">
-                <div class="span12">
-                    <div class="control-group">
-                        <label class="control-label" for="description">Terms & conditions</label>
-                        <div class="controls">
-                            <textarea id="description" name="description" rows="4"><?=set_value('description') ?></textarea>
-                        </div>
-                    </div>
+            <div class="row-fluid">
+            	<div class="ge-terms">
+	                <div class="span12">
+	                    <div class="control-group">
+	                        <label class="control-label" for="description">Terms &amp; conditions</label>
+	                        <div class="controls">
+	                            <textarea id="description" name="description" rows="4"><?=set_value('description') ?></textarea>
+	                        </div>
+	                    </div>
+	                </div>
                 </div>
             </div><!--/terms-->
             
-            <div class="row-fluid ge-select">
-                <div class="span12">
-                    <div class="control-group">
-                        <label class="control-label">
-                            <div class="span3">
-                                <label for="availableDays">Available</label>
-                            </div>
-                            <div class="span6 ge-check">
-                                <div class="control-group">
-                                    <div class="controls">
-                                        <label class="checkbox" for="allWeek">
-                                            <input id="allWeek" type="checkbox" data-toggle="checkbox">
-                                            All week
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                        <div class="controls">
-                            <div class="span12">
-                                <select id="availableDays" name="availableDays" multiple="multiple" class="select-block mbl select-info" title=' '>
-                                    <option value="<?=Ad_model::WEEKDAY_MONDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_MONDAY) ?>>Monday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_TUESDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_TUESDAY) ?>>Tuesday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_WEDNESDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_WEDNESDAY) ?>>Wednesday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_THURSDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_THURSDAY) ?>>Thursday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_FRIDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_FRIDAY) ?>>Friday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_SATURDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_SATURDAY) ?>>Saturday</option>
-                                    <option value="<?=Ad_model::WEEKDAY_SUNDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_SUNDAY) ?>>Sunday</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="row-fluid">
+            	<div class="ge-select">
+	                <div class="span12">
+	                    <div class="control-group">
+	                        <label class="control-label">
+	                            <div class="span3">
+	                                <label for="availableDays">Available</label>
+	                            </div>
+	                            <div class="span6 ge-check">
+	                                <div class="control-group">
+	                                    <div class="controls">
+	                                        <label class="checkbox" for="allWeek">
+	                                            <input id="allWeek" type="checkbox" data-toggle="checkbox">
+	                                            All week
+	                                        </label>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </label>
+	                        <div class="controls">
+	                            <div class="span12">
+	                                <select id="availableDays" name="availableDays" multiple="multiple" class="select-block mbl select-info" title=' '>
+	                                    <option value="<?=Ad_model::WEEKDAY_MONDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_MONDAY) ?>>Monday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_TUESDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_TUESDAY) ?>>Tuesday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_WEDNESDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_WEDNESDAY) ?>>Wednesday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_THURSDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_THURSDAY) ?>>Thursday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_FRIDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_FRIDAY) ?>>Friday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_SATURDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_SATURDAY) ?>>Saturday</option>
+	                                    <option value="<?=Ad_model::WEEKDAY_SUNDAY ?>" <?=set_select('availableDays', Ad_model::WEEKDAY_SUNDAY) ?>>Sunday</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+            	</div>
             </div><!--./select-day -->
             
-            <div class="row-fluid ge-select">
-                <div class="span6">
-                    <div class="control-group">
-                        <label class="control-label" for="availableFromTime">From</label>
-                        <div class="controls">
-                            <select id="availableFromTime" name="availableFromTime" class="select-block mbl select-info" data-size="5">
-                                <option value="*" <?=set_select('availableFromTime', '*')?> class="highlighted fui-lock">All day</option>
-                                <? foreach ( $availableFromTime_AM as $key => $value ): ?>
-                                    <option value="<?=$key?>" <?=$availableFromTime == $key ? 'selected="selected"' : ''?>><?=$value?></option>
-                                <? endforeach; ?>
-                                <option data-divider="true"></option>
-                                <? foreach ( $availableFromTime_PM as $key => $value ): ?>
-                                    <option value="<?=$key?>" <?=$availableFromTime == $key ? 'selected="selected"' : ''?>><?=$value?></option>
-                                <? endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="span6">
-                    <div class="control-group">
-                        <label class="control-label" for="availableToTime">Until</label>
-                        <div class="controls">
-                            <select id="availableToTime" name="availableToTime" class="select-block mbl select-info" data-size="5">
-                                <? foreach ( $availableToTime_AM as $key => $value ): ?>
-                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
-                                <? endforeach; ?>
-                                <option data-divider="true"></option>
-                                <? foreach ( $availableToTime_PM as $key => $value ): ?>
-                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
-                                <? endforeach; ?>
-                                <option data-divider="true"></option>
-                                <? foreach ( $availableToTime_AM_NEXTDAY as $key => $value ): ?>
-                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
-                                <? endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
+            <div class="row-fluid">
+            	<div class="ge-select">
+	                <div class="span6">
+	                    <div class="control-group">
+	                        <label class="control-label" for="availableFromTime">From</label>
+	                        <div class="controls">
+	                            <select id="availableFromTime" name="availableFromTime" class="select-block mbl select-info" data-size="5">
+	                                <option value="*" <?=set_select('availableFromTime', '*')?> class="highlighted fui-lock">All day</option>
+	                                <? foreach ( $availableFromTime_AM as $key => $value ): ?>
+	                                    <option value="<?=$key?>" <?=$availableFromTime == $key ? 'selected="selected"' : ''?>><?=$value?></option>
+	                                <? endforeach; ?>
+	                                <option data-divider="true"></option>
+	                                <? foreach ( $availableFromTime_PM as $key => $value ): ?>
+	                                    <option value="<?=$key?>" <?=$availableFromTime == $key ? 'selected="selected"' : ''?>><?=$value?></option>
+	                                <? endforeach; ?>
+	                            </select>
+	                        </div>
+	                    </div>
+	                </div>
+	
+	                <div class="span6">
+	                    <div class="control-group">
+	                        <label class="control-label" for="availableToTime">Until</label>
+	                        <div class="controls">
+	                            <select id="availableToTime" name="availableToTime" class="select-block mbl select-info" data-size="5">
+	                                <? foreach ( $availableToTime_AM as $key => $value ): ?>
+	                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
+	                                <? endforeach; ?>
+	                                <option data-divider="true"></option>
+	                                <? foreach ( $availableToTime_PM as $key => $value ): ?>
+	                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
+	                                <? endforeach; ?>
+	                                <option data-divider="true"></option>
+	                                <? foreach ( $availableToTime_AM_NEXTDAY as $key => $value ): ?>
+	                                    <option value="<?=$key?>" <?=set_select('availableToTime', $key)?>><?=$value?></option>
+	                                <? endforeach; ?>
+	                            </select>
+	                        </div>
+	                    </div>
+	                </div>
                 </div>
             </div><!--./select-time -->
             
-            <div class="row-fluid ge-check">
-                <div class="span12">
-                    <div class="control-group">
-                        <div class="controls">
-                            <label class="checkbox" for="needReservation">
-                                <input id="needReservation" name="needReservation" value="1" <?=set_checkbox('needReservation', '1', FALSE) ?> type="checkbox" data-toggle="checkbox">
-                                Appointment/Reservation needed
-                            </label>
-                        </div>
-                    </div>
+            <div class="row-fluid">
+            	<div class="ge-check">
+	                <div class="span12">
+	                    <div class="control-group">
+	                        <div class="controls">
+	                            <label class="checkbox" for="needReservation">
+	                                <input id="needReservation" name="needReservation" value="1" <?=set_checkbox('needReservation', '1', FALSE) ?> type="checkbox" data-toggle="checkbox">
+	                                Appointment/Reservation needed
+	                            </label>
+	                        </div>
+	                    </div>
+	                </div>
                 </div>
             </div><!--./appointment -->
             
             <hr>
 
-            <div class="row-fluid ge-multiple-location">
-                <div class="span12">
-                    
-                    <div class="row-fluid">
-                        <div class="span6">
-                            Location <a data-toggle="modal" href="#locationContainer">+ Add location</a>
-                        </div>
-                        <div class="span2">
-                            Gifts
-                        </div>
-                        <div class="span2">
-                            Photo
-                        </div>
-                        <div class="span2">
-                            QR/Bar
-                        </div>
-                    </div><!--./add location-->
-                    
-                    
-                    <div id="business_post_location_addresses">
-
-                    <? if( !is_empty($currentUser->addresses) ): ?>
-                    <? foreach( $currentUser->addresses as $address ): ?>
-                        
-                        <? $this->load->view('element/address', array('address' => $address, 'image' => ${'image_'.$address->id}, 'bar_code' => ${'bar_code_'.$address->id})); ?>
-                        
-                    <? endforeach; ?>
-                    <? endif; ?>
-
-                    </div>
-
-                    
-                    <div class="row-fluid">
-                        <div class="span6">
-                            Location
-                            <a data-toggle="modal" href="#locationContainer">+ Add location</a>
-                        </div>
-                        <div class="span2">
-                            Gifts
-                        </div>
-                        <div class="span2">
-                            Photo
-                        </div>
-                        <div class="span2">
-                            QR/Bar
-                        </div>
-                    </div><!--./add location-->
-                    
-                    
-                </div>
+            <div class="row-fluid">
+            	<div class="ge-multiple-location">
+	                <div class="span12">
+	                    
+	                    <div class="row-fluid">
+	                        <div class="span6">
+	                            Location <a data-toggle="modal" href="#locationContainer">+ Add location</a>
+	                        </div>
+	                        <div class="span2">
+	                            Gifts
+	                        </div>
+	                        <div class="span2">
+	                            Photo
+	                        </div>
+	                        <div class="span2">
+	                            QR/Bar
+	                        </div>
+	                    </div><!--./add location-->
+	                    
+	                    
+	                    <div id="business_post_location_addresses">
+	
+	                    <? if( !is_empty($currentUser->addresses) ): ?>
+	                    <? foreach( $currentUser->addresses as $address ): ?>
+	                        
+	                        <? $this->load->view('element/address', array('address' => $address, 'image' => ${'image_'.$address->id}, 'bar_code' => ${'bar_code_'.$address->id})); ?>
+	                        
+	                    <? endforeach; ?>
+	                    <? endif; ?>
+	
+	                    </div>
+	
+	                    
+	                    <div class="row-fluid">
+	                        <div class="span6">
+	                            Location
+	                            <a data-toggle="modal" href="#locationContainer">+ Add location</a>
+	                        </div>
+	                        <div class="span2">
+	                            Gifts
+	                        </div>
+	                        <div class="span2">
+	                            Photo
+	                        </div>
+	                        <div class="span2">
+	                            QR/Bar
+	                        </div>
+	                    </div><!--./add location-->
+	                    
+	                    
+	                </div>
+            	</div>
             </div><!--/multiple locations-->
 
-            <div class="row-fluid ge-submit">
+            <div class="row-fluid">
                 <div class="span12">
                     <div class="control-group">
                         <div class="controls">
-                            <button type="submit" class="btn btn-huge btn-block btn-primary">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                            <button type="submit" class="btn ge-submit btn-huge btn-block btn-primary">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
                         </div>
                     </div>
                 </div>

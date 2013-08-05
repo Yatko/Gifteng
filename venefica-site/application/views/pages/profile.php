@@ -45,7 +45,7 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                     <div class="span6">
                         <? $this->load->view('element/user', array('user' => $user, 'canEdit' => true, 'small' => false)); ?>
                     </div>
-                    <div class="span6">
+                    <div class="span6 mobile-four">
                         <div class="ge-info">
                             <ul class="nav nav-tabs nav-append-content hidden-phone">
                                 <li class="hidden-tablet <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
