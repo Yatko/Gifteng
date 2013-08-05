@@ -295,6 +295,38 @@ class Usermanagement_service {
         }
     }
     
+    //******************
+    //* social network *
+    //******************
+    
+    /**
+     * 
+     * @return array of string
+     * @throws Exception
+     */
+    public function getConnectedSocialNetworks() {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getConnectedSocialNetworks();
+            
+            $networks = array();
+            if ( hasField($result, 'network') && $result->network ) {
+                if ( is_array($result->network) && count($result->network) > 0 ) {
+                    foreach ( $result->network as $network ) {
+                        array_push($networks, $network);
+                    }
+                } elseif ( !is_empty($result->network) ) {
+                    $network = $result->network;
+                    array_push($networks, $network);
+                }
+            }
+            return $networks;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, "Getting connected social network list failed! " . $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     
     
     /**

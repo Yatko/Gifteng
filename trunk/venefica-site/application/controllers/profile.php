@@ -400,20 +400,23 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     public function setting($user) {
-        $modal = $this->getProfileModal();
+        try {
+            $networks = $this->usermanagement_service->getConnectedSocialNetworks();
+        } catch ( Exception $ex ) {
+            $networks = array();
+        }
         
+        $modal = $this->getProfileModal();
+
         $data = array();
         $data['user'] = $user;
+        $data['networks'] = $networks;
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
-        $this->load->view('javascript/follow');
-        $this->load->view('javascript/bookmark');
-        $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
-        $this->load->view('javascript/request');
+        $this->load->view('javascript/social');
         $this->load->view('pages/profile', $data);
         if ( isOwner($user) ) {
-            //TODO
+            $this->load->view('pages/profile_setting', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }

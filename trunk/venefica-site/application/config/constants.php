@@ -11,6 +11,11 @@ define('MESSAGE_SERVICE_WSDL',      SERVER_URL.'/services/MessageService?wsdl');
 define('USER_SERVICE_WSDL',         SERVER_URL.'/services/UserManagementService?wsdl');
 define('UTILITY_SERVICE_WSDL',      SERVER_URL.'/services/UtilityService?wsdl');
 
+define('CONNECT_TO_FACEBOOK_URL',   SERVER_URL.'/connect/facebook?scope=email,publish_stream,user_status&display=popup');
+define('SIGN_IN_FACEBOOK_URL',      SERVER_URL.'/signin/facebook?scope=email,publish_stream,user_status&display=popup');
+define('CONNECT_TO_TWITTER_URL',   SERVER_URL.'/connect/twitter?display=popup');
+define('SIGN_IN_TWITTER_URL',      SERVER_URL.'/signin/twitter?display=popup');
+
 define('DEBUG', 'debug');
 define('INFO',  'info');
 define('ERROR', 'error');
