@@ -55,7 +55,7 @@ public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
     private String getEncryptedToken(HttpServletRequest request) {
         String encryptedToken = request.getHeader(Constants.AUTH_TOKEN);
 
-        if (encryptedToken == null) {
+        if ( encryptedToken == null || encryptedToken.isEmpty() ) {
             // Try to get token from the cookies
             Cookie[] cookies = request.getCookies();
 
@@ -67,6 +67,11 @@ public class TokenDecryptionInterceptorMvc extends HandlerInterceptorAdapter {
                     }
                 }
             }
+        }
+        
+        if ( encryptedToken == null || encryptedToken.isEmpty() ) {
+            //Try to get from the params
+            encryptedToken = request.getParameter(Constants.AUTH_TOKEN);
         }
 
         return encryptedToken;

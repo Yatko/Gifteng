@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import javax.jws.WebService;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.vkontakte.api.VKontakte;
+//import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -297,11 +297,11 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             twitter.timelineOperations().updateStatus(message);
         }
 
-        // VKontakte
-        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
-        if (vkontakte != null) {
-            vkontakte.wallOperations().post(message);
-        }
+//        // VKontakte
+//        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
+//        if (vkontakte != null) {
+//            vkontakte.wallOperations().post(message);
+//        }
     }
     
     // internal helpers

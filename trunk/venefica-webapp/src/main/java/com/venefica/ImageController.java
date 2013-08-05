@@ -20,15 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/images")
 public class ImageController {
 
-    private static final String JPEG_MIME_TYPE = "image/jpeg";
-    private static final String PNG_MIME_TYPE = "image/x-png";
-    
     @Inject
     private ImageDao imageDao;
 
     @RequestMapping("/img{imageId}")
     @Transactional
-    public void image(@PathVariable Long imageId, HttpServletResponse response) throws IOException {
+    public void image(
+            @PathVariable Long imageId,
+            HttpServletResponse response) throws IOException {
         Image img = imageDao.get(imageId);
 
         if (img == null) {
@@ -36,19 +35,9 @@ public class ImageController {
             return;
         }
 
-        switch (img.getImgType()) {
-            case JPEG:
-                response.setContentType(JPEG_MIME_TYPE);
-                break;
-            case PNG:
-                response.setContentType(PNG_MIME_TYPE);
-                break;
-            default:
-                response.setContentType(JPEG_MIME_TYPE);
-        }
-
         byte[] imageData = img.getData();
 
+        response.setContentType(img.getImgType().getMimeType());
         response.setContentLength(imageData.length);
 
         ServletOutputStream out = response.getOutputStream();

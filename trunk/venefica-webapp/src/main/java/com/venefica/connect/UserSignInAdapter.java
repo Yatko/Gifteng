@@ -18,7 +18,7 @@ import org.springframework.web.context.request.NativeWebRequest;
  */
 public class UserSignInAdapter implements SignInAdapter {
 
-    private static final String TOKEN_PARAM = "token";
+    private static final String PARAM_TOKEN = "token";
     private static final String PROFILE_URL = "/profile";
     
     private final Log log = LogFactory.getLog(UserSignInAdapter.class);
@@ -27,13 +27,12 @@ public class UserSignInAdapter implements SignInAdapter {
     private TokenEncryptor tokenEncryptor;
 
     @Override
-    public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
+    public String signIn(String userId, Connection connection, NativeWebRequest request) {
         try {
             Token token = new Token(Long.parseLong(userId));
             String encryptedToken = tokenEncryptor.encrypt(token);
 
-            return URIBuilder.fromUri(PROFILE_URL).queryParam(TOKEN_PARAM, encryptedToken).build()
-                    .toString();
+            return URIBuilder.fromUri(PROFILE_URL).queryParam(PARAM_TOKEN, encryptedToken).build().toString();
         } catch (Exception e) {
             log.error("Exception thrown", e);
             throw new RuntimeException(e);

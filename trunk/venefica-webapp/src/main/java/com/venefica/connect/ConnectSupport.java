@@ -1,6 +1,5 @@
 package com.venefica.connect;
 
-import com.venefica.config.Constants;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +32,14 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class ConnectSupport {
 
+    public static final String CALLBACK_PATH = "callback";
+    
+    private static final String OAUTH_TOKEN_ATTRIBUTE = "oauthToken";
+    private final static String PARAM_VERIFIER = "oauth_verifier";
+    private final static String PARAM_CODE = "code";
+    private final static String PARAM_SCOPE = "scope";
+    private final static String PARAM_DISPLAY = "display";
+    
     private static final Log logger = LogFactory.getLog(ConnectSupport.class);
 
     /**
@@ -46,10 +53,49 @@ public class ConnectSupport {
      * @throws IllegalArgumentException if the connection factory is not OAuth1
      * based.
      */
-    public String buildOAuthUrl(ConnectionFactory<?> connectionFactory, NativeWebRequest request) {
+    public String buildOAuthUrl(ConnectionFactory connectionFactory, NativeWebRequest request) {
         return buildOAuthUrl(connectionFactory, request, null);
     }
 
+    /**
+     * Complete the connection to the OAuth1 provider.
+     *
+     * @param connectionFactory the service provider's connection factory e.g.
+     * TwitterConnectionFactory
+     * @param request the current web request
+     * @return a new connection to the service provider
+     */
+    public Connection completeConnection(OAuth1ConnectionFactory connectionFactory, NativeWebRequest request) {
+        String verifier = request.getParameter(PARAM_VERIFIER);
+        AuthorizedRequestToken requestToken = new AuthorizedRequestToken(extractCachedRequestToken(request), verifier);
+        OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(requestToken, null);
+        return connectionFactory.createConnection(accessToken);
+    }
+
+    /**
+     * Complete the connection to the OAuth2 provider.
+     *
+     * @param connectionFactory the service provider's connection factory e.g.
+     * FacebookConnectionFactory
+     * @param request the current web request
+     * @return a new connection to the service provider
+     */
+    public Connection completeConnection(OAuth2ConnectionFactory connectionFactory, NativeWebRequest request) {
+        try {
+            String code = request.getParameter(PARAM_CODE);
+            String callbackUrl = callbackUrl(request);
+            OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
+            AccessGrant accessGrant = oauthOperations.exchangeForAccess(code, callbackUrl, null);
+            return connectionFactory.createConnection(accessGrant);
+        } catch (HttpClientErrorException e) {
+            logger.warn("HttpClientErrorException while completing connection: " + e.getMessage());
+            logger.warn("      Response body: " + e.getResponseBodyAsString());
+            throw e;
+        }
+    }
+
+    // internal helpers
+    
     /**
      * Builds the provider URL to redirect the user to for connection
      * authorization.
@@ -62,124 +108,91 @@ public class ConnectSupport {
      * @throws IllegalArgumentException if the connection factory is not OAuth1
      * based.
      */
-    public String buildOAuthUrl(ConnectionFactory<?> connectionFactory, NativeWebRequest request,
-            MultiValueMap<String, String> additionalParameters) {
+    private String buildOAuthUrl(ConnectionFactory connectionFactory, NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
         if (connectionFactory instanceof OAuth1ConnectionFactory) {
-            return buildOAuth1Url((OAuth1ConnectionFactory<?>) connectionFactory, request,
-                    additionalParameters);
+            return buildOAuth1Url((OAuth1ConnectionFactory) connectionFactory, request, additionalParameters);
         } else if (connectionFactory instanceof OAuth2ConnectionFactory) {
-            return buildOAuth2Url((OAuth2ConnectionFactory<?>) connectionFactory, request,
-                    additionalParameters);
+            return buildOAuth2Url((OAuth2ConnectionFactory) connectionFactory, request, additionalParameters);
         } else {
             throw new IllegalArgumentException("ConnectionFactory not supported");
         }
     }
-
-    /**
-     * Complete the connection to the OAuth1 provider.
-     *
-     * @param connectionFactory the service provider's connection factory e.g.
-     * FacebookConnectionFactory
-     * @param request the current web request
-     * @return a new connection to the service provider
-     */
-    public Connection<?> completeConnection(OAuth1ConnectionFactory<?> connectionFactory,
-            NativeWebRequest request) {
-        String verifier = request.getParameter("oauth_verifier");
-        AuthorizedRequestToken requestToken = new AuthorizedRequestToken(
-                extractCachedRequestToken(request), verifier);
-        OAuthToken accessToken = connectionFactory.getOAuthOperations().exchangeForAccessToken(
-                requestToken, null);
-        return connectionFactory.createConnection(accessToken);
-    }
-
-    /**
-     * Complete the connection to the OAuth2 provider.
-     *
-     * @param connectionFactory the service provider's connection factory e.g.
-     * FacebookConnectionFactory
-     * @param request the current web request
-     * @return a new connection to the service provider
-     */
-    public Connection<?> completeConnection(OAuth2ConnectionFactory<?> connectionFactory,
-            NativeWebRequest request) {
-        String code = request.getParameter("code");
-        try {
-            AccessGrant accessGrant = connectionFactory.getOAuthOperations().exchangeForAccess(
-                    code, callbackUrl(request), null);
-            return connectionFactory.createConnection(accessGrant);
-        } catch (HttpClientErrorException e) {
-            logger.warn("HttpClientErrorException while completing connection: " + e.getMessage());
-            logger.warn("      Response body: " + e.getResponseBodyAsString());
-            throw e;
-        }
-    }
-
-    // internal helpers
     
-    private String buildOAuth1Url(OAuth1ConnectionFactory<?> connectionFactory,
-            NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
-        OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
-        OAuth1Parameters parameters = new OAuth1Parameters(additionalParameters);
-        if (oauthOperations.getVersion() == OAuth1Version.CORE_10) {
-            parameters.setCallbackUrl(callbackUrl(request));
-        }
-        OAuthToken requestToken = fetchRequestToken(request, oauthOperations);
-        request.setAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE, requestToken, RequestAttributes.SCOPE_SESSION);
-        return buildOAuth1Url(oauthOperations, requestToken.getValue(), parameters);
-    }
-
-    private OAuthToken fetchRequestToken(NativeWebRequest request, OAuth1Operations oauthOperations) {
-        if (oauthOperations.getVersion() == OAuth1Version.CORE_10_REVISION_A) {
-            return oauthOperations.fetchRequestToken(callbackUrl(request), null);
-        }
-        return oauthOperations.fetchRequestToken(null, null);
-    }
-
-    private String buildOAuth1Url(OAuth1Operations oauthOperations, String requestToken,
-            OAuth1Parameters parameters) {
-        return oauthOperations.buildAuthorizeUrl(requestToken, parameters);
-    }
-
-    private String buildOAuth2Url(OAuth2ConnectionFactory<?> connectionFactory,
-            NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
-        OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
-        OAuth2Parameters parameters = getOAuth2Parameters(request, additionalParameters);
-
-        return oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, parameters);
-    }
-
-    private OAuth2Parameters getOAuth2Parameters(NativeWebRequest request,
-            MultiValueMap<String, String> additionalParameters) {
-        OAuth2Parameters parameters = new OAuth2Parameters(additionalParameters);
-        parameters.setRedirectUri(callbackUrl(request));
-        String scope = request.getParameter("scope");
-
-        if (scope != null) {
-            parameters.setScope(scope);
-        }
-
-        String display = request.getParameter("display");
-
-        if (display != null) {
-            parameters.set("display", display);
-        }
-
-        return parameters;
-    }
-
     private String callbackUrl(NativeWebRequest request) {
         HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
         String requestUrl = nativeRequest.getRequestURL().toString();
 
-        return requestUrl.endsWith(Constants.CALLBACK_PATH) ? requestUrl : nativeRequest.getRequestURL()
-                .toString() + "/" + Constants.CALLBACK_PATH;
+//        return requestUrl.endsWith(Constants.CALLBACK_PATH) ? requestUrl : nativeRequest.getRequestURL().toString() + "/" + Constants.CALLBACK_PATH;
+        if ( requestUrl.endsWith(CALLBACK_PATH) ) {
+            return requestUrl;
+        } else {
+            return requestUrl + "/" + CALLBACK_PATH;
+        }
     }
 
     private OAuthToken extractCachedRequestToken(WebRequest request) {
-        OAuthToken requestToken = (OAuthToken) request.getAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE,
-                RequestAttributes.SCOPE_SESSION);
-        request.removeAttribute(Constants.OAUTH_TOKEN_ATTRIBUTE, RequestAttributes.SCOPE_SESSION);
+        String attribute = OAUTH_TOKEN_ATTRIBUTE;
+        int scope = RequestAttributes.SCOPE_SESSION;
+        OAuthToken requestToken = (OAuthToken) request.getAttribute(attribute, scope);
+        request.removeAttribute(attribute, scope);
         return requestToken;
+    }
+    
+    /***********/
+    /* OAuth 1 */
+    /***********/
+    
+    private String buildOAuth1Url(OAuth1ConnectionFactory connectionFactory, NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
+        OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
+        OAuth1Parameters parameters = getOAuth1Parameters(connectionFactory, request, additionalParameters);
+        OAuthToken requestToken = fetchRequestToken(request, oauthOperations);
+        request.setAttribute(OAUTH_TOKEN_ATTRIBUTE, requestToken, RequestAttributes.SCOPE_SESSION);
+        return oauthOperations.buildAuthorizeUrl(requestToken.getValue(), parameters);
+    }
+
+    private OAuthToken fetchRequestToken(NativeWebRequest request, OAuth1Operations oauthOperations) {
+        String callbackUrl = null;
+        if (oauthOperations.getVersion() == OAuth1Version.CORE_10_REVISION_A) {
+            callbackUrl = callbackUrl(request);
+        }
+        return oauthOperations.fetchRequestToken(callbackUrl, null);
+    }
+
+    private OAuth1Parameters getOAuth1Parameters(OAuth1ConnectionFactory connectionFactory, NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
+        OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
+        OAuth1Parameters parameters = new OAuth1Parameters(additionalParameters);
+        if (oauthOperations.getVersion() == OAuth1Version.CORE_10) {
+            String callbackUrl = callbackUrl(request);
+            parameters.setCallbackUrl(callbackUrl);
+        }
+        return parameters;
+    }
+    
+    /***********/
+    /* OAuth 2 */
+    /***********/
+    
+    private String buildOAuth2Url(OAuth2ConnectionFactory connectionFactory, NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
+        OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
+        OAuth2Parameters parameters = getOAuth2Parameters(request, additionalParameters);
+        return oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, parameters);
+    }
+
+    private OAuth2Parameters getOAuth2Parameters(NativeWebRequest request, MultiValueMap<String, String> additionalParameters) {
+        String callbackUrl = callbackUrl(request);
+        OAuth2Parameters parameters = new OAuth2Parameters(additionalParameters);
+        parameters.setRedirectUri(callbackUrl);
+
+        String scope = request.getParameter(PARAM_SCOPE);
+        if (scope != null) {
+            parameters.setScope(scope);
+        }
+
+        String display = request.getParameter(PARAM_DISPLAY);
+        if (display != null) {
+            parameters.set(PARAM_DISPLAY, display);
+        }
+
+        return parameters;
     }
 }

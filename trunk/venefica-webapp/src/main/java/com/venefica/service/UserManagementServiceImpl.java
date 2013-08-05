@@ -422,11 +422,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     public Set<String> getConnectedSocialNetworks() {
         MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
-        HashSet<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<String>();
 
         for (String network : allConnections.keySet()) {
             List<Connection<?>> connections = allConnections.get(network);
-
             if (!connections.isEmpty()) {
                 result.add(network);
             }
