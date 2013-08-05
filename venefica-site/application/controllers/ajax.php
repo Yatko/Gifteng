@@ -8,6 +8,26 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    public function share_message() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $text = $this->input->post('text');
+            
+            $this->message_service->shareOnSocialNetworks($text);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     // user related
     
     public function follow() {

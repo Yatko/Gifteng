@@ -289,5 +289,13 @@ class Message_service {
     //* share *
     //*********
     
-    //...
+    public function shareOnSocialNetworks($text) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService->shareOnSocialNetworks(array("message" => $text));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Shareing on social networks failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
 }

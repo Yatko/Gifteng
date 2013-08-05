@@ -62,6 +62,14 @@ function get_file_size(file) {
     return file.files[0].size;
 }
 
+function open_window_clear(url, title) {
+    var width = 300;
+    var height = 200;
+    var top = ($(window).height() / 2) - (height / 2);
+    var left  = ($(window).width() / 2) - (width / 2);
+    window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, channelmode=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
+}
+
 $(function() {
     
     init_files();
