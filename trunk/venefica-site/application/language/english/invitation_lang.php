@@ -27,7 +27,7 @@ $lang['invitation_request_failed_already_subscribed'] = "You can only request on
 $lang['invitation_verify_invalid'] = "Sorry, we don't recognize this invitation code.";
 $lang['invitation_verify_failed'] = "Cannot verify invitation!";
 
-$lang['invitation_verified'] = "Success!<br />You can register now.";
+$lang['invitation_verified'] = "Welcome to Gifteng!<br />You are few steps away to unlock the Giftbox.";
 $lang['invitation_join_button'] = "Join";
 
 $lang['invitation_source_list'] = array(

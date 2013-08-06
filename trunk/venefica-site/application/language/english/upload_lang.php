@@ -1,4 +1,4 @@
 <?php
 
 $lang[''] = '';
-$lang['upload_invalid_dimensions'] = 'The image you are attempting to upload does not meet the allowed dimensions.';
+$lang['upload_invalid_dimensions'] = 'Picture width and height must be at least 500px. Please select a larger image or limit the photo size to 5GB.';
