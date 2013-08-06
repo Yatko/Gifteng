@@ -58,6 +58,7 @@
 }
 .snap-drawer ul li {
 	border-bottom:1px solid #34495e;
+		text-shadow: none;
 }
 .snap-drawer ul li > a {
 	display:block;
