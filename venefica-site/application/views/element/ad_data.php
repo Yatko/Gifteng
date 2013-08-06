@@ -21,7 +21,7 @@ if ( $subtitle != '' ) $subtitle = $subtitle . ' % off';
 <div class="row-fluid ge-text ge-description">
     <div class="row-fluid">
         <p class="ge-title">
-            <i class="fui-tag"></i>
+            <i class="ge-icon-giftbox"></i>
             <a href="<?= $view_link ?>"><?= $title ?></a>
             <? if ($subtitle != ''): ?>
                 <span class="ge-subtitle">
