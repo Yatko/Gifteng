@@ -9,10 +9,24 @@
 
 ?>
 
+<script language="javascript">
+    $(function() {
+        $(".ge-browse").vgrid({
+            easing: "easeOutQuint",
+            time: 500,
+            delay: 20,
+            fadeIn: {
+                time: 300,
+                delay: 50
+            }
+        });
+    });
+</script>
+
 <div class="row">			
-	<div class="container user-follow">
-		<div class="row">
-			<div class="ge-tile-view ge-browse">
+    <div class="container user-follow">
+        <div class="row">
+            <div class="ge-tile-view ge-browse">
             
             <? if( isset($follow_users) && is_array($follow_users) && count($follow_users) > 0 ): ?>
             <? foreach( $follow_users as $follow ): ?>
@@ -32,14 +46,6 @@
 									<div class="ge-user">
 										<? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
 									</div><!--./ge-user-->
-									
-									<div class="ge-action">
-										<div class="row-fluid">
-											<div class="span12">
-												<a href="#fakelink" class="btn btn-small btn-block">Following</a>
-											</div>
-										</div>
-									</div><!--./ge-action-->
 									
                                     <? if( count($ads) > 0 ): ?>
                                     
@@ -84,7 +90,7 @@
             <? endforeach; ?>
             <? endif; ?>
             
-			</div><!--./ge-tile-view-->
-		</div><!--./row-->
-	</div><!--./container user-follow-->					
+            </div><!--./ge-tile-view-->
+        </div><!--./row-->
+    </div><!--./container user-follow-->					
 </div>

@@ -99,6 +99,7 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/message');
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
+        $this->load->view('javascript/social');
         $this->load->view('pages/profile', $data);
         $this->load->view('pages/profile_giving', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');

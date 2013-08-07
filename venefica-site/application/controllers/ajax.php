@@ -8,6 +8,7 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    /**
     public function share_message() {
         $this->init();
         
@@ -27,6 +28,7 @@ class Ajax extends CI_Controller {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
+    /**/
     
     // user related
     

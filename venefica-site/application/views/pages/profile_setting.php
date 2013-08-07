@@ -1,3 +1,4 @@
+<? /** ?>
 <? if( !in_array("facebook", $networks) ): ?>
     <button onclick="connect_to_facebook();">Connect to Facebook</button>
     <button onclick="sign_in_facebook();">Sign in Facebook</button>
@@ -9,3 +10,6 @@
 <? endif; ?>
 
 <button onclick="shareMessage('test');">Share simple message</button>
+<? /**/ ?>
+
+<button onclick="shareOnFacebook();">Post to your wall</button>

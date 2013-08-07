@@ -35,7 +35,7 @@ if ( $ad_is_business ) {
 
 ?>
 
-!!! NOT IMPLEMENTED !!!
+!!! NOT YET IMPLEMENTED !!!
 
 <!--left side-->
 <div class="span6">
@@ -50,7 +50,7 @@ if ( $ad_is_business ) {
             </div><!--/image-->
 
             <!--text-->
-			<div class="ge-text ge-description">
+                <div class="ge-text ge-description">
 	            <div class="row-fluid">
 	                <div class="ge-spacer"></div>
 	                <div class="ge-title">
@@ -95,13 +95,13 @@ if ( $ad_is_business ) {
 	                    <li><em>Phone number: </em><?=$creator_phone_number?></li>
 	                </ul>
 	                </div>
-					<div class="control-group">
-					  <div class="controls">
+                        <div class="control-group">
+                          <div class="controls">
 	                    <button class="btn btn-small" type="button">How to redeem</button>
 	                   </div>
 	                </div>
 	            </div><!--/text-->
-			</div>
+                </div>
 
             <!--space--><div class="row-fluid ge-spacer"></div>
 
@@ -179,7 +179,7 @@ if ( $ad_is_business ) {
     <!--user panel-->
     
 	<div class="ge-user">
-<? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
+            <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
 	</div><!--./ge-user-->
 
 </div><!--/right side-->

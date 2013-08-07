@@ -16,15 +16,24 @@
         $('.ge-request').on('request_created', function(event, adId) {
             $('#ad_' + adId).addClass('hide');
         });
+        $(".ge-browse").vgrid({
+            easing: "easeOutQuint",
+            time: 500,
+            delay: 20,
+            fadeIn: {
+                time: 300,
+                delay: 50
+            }
+        });
     });
 </script>
 
 <div class="row">
     <div class="container user-favorites">
         <div class="row">
-        	<div class="ge-tile-view ge-browse">
+            <div class="ge-tile-view ge-browse">
         	
-			<? if( isset($bookmarks) && is_array($bookmarks) && count($bookmarks) > 0 ): ?>
+            <? if( isset($bookmarks) && is_array($bookmarks) && count($bookmarks) > 0 ): ?>
             <? foreach( $bookmarks as $ad ): ?>
                 <?
                 $ad_id = $ad->id;
@@ -48,13 +57,13 @@
 									</div><!--./ge-user-->
 										
 									<div class="ge-item">	
-										<? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => false, 'canComment' => false, 'canShare' => false)); ?>
+										<? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
                                     
 										
 										<div class="ge-action">
 											<div class="row-fluid">
 												<div class="span4 mobile-one">
-													<a onclick="remove_bookmark(this, <?=$ad_id?>);" href="" class="btn btn-small btn-block fui-cross"></a>
+													<button onclick="remove_bookmark(this, <?=$ad_id?>);" class="btn btn-small btn-block fui-cross"></button>
 												</div>
 												<div class="span8 mobile-three">
 		                                        <? if( $ad_is_owned ): ?>
@@ -64,7 +73,7 @@
 		                                        <? elseif( $ad_is_requested ): ?>
 		                                            <p class="text-center">REQUESTED</p>
 		                                        <? elseif ( $ad_can_request  ): ?>
-													<a onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" href="" class="btn btn-small btn-block btn-ge">Request Gift</a>
+													<button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="btn btn-small btn-block btn-ge">Request Gift</button>
 												<? endif; ?>
 												</div>
 											</div>
@@ -87,7 +96,7 @@
                 
             <? endif; ?>
 
-			</div><!--./ge-tile-view-->
+            </div><!--./ge-tile-view-->
         </div>
     </div>
 </div>

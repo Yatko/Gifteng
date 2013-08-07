@@ -20,8 +20,21 @@
     }
     
     $(function() {
+        $('.ge-ad').on('ad_deleted', function(event, adId) {
+            $('#ad_' + adId).addClass('hide');
+        });
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#ad_' + adId).html(result);
+        });
+        
+        $(".ge-browse").vgrid({
+            easing: "easeOutQuint",
+            time: 500,
+            delay: 20,
+            fadeIn: {
+                time: 300,
+                delay: 50
+            }
         });
     });
 </script>

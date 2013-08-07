@@ -23,6 +23,15 @@
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#request_' + requestId).addClass('hide');
         });
+        $(".ge-browse").vgrid({
+            easing: "easeOutQuint",
+            time: 500,
+            delay: 20,
+            fadeIn: {
+                time: 300,
+                delay: 50
+            }
+        });
     });
 </script>
 

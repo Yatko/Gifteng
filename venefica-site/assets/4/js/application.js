@@ -30,7 +30,7 @@ function init_datepicker() {
         dp.focus();
     });
     $.extend($.datepicker, {_checkOffset: function(inst, offset, isFixed) {
-            return offset
+            return offset;
         }});
 }
 function init_slider() {
@@ -115,9 +115,9 @@ function init_table() {
     $('.table tbody :checkbox').on('check uncheck toggle', function(e) {
         var $this = $(this)
                 , check = $this.prop('checked')
-                , toggle = e.type == 'toggle'
+                , toggle = e.type === 'toggle'
                 , checkboxes = $('.table tbody :checkbox')
-                , checkAll = checkboxes.length == checkboxes.filter(':checked').length
+                , checkAll = checkboxes.length === checkboxes.filter(':checked').length;
 
         $this.closest('tr')[check ? 'addClass' : 'removeClass']('selected-row');
         if (toggle)
@@ -132,7 +132,7 @@ function init_tab() {
     $(".nav-tabs a").on('click', function(e) {
         e.preventDefault();
         $(this).tab("show");
-    })
+    });
 }
 function init_tooltip() {
     // Tooltips
