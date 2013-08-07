@@ -38,4 +38,4 @@ $(function() {
 
 $(function() {
 	$('#open-left').snap();
-})
+});
