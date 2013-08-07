@@ -11,5 +11,3 @@
 
 <button onclick="shareMessage('test');">Share simple message</button>
 <? /**/ ?>
-
-<button onclick="shareOnFacebook();">Post to your wall</button>
