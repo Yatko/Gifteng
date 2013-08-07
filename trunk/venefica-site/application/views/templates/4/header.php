@@ -46,7 +46,6 @@ $subpage = key($_GET); //gets the first element from the array
     <script src="<?=JS_PATH?>jquery.stacktable.js"></script>
     <script src="<?=JS_PATH?>application.js"></script>
     <script src="<?=JS_PATH?>snap_krasi.js"></script>
-    <script src="<?=JS_PATH?>krasi.js"></script>
     <script src="<?=JS_PATH?>jquery.vgrid.min.js"></script>
     
     <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
