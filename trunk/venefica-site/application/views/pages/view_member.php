@@ -20,8 +20,11 @@
     $(function() {
         init_map('view_map', 'view_longitude', 'view_latitude', 'view_marker_longitude', 'view_marker_latitude', false);
         
+        $('.ge-ad').on('ad_deleted', function(event, adId) {
+            window.location = '<?=base_url()?>profile?giving';
+        });
         $('.ge-request').on('request_created', function(event, adId) {
-            self.location.reload();
+            window.location.reload();
             //if ( $('#ad_control').length > 0 ) {
             //    $('#ad_control').addClass('hide');
             //}
@@ -134,8 +137,8 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 		                        $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
 		                        $edit_class = 'class="btn btn-large btn-ge btn-block"';
 		                        
-		                        $delete_class = 'class="btn btn-large btn-ge btn-block"';
-		                        $delete_js = 'onclick="ad_delete(' . $ad_id . ');"';
+		                        $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
+		                        $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
 		                    } else {
 		                        //there is at least one active request
 		                        $edit_js = '';

@@ -41,7 +41,7 @@
                     $('#edit_profile_ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                     $('.modal').modal('hide');
-                    self.location.reload(true);
+                    window.location.reload(true);
                 } else {
                     //TODO: unknown response received
                 }
@@ -82,8 +82,9 @@ $email = $currentUser->email;
                     <?=form_open('/edit_profile/member', array('id' => 'edit_profile_form'))?>
 
                         <blockquote><!-- removing label tag to fix html validation issues -->
-									<p><?=$message?></p>
-								</blockquote>
+                            <div id="edit_profile_ajax_error"><p><?=$message?></p></div>
+                        </blockquote>
+                                                    
 								<fieldset>
 								
 									<div class="row-fluid">
@@ -132,7 +133,7 @@ $email = $currentUser->email;
 									<div class="row-fluid">
 										<div class="span12">
 											<div class="control-group">
-											  <label class="control-label" for="email">My Email <span class="text-danger">- confirm your change by checking your (old) email address.</span></label>
+											  <label class="control-label" for="email">My Email <span id="email_change_notification" class="text-danger" style="display: none;">- confirm your change by checking your (old) email address.</span></label>
 											  <div class="controls">
 											    <input id="email" name="email" type="text" value="<?=set_value('email', $email)?>" placeholder="Email" class="input-block-level" required="" readonly="readonly">
                                         	  </div>
@@ -151,7 +152,7 @@ $email = $currentUser->email;
 										</div>
 										<div class="span8">
 											<div class="control-group">
-											  <label class="control-label" for="new_password">New Password <span class="text-danger">- please confirm by email.</span></label>
+											  <label class="control-label" for="new_password">New Password <span id="password_change_notification" class="text-danger" style="display: none;">- please confirm by email.</span></label>
 											  <div class="row-fluid">
 											  	<div class="span6">
 											  		<div class="controls">
@@ -168,13 +169,14 @@ $email = $currentUser->email;
 										</div>									
 									</div>
 									
+                                                                        <? /** ?>
 									<div class="row-fluid">
 										<div class="edit-profile_facebook">
 											<div class="span6">
 												<div class="control-group">
-												  <label class="control-label" for="facebookbtn">Facebook</label>
+												  <label class="control-label" for="facebookButton">Facebook</label>
 												  <div class="controls">
-												    <button id="facebookbtn" name="facebookbtn" class="btn btn-block btn-info"><i class="ge-icon-facebook"></i> Verify now</button>
+												    <button id="facebookButton" class="btn btn-block btn-info"><i class="ge-icon-facebook"></i> Verify now</button>
 												  </div>
 												</div>
 											</div>
@@ -187,6 +189,7 @@ $email = $currentUser->email;
 											</div>
 										</div>
 									</div>
+                                                                        <? /**/ ?>
 									
 									<div class="row-fluid">
                                 <? if( $is_modal ): ?>

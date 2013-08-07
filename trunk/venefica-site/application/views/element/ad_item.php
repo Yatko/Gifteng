@@ -72,12 +72,23 @@ if ( $ad->statistics != null ) {
                         <? if( !$canShare ): ?>
                             <button class="btn btn-small btn-block btn-ge disabled">
                                 <i class="ge-icon-share"></i>
+                                <? /** ?>
                                 <?= $num_shares ?>
+                                <? /**/ ?>
                             </button>
                         <? else: ?>
-                            <button class="btn btn-small btn-block btn-ge">
+                            
+                            <?
+                            $title = $ad->getSafeTitle();
+                            $itemUrl = $ad->getViewUrl();
+                            $imgUrl = $ad->getImageUrl();
+                            ?>
+                            
+                            <button onclick="startSocialModal('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-small btn-block btn-ge">
                                 <i class="ge-icon-share"></i>
+                                <? /** ?>
                                 <?= $num_shares ?>
+                                <? /**/ ?>
                             </button>
                         <? endif; ?>
                     </div>

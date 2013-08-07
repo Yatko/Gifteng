@@ -18,6 +18,8 @@
 .map {
     height: 254px;
 }
+.ge-detail-view .ge-item .ge-map img {min-height: 0 !important;}
+.ge-detail-view .ge-item .ge-map .img {min-height: 195px !important;}
 
 /**
 .ge-item {

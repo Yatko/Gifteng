@@ -77,6 +77,13 @@ $is_owner = isOwner($user_id);
         <? endif; ?>
 
     <? elseif( !$ad->hasActiveRequest() ): ?>
+                    
+        <?
+        $title = $ad->getSafeTitle();
+        $itemUrl = $ad->getViewUrl();
+        $imgUrl = $ad->getImageUrl();
+        ?>
+                    
 
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
@@ -89,14 +96,14 @@ $is_owner = isOwner($user_id);
                     </div>
 
                     <div class="row-fluid ge-text ge-description ge-action">
-                        <div class="span4">					
-                            <a class="btn btn-mini btn-block btn-social-facebook link ge-icon-facebook"></a>
+                        <div class="span4">
+                            <button onclick="shareOnFacebook('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-facebook link ge-icon-facebook"></button>
                         </div>
                         <div class="span4">
-                            <a class="btn btn-mini btn-block btn-social-twitter link ge-icon-twitter"></a>
+                            <button onclick="shareOnTwitter('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-twitter link ge-icon-twitter"></button>
                         </div>
                         <div class="span4">
-                            <a class="btn btn-mini btn-block btn-social-pinterest link ge-icon-pinterest"></a>
+                            <button onclick="shareOnPinterest('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-pinterest link ge-icon-pinterest"></button>
                         </div>
                     </div><!--./ge-action-->
 

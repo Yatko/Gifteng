@@ -48,6 +48,7 @@ class View extends CI_Controller {
         $modal .= $this->load->view('modal/request_create', array(), true);
         $modal .= $this->load->view('modal/edit_post', array(), true);
         $modal .= $this->load->view('modal/ad', array(), true);
+        $modal .= $this->load->view('modal/social', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/ad');
@@ -55,6 +56,7 @@ class View extends CI_Controller {
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');
         $this->load->view('javascript/map');
+        $this->load->view('javascript/social');
         if ( isBusinessAccount() ) {
             $this->load->view('pages/view_business', $data);
         } else {

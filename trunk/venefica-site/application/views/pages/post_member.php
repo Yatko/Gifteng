@@ -45,8 +45,6 @@
 </script>
 
 <?
-//print_r($this->session->all_userdata());
-
 if ( $is_new ) {
     $form_action = '/post/member' . ($is_modal ? '?modal' : '');
 } else {

@@ -26,11 +26,13 @@ class Browse extends CI_Controller {
         $data['currentUser'] = $currentUser;
         
         $modal = $this->load->view('modal/comment', array(), true);
+        $modal .= $this->load->view('modal/social', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment');
+        $this->load->view('javascript/social');
         $this->load->view('pages/browse', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
