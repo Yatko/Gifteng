@@ -152,6 +152,7 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 /* FORMS */
 .ge-form {padding:19px;}
 .ge-form .control-form button {margin-top:42px;text-transform:uppercase;}
+.ge-form blockquote p {color:#00bebe;}
 
 /* OTHER PAGES */
 .ge-terms, .ge-description, .ge-details {font-size: 100%;line-height: 120%;}
