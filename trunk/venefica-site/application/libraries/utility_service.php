@@ -16,7 +16,10 @@ class Utility_service {
             $utilityService = new SoapClient(UTILITY_SERVICE_WSDL, getSoapOptions());
             $result = $utilityService->getAddressByZipcode(array("zipcode" => $zipcode));
             
-            $address = Address_model::convertAddress($result->address);
+            $address = null;
+            if ( hasField($result, 'address') && $result->address ) {
+                $address = Address_model::convertAddress($result->address);
+            }
             return $address;
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Getting address by zipcode (zipcode: '.$zipcode.') failed! '.$ex->faultstring);

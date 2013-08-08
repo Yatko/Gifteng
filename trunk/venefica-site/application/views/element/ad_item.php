@@ -79,7 +79,7 @@ if ( $ad->statistics != null ) {
                         <? else: ?>
                             
                             <?
-                            $title = $ad->getSafeTitle();
+                            $title = safe_parameter($ad->title);
                             $itemUrl = $ad->getViewUrl();
                             $imgUrl = $ad->getImageUrl();
                             ?>
