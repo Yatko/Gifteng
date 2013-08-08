@@ -179,71 +179,6 @@ $subpage = key($_GET); //gets the first element from the array
 
 <? endif; ?>
 
-
-
-<? /** ?>
-
-<div class="navbar navbar-fixed-top ge-navbar">
-    <div class="navbar-inner">
-    <div class="container">
-        <div class="nav-collapse">
-            <span class="nav">
-                <a href="<?=base_url()?>index"><i class="gifteng"></i><sup>Beta</sup></a>
-            </span>
-            
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <? if( isLogged() ): ?>
-                    
-                        <li<?=($page == "profile" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile"><?=lang('main_submenu_profile')?></a></li>
-                        <li<?=($page == "post" ? ' class="active"' : '')?>><a href="<?=base_url()?>post">POST</a></li>
-                    
-                    <? else: ?>
-                    
-                        <li<?=($page == "registration" ? ' class="active"' : '')?>><a href="<?=base_url()?>registration">REGISTRATION</a></li>
-                    
-                    <? endif; ?>
-                        
-                    <li<?=($page == "contact" ? ' class="active"' : '')?>><a href="<?=base_url()?>contact">CONTACT</a></li>
-                </ul>
-            </div>
-            
-            <ul class="nav pull-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
-                    <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
-                        
-                        <? if( isLogged() ): ?>
-                            
-                            <a href="<?=base_url()?>authentication/logout" class="btn btn-block btn-ge">SIGN OUT</a>
-                        
-                        <? else: ?>
-                        
-                            <form action="<?=base_url()?>authentication/login" method="post" accept-charset="UTF-8">
-                                <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
-                                <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
-                                <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
-                                <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
-                                <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
-                            </form>
-                        
-                        <? endif; ?>
-                    </div>
-                </li>
-           </ul>
-        </div>
-    </div>
-    </div>
-</div>
-
-<? /**/ ?>
-
-
-
-<!-- ********** ********** ********** -->    
-<!-- content starts here -->
-<!-- ********** ********** ********** -->  
-
 <!-- ge CONTENT -->
 <div class="ge-container snap-content">
     
@@ -255,7 +190,7 @@ $subpage = key($_GET); //gets the first element from the array
                         <a id="open-left" class="link"><span class="fui-list"></span></a>
                     </span>
                     <span class="nav">
-                        <a href="<?=base_url()?>index"><i class="gifteng"></i><sup>Beta</sup></a>
+                        <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
                     </span>
                     
                     <? if( isLogged() ): ?>
@@ -270,10 +205,13 @@ $subpage = key($_GET); //gets the first element from the array
                     <? else: ?>
                     
                         <ul class="nav pull-right">
+                        	<li>
+                        		<a href="http://help.gifteng.com"><i class="ge-icon-help text-inverted"></i></a>
+                        	</li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted"></i></a>
-
-                                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>                      
+                                
+                                <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
                                     <?=form_open('/authentication/login')?>
                                         <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
                                         <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
