@@ -64,6 +64,12 @@ if ( ! function_exists('safe_redirect')) {
 
 // making a safer world
 
+//if ( ! function_exists('jsEscape')) {
+//    function jsEscape($str) { 
+//        return addcslashes($str, "\\\'\"&\n\r<>"); 
+//    }
+//}
+
 if ( ! function_exists('safe_content')) {
     function safe_content($str) {
         if ( $str == null ) {
@@ -83,7 +89,8 @@ if ( ! function_exists('safe_content')) {
 if ( ! function_exists('safe_parameter')) {
     function safe_parameter($str) {
         $str = safe_content($str);
-        $str = strip_slashes($str);
+        //$str = jsEscape($str);
+        $str = str_replace("\"", "&quot;", $str);
         return $str;
     }
 }
