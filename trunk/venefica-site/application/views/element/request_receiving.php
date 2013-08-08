@@ -30,9 +30,9 @@ $request_id = $request->id;
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
                                 <p class="text-center">
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-right"></span>
                                     Expired
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
                         </div>
@@ -58,9 +58,9 @@ $request_id = $request->id;
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
                                 <p class="text-center">
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-right"></span>
                                     RECEIVED
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
                         </div>
@@ -78,9 +78,9 @@ $request_id = $request->id;
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
                                 <p class="text-center">
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-right"></span>
                                     Pending
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
                         </div>
@@ -97,9 +97,9 @@ $request_id = $request->id;
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
                                 <p class="text-center">
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-right"></span>
                                     Accepted
-                                    <span class="fui-triangle-down"></span>
+                                    <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
                         </div>
