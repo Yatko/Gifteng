@@ -90,7 +90,8 @@ if ( ! function_exists('safe_parameter')) {
     function safe_parameter($str) {
         $str = safe_content($str);
         //$str = jsEscape($str);
-        $str = str_replace("\"", "&quot;", $str);
+        $str = str_replace("\"", "&quot;", $str); //&#34;
+        $str = str_replace("'", "&#39;", $str);
         return $str;
     }
 }
