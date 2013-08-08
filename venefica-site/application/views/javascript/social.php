@@ -48,11 +48,6 @@
 </script>
 <? /**/ ?>
 
-<?
-$user = $this->usermanagement_service->loadUser();
-$fullName = $user->getFullName();
-?>
-
 <script language="javascript">
     function shareOnFacebook(title, itemUrl, imgUrl) {
         FB.ui({
@@ -79,7 +74,7 @@ $fullName = $user->getFullName();
         var height = 450;
         var safeItemUrl = encodeURIComponent(itemUrl.replace(/&amp;/g, "&"));
         var safeImgUrl = encodeURIComponent(imgUrl.replace(/&amp;/g, "&"));
-        var description = 'Check out <?=$fullName?>\'s "' + title + '" free gift @Gifteng';
+        var description = 'Check out "' + title + '" free gift @Gifteng';
         var safeDescription = encodeURIComponent(description.replace(/&amp;/g, "&"));
         open_window_clear('//pinterest.com/pin/create/button/?url=' + safeItemUrl + '&media=' + safeImgUrl + '&description=' + safeDescription, '', width, height);
     }
