@@ -69,7 +69,7 @@
 		                                        <? if( $ad_is_owned ): ?>
 		                                            <p class="text-center">MINE</p>
 		                                        <? elseif( $ad_is_expired ): ?>
-		                                            <p class="text-center">EXPIRED</p>
+		                                            <p class="text-center">ENDED</p>
 		                                        <? elseif( $ad_is_requested ): ?>
 		                                            <p class="text-center">REQUESTED</p>
 		                                        <? elseif ( $ad_can_request  ): ?>

@@ -14,4 +14,4 @@ $lang['post_bar_code'] = "bar code";
 #
 #member post
 #
-$lang['post_member_delivery_missing'] = 'Please select a delivery type';
+$lang['post_member_delivery_missing'] = 'Please select the delivery method.';
