@@ -19,6 +19,10 @@ $subpage = key($_GET); //gets the first element from the array
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
     <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png" />
     
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
     <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
