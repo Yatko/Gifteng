@@ -174,6 +174,7 @@ $subpage = key($_GET); //gets the first element from the array
                 <li<?=($page == "profile" && $subpage == "following" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-heart"></i> Connections</a></li>
                 <li<?=($page == "profile" && $subpage == "message" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?message"><i class="fui-mail"></i> Messages</a></li>
                 <li<?=($page == "profile" && $subpage == "notification" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?notification"><i class="fui-alert"></i> Notifications</a></li>
+                <li><a href="http://help.gifteng.com"><i class="ge-icon-bug"></i> Report a problem</a></li>
                 <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
             </ul>
         </div>
