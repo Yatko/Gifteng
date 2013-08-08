@@ -84,6 +84,7 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-detail-view .ge-item .ge-description {padding:0 19px;}
 .ge-detail-view .ge-item .ge-map img {min-height: 195px;}
 .ge-detail-view .ge-messagelist {max-height:589px;}
+.ge-detail-view p.ge-location {font-weight:400;color: #aaaaaa;font-size: 80%;line-height:1.2em;text-align:right;margin: 3px 19px 0 0; padding: 0px;}
 
 /* MESSAGING  todo reorder, review */
 .ge-messages, .ge-comments {padding:0 0 9px 0;}
