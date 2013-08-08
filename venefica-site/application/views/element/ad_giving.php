@@ -36,9 +36,9 @@ $is_owner = isOwner($user_id);
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-right"></span>
                                 Given to
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-left"></span>
                             </p>
                         </div>
                     </div>
@@ -88,9 +88,9 @@ $is_owner = isOwner($user_id);
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-right"></span>
                                 Share to receive requests
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-left"></span>
                             </p>
                         </div>
                     </div>
@@ -118,9 +118,9 @@ $is_owner = isOwner($user_id);
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-right"></span>
                                 Given to
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-left"></span>
                             </p>
                         </div>
                     </div>
@@ -164,9 +164,9 @@ $is_owner = isOwner($user_id);
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-right"></span>
                                 Select recipient
-                                <span class="fui-triangle-down"></span>
+                                <span class="fui-arrow-left"></span>
                             </p>
                         </div>
                     </div><!--./ge-text ge-description-->
