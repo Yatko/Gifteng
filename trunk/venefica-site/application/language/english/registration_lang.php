@@ -1,7 +1,7 @@
 <?php
 
-$lang['registration_firstname_hint'] = "First name";
-$lang['registration_lastname_hint'] = "Last name";
+$lang['registration_firstname_hint'] = "First Name";
+$lang['registration_lastname_hint'] = "Last Name";
 $lang['registration_email_hint'] = "Email";
 $lang['registration_password_hint'] = "Password";
 $lang['registration_join_button'] = "Join";
@@ -12,8 +12,8 @@ $lang['u_registration_failed'] = "User registration failed!";
 #
 #user registration form fields
 #
-$lang['u_registration_firstname'] = "First name";
-$lang['u_registration_lastname'] = "Last name";
+$lang['u_registration_firstname'] = "First Name";
+$lang['u_registration_lastname'] = "Last Name";
 $lang['u_registration_email'] = "Email";
 $lang['u_registration_password'] = "Password";
 

@@ -17,7 +17,7 @@ $lang['login_welcome'] = "Welcome <b>%s</b>!";
 $lang['login_failed_empty_email_password'] = "Please enter your email address and password.";
 $lang['login_failed_invalid_email'] = "Please enter a correct email address.";
 $lang['login_failed_empty_password'] = "Please enter your password.";
-$lang['login_failed'] = "Oops, that email address is not in our file. Please check and make sure you typed in your correct email.";
+$lang['login_failed'] = "Oops, the email address or password is not correct.";
 
 $lang['forgot_password_failed'] = "Sorry we don’t recognize your email address.";
 

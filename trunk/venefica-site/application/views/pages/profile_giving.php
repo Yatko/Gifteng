@@ -89,7 +89,7 @@
 	                                    <div class="row-fluid">
 	                                        <div class="row-fluid">
 	                                            <p class="ge-title"> 
-	                                                <span class="ge-subtitle">You don't have anything to give at this time. Start by posting your first Gift now :)</span>
+	                                                <span class="ge-subtitle">Or click here to see what others are giving away.</span>
 	                                            </p>
 	                                        </div><!--/text-->
 	                                    </div>

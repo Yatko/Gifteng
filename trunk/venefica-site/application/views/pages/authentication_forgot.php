@@ -27,8 +27,7 @@
                                             <div class="row-fluid">
                                                     <div class="span8 offset2">
                                                             <p>
-                                                                    Success!<br />
-                                                                    You should receive an email shortly.
+                                                                Please check your email to reset your password.
                                                             </p>
                                                     </div>
                                             </div>

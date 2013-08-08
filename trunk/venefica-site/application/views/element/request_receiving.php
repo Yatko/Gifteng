@@ -31,7 +31,7 @@ $request_id = $request->id;
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-arrow-right"></span>
-                                    Expired
+                                    Ended
                                     <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
