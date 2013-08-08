@@ -262,8 +262,7 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 	                    
 	                    <? if ($distance != null && $distance != ''): ?>
 	                        <div class="ge-location">
-	                            <i class="fui-location"></i>
-	                            <?= $distance ?> mi
+	                        	<p class="ge-location"><i class="fui-location"></i> <?= $distance ?> mi</p>
 	                        </div>
 	                    <? endif; ?>
 	                    
