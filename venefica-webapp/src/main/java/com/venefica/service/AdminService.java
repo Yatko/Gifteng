@@ -39,6 +39,15 @@ public interface AdminService {
     
     /**
      * 
+     * @return
+     * @throws PermissionDeniedException 
+     */
+    @WebMethod(operationName = "GetOfflineAds")
+    @WebResult(name = "ad")
+    List<AdDto> getOfflineAds() throws PermissionDeniedException;
+    
+    /**
+     * 
      * @param adId
      * @return
      * @throws PermissionDeniedException

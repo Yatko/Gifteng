@@ -262,6 +262,17 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "")
                 .list();
     }
+    
+    @Override
+    public List<Ad> getOfflineAds() {
+        return createQuery(""
+                + "from " + getDomainClassName() + " a where "
+                + "a.deleted = false and "
+                + "a.online = false "
+                + "order by a.id desc"
+                + "")
+                .list();
+    }
 
     /**
      * This is a PostgreSQL dependent implementation.
