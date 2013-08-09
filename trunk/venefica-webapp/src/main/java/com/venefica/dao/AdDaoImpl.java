@@ -256,7 +256,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     public List<Ad> getUnapprovedAds() {
         return createQuery(""
                 + "from " + getDomainClassName() + " a where "
-                + "a.deleted = false "
+                + "a.deleted = false and "
                 + "a.approved = false "
                 + "order by a.id desc"
                 + "")
