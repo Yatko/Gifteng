@@ -10,6 +10,7 @@ define('INVITATION_SERVICE_WSDL',   SERVER_URL.'/services/InvitationService?wsdl
 define('MESSAGE_SERVICE_WSDL',      SERVER_URL.'/services/MessageService?wsdl');
 define('USER_SERVICE_WSDL',         SERVER_URL.'/services/UserManagementService?wsdl');
 define('UTILITY_SERVICE_WSDL',      SERVER_URL.'/services/UtilityService?wsdl');
+define('ADMIN_SERVICE_WSDL',        SERVER_URL.'/services/AdminService?wsdl');
 
 define('CONNECT_TO_FACEBOOK_URL',   SERVER_URL.'/connect/facebook?scope=email,publish_stream,user_status&display=popup');
 define('SIGN_IN_FACEBOOK_URL',      SERVER_URL.'/signin/facebook?scope=email,publish_stream,user_status&display=popup');
@@ -27,7 +28,7 @@ define('AD_BOOKMARKS_NUM', 'ad_bookmarks_num');
 define('USER_BOOKMARKS_NUM', 'user_bookmarks_num');
 
 //define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
-define('DESCRIPTION_MAX_LENGTH', 100);
+define('DESCRIPTION_MAX_LENGTH', 750);
 define('COMMENT_MAX_LENGTH', 100);
 define('MESSAGE_MAX_LENGTH', 100);
 define('UPLOAD_FILE_MAX_SIZE', 2 * 1024 * 1024); //in bytes
