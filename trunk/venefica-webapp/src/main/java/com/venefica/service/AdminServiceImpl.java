@@ -64,6 +64,27 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
     }
     
     @Override
+    @Transactional
+    public List<AdDto> getOfflineAds() throws PermissionDeniedException {
+        User currentUser = getCurrentUser();
+        validateAdminUser(currentUser);
+        
+        List<AdDto> result = new LinkedList<AdDto>();
+        List<Ad> ads = adDao.getOfflineAds();
+        
+        for (Ad ad : ads) {
+            AdDto adDto = new AdDtoBuilder(ad)
+                    .setCurrentUser(currentUser)
+                    .includeCreator()
+                    .build();
+            
+            result.add(adDto);
+        }
+        
+        return result;
+    }
+    
+    @Override
     public List<ApprovalDto> getApprovals(Long adId) throws PermissionDeniedException, AdNotFoundException {
         User currentUser = getCurrentUser();
         validateAdminUser(currentUser);

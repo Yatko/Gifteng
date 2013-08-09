@@ -78,4 +78,10 @@ public interface AdDao {
      * @return a list of un-approved ads
      */
     List<Ad> getUnapprovedAds();
+    
+    /**
+     * 
+     * @return a list of un-approved ads
+     */
+    List<Ad> getOfflineAds();
 }
