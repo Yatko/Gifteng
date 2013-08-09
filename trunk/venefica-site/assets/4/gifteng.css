@@ -142,6 +142,10 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 .btn-social-facebook {color:#ffffff;}
 .navbar .nav > li > a {font-weight: normal !important;}
 .snap-drawer ul li form > input {background: #34495e;border: 1px solid #bdc3c7;display: block;margin: 15px auto;color: #ffffff;} /*style for Search box*/
+/* Bootstrap Flat-UI override - modal */
+.modal [class*="span"] {margin-left: 0px !important;} /* 285 */
+.modal .modal-body {padding: 0px !important;} /* 5252 */
+.modal {width: auto !important;max-width: 560px;} /* 5204 */
 
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}
@@ -151,6 +155,7 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 
 /* FORMS */
 .ge-form {padding:19px;}
+.ge-form .form_body {max-height: 326px;overflow: scroll;}
 .ge-form .control-form button {margin-top:42px;text-transform:uppercase;}
 .ge-form blockquote p {color:#00bebe;}
 
