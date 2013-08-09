@@ -90,7 +90,7 @@ $(function() {
                 $('.modal-body', this).css({
                     width: 'auto',
                     height: 'auto',
-                    'max-height':'520px'
+                    'max-height':'380px'
                 });
             });
         });

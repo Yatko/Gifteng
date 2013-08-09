@@ -77,7 +77,7 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <div class="ge-post-member-header">
+                    <div class="ge-modal_header">
                         <label class="control-label">
                             <blockquote>
                                 <div class="post_ajax_error"><?=$message?></div>
@@ -102,32 +102,30 @@ if ( $is_new ) {
                     <div class="ge-item-image">
                         <div class="row-fluid">
                             <div class="span12">
-
+                            
                             <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
                                 <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
                             <? else: ?>
                                 <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
                             <? endif; ?>
-
+                            
                             </div>
                         </div>
                     </div><!--./ge-item-image-->
-		    
-                    <div class="ge-post-member-footer">
-                        <div class="form_control">
-	                    <div class="row-fluid">
-	                        <div class="span12">
-	                            <div class="control-group control-form">
-	                                <div class="controls">
-	                                    <? if( $is_modal ): ?>
-	                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
-	                                    <? endif; ?>
-	                                    <button type="submit" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div><!--./submit-->
-	                </div>
+
+                    <div class="ge-modal_footer">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <? if( $is_modal ): ?>
+                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                        <? endif; ?>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div><!--./ge well-->
             </div><!--./post-gift_1-->
@@ -151,7 +149,7 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <div class="ge-post-member-header">
+                    <div class="ge-modal_header">
                         <label class="control-label">
                             <blockquote>
                                 <div class="post_ajax_error"><?=$message?></div>
@@ -239,7 +237,7 @@ if ( $is_new ) {
                         </div>
                     </div><!--./shipping-->
 
-                    <div class="ge-post-member-footer">
+                    <div class="ge-modal_footer">
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group control-form">
@@ -276,7 +274,7 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <div class="ge-post-member-header">
+                    <div class="ge-modal_header">
                         <label class="control-label">
                             <blockquote>
                                 <div class="post_ajax_error"><?=$message?></div>
@@ -290,7 +288,7 @@ if ( $is_new ) {
                         </div>
                     </div><!--./ge-item-image-->
 
-                    <div class="ge-post-member-footer">
+                    <div class="ge-modal_footer">
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group control-form">
@@ -324,7 +322,7 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <div class="ge-post-member-header">
+                    <div class="ge-modal_header">
                         <label class="control-label">
                             <blockquote>
                                 <div class="post_ajax_error"><?=$message?></div>
@@ -367,7 +365,7 @@ if ( $is_new ) {
                         </div>
                     </div><!--./ge-text-->
 
-                    <div class="ge-post-member-footer">
+                    <div class="ge-modal_footer">
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group control-form">
@@ -397,7 +395,7 @@ if ( $is_new ) {
                             </blockquote>
                         </label>
                         
-                        <div class="ge-post-member-footer">
+                        <div class="ge-modal_footer">
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="control-group control-form">
@@ -424,7 +422,7 @@ if ( $is_new ) {
                             </blockquote>
                         </label>
                         
-                        <div class="ge-post-member-footer">
+                        <div class="ge-modal_footer">
                             <div class="row-fluid">
                                 <div class="span12">
                                     <div class="control-group control-form">
