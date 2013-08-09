@@ -38,9 +38,11 @@ if (strlen($text) > MESSAGE_MAX_LENGTH) {
         <a class="ge-name" href="<?= $profile_link ?>"><?= $name ?></a>
         <span class="ge-date"><?= $since ?></span>
         
+        <? /** ?>
         <? if( $showDelete ): ?>
             <a class="fui-trash"></a>
         <? endif; ?>
+        <? /**/ ?>
         
         <? if( $showTitle ): ?>
             <a href="<?=base_url()?>profile?message&<?=$request_id?>" class="ge-title ge-block"><?= $ad_title ?></a>
