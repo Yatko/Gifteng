@@ -76,53 +76,61 @@ if ( $is_new ) {
             ?>
             
             <div class="span6">
-                <div class="well ge-well ge-form">
-                    <label class="control-label">
-                        <blockquote>
-                            <div class="post_ajax_error"><?=$message?></div>
-                        </blockquote>
-                    </label>
+                <div class="ge-form">
                     
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
-                                        <?=$image_text?>
-                                        <i class="fui-photo pull-right"></i>
-                                    </button>
-                                    <input name="image" id="image" type="file" />
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--./upload-->
-
-                    <div class="ge-item-image">
-                        <div class="row-fluid">
-                            <div class="span12">
-                            
-                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
-                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
-                            <? else: ?>
-                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
-                            <? endif; ?>
-                            
-                            </div>
-                        </div>
-                    </div><!--./ge-item-image-->
-
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="control-group control-form">
-                                <div class="controls">
-                                    <? if( $is_modal ): ?>
-                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
-                                    <? endif; ?>
-                                    <button type="submit" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--./submit-->
+                    <div class="form_title">
+	                    <label class="control-label">
+	                        <blockquote>
+	                            <div class="post_ajax_error"><?=$message?></div>
+	                        </blockquote>
+	                    </label>
+                    </div>
+                    
+                    <div class="form_body">
+	                    <div class="row-fluid">
+	                        <div class="span12">
+	                            <div class="control-group">
+	                                <div class="controls">
+	                                    <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
+	                                        <?=$image_text?>
+	                                        <i class="fui-photo pull-right"></i>
+	                                    </button>
+	                                    <input name="image" id="image" type="file" />
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div><!--./upload-->
+	
+	                    <div class="ge-item-image">
+	                        <div class="row-fluid">
+	                            <div class="span12">
+	                            
+	                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
+	                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
+	                            <? else: ?>
+	                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
+	                            <? endif; ?>
+	                            
+	                            </div>
+	                        </div>
+	                    </div><!--./ge-item-image-->
+					</div>
+					
+					<div class="form_control">
+	                    <div class="row-fluid">
+	                        <div class="span12">
+	                            <div class="control-group control-form">
+	                                <div class="controls">
+	                                    <? if( $is_modal ): ?>
+	                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+	                                    <? endif; ?>
+	                                    <button type="submit" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div><!--./submit-->
+	                </div>   
+	            	
                 </div><!--./ge well-->
             </div><!--./post-gift_1-->
             
