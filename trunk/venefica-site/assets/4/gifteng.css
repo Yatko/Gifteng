@@ -145,7 +145,7 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 /* Bootstrap Flat-UI override - modal */
 .modal [class*="span"] {margin-left: 0px !important;} /* 285 */
 .modal .modal-body {padding: 0px !important;} /* 5252 */
-.modal {width: auto !important;max-width: 560px;} /* 5204 */
+/*.modal {width: auto !important;max-width: 560px;}*/ /* 5204 */
 
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}

@@ -34,16 +34,16 @@
             });
         });
         
-        if ( $('#postContainer > .modal-body .ge-post-member-header').length > 0 ) {
-            var $header = $('#postContainer > .modal-body .ge-post-member-header').clone();
-            $('#postContainer > .modal-body .ge-post-member-header').remove();
+        if ( $('#postContainer > .modal-body .ge-modal_header').length > 0 ) {
+            var $header = $('#postContainer > .modal-body .ge-modal_header').clone();
+            $('#postContainer > .modal-body .ge-modal_header').remove();
             $('#postContainer > .modal-header').empty();
             $('#postContainer > .modal-header').append($header);
         }
         
-        if ( $('#postContainer > .modal-body .ge-post-member-footer').length > 0 ) {
-            var $footer = $('#postContainer > .modal-body .ge-post-member-footer').clone();
-            $('#postContainer > .modal-body .ge-post-member-footer').remove();
+        if ( $('#postContainer > .modal-body .ge-modal_footer').length > 0 ) {
+            var $footer = $('#postContainer > .modal-body .ge-modal_footer').clone();
+            $('#postContainer > .modal-body .ge-modal_footer').remove();
             $('#postContainer > .modal-footer').empty();
             $('#postContainer > .modal-footer').append($footer);
         }
