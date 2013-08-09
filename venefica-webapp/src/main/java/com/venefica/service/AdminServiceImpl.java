@@ -6,6 +6,7 @@ package com.venefica.service;
 
 import com.venefica.dao.ApprovalDao;
 import com.venefica.model.Ad;
+import com.venefica.model.AdStatus;
 import com.venefica.model.Approval;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
@@ -87,6 +88,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         
         Ad ad = validateAd(adId);
         ad.markAsApproved();
+        ad.setStatus(AdStatus.ACTIVE);
         
         Approval approval = new Approval(true);
         approval.setDecider(currentUser);
@@ -107,6 +109,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         
         Ad ad = validateAd(adId);
         ad.unmarkAsApproved();
+        ad.setStatus(AdStatus.OFFLINE);
         
         Approval approval = new Approval(false);
         approval.setDecider(currentUser);

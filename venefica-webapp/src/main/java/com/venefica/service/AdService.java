@@ -2,6 +2,7 @@ package com.venefica.service;
 
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AdStatisticsDto;
+import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
@@ -159,6 +160,25 @@ public interface AdService {
             @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "imageIds") List<Long> imageIds)
             throws AdNotFoundException, AuthorizationException, ImageNotFoundException;
+    
+    
+    
+    //*********************
+    //* approvals related *
+    //*********************
+    
+    /**
+     * Returns the available approvals for the given ad.
+     * 
+     * @param adId
+     * @return
+     * @throws AdNotFoundException
+     * @throws AuthorizationException 
+     */
+    @WebMethod(operationName = "GetApprovals")
+    @WebResult(name = "approval")
+    List<ApprovalDto> getApprovals(@WebParam(name = "adId") Long adId)
+            throws AdNotFoundException, AuthorizationException;
 
     
     
