@@ -58,10 +58,11 @@ public class Ad {
     
     private int numExpire; //how many times expired
     private boolean expires; //never expire?
-    @Column(nullable = false)
-    private boolean expired;
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiresAt;
+    
+    @Column(nullable = false)
+    private boolean expired; //ad is in expired state (flag changed by cron job)
     
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
@@ -70,6 +71,14 @@ public class Ad {
     private boolean sold; //product/gift ended
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldAt;
+    
+    private boolean approved; //can go live or not
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date approvedAt;
+    
+    private boolean online; //is visible on site
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date onlinedAt;
     
     private long numViews;
     @OneToMany(mappedBy = "ad")
@@ -256,6 +265,21 @@ public class Ad {
         sold = true;
         soldAt = new Date();
         status = AdStatus.FINALIZED;
+    }
+    
+    public void markAsApproved() {
+        approved = true;
+        approvedAt = new Date();
+    }
+    
+    public void unmarkAsApproved() {
+        approved = false;
+        approvedAt = null;
+    }
+    
+    public void markAsOnline() {
+        online = true;
+        onlinedAt = new Date();
     }
 
     public void addImage(Image image) {
@@ -596,5 +620,37 @@ public class Ad {
 
     public void setBookmarks(Set<Bookmark> bookmarks) {
         this.bookmarks = bookmarks;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public Date getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(Date approvedAt) {
+        this.approvedAt = approvedAt;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public Date getOnlinedAt() {
+        return onlinedAt;
+    }
+
+    public void setOnlinedAt(Date onlinedAt) {
+        this.onlinedAt = onlinedAt;
     }
 }

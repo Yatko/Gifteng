@@ -534,10 +534,16 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     @Transactional
-    public AdDto getAdById(Long adId) throws AdNotFoundException {
+    public AdDto getAdById(Long adId) throws AdNotFoundException, AuthorizationException {
         User currentUser = getCurrentUser();
         Ad ad = validateAd(adId);
 
+        if ( !ad.isOnline() || !ad.isApproved() ) {
+            if ( !currentUser.isAdmin() ) {
+                throw new AuthorizationException("Ad (id: " + adId + ") is not yet available (only for admins)");
+            }
+        }
+        
         if (!ad.getCreator().equals(currentUser) && !ad.isAlreadyViewedBy(currentUser)) {
             ad.visit();
         }

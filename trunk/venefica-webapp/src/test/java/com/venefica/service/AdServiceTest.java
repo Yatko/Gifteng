@@ -11,6 +11,9 @@ import com.venefica.model.Image;
 import com.venefica.model.ImageType;
 import com.venefica.model.RequestStatus;
 import com.venefica.model.User;
+import static com.venefica.service.ServiceTestBase.configureTimeouts;
+import static com.venefica.service.ServiceTestBase.createClient;
+import static com.venefica.service.ServiceTestBase.getCxfClient;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CategoryDto;
@@ -32,6 +35,7 @@ import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
+import com.venefica.service.fault.PermissionDeniedException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.io.IOException;
@@ -40,9 +44,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.cxf.endpoint.Client;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -75,6 +81,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     private BookmarkDao bookmarkDao;
     @Inject
     private ImageDao imageDao;
+    
+    @Resource(name = "adminPublishedUrl")
+    private String adminEndpointAddress;
     
     private Ad ad;
 
@@ -204,7 +213,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void getAdByIdTest() throws AdNotFoundException {
+    public void getAdByIdTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.getAdById(new Long(-1));
     }
@@ -522,7 +531,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     @Test
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void markAsSpamTest() throws AdNotFoundException {
+    public void markAsSpamTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.markAsSpam(ad.getId());
 
@@ -622,7 +631,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***************
     
     @Test
-    public void happyDayTest() throws AdValidationException, AdNotFoundException, UserNotFoundException, AlreadyRequestedException, InvalidAdStateException, InvalidRequestException, RequestNotFoundException {
+    public void happyDayTest() throws AdValidationException, AdNotFoundException, UserNotFoundException, AlreadyRequestedException, InvalidAdStateException, InvalidRequestException, RequestNotFoundException, AuthorizationException, PermissionDeniedException {
+        AdminService adminService = buildAdminService();
+        
         authenticateClientAsFirstUser();
         
         AdDto adDto = new AdDto();
@@ -634,6 +645,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         Long adId = client.placeAd(adDto);
         assertNotNull("The ad should exist", client.getAdById(adId));
+        
+        authenticateClientWithToken(adminService, firstUserAuthToken);
+        adminService.approveAd(adId);
+        adminService.onlineAd(adId);
         
         List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
         assertTrue("The user ads should not be empty", ads != null && !ads.isEmpty());
@@ -824,7 +839,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test
-    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException, AdValidationException {
+    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException, AdValidationException, AuthorizationException, PermissionDeniedException {
+        AdminService adminService = buildAdminService();
+        
         authenticateClientAsFirstUser();
         
         AdDto adDto = new AdDto();
@@ -836,6 +853,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         Long adId = client.placeAd(adDto);
         assertNotNull("The ad should exist", client.getAdById(adId));
+        
+        authenticateClientWithToken(adminService, firstUserAuthToken);
+        adminService.approveAd(adId);
+        adminService.onlineAd(adId);
         
         Ad ad_ = getAdById(adId);
         
@@ -1052,4 +1073,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 //            throw new RuntimeException(e);
 //        }
 //    }
+    
+    private AdminService buildAdminService() {
+        Class adminServiceClass = AdminService.class;
+        AdminService adminService = (AdminService) createClient(adminEndpointAddress, adminServiceClass);
+        Client adminServiceCxfClient = getCxfClient(adminService);
+        configureTimeouts(adminServiceCxfClient);
+        return adminService;
+    }
 }

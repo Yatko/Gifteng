@@ -63,6 +63,10 @@ public class AdDto extends DtoBase {
     private boolean expired;
     // out
     private boolean requested; //there is a valid request for this ad by the current user
+    // out
+    private boolean online; //not onlined ads are visible only for the owner
+    // out
+    private boolean approved; //approval status of the ad
     // in, out
     private Boolean expires; //never expire?
     // in, out
@@ -476,5 +480,21 @@ public class AdDto extends DtoBase {
 
     public void setSoldAt(Date soldAt) {
         this.soldAt = soldAt;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

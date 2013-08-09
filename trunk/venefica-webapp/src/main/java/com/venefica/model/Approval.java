@@ -1,0 +1,104 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.venefica.model;
+
+import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.hibernate.annotations.ForeignKey;
+
+/**
+ * Stores all the approve attempt made by the admin user. Un-approved ads will
+ * be notified via email by specifying the reject reason.
+ * 
+ * @author gyuszi
+ */
+@Entity
+@Table(name = "approval")
+public class Approval {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "approval_ad_fk")
+    private Ad ad;
+    
+    @ManyToOne(optional = false)
+    @ForeignKey(name = "approval_decider_fk")
+    private User decider;
+    
+    private boolean approved;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date approvedAt;
+    
+    private String text;
+
+    protected Approval() {
+    }
+    
+    public Approval(boolean approved) {
+        this.approved = approved;
+    }
+    
+    // getter/setter
+    
+    @SuppressWarnings("unused")
+    private void setId(Long id) {
+        this.id = id;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
+    public User getDecider() {
+        return decider;
+    }
+
+    public void setDecider(User decider) {
+        this.decider = decider;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public Date getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(Date approvedAt) {
+        this.approvedAt = approvedAt;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+    
+}

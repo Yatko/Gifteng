@@ -21,6 +21,7 @@ public interface Constants {
     
     public static final int AD_MAX_ALLOWED_PROLONGATION = 1; //number of allowed relisting
     public static final int AD_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60; // default: 1 minut
+    public static final int AD_ONLINE_STARTING_CHECK_HOUR = 12; // daily fixed hour checking (ex: every day at 12:00:00)
     public static final int AD_PROLONGATION_PERIOD_DAYS = 30; //with how many days will be incremented the expiration date at relist
     public static final int AD_EXPIRATION_PERIOD_DAYS = 30; //the default expiration in days at ad creation
     public static final int SPAMMARK_MAX_ALLOWED = 3; //number of allowed marks, after this the ad will be considered as spam

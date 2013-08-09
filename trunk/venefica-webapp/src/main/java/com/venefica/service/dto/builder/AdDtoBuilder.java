@@ -156,6 +156,8 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         adDto.setCreatedAt(model.getCreatedAt());
+        adDto.setOnline(model.isOnline());
+        adDto.setApproved(model.isApproved());
         adDto.setExpires(model.isExpires());
         adDto.setExpired(model.isExpired());
         adDto.setExpiresAt(model.getExpiresAt());

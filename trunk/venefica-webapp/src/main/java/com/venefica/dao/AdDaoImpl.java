@@ -97,7 +97,9 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         AdType type = filter.getType();
         
         // Build query string
-        String queryStr = "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false and a.sold = false";
+        String queryStr = ""
+                + "select distinct a "
+                + "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false and a.sold = false";
 
         if (lastAdId >= 0) {
             queryStr += " and a.id < :lastId";
@@ -109,6 +111,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     + "lower(a.adData.title) like '%' || :searchstr || '%' or "
                     + "lower(a.adData.subtitle) like '%' || :searchstr || '%' or "
                     + "lower(a.adData.description) like '%' || :searchstr || '%' or "
+                    + "lower(a.adData.category.name) like '%' || :searchstr || '%' or "
                     + "a.creator.userData in (select ud from " + MemberUserData.class.getSimpleName() + " ud where ud.firstName like '%' || :searchstr || '%' or ud.lastName like '%' || :searchstr || '%') or "
                     + "a.creator.userData in (select ud from " + BusinessUserData.class.getSimpleName() + " ud where ud.businessName like '%' || :searchstr || '%' or ud.contactName like '%' || :searchstr || '%')"
                     + ")";
@@ -206,17 +209,57 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             log.info(numRows + " ads marked as expired.");
         }
     }
+    
+    @Override
+    public void markOnlineAds() {
+        // @formatter:off		
+        int numRows = createQuery(""
+                + "update " + getDomainClassName() + " a "
+                + "set "
+                + "a.online = true, "
+                + "a.onlinedAt = :onlinedAt "
+                + "where "
+                + "a.online = false and "
+                + "a.approved = true"
+                + "")
+                .setParameter("onlinedAt", new Date())
+                .executeUpdate();
+        // @formatter:on
+
+        if (numRows > 0) {
+            log.info(numRows + " ads marked as online.");
+        }
+    }
+    
+    @Override
+    public void approveAd(Ad ad) {
+        ad.setApproved(true);
+        ad.setApprovedAt(new Date());
+        updateEntity(ad);
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Ad> getByUser(Long userId) {
         return createQuery(""
                 + "from " + getDomainClassName() + " a where "
-                + "a.creator.id = :userid and "
+                + "a.creator.id = :userId and "
                 + "a.adData.category.hidden = false and "
                 + "a.deleted = false "
-                + "order by a.id desc")
-                .setParameter("userid", userId)
+                + "order by a.id desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Ad> getUnapprovedAds() {
+        return createQuery(""
+                + "from " + getDomainClassName() + " a where "
+                + "a.deleted = false "
+                + "a.approved = false "
+                + "order by a.id desc"
+                + "")
                 .list();
     }
 

@@ -14,9 +14,13 @@
     <import resource="common-context.xml" />
 
     <bean id="adService" class="com.venefica.service.AdServiceImpl" />
+    <bean id="adminService" class="com.venefica.service.AdminServiceImpl" />
 
     <bean id="publishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'AdService'}" />
+    </bean>
+    <bean id="adminPublishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'AdminService'}" />
     </bean>
 
     <jaxws:endpoint id="adServiceEndpoint" implementor="#adService" address="#publishedUrl">
@@ -31,6 +35,12 @@
             </entry>
         </jaxws:properties>
         -->
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="adminServiceEndpoint" implementor="#adminService" address="#adminPublishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
     </jaxws:endpoint>
     
 </beans>

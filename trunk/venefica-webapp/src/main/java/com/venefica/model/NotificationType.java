@@ -31,8 +31,9 @@ public enum NotificationType {
     FOLLOWER_AD_CREATED("follower-ad-new"), //a member I follow posted a new gift
     
     //administration service
-    //APPROVAL_AD_REJECTED("ad-approval-reject"), //if we don’t approve a gift
-    //APPROVAL_AD_ACCEPTED("ad-approval-accept"), //if we approve a gift
+    AD_APPROVED("ad-approval-accept"), //if admin approve a gift
+    AD_UNAPPROVED("ad-approval-reject"), //if admin don’t approve a gift
+    //AD_ONLINE("ad-online"), //ad approvad and marked as online
     ;
     
     private String templateName;
