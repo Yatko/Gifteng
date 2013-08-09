@@ -34,7 +34,7 @@
             var $this = $(this);
             
             if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                $(".post_ajax_error").html("<div class='error'>Please limit photo size to 2MB !</div>");
+                $(".post_ajax_error").html("<div class='error'>Please limit photo size to 5 MB !</div>");
                 $this.html($this.attr('original_text'));
                 return;
             }
