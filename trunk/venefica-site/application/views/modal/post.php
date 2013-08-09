@@ -33,6 +33,20 @@
                 //TODO
             });
         });
+        
+        if ( $('#postContainer > .modal-body .ge-post-member-header').length > 0 ) {
+            var $header = $('#postContainer > .modal-body .ge-post-member-header').clone();
+            $('#postContainer > .modal-body .ge-post-member-header').remove();
+            $('#postContainer > .modal-header').empty();
+            $('#postContainer > .modal-header').append($header);
+        }
+        
+        if ( $('#postContainer > .modal-body .ge-post-member-footer').length > 0 ) {
+            var $footer = $('#postContainer > .modal-body .ge-post-member-footer').clone();
+            $('#postContainer > .modal-body .ge-post-member-footer').remove();
+            $('#postContainer > .modal-footer').empty();
+            $('#postContainer > .modal-footer').append($footer);
+        }
     }
     
     $(function() {
@@ -57,5 +71,7 @@
 </script>
 
 <div id="postContainer" class="modal hide fade" data-remote="<?=base_url()?>post?modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-header"></div>
     <div class="modal-body"></div>
+    <div class="modal-footer"></div>
 </div>

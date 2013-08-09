@@ -39,7 +39,7 @@
                 return;
             }
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
-            $("#member_post_form").submit();
+            submit_form('member_post_form');
         });
     });
 </script>
@@ -76,47 +76,45 @@ if ( $is_new ) {
             ?>
             
             <div class="span6">
-                <div class="ge-form">
-                    
-                    <div class="form_title">
-	                    <label class="control-label">
-	                        <blockquote>
-	                            <div class="post_ajax_error"><?=$message?></div>
-	                        </blockquote>
-	                    </label>
+                <div class="well ge-well ge-form">
+                    <div class="ge-post-member-header">
+                        <label class="control-label">
+                            <blockquote>
+                                <div class="post_ajax_error"><?=$message?></div>
+                            </blockquote>
+                        </label>
                     </div>
                     
-                    <div class="form_body">
-	                    <div class="row-fluid">
-	                        <div class="span12">
-	                            <div class="control-group">
-	                                <div class="controls">
-	                                    <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
-	                                        <?=$image_text?>
-	                                        <i class="fui-photo pull-right"></i>
-	                                    </button>
-	                                    <input name="image" id="image" type="file" />
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div><!--./upload-->
-	
-	                    <div class="ge-item-image">
-	                        <div class="row-fluid">
-	                            <div class="span12">
-	                            
-	                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
-	                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
-	                            <? else: ?>
-	                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
-	                            <? endif; ?>
-	                            
-	                            </div>
-	                        </div>
-	                    </div><!--./ge-item-image-->
-					</div>
-					
-					<div class="form_control">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="control-group">
+                                <div class="controls">
+                                    <button for="image" type="button" class="ge-post-image-btn btn btn-huge btn-block file">
+                                        <?=$image_text?>
+                                        <i class="fui-photo pull-right"></i>
+                                    </button>
+                                    <input name="image" id="image" type="file" />
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--./upload-->
+
+                    <div class="ge-item-image">
+                        <div class="row-fluid">
+                            <div class="span12">
+
+                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
+                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
+                            <? else: ?>
+                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
+                            <? endif; ?>
+
+                            </div>
+                        </div>
+                    </div><!--./ge-item-image-->
+		    
+                    <div class="ge-post-member-footer">
+                        <div class="form_control">
 	                    <div class="row-fluid">
 	                        <div class="span12">
 	                            <div class="control-group control-form">
@@ -129,8 +127,8 @@ if ( $is_new ) {
 	                            </div>
 	                        </div>
 	                    </div><!--./submit-->
-	                </div>   
-	            	
+	                </div>
+                    </div>
                 </div><!--./ge well-->
             </div><!--./post-gift_1-->
             
@@ -153,11 +151,13 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <label class="control-label">
-                        <blockquote>
-                            <div class="post_ajax_error"><?=$message?></div>
-                        </blockquote>
-                    </label>
+                    <div class="ge-post-member-header">
+                        <label class="control-label">
+                            <blockquote>
+                                <div class="post_ajax_error"><?=$message?></div>
+                            </blockquote>
+                        </label>
+                    </div>
                     
                     <div class="row-fluid">
                         <div class="span12">
@@ -239,18 +239,20 @@ if ( $is_new ) {
                         </div>
                     </div><!--./shipping-->
 
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="control-group control-form">
-                                <div class="controls">
-                                    <? if( $is_modal ): ?>
-                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
-                                    <? endif; ?>
-                                    <button type="submit" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+                    <div class="ge-post-member-footer">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <? if( $is_modal ): ?>
+                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                        <? endif; ?>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div><!--./submit-->
+                    </div>
                 </div><!--./ge well-->
             </div><!--./post-gift_2-->
             
@@ -274,11 +276,13 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <label class="control-label">
-                        <blockquote>
-                            <div class="post_ajax_error"><?=$message?></div>
-                        </blockquote>
-                    </label>
+                    <div class="ge-post-member-header">
+                        <label class="control-label">
+                            <blockquote>
+                                <div class="post_ajax_error"><?=$message?></div>
+                            </blockquote>
+                        </label>
+                    </div>
                     
                     <div class="row-fluid ge-map">
                         <div class="span12">
@@ -286,18 +290,20 @@ if ( $is_new ) {
                         </div>
                     </div><!--./ge-item-image-->
 
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="control-group control-form">
-                                <div class="controls">
-                                    <? if( $is_modal ): ?>
-                                        <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
-                                    <? endif; ?>
-                                    <button type="submit" class="span10 btn btn-huge btn-block btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                    <div class="ge-post-member-footer">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <? if( $is_modal ): ?>
+                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                        <? endif; ?>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-block btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div><!--./submit-->
+                    </div>
                 </div><!--./ge well-->
             </div><!--./post-gift_3-->
             
@@ -318,11 +324,13 @@ if ( $is_new ) {
             
             <div class="span6">
                 <div class="well ge-well ge-form">
-                    <label class="control-label">
-                        <blockquote>
-                            <div class="post_ajax_error"><?=$message?></div>
-                        </blockquote>
-                    </label>
+                    <div class="ge-post-member-header">
+                        <label class="control-label">
+                            <blockquote>
+                                <div class="post_ajax_error"><?=$message?></div>
+                            </blockquote>
+                        </label>
+                    </div>
                     
                     <div class="row-fluid">
                     	<div class="ge-item-image">
@@ -359,16 +367,18 @@ if ( $is_new ) {
                         </div>
                     </div><!--./ge-text-->
 
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="control-group control-form">
-                                <div class="controls">
-                                    <button onclick="edit_post();" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
-                                    <button type="submit" class="span8 btn btn-huge btn-ge"><?=$submit_text?><i class="fui-arrow-right pull-right"></i></button>
+                    <div class="ge-post-member-footer">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <button onclick="edit_post();" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span8 btn btn-huge btn-ge"><?=$submit_text?><i class="fui-arrow-right pull-right"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div><!--./submit-->
+                    </div>
 
                 </div><!--./ge well-->
             </div><!--./post-gift_4-->
@@ -387,13 +397,15 @@ if ( $is_new ) {
                             </blockquote>
                         </label>
                         
-                        <div class="row-fluid">
-                            <div class="span12">
-                                <div class="control-group control-form">
-                                    <div class="controls">
-                                        <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
-                                        <? endif; ?>
+                        <div class="ge-post-member-footer">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="control-group control-form">
+                                        <div class="controls">
+                                            <? if( $is_modal ): ?>
+                                                <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
+                                            <? endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -412,25 +424,27 @@ if ( $is_new ) {
                             </blockquote>
                         </label>
                         
-                        <div class="row-fluid">
-                            <div class="span12">
-                                <div class="control-group control-form">
-                                    <div class="controls">
-                                        <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
-                                            
-                                            <? if( $is_new ): ?>
-                                                <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                        <div class="ge-post-member-footer">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <div class="control-group control-form">
+                                        <div class="controls">
+                                            <? if( $is_modal ): ?>
+                                                <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
+
+                                                <? if( $is_new ): ?>
+                                                    <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                                                <? endif; ?>
+                                            <? else: ?>
+                                                <? if( $is_new ): ?>
+                                                    <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
+                                                <? endif; ?>
                                             <? endif; ?>
-                                        <? else: ?>
-                                            <? if( $is_new ): ?>
-                                                <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
-                                            <? endif; ?>
-                                        <? endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div><!--./submit-->
+                        </div>
                     </div><!--./ge well-->
                 </div><!--./post-gift_5-->
                 
