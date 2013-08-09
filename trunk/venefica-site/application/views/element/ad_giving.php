@@ -22,7 +22,33 @@ $is_owner = isOwner($user_id);
 
 <? if( $is_owner ): ?>
 
-    <? if( $ad->sold ): ?>
+    <? if( !$ad->online ): ?>
+        
+        <? if( $ad->approved ): ?>
+                    
+                    <div class="row-fluid ge-text ge-description">
+                        <div class="span12">
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Approved
+                                <span class="fui-arrow-left"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
+        <? else: ?>
+                    
+                    <div class="row-fluid ge-text ge-description">
+                        <div class="span12">
+                            <p class="text-center">
+                                <button onclick="startApprovalModal(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">Not approved</button>
+                            </p>
+                        </div>
+                    </div>
+                    
+        <? endif; ?>
+                    
+    <? elseif( $ad->sold ): ?>
 
         <?
         $accepted_request = $ad->getAcceptedRequest();

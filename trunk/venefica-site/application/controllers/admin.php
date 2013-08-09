@@ -10,14 +10,12 @@ class Admin extends CI_Controller {
         if ( !validate_login() ) return;
         
         $data = array();
-        
-        try {
-            $users = $this->usermanagement_service->getUsers();
-            $data['users'] = $users;
-        } catch ( Exception $ex ) {
-        }
+        $data['businessUsers'] = $this->getBusinessUsers();
+        $data['unapprovedAds'] = $this->getUnapprovedAds();
+        //$data['offlineAds'] = $this->getOfflineAds();
         
         $this->load->view('templates/'.TEMPLATES.'/header');
+        $this->load->view('javascript/admin');
         $this->load->view('admin/dashboard', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
@@ -29,14 +27,50 @@ class Admin extends CI_Controller {
             //load translations
             $this->lang->load('main');
             
-            $this->load->library('usermanagement_service');
+            $this->load->library('admin_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
+            $this->load->model('approval_model');
             
             $this->initialized = true;
         }
+    }
+    
+    private function getBusinessUsers() {
+        try {
+            $users = $this->admin_service->getUsers();
+        } catch ( Exception $ex ) {
+            $users = array();
+        }
+        
+        $businessUsers = array();
+        foreach ($users as $user) {
+            if ( !$user->businessAccount ) {
+                continue;
+            }
+            array_push($businessUsers, $user);
+        }
+        return $businessUsers;
+    }
+    
+    private function getUnapprovedAds() {
+        try {
+            $ads = $this->admin_service->getUnapprovedAds();
+        } catch ( Exception $ex ) {
+            $ads = array();
+        }
+        return $ads;
+    }
+    
+    private function getOfflineAds() {
+        try {
+            $ads = $this->admin_service->getOfflineAds();
+        } catch ( Exception $ex ) {
+            $ads = array();
+        }
+        return $ads;
     }
 }
