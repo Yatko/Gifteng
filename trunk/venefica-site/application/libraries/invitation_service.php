@@ -34,7 +34,7 @@ class Invitation_service {
             $invitationId = $result->invitationId;
             return $invitationId;
         } catch ( Exception $ex ) {
-            $errorCode = Invitation_service::$GENERAL_ERROR;
+            $errorCode = Invitation_service::GENERAL_ERROR;
             if (
                 hasField($ex, 'detail') &&
                 hasField($ex->detail, 'InvitationError') &&
