@@ -53,6 +53,18 @@ public interface AdDao {
     void markExpiredAds();
 
     /**
+     * Set the 'online' flag for all approved ads in the database.
+     */
+    void markOnlineAds();
+    
+    /**
+     * Marks the approved state of an ad. At this moment the ad can be exported
+     * for online state.
+     * @param ad
+     */
+    void approveAd(Ad ad);
+    
+    /**
      * Returns a list of 'active' or 'expired' ads created by the specified
      * user.
      *
@@ -60,4 +72,10 @@ public interface AdDao {
      * @return list of ads
      */
     List<Ad> getByUser(Long userId);
+    
+    /**
+     * 
+     * @return a list of un-approved ads
+     */
+    List<Ad> getUnapprovedAds();
 }

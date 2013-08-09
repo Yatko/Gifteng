@@ -111,14 +111,6 @@ public interface UserManagementService {
     //***************
     
     /**
-     * 
-     * @return a list of available users
-     */
-    @WebMethod(operationName = "GetUsers")
-    @WebResult(name = "user")
-    public List<UserDto> getUsers();
-    
-    /**
      * Retrieves information about the current (logged) user.
      *
      * @return user object

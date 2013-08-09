@@ -306,10 +306,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     
     @Test
     public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException {
-        Class adServiceClass = AdService.class;
-        AdService adService = (AdService) createClient(adEndpointAddress, adServiceClass);
-        Client adServiceCxfClient = getCxfClient(adService);
-        configureTimeouts(adServiceCxfClient);
+        AdService adService = buildAdService();
         
         authenticateClientWithToken(adService, firstUserAuthToken);
         
@@ -396,5 +393,13 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         messages = client.getLastMessagePerRequest();
         System.out.println("messages: " + messages);
         assertEquals("The size should be 1", 1, messages.size());
+    }
+    
+    private AdService buildAdService() {
+        Class adServiceClass = AdService.class;
+        AdService adService = (AdService) createClient(adEndpointAddress, adServiceClass);
+        Client adServiceCxfClient = getCxfClient(adService);
+        configureTimeouts(adServiceCxfClient);
+        return adService;
     }
 }

@@ -20,10 +20,10 @@ insert into memberuserdata ("id", "firstName", "lastName") values (4, 'Null', 'U
 
 -- Users
 delete from local_user;
-insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com', 1);
-insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com', 2);
-insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com', 3);
-insert into local_user ("id", "name", "password", "email", "userData_id") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com', 4);
+insert into local_user ("id", "name", "password", "email", "adminn", "userData_id") values (nextval('user_seq'), 'first', '12345', 'firstUser@gmail.com', 't', 1);
+insert into local_user ("id", "name", "password", "email", "adminn", "userData_id") values (nextval('user_seq'), 'second', '12345', 'secondUser@gmail.com', 'f', 2);
+insert into local_user ("id", "name", "password", "email", "adminn", "userData_id") values (nextval('user_seq'), 'third', '12345', 'thirdUser@gmail.com', 'f', 3);
+insert into local_user ("id", "name", "password", "email", "adminn", "userData_id") values (nextval('user_seq'), 'null', '12345', 'null@gmail.com', 'f', 4);
 
 -- User point
 delete from user_point;
@@ -66,7 +66,7 @@ insert into memberaddata ("id") values (1);
 
 -- Ads
 delete from ad;
-insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "numexpire", "status", "expires") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't');
+insert into ad ("id", "adData_id", "creator_id", "createdAt", "expired", "deleted", "sold", "numviews", "reviewed", "spam", "numavailprolongations", "rating", "numexpire", "status", "expires", "approved", "online") values (nextval('ad_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't', 't', 't');
 
 delete from user_transaction;
 insert into user_transaction ("finalized", "pendingGivingNumber", "pendingReceivingNumber", "ad_id", "user_id", "userPoint_id") values ('f', '2.2625', '0', 1, 1, 1);

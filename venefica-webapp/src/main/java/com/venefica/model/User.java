@@ -86,6 +86,9 @@ public class User {
     @OrderBy
     private Set<Message> receivedMessages;
     
+    @Column(name = "adminn", nullable = false)
+    private boolean admin;
+    
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
@@ -337,5 +340,13 @@ public class User {
 
     public void setRequests(Set<Request> requests) {
         this.requests = requests;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

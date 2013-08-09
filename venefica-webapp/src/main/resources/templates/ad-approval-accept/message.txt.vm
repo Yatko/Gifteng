@@ -1,0 +1,9 @@
+Hi ${ad.creator.getFullName()},
+
+Congratulations, your gift was approved. Daily at 12:00 all the apprved gifts will be made online,
+so see you soon on gifteng.
+
+To view gift access the following address:
+${baseUrl}view/${ad.id}
+
+Happy gifting!

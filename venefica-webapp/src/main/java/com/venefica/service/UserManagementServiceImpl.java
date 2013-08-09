@@ -24,7 +24,6 @@ import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -192,18 +191,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     //***************
     //* user search *
     //***************
-
-    @Override
-    @Transactional
-    public List<UserDto> getUsers() {
-        List<UserDto> result = new ArrayList<UserDto>(0);
-        List<User> users = userDao.getAll();
-        for ( User user : users ) {
-            UserDto userDto = new UserDto(user);
-            result.add(userDto);
-        }
-        return result;
-    }
     
     @Override
     @Transactional

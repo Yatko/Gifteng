@@ -54,5 +54,6 @@
     <jaxws:endpoint id="adEndpoint" implementor="#adService" address="/AdService" />
     <jaxws:endpoint id="messageEndpoint" implementor="#messageService" address="/MessageService" />
     <jaxws:endpoint id="utilityEndpoint" implementor="#utilityService" address="/UtilityService" />
+    <jaxws:endpoint id="adminEndpoint" implementor="#adminService" address="/AdminService" />
 
 </beans>

@@ -1,0 +1,10 @@
+Hi ${ad.creator.getFullName()},
+
+Sorry, but we are unable to accept your gift at this moment. Please review and give it another try.
+
+The reason behind refuse is:
+${text}
+
+Click <a href="${baseUrl}view/${ad.id}">here</a> to edit your gift.
+
+Happy gifting!
