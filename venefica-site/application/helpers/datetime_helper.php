@@ -36,6 +36,12 @@ if ( ! function_exists('convertTimestampToDateForMessage')) {
         return $strDate;
     }
 }
+if ( ! function_exists('convertTimestampToDate')) {
+    function convertTimestampToDate($timestamp) {
+        $strDate = date("F j, Y", $timestamp);
+        return $strDate;
+    }
+}
 
 
 

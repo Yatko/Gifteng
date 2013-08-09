@@ -123,22 +123,6 @@ class Usermanagement_service {
     //* user search *
     //***************
     
-    public function getUsers() {
-        try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $userService->getUsers();
-            
-            $users = array();
-            if ( hasField($result, 'user') && $result->user ) {
-                $users = User_model::convertUsers($result->user);
-            }
-            return $users;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, $ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
-    
     /**
      * Request user by its user name;
      * 

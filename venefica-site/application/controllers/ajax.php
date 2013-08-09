@@ -8,6 +8,69 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    // admin related
+    
+    public function approve() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('adId');
+            
+            $this->admin_service->approveAd($adId);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function unapprove() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('adId');
+            $reason = $this->input->post('reason');
+            
+            $this->admin_service->unapproveAd($adId, $reason);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function online() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('adId');
+            
+            $this->admin_service->onlineAd($adId);
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+
     /**
     public function share_message() {
         $this->init();
@@ -129,6 +192,31 @@ class Ajax extends CI_Controller {
     }
     
     // ad related
+    
+    public function approval() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_GET ) {
+            return;
+        }
+        
+        try {
+            $adId = $_GET['adId'];
+            $approvals = $this->ad_service->getApprovals($adId);
+            if ( empty($approvals) ) {
+                $result = 'Not yet approved !';
+            } else {
+                $approval = end(array_values($approvals));
+                $result = $approval->text;
+            }
+            
+            respond_ajax(AJAX_STATUS_RESULT, $result);
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
     
     public function bookmark() {
         $this->init();
@@ -355,6 +443,7 @@ class Ajax extends CI_Controller {
             $this->load->library('ad_service');
             $this->load->library('usermanagement_service');
             $this->load->library('message_service');
+            $this->load->library('admin_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');
@@ -365,6 +454,7 @@ class Ajax extends CI_Controller {
             $this->load->model('comment_model');
             $this->load->model('message_model');
             $this->load->model('request_model');
+            $this->load->model('approval_model');
             
             $this->initialized = true;
         }

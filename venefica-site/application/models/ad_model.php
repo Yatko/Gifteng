@@ -22,6 +22,7 @@ class Ad_model extends CI_Model {
     const WEEKDAY_SATURDAY = 'SATURDAY';
     const WEEKDAY_SUNDAY = 'SUNDAY';
     
+    const STATUS_OFLINE = 'OFFLINE'; //unapproved ad status (status will be changed by admin user approval)
     const STATUS_ACTIVE = 'ACTIVE'; //there is no active request for this ad
     const STATUS_IN_PROGRESS = 'IN_PROGRESS'; //there is an (one or more) active request for this ad
     const STATUS_FINALIZED = 'FINALIZED';
@@ -44,6 +45,8 @@ class Ad_model extends CI_Model {
     var $sold; //boolean
     var $expired; //boolean
     var $requested; //boolean
+    var $online; //boolean
+    var $approved; //boolean
     var $expires; //boolean
     var $availableAt; //long - timestamp
     var $soldAt; //long - timestamp
@@ -57,7 +60,7 @@ class Ad_model extends CI_Model {
     var $type; //enum: MEMBER, BUSINESS
     var $comments; //array of Comment_model
     var $address; //Address_model
-    var $status; //enum: ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED
+    var $status; //enum: OFFLINE, ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED
     var $requests; //array of Request_model
     var $canRequest; //boolean
     var $statistics; //AdStatistics_model
@@ -90,6 +93,8 @@ class Ad_model extends CI_Model {
             $this->sold = getField($obj, 'sold');
             $this->expired = getField($obj, 'expired');
             $this->requested = getField($obj, 'requested');
+            $this->online = getField($obj, 'online');
+            $this->approved = getField($obj, 'approved');
             $this->expires = getField($obj, 'expires');
             $this->availableAt = getField($obj, 'availableAt');
             $this->soldAt = getField($obj, 'soldAt');
@@ -235,18 +240,18 @@ class Ad_model extends CI_Model {
         return $this->place == Ad_model::PLACE_ONLINE;
     }
     
-//    public function getCreateDate() {
-//        if ( $this->createdAt == null ) {
-//            return '';
-//        }
-//        return date(DATE_FORMAT, $this->createdAt / 1000);
-//    }
+    public function getCreateDate() {
+        if ( $this->createdAt == null ) {
+            return '';
+        }
+        return convertTimestampToDate($this->createdAt / 1000);
+    }
     
     public function getExpireDate() {
         if ( $this->expiresAt == null ) {
             return '';
         }
-        return date(DATE_FORMAT, $this->expiresAt / 1000);
+        return convertTimestampToDate($this->expiresAt / 1000);
     }
     
     public function getLocation() {
