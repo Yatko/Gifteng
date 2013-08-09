@@ -383,3 +383,6 @@ transition: all 500ms ease;}
 		display:none !important;
 	}
 }
+
+/*WELCOME*/
+.ge-welcome #welcome_index {background:url('temp-sample/ge-welcome_bg.jpg') no-repeat center;height: 3455px;}
