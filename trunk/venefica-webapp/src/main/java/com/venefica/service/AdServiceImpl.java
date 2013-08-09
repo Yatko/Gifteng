@@ -2,6 +2,7 @@ package com.venefica.service;
 
 import com.venefica.config.Constants;
 import com.venefica.dao.AdDataDao;
+import com.venefica.dao.ApprovalDao;
 import com.venefica.dao.BookmarkDao;
 import com.venefica.dao.CategoryDao;
 import com.venefica.dao.CommentDao;
@@ -15,6 +16,7 @@ import com.venefica.dao.ViewerDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
+import com.venefica.model.Approval;
 import com.venefica.model.Bookmark;
 import com.venefica.model.BusinessAdData;
 import com.venefica.model.Category;
@@ -32,6 +34,7 @@ import com.venefica.model.UserTransaction;
 import com.venefica.model.Viewer;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AdStatisticsDto;
+import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.ImageDto;
@@ -73,6 +76,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AdService")
 public class AdServiceImpl extends AbstractService implements AdService {
 
+    @Inject
+    private ApprovalDao approvalDao;
     @Inject
     private AdDataDao adDataDao;
     @Inject
@@ -157,7 +162,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         adDataDao.save(ad.getAdData());
         
-        ad.setStatus(AdStatus.ACTIVE);
+        ad.setStatus(AdStatus.OFFLINE);
         ad.setCreator(currentUser);
         ad.setExpires(expires);
         ad.setExpired(false);
@@ -212,6 +217,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // WARNING: This update must be performed within an active transaction!
         adDto.update(ad);
 
+        ad.setStatus(AdStatus.OFFLINE);
         ad.getAdData().setCategory(category);
 
         try {
@@ -408,6 +414,32 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
     }
 
+    
+    
+    //*********************
+    //* approvals related *
+    //*********************
+    
+    @Override
+    public List<ApprovalDto> getApprovals(Long adId) throws AdNotFoundException, AuthorizationException {
+        Ad ad = validateAd(adId);
+        User currentUser = getCurrentUser();
+
+        if (!ad.getCreator().equals(currentUser)) {
+            throw new AuthorizationException("Only the creator can access approvals!");
+        }
+        
+        List<ApprovalDto> result = new LinkedList<ApprovalDto>();
+        List<Approval> approvals = approvalDao.getByAd(adId);
+        
+        for ( Approval approval : approvals ) {
+            ApprovalDto approvalDto = new ApprovalDto(approval);
+            result.add(approvalDto);
+        }
+        
+        return result;
+    }
+    
     
     
     //*************************

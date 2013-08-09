@@ -15,12 +15,16 @@
 
     <bean id="messageService" class="com.venefica.service.MessageServiceImpl" />
     <bean id="adService" class="com.venefica.service.AdServiceImpl" />
+    <bean id="adminService" class="com.venefica.service.AdminServiceImpl" />
 
     <bean id="publishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'MessageService'}" />
     </bean>
     <bean id="adPublishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'AdService'}" />
+    </bean>
+    <bean id="adminPublishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'AdminService'}" />
     </bean>
 
     <jaxws:endpoint id="messageServiceEndpoint" implementor="#messageService" address="#publishedUrl">
@@ -30,6 +34,12 @@
     </jaxws:endpoint>
     
     <jaxws:endpoint id="adServiceEndpoint" implementor="#adService" address="#adPublishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="adminServiceEndpoint" implementor="#adminService" address="#adminPublishedUrl">
         <jaxws:inInterceptors>
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>

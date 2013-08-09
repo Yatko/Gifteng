@@ -20,6 +20,7 @@ import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
+import com.venefica.service.fault.PermissionDeniedException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.math.BigDecimal;
@@ -54,6 +55,8 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     
     @Resource(name = "adPublishedUrl")
     private String adEndpointAddress;
+    @Resource(name = "adminPublishedUrl")
+    private String adminEndpointAddress;
     
     private Ad ad;
     //private Message message;
@@ -305,8 +308,9 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
     
     @Test
-    public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException {
+    public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException, PermissionDeniedException {
         AdService adService = buildAdService();
+        AdminService adminService = buildAdminService();
         
         authenticateClientWithToken(adService, firstUserAuthToken);
         
@@ -324,6 +328,10 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         
         Long adId = adService.placeAd(adDto);
         assertNotNull("Ad has to be created", adId);
+        
+        authenticateClientWithToken(adminService, firstUserAuthToken);
+        adminService.approveAd(adId);
+        adminService.onlineAd(adId);
         
         authenticateClientWithToken(adService, secondUserAuthToken);
         
@@ -401,5 +409,13 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         Client adServiceCxfClient = getCxfClient(adService);
         configureTimeouts(adServiceCxfClient);
         return adService;
+    }
+    
+    private AdminService buildAdminService() {
+        Class adminServiceClass = AdminService.class;
+        AdminService adminService = (AdminService) createClient(adminEndpointAddress, adminServiceClass);
+        Client adminServiceCxfClient = getCxfClient(adminService);
+        configureTimeouts(adminServiceCxfClient);
+        return adminService;
     }
 }
