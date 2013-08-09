@@ -147,6 +147,11 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 .modal .modal-body {padding: 0px !important;} /* 5252 */
 /*.modal {width: auto !important;max-width: 560px;}*/ /* 5204 */
 
+/* MODAL */
+.modal .well, .modal .ge-well {background:transparent !important;box-shadow:none !important;margin: 0px !important;}
+.modal-header {padding-bottom: 3px !important;}
+.ge-modal_header h3 {font-size: 120%;font-weight: normal;}
+
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}
 .user-giving_recipient .ge-user .ge-points a {font-size: 70%;vertical-align: super;}
