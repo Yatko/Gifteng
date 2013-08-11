@@ -59,7 +59,9 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 
 /* ITEM */
 .ge-item {}
-.ge-item .ge-item-image {min-height:220px;position:relative;} /*TODO review min-height and margin*/
+.ge-item .ge-item-image {min-height:220px;position:relative;}
+.ge-item-image .span12 {text-align: center;}
+.ge-item-image .ge-post-image.noimage {margin-top: 20px;}
 .ge-item .ge-item-image .btn {background-color: rgb(0, 0, 0);background-color: rgba(0, 0, 0, 0.2);
 	/* For IE 5.5 - 7*/
 	filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
@@ -150,7 +152,9 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 /* MODAL */
 .modal .well, .modal .ge-well {background:transparent !important;box-shadow:none !important;margin: 0px !important;}
 .modal-header {padding-bottom: 3px !important;}
+.ge-modal_header label.control-label {max-width: 403px;}
 .ge-modal_header h3 {font-size: 120%;font-weight: normal;}
+.ge-modal_header h3 small {font-size: 86% !important;font-weight: normal;}
 
 /* TABS */
 .user-giving_tabs, .user-receiving_tabs {margin-bottom:19px;}

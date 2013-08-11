@@ -39,7 +39,7 @@ function attach_file($button) {
                     //saving original text to be used later
                     $button.attr('original_text', $button.html());
                 }
-                $button.text('Done');
+                $button.text('Uploading ...');
             }
             $button.trigger('file_selected');
         });

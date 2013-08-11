@@ -105,9 +105,9 @@ if ( $is_new ) {
                             <div class="span12">
                             
                             <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
-                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image-img img img-rounded file" for="image" />
+                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image img img-rounded file" for="image" />
                             <? else: ?>
-                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image-img img img-rounded file" for="image" />
+                                <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image noimage img img-rounded file" for="image" />
                             <? endif; ?>
                             
                             </div>
@@ -314,7 +314,7 @@ if ( $is_new ) {
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'One last step! Make sure everything is correct.<br /><small>(Note: with every gift you give your Generosity Score will increase.)</small>';
+            if ( $message == '' ) $message = 'One last step! Make sure everything is correct.<br /><small>With every gift you give, your Generosity Score will increase!</small>';
             
             if ( $is_new ) {
                 $submit_text = 'POST MY GIFT';
@@ -368,14 +368,14 @@ if ( $is_new ) {
 	                        </div>
                         </div>
                     </div><!--./ge-text-->
-
+                    
                     <div class="ge-modal_footer">
                         <div class="row-fluid">
                             <div class="span12">
                                 <div class="control-group control-form">
                                     <div class="controls">
-                                        <button onclick="edit_post();" type="button" class="span4 btn btn-huge"><i class="fui-arrow-left pull-left"></i>EDIT</button>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span8 btn btn-huge btn-ge"><?=$submit_text?><i class="fui-arrow-right pull-right"></i></button>
+                                        <button type="button" onclick="edit_post();" class="span3 btn btn-huge">EDIT</button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span9 btn btn-huge btn-ge pull-right"><?=$submit_text?> <i class="fui-arrow-right pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -438,17 +438,16 @@ if ( $is_new ) {
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
                                 <div class="span12">
-                                    <div class="control-group control-form">
+                                    <div class="control-group control-form">                                       
                                         <div class="controls">
                                             <? if( $is_modal ): ?>
-                                                <button type="button" data-dismiss="modal" class="span4 btn btn-huge"><i class="fui-cross pull-left"></i>OK</button>
-
+                                                <button type="button" data-dismiss="modal" class="span3 btn btn-huge">OK</button>
                                                 <? if( $is_new ): ?>
-                                                    <button onclick="another_post();" type="button" class="span8 btn btn-huge btn-ge"><i class="pull-right"></i>POST ANOTHER GIFT</button>
+                                                    <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
                                             <? else: ?>
                                                 <? if( $is_new ): ?>
-                                                    <a href="<?=base_url()?>post" class="span8 btn btn-huge btn-ge">POST ANOTHER GIFT</a>
+                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
                                             <? endif; ?>
                                         </div>
