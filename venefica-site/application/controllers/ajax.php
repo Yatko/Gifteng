@@ -337,15 +337,15 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
         try {
-            $requestId = $_GET['requestId'];
-            $adId = $_GET['adId'];
-            $userId = key_exists('userId', $_GET) ? $_GET['userId'] : null;
-            $is_giving = key_exists('giving', $_GET) ? true : false;
+            $requestId = $this->input->post('requestId');
+            $adId = $this->input->post('adId');
+            $userId = key_exists('userId', $_POST) ? $this->input->post('userId') : null;
+            $is_giving = $this->input->post('requestType') == 'giving' ? true : false;
             
             $this->ad_service->cancelRequest($requestId);
             $this->usermanagement_service->refreshUser();
