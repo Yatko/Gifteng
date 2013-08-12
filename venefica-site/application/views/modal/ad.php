@@ -12,7 +12,7 @@
         }
     }
     
-    function ad_delete() {
+    function ad_delete_modal() {
         if ( $("#ad_delete_form").length === 0 ) {
             return;
         }
@@ -66,7 +66,7 @@
     </div>
     
     <div class="modal-body">
-        <?=form_open('/ajax/ad_delete', array('id' => 'ad_delete_form'))?>
+        <?=form_open('/ajax/delete_ad', array('id' => 'ad_delete_form'))?>
             <input type="hidden" name="adId"/>
 
             <fieldset>
@@ -74,7 +74,7 @@
                     <div class="span12">
                         <div class="control-group control-form">
                             <div class="controls">
-                                <button type="button" onclick="ad_delete();" class="span6 btn">YES</button>
+                                <button type="button" onclick="ad_delete_modal();" class="span6 btn">YES</button>
                                 <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
                             </div>
                         </div>

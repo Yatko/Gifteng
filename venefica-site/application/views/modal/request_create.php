@@ -12,12 +12,12 @@
         $("#" + type + "_request_post_form").removeClass('hide');
         
         if ( $('#requestContainer').length > 0 ) {
-            showRequestStep2();
+            showRequestModalStep2();
             $('#requestContainer').removeData("modal").modal('show');
         }
     }
     
-    function requestModal(type) {
+    function request_modal(type) {
         if ( $("#" + type + "_request_post_form").length === 0 ) {
             return;
         }
@@ -60,19 +60,19 @@
         });
     }
     
-    function showRequestStep1() {
+    function showRequestModalStep1() {
         $('#request_step_1').removeClass('hide');
         $('#request_step_2').addClass('hide');
     }
-    function showRequestStep2() {
+    function showRequestModalStep2() {
         $('#request_step_1').addClass('hide');
         $('#request_step_2').removeClass('hide');
     }
     
     $(function() {
         $('#requestContainer').on('hidden', function() {
-            //showRequestStep1();
-            showRequestStep2();
+            //showRequestModalStep1();
+            showRequestModalStep2();
         });
     });
 </script>
@@ -97,7 +97,7 @@
                     <div class="control-group control-form">
                         <div class="controls">
                             <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                            <button onclick="requestModal('business');" type="button" class="span8 btn btn-ge">Send Request</button>
+                            <button onclick="request_modal('business');" type="button" class="span8 btn btn-ge">Send Request</button>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     <div class="span12">
                         <div class="control-group control-form">
                             <div class="controls">
-                                <button onclick="showRequestStep2();" type="button" class="span8 pull-right btn btn-ge" >Got it!</button>
+                                <button onclick="showRequestModalStep2();" type="button" class="span8 pull-right btn btn-ge" >Got it!</button>
                             </div>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                         <div class="control-group control-form">
                             <div class="controls">
                                 <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                <button onclick="requestModal('member');" type="button" class="span8 btn btn-ge">Send Request</button>
+                                <button onclick="request_modal('member');" type="button" class="span8 btn btn-ge">Send Request</button>
                             </div>
                         </div>
                     </div>
