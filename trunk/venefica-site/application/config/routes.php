@@ -118,6 +118,10 @@ $route['get_photo/(:any)/(:num)']           = 'generator/get_photo/$1/$2/$2'; //
 $route['get_photo/(:any)/(:num)/(:num)']    = 'generator/get_photo/$1/$2/$3';
 $route['get_photo']                         = 'generator/get_photo//0/0'; //empty image
 
+// statistics
+
+$route['stat'] = 'stat/view';
+
 // contact static page
 
 $route['contact'] = 'contact/view';
