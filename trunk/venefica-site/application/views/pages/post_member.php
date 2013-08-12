@@ -34,7 +34,7 @@
             var $this = $(this);
             
             if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                $(".post_ajax_error").html("<div class='error'>Please limit photo size to 5 MB !</div>");
+                $(".ge-modal_header h3").html("<div class='error'>Please limit photo size to 5 MB !</div>");
                 $this.html($this.attr('original_text'));
                 return;
             }
@@ -80,9 +80,7 @@ if ( $is_new ) {
                     <div class="ge-modal_header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -153,9 +151,7 @@ if ( $is_new ) {
                     <div class="ge-modal_header">
                     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -279,9 +275,7 @@ if ( $is_new ) {
                     <div class="ge-modal_header">
                     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -328,9 +322,7 @@ if ( $is_new ) {
                     <div class="ge-modal_header">
                     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -342,30 +334,30 @@ if ( $is_new ) {
 
                     <div id="item_description" class="row-fluid">
                     	<div class="ge-text">
-	                        <div class="ge-title"><?=$title?></div>
-	                        <div class="ge-description">
-	                            <em>Description:</em> <?=$description?>
-	                        </div>
-	                        <div class="ge-details">
-	                            <ul>
-	                                <li><em>Category: </em><?=$category?></li>
-	                                <li><em>Current value: $</em><?=$price?></li>
-	                            </ul>
-	                            <div class="row-fluid">
-	                                <div class="span6">
-	                                    <label class="checkbox">
-	                                        <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-	                                        Pick up
-	                                    </label>
-	                                </div>
-	                                <div class="span6">
-	                                    <label class="checkbox">
-	                                        <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-	                                        Free shipping
-	                                    </label>	
-	                                </div>	
-	                            </div>
-	                        </div>
+                            <div class="ge-title"><?=$title?></div>
+                            <div class="ge-description">
+                                <em>Description:</em> <?=$description?>
+                            </div>
+                            <div class="ge-details">
+                                <ul>
+                                    <li><em>Category: </em><?=$category?></li>
+                                    <li><em>Current value: $</em><?=$price?></li>
+                                </ul>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <label class="checkbox">
+                                            <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+                                            Pick up
+                                        </label>
+                                    </div>
+                                    <div class="span6">
+                                        <label class="checkbox">
+                                            <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+                                            Free shipping
+                                        </label>	
+                                    </div>	
+                                </div>
+                            </div>
                         </div>
                     </div><!--./ge-text-->
                     
@@ -394,13 +386,11 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                        <label class="control-label">
-	                            <h3>
-	                                <?=$error?>
-	                            </h3>
-	                        </label>
-	                    </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <label class="control-label">
+                                <h3><?=$error?></h3>
+                            </label>
+                        </div>
                         
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
@@ -423,16 +413,14 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                        <label class="control-label">
-	                            <h3>
-	                                You're Awesome!
-	                            </h3>
-	                        </label>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <label class="control-label">
+                                <h3>You're Awesome!</h3>
+                            </label>
                         </div>
                         
                         <div class="row-fluid">
-                        	Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)
+                            Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)
                         </div>
                         
                         <div class="ge-modal_footer">
