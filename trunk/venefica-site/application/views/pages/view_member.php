@@ -83,6 +83,8 @@ $ad_pickUp = $ad->pickUp;
 $ad_freeShipping = $ad->freeShipping;
 $ad_description = $ad->getSafeDescription();
 
+$ad_price = trim($ad_price, '0'); //remove zeros from beginning/end of number ie. 00140.00000 becomes 140.
+$ad_price = trim($ad_price, '.'); //remove decimal point if an integer ie. 140. becomes 140
 
 if ( $ad_subtitle != '' ) $ad_subtitle = $ad_subtitle . ' % off the bill';
 if ( $ad_price != '' ) $ad_price = '$' . $ad_price;
