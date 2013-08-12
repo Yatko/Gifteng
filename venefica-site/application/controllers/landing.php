@@ -7,11 +7,21 @@ class Landing extends CI_Controller {
     public function totegiveaway() {
         $this->init();
         
+        $data = array();
         $data['address'] = 'http://eepurl.com/AsK6D';
         
         $this->load->view('iframe', $data);
     }
     
+    public function jobs() {
+        $this->init();
+        
+        $data = array();
+        $data['address'] = 'http://help.gifteng.com/forums/22379438-Jobs';
+        
+        $this->load->view('iframe', $data);
+    }
+
     // internal functions
     
     private function init() {
