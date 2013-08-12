@@ -34,17 +34,17 @@
             });
         });
         
+        $('#postContainer > .modal-header').empty();
         if ( $('#postContainer > .modal-body .ge-modal_header').length > 0 ) {
             var $header = $('#postContainer > .modal-body .ge-modal_header').clone();
             $('#postContainer > .modal-body .ge-modal_header').remove();
-            $('#postContainer > .modal-header').empty();
             $('#postContainer > .modal-header').append($header);
         }
         
+        $('#postContainer > .modal-footer').empty();
         if ( $('#postContainer > .modal-body .ge-modal_footer').length > 0 ) {
             var $footer = $('#postContainer > .modal-body .ge-modal_footer').clone();
             $('#postContainer > .modal-body .ge-modal_footer').remove();
-            $('#postContainer > .modal-footer').empty();
             $('#postContainer > .modal-footer').append($footer);
         }
     }
