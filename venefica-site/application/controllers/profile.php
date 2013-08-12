@@ -119,6 +119,7 @@ class Profile extends CI_Controller {
         
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
+        $modal .= $this->load->view('modal/request_cancel', array(), true);
         
         $data = array();
         $data['user'] = $user;
