@@ -10,9 +10,14 @@
 $ad_id = $ad->id;
 $request_id = $request->id;
 
+$inactive = false;
+//if ( $ad->expired || $request->isExpired() ) {
+//    $inactive = true;
+//}
+
 ?>
 
-<div class="span3 ge-box">
+<div class="span3 ge-box <?=($inactive ? 'ge-inactive' : '')?>">
     <div class="well ge-well">
         <div class="row-fluid">
             <div class="span12">
@@ -86,7 +91,7 @@ $request_id = $request->id;
                         </div>
 
                         <div class="span12">
-                            <button onclick="request_cancel(this, 'receiving', <?=$request_id?>, , <?=$ad_id?>, 0);" class="ge-request btn btn-small btn-block">
+                            <button onclick="startRequestCancelModal(this, 'receiving', <?=$request_id?>, <?=$ad_id?>, 0);" class="ge-request btn btn-small btn-block">
                                 Cancel Request
                                 <i class="fui-cross pull-left"></i>
                             </button>
