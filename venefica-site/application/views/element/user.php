@@ -67,7 +67,15 @@ if ( $small == false ) {
     <? endif; ?>
     <div class="ge-points">
     <? if ($points != ''): ?>
-        <span class="<?= $label_css ?>"><?= $points ?></span>
+        <span class="<?= $label_css ?>">
+        
+        <? if ($is_owner): ?>
+            Generosity Score <?= $points ?>
+        <? else: ?>
+            G <?= $points ?>
+        <? endif; ?>
+        
+        </span>
     <? endif; ?>
     <? if (!$is_owner): ?>
         <? if ($is_in_followings): ?>
