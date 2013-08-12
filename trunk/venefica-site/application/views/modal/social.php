@@ -11,15 +11,15 @@
         $('#socialContainer').removeData("modal").modal('show');
     }
     
-    function shareOnFacebookModal() {
+    function share_on_facebook_modal() {
         shareOnFacebook(socialTitle, socialItemUrl, socialImgUrl);
         $('#socialContainer').modal('hide');
     }
-    function shareOnTwitterModal() {
+    function share_on_twitter_modal() {
         shareOnTwitter(socialTitle, socialItemUrl, socialImgUrl);
         $('#socialContainer').modal('hide');
     }
-    function shareOnPinterestModal() {
+    function share_on_pinterest_modal() {
         shareOnPinterest(socialTitle, socialItemUrl, socialImgUrl);
         $('#socialContainer').modal('hide');
     }
@@ -29,13 +29,13 @@
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span4">
-                <button onclick="shareOnFacebookModal();" class="btn btn-mini btn-block btn-social-facebook ge-icon-facebook"></button>
+                <button onclick="share_on_facebook_modal();" class="btn btn-mini btn-block btn-social-facebook ge-icon-facebook"></button>
             </div>
             <div class="span4">
-                <button onclick="shareOnTwitterModal();" class="btn btn-mini btn-block btn-social-twitter ge-icon-twitter"></button>
+                <button onclick="share_on_twitter_modal();" class="btn btn-mini btn-block btn-social-twitter ge-icon-twitter"></button>
             </div>
             <div class="span4">
-                <button onclick="shareOnPinterestModal();" class="btn btn-mini btn-block btn-social-pinterest ge-icon-pinterest"></button>
+                <button onclick="share_on_pinterest_modal();" class="btn btn-mini btn-block btn-social-pinterest ge-icon-pinterest"></button>
             </div>
         </div>
     </div>

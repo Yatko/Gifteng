@@ -8,7 +8,7 @@
         }
     }
     
-    function editPostModal() {
+    function edit_post_modal() {
         if ( $("#edit_post_form").length === 0 ) {
             return;
         }
@@ -35,7 +35,7 @@
                     <div class="span12">
                         <div class="control-group control-form">
                             <div class="controls">
-                                <button type="button" onclick="editPostModal();" class="span4 btn">Edit</button>
+                                <button type="button" onclick="edit_post_modal();" class="span4 btn">Edit</button>
                                 <button type="button" data-dismiss="modal" class="span8 btn btn-ge">Don't Edit</button>
                             </div>
                         </div>
