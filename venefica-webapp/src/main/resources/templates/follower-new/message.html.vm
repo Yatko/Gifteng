@@ -1,4 +1,4 @@
-Hi ${user.getFullName()},
+Hi ${user.userData.getFirstName()},
 
 Click <a href="${baseUrl}profile?follower">here</a> to find out who is your new follower!
 

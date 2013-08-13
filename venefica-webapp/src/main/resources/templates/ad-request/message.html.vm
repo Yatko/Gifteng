@@ -1,4 +1,4 @@
-Hi ${ad.creator.getFullName()},
+Hi ${ad.creator.userData.getFirstName()},
 
 ${request.user.getFullName()} is excited to have your Gift!
 

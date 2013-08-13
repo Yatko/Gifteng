@@ -1,10 +1,12 @@
-Hi ${ad.creator.getFullName()},
+Hi ${ad.creator.userData.getFirstName()},
 
-Sorry, but we are unable to accept your gift at this moment. Please review and give it another try.
-
-The reason behind refuse is:
+Unfortunately your gift can’t be posted because:
 ${text}
 
-Click <a href="${baseUrl}view/${ad.id}">here</a> to edit your gift.
+Click <a href="${baseUrl}view/${ad.id}">here</a> to revise gift.
 
-Happy gifting!
+Thanks, 
+The Gifteng Team
+
+You can also copy and paste this link into your browser:
+${baseUrl}view/${ad.id}

@@ -1,6 +1,6 @@
-Hi,
+Hi ${ad.creator.userData.getFirstName()},
 
-${user.getFullName()} received yout gift.
+${user.getFullName()} received your gift.
 
 Happy giving!
 

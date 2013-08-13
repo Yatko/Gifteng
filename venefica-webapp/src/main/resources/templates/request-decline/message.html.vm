@@ -1,4 +1,4 @@
-Hi ${user.getFullName()},
+Hi ${user.userData.getFirstName()},
 
 Very sorry, but your request was declined.
 
