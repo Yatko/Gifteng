@@ -1,5 +1,7 @@
 <script language="javascript">
     function startApprovalModal(adId, revision) {
+        $("#approval_modal_view_gift").attr('href', '<?=base_url()?>view/' + adId);
+        
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/approval',
@@ -35,6 +37,7 @@
         <h3></h3>
     </div>
     <div class="modal-footer">
+        <a id="approval_modal_view_gift" class="btn btn-large btn-ge">View Gift</a>
         <button type="button" data-dismiss="modal" class="btn btn-large btn-ge"><i class="fui-cross pull-right"></i>OK</button>
     </div>
 </div>

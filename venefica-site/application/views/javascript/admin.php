@@ -1,5 +1,8 @@
 <script language="javascript">
     function approve_ad(adId) {
+        $('#approve_btn_' + adId).attr("disabled", true);
+        $('#unapprove_btn_' + adId).attr("disabled", true);
+        
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/approve',
@@ -14,8 +17,6 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                $('#approve_btn_' + adId).attr("disabled", true);
-                $('#unapprove_btn_' + adId).attr("disabled", true);
                 $('#online_btn_' + adId).removeAttr("disabled");
             } else {
                 //TODO: unknown response received
@@ -26,6 +27,12 @@
     }
     function unapprove_ad(adId) {
         var reason = $("#reason_" + adId).val();
+        if ( $.trim(reason) === '' ) {
+            return;
+        }
+        
+        $('#approve_btn_' + adId).attr("disabled", true);
+        $('#unapprove_btn_' + adId).attr("disabled", true);
         
         $.ajax({
             type: 'POST',
@@ -42,8 +49,6 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                $('#approve_btn_' + adId).attr("disabled", true);
-                $('#unapprove_btn_' + adId).attr("disabled", true);
                 $("#reason_" + adId).val('');
             } else {
                 //TODO: unknown response received
@@ -53,6 +58,8 @@
         });
     }
     function online_ad(adId) {
+        $('#online_btn_' + adId).attr("disabled", true);
+        
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/online',
