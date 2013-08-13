@@ -68,6 +68,12 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         List<Ad> ads = adDao.getUnapprovedAds();
         
         for (Ad ad : ads) {
+            Approval approval = approvalDao.getByAdAndRevision(ad.getId(), ad.getRevision());
+            if ( approval != null ) {
+                //an approval already exists for the actual ad revision
+                continue;
+            }
+            
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
                     .includeCreator()
@@ -144,6 +150,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         Approval approval = new Approval(true);
         approval.setDecider(currentUser);
         approval.setAd(ad);
+        approval.setRevision(ad.getRevision());
         approvalDao.save(approval);
         
         String email = ad.getCreator().getEmail();
@@ -177,6 +184,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         Approval approval = new Approval(false);
         approval.setDecider(currentUser);
         approval.setAd(ad);
+        approval.setRevision(ad.getRevision());
         approval.setText(message);
         approvalDao.save(approval);
         
