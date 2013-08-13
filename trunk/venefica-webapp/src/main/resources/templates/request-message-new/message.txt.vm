@@ -1,4 +1,4 @@
-Hi ${to.getFullName()},
+Hi ${to.userData.getFirstName()},
 
 You received a new message from ${from.getFullName()}.
 

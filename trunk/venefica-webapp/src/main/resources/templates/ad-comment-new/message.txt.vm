@@ -1,4 +1,4 @@
-Hi ${ad.creator.getFullName()},
+Hi ${ad.creator.userData.getFirstName()},
 
 ${comment.publisher.getFullName()} commented your Gift! Click here to view the comment!
 

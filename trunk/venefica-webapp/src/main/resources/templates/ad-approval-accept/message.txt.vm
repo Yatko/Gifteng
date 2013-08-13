@@ -1,9 +1,7 @@
-Hi ${ad.creator.getFullName()},
+Hi ${ad.creator.userData.getFirstName()},
 
-Congratulations, your gift was approved. Daily at 12:00 all the apprved gifts will be made online,
-so see you soon on gifteng.
+We just want to let you know that your gift is approved and it will be available tomorrow at 12:00pm ET on Gifteng.com.
+Please visit us then to share it with your friends and most importantly to request new Gifts posted by other members!
 
-To view gift access the following address:
-${baseUrl}view/${ad.id}
-
-Happy gifting!
+Happy giving (and receiving), 
+The Gifteng Team

@@ -995,6 +995,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         userPointDao.update(userPoint);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("ad", ad);
         vars.put("user", request.getUser());
         vars.put("request", request);
         

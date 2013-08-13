@@ -1,4 +1,4 @@
-Hi ${follower.getFullName()},
+Hi ${follower.userData.getFirstName()},
 
 ${ad.creator.getFullName()} posted a new Gift!
 

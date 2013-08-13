@@ -1,4 +1,4 @@
-Hi ${user.getFullName()},
+Hi ${user.userData.getFirstName()},
 
 To find out who is your new follower access the following address:
 ${baseUrl}profile?follower
