@@ -98,6 +98,17 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 
 ?>
 
+<? if( $this->agent->is_referral() ): ?>
+
+    <div class="row">
+        <div class="span6">
+            <a href="<?=$this->agent->referrer()?>" class="btn btn-large">Back</a>
+            <br/><br/>
+        </div>
+    </div>
+
+<? endif; ?>
+
 
 <div class="row">
     <div class="ge-detail-view">

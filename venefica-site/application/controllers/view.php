@@ -73,6 +73,7 @@ class View extends CI_Controller {
             $this->lang->load('main');
             $this->lang->load('view');
             
+            $this->load->library('user_agent');
             $this->load->library('ad_service');
             $this->load->library('usermanagement_service');
             $this->load->library('message_service');
