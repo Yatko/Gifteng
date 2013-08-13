@@ -599,7 +599,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Ad ad = validateAd(adId);
 
         if ( !ad.isOnline() || !ad.isApproved() ) {
-            if ( !currentUser.isAdmin() ) {
+            if ( !currentUser.isAdmin() && !ad.getCreator().equals(currentUser)  ) {
+                //current is not admin and is not ad owner
                 throw new AuthorizationException("Ad (id: " + adId + ") is not yet available (only for admins)");
             }
         }
