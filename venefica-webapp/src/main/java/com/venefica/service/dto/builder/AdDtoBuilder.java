@@ -101,6 +101,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     public AdDto build() {
         AdDto adDto = new AdDto();
         adDto.setId(model.getId());
+        adDto.setRevision(model.getRevision());
         adDto.setCategoryId(model.getAdData().getCategory().getId());
         adDto.setCategory(model.getAdData().getCategory().getName());
         adDto.setTitle(model.getAdData().getTitle());

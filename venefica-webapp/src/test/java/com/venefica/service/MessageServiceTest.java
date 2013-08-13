@@ -16,6 +16,7 @@ import com.venefica.service.fault.AlreadyRequestedException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.CommentNotFoundException;
 import com.venefica.service.fault.CommentValidationException;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.MessageNotFoundException;
@@ -308,7 +309,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
     
     @Test
-    public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException, PermissionDeniedException {
+    public void getLastMessagePerRequestTest() throws AdValidationException, AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException, UserNotFoundException, RequestNotFoundException, MessageValidationException, PermissionDeniedException, GeneralException {
         AdService adService = buildAdService();
         AdminService adminService = buildAdminService();
         

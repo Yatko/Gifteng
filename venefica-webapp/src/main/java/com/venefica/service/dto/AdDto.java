@@ -26,6 +26,8 @@ public class AdDto extends DtoBase {
     
     // out
     private Long id;
+    // out
+    private Integer revision;
     // in, out
     private Long categoryId;
     // out
@@ -105,6 +107,8 @@ public class AdDto extends DtoBase {
     private Boolean canRequest;
     // out
     private AdStatisticsDto statistics;
+    // out
+    private ApprovalDto approval; // the approval of the ad on specified revision
     
     // business ad data
     
@@ -129,7 +133,7 @@ public class AdDto extends DtoBase {
     public AdDto() {
     }
 
-    public void update(Ad ad) {
+    public void updateAd(Ad ad) {
         ad.getAdData().setTitle(title);
         ad.getAdData().setSubtitle(subtitle);
         ad.getAdData().setDescription(description);
@@ -496,5 +500,21 @@ public class AdDto extends DtoBase {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
+    }
+
+    public ApprovalDto getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ApprovalDto approval) {
+        this.approval = approval;
     }
 }

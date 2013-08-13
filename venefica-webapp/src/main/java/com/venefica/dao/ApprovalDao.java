@@ -27,4 +27,14 @@ public interface ApprovalDao {
      * @return 
      */
     List<Approval> getByAd(Long adId);
+    
+    /**
+     * Return (if exists) the approval for the given ad at the given moment
+     * defined by the revision number.
+     * 
+     * @param adId
+     * @param revision
+     * @return 
+     */
+    Approval getByAdAndRevision(Long adId, Integer revision);
 }

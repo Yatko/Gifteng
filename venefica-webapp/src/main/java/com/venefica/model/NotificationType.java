@@ -29,11 +29,6 @@ public enum NotificationType {
     REQUEST_CANCELED("request-cancel"), //the requestor cancelled the request
     REQUEST_DECLINED("request-decline"), //the giver cancelled your request
     FOLLOWER_AD_CREATED("follower-ad-new"), //a member I follow posted a new gift
-    
-    //administration service
-    AD_APPROVED("ad-approval-accept"), //if admin approve a gift
-    AD_UNAPPROVED("ad-approval-reject"), //if admin don’t approve a gift
-    //AD_ONLINE("ad-online"), //ad approvad and marked as online
     ;
     
     private String templateName;
