@@ -47,7 +47,7 @@
         <label class="control-label" for="fieldset">
             <blockquote>
                 <p>
-                    Are you sure you want to cancel the request??
+                    Are you sure you want to cancel the request?
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </p>
             </blockquote>
