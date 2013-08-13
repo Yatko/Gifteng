@@ -33,6 +33,8 @@ public class Approval {
     @ForeignKey(name = "approval_ad_fk")
     private Ad ad;
     
+    private Integer revision; //the revision of the ad when the approval was created
+    
     @ManyToOne(optional = false)
     @ForeignKey(name = "approval_decider_fk")
     private User decider;
@@ -99,6 +101,14 @@ public class Approval {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
     }
     
 }

@@ -53,6 +53,8 @@ public class Ad {
     @ForeignKey(name = "ad_creator_fk")
     private User creator;
     
+    private Integer revision; //the modification number of the ad (at creation 1, after every update increment by 1)
+    
     @Temporal(TemporalType.TIMESTAMP)
     private Date availableAt; //beginning of the offer (available since)
     
@@ -373,6 +375,17 @@ public class Ad {
         return number;
     }
     
+    public void initRevision() {
+        this.revision = 1;
+    }
+    
+    public void incrementRevision() {
+        if ( revision == null ) {
+            initRevision();
+        }
+        this.revision++;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Ad)) {
@@ -652,5 +665,13 @@ public class Ad {
 
     public void setOnlinedAt(Date onlinedAt) {
         this.onlinedAt = onlinedAt;
+    }
+
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
     }
 }

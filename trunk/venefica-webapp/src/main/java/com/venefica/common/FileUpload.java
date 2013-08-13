@@ -40,7 +40,7 @@ public class FileUpload {
     }
     
     public void setPath(String path) {
-        if ( path == null ) {
+        if ( path == null || path.trim().isEmpty() ) {
             logger.error("Path must have valid value.");
             return;
         }

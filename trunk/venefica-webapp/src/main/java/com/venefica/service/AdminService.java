@@ -8,6 +8,8 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.ApprovalNotFoundException;
+import com.venefica.service.fault.GeneralException;
 import com.venefica.service.fault.PermissionDeniedException;
 import java.util.List;
 import javax.jws.WebMethod;
@@ -61,12 +63,26 @@ public interface AdminService {
     /**
      * 
      * @param adId
+     * @param revision
+     * @return
+     * @throws PermissionDeniedException
+     * @throws AdNotFoundException
+     * @throws ApprovalNotFoundException 
+     */
+    @WebMethod(operationName = "GetApproval")
+    @WebResult(name = "approval")
+    ApprovalDto getApproval(@WebParam(name = "adId") Long adId, @WebParam(name = "revision") Integer revision)
+            throws PermissionDeniedException, AdNotFoundException, ApprovalNotFoundException;
+    
+    /**
+     * 
+     * @param adId
      * @throws PermissionDeniedException
      * @throws AdNotFoundException 
      */
     @WebMethod(operationName = "ApproveAd")
     void approveAd(@WebParam(name = "adId") Long adId)
-            throws PermissionDeniedException, AdNotFoundException;
+            throws PermissionDeniedException, AdNotFoundException, GeneralException;
     
     /**
      * 
@@ -77,7 +93,7 @@ public interface AdminService {
      */
     @WebMethod(operationName = "UnapproveAd")
     void unapproveAd(@WebParam(name = "adId") Long adId, @WebParam(name = "message") String message)
-            throws PermissionDeniedException, AdNotFoundException;
+            throws PermissionDeniedException, AdNotFoundException, GeneralException;
     
     /**
      * 

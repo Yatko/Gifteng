@@ -21,6 +21,8 @@ public class ApprovalDto extends DtoBase {
     // out
     private Long adId;
     // out
+    private Integer revision;
+    // out
     private Long deciderId;
     // out
     private String deciderFullName;
@@ -36,6 +38,7 @@ public class ApprovalDto extends DtoBase {
     public ApprovalDto(Approval approval) {
         this.id = approval.getId();
         this.adId = approval.getAd().getId();
+        this.revision = approval.getAd().getRevision();
         this.deciderId = approval.getDecider().getId();
         this.deciderFullName = approval.getDecider().getFullName();
         this.approvedAt = approval.getApprovedAt();
@@ -90,6 +93,14 @@ public class ApprovalDto extends DtoBase {
 
     public void setDeciderFullName(String deciderFullName) {
         this.deciderFullName = deciderFullName;
+    }
+
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
     }
     
 }

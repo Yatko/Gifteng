@@ -46,6 +46,7 @@ import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.AdValidationException;
 import com.venefica.service.fault.AlreadyRatedException;
 import com.venefica.service.fault.AlreadyRequestedException;
+import com.venefica.service.fault.ApprovalNotFoundException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.GeneralException;
@@ -150,7 +151,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
         
         Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
-        adDto.update(ad);
+        ad.initRevision();
+        adDto.updateAd(ad);
         
         ad.getAdData().setCategory(category);
         ad.getAdData().setMainImage(image);
@@ -215,8 +217,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
 
         // WARNING: This update must be performed within an active transaction!
-        adDto.update(ad);
+        adDto.updateAd(ad);
 
+        ad.incrementRevision();
         ad.setStatus(AdStatus.OFFLINE);
         ad.getAdData().setCategory(category);
 
@@ -440,6 +443,22 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return result;
     }
     
+    @Override
+    public ApprovalDto getApproval(Long adId, Integer revision) throws AdNotFoundException, AuthorizationException, ApprovalNotFoundException {
+        User currentUser = getCurrentUser();
+        Ad ad = validateAd(adId);
+        
+        if (!ad.getCreator().equals(currentUser)) {
+            throw new AuthorizationException("Only the creator can access approvals!");
+        }
+        
+        Approval approval = approvalDao.getByAdAndRevision(adId, revision);
+        if ( approval == null ) {
+            throw new ApprovalNotFoundException(adId);
+        }
+        
+        return new ApprovalDto(approval);
+    }
     
     
     //*************************
@@ -526,6 +545,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeRequests(includeRequests)
                     .includeCanRequest()
                     .build();
+            
+            if ( includeRequests ) {
+                Approval approval = approvalDao.getByAdAndRevision(ad.getId(), ad.getRevision());
+                if ( approval != null ) {
+                    ApprovalDto approvalDto = new ApprovalDto(approval);
+                    adDto.setApproval(approvalDto);
+                }
+            }
+            
             result.add(adDto);
         }
         

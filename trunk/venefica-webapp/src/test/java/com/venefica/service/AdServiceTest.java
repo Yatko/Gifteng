@@ -631,7 +631,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***************
     
     @Test
-    public void happyDayTest() throws AdValidationException, AdNotFoundException, UserNotFoundException, AlreadyRequestedException, InvalidAdStateException, InvalidRequestException, RequestNotFoundException, AuthorizationException, PermissionDeniedException {
+    public void happyDayTest() throws AdValidationException, AdNotFoundException, UserNotFoundException, AlreadyRequestedException, InvalidAdStateException, InvalidRequestException, RequestNotFoundException, AuthorizationException, PermissionDeniedException, GeneralException {
         AdminService adminService = buildAdminService();
         
         authenticateClientAsFirstUser();
@@ -839,7 +839,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test
-    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException, AdValidationException, AuthorizationException, PermissionDeniedException {
+    public void rateAdTest() throws AdNotFoundException, RequestNotFoundException, InvalidRequestException, AlreadyRequestedException, UserNotFoundException, InvalidRateOperationException, AlreadyRatedException, InvalidAdStateException, AdValidationException, AuthorizationException, PermissionDeniedException, GeneralException {
         AdminService adminService = buildAdminService();
         
         authenticateClientAsFirstUser();

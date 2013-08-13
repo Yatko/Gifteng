@@ -12,6 +12,7 @@ import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.AdValidationException;
 import com.venefica.service.fault.AlreadyRatedException;
 import com.venefica.service.fault.AlreadyRequestedException;
+import com.venefica.service.fault.ApprovalNotFoundException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.BookmarkNotFoundException;
 import com.venefica.service.fault.GeneralException;
@@ -20,6 +21,7 @@ import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
+import com.venefica.service.fault.PermissionDeniedException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
@@ -179,6 +181,20 @@ public interface AdService {
     @WebResult(name = "approval")
     List<ApprovalDto> getApprovals(@WebParam(name = "adId") Long adId)
             throws AdNotFoundException, AuthorizationException;
+    
+    /**
+     * 
+     * @param adId
+     * @param revision
+     * @return
+     * @throws AdNotFoundException
+     * @throws AuthorizationException
+     * @throws ApprovalNotFoundException 
+     */
+    @WebMethod(operationName = "GetApproval")
+    @WebResult(name = "approval")
+    ApprovalDto getApproval(@WebParam(name = "adId") Long adId, @WebParam(name = "revision") Integer revision)
+            throws AdNotFoundException, AuthorizationException, ApprovalNotFoundException;
 
     
     

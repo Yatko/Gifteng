@@ -36,4 +36,20 @@ public class ApprovalDaoImpl extends DaoBase<Approval> implements ApprovalDao {
                 .list();
     }
     
+    @Override
+    public Approval getByAdAndRevision(Long adId, Integer revision) {
+        List<Approval> approvals = createQuery(""
+                + "from " + getDomainClassName() + " a where "
+                + "a.ad.id = :adId and "
+                + "a.revision = :revision "
+                + "order by a.approvedAt desc"
+                + "")
+                .setParameter("adId", adId)
+                .setParameter("revision", revision)
+                .list();
+        if ( approvals != null && !approvals.isEmpty() ) {
+            return approvals.get(0);
+        }
+        return null;
+    }
 }
