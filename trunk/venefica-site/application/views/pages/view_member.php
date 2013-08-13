@@ -56,6 +56,7 @@ if ( $ad->statistics != null ) {
 }
 
 $ad_can_edit = $is_owner && !$ad->hasActiveRequest() && $num_bookmarks == 0 && $num_comments == 0 && $num_shares == 0;
+$ad_can_delete = $is_owner && !$ad->hasActiveRequest();
 $ad_can_request = $ad->canRequest;
 
 $user_request = $ad->getRequestByUser($currentUser->id);
@@ -145,21 +146,24 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 		                    
 		                    <?
 		                    if ( $ad_can_edit ) {
-		                        //there is no active request for this ad
-		                        
+		                        //there is no active request for this ad (and no comment/bookmark/share on it)
 		                        $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
 		                        $edit_class = 'class="btn btn-large btn-ge btn-block"';
-		                        
-		                        $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
-		                        $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
 		                    } else {
-		                        //there is at least one active request
+		                        //there is at least one active request (or at least one comment/bookmark/share on it)
 		                        $edit_js = '';
 		                        $edit_class = 'class="btn btn-large btn-block disabled"';
-		                        
-		                        $delete_js = '';
-		                        $delete_class = 'class="btn btn-large btn-block disabled"';
 		                    }
+                                    
+                                    if ( $ad_can_delete ) {
+                                        //there is no active request for this ad
+                                        $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
+		                        $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
+                                    } else {
+                                        //there is at least one active request
+                                        $delete_js = '';
+		                        $delete_class = 'class="btn btn-large btn-block disabled"';
+                                    }
 		                    ?>
 		                    
 		                                <div class="span6">
