@@ -41,7 +41,7 @@
     });
 </script>
 
-<div class="row">			
+<div class="row">
     <div class="container user-giving_items">
         <div class="row">
             <div class="ge-tile-view ge-browse">
