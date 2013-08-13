@@ -187,6 +187,25 @@ class Ad_service {
         }
     }
     
+    /**
+     * 
+     * @param long $adId
+     * @param integer $revision
+     * @return Approval_model
+     * @throws Exception
+     */
+    public function getApproval($adId, $revision) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getApproval(array("adId" => $adId, "revision" => $revision));
+            $approval = Approval_model::convertApproval($result->approval);
+            return $approval;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting approval for ad (adId: '.$adId.', revision: '.$revision.') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //*************************
     //* ads listing/filtering *
     //*************************

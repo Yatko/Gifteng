@@ -9,6 +9,13 @@
 
 $ad_id = $ad->id;
 $is_owner = isOwner($user_id);
+$revision = $ad->revision;
+$approval = $ad->approval;
+
+$has_approval = false;
+if ( $approval != null ) {
+    $has_approval = true;
+}
 
 ?>
 
@@ -36,13 +43,33 @@ $is_owner = isOwner($user_id);
                         </div>
                     </div>
                     
+        <? elseif ( !$has_approval ): ?>
+                    
+                    <div class="row-fluid ge-text ge-description">
+                        <div class="span12">
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Approval Pending
+                                <span class="fui-arrow-left"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
         <? else: ?>
                     
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <button onclick="startApprovalModal(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">Not approved</button>
+                                <span class="fui-arrow-right"></span>
+                                Gift declined
+                                <span class="fui-arrow-left"></span>
                             </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row-fluid ge-text ge-description ge-action">
+                        <div class="span4">
+                            <button onclick="startApprovalModal(<?=$ad_id?>, <?=$revision?>);" type="button" class="btn btn-small btn-block btn-ge">View Reason</button>
                         </div>
                     </div>
                     

@@ -29,6 +29,7 @@ class Ad_model extends CI_Model {
     const STATUS_EXPIRED = 'EXPIRED';
     
     var $id; //long
+    var $revision; //integer
     var $categoryId; //long
     var $category; //string
     var $title; //string
@@ -64,6 +65,7 @@ class Ad_model extends CI_Model {
     var $requests; //array of Request_model
     var $canRequest; //boolean
     var $statistics; //AdStatistics_model
+    var $approval; //Approval_model
     
     // business ad data
     var $promoCode; //string
@@ -80,6 +82,7 @@ class Ad_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->revision = getField($obj, 'revision');
             $this->categoryId = getField($obj, 'categoryId');
             $this->category = getField($obj, 'category');
             $this->title = getField($obj, 'title');
@@ -143,6 +146,9 @@ class Ad_model extends CI_Model {
             }
             if ( hasField($obj, 'statistics') ) {
                 $this->statistics = AdStatistics_model::convertAdStatistics($obj->statistics);
+            }
+            if ( hasField($obj, 'approval') ) {
+                $this->approval = Approval_model::convertApproval($obj->approval);
             }
         }
     }
