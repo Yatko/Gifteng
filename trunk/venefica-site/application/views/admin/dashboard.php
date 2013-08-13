@@ -18,7 +18,9 @@
             <thead>
                 <tr>
                     <th>*</th>
+                    <th>Owner</th>
                     <th>Date</th>
+                    <th>Revision</th>
                     <th>Gift</th>
                     <th>Accept</th>
                     <th>Decline & Reason</th>
@@ -30,13 +32,18 @@
             <? foreach ( $unapprovedAds as $ad ): ?>
                 <?
                 $id = $ad->id;
+                $owner = $ad->getCreatorFullName();
                 $createdAt = $ad->getCreateDate();
+                $revision = $ad->revision;
                 $view_link = $ad->getViewUrl();
+                $profile_link = $ad->getCreatorProfileUrl();
                 ?>
 
                 <tr id="ad_<?=$id?>">
                     <td><?=$id?></td>
+                    <td><a href="<?=$profile_link?>" target="_blank"><?=$owner?></a></td>
                     <td><?=$createdAt?></td>
+                    <td><?=$revision?></td>
                     <td><a href="<?=$view_link?>" target="_blank">Gift link</a></td>
                     <td><button type="button" id="approve_btn_<?=$id?>" onclick="approve_ad(<?=$id?>);" class="btn btn-mini btn-block btn-success">OK</button></td>
                     <td>

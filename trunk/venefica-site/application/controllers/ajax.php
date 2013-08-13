@@ -198,24 +198,21 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
+        $adId = $this->input->post('adId');
+        $revision = $this->input->post('revision');
+        
         try {
-            $adId = $_GET['adId'];
-            $approvals = $this->ad_service->getApprovals($adId);
-            if ( empty($approvals) ) {
-                $result = 'Not yet approved !';
-            } else {
-                $approval = end(array_values($approvals));
-                $result = $approval->text;
-            }
-            
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            $approval = $this->ad_service->getApproval($adId, $revision);
+            $result = $approval->text;
         } catch ( Exception $ex ) {
-            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+            $result = 'Not yet approved';
         }
+        
+        respond_ajax(AJAX_STATUS_RESULT, $result);
     }
     
     public function bookmark() {

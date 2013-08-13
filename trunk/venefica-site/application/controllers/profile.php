@@ -493,6 +493,7 @@ class Profile extends CI_Controller {
             $this->load->model('rating_model');
             $this->load->model('request_model');
             $this->load->model('message_model');
+            $this->load->model('approval_model');
             
             $this->initialized = true;
         }
