@@ -68,7 +68,7 @@ if ( $approval != null ) {
                     </div>
                     
                     <div class="row-fluid ge-text ge-description ge-action">
-                        <div class="span4">
+                        <div class="span8">
                             <button onclick="startApprovalModal(<?=$ad_id?>, <?=$revision?>);" type="button" class="btn btn-small btn-block btn-ge">View Reason</button>
                         </div>
                     </div>
