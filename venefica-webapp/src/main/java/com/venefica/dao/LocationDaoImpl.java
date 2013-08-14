@@ -25,12 +25,11 @@ public class LocationDaoImpl extends DaoBase<Location> implements LocationDao {
             throw new NullPointerException("zipcode");
         }
         
-        String hql = ""
+        List<Location> locations = createQuery(""
                 + "select l "
                 + "from " + getDomainClassName() + " l "
-                + "where l.zipcode like '%' || :zipcode || '%' "
-                + "";
-        List<Location> locations = createQuery(hql)
+                + "where l.zipcode = :zipcode "
+                + "")
                 .setParameter("zipcode", zipcode)
                 .setMaxResults(1)
                 .list();
@@ -38,7 +37,11 @@ public class LocationDaoImpl extends DaoBase<Location> implements LocationDao {
         if ( locations == null || locations.isEmpty() ) {
             //trying to find without 0 in front
             zipcode = StringUtils.stripStart(zipcode, "0");
-            locations = createQuery(hql)
+            locations = createQuery(""
+                    + "select l "
+                    + "from " + getDomainClassName() + " l "
+                    + "where l.zipcode = :zipcode "
+                    + "")
                     .setParameter("zipcode", zipcode)
                     .setMaxResults(1)
                     .list();
