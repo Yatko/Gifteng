@@ -41,6 +41,13 @@
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             submit_form('member_post_form');
         });
+        
+        $('#member_post_form').on('submit', function(e) {
+            $(".ge-modal_footer button").each(function() {
+                var $this = $(this);
+                $this.attr('disabled', 'disabled');
+            });
+        });
     });
 </script>
 
@@ -78,7 +85,6 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
                             <h3><?=$message?></h3>
                         </label>
@@ -149,7 +155,6 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
                             <h3><?=$message?></h3>
                         </label>
@@ -273,7 +278,6 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
                             <h3><?=$message?></h3>
                         </label>
@@ -320,7 +324,6 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
                             <h3><?=$message?></h3>
                         </label>
@@ -386,7 +389,6 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <label class="control-label">
                                 <h3><?=$error?></h3>
                             </label>
@@ -413,7 +415,6 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <label class="control-label">
                                 <h3>You're Awesome!</h3>
                             </label>
