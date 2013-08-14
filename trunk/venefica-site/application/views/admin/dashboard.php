@@ -49,7 +49,7 @@
                     <td>
                         <div class="row-fluid">
                             <div class="span9">
-                                <input id="reason_<?=$id?>" type="text" placeholder="Reason" class="span3">
+                                <textarea id="reason_<?=$id?>" placeholder="Reason"></textarea>
                             </div>
                             <div class="span3">
                                 <button type="button" id="unapprove_btn_<?=$id?>" onclick="unapprove_ad(<?=$id?>);" class="btn btn-mini btn-block btn-danger">NO</button>

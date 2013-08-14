@@ -49,7 +49,10 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                $("#reason_" + adId).val('');
+                //$("#reason_" + adId).val('');
+                if ( $("#ad_" + adId).length > 0 ) {
+                    $("#ad_" + adId).hide();
+                }
             } else {
                 //TODO: unknown response received
             }
