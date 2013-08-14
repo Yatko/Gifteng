@@ -16,6 +16,7 @@
         $('.ge-request').on('request_created', function(event, adId) {
             $('#ad_' + adId).addClass('hide');
         });
+        /**
         $(".ge-browse").vgrid({
             easing: "easeOutQuint",
             time: 500,
@@ -25,6 +26,7 @@
                 delay: 50
             }
         });
+        /**/
     });
 </script>
 
