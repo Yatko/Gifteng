@@ -37,7 +37,7 @@
         <h3></h3>
     </div>
     <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-large"><i class="fui-cross pull-right"></i>OK</button>
         <a id="approval_modal_view_gift" class="btn btn-large btn-ge">View Gift</a>
-        <button type="button" data-dismiss="modal" class="btn btn-large btn-ge"><i class="fui-cross pull-right"></i>OK</button>
     </div>
 </div>
