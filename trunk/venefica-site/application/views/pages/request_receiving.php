@@ -6,6 +6,9 @@
  * ad: Ad_model
  * request: Request_model
  * messages: array of Message_model
+ * currentUser: User_model
+ * is_modal: boolean
+ * userId: long
  */
 
 $ad_id = $ad->id;
@@ -32,7 +35,7 @@ $view_link = $ad->getViewUrl();
 		<div class="row-fluid">
 			<div class="ge-action">
 				<div class="span6">
-					<button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Received</button>
+					<button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Received</button>
 				</div>
 			</div>
 		</div><!--./ge-action-->

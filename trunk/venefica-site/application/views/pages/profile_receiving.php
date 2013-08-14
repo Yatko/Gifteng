@@ -10,19 +10,11 @@
 ?>
 
 <script language="javascript">
-    function request_view(requestId) {
-        if ( $('#requestContainer').length > 0 ) {
-            $('#requestContainer').removeData('modal').modal({
-                remote: '<?=base_url()?>request/' + requestId + '?modal&receiving&userId=<?=$user->id?>',
-                show: true
-            });
-        }
-    }
-    
     $(function() {
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#request_' + requestId).addClass('hide');
         });
+        /**
         $(".ge-browse").vgrid({
             easing: "easeOutQuint",
             time: 500,
@@ -32,6 +24,7 @@
                 delay: 50
             }
         });
+        /**/
     });
 </script>
 
@@ -49,7 +42,7 @@
                         ?>
                         
                         <div id="request_<?=$request_id?>">
-                            <? $this->load->view('element/request_receiving', array('ad' => $ad, 'request' => $request)); ?>
+                            <? $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $user->id)); ?>
                         </div>
                     <? endforeach; ?>
                     

@@ -1,4 +1,13 @@
 <script language="javascript">
+    function request_view(requestId, requestType, userId) {
+        if ( $('#requestContainer').length > 0 ) {
+            $('#requestContainer').removeData('modal').modal({
+                remote: '<?=base_url()?>request/' + requestId + '?modal&' + requestType + '&userId=' + userId,
+                show: true
+            });
+        }
+    }
+    
     function request_hide(requestId) {
         $.ajax({
             type: 'POST',
@@ -108,10 +117,10 @@
             //TODO
         });
     }
-    function request_receive(requestId, adId) {
+    function request_receive(requestId, adId, userId) {
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId + '&adId=' + adId,
+            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
             dataType: 'json',
             cache: false
         }).done(function(response) {

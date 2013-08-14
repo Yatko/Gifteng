@@ -180,7 +180,7 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
                         </div>
                     </div>
 
@@ -200,15 +200,23 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img src="<?=$requestor_img?>" class="img img-rounded link">
+                            
+                            <? /** ?>
+                            <img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <? /**/ ?>
                         </div>
                         <div class="span8">
+                            <button onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block btn-ge">Action required</button>
+                            
+                            <? /** ?>
                             <div class="row-fluid">
                                 <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                             </div>
                             <div class="row-fluid">
                                 <button onclick="request_send(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Gifted</button>
                             </div>
+                            <? /**/ ?>
                         </div>
                     </div>
 
@@ -236,7 +244,7 @@ if ( $approval != null ) {
                         $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
-                        <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
+                        <div class="span4"><img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
                     <? endforeach; ?>
 
                     </div><!--./ge-action-->

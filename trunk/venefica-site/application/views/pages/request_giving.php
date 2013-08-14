@@ -7,6 +7,8 @@
  * request: Request_model
  * userId: long
  * messages: array of Message_model
+ * currentUser: User_model
+ * is_modal: boolean
  */
 
 $ad_id = $ad->id;
@@ -40,6 +42,7 @@ $view_link = $ad->getViewUrl();
             <? /**/ ?>
             
         <? elseif( $request->accepted ): ?>
+            
 		<div class="row-fluid">
 			<div class=" ge-action">
 				<div class="span6 mobile-two">

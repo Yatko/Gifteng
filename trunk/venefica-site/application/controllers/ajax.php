@@ -352,7 +352,7 @@ class Ajax extends CI_Controller {
             if ( $is_giving ) {
                 $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
             } else {
-                $result = $this->load->view('element/request_receiving', array('ad' => $ad, 'request' => $request), true);
+                $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
             }
             
             respond_ajax(AJAX_STATUS_RESULT, $result);
@@ -421,12 +421,13 @@ class Ajax extends CI_Controller {
         try {
             $requestId = $_GET['requestId'];
             $adId = $_GET['adId'];
+            $userId = $_GET['userId'];
             
             $this->ad_service->markAsReceived($requestId);
             $ad = $this->ad_service->getAdById($adId);
             $request = $this->ad_service->getRequestById($requestId);
             
-            $result = $this->load->view('element/request_receiving', array('ad' => $ad, 'request' => $request), true);
+            $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
             respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());

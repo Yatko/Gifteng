@@ -5,6 +5,7 @@
  * 
  * ad: Ad_model
  * request: Request_model
+ * user_id: long
  */
 
 $ad_id = $ad->id;
@@ -111,12 +112,12 @@ $inactive = false;
 
                         <div class="row-fluid">
                             <div class="span4">
-                                <button onclick="request_view(<?=$request_id?>);" class="btn btn-small btn-block btn-ge">
+                                <button onclick="request_view(<?=$request_id?>, 'receiving', <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     <i class="fui-mail"></i>
                                 </button>
                             </div>
                             <div class="span8">
-                                <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>);" class="btn btn-small btn-block btn-ge">
+                                <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     Mark Received
                                 </button>
                             </div>

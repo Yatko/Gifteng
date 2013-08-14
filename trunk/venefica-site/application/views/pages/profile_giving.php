@@ -10,15 +10,6 @@
 ?>
 
 <script language="javascript">
-    function request_view(requestId) {
-        if ( $('#requestContainer').length > 0 ) {
-            $('#requestContainer').removeData('modal').modal({
-                remote: '<?=base_url()?>request/' + requestId + '?modal&giving&userId=<?=$user->id?>',
-                show: true
-            });
-        }
-    }
-    
     $(function() {
         $('.ge-ad').on('ad_deleted', function(event, adId) {
             $('#ad_' + adId).addClass('hide');
