@@ -206,6 +206,7 @@ class Post_member extends CI_Controller {
                 $error = $this->update_ad();
             }
             $data['error'] = $error;
+            $data['adId'] = $this->adId;
         }
         
         if ( $is_modal ) {
@@ -376,8 +377,8 @@ class Post_member extends CI_Controller {
         
         $errors = '';
         try {
-            $adId = $this->ad_service->placeAd($this->ad);
-            log_message(INFO, 'Ad created: ' . $adId);
+            $this->adId = $this->ad_service->placeAd($this->ad);
+            log_message(INFO, 'Ad created: ' . $this->adId);
             
             $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {

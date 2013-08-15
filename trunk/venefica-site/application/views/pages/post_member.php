@@ -61,7 +61,7 @@ if ( $is_new ) {
 
 <? endif; ?>
     
-    <?=form_open_multipart($form_action, array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id)) ?>
+    <?=form_open_multipart($form_action, array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id, 'adId' => $adId)) ?>
         
         <? if ($step == Post_member::STEP_START): ?>
             
@@ -424,20 +424,22 @@ if ( $is_new ) {
                                 <div class="span12">
                                     <div class="control-group control-form">
                                         <div class="controls">
-                                            <? if( $is_modal ): ?>
                                             
+                                            <? if( $is_modal ): ?>
+                                                
                                                 <button type="button" data-dismiss="modal" class="span3 btn btn-huge">OK</button>
                                                 <? if( $is_new ): ?>
                                                     <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
-                                                    
+                                                
                                             <? else: ?>
-                                                    
+                                                
                                                 <? if( $is_new ): ?>
                                                     <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
-                                                    
+                                                
                                             <? endif; ?>
+                                            
                                         </div>
                                     </div>
                                 </div>

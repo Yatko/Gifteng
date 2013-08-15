@@ -8,6 +8,70 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    public function getAdGiving($adId = null, $userId = null) {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        }
+        
+        if ( $adId == null || $userId == null ) {
+            if ( !$_POST ) {
+                return;
+            }
+        }
+        
+        if ( $adId == null ) {
+            $adId = $this->input->post('adId');
+        }
+        if ( $userId == null ) {
+            $userId = $this->input->post('userId');
+        }
+        
+        try {
+            $ad = $this->ad_service->getAdById($adId);
+            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+            
+            respond_ajax(AJAX_STATUS_RESULT, $result);
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
+    public function getAdReceiving($adId = null, $requestId = null, $userId = null) {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        }
+        
+        if ( $adId == null || $requestId == null || $userId == null ) {
+            if ( !$_POST ) {
+                return;
+            }
+        }
+        
+        if ( $adId == null ) {
+            $adId = $this->input->post('adId');
+        }
+        if ( $requestId == null ) {
+            $requestId = $this->input->post('requestId');
+        }
+        if ( $userId == null ) {
+            $userId = $this->input->post('userId');
+        }
+        
+        try {
+            $ad = $this->ad_service->getAdById($adId);
+            $request = $this->ad_service->getRequestById($requestId);
+            $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
+            
+            respond_ajax(AJAX_STATUS_RESULT, $result);
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     // admin related
     
     public function approve() {
@@ -341,21 +405,28 @@ class Ajax extends CI_Controller {
         try {
             $requestId = $this->input->post('requestId');
             $adId = $this->input->post('adId');
-            $userId = key_exists('userId', $_POST) ? $this->input->post('userId') : null;
+            $userId = $this->input->post('userId');
             $is_giving = $this->input->post('requestType') == 'giving' ? true : false;
             
             $this->ad_service->cancelRequest($requestId);
             $this->usermanagement_service->refreshUser();
-            $ad = $this->ad_service->getAdById($adId);
-            $request = $this->ad_service->getRequestById($requestId);
             
             if ( $is_giving ) {
-                $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+                $this->getAdGiving($adId, $userId);
             } else {
-                $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
+                $this->getAdReceiving($adId, $requestId, $userId);
             }
             
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+//            $ad = $this->ad_service->getAdById($adId);
+//            $request = $this->ad_service->getRequestById($requestId);
+//            
+//            if ( $is_giving ) {
+//                $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+//            } else {
+//                $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
+//            }
+//            
+//            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -376,10 +447,13 @@ class Ajax extends CI_Controller {
             $userId = $_GET['userId'];
             
             $this->ad_service->selectRequest($requestId);
-            $ad = $this->ad_service->getAdById($adId);
             
-            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            $this->getAdGiving($adId, $userId);
+            
+//            $ad = $this->ad_service->getAdById($adId);
+//            
+//            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+//            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -400,10 +474,13 @@ class Ajax extends CI_Controller {
             $userId = $_GET['userId'];
             
             $this->ad_service->markAsSent($requestId);
-            $ad = $this->ad_service->getAdById($adId);
             
-            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            $this->getAdGiving($adId, $userId);
+            
+//            $ad = $this->ad_service->getAdById($adId);
+//            
+//            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+//            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
