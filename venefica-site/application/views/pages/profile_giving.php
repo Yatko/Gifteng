@@ -7,6 +7,8 @@
  * givings: array of Ad_model
  */
 
+$is_owner = isOwner($user);
+
 ?>
 
 <script language="javascript">
@@ -17,6 +19,32 @@
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
             $('#ad_' + adId).html(result);
         });
+        
+        <? if( $is_owner ): ?>
+        if ( $('#postContainer').length > 0 ) {
+            $('#postContainer').on('ad_posted', function(event, adId) {
+                if ( $('.ge-no-ad').length > 0 ) {
+                    $('.ge-no-ad').addClass('hide');
+                }
+
+                if ( $('#ad_' + adId).length === 0 ) {
+                    $('.ge-browse').append('<div id="ad_' + adId + '"></div>');
+                }
+                
+                $.getJSON('<?=base_url()?>ajax/getAdGiving/' + adId + '/<?=$user->id?>', function(response) {
+                    if ( !response || response === '' ) {
+                        //TODO: empty result
+                    } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
+                        //TODO
+                    } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                        $('#ad_' + adId).html(response.<?=AJAX_STATUS_RESULT?>);
+                    } else {
+                        //TODO: unknown response received
+                    }
+                });
+            });
+        }
+        <? endif; ?>
         
         /**
         $(".ge-browse").vgrid({
@@ -51,7 +79,7 @@
                 
             <? else: ?>
                 
-                <div class="span4 ge-box">
+                <div class="span4 ge-box ge-no-ad">
                     <div class="well ge-well">
 
                         <div class="ge-item">	

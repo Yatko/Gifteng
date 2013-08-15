@@ -17,6 +17,7 @@
             return;
         }
         
+        disable_buttons('#ad_delete_form button');
         var $adId = $("#ad_delete_form input[name=adId]");
         
         $.ajax({
@@ -66,9 +67,9 @@
     </div>
     
     <div class="modal-body">
-        <?=form_open('/ajax/delete_ad', array('id' => 'ad_delete_form'))?>
+        <form id="ad_delete_form">
             <input type="hidden" name="adId"/>
-
+            
             <fieldset>
                 <div class="row-fluid">
                     <div class="span12">
@@ -81,7 +82,6 @@
                     </div>
                 </div><!--./submit-->
             </fieldset>
-            
-        <?=form_close()?>
+        </form>
     </div>
 </div>

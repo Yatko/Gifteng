@@ -200,7 +200,7 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img src="<?=$requestor_img?>" class="img img-rounded">
                             
                             <? /** ?>
                             <img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">

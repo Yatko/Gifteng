@@ -1,4 +1,6 @@
 <script langauge="javascript">
+    var postCallerElement;
+    
     function startPostModal() {
         $('#postContainer').removeData("modal").modal('show');
     }
@@ -45,6 +47,8 @@
     
     $(function() {
         $('#postContainer').on('hide', function() {
+            var step = $("#member_post_form input[name=step]");
+            var adId = $("#member_post_form input[name=adId]");
             var $unique_id = $("#member_post_form input[name=unique_id]");
             
             $.ajax({
@@ -56,7 +60,9 @@
                     unique_id: $unique_id.val()
                 }
             }).done(function(response) {
-                //
+                if ( step.val() === 'post' && adId.val() !== '' ) {
+                    $('#postContainer').trigger('ad_posted', [adId.val()]);
+                }
             }).fail(function(data) {
                 //TODO
             });

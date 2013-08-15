@@ -55,7 +55,7 @@
     </div>
     
     <div class="modal-body">
-        <?=form_open('/ajax/cancel_request', array('id' => 'request_cancel_form'))?>
+        <form id="request_cancel_form">
             <input type="hidden" name="requestType"/>
             <input type="hidden" name="requestId"/>
             <input type="hidden" name="adId"/>
@@ -73,7 +73,6 @@
                     </div>
                 </div><!--./submit-->
             </fieldset>
-            
-        <?=form_close()?>
+        </form>
     </div>
 </div>
