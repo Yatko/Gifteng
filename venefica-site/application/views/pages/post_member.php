@@ -70,7 +70,7 @@ if ( $is_new ) {
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'You should give as you would receive, cheerfully, quickly and without hesitation...';
             
-            if ( $is_new ) {
+            if ( $is_new && is_empty($image->getDetectedImageUrl()) ) {
                 $image_text = 'Add photo';
             } else {
                 $image_text = 'Change photo';
