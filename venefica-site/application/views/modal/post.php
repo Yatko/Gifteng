@@ -11,12 +11,6 @@
             e.preventDefault();
             
             var $form = $("#member_post_form");
-            
-            $form.find(':submit').each(function() {
-                var $this = $(this);
-                $this.attr('disabled', 'disabled');
-            });
-            
             var formData = new FormData($form.get(0));
 
             $.ajax({

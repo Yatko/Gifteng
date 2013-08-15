@@ -89,7 +89,10 @@ class Admin_service {
     public function getApproval($adId, $revision) {
         try {
             $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adminService->getApproval(array("adId" => $adId, "revision" => $revision));
+            $result = $adminService->getApproval(array(
+                "adId" => $adId,
+                "revision" => $revision
+            ));
             $approval = Approval_model::convertApproval($result->approval);
             return $approval;
         } catch ( Exception $ex ) {
@@ -122,7 +125,10 @@ class Admin_service {
     public function unapproveAd($adId, $message) {
         try {
             $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $adminService->unapproveAd(array("adId" => $adId, "message" => $message));
+            $adminService->unapproveAd(array(
+                "adId" => $adId,
+                "message" => $message
+            ));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Unapproving ad (adId: '.$adId.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);

@@ -87,7 +87,7 @@ class Profile extends CI_Controller {
         
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
-        $modal .= $this->load->view('modal/ad', array(), true);
+        $modal .= $this->load->view('modal/ad_delete', array(), true);
         $modal .= $this->load->view('modal/approval', array(), true);
         
         $data = array();

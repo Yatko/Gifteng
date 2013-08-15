@@ -42,12 +42,7 @@
             submit_form('member_post_form');
         });
         
-        $('#member_post_form').on('submit', function(e) {
-            $(".ge-modal_footer button").each(function() {
-                var $this = $(this);
-                $this.attr('disabled', 'disabled');
-            });
-        });
+        disable_form_buttons_on_submit('member_post_form', null);
     });
 </script>
 
@@ -427,17 +422,21 @@ if ( $is_new ) {
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
                                 <div class="span12">
-                                    <div class="control-group control-form">                                       
+                                    <div class="control-group control-form">
                                         <div class="controls">
                                             <? if( $is_modal ): ?>
+                                            
                                                 <button type="button" data-dismiss="modal" class="span3 btn btn-huge">OK</button>
                                                 <? if( $is_new ): ?>
                                                     <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
+                                                    
                                             <? else: ?>
+                                                    
                                                 <? if( $is_new ): ?>
                                                     <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
+                                                    
                                             <? endif; ?>
                                         </div>
                                     </div>
