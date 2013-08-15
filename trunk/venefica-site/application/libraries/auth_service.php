@@ -39,6 +39,25 @@ class Auth_service {
     
     /**
      * 
+     * @param string $oldPassword
+     * @param string $newPassword
+     * @throws Exception
+     */
+    public function changePassword($oldPassword, $newPassword) {
+        try {
+            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $authService->changePassword(array(
+                "oldPassword" => $oldPassword,
+                "newPassword" => $newPassword
+            ));
+        } catch ( Exception $ex ) {
+            log_message(INFO, 'Change password failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param type $newPassword
      * @param type $code forgot password request identifier code
      * @throws Exception

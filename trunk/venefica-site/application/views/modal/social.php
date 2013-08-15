@@ -26,6 +26,7 @@
 </script>
 
 <div id="socialContainer" class="modal hide fade">
+    <div class="modal-header">Choose</div>
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span4">

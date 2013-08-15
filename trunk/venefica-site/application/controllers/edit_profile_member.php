@@ -58,6 +58,7 @@ class Edit_profile_member extends CI_Controller {
             $this->lang->load('main');
             $this->lang->load('edit_profile');
             
+            $this->load->library('auth_service');
             $this->load->library('usermanagement_service');
             
             $this->load->model('image_model');
@@ -73,6 +74,20 @@ class Edit_profile_member extends CI_Controller {
         $is_valid = $this->post_form();
         if ( $is_valid ) {
             //form data valid after post
+            
+            if ( $this->input->post('password') != '' ) {
+                $oldPassword = $this->input->post('password');
+                $newPassword = $this->input->post('new_password_1');
+                
+                try {
+                    $this->auth_service->changePassword($oldPassword, $newPassword);
+                } catch ( Exception $ex ) {
+                    $this->edit_profile_form->setError('Password change failed!');
+                    return array(
+                        AJAX_STATUS_ERROR => 'Password change failed!'
+                    );
+                }
+            }
             
             $currentUser = $this->usermanagement_service->loadUser();
             $zipCode = $this->input->post('zipCode');
@@ -124,19 +139,34 @@ class Edit_profile_member extends CI_Controller {
     }
 
     private function post_form() {
+        $is_valid = true;
         $this->load->library('form_validation', null, 'edit_profile_form');
         $this->edit_profile_form->set_error_delimiters('<div class="error">', '</div>');
         
-        $this->edit_profile_form->set_rules('firstName', 'lang:m_edit_profile_firstName', 'trim|required');
-        $this->edit_profile_form->set_rules('lastName', 'lang:m_edit_profile_lastName', 'trim|required');
-        $this->edit_profile_form->set_rules('about');
-        $this->edit_profile_form->set_rules('zipCode', 'lang:m_edit_profile_zipCode', 'trim|required');
-        $this->edit_profile_form->set_rules('email', 'lang:m_edit_profile_email', 'trim|required|valid_email');
+        if ( $_POST ) {
+            if ( $this->input->post('password') != '' ) {
+                if ( !$this->edit_profile_form->matches($this->input->post('new_password_1'), 'new_password_2') ) {
+                    $this->edit_profile_form->setError(lang('change_password_failed_not_matching_passwords'));
+                    $is_valid = false;
+                }
+            }
+        }
         
-        $this->edit_profile_form->set_message('required', lang('validation_required'));
-        $this->edit_profile_form->set_message('valid_email', lang('validation_valid_email'));
+        if ( $is_valid ) {
+            $this->edit_profile_form->set_rules('firstName', 'lang:m_edit_profile_firstName', 'trim|required');
+            $this->edit_profile_form->set_rules('lastName', 'lang:m_edit_profile_lastName', 'trim|required');
+            $this->edit_profile_form->set_rules('about');
+            $this->edit_profile_form->set_rules('zipCode', 'lang:m_edit_profile_zipCode', 'trim|required');
+            $this->edit_profile_form->set_rules('email', 'lang:m_edit_profile_email', 'trim|required|valid_email');
+            $this->edit_profile_form->set_rules('new_password_1', 'lang:m_edit_profile_password', 'matches[new_password_2]');
+
+            $this->edit_profile_form->set_message('required', lang('validation_required'));
+            $this->edit_profile_form->set_message('valid_email', lang('validation_valid_email'));
+        }
         
-        $is_valid = $this->edit_profile_form->run();
+        if ( $is_valid ) {
+            $is_valid = $this->edit_profile_form->run();
+        }
         return $is_valid;
     }
 }

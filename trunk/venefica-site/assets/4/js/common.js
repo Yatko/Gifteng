@@ -74,9 +74,39 @@ function open_window_clear(url, name, width, height) {
     window.open(url, name, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, channelmode=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
 }
 
+
+
+
 function submit_form(formId) {
     $('#' + formId).submit();
 }
+function disable_form_buttons_on_submit(formId, buttonsSelector) {
+    $('#' + formId).on('submit', function(e) {
+        disable_buttons(buttonsSelector);
+    });
+}
+function disable_buttons(buttonsSelector) {
+    if ( buttonsSelector === null || buttonsSelector === '' ) {
+        buttonsSelector = ".ge-modal_footer button";
+    }
+
+    $(buttonsSelector).each(function() {
+        var $this = $(this);
+        $this.attr('disabled', 'disabled');
+    });
+}
+function enable_buttons(buttonsSelector) {
+    if ( buttonsSelector === null || buttonsSelector === '' ) {
+        buttonsSelector = ".ge-modal_footer button";
+    }
+    
+    $(buttonsSelector).each(function() {
+        var $this = $(this);
+        $this.removeAttr('disabled');
+    });
+}
+
+
 
 $(function() {
     
