@@ -28,7 +28,7 @@ $is_owner = isOwner($user);
                 }
 
                 if ( $('#ad_' + adId).length === 0 ) {
-                    $('.ge-browse').append('<div id="ad_' + adId + '"></div>');
+                    $('.ge-browse').prepend('<div id="ad_' + adId + '"></div>');
                 }
                 
                 $.getJSON('<?=base_url()?>ajax/getAdGiving/' + adId + '/<?=$user->id?>', function(response) {
