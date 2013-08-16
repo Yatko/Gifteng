@@ -59,10 +59,10 @@ $view_link = $ad->getViewUrl();
 		<div class="row-fluid">
 			<div class=" ge-action">
 				<div class="span6 mobile-two">
-					<button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block">Decline Request</button>
+					<button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block">Decline Request</button>
 				</div>
 				<div class="span6 mobile-two">
-					<button onclick="request_select(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="submit" class="btn btn-small btn-block btn-ge">Accept Request</button>
+					<button onclick="request_select(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
 				</div>
 			</div><!--./ge-action-->
 		</div>
