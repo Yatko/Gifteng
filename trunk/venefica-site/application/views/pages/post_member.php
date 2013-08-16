@@ -8,7 +8,7 @@
  * adId: long
  * step: string
  * unique_id: string
- * image: string
+ * image: Image_model
  * title: string
  * description: string
  * category: long
@@ -38,6 +38,7 @@
                 $this.html($this.attr('original_text'));
                 return;
             }
+            
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             submit_form('member_post_form');
         });
