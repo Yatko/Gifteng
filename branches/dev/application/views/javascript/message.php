@@ -16,7 +16,7 @@
         var $messageRequestId = $("#message_post_form input[name=messageRequestId]");
         var $messageToId = $("#message_post_form input[name=messageToId]");
         var $messageText = $("#message_post_form textarea[name=messageText]");
-		var template = '<div class="row-fluid ge-message">'+$('#messages .ge-message').html()+'</div>', $newTemplate = $(template);
+		var template = '<div class="row-fluid ge-message"><div class="ge-user-image"><a href=""><img src="" alt="" class="img img-rounded" /></a></div><div class="ge-text"><a class="ge-name" href=""></a><span class="ge-date"></span><span class="ge-block"></span></div></div>', $newTemplate = $(template);
 		
         $.ajax({
             type: 'POST',
@@ -42,13 +42,13 @@
                 $(".ge-date", $newTemplate).html('Just now');
                 $('.ge-block', $newTemplate).html($messageText.val());
                 
-                
+                /*
                 $messageRequestId.val('');
                 $messageToId.val('');
+                */
                 $messageText.val('');
                 
                 $('#messages .ge-conversation .span12').append($newTemplate);
-                console.log($newTemplate);
 
                 if ( $('#messageContainer').length > 0 ) {
                     $('#messageContainer').modal('hide');

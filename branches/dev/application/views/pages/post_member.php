@@ -198,17 +198,17 @@ if ( $is_new ) {
                     </div><!--./select-category-->
 
                     <div class="row-fluid">
-                        <div class="span8">
+                        <div class="span6">
                             <div class="control-group">
                                 <div class="controls">
-                                    <div class="input-prepend">
+                                    <div class="input-prepend span9">
                                         <span class="add-on">$</span>
                                         <input id="price" name="price" value="<?=$price?>" class="span2" type="text" placeholder="Current value" required="">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="span4">
+                        <div class="span6">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input">

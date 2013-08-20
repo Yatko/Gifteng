@@ -29,13 +29,13 @@
     <div class="modal-body">
         <div class="row-fluid">
             <div class="span4">
-                <button onclick="shareOnFacebookModal();" class="btn btn-mini btn-block btn-social-facebook ge-icon-facebook"></button>
+                <button onclick="shareOnFacebookModal();" class="btn btn-mini btn-block btn-social-facebook fui-facebook"></button>
             </div>
             <div class="span4">
-                <button onclick="shareOnTwitterModal();" class="btn btn-mini btn-block btn-social-twitter ge-icon-twitter"></button>
+                <button onclick="shareOnTwitterModal();" class="btn btn-mini btn-block btn-social-twitter fui-twitter"></button>
             </div>
             <div class="span4">
-                <button onclick="shareOnPinterestModal();" class="btn btn-mini btn-block btn-social-pinterest ge-icon-pinterest"></button>
+                <button onclick="shareOnPinterestModal();" class="btn btn-mini btn-block btn-social-pinterest fui-pinterest"></button>
             </div>
         </div>
     </div>

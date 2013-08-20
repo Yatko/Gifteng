@@ -33,7 +33,7 @@
                                 
                                 <? foreach ($messages as $message): ?>
                                     
-                                    <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true)); ?>
+                                    <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true, 'showProfileLinks' => false)); ?>
                                     
                                 <? endforeach; ?>
 
@@ -78,7 +78,7 @@
                                 </div><!--./ge-subject-->
                             </div>
 
-                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true)); ?>
+                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true, 'showProfileLinks' => true)); ?>
 
                         </div>
                     </div><!--./ge-messages-->

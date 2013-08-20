@@ -20,7 +20,7 @@ if ( $ad != null ) {
 
 <? if( (isset($comments) && is_array($comments) && count($comments) > 0) || $canComment ): ?>
 
-    <div class="row-fluid ge-comments">
+    <div class="row-fluid ge-comments" id="ad_<?=$ad_id?>_comments">
         <div class="span12">
             
             <? if( isset($comments) && is_array($comments) && count($comments) > 0 ): ?>

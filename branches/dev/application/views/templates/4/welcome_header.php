@@ -169,6 +169,8 @@ $subpage = key($_GET); //gets the first element from the array
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
         
+        
+        
         <div>
             <ul>
             	<li class="text-center">
@@ -205,9 +207,11 @@ $subpage = key($_GET); //gets the first element from the array
         <div class="navbar-inner">
             <div class="container">
                 <div class="nav-collapse">
+                	<? if( isLogged() ): ?>
                     <span class="nav">
                         <a id="open-left" class="link"><span class="fui-list"></span></a>
                     </span>
+                    <? endif; ?>
                     <span class="nav">
                         <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
                     </span>
@@ -254,5 +258,5 @@ $subpage = key($_GET); //gets the first element from the array
     
     
 
-    <div class="container ge-topspace">
+    <div class="ge-topspace">
         

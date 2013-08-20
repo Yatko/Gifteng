@@ -95,13 +95,13 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                 <div id="tab_connections" class="tab-pane <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_FOLLOWING) ? 'active-tab' : '' ?>">
                                                 <span class="user_following"><?= $followings_num ?></span><br />
                                                 Following
                                             </a>
                                         </div>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_FOLLOWER) ? 'active-tab' : '' ?>">
                                                 <span class="user_follower"><?= $followers_num ?></span><br />
                                                 Followers
                                             </a>
@@ -121,13 +121,13 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                 <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_NOTIFICATION) ? 'active-tab' : '' ?>">
                                                 <i class="fui-alert"></i>
                                                 <br />Notifications
                                             </a>
                                         </div>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_MESSAGE) ? 'active-tab' : '' ?>">
                                                 <i class="fui-mail"></i>
                                                 <br />Messages
                                             </a>
