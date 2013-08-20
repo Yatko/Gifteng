@@ -10,7 +10,17 @@
   width: auto;
   height: auto;
   z-index: 2;
-  overflow: auto;
+  overflow-x: hidden;
+}
+.snap-content > .navbar {
+	position:relative !important;
+}
+.snap-slide {
+  -webkit-transition: all 1s ease;
+     -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+       -o-transition: all 1s ease;
+          transition: all 1s ease;
   -webkit-overflow-scrolling: touch;
   -webkit-transform: translate3d(0, 0, 0);
      -moz-transform: translate3d(0, 0, 0);
@@ -18,10 +28,15 @@
        -o-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
 }
-.snap-content > .navbar {
-	position:relative !important;
-}
 
+.snap-slide.active {
+	
+  -webkit-transform: translate3d(250px, 0, 0);
+     -moz-transform: translate3d(250px, 0, 0);
+      -ms-transform: translate3d(250px, 0, 0);
+       -o-transform: translate3d(250px, 0, 0);
+          transform: translate3d(250px, 0, 0);
+}
 
 .snap-drawers {
   position: absolute;

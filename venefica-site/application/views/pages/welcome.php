@@ -152,7 +152,7 @@
 	                </div><!--./ge-headline-->
 	                <div class="row-fluid">
 	                    <div class="span2 offset2">
-	                        <i class="icon ge-icons geicon-gift"></i>
+	                        <i class="icon ge-icon-giftbox"></i>
 	                    </div>
 	                    <div class="span6">
 	                        <p class="lead">Every item you see on Gifteng is individually posted by a member of Gifteng’s growing community or by a company who loves rewarding their customers with awesome gifts.</p>
@@ -161,7 +161,7 @@
 	                <div class="row-fluid"><div class="span8 offset2"><hr class="ge-hr-dotted"></div></div>
 	                <div class="row-fluid">
 	                    <div class="span2 offset2">
-	                        <i class="icon ge-icons geicon-check"></i>
+	                        <i class="icon ge-icon-check"></i>
 	                    </div>
 	                    <div class="span6">
 	                        <p class="lead">As a Giftenger you have access to new Gifts - FREE items - on a daily basis, beginning at 12:00pm Eastern Time. (The preciousness of the gift is checked by our team before publishing.)</p>
@@ -170,7 +170,7 @@
 	                <div class="row-fluid"><div class="span8 offset2"><hr class="ge-hr-dotted"></div></div>
 	                <div class="row-fluid">
 	                    <div class="span2 offset2">
-	                        <i class="icon ge-icons geicon-heart"></i>
+	                        <i class="icon ge-icon-heart"></i>
 	                    </div>
 	                    <div class="span6">
 	                        <p class="lead">Currently, there is no need for points to request a Gift. But the more you give the higher your Generosity Score becomes. What does this mean? It means that the higher your score is, the more gifts will be waiting for you.</p>
