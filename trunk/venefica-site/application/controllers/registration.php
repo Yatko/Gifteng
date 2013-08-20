@@ -145,6 +145,11 @@ class Registration extends CI_Controller {
             return FALSE;
         }
         
+        if ( $password == null || strlen($password) < PASSWORD_MIN_SIZE ) {
+            $this->registration_form->set_message('register_user', 'Your password needs to be minimum ' . PASSWORD_MIN_SIZE . ' characters');
+            return FALSE;
+        }
+        
         $code = $this->input->post('invitation_code');
         
         $user = new User_model();

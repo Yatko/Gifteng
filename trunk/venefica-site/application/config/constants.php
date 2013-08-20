@@ -31,6 +31,7 @@ define('USER_BOOKMARKS_NUM', 'user_bookmarks_num');
 define('DESCRIPTION_MAX_LENGTH', 750);
 define('COMMENT_MAX_LENGTH', 100);
 define('MESSAGE_MAX_LENGTH', 100);
+define('PASSWORD_MIN_SIZE', 6);
 define('UPLOAD_FILE_MAX_SIZE', 5 * 1024 * 1024); //in bytes
 define('UPLOAD_IMAGE_MIN_WIDTH', 400); //in pixels
 define('UPLOAD_IMAGE_MIN_HEIGHT', 400); //in pixels
