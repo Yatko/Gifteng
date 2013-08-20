@@ -44,12 +44,12 @@ if ( $ad->statistics != null ) {
                 <div class="row-fluid">
                     <div class="span4">
                         <? if( !$canBookmark || $is_bookmarked || $is_owner ): ?>
-                            <button class="btn btn-small btn-block btn-ge disabled">
+                            <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="fui-star-2"></i>
                                 <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
                             </button>
                         <? else: ?>
-                            <button onclick="bookmark(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
+                            <button onclick="bookmark(this, <?= $id ?>);" type="button" class="btn btn-small btn-block btn-ge">
                                 <i class="fui-star-2"></i>
                                 <span class="ad_bookmark_<?= $id ?>"><?= $num_bookmarks ?></span>
                             </button>
@@ -57,12 +57,12 @@ if ( $ad->statistics != null ) {
                     </div>
                     <div class="span4">
                         <? if( !$canComment ): ?>
-                            <button class="btn btn-small btn-block btn-ge disabled">
+                            <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="fui-bubble"></i>
                                 <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
                             </button>
                         <? else: ?>
-                            <button onclick="startCommentModal(this, <?= $id ?>);" class="btn btn-small btn-block btn-ge">
+                            <button onclick="startCommentModal(this, <?= $id ?>);" type="button" class="btn btn-small btn-block btn-ge">
                                 <i class="fui-bubble"></i>
                                 <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
                             </button>
@@ -70,7 +70,7 @@ if ( $ad->statistics != null ) {
                     </div>
                     <div class="span4">
                         <? if( !$canShare ): ?>
-                            <button class="btn btn-small btn-block btn-ge disabled">
+                            <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="ge-icon-share"></i>
                                 <? /** ?>
                                 <?= $num_shares ?>
@@ -84,7 +84,7 @@ if ( $ad->statistics != null ) {
                             $imgUrl = $ad->getImageUrl();
                             ?>
                             
-                            <button onclick="startSocialModal('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-small btn-block btn-ge">
+                            <button onclick="startSocialModal('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" type="button" class="btn btn-small btn-block btn-ge">
                                 <i class="ge-icon-share"></i>
                                 <? /** ?>
                                 <?= $num_shares ?>

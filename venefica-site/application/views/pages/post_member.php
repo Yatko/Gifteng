@@ -48,10 +48,12 @@
 </script>
 
 <?
-if ( $is_new ) {
-    $form_action = '/post/member' . ($is_modal ? '?modal' : '');
+if ( $is_modal ) {
+    $form_action = '';
+} else if ( $is_new ) {
+    $form_action = 'post/member' . ($is_modal ? '?modal' : '');
 } else {
-    $form_action = '/edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
+    $form_action = 'edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
 }
 ?>
 
@@ -62,7 +64,12 @@ if ( $is_new ) {
 
 <? endif; ?>
     
-    <?=form_open_multipart($form_action, array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id, 'adId' => $adId)) ?>
+    <form <?=($form_action != '' ? 'action="' . base_url() . $form_action . '"' : '')?> method="post" id="member_post_form" enctype="multipart/form-data">
+        <input type="hidden" name="step" value="<?=$step?>" />
+        <input type="hidden" name="next_step" />
+        <input type="hidden" name="unique_id" value="<?=$unique_id?>" />
+        <input type="hidden" name="adId" value="<?=$adId?>" />
+        
         
         <? if ($step == Post_member::STEP_START): ?>
             
@@ -454,7 +461,7 @@ if ( $is_new ) {
             
         <? endif; ?>
         
-    <?=form_close() ?>
+    </form>
 
 <? if( !$is_modal ): ?>
 

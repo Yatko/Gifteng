@@ -119,9 +119,13 @@
     <? foreach ($ads as $ad): ?>
         <?
         $ad_id = $ad->id;
+        $ad_can_request = $ad->canRequest;
+        $can_bookmark = $ad_can_request ? true : false;
+        $can_share = $ad_can_request ? true : false;
+        $can_comment = $ad_can_request ? true : false;
         ?>
 
-        <div class="ge-ad-item-box">
+        <div class="ge-ad-item-box <?=($ad_can_request == false ? 'ge-inactive' : '')?>">
             <div class="span4">
             	<div class="ge-box">
                     <div class="well ge-well">
@@ -135,8 +139,8 @@
                                 </div>
 
                                 <div class="ge-item">
-                                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => true, 'canShare' => true)); ?>
-                                    <? $this->load->view('element/ad_data', array('ad' => $ad, 'user' => $currentUser)); ?>
+                                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
+                                    <? $this->load->view('element/ad_data', array('ad' => $ad, 'currentUser' => $currentUser)); ?>
                                 </div><!--./ge-item-->
 
                                 <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
@@ -148,6 +152,10 @@
         </div>
 
     <? endforeach; ?>
+<? else: ?>
+        
+    There is no gift!
+        
 <? endif; ?>
 
 

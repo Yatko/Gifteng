@@ -62,7 +62,7 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
 <? endif; ?>
                                 
                                 <li class="hidden-tablet <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
-                                    <a href="#tab_bio"><i class="fui-bubble"></i> Me</a>
+                                    <a href="#tab_bio"><i class="fui-bubble"></i> About</a>
                                 </li>
                             </ul><!-- /tabs -->
                             <div class="tab-content">

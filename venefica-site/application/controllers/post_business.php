@@ -100,7 +100,7 @@ class Post_business extends CI_Controller {
     public function new_address() {
         $this->init();
         
-        $this->session->kepp_all_flashdata();
+        $this->session->keep_all_flashdata();
         
         if ( !isLogged() ) {
             return;

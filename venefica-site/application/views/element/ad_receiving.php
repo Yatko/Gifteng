@@ -11,14 +11,9 @@
 $ad_id = $ad->id;
 $request_id = $request->id;
 
-$inactive = false;
-//if ( $ad->expired || $request->isExpired() ) {
-//    $inactive = true;
-//}
-
 ?>
 
-<div class="span3 ge-box <?=($inactive ? 'ge-inactive' : '')?>">
+<div class="span3 ge-box">
     <div class="well ge-well">
         <div class="row-fluid">
             <div class="span12">
@@ -33,11 +28,19 @@ $inactive = false;
 
 <? if( $ad->expired || $request->isExpired() ): ?>
 
+                        <?
+                        if ( $ad->expired ) {
+                            $status_text = 'Gift expired';
+                        } else {
+                            $status_text = 'Request declined';
+                        }
+                        ?>
+                        
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-arrow-right"></span>
-                                    Ended
+                                    <?=$status_text?>
                                     <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
@@ -65,7 +68,7 @@ $inactive = false;
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-arrow-right"></span>
-                                    RECEIVED
+                                    Gift received
                                     <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
@@ -85,7 +88,7 @@ $inactive = false;
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-arrow-right"></span>
-                                    Pending
+                                    Request pending
                                     <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
@@ -104,7 +107,7 @@ $inactive = false;
                             <div class="span12">
                                 <p class="text-center">
                                     <span class="fui-arrow-right"></span>
-                                    Accepted
+                                    Request accepted
                                     <span class="fui-arrow-left"></span>
                                 </p>
                             </div>
@@ -112,7 +115,7 @@ $inactive = false;
 
                         <div class="row-fluid">
                             <div class="span4">
-                                <button onclick="request_view(<?=$request_id?>, 'receiving', <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
+                                <button onclick="startRequestViewModal(<?=$request_id?>, 'receiving', <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     <i class="fui-mail"></i>
                                 </button>
                             </div>

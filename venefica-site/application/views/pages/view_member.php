@@ -176,10 +176,40 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 		                <? else: ?>
 		                
 		                    <?
+                                    if ( $user_request != null ) {
+                                        //there is a user request for this ad
+                                        if ( $ad_is_sold ) {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'GIFT RECEIVED';
+                                        } else if ( $user_request->isDeclined() ) {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'EXPIRED';
+                                        } else {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'REQUEST SENT';
+                                        }
+                                    } else if ( $ad_is_sold ) {
+                                        $request_js = '';
+		                        $request_class = 'class="btn btn-large btn-block disabled"';
+		                        $request_text = 'GIFTED';
+                                    } else if ( $ad_can_request ) {
+                                        $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
+		                        $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
+		                        $request_text = 'REQUEST GIFT';
+                                    } else {
+                                        $request_js = '';
+		                        $request_class = 'class="btn btn-large btn-block disabled"';
+		                        $request_text = 'INACTIVE';
+                                    }
+                                    
+                                    /**
 		                    if ( $ad_is_sold ) {
 		                        $request_js = '';
 		                        $request_class = 'class="btn btn-large btn-block disabled"';
-		                        $request_text = 'SOLD OUT';
+		                        $request_text = 'GIFTED';
 		                    } elseif ( $user_request != null && $user_request->isDeclined() ) {
 		                        $request_js = '';
 		                        $request_class = 'class="btn btn-large btn-block disabled"';
@@ -197,6 +227,7 @@ if ( strlen($ad_description) > DESCRIPTION_MAX_LENGTH ) {
 		                        $request_class = 'class="btn btn-large btn-block disabled"';
 		                        $request_text = 'INACTIVE';
 		                    }
+                                    /**/
 		                    ?>
 		                                
 		                                <button <?=$request_js?> <?=$request_class?> type="button"><?=$request_text?></button>
