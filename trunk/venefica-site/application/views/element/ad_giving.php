@@ -150,13 +150,13 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description ge-action">
                         <div class="span4">
-                            <button onclick="shareOnFacebook('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-facebook link ge-icon-facebook"></button>
+                            <button onclick="shareOnFacebook('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-facebook link fui-facebook"></button>
                         </div>
                         <div class="span4">
-                            <button onclick="shareOnTwitter('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-twitter link ge-icon-twitter"></button>
+                            <button onclick="shareOnTwitter('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-twitter link fui-twitter"></button>
                         </div>
                         <div class="span4">
-                            <button onclick="shareOnPinterest('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-pinterest link ge-icon-pinterest"></button>
+                            <button onclick="shareOnPinterest('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-pinterest link fui-pinterest"></button>
                         </div>
                     </div><!--./ge-action-->
 

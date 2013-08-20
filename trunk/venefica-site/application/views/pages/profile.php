@@ -16,22 +16,8 @@ $followings_num = $user->statistics->numFollowings;
 $user_about = $user->about;
 $is_owner = isOwner($user);
 
-reset($_GET);
-$active_menu = key($_GET);
-if ( $active_menu == null ) {
-    $active_menu = Profile::MENU_GIVING;
-}
-
-$active_tab = Profile::TAB_GIFTS;
-if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING, Profile::MENU_FAVORITE)) ) {
-    $active_tab = Profile::TAB_GIFTS;
-} else if ( in_array($active_menu, array(Profile::MENU_FOLLOWING, Profile::MENU_FOLLOWER, Profile::MENU_RATING)) ) {
-    $active_tab = Profile::TAB_CONNECTIONS;
-} else if ( in_array($active_menu, array(Profile::MENU_NOTIFICATION, Profile::MENU_MESSAGE, Profile::MENU_SETTING)) ) {
-    $active_tab = Profile::TAB_ACCOUNT;
-} else if ( in_array($active_menu, array(Profile::MENU_ABOUT)) ) {
-    $active_tab = Profile::TAB_BIO;
-}
+$active_menu = Profile::getActiveMenu();
+$active_tab = Profile::getActiveTab($active_menu);
 
 ?>
 
