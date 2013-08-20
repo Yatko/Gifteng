@@ -97,7 +97,7 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-messages .ge-input .btn, .ge-comments .ge-input .btn {color: #fff;padding: 14px 3px !important;}
 .ge-messages .ge-title, .ge-message a.ge-title {font-weight:600;color:#aaaaaa;font-size: 110%;}
 .ge-messages .ge-subject {padding:9px;}
-.ge-messagelist, .ge-conversation {max-height:117px;overflow: hidden;border-top: 1px solid #e4e4e4;}
+.ge-messagelist, .ge-conversation {overflow: hidden;border-top: 1px solid #e4e4e4;}
 .ge-messagelist .ge-message a.fui-trash, .ge-conversation .ge-message a.fui-trash {float: right;color: #e4e4e4;}
 .ge-message {padding: 9px;min-height:60px;background-color: #fafafa;border-bottom: 1px solid #e4e4e4;}
 .ge-message .ge-user-image {float:left;width:50px;width:50px;width:50px;}
@@ -307,12 +307,7 @@ line-height: 0.99em;
 
 /* NAV */
 /*.snap-content > .navbar.ge-navbar {position:static !important;z-index:1000;}*/
-.snap-content > .navbar.ge-navbar {position:absolute !important;z-index:1000;
--webkit-transition: all 500ms ease;
--moz-transition: all 500ms ease;
--ms-transition: all 500ms ease;
--o-transition: all 500ms ease;
-transition: all 500ms ease;}
+.snap-content > .navbar.ge-navbar {position:fixed !important;z-index:1000;}
 .ge-navbar .nav sup {text-shadow:none;color: #ffffff;}
 .ge-navbar, .ge-navbar .navbar-inner {background-color:#00bebe;border-radius:0px;height:52px;}
 .ge-navbar {font-size: 16.996px; /* 17px */}
@@ -395,3 +390,95 @@ transition: all 500ms ease;}
 
 /*WELCOME*/
 .ge-welcome #welcome_index {background:url('temp-sample/ge-welcome_bg.jpg') no-repeat center;height: 3455px;}
+#welcome_0.ge-stage .ge-headline p {
+	padding: 32px 0 0 0;
+	font-size: 17px;
+	font-weight: 300 !important;
+	line-height: 130%;
+	color: #6f6f6f;
+}
+.ge-welcome .ge-text p {
+	text-align:center;
+	line-height:130%;
+	padding:9px;
+	font-size:14px;
+}
+.ge-welcome .ge-text p.ge-title {
+	padding: 16px 0 0 0;
+	font-size: 22px;
+}
+.ge-welcome .ge-well .ge-item-image {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background-color: #f7f3f3;
+	height: 300px;
+	min-height: 300px;
+	max-height: 300px;
+}
+.ge-welcome #login_ {
+	padding: 87px 0 0 0;
+}
+.ge-welcome .ge-ribbon2 {
+	background-image: url("temp-sample/ge-ribbon2.png");
+	background-repeat: no-repeat;
+	background-position: 28px 0;
+	background-size: 35px 50px;
+}
+.ge-welcome #login_ a {
+	color: #d26058 !important;
+	font-weight: 600;
+}
+.ge-welcome #login_ a:hover {
+	color: #00bebe !important;
+}
+.ge-welcome .ge-stage .ge-headline p {
+	font-size: 27px;
+	color: #00bebe;
+	margin-bottom: 0px;
+}
+.ge-welcome .ge-stage .ge-headline small {
+	font-size: 17px;
+	font-weight: 300 !important;
+	line-height: 130%;
+	color: #6f6f6f;
+}
+.ge-welcome p.lead {
+	font-size: 15px;
+}
+.ge-welcome .icon {
+	font-size:56px;
+	color:#00bebe;
+}
+hr.ge-hr {
+	border-top: 1px solid #cbc8c3 !important;
+	border-bottom: 1px inset #f7f5f5 !important;
+}
+hr.ge-hr-dotted {
+	border: 0;
+	border-bottom: 1px dotted #e4e4e4 !important;
+	background: #cbc8c3 !important;
+}
+.ge-highlight {
+	padding: 60px 0;
+	background-color: #f7f5f5;
+	border-top: 1px solid #cbc8c3;
+	border-bottom: 1px inset #cbc8c3;
+	margin-bottom: 36px;
+}
+#welcome_4 {
+	font-size:17px;
+}
+#welcome_4 p {
+	font-size: 34px;
+	font-weight: 800 !important;
+	margin-bottom: 0px;
+}
+
+/* new styles */
+.active-tab {
+	background-color:#EEEEEE !important;
+}
+.ge-user-unfollow {
+	background-color:#00bebe !important;
+	color:#FFFFFF !important;
+}

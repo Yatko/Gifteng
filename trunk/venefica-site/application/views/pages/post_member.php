@@ -202,7 +202,7 @@ if ( $is_modal ) {
                     </div><!--./select-category-->
 
                     <div class="row-fluid">
-                        <div class="span12">
+                        <div class="span8">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -212,19 +212,16 @@ if ( $is_modal ) {
                                 </div>
                             </div>
                         </div>
-                    </div><!--./value-->
-
-                    <div class="row-fluid">
-                        <div class="span12">
+                        <div class="span4">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input">
-                                        <input id="zipCode" name="zipCode" value="<?=$zipCode?>" class="span2" type="text" maxlength="5" placeholder="Your Zip code">
+                                        <input id="zipCode" style="margin-top:0" name="zipCode" value="<?=$zipCode?>" class="span2" type="text" maxlength="5" placeholder="Your Zip code">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div><!--./zip-->
+                    </div>
 
                     <div class="row-fluid">
                         <div class="span12">
