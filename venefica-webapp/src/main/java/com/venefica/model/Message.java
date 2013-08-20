@@ -119,7 +119,7 @@ public class Message {
         this.text = text;
     }
 
-    public boolean hasRead() {
+    public boolean isRead() {
         return read;
     }
 

@@ -111,6 +111,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     //*************
 
     @Override
+    @Transactional
     public List<MessageDto> getLastMessagePerRequest() {
         List<Message> messages = messageDao.getLastMessagePerRequestByUser(getCurrentUserId());
         return buildMessages(messages);
@@ -124,6 +125,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 //    }
     
     @Override
+    @Transactional
     public List<MessageDto> getMessagesByRequest(Long requestId) throws RequestNotFoundException, AuthorizationException {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
@@ -137,6 +139,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
     
     @Override
+    @Transactional
     public List<MessageDto> getMessagesByUsers(Long user1Id, Long user2Id) throws UserNotFoundException {
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
@@ -145,6 +148,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
     
     @Override
+    @Transactional
     public List<MessageDto> getMessagesByAdAndUsers(Long adId, Long user1Id, Long user2Id) throws AdNotFoundException, UserNotFoundException {
         Ad ad = validateAd(adId);
         User user1 = validateUser(user1Id);
@@ -229,9 +233,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             MessageDto messageDto = new MessageDtoBuilder(msg)
                     .setCurrentUser(currentUser)
                     .build();
-            msg.setRead(true); // mark as read
-            
             result.add(messageDto);
+            
+            msg.setRead(true); // mark as read
         }
 
         // outgoing
@@ -353,16 +357,16 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User currentUser = getCurrentUser();
         
         for (Message message : messages) {
-            if ( message.isHiddenByRecipient() || message.isHiddenBySender() ) {
+            if ( message.isDeleted() || message.isHiddenByRecipient() || message.isHiddenBySender() ) {
                 continue;
             }
             
             MessageDto messageDto = new MessageDtoBuilder(message)
                     .setCurrentUser(currentUser)
                     .build();
-            message.setRead(true); // mark as read
-            
             result.add(messageDto);
+            
+            message.setRead(true); // mark as read
         }
         return result;
     }

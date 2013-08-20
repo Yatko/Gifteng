@@ -183,7 +183,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         assertNotNull("Id field not set!", message.getId());
         assertTrue("Message text not match", messageDto.getText().equals(message.getText()));
         assertNotNull("CreatedAt field is null!", message.getCreatedAt());
-        assertTrue("Message must be marked as not read!", !message.hasRead());
+        assertTrue("Message must be marked as not read!", !message.isRead());
     }
 
     @Test(expected = MessageNotFoundException.class)
@@ -242,7 +242,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         assertTrue("Message must be marked as not read!", !message.isRead());
 
         Message storedMessage = messageDao.get(message.getId());
-        assertTrue("Message in the database must be marked as read!", storedMessage.hasRead());
+        assertTrue("Message in the database must be marked as read!", storedMessage.isRead());
     }
 
     @Test(expected = MessageNotFoundException.class)

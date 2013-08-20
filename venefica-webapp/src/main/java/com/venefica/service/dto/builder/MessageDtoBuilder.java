@@ -42,7 +42,7 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
         messageDto.setFromName(model.getFrom().getName());
         messageDto.setFromFullName(model.getFrom().getFullName());
         messageDto.setFromAvatarUrl(ImageDto.imageUrl(fromAvatar));
-        messageDto.setRead(model.hasRead());
+        messageDto.setRead(model.isRead());
         messageDto.setCreatedAt(model.getCreatedAt());
 
         return messageDto;
