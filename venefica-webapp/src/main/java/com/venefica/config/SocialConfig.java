@@ -18,6 +18,7 @@ import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
+//import org.springframework.social.connect.appengine.AppEngineUsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
@@ -27,10 +28,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Spring social configuration.
+ * 
+ * Currently set as inactive. Direct website and social media (facebook, twitter, pinterest)
+ * integration were done.
  *
  * @author Sviatoslav Grebenchukov
  */
-@Configuration
+//@Configuration
 public class SocialConfig {
 
     @Inject
@@ -75,6 +79,16 @@ public class SocialConfig {
         repository.setConnectionSignUp(userSignUpAdapter());
         return repository;
     }
+    
+//    /**
+//     * Instance that should be used when deploying into google app engine.
+//     * @return 
+//     */
+//    @Bean
+//    public UsersConnectionRepository usersConnectionRepository() {
+//        AppEngineUsersConnectionRepository repository = new AppEngineUsersConnectionRepository(connectionFactoryLocator(), Encryptors.noOpText());
+//        return repository;
+//    }
 
     /**
      * A proxy to a request-scoped object.

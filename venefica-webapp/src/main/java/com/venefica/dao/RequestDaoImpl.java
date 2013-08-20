@@ -33,7 +33,14 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
     @Override
     public Request get(Long userId, Long adId) {
         // @formatter:off
-        return (Request) createQuery("from " + getDomainClassName() + " r where r.deleted = false and r.user.id = :userId and r.ad.id = :adId")
+        return (Request) createQuery(""
+                + "from " + getDomainClassName() + " r "
+                + "where "
+                + "r.deleted = false and "
+                + "r.hidden = false and "
+                + "r.user.id = :userId and "
+                + "r.ad.id = :adId"
+                + "")
                 .setParameter("userId", userId)
                 .setParameter("adId", adId)
                 .uniqueResult();
