@@ -206,17 +206,23 @@ $subpage = key($_GET); //gets the first element from the array
     <div class="navbar-inner">
         <div class="container">
             <div class="nav-collapse">
+                
+                <? if( isLogged() ): ?>
                 <span class="nav">
                     <a id="open-left" class="link"><span class="fui-list"></span></a>
                 </span>
+                <? endif; ?>
+                
                 <span class="nav">
                     <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
                 </span>
 
                 <? if( isLogged() ): ?>
 
-                    <div class="pull-right">
-                        <button onclick="startPostModal()" class="btn btn-small btn-block btn-ge"><i class="ge-icon-giftbox"></i></button>
+                    <div class="nav pull-right">
+                        <li>
+                            <a href="#" onclick="startPostModal();"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
+                        </li>
                         <? /** ?>
                         <a href="<?=base_url()?>post" data-target="#postContainer" data-toggle="modal"><i class="ge-icon-giftbox"></i></a>
                         <? /**/ ?>
@@ -229,7 +235,7 @@ $subpage = key($_GET); //gets the first element from the array
                             <a href="http://help.gifteng.com"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>                      
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
 
                             <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
                                 <?=form_open('/authentication/login')?>
@@ -250,4 +256,4 @@ $subpage = key($_GET); //gets the first element from the array
 </div>
 
 <div class="ge-container snap-content snap-slide">
-    <div class="container ge-topspace">
+    <div class="<?= isLogged() ? 'container' : '' ?> ge-topspace">

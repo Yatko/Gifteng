@@ -153,9 +153,13 @@
 
     <? endforeach; ?>
 <? else: ?>
-        
-    There is no gift!
-        
+    
+    <? if( key_exists('q', $_GET) ): ?>
+        No results for "<?=$_GET['q']?>"
+    <? else: ?>
+        There are no gifts!
+    <? endif; ?>
+    
 <? endif; ?>
 
 

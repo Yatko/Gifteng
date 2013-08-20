@@ -6,10 +6,13 @@
  * message: Message_model
  * showTitle: boolean
  * showDelete: boolean
+ * showProfileLinks: boolean
  */
 
 if ( !isset($showTitle) ) $showTitle = false;
 if ( !isset($showDelete) ) $showDelete = false;
+if ( !isset($showProfileLinks)) $showProfileLinks = false;
+
 $profile_link = $message->getFromProfileUrl();
 $img = $message->getFromAvatarUrl();
 $name = $message->fromFullName;
@@ -18,6 +21,8 @@ $text = $message->getSafeText();
 $id = $message->id;
 $ad_title = $message->getSafeAdTitle();
 $request_id = $message->requestId;
+$message_link = base_url().'profile?message&'.$request_id;
+$read = $message->read;
 
 if ( trim($ad_title) == '' ) $ad_title = '-';
 
@@ -31,11 +36,24 @@ if (strlen($text) > MESSAGE_MAX_LENGTH) {
 ?>
 
 <div class="row-fluid ge-message">
-    <div class="ge-user-image">
-        <a href="<?= $profile_link ?>"><img src="<?= $img ?>" class="img img-rounded"></a>
-    </div>
-    <div class="ge-text">
-        <a class="ge-name" href="<?= $profile_link ?>"><?= $name ?></a>
+    
+    <? if( !$showProfileLinks ): ?>
+        <a href="<?=$message_link?>">
+    <? endif; ?>
+    
+    <span class="ge-user-image">
+        <? if( $showProfileLinks ): ?>
+            <a href="<?= $profile_link ?>"><img src="<?= $img ?>" class="img img-rounded"></a>
+        <? else: ?>
+            <img src="<?= $img ?>" class="img img-rounded">
+        <? endif; ?>
+    </span>
+    <span class="ge-text">
+        <? if( $showProfileLinks ): ?>
+            <a class="ge-name" href="<?= $profile_link ?>"><?= $name ?></a>
+        <? else: ?>
+            <span class="ge-name"><?= $name ?></span>
+        <? endif; ?>
         <span class="ge-date"><?= $since ?></span>
         
         <? /** ?>
@@ -45,7 +63,11 @@ if (strlen($text) > MESSAGE_MAX_LENGTH) {
         <? /**/ ?>
         
         <? if( $showTitle ): ?>
-            <a href="<?=base_url()?>profile?message&<?=$request_id?>" class="ge-title ge-block"><?= $ad_title ?></a>
+            <? if( $showProfileLinks ): ?>
+                <a href="<?=$message_link?>" class="ge-title ge-block" <?=$read ? '' : 'style="color:#00bebe;"'?>><?= $ad_title ?></a>
+            <? else: ?>
+                <span class="ge-title ge-block" <?=$read ? '' : 'style="color:#00bebe;"'?>><?= $ad_title ?></span>
+            <? endif; ?>
         <? endif; ?>
         
         <span class="ge-block">
@@ -58,5 +80,10 @@ if (strlen($text) > MESSAGE_MAX_LENGTH) {
                 <a class="text-note link" onclick="show_message_rest(this, <?= $id ?>);">read more</a>
             <? endif; ?>
         </span>
-    </div>
-</div><!--./ge-message-->
+    </span>
+            
+    <? if( !$showProfileLinks ): ?>
+        </a>
+    <? endif; ?>
+    
+</div>

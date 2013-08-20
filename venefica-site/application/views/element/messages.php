@@ -7,9 +7,11 @@
  * request: Request_model
  * to: User_model
  * canMessage: boolean (default: true)
+ * showProfileLinks: boolean
  */
 
 if ( !isset($canMessage) ) $canMessage = false;
+if ( !isset($showProfileLinks)) $showProfileLinks = false;
 
 if ( $request != null ) {
     $request_id = $request->id;

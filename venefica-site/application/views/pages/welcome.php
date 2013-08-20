@@ -51,7 +51,7 @@
 	                        <div class="well ge-well">
 	                            <div class="row-fluid">
 	                            	<div class="ge-item-image ge-ribbon2">
-		                                <div class="row-fluid">
+		                                <div class="row-fluid" id="login_">
 		                                    <div class="span10 offset1">
 		                                        
 		                                        <div id="form_wrapper" class="form_wrapper">

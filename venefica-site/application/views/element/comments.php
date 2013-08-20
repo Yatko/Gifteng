@@ -20,7 +20,7 @@ if ( $ad != null ) {
 
 <? if( (isset($comments) && is_array($comments) && count($comments) > 0) || $canComment ): ?>
 
-    <div class="row-fluid ge-comments">
+    <div class="row-fluid ge-comments" id="ad_<?=$ad_id?>_comments">
         <div class="span12">
             
             <? if( isset($comments) && is_array($comments) && count($comments) > 0 ): ?>
@@ -47,7 +47,7 @@ if ( $ad != null ) {
                     <div class="span12">
                         <div class="row-fluid ge-message">
                             <div class="span9 ge-text">
-                                <textarea name="commentText" placeholder="Your message ..."></textarea>
+                                <textarea name="commentText" placeholder="Your comment ..."></textarea>
                             </div>
                             <div class="span3 ge-text">
                                 <button type="button" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>

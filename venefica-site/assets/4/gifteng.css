@@ -85,7 +85,7 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-detail-view .ge-item .ge-action {padding:0 19px 19px 19px;}
 .ge-detail-view .ge-item .ge-description {padding:0 19px;}
 .ge-detail-view .ge-item .ge-map img {min-height: 195px;}
-.ge-detail-view .ge-messagelist {max-height:589px;}
+.ge-detail-view .ge-messagelist {max-height:400px;overflow-y:auto;}
 .ge-detail-view p.ge-location {font-weight:400;color: #aaaaaa;font-size: 80%;line-height:1.2em;text-align:right;margin: 3px 19px 0 0; padding: 0px;}
 
 /* MESSAGING  todo reorder, review */
@@ -472,6 +472,28 @@ hr.ge-hr-dotted {
 	font-size: 34px;
 	font-weight: 800 !important;
 	margin-bottom: 0px;
+}
+.ge-welcome #welcome_3 .ge-item-image {
+	text-align: center;
+	background: transparent;
+	margin-bottom: 20px;
+}
+.ge-welcome #welcome_3 img.img-rounded {
+	border-radius: 180px;
+	width: 210px;
+	height: 210px;
+	background-size: 210px 210px;
+}
+.ge-welcome #welcome_3 .ge-well {
+	background: transparent;
+	box-shadow: none;
+	padding:0;
+}
+.text-inverted {
+	color:#fff !important;
+}
+.text-inverted:hover {
+	color:#34495e !important;
 }
 
 /* new styles */
