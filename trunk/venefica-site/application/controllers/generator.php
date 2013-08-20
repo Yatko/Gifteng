@@ -7,7 +7,7 @@ class Generator extends CI_Controller {
     function get_photo($file, $width, $height) {
         $this->init();
         
-        $this->session->kepp_all_flashdata();
+        $this->session->keep_all_flashdata();
         
         if ( !isLogged() ) {
             return;

@@ -90,7 +90,7 @@ if ( $approval != null ) {
                         <div class="span12">
                             <p class="text-center">
                                 <span class="fui-arrow-right"></span>
-                                Given to
+                                Gifted
                                 <span class="fui-arrow-left"></span>
                             </p>
                         </div>
@@ -172,7 +172,7 @@ if ( $approval != null ) {
                         <div class="span12">
                             <p class="text-center">
                                 <span class="fui-arrow-right"></span>
-                                Given to
+                                Gifted
                                 <span class="fui-arrow-left"></span>
                             </p>
                         </div>
@@ -180,7 +180,7 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
                         </div>
                     </div>
 
@@ -194,7 +194,11 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
-                            <p class="text-center">Recipient selected</p>
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Recipient selected
+                                <span class="fui-arrow-left"></span>
+                            </p>
                         </div>
                     </div><!--./ge-text ge-description-->
 
@@ -203,11 +207,11 @@ if ( $approval != null ) {
                             <img src="<?=$requestor_img?>" class="img img-rounded">
                             
                             <? /** ?>
-                            <img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
                             <? /**/ ?>
                         </div>
                         <div class="span8">
-                            <button onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block btn-ge">Action required</button>
+                            <button onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block btn-ge">Action required</button>
                             
                             <? /** ?>
                             <div class="row-fluid">
@@ -244,7 +248,7 @@ if ( $approval != null ) {
                         $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
-                        <div class="span4"><img onclick="request_view(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
+                        <div class="span4"><img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
                     <? endforeach; ?>
 
                     </div><!--./ge-action-->

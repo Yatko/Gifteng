@@ -1,13 +1,4 @@
 <script language="javascript">
-    function request_view(requestId, requestType, userId) {
-        if ( $('#requestContainer').length > 0 ) {
-            $('#requestContainer').removeData('modal').modal({
-                remote: '<?=base_url()?>request/' + requestId + '?modal&' + requestType + '&userId=' + userId,
-                show: true
-            });
-        }
-    }
-    
     function request_hide(requestId) {
         $.ajax({
             type: 'POST',

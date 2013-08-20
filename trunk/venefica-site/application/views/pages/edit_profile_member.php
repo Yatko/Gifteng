@@ -36,6 +36,12 @@ $about = $currentUser->about;
 $zipCode = $currentUser->getZipCode();
 $email = $currentUser->email;
 
+if ( $is_modal ) {
+    $form_action = '';
+} else {
+    $form_action = 'edit_profile/member';
+}
+
 ?>
 
 <? if( !$is_modal ): ?>
@@ -57,7 +63,7 @@ $email = $currentUser->email;
                         <div id="edit_profile_ajax_error"><p><?=$message?></p></div>
                     </div>
 
-                    <?=form_open('/edit_profile/member', array('id' => 'edit_profile_form'))?>
+                    <form <?=($form_action != '' ? 'action="' . base_url() . $form_action . '"' : '')?> method="post" id="edit_profile_form">
 
                     <fieldset>
                         <div class="row-fluid">
@@ -158,7 +164,7 @@ $email = $currentUser->email;
                         </div>
                     </fieldset>
 
-                    <?=form_close()?>
+                    </form>
 
 <? if( !$is_modal ): ?>
 

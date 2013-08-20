@@ -416,17 +416,6 @@ class Ajax extends CI_Controller {
             } else {
                 $this->getAdReceiving($adId, $requestId, $userId);
             }
-            
-//            $ad = $this->ad_service->getAdById($adId);
-//            $request = $this->ad_service->getRequestById($requestId);
-//            
-//            if ( $is_giving ) {
-//                $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
-//            } else {
-//                $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
-//            }
-//            
-//            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -449,11 +438,6 @@ class Ajax extends CI_Controller {
             $this->ad_service->selectRequest($requestId);
             
             $this->getAdGiving($adId, $userId);
-            
-//            $ad = $this->ad_service->getAdById($adId);
-//            
-//            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
-//            respond_ajax(AJAX_STATUS_RESULT, $result);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
