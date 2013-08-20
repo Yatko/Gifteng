@@ -7,6 +7,24 @@
             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
     
+    <!--
+    <bean id="persistenceManagerFactory" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
+        <property name="jdoProperties">
+            <props>
+                <prop key="javax.jdo.PersistenceManagerFactoryClass">
+                    org.datanucleus.store.appengine.jdo.DatastoreJDOPersistenceManagerFactory
+                </prop>
+                <prop key="javax.jdo.option.ConnectionURL">appengine</prop>
+                <prop key="javax.jdo.option.NontransactionalRead">true</prop>
+                <prop key="javax.jdo.option.NontransactionalWrite">true</prop>
+                <prop key="javax.jdo.option.RetainValues">true</prop>
+                <prop key="datanucleus.appengine.autoCreateDatastoreTxns">true</prop>
+                <prop key="datanucleus.DetachOnClose">true</prop>
+            </props>
+        </property>
+    </bean>
+    -->
+    
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${assembly.jdbc.driverClassName}" />
         <property name="url" value="${assembly.jdbc.url}" />

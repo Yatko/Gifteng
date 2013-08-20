@@ -27,7 +27,7 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author Sviatoslav Grebenchukov
  */
-@Controller
+//@Controller
 @RequestMapping("/signin")
 public class SignInController {
 

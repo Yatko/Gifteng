@@ -506,6 +506,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .setFilteredComments(comments)
                     .includeImages(includeImages != null ? includeImages : false)
                     .includeCreator(includeCreator != null ? includeCreator : false)
+                    .includeCanRequest()
                     .build();
             adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
             adDto.setRequested(ad.isRequested(currentUser, false));

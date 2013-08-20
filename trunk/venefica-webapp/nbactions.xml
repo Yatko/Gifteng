@@ -48,6 +48,21 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    
+    <action>
+        <actionName>CUSTOM-env=venefica-dev - skip tests, gae deploy</actionName>
+        <displayName>env=venefica-dev - skip tests, gae deploy</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>gae:deploy</goal>
+        </goals>
+        <properties>
+            <env>venefica-dev</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    
     <action>
         <actionName>CUSTOM-only integration tests</actionName>
         <displayName>only integration tests</displayName>
