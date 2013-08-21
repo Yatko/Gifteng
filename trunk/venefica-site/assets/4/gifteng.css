@@ -42,7 +42,8 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-user:after {clear:both;}
 /* user info panel */
 .ge-user .ge-info {background-color:#fafafa;border-radius: 3px;}
-.ge-user .ge-info [id^="tab_"] .btn.btn-ge {background-color:#fafafa;color: #00bebe;}
+.ge-user .ge-info [id^="tab_"] .btn.btn-ge {background-color:#fafafa;color: #34495e;}
+.ge-user .ge-info [id^="tab_"] .btn.btn-ge:hover {background-color:#fafafa;color: #333333;}
 .ge-user .ge-info .nav-tabs.nav-append-content > li.active:first-child:before {background-color: transparent;border-left: none;}
 .ge-user .ge-info .tab-content {border: none;margin-bottom: 0px;padding: 10px;position: relative;z-index: 1;background-color:#fafafa;}
 .ge-user .ge-info .nav-tabs {border-bottom: 1px solid #dedede;}
