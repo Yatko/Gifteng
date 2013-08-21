@@ -208,7 +208,7 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="ge-icon-"] {
 */
-.ge-icon-gifteng, .ge-icon-logo, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-heart, .ge-icon-g-pin, .ge-icon-pin, .ge-icon-star, .ge-icon-bubble, .ge-icon-share, .ge-icon-smiley, .ge-icon-check, .ge-icon-pencil, .ge-icon-businesses, .ge-icon-press, .ge-icon-clover, .ge-icon-list, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest {
+.ge-icon-gifteng, .ge-icon-logo, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-heart, .ge-icon-g-pin, .ge-icon-pin, .ge-icon-star, .ge-icon-bubble, .ge-icon-share, .ge-icon-smiley, .ge-icon-check, .ge-icon-pencil, .ge-icon-businesses, .ge-icon-press, .ge-icon-clover, .ge-icon-list, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest, .ge-icon-user, .ge-icon-help, .ge-icon-bug {
 	font-family: 'gifteng-icons';
 	speak: none;
 	font-style: normal;
@@ -240,43 +240,52 @@ you can use the generic selector below, but it's slower:
 	content: "\e006";
 }
 .ge-icon-star:before {
-	content: "\e007";
-}
-.ge-icon-bubble:before {
-	content: "\e008";
-}
-.ge-icon-share:before {
-	content: "\e009";
-}
-.ge-icon-smiley:before {
 	content: "\e00a";
 }
-.ge-icon-check:before {
+.ge-icon-bubble:before {
 	content: "\e00b";
 }
-.ge-icon-pencil:before {
+.ge-icon-share:before {
 	content: "\e00c";
 }
-.ge-icon-businesses:before {
+.ge-icon-smiley:before {
 	content: "\e00d";
 }
-.ge-icon-press:before {
+.ge-icon-check:before {
 	content: "\e042";
 }
-.ge-icon-clover:before {
+.ge-icon-pencil:before {
 	content: "\e03f";
 }
+.ge-icon-businesses:before {
+	content: "\e007";
+}
+.ge-icon-press:before {
+	content: "\e008";
+}
+.ge-icon-clover:before {
+	content: "\e009";
+}
 .ge-icon-list:before {
-	content: "\e00e";
+	content: "\e01d";
 }
 .ge-icon-facebook:before {
-	content: "\e046";
+	content: "\e00e";
 }
 .ge-icon-twitter:before {
-	content: "\e036";
+	content: "\e00f";
 }
 .ge-icon-pinterest:before {
+	content: "\e010";
+}
+.ge-icon-user:before {
+	content: "\e046";
+}
+.ge-icon-help:before {
 	content: "\e029";
+}
+.ge-icon-bug:before {
+	content: "\e036";
 }
 
 .ge-icon-gifteng-large {
@@ -465,9 +474,6 @@ hr.ge-hr-dotted {
 	border-bottom: 1px inset #cbc8c3;
 	margin-bottom: 36px;
 }
-#welcome_4 {
-	font-size:17px;
-}
 #welcome_4 p {
 	font-size: 34px;
 	font-weight: 800 !important;
@@ -476,7 +482,7 @@ hr.ge-hr-dotted {
 .ge-welcome #welcome_3 .ge-item-image {
 	text-align: center;
 	background: transparent;
-	margin-bottom: 20px;
+	margin-bottom: -20px;
 }
 .ge-welcome #welcome_3 img.img-rounded {
 	border-radius: 180px;
