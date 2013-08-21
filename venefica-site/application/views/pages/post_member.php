@@ -440,7 +440,7 @@ if ( $is_modal ) {
                                             <? else: ?>
                                                 
                                                 <? if( $is_new ): ?>
-                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
+                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</a>
                                                 <? endif; ?>
                                                 
                                             <? endif; ?>
