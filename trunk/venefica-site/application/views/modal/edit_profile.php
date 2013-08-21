@@ -46,6 +46,27 @@
             $('#editProfileContainer > .modal-footer').append($footer);
         }
     }
+    
+    function resend_verification() {
+        $.ajax({
+            type: 'POST',
+            url: '<?=base_url()?>ajax/resend_verification',
+            dataType: 'json',
+            cache: false
+        }).done(function(response) {
+            if ( !response || response === '' ) {
+                //TODO: empty result
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
+                //TODO
+            } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                
+            } else {
+                //TODO: unknown response received
+            }
+        }).fail(function(data) {
+            //TODO
+        });
+    }
 </script>
 
 <div id="editProfileContainer" class="modal hide fade" data-remote="<?= base_url() ?>edit_profile?modal">

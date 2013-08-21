@@ -9,6 +9,7 @@ class Profile extends CI_Controller {
     const TAB_ACCOUNT = 'account';
     const TAB_BIO = 'bio';
     
+    const MENU_FIRST = 'first';
     const MENU_GIVING = 'giving';
     const MENU_RECEIVING = 'receiving';
     const MENU_FAVORITE = 'favorite';
@@ -74,7 +75,9 @@ class Profile extends CI_Controller {
         
         if ( !validate_user($user) ) return;
         
-        if ( key_exists(Profile::MENU_NOTIFICATION, $_GET) ) {
+        if ( key_exists(Profile::MENU_FIRST, $_GET) ) {
+            $this->first($user);
+        } else if ( key_exists(Profile::MENU_NOTIFICATION, $_GET) ) {
             $this->notification($user);
         } else if ( key_exists(Profile::MENU_SETTING, $_GET) ) {
             $this->setting($user);
@@ -97,6 +100,22 @@ class Profile extends CI_Controller {
         }
     }
     
+    /**
+     * 
+     * @param User_model $user
+     */
+    public function first($user) {
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_first', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+
     /**
      * Giving profile submenu.
      * @param User_model $user

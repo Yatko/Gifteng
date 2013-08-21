@@ -110,6 +110,7 @@ $route['invitation']        = 'invitation/view';
 $route['registration/(:any)']   = 'registration/$1';
 $route['registration']          = 'registration/business';
 $route['business']              = 'registration/business';
+$route['verify/(:any)']         = 'registration/verify/$1';
 
 // helpers
 

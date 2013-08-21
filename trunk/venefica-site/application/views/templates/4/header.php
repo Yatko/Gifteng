@@ -171,10 +171,10 @@ $subpage = key($_GET); //gets the first element from the array
         <div>
             <ul>
             	<li class="text-center">
-		            <form id="browse_form" action="<?=base_url()?>browse" method="get">
-		                <input type="text" name="q" placeholder="Find friends and gifts" value="<?= key_exists('q', $_GET) ? $_GET['q'] : '' ?>" />
-		            </form>
-        		</li>
+                    <form id="browse_form" action="<?=base_url()?>browse" method="get">
+                        <input type="text" name="q" placeholder="Find friends and gifts" value="<?= key_exists('q', $_GET) ? $_GET['q'] : '' ?>" />
+                    </form>
+                </li>
                 <li>
                     <div class="row-fluid ge-user">
                         <?
