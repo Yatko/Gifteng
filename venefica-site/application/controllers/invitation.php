@@ -250,6 +250,7 @@ class Invitation extends CI_Controller {
         }
         
         $invitation = new Invitation_model();
+        $invitation->ipAddress = $this->input->ip_address();
         $invitation->email = $this->input->post('invitation_email');
         $invitation->country = $this->input->post('invitation_country');
         $invitation->zipCode = $this->input->post('invitation_zipcode');

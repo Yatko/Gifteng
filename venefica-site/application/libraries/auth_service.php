@@ -79,13 +79,17 @@ class Auth_service {
      * Sends a forgot password request to the server. The server generates a link
      * that will enable to chnage user password.
      * 
-     * @param type $email
+     * @param string $email
+     * @param string $ipAddress
      * @throws Exception incorrect email or in case of WS error
      */
-    public function forgotPasswordEmail($email) {
+    public function forgotPasswordEmail($email, $ipAddress) {
         try {
             $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
-            $authService->forgotPasswordEmail(array("email" => $email));
+            $authService->forgotPasswordEmail(array(
+                "email" => $email,
+                "ipAddress" => $ipAddress
+            ));
         } catch ( Exception $ex ) {
             log_message(INFO, 'Email is incorrect! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
