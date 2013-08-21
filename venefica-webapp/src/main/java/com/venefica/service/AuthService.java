@@ -91,7 +91,8 @@ public interface AuthService {
     /**
      * 
      * @param email 
+     * @param ipAddress 
      */
     @WebMethod(operationName = "ForgotPasswordEmail")
-    public void forgotPasswordEmail(@WebParam(name = "email") String email) throws UserNotFoundException, GeneralException;
+    public void forgotPasswordEmail(@WebParam(name = "email") String email, @WebParam(name = "ipAddress") String ipAddress) throws UserNotFoundException, GeneralException;
 }
