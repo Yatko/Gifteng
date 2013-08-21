@@ -34,6 +34,11 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
     private static final String FORGOT_PASSWORD_HTML_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.html.vm";
     private static final String FORGOT_PASSWORD_PLAIN_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.txt.vm";
     
+    private static final String PASSWORD_CHANGED_TEMPLATE = "password-changed/";
+    private static final String PASSWORD_CHANGED_SUBJECT_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "subject.vm";
+    private static final String PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.html.vm";
+    private static final String PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.txt.vm";
+    
     @Inject
     private TokenEncryptor tokenEncryptor;
     @Inject
@@ -144,7 +149,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
                     vars);
         } catch ( MailException ex ) {
             logger.error("Email exception", ex);
-            throw new GeneralException(ex.getErrorCode(), "Could not send invitation mail!");
+            throw new GeneralException(ex.getErrorCode(), "Could not send forgot password mail!");
         } catch ( Exception ex ) {
             logger.error("Runtime exception", ex);
             throw new GeneralException(GeneralException.GENERAL_ERROR, ex.getMessage());
@@ -202,6 +207,19 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             user.setPassword(newPassword);
         } else {
             throw new AuthorizationException("Old passwod is wrong!");
+        }
+        
+        try {
+            emailSender.sendHtmlEmailByTemplates(
+                    PASSWORD_CHANGED_SUBJECT_TEMPLATE,
+                    PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE,
+                    PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE,
+                    user.getEmail(),
+                    null);
+        } catch ( MailException ex ) {
+            logger.error("Email exception", ex);
+        } catch ( Exception ex ) {
+            logger.error("Runtime exception", ex);
         }
     }
 }
