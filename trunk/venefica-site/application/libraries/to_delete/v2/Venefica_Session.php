@@ -238,9 +238,9 @@ class Venefica_Session extends CI_Session {
     }
     
     /**
-     * PRIVATE: Internal method - marks "flash" session attributes as 'old'
+     * Marks "flash" session attributes as 'old'
      */
-    private function _flashdata_mark() {
+    public function _flashdata_mark() {
         foreach ($_SESSION as $name => $value) {
             $parts = explode(':new:', $name);
             if (is_array($parts) && count($parts) == 2) {
@@ -252,9 +252,9 @@ class Venefica_Session extends CI_Session {
     }
 
     /**
-     * PRIVATE: Internal method - removes "flash" session marked as 'old'
+     * Removes "flash" session marked as 'old'
      */
-    private function _flashdata_sweep() {
+    public function _flashdata_sweep() {
         foreach ($_SESSION as $name => $value) {
             $parts = explode(':old:', $name);
             if (is_array($parts) && count($parts) == 2 && $parts[0] == $this->flash_key) {

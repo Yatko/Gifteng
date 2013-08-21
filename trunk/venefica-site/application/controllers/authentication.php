@@ -232,7 +232,8 @@ class Authentication extends CI_Controller {
         }
         
         try {
-            $this->auth_service->forgotPasswordEmail($email);
+            $ipAddress = $this->input->ip_address();
+            $this->auth_service->forgotPasswordEmail($email, $ipAddress);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Forgot password request failed: '.$ex->getMessage());
             $this->forgot_password_form->set_message('forgot_password', lang('forgot_password_failed'));

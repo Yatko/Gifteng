@@ -11,6 +11,7 @@ class Invitation_model extends CI_Model {
     const USERTYPE_RECEIVER = 'RECEIVER';
     
     var $email; //string
+    var $ipAddress; //string
     var $country; //string
     var $zipCode; //string
     var $source; //string
@@ -30,6 +31,7 @@ class Invitation_model extends CI_Model {
     public function toString() {
         return "Invitation ["
             ."email=".$this->email.", "
+            ."ipAddress=".$this->ipAddress.", "
             ."country=".$this->country.", "
             ."zipCode=".$this->zipCode.", "
             ."source=".$this->source.", "
