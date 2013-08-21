@@ -122,7 +122,7 @@ if ( $is_modal ) {
                         <? if( !$verified ): ?>
                             <div class="row-fluid">
                                 <div class="span12">
-                                    <span onclick="resend_verification();" class="link" style="color: red;">Psst. Don't forget to confirm your email! Click here to resend it.</span>
+                                    <span onclick="resend_verification(this);" class="link" style="color: red;">Psst. Don't forget to confirm your email! Click here to resend it.</span>
                                 </div>
                             </div>
                         <? endif; ?>

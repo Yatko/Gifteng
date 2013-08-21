@@ -47,7 +47,7 @@
         }
     }
     
-    function resend_verification() {
+    function resend_verification(callerElement) {
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/resend_verification',
@@ -59,7 +59,10 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                
+                if ( callerElement !== null ) {
+                    var $element = $(callerElement);
+                    $element.addClass('hide');
+                }
             } else {
                 //TODO: unknown response received
             }
