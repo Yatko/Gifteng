@@ -61,6 +61,8 @@ public class UserDto extends DtoBase {
     private BigDecimal pendingScore;
     // out
     private UserStatisticsDto statistics;
+    // out
+    private boolean verified;
     
     // business user data
     
@@ -100,6 +102,7 @@ public class UserDto extends DtoBase {
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
         address = new AddressDto(user.getAddress(), user.getLocation());
         businessAccount = user.isBusinessAccount();
+        verified = user.isVerified();
         user.getUserData().updateUserDto(this);
         
         if ( includeUserPoints && user.getUserPoint() != null ) {
@@ -358,5 +361,13 @@ public class UserDto extends DtoBase {
 
     public void setPendingScore(BigDecimal pendingScore) {
         this.pendingScore = pendingScore;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }

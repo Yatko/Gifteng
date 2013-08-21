@@ -132,27 +132,27 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     }
     
     @Test
-    public void registerUserTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+    public void registerUserTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto testUserDto = createUserDto(TEST_USER_NAME);
         client.registerUser(testUserDto, TEST_PASSWORD, TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+    public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto userWithRegisteredName = createUserDto("otherUser");
         userWithRegisteredName.setName(getFirstUser().getName());
         client.registerUser(userWithRegisteredName, TEST_PASSWORD, TEST_INVITATION_CODE);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void registerUserWithTheSameEmailTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+    public void registerUserWithTheSameEmailTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto userWithRegisteredEmail = createUserDto("otherUser");
         userWithRegisteredEmail.setEmail(getFirstUser().getEmail());
         client.registerUser(userWithRegisteredEmail, "pass$$word", TEST_INVITATION_CODE);
     }
     
     @Test(expected = InvalidInvitationException.class)
-    public void registerMultipleUsersWithTheSameInvitationTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+    public void registerMultipleUsersWithTheSameInvitationTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         String invitationCode = "11111";
         
         UserDto testUserDto_1 = createUserDto("test_1");

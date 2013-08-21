@@ -7,11 +7,13 @@ import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.dao.InvitationDao;
+import com.venefica.dao.UserVerificationDao;
 import com.venefica.job.AdExpirationJob;
 import com.venefica.job.AdOnlineJob;
 import com.venefica.job.ForgotPasswordExpirationJob;
 import com.venefica.job.InvitationExpirationJob;
 import com.venefica.job.InvitationReminderJob;
+import com.venefica.job.UserVerificationReminderJob;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
@@ -60,6 +62,9 @@ public class MainConfig {
     private static final String FORGOT_PASSWORD_JOB_KEY = "forgotPasswordExpirationJob";
     private static final String FORGOT_PASSWORD_TRIGGER_KEY = "forgotPasswordExpirationTrigger";
     
+    private static final String USER_VERIFICATION_JOB_KEY = "userVerificationReminderJob";
+    private static final String USER_VERIFICATION_TRIGGER_KEY = "userVerificationReminderTrigger";
+    
     private static final String JOB_GROUP = "common";
     
     @Inject
@@ -71,6 +76,8 @@ public class MainConfig {
     private InvitationDao invitationDao;
     @Inject
     private ForgotPasswordDao forgotPasswordDao;
+    @Inject
+    private UserVerificationDao userVerificationDao;
     @Inject
     private EmailSender emailSender;
 
@@ -165,6 +172,21 @@ public class MainConfig {
     @Bean
     public Trigger forgotPasswordExpirationTrigger() {
         return createRepeatTrigger(FORGOT_PASSWORD_TRIGGER_KEY, Constants.FORGOT_PASSWORD_EXPIRATION_INTERVAL_CHECK_SECS);
+    }
+    
+    // UserVerification reminder related job config
+    
+    @Bean
+    public JobDetail userVerificationReminderJobDetail() {
+        JobDetail job = createJobDetail(UserVerificationReminderJob.class, USER_VERIFICATION_JOB_KEY);
+        job.getJobDataMap().put(Constants.USER_VERIFICATION_DAO, userVerificationDao);
+        job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
+        return job;
+    }
+    
+    @Bean
+    public Trigger userVerificationReminderTrigger() {
+        return createRepeatTrigger(USER_VERIFICATION_TRIGGER_KEY, Constants.USER_VERIFICATION_REMINDER_INTERVAL_CHECK_SECS);
     }
     
     // internal

@@ -15,9 +15,18 @@ import java.util.Set;
 public interface Constants {
     
     public static final int USER_DEFAULT_PASSWORD_LENGTH = 5; //default password size
+    
     public static final int FORGOT_PASSWORD_DEFAULT_CODE_LENGTH = 24; //default forgot password request code size
     public static final int FORGOT_PASSWORD_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60 * 60; // default: 1 hour
     public static final int FORGOT_PASSWORD_EXPIRATION_PERIOD_DAYS = 1; //default expiration of a forgot password request
+    
+    public static final int USER_VERIFICATION_DEFAULT_CODE_LENGTH = 24; //default user varification code size
+    public static final int USER_VERIFICATION_REMINDER_INTERVAL_CHECK_SECS = 24 * 60 * 60; // default: 1 day
+    
+    public static final String USER_VERIFICATION_REMINDER_TEMPLATE = "user-verification/";
+    public static final String USER_VERIFICATION_REMINDER_SUBJECT_TEMPLATE = USER_VERIFICATION_REMINDER_TEMPLATE + "subject.vm";
+    public static final String USER_VERIFICATION_REMINDER_HTML_MESSAGE_TEMPLATE = USER_VERIFICATION_REMINDER_TEMPLATE + "message.html.vm";
+    public static final String USER_VERIFICATION_REMINDER_PLAIN_MESSAGE_TEMPLATE = USER_VERIFICATION_REMINDER_TEMPLATE + "message.txt.vm";
     
     public static final int AD_MAX_ALLOWED_PROLONGATION = 1; //number of allowed relisting
     public static final int AD_EXPIRATION_INTERVAL_CHECK_SECS = 1 * 60; // default: 1 minut
@@ -39,6 +48,7 @@ public interface Constants {
     public static final String AD_DAO = "AdDao";
     public static final String INVITATION_DAO = "InvitationDao";
     public static final String FORGOT_PASSWORD_DAO = "ForgotPasswordDao";
+    public static final String USER_VERIFICATION_DAO = "UserVerificationDao";
     public static final String EMAIL_SENDER = "EmailSender";
     
     public static final String DEFAULT_CHARSET = "UTF-8";

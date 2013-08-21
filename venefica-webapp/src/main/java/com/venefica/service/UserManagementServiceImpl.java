@@ -1,11 +1,15 @@
 package com.venefica.service;
 
+import com.venefica.common.MailException;
+import com.venefica.common.RandomGenerator;
+import com.venefica.config.Constants;
 import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserPointDao;
+import com.venefica.dao.UserVerificationDao;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
@@ -14,6 +18,7 @@ import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.model.UserSetting;
+import com.venefica.model.UserVerification;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.dto.UserSettingDto;
@@ -24,6 +29,7 @@ import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -56,6 +62,50 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private AddressWrapperDao addressWrapperDao;
     @Inject
     private UserPointDao userPointDao;
+    @Inject
+    private UserVerificationDao userVerificationDao;
+    
+    //*****************************
+    //* user verification related *
+    //*****************************
+    
+    @Override
+    @Transactional
+    public void verifyUser(String code) throws UserNotFoundException, GeneralException {
+        UserVerification userVerification = userVerificationDao.findByCode(code);
+        if ( userVerification == null ) {
+            throw new GeneralException("Verification code was not found.");
+        }
+        
+        if ( userVerification.isVerified() ) {
+            logger.info("Code (" + code + ") is already verified");
+            return;
+        }
+        
+        userVerification.setVerified(true);
+        userVerification.setVerifiedAt(new Date());
+        
+        User user = userVerification.getUser();
+        user.setVerified(true);
+        userDao.update(user);
+    }
+    
+    @Override
+    public void resendVerification() throws UserNotFoundException, GeneralException {
+        UserVerification userVerification = userVerificationDao.findByUser(getCurrentUserId());
+        if ( userVerification == null ) {
+            throw new GeneralException("User verification was not found.");
+        }
+        
+        if ( userVerification.isVerified() ) {
+            logger.warn("User verification is already done (code: " + userVerification.getCode() + ")");
+            return;
+        }
+        
+        sendNotification(userVerification);
+    }
+    
+    
     
     //**********************
     //* categories related *
@@ -105,7 +155,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException {
+    public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         // Check for existing users
         if (userDao.findUserByName(userDto.getName()) != null) {
             throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
@@ -124,6 +174,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
+        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         UserSetting userSetting = new UserSetting();
         userSettingDao.save(userSetting);
@@ -141,8 +192,18 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         userPointDao.save(userPoint);
         
         user.setUserPoint(userPoint);
+        Long userId = userDao.save(user);
         
-        return userDao.save(user);
+        if ( !user.isVerified() ) {
+            UserVerification userVerification = new UserVerification();
+            userVerification.setCode(getUserVerificationCode());
+            userVerification.setUser(user);
+            userVerificationDao.save(userVerification);
+            
+            sendNotification(userVerification);
+        }
+        
+        return userId;
     }
     
     @Override
@@ -464,5 +525,41 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         statistics.setNumFollowings(numFollowings);
         statistics.setNumRatings(numRatings);
         return statistics;
+    }
+    
+    private String getUserVerificationCode() throws GeneralException {
+        String code;
+        int generationTried = 0;
+        while ( true ) {
+            code = RandomGenerator.generateAlphanumeric(Constants.USER_VERIFICATION_DEFAULT_CODE_LENGTH);
+            generationTried++;
+            if ( userVerificationDao.findByCode(code) == null ) {
+                //the generated code does not exists, found an unused (free) one
+                break;
+            } else if ( generationTried >= 10 ) {
+                throw new GeneralException("Cannot generate valid user verification code!");
+            }
+        }
+        return code;
+    }
+
+    private void sendNotification(UserVerification userVerification) {
+        String code = userVerification.getCode();
+        String email = userVerification.getUser().getEmail();
+        
+        try {
+            Map<String, Object> vars = new HashMap<String, Object>(0);
+            vars.put("code", userVerification.getCode());
+            vars.put("user", userVerification.getUser());
+
+            emailSender.sendHtmlEmailByTemplates(
+                    Constants.USER_VERIFICATION_REMINDER_SUBJECT_TEMPLATE,
+                    Constants.USER_VERIFICATION_REMINDER_HTML_MESSAGE_TEMPLATE,
+                    Constants.USER_VERIFICATION_REMINDER_PLAIN_MESSAGE_TEMPLATE,
+                    email,
+                    vars);
+        } catch ( MailException ex ) {
+            logger.error("Email exception when sending user verification reminder (email: " + email + ", code: " + code + ")", ex);
+        }
     }
 }

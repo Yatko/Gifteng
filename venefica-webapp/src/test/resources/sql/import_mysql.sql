@@ -20,10 +20,10 @@ insert into `memberuserdata` (`id`, `firstName`, `lastName`) values (4, 'Null', 
 
 -- Users
 delete from `local_user`;
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `userData_id`) values ('first', '12345', 'firstUser@gmail.com', '1', 1);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `userData_id`) values ('second', '12345', 'secondUser@gmail.com', '0', 2);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `userData_id`) values ('third', '12345', 'thirdUser@gmail.com', '0', 3);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `userData_id`) values ('null', '12345', 'null@gmail.com', '0', 4);
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('first', '12345', 'firstUser@gmail.com', '1', '0', 1);
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('second', '12345', 'secondUser@gmail.com', '0', '0', 2);
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('third', '12345', 'thirdUser@gmail.com', '0', '0', 3);
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('null', '12345', 'null@gmail.com', '0', '0', 4);
 
 -- User point
 delete from `user_point`;
