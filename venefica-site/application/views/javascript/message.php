@@ -50,14 +50,14 @@ $user = $CI->usermanagement_service->loadUser();
                     $(".ge-user-image img", $newTemplate).attr('src', $img);
                     $(".ge-name", $newTemplate).attr('href', $profile_link);
                     $(".ge-name", $newTemplate).html($name);
-                    $(".ge-date", $newTemplate).html('Just now');
+                    $(".ge-date", $newTemplate).html('Right now');
                     $('.ge-block', $newTemplate).html($messageText.val());
 
                     $('#messages .ge-conversation .span12').append($newTemplate);
                 }
                 
-                $messageRequestId.val('');
-                $messageToId.val('');
+                //$messageRequestId.val('');
+                //$messageToId.val('');
                 $messageText.val('');
 
                 if ( $('#messageContainer').length > 0 ) {

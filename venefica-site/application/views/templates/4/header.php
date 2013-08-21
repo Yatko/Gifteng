@@ -219,14 +219,11 @@ $subpage = key($_GET); //gets the first element from the array
 
                 <? if( isLogged() ): ?>
 
-                    <div class="nav pull-right">
+                    <ul class="nav pull-right">
                         <li>
                             <a href="#" onclick="startPostModal();"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
                         </li>
-                        <? /** ?>
-                        <a href="<?=base_url()?>post" data-target="#postContainer" data-toggle="modal"><i class="ge-icon-giftbox"></i></a>
-                        <? /**/ ?>
-                    </div>
+                    </ul>
 
                 <? else: ?>
 

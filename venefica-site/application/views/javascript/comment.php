@@ -49,13 +49,13 @@ $user = $CI->usermanagement_service->loadUser();
                     $('.ge-user-image img', $newTemplate).attr('src', $img);
                     $('.ge-name', $newTemplate).attr('href', $profile_link);
                     $('.ge-name', $newTemplate).html($name);
-                    $('.ge-date', $newTemplate).html('One seconds ago');
+                    $('.ge-date', $newTemplate).html('Right now');
                     $('.ge-block', $newTemplate).html($commentText.val());
 
                     $('#ad_' + adId + '_comments .ge-messagelist .span12').prepend($newTemplate);
                 }
                 
-                $commentAdId.val('');
+                //$commentAdId.val('');
                 $commentText.val('');
 
                 if ( $('.ad_comment_' + adId).length > 0 ) {
