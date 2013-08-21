@@ -159,6 +159,23 @@ class Ajax extends CI_Controller {
     
     // user related
     
+    public function resend_verification() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        }
+        
+        try {
+            $this->usermanagement_service->resendVerification();
+            $this->usermanagement_service->refreshUser();
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     public function follow() {
         $this->init();
         

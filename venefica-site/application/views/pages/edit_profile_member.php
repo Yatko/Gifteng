@@ -35,6 +35,7 @@ $lastName = $currentUser->lastName;
 $about = $currentUser->about;
 $zipCode = $currentUser->getZipCode();
 $email = $currentUser->email;
+$verified = $currentUser->verified;
 
 if ( $is_modal ) {
     $form_action = '';
@@ -116,8 +117,16 @@ if ( $is_modal ) {
                                     </div>
                                 </div>
                             </div>
-                        </div>	
+                        </div>
 
+                        <? if( !$verified ): ?>
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <span onclick="resend_verification();" class="link" style="color: red;">Psst. Don't forget to confirm your email! Click here to resend it.</span>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                        
                         <div class="row-fluid">
                             <div class="span4">
                                 <div class="control-group">

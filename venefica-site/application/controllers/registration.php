@@ -8,7 +8,7 @@
 class Registration extends CI_Controller {
     
     private $initialized = false;
-    private $auto_login = false;
+    private $auto_login = true;
     
     public function user() {
         $extra_data = array();
@@ -37,6 +37,23 @@ class Registration extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     
+    public function verify($code) {
+        $this->init();
+        
+        if ( $code == null || trim($code) == '' ) {
+            redirect('/profile');
+        }
+        
+        try {
+            $this->load->library('usermanagement_service');
+            $this->usermanagement_service->verifyUser($code);
+            $this->usermanagement_service->refreshUser();
+        } catch ( Exception $ex ) {
+        }
+        
+        redirect('/profile');
+    }
+    
     private function registerUser(&$extra_data) {
         $this->load->library('form_validation', null, 'registration_form');
         $this->registration_form->set_error_delimiters('<div class="error">', '</div>');
@@ -58,7 +75,7 @@ class Registration extends CI_Controller {
                 $password = $this->input->post('registration_password');
 
                 if ( login($email, $password) ) {
-                    redirect('/browse');
+                    redirect('/profile?first');
                 } else {
                     log_message(ERROR, 'Newly created business cannot auto login into system');
                 }

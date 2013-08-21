@@ -28,6 +28,7 @@ class User_model extends CI_Model {
     var $score; //float
     var $pendingScore; //float
     var $statistics; //UserStatistics_model
+    var $verified; //boolean
     
     // business user data
     var $businessName; //string
@@ -55,6 +56,7 @@ class User_model extends CI_Model {
             $this->businessAccount = getField($obj, 'businessAccount');
             $this->score = getField($obj, 'score');
             $this->pendingScore = getField($obj, 'pendingScore');
+            $this->verified = getField($obj, 'verified');
             $this->businessName= getField($obj, 'businessName');
             $this->contactName = getField($obj, 'contactName');
             $this->businessCategoryId = getField($obj, 'businessCategoryId');

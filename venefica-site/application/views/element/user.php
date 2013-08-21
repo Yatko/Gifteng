@@ -56,7 +56,7 @@ if ( $small == false ) {
     <div class="ge-name">
         <a href="<?= $profile_link ?>"><?= $name ?></a>
         <? if( $canEdit && $is_owner ): ?>
-            <button onclick="startEditProfileModal()" class="btn btn-small btn-ge"><i class="ge-icon-pencil"></i></button>
+            <a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
         <? endif; ?>
     </div>
     <? if ($joined != ''): ?>
