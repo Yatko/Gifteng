@@ -8,6 +8,7 @@ $lang['registration_join_button'] = "Join";
 $lang['registration_footer'] = "By joining, you agree to our Terms of Use and Privacy Policy";
 
 $lang['u_registration_failed'] = "User registration failed!";
+$lang['u_registration_failed_user_already_exists'] = "That email is already registered, please login.";
 
 #
 #user registration form fields

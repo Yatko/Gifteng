@@ -162,7 +162,12 @@ class Registration extends CI_Controller {
             $this->usermanagement_service->registerUser($user, $password, $code);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'User registration failed! '.$ex->getMessage());
-            $this->registration_form->set_message('register_user', lang('u_registration_failed'));
+            
+            if ( getField($ex->detail, "UserAlreadyExistsError") != null ) {
+                $this->registration_form->set_message('register_user', lang('u_registration_failed_user_already_exists'));
+            } else {
+                $this->registration_form->set_message('register_user', lang('u_registration_failed'));
+            }
             return FALSE;
         }
         return TRUE;

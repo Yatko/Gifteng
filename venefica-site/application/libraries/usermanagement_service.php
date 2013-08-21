@@ -82,7 +82,7 @@ class Usermanagement_service {
             return $result->userId;
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
-            throw new Exception($ex->faultstring);
+            throw $ex;
         }
     }
     
