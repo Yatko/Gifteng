@@ -46,6 +46,13 @@ public interface InvitationDao {
     public Invitation findByCode(String code);
     
     /**
+     * 
+     * @param email
+     * @return 
+     */
+    public Invitation findByEmail(String email);
+    
+    /**
      * Set 'expired' flag to true for all expired invitations in the database.
      */
     void markExpiredInvitations();

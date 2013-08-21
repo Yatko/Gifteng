@@ -47,9 +47,20 @@ public class InvitationDaoImpl extends DaoBase<Invitation> implements Invitation
     public Invitation findByCode(String code) {
         List<Invitation> invitations = createQuery(""
                 + "from " + getDomainClassName() + " i "
-                + "where i.code=:code "
+                + "where i.code = :code "
                 + "")
                 .setParameter("code", code)
+                .list();
+        return invitations.isEmpty() ? null : invitations.get(0);
+    }
+    
+    @Override
+    public Invitation findByEmail(String email) {
+        List<Invitation> invitations = createQuery(""
+                + "from " + getDomainClassName() + " i "
+                + "where i.email = :email "
+                + "")
+                .setParameter("email", email)
                 .list();
         return invitations.isEmpty() ? null : invitations.get(0);
     }

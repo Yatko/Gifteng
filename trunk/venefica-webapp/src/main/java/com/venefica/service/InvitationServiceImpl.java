@@ -47,33 +47,35 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
     @Override
     @Transactional
     public Long requestInvitation(InvitationDto invitationDto) throws InvitationException {
-        String code;
-        int generationTried = 0;
-        while ( true ) {
-            code = RandomGenerator.generateNumeric(Constants.INVITATION_DEFAULT_CODE_LENGTH);
-            generationTried++;
-            if ( invitationDao.findByCode(code) == null ) {
-                //the generated code does not exists, found an unused (free) one
-                break;
-            } else if ( generationTried >= 10 ) {
-                throw new InvitationException("Cannot generate valid invitation code!");
-            }
+        Invitation invitation;
+        
+        if ( invitationDto.getIpAddress() == null || invitationDto.getIpAddress().trim().isEmpty() ) {
+            invitationDto.setIpAddress(getIpAddress());
         }
         
-        Invitation invitation = new Invitation();
-        invitationDto.update(invitation);
-        invitation.setExpiresAt(DateUtils.addDays(new Date(), Constants.INVITATION_EXPIRATION_PERIOD_DAYS));
-        invitation.setExpired(false);
-        invitation.setCode(code);
-        invitation.setIpAddress(getIpAddress());
+        invitation = invitationDao.findByEmail(invitationDto.getEmail());
+        if ( invitation != null ) {
+            //use the same invitation if email already exists
+            invitationDto.update(invitation);
+            invitation.setExpiresAt(getExpirationDate());
+            invitation.setExpired(false);
+            invitationDao.update(invitation);
+        } else {
+            invitation = new Invitation();
+            invitationDto.update(invitation);
+            invitation.setExpiresAt(getExpirationDate());
+            invitation.setExpired(false);
+            invitation.setCode(generateCode());
+            invitationDao.save(invitation);
+        }
         
-        Long invitationId = invitationDao.save(invitation);
         String email = invitation.getEmail();
         String country = invitation.getCountry();
         String zipcode = invitation.getZipCode();
         UserType userType = invitation.getUserType();
         String source = invitation.getSource();
         String otherSource = invitation.getOtherSource();
+        String code = invitation.getCode();
         
         if ( useEmailSender ) {
             try {
@@ -118,7 +120,7 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
             }
         }
         
-        return invitationId;
+        return invitation.getId();
     }
     
     @Override
@@ -134,5 +136,27 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
         }
         
         return true;
+    }
+    
+    // internal helpers
+    
+    private String generateCode() throws InvitationException {
+        String code;
+        int generationTried = 0;
+        while ( true ) {
+            code = RandomGenerator.generateNumeric(Constants.INVITATION_DEFAULT_CODE_LENGTH);
+            generationTried++;
+            if ( invitationDao.findByCode(code) == null ) {
+                //the generated code does not exists, found an unused (free) one
+                break;
+            } else if ( generationTried >= 10 ) {
+                throw new InvitationException("Cannot generate valid invitation code!");
+            }
+        }
+        return code;
+    }
+    
+    private Date getExpirationDate() {
+        return DateUtils.addDays(new Date(), Constants.INVITATION_EXPIRATION_PERIOD_DAYS);
     }
 }

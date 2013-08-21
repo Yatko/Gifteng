@@ -20,6 +20,8 @@ public class InvitationDto extends DtoBase {
     // in
     private String email;
     // in
+    private String ipAddress;
+    // in
     private String country;
     // in
     private String zipCode;
@@ -35,6 +37,7 @@ public class InvitationDto extends DtoBase {
 
     public void update(Invitation invitation) {
         invitation.setEmail(email);
+        invitation.setIpAddress(ipAddress);
         invitation.setCountry(country);
         invitation.setZipCode(zipCode);
         invitation.setSource(source);
@@ -88,6 +91,14 @@ public class InvitationDto extends DtoBase {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
     
 }

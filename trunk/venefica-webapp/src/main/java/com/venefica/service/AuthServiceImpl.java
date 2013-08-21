@@ -105,7 +105,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
     
     @Override
     @Transactional
-    public void forgotPasswordEmail(String email) throws UserNotFoundException, GeneralException {
+    public void forgotPasswordEmail(String email, String ipAddress) throws UserNotFoundException, GeneralException {
         User user = userDao.findUserByEmail(email);
         if ( user == null ) {
             logger.debug("User not found by email address (" + email + ")");
@@ -127,8 +127,12 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
                 }
             }
 
+            if ( ipAddress == null || ipAddress.trim().isEmpty() ) {
+                ipAddress = getIpAddress();
+            }
+            
             forgotPassword = new ForgotPassword();
-            forgotPassword.setIpAddress(getIpAddress());
+            forgotPassword.setIpAddress(ipAddress);
             forgotPassword.setExpiresAt(DateUtils.addDays(new Date(), Constants.FORGOT_PASSWORD_EXPIRATION_PERIOD_DAYS));
             forgotPassword.setExpired(false);
             forgotPassword.setCode(code);
