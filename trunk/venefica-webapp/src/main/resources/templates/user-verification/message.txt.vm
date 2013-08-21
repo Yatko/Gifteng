@@ -1,0 +1,8 @@
+Dear ${user.userData.getFirstName()},
+
+Thank you for using Gifteng!
+
+Confirm your email address, by accessing the following address:
+${baseUrl}verify/${code}
+
+Happy gifting! 

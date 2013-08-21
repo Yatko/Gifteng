@@ -15,7 +15,6 @@ public enum NotificationType {
     //INVITATION_WILL_EXPIRE("invitation-reminder"), //when there is a small amount of time till the invitation will expire (invitation code reminder)
     
     //user management service
-    //USER_REGISTERED("user-new"),
     //PASSWORD_RESET_REQUESTED("forgot-password"), //this will contain the link to reset password
     FOLLOWER_ADDED("follower-new"), //someone followed me
     

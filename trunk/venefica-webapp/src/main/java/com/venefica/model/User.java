@@ -88,6 +88,8 @@ public class User {
     
     @Column(name = "adminn", nullable = false)
     private boolean admin;
+    @Column(nullable = false)
+    private boolean verified;
     
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
@@ -348,5 +350,13 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }

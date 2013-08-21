@@ -214,12 +214,15 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
         }
         
         try {
+            Map<String, Object> vars = new HashMap<String, Object>(0);
+            vars.put("user", user);
+            
             emailSender.sendHtmlEmailByTemplates(
                     PASSWORD_CHANGED_SUBJECT_TEMPLATE,
                     PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE,
                     PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE,
                     user.getEmail(),
-                    null);
+                    vars);
         } catch ( MailException ex ) {
             logger.error("Email exception", ex);
         } catch ( Exception ex ) {

@@ -27,7 +27,19 @@ import javax.validation.constraints.NotNull;
 @WebService(name = "UserManagement", targetNamespace = Namespace.SERVICE)
 @SOAPBinding(parameterStyle = ParameterStyle.WRAPPED)
 public interface UserManagementService {
-
+    
+    //*****************************
+    //* user verification related *
+    //*****************************
+    
+    @WebMethod(operationName = "VerifyUser")
+    void verifyUser(@WebParam(name = "code") @NotNull String code) throws UserNotFoundException, GeneralException;
+    
+    @WebMethod(operationName = "ResendVerification")
+    void resendVerification() throws UserNotFoundException, GeneralException;
+    
+    
+    
     //**********************
     //* categories related *
     //**********************
@@ -68,13 +80,15 @@ public interface UserManagementService {
      * name and email already exists
      * @throws InvitationNotFoundException thrown when the provided invitation code
      * could not be found
+     * @throws GeneralException if the user verification code could not be created
      */
     @WebMethod(operationName = "RegisterUser")
     @WebResult(name = "userId")
     public Long registerUser(
             @WebParam(name = "user") @NotNull UserDto userDto,
             @WebParam(name = "password") @NotNull String password,
-            @WebParam(name = "invitationCode")  @NotNull String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException;
+            @WebParam(name = "invitationCode")  @NotNull String invitationCode)
+            throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException;
     
     /**
      * Updates user information.
