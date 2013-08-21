@@ -29,7 +29,7 @@ if ( $to != null ) {
 
 <? if( (isset($messages) && is_array($messages) && count($messages) > 0) || $canMessage ): ?>
     
-    <div class="row-fluid ge-messages">
+    <div class="row-fluid ge-messages" id="messages">
         <div class="span12">
 
             <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
