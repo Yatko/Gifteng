@@ -222,7 +222,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Transactional
     public List<MessageDto> getAllMessages() {
         User currentUser = getCurrentUser();
-        LinkedList<MessageDto> result = new LinkedList<MessageDto>();
+        List<MessageDto> result = new LinkedList<MessageDto>();
 
         // incoming
         for (Message msg : currentUser.getReceivedMessages()) {

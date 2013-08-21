@@ -4,6 +4,7 @@ import com.venefica.model.Message;
 import com.venefica.model.Request;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -119,7 +120,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
         /**/
         
         /**/
-        List<Message> messages = new ArrayList<Message>(0);
+        List<Message> messages = new LinkedList<Message>();
         List<Request> requests = createQuery(""
                 + "select m.request "
                 + "from " + getDomainClassName() + " m "
@@ -127,6 +128,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "m.deleted = false and "
                 + "(m.request.ad.creator.id = :userId or m.request.user.id = :userId) "
                 + "group by m.request "
+                + "order by m.createdAt desc "
                 + "")
                 .setParameter("userId", userId)
                 .list();
