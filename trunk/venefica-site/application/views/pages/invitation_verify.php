@@ -16,7 +16,7 @@
         
         <?=form_open('/invitation/verify/2', '', array('invitation_code' => $invitation_code))?>
             
-        <div class="span6"><!-- ge-topspace outside of span -->
+        <div class="span6 offset3"><!-- ge-topspace outside of span -->
             <div class="ge-topspace">
                 <div class="well ge-well ge-authbox">
                     <div class="ge-well-content ge-form">
@@ -55,7 +55,7 @@
         
         <?=form_open('/invitation/verify/1')?>
         
-        <div class="span6"><!-- ge-topspace outside of span -->
+        <div class="span6 offset3"><!-- ge-topspace outside of span -->
             <div class="ge-topspace">
                 <div class="well ge-well ge-authbox">
                     <div class="ge-well-content ge-form">

@@ -47,7 +47,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
     
     <? if ( $step == 3 ): ?>
         
-        <div class="span6"><!-- ge-topspace outside of span -->
+        <div class="span6 offset3"><!-- ge-topspace outside of span -->
             <div class="ge-topspace">
                 <div class="well ge-well ge-authbox">
                     <div class="ge-well-content ge-form">
@@ -90,7 +90,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
         
         <?=form_open('/invitation/request/2', '', array('invitation_email' => $invitation_email, 'invitation_country' => $invitation_country))?>
         
-        <div class="span6"><!-- ge-topspace outside of span -->
+        <div class="span6 offset3"><!-- ge-topspace outside of span -->
             <div class="ge-topspace">
                 <div class="well ge-well ge-authbox">
                     <div class="ge-well-content ge-form">
@@ -205,7 +205,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
         
         <?=form_open('/invitation/request/1')?>
         
-        <div class="span6"><!-- ge-topspace outside of span -->
+        <div class="span6 offset3"><!-- ge-topspace outside of span -->
             <div class="ge-topspace">
                 <div class="well ge-well ge-authbox">
                     <div class="ge-well-content ge-form">
