@@ -145,6 +145,7 @@ input:focus:invalid:focus,textarea:focus:invalid:focus,select:focus:invalid:focu
 .navbar .nav > li > a {font-weight: normal !important;}
 .snap-drawer ul li form > input {background: #34495e;border: 1px solid #bdc3c7;display: block;margin: 15px auto;color: #ffffff;} /*style for Search box*/
 /* Bootstrap Flat-UI override - modal */
+.modal {width:auto !important;}
 .modal [class*="span"] {margin-left: 0px !important;} /* 285 */
 .modal .modal-body {padding: 0px !important;} /* 5252 */
 /*.modal {width: auto !important;max-width: 560px;}*/ /* 5204 */
