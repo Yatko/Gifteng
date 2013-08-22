@@ -28,7 +28,7 @@ if (!defined('BASEPATH'))
  * @link        http://www.codeigniter.com/user_guide/libraries/sessions.html
  */
 class Venefica_Session extends CI_Session {
-
+    
     var $session_id_ttl = 360; // session id time to live (TTL) in seconds
     var $flash_key = 'flash'; // prefix for "flash" variables (eg. flash:new:message)
 
@@ -62,9 +62,28 @@ class Venefica_Session extends CI_Session {
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 42000, '/');
         }
-        session_destroy();
+        
+        if ( $this->session_is_active() ) {
+            session_destroy();
+        }
     }
 
+    /**
+     * @return bool
+     */
+    private function session_is_active() {
+        $setting = 'session.use_trans_sid';
+        $current = ini_get($setting);
+        if (FALSE === $current) {
+            throw new UnexpectedValueException(sprintf('Setting %s does not exists.', $setting));
+        }
+        $testate = "mix$current$current";
+        $old = @ini_set($setting, $testate);
+        $peek = @ini_set($setting, $current);
+        $result = $peek === $current || $peek === FALSE;
+        return $result;
+    }
+    
     /**
      * Reads given session attribute value
      */
