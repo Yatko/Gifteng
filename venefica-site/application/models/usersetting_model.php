@@ -18,7 +18,7 @@ class UserSetting_model extends CI_Model {
         UserSetting_model::NOTIFICATION_AD_REQUESTED,
         UserSetting_model::NOTIFICATION_REQUEST_MESSAGED,
         UserSetting_model::NOTIFICATION_REQUEST_ACCEPTED,
-        UserSetting_model::NOTIFICATION_REQUEST_SENT,
+        //UserSetting_model::NOTIFICATION_REQUEST_SENT,
         UserSetting_model::NOTIFICATION_REQUEST_CANCELED,
         UserSetting_model::NOTIFICATION_REQUEST_DECLINED,
         UserSetting_model::NOTIFICATION_FOLLOWER_AD_CREATED,
