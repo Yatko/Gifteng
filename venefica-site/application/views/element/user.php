@@ -70,7 +70,7 @@ if ( $small == false ) {
         <span class="<?= $label_css ?>">
         
         <? if ($is_owner): ?>
-            <a href="http://help.gifteng.com/entries/25071768" target="_blank">Generosity Score <?= $points ?></a>
+            <a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">Generosity Score <?= $points ?></a>
         <? else: ?>
             G <?= $points ?>
         <? endif; ?>

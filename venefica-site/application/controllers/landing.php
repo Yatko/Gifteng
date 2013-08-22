@@ -17,7 +17,7 @@ class Landing extends CI_Controller {
         $this->init();
         
         $data = array();
-        $data['address'] = 'http://help.gifteng.com/forums/22379438-Jobs';
+        $data['address'] = 'http://gifteng.zendesk.com/forums/22379438-Jobs';
         
         $this->load->view('iframe', $data);
     }
