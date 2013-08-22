@@ -82,9 +82,9 @@ class Edit_profile_member extends CI_Controller {
                 try {
                     $this->auth_service->changePassword($oldPassword, $newPassword);
                 } catch ( Exception $ex ) {
-                    $this->edit_profile_form->setError('Password change failed!');
+                    $this->edit_profile_form->setError('You must enter your current password.');
                     return array(
-                        AJAX_STATUS_ERROR => 'Password change failed!'
+                        AJAX_STATUS_ERROR => 'You must enter your current password.'
                     );
                 }
             }
