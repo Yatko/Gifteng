@@ -17,7 +17,7 @@
                 if ( !response || response === '' ) {
                     //TODO: empty result
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
-                    $('#edit_profile_ajax_error').html(response.<?=AJAX_STATUS_ERROR?>);
+                    $('#edit_profile_ajax_error').html('<span class="error">' + response.<?=AJAX_STATUS_ERROR?> + '</span>');
                     enable_buttons('#editProfileContainer > .modal-footer button');
                 } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                     if ( $('#editProfileContainer').length > 0 ) {
