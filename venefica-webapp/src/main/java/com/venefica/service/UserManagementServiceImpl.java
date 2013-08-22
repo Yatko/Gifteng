@@ -30,6 +30,7 @@ import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -177,6 +178,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         UserSetting userSetting = new UserSetting();
+        userSetting.setNotifiableTypes(EnumSet.of(NotificationType.FOLLOWER_ADDED, NotificationType.AD_COMMENTED, NotificationType.AD_REQUESTED, NotificationType.REQUEST_MESSAGED));
         userSettingDao.save(userSetting);
         
         invitation.use();
