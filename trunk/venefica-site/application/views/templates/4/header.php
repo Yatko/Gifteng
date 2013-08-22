@@ -229,7 +229,7 @@ $subpage = key($_GET); //gets the first element from the array
 
                     <ul class="nav pull-right">
                         <li>
-                            <a href="http://help.gifteng.com"><i class="ge-icon-help text-inverted"></i></a>
+                            <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
