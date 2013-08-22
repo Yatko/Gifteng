@@ -109,6 +109,14 @@
 <? if ( !$boxContainer_exists ): ?>
 
 <div class="row">
+    <div class="span12">
+        <div class="text-center">
+            New Gifts are available daily at 12pm ET. Make someone happy tomorrow with yours!<br/><br/>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="ge-tile-view ge-browse">
         <div id="boxContainer" class="transitions-enabled infinite-scroll clearfix">
 
