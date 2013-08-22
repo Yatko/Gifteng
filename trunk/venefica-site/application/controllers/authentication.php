@@ -44,10 +44,14 @@ class Authentication extends CI_Controller {
         if ( $is_valid ) {
             //$remember_me = $this->input->post('login_remember_me');
             
+            /**
             if ( $this->agent->is_referral() ) {
                 redirect($this->agent->referrer());
             }
             redirect('/authentication/login');
+            /**/
+            
+            redirect('/profile');
         }
         
         $this->view();
