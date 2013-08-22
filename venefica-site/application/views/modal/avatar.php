@@ -8,7 +8,7 @@
                 if ( !$error.attr('original_text') ) {
                     $error.attr('original_text', $error.html());
                 }
-                $error.html("<div class='error'>Please limit photo size to 2MB !</div>");
+                $error.html("<div class='error'>Please limit photo size to 5 MB !</div>");
                 
                 $this.html($this.attr('original_text'));
                 return;
