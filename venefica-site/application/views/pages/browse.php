@@ -133,7 +133,7 @@
         $can_comment = $ad_can_request ? true : false;
         ?>
 
-        <div class="ge-ad-item-box <?=($ad_can_request == false ? 'ge-inactive' : '')?>">
+        <div class="ge-ad-item-box <?=($ad_can_request == false ? 'ge-inactive' : 'ge-active')?>">
             <div class="span4">
             	<div class="ge-box">
                     <div class="well ge-well">
