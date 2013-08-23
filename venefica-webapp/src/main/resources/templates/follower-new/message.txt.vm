@@ -4,6 +4,7 @@ To find out who is your new follower access the following address:
 ${baseUrl}profile?follower
 
 Happy gifting!
+The Gifteng Team
 
 To change your general email notifications click here:
 ${baseUrl}profile?notification

@@ -1,15 +1,19 @@
-Congratulations, you are now a Giftenger!
+Hi There! 
 
-You can share this code with your friends so they can also
-sign up within 48 hours before the invite expires.
+We're excited to have you onboard! Use invitation code 
+ ${invitationCode}
+to get a sneak peek to the beta version where you can already give and request “gifts” for free. Here’s a bit of information to get you started:
+1. Go to www.gifteng.com and use your invitation code
+2. Request your first gift to see how easy it is 
+3. Post a Gift, something that you don’t need anymore
+3. Share this invitation code with your friends so they can discover your gifts and other free things around them (only in New York)
+
+Email us if you have any thoughts or suggestions: <a href="teamp@gifteng.com">team@gifteng.com</a>.
+
+Happy giving & receiving, 
+The Gifteng Team
 
 
-Your Invitation Code: ${invitationCode}
+ 
 
 
-Access the link below, to log in to your account:
-${baseUrl}invitation/verify
-
-
-Hurry, gifts are waiting for you!
-Welcome to Gifteng!

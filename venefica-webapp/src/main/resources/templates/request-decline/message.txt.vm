@@ -1,11 +1,9 @@
 Hi ${user.userData.getFirstName()},
 
-Very sorry, but your request was declined.
-
-To view the gift you requested access the following address:
-${baseUrl}view/${ad.id}
+We’re very sorry, but your someone else got the gift you wanted. Don’t give up, there are other gifts waiting for you. Tip: increase your Generosity Score by giving a gift. This will increase your chances of having most of your request accepted.
 
 Happy receiving!
+The Gifteng Team
 
 To change your general email notifications click here:
 ${baseUrl}profile?notification
