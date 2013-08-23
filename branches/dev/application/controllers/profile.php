@@ -9,6 +9,7 @@ class Profile extends CI_Controller {
     const TAB_ACCOUNT = 'account';
     const TAB_BIO = 'bio';
     
+    const MENU_FIRST = 'first';
     const MENU_GIVING = 'giving';
     const MENU_RECEIVING = 'receiving';
     const MENU_FAVORITE = 'favorite';
@@ -22,6 +23,29 @@ class Profile extends CI_Controller {
     
     const ADS_NUM = 3;
     
+    public static function getActiveMenu() {
+        reset($_GET);
+        $active_menu = key($_GET);
+        if ( $active_menu == null ) {
+            $active_menu = Profile::MENU_GIVING;
+        }
+        return $active_menu;
+    }
+    
+    public static function getActiveTab($active_menu) {
+        $active_tab = Profile::TAB_GIFTS;
+        if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING, Profile::MENU_FAVORITE)) ) {
+            $active_tab = Profile::TAB_GIFTS;
+        } else if ( in_array($active_menu, array(Profile::MENU_FOLLOWING, Profile::MENU_FOLLOWER, Profile::MENU_RATING)) ) {
+            $active_tab = Profile::TAB_CONNECTIONS;
+        } else if ( in_array($active_menu, array(Profile::MENU_NOTIFICATION, Profile::MENU_MESSAGE, Profile::MENU_SETTING)) ) {
+            $active_tab = Profile::TAB_ACCOUNT;
+        } else if ( in_array($active_menu, array(Profile::MENU_ABOUT)) ) {
+            $active_tab = Profile::TAB_BIO;
+        }
+        return $active_tab;
+    }
+
     public function view($name = null) {
         $this->init();
         
@@ -51,7 +75,9 @@ class Profile extends CI_Controller {
         
         if ( !validate_user($user) ) return;
         
-        if ( key_exists(Profile::MENU_NOTIFICATION, $_GET) ) {
+        if ( key_exists(Profile::MENU_FIRST, $_GET) ) {
+            $this->first($user);
+        } else if ( key_exists(Profile::MENU_NOTIFICATION, $_GET) ) {
             $this->notification($user);
         } else if ( key_exists(Profile::MENU_SETTING, $_GET) ) {
             $this->setting($user);
@@ -75,6 +101,22 @@ class Profile extends CI_Controller {
     }
     
     /**
+     * 
+     * @param User_model $user
+     */
+    public function first($user) {
+        $modal = $this->getProfileModal();
+        
+        $data = array();
+        $data['user'] = $user;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
+        $this->load->view('pages/profile', $data);
+        $this->load->view('pages/profile_first', $data);
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+
+    /**
      * Giving profile submenu.
      * @param User_model $user
      */
@@ -87,7 +129,7 @@ class Profile extends CI_Controller {
         
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
-        $modal .= $this->load->view('modal/ad', array(), true);
+        $modal .= $this->load->view('modal/ad_delete', array(), true);
         $modal .= $this->load->view('modal/approval', array(), true);
         
         $data = array();
@@ -119,6 +161,7 @@ class Profile extends CI_Controller {
         
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
+        $modal .= $this->load->view('modal/request_cancel', array(), true);
         
         $data = array();
         $data['user'] = $user;
@@ -492,6 +535,7 @@ class Profile extends CI_Controller {
             $this->load->model('rating_model');
             $this->load->model('request_model');
             $this->load->model('message_model');
+            $this->load->model('approval_model');
             
             $this->initialized = true;
         }

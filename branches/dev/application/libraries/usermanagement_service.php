@@ -11,6 +11,39 @@ class Usermanagement_service {
         log_message(DEBUG, "Initializing Usermanagement_service");
     }
     
+    //*****************************
+    //* user verification related *
+    //*****************************
+    
+    /**
+     * 
+     * @param string $code
+     * @throws Exception
+     */
+    public function verifyUser($code) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->verifyUser(array("code" => $code));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @throws Exception
+     */
+    public function resendVerification() {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService->resendVerification();
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
     //**********************
     //* categories related *
     //**********************
@@ -82,7 +115,7 @@ class Usermanagement_service {
             return $result->userId;
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
-            throw new Exception($ex->faultstring);
+            throw $ex;
         }
     }
     

@@ -6,8 +6,16 @@
  * ad: Ad_model
  * user_id: long
  */
+
 $ad_id = $ad->id;
 $is_owner = isOwner($user_id);
+$revision = $ad->revision;
+$approval = $ad->approval;
+
+$has_approval = false;
+if ( $approval != null ) {
+    $has_approval = true;
+}
 
 ?>
 
@@ -16,6 +24,7 @@ $is_owner = isOwner($user_id);
         <div class="row-fluid">
             <div class="span12">
                 <div class="ge-item">
+
                     <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
 
 <? if( $is_owner ): ?>
@@ -34,13 +43,33 @@ $is_owner = isOwner($user_id);
                         </div>
                     </div>
                     
+        <? elseif ( !$has_approval ): ?>
+                    
+                    <div class="row-fluid ge-text ge-description">
+                        <div class="span12">
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Approval Pending
+                                <span class="fui-arrow-left"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
         <? else: ?>
                     
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
                             <p class="text-center">
-                                <button onclick="startApprovalModal(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">Not approved</button>
+                                <span class="fui-arrow-right"></span>
+                                Gift declined
+                                <span class="fui-arrow-left"></span>
                             </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row-fluid ge-text ge-description ge-action">
+                        <div class="span8">
+                            <button onclick="startApprovalModal(<?=$ad_id?>, <?=$revision?>);" type="button" class="btn btn-small btn-block btn-ge">View Reason</button>
                         </div>
                     </div>
                     
@@ -61,7 +90,7 @@ $is_owner = isOwner($user_id);
                         <div class="span12">
                             <p class="text-center">
                                 <span class="fui-arrow-right"></span>
-                                Given to
+                                Gifted
                                 <span class="fui-arrow-left"></span>
                             </p>
                         </div>
@@ -143,7 +172,7 @@ $is_owner = isOwner($user_id);
                         <div class="span12">
                             <p class="text-center">
                                 <span class="fui-arrow-right"></span>
-                                Given to
+                                Gifted
                                 <span class="fui-arrow-left"></span>
                             </p>
                         </div>
@@ -151,7 +180,7 @@ $is_owner = isOwner($user_id);
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
                         </div>
                     </div>
 
@@ -165,21 +194,33 @@ $is_owner = isOwner($user_id);
 
                     <div class="row-fluid ge-text ge-description">
                         <div class="span12">
-                            <p class="text-center">Recipient selected</p>
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Recipient selected
+                                <span class="fui-arrow-left"></span>
+                            </p>
                         </div>
                     </div><!--./ge-text ge-description-->
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
                         <div class="span4">
-                            <img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <img src="<?=$requestor_img?>" class="img img-rounded">
+                            
+                            <? /** ?>
+                            <img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
+                            <? /**/ ?>
                         </div>
                         <div class="span8">
+                            <button onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block btn-ge">Action required</button>
+                            
+                            <? /** ?>
                             <div class="row-fluid">
                                 <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                             </div>
                             <div class="row-fluid">
                                 <button onclick="request_send(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Gifted</button>
                             </div>
+                            <? /**/ ?>
                         </div>
                     </div>
 
@@ -207,7 +248,7 @@ $is_owner = isOwner($user_id);
                         $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
-                        <div class="span4"><img onclick="request_view(<?=$request_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
+                        <div class="span4"><img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
                     <? endforeach; ?>
 
                     </div><!--./ge-action-->

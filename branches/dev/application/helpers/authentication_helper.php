@@ -178,3 +178,11 @@ if ( ! function_exists('destroySession')) {
         return $CI->session->sess_destroy();
     }
 }
+
+if ( ! function_exists('logSession')) {
+    function logSession() {
+        $CI =& get_instance();
+        $CI->load->library('session');
+        log_message(ERROR, 'Session data: ' . print_r($CI->session->all_userdata(), true));
+    }
+}

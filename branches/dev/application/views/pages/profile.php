@@ -16,22 +16,8 @@ $followings_num = $user->statistics->numFollowings;
 $user_about = $user->about;
 $is_owner = isOwner($user);
 
-reset($_GET);
-$active_menu = key($_GET);
-if ( $active_menu == null ) {
-    $active_menu = Profile::MENU_GIVING;
-}
-
-$active_tab = Profile::TAB_GIFTS;
-if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING, Profile::MENU_FAVORITE)) ) {
-    $active_tab = Profile::TAB_GIFTS;
-} else if ( in_array($active_menu, array(Profile::MENU_FOLLOWING, Profile::MENU_FOLLOWER, Profile::MENU_RATING)) ) {
-    $active_tab = Profile::TAB_CONNECTIONS;
-} else if ( in_array($active_menu, array(Profile::MENU_NOTIFICATION, Profile::MENU_MESSAGE, Profile::MENU_SETTING)) ) {
-    $active_tab = Profile::TAB_ACCOUNT;
-} else if ( in_array($active_menu, array(Profile::MENU_ABOUT)) ) {
-    $active_tab = Profile::TAB_BIO;
-}
+$active_menu = Profile::getActiveMenu();
+$active_tab = Profile::getActiveTab($active_menu);
 
 ?>
 
@@ -62,14 +48,14 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
 <? endif; ?>
                                 
                                 <li class="hidden-tablet <?= ($active_tab == Profile::TAB_BIO ? 'active' : '') ?>">
-                                    <a href="#tab_bio"><i class="fui-bubble"></i> Me</a>
+                                    <a href="#tab_bio"><i class="fui-bubble"></i> About</a>
                                 </li>
                             </ul><!-- /tabs -->
                             <div class="tab-content">
                                 <div id="tab_gifts" class="tab-pane <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_GIVING ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_GIVING) ? 'active-tab' : '' ?>">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_GIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_GIVING ? 'active-tab' : '' ?>">
                                                 Giving<br />
                                                 <span class="user_giving"><?= $givings_num ?></span>
                                             </a>
@@ -77,13 +63,13 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                         
 <? if( $is_owner ): ?>
                                             <div class="span4">
-                                                <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_RECEIVING) ? 'active-tab' : '' ?>">
+                                                <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_RECEIVING ? 'active-tab' : '' ?>">
                                                     Receiving<br />
                                                     <span class="user_receiving"><?= $receivings_num ?></span>
                                                 </a>
                                             </div>
                                             <div class="span4">
-                                                <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_FAVORITE) ? 'active-tab' : '' ?>">
+                                                <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FAVORITE ? 'active-tab' : '' ?>">
                                                     Favorites<br />
                                                     <span class="user_bookmark"><?= $bookmarks_num ?></span>
                                                 </a>
@@ -95,20 +81,20 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                 <div id="tab_connections" class="tab-pane <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_FOLLOWING) ? 'active-tab' : '' ?>">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FOLLOWING? 'active-tab' : '' ?>">
                                                 <span class="user_following"><?= $followings_num ?></span><br />
                                                 Following
                                             </a>
                                         </div>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_FOLLOWER) ? 'active-tab' : '' ?>">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FOLLOWER ? 'active-tab' : '' ?>">
                                                 <span class="user_follower"><?= $followers_num ?></span><br />
                                                 Followers
                                             </a>
                                         </div>
                                         <? /** ?>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_RATING ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_RATING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_RATING ? 'active-tab' : '' ?>">
                                                 <?=$ratings_num?><br />
                                                 Reviews
                                             </a>
@@ -121,20 +107,20 @@ if ( in_array($active_menu, array(Profile::MENU_GIVING, Profile::MENU_RECEIVING,
                                 <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_NOTIFICATION) ? 'active-tab' : '' ?>">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_NOTIFICATION ? 'active-tab' : '' ?>">
                                                 <i class="fui-alert"></i>
                                                 <br />Notifications
                                             </a>
                                         </div>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= ($active_menu == Profile::MENU_MESSAGE) ? 'active-tab' : '' ?>">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_MESSAGE ? 'active-tab' : '' ?>">
                                                 <i class="fui-mail"></i>
                                                 <br />Messages
                                             </a>
                                         </div>
                                         <? /** ?>
                                         <div class="span4">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_SETTING ?>" class="btn btn-small btn-block btn-ge">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_SETTING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_SETTING ? 'active-tab' : '' ?>">
                                                 <i class="fui-gear"></i>
                                                 <br />Settings
                                             </a>

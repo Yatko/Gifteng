@@ -8,7 +8,8 @@ class Index extends CI_Controller {
         $this->lang->load('index');
         $this->lang->load('invitation');
         
-        $this->load->view('templates/'.TEMPLATES.'/welcome_header');
+        $this->load->view('templates/'.TEMPLATES.'/header');
+        //$this->load->view('pages/index');
         $this->load->view('pages/welcome');
         $this->load->view('pages/footer');
         $this->load->view('templates/'.TEMPLATES.'/footer');

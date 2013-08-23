@@ -252,6 +252,7 @@ CREATE TABLE IF NOT EXISTS  `venefica_session` (
     ip_address varchar(45) DEFAULT '0' NOT NULL,
     user_agent varchar(120) NOT NULL,
     last_activity int(10) unsigned DEFAULT 0 NOT NULL,
+    prevent_update int(1) unsigned DEFAULT 0,
     user_data text NOT NULL,
     PRIMARY KEY (session_id),
     KEY `last_activity_idx` (`last_activity`)
@@ -263,6 +264,7 @@ CREATE TABLE venefica_session (
     ip_address VARCHAR(45) DEFAULT '0' NOT NULL,
     user_agent VARCHAR(120) NOT NULL,
     last_activity INT(10) DEFAULT 0 NOT NULL,
+    prevent_update INT(1) DEFAULT 0,
     user_data BLOB NOT NULL,
     PRIMARY KEY (session_id)
 );

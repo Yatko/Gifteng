@@ -9,7 +9,16 @@
         $('#member_post_form').submit();
         /**/
         
+        /**
         $('#postContainer').modal('hide');
         $('#postContainer').removeData("modal").modal('show');
+        /**/
+        
+        setTimeout(function() {
+            $('#postContainer').modal('hide');
+        }, 10);
+        setTimeout(function() {
+            $('#postContainer').removeData("modal").modal('show');
+        }, 500);
     }
 </script>

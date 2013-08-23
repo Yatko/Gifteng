@@ -34,6 +34,11 @@
     }
     
     function remove_bookmark(callerElement, adId) {
+        if ( callerElement !== null ) {
+            var $element = $(callerElement);
+            $element.addClass('disabled');
+        }
+        
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/remove_bookmark?adId=' + adId,
@@ -45,10 +50,8 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                if ( callerElement !== null ) {
-                    var $element = $(callerElement);
-                    $element.addClass('disabled');
-                    $element.trigger('bookmark_removed', [adId]);
+                if ( $('#ad_' + adId) ) {
+                    $('#ad_' + adId).addClass('hide');
                 }
                 
                 if ( $('.ad_bookmark_' + adId).length > 0 ) {

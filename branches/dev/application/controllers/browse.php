@@ -108,12 +108,28 @@ class Browse extends CI_Controller {
         
         try {
             $ads = $this->ad_service->getAdsExDetail($lastAdId, $numberAds, $filter, true, true, Browse::COMMENTS_NUM);
+            
+            if ( count($ads) > 0 ) {
+                $has_ads = true;
+                $last_ad = end(array_values($ads));
+                $last_ad_id = $last_ad->id;
+            } else {
+                $has_ads = false;
+                $last_ad_id = -1;
+            }
+            
             foreach ( $ads as $key => $ad ) {
                 if ( $ad->approved && $ad->online ) {
                     continue;
                 }
+                //remove all non approved and non online ads
                 unset($ads[$key]);
             }
+            
+            if ( count($ads) == 0 && $has_ads ) {
+                $ads = $this->getAds($last_ad_id, $numberAds, $filter);
+            }
+            
             return $ads;
         } catch ( Exception $ex ) {
             return $ex->getMessage();

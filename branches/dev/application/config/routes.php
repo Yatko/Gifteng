@@ -110,6 +110,7 @@ $route['invitation']        = 'invitation/view';
 $route['registration/(:any)']   = 'registration/$1';
 $route['registration']          = 'registration/business';
 $route['business']              = 'registration/business';
+$route['verify/(:any)']         = 'registration/verify/$1';
 
 // helpers
 
@@ -118,14 +119,18 @@ $route['get_photo/(:any)/(:num)']           = 'generator/get_photo/$1/$2/$2'; //
 $route['get_photo/(:any)/(:num)/(:num)']    = 'generator/get_photo/$1/$2/$3';
 $route['get_photo']                         = 'generator/get_photo//0/0'; //empty image
 
+// statistics
+
+$route['stat'] = 'stat/view';
+
 // contact static page
 
 $route['contact'] = 'contact/view';
 
 // promotion landing pages
 
-$route['totegiveaway'] = 'landing/totegiveaway';
-
+$route['totegiveaway']  = 'landing/totegiveaway';
+$route['jobs']          = 'landing/jobs';
 
 
 $route['(:any)'] = 'index/view';

@@ -153,29 +153,28 @@ $subpage = key($_GET); //gets the first element from the array
     @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
 </style>
 <script type="text/javascript">
-  if (typeof(Zenbox) !== "undefined") {
-    Zenbox.init({
-      dropboxID:   "20202172",
-      url:         "https://gifteng.zendesk.com",
-      tabTooltip:  "Feedback",
-      tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_feedback_right.png",
-      tabColor:    "#00bebe",
-      tabPosition: "Right"
-    });
-  }
+    if (typeof(Zenbox) !== "undefined") {
+        Zenbox.init({
+            dropboxID:   "20202172",
+            url:         "https://gifteng.zendesk.com",
+            tabTooltip:  "Feedback",
+            tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_feedback_right.png",
+            tabColor:    "#00bebe",
+            tabPosition: "Right"
+        });
+    }
 </script>
 
 
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
-        
         <div>
             <ul>
             	<li class="text-center">
-		            <form id="browse_form" action="<?=base_url()?>browse" method="get">
-		                <input type="text" name="q" placeholder="Find friends and gifts" value="<?= key_exists('q', $_GET) ? $_GET['q'] : '' ?>" />
-		            </form>
-        		</li>
+                    <form id="browse_form" action="<?=base_url()?>browse" method="get">
+                        <input type="text" name="q" placeholder="Find friends and gifts" value="<?= key_exists('q', $_GET) ? $_GET['q'] : '' ?>" />
+                    </form>
+                </li>
                 <li>
                     <div class="row-fluid ge-user">
                         <?
@@ -185,15 +184,14 @@ $subpage = key($_GET); //gets the first element from the array
                     </div>
                 </li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
-                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation"><i class="fui-user"></i> Invite Friends</a></li>
+                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
                 <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
                 <li<?=($page == "profile" && $subpage == "following" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?following"><i class="fui-heart"></i> Connections</a></li>
-                <li><a href="#"><i class="fui-star"></i> Top Giftengers</a></li>
+                <li<?=($page == "stat" ? ' class="active"' : '')?>><a href="<?=base_url()?>stat"><i class="fui-star"></i> Top Giftengers</a></li>
                 <li<?=($page == "profile" && $subpage == "message" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?message"><i class="fui-mail"></i> Messages</a></li>
                 <li<?=($page == "profile" && $subpage == "notification" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?notification"><i class="fui-alert"></i> Notifications</a></li>
-                <li><a href="http://help.gifteng.com"><i class="ge-icon-bug"></i> Report a problem</a></li>
                 <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
             </ul>
         </div>
@@ -201,58 +199,58 @@ $subpage = key($_GET); //gets the first element from the array
 </div>
 
 <? endif; ?>
+
+
+
 <div class="navbar navbar-fixed-top ge-navbar snap-slide">
-        <div class="navbar-inner">
-            <div class="container">
-                <div class="nav-collapse">
-                    <span class="nav">
-                        <a id="open-left" class="link"><span class="fui-list"></span></a>
-                    </span>
-                    <span class="nav">
-                        <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
-                    </span>
-                    
-                    <? if( isLogged() ): ?>
-                    
-                        <ul class="nav pull-right">
-                            <li>
-                            	<a href="#" onclick="startPostModal()"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
-                            </li>
-                            <? /** ?>
-                            <a href="<?=base_url()?>post" data-target="#postContainer" data-toggle="modal"><i class="ge-icon-giftbox"></i></a>
-                            <? /**/ ?>
-                        </ul>
-                    
-                    <? else: ?>
-                    
-                        <ul class="nav pull-right">
-                        	<li>
-                        		<a href="http://help.gifteng.com"><i class="ge-icon-help text-inverted"></i></a>
-                        	</li>
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
-                                
-                                <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
-                                    <?=form_open('/authentication/login')?>
-                                        <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
-                                        <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
-                                        <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
-                                        <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
-                                        <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
-                                    <?=form_close()?>
-                                </div>
-                            </li>
-                        </ul>
-                    
-                    <? endif; ?>
-                </div>
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="nav-collapse">
+                
+                <? if( isLogged() ): ?>
+                <span class="nav">
+                    <a id="open-left" class="link"><span class="fui-list"></span></a>
+                </span>
+                <? endif; ?>
+                
+                <span class="nav">
+                    <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
+                </span>
+
+                <? if( isLogged() ): ?>
+
+                    <ul class="nav pull-right">
+                        <li>
+                            <a href="#" onclick="startPostModal();"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
+                        </li>
+                    </ul>
+
+                <? else: ?>
+
+                    <ul class="nav pull-right">
+                        <li>
+                            <a href="http://help.gifteng.com"><i class="ge-icon-help text-inverted"></i></a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
+
+                            <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
+                                <?=form_open('/authentication/login')?>
+                                    <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
+                                    <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
+                                    <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
+                                    <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
+                                    <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
+                                <?=form_close()?>
+                            </div>
+                        </li>
+                    </ul>
+
+                <? endif; ?>
             </div>
         </div>
     </div>
-<!-- ge CONTENT -->
-<div class="ge-container snap-content snap-slide">
-    
-    
+</div>
 
-    <div class="container ge-topspace">
-        
+<div class="ge-container snap-content snap-slide">
+    <div class="<?= isLogged() ? 'container' : '' ?> ge-topspace">

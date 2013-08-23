@@ -58,14 +58,17 @@
 
 <div id="avatarContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
-        <label class="control-label" for="fieldset">
-            <blockquote>
-                <div class="avatar_ajax_error">Choose your profile picture</div>
-            </blockquote>
-        </label>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-header-content">
+        	<div class="ge-modal_header">
+		        <label class="control-label" for="fieldset">
+		                <h3 class="avatar_ajax_error">Choose your profile picture</h3>
+		        </label>
+        	</div>
+        </div>
     </div>
     <div class="modal-body">
-
+		<div class="well ge-well  ge-form">
     <?= form_open_multipart('/profile/ajax/change_avatar', array('id' => 'avatar_post_form')) ?>
 
         <button id="avatar" for="avatar_image" type="button" class="btn btn-huge btn-block file">
@@ -75,6 +78,6 @@
         <input type="file" name="avatar_image" id="avatar_image" />
 
     <?= form_close() ?>
-
+		</div>
     </div>
 </div>

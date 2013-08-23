@@ -206,6 +206,7 @@ class Post_member extends CI_Controller {
                 $error = $this->update_ad();
             }
             $data['error'] = $error;
+            $data['adId'] = $this->adId;
         }
         
         if ( $is_modal ) {
@@ -326,6 +327,12 @@ class Post_member extends CI_Controller {
         }
         
         if ( $is_valid ) {
+            
+            if ( $this->ad->address->zipCode != $this->input->post('zipCode') ) {
+                $this->ad->address->longitude = '';
+                $this->ad->address->latitude = '';
+            }
+            
             $this->ad->title = $this->input->post('title');
             $this->ad->description = $this->input->post('description');
             $this->ad->categoryId = $this->input->post('category');
@@ -370,8 +377,8 @@ class Post_member extends CI_Controller {
         
         $errors = '';
         try {
-            $adId = $this->ad_service->placeAd($this->ad);
-            log_message(INFO, 'Ad created: ' . $adId);
+            $this->adId = $this->ad_service->placeAd($this->ad);
+            log_message(INFO, 'Ad created: ' . $this->adId);
             
             $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {

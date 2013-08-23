@@ -19,12 +19,18 @@
             //TODO
         });
     }
-    function request_cancel(callerElement, requestType, requestId, adId, userId) {
+    function request_cancel(callerElement, requestType, requestId, adId, userId, callback) {
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/cancel_request?' + requestType + '&requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
+            url: '<?=base_url()?>ajax/cancel_request',
             dataType: 'json',
-            cache: false
+            cache: false,
+            data: {
+                requestType: requestType,
+                requestId: requestId,
+                adId: adId,
+                userId: userId
+            }
         }).done(function(response) {
             if ( !response || response === '' ) {
                 //TODO: empty result
@@ -39,6 +45,10 @@
                 
                 if ( $('#requestContainer').length > 0 ) {
                     $('#requestContainer').modal('hide');
+                }
+                
+                if ( callback !== null ) {
+                    callback();
                 }
             } else {
                 //TODO: unknown response received
@@ -98,10 +108,10 @@
             //TODO
         });
     }
-    function request_receive(requestId, adId) {
+    function request_receive(requestId, adId, userId) {
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId + '&adId=' + adId,
+            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
             dataType: 'json',
             cache: false
         }).done(function(response) {

@@ -8,7 +8,7 @@
  * adId: long
  * step: string
  * unique_id: string
- * image: string
+ * image: Image_model
  * title: string
  * description: string
  * category: long
@@ -34,21 +34,26 @@
             var $this = $(this);
             
             if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                $(".post_ajax_error").html("<div class='error'>Please limit photo size to 5 MB !</div>");
+                $(".ge-modal_header h3").html("<div class='error'>Please limit photo size to 5 MB !</div>");
                 $this.html($this.attr('original_text'));
                 return;
             }
+            
             $('input[name=next_step]').val('<?=Post_member::STEP_START?>');
             submit_form('member_post_form');
         });
+        
+        disable_form_buttons_on_submit('member_post_form', null);
     });
 </script>
 
 <?
-if ( $is_new ) {
-    $form_action = '/post/member' . ($is_modal ? '?modal' : '');
+if ( $is_modal ) {
+    $form_action = '';
+} else if ( $is_new ) {
+    $form_action = 'post/member' . ($is_modal ? '?modal' : '');
 } else {
-    $form_action = '/edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
+    $form_action = 'edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
 }
 ?>
 
@@ -59,7 +64,12 @@ if ( $is_new ) {
 
 <? endif; ?>
     
-    <?=form_open_multipart($form_action, array('id' => 'member_post_form'), array('step' => $step, 'next_step' => '', 'unique_id' => $unique_id)) ?>
+    <form <?=($form_action != '' ? 'action="' . base_url() . $form_action . '"' : '')?> method="post" id="member_post_form" enctype="multipart/form-data">
+        <input type="hidden" name="step" value="<?=$step?>" />
+        <input type="hidden" name="next_step" />
+        <input type="hidden" name="unique_id" value="<?=$unique_id?>" />
+        <input type="hidden" name="adId" value="<?=$adId?>" />
+        
         
         <? if ($step == Post_member::STEP_START): ?>
             
@@ -68,21 +78,18 @@ if ( $is_new ) {
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'You should give as you would receive, cheerfully, quickly and without hesitation...';
             
-            if( !is_empty($image->getDetectedImageUrl()) ) {
-                $image_text = 'Change photo';
-            } else {
+            if ( $is_new && is_empty($image->getDetectedImageUrl()) ) {
                 $image_text = 'Add photo';
+            } else {
+                $image_text = 'Change photo';
             }
             ?>
             
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -151,11 +158,8 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -217,10 +221,7 @@ if ( $is_new ) {
                                 </div>
                             </div>
                         </div>
-                    </div><!--./value-->
-
-                    <div class="row-fluid">
-                    </div><!--./zip-->
+                    </div>
 
                     <div class="row-fluid">
                         <div class="span12">
@@ -277,11 +278,8 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -326,11 +324,8 @@ if ( $is_new ) {
             <div class="span6">
                 <div class="well ge-well ge-form">
                     <div class="ge-modal_header">
-                    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <label class="control-label">
-                            <h3>
-                                <?=$message?>
-                            </h3>
+                            <h3><?=$message?></h3>
                         </label>
                     </div>
                     
@@ -342,30 +337,30 @@ if ( $is_new ) {
 
                     <div id="item_description" class="row-fluid">
                     	<div class="ge-text">
-	                        <div class="ge-title"><?=$title?></div>
-	                        <div class="ge-description">
-	                            <em>Description:</em> <?=$description?>
-	                        </div>
-	                        <div class="ge-details">
-	                            <ul>
-	                                <li><em>Category: </em><?=$category?></li>
-	                                <li><em>Current value: $</em><?=$price?></li>
-	                            </ul>
-	                            <div class="row-fluid">
-	                                <div class="span6">
-	                                    <label class="checkbox">
-	                                        <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-	                                        Pick up
-	                                    </label>
-	                                </div>
-	                                <div class="span6">
-	                                    <label class="checkbox">
-	                                        <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-	                                        Free shipping
-	                                    </label>	
-	                                </div>	
-	                            </div>
-	                        </div>
+                            <div class="ge-title"><?=$title?></div>
+                            <div class="ge-description">
+                                <em>Description:</em> <?=$description?>
+                            </div>
+                            <div class="ge-details">
+                                <ul>
+                                    <li><em>Category: </em><?=$category?></li>
+                                    <li><em>Current value: $</em><?=$price?></li>
+                                </ul>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <label class="checkbox">
+                                            <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+                                            Pick up
+                                        </label>
+                                    </div>
+                                    <div class="span6">
+                                        <label class="checkbox">
+                                            <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
+                                            Free shipping
+                                        </label>	
+                                    </div>	
+                                </div>
+                            </div>
                         </div>
                     </div><!--./ge-text-->
                     
@@ -394,13 +389,10 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                        <label class="control-label">
-	                            <h3>
-	                                <?=$error?>
-	                            </h3>
-	                        </label>
-	                    </div>
+                            <label class="control-label">
+                                <h3><?=$error?></h3>
+                            </label>
+                        </div>
                         
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
@@ -423,33 +415,36 @@ if ( $is_new ) {
                 <div class="span6">
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
-                        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                        <label class="control-label">
-	                            <h3>
-	                                You're Awesome!
-	                            </h3>
-	                        </label>
+                            <label class="control-label">
+                                <h3>You're Awesome!</h3>
+                            </label>
                         </div>
                         
                         <div class="row-fluid">
-                        	Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)
+                            Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)
                         </div>
                         
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
                                 <div class="span12">
-                                    <div class="control-group control-form">                                       
+                                    <div class="control-group control-form">
                                         <div class="controls">
+                                            
                                             <? if( $is_modal ): ?>
+                                                
                                                 <button type="button" data-dismiss="modal" class="span3 btn btn-huge">OK</button>
                                                 <? if( $is_new ): ?>
                                                     <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
+                                                
                                             <? else: ?>
+                                                
                                                 <? if( $is_new ): ?>
-                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
+                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</a>
                                                 <? endif; ?>
+                                                
                                             <? endif; ?>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -463,7 +458,7 @@ if ( $is_new ) {
             
         <? endif; ?>
         
-    <?=form_close() ?>
+    </form>
 
 <? if( !$is_modal ): ?>
 

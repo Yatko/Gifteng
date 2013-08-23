@@ -24,18 +24,16 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                if ( $('.user_' + userId).length === 0 ) {
-                    return;
-                }
-                
-                $('.user_' + userId).each(function() {
-                    var $this = $(this);
-                    $this.removeClass('ge-user-unfollow');
-                    $this.addClass('ge-user-follow');
+                if ( $('.user_' + userId).length > 0 ) {
+                    $('.user_' + userId).each(function() {
+                        var $this = $(this);
+                        $this.removeClass('ge-user-unfollow');
+                        $this.addClass('ge-user-follow');
 
-                    $this.html('Unfollow');
-                    $this.text('Unfollow');
-                });
+                        $this.html('Unfollow');
+                        $this.text('Unfollow');
+                    });
+                }
             } else {
                 //TODO: unknown response received
             }
@@ -56,18 +54,20 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                if ( $('.user_' + userId).length === 0 ) {
-                    return;
+                if ( $('#user_' + userId).length > 0 ) {
+                    $('#user_' + userId).trigger('unfollowed', [userId]);
                 }
                 
-                $('.user_' + userId).each(function() {
-                    var $this = $(this);
-                    $this.removeClass('ge-user-follow');
-                    $this.addClass('ge-user-unfollow');
+                if ( $('.user_' + userId).length > 0 ) {
+                    $('.user_' + userId).each(function() {
+                        var $this = $(this);
+                        $this.removeClass('ge-user-follow');
+                        $this.addClass('ge-user-unfollow');
 
-                    $this.html('Follow');
-                    $this.text('Follow');
-                });
+                        $this.html('Follow');
+                        $this.text('Follow');
+                    });
+                }
             } else {
                 //TODO: unknown response received
             }

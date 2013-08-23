@@ -4,13 +4,13 @@
  * Input params:
  * 
  * ad: Ad_model
- * user: User_model
+ * currentUser: User_model
  */
 
 $title = $ad->getSafeTitle();
 $subtitle = $ad->getSafeSubtitle();
 $view_link = $ad->getViewUrl();
-$distance = getDistance($user, $ad);
+$distance = getDistance($currentUser, $ad);
 
 //$title_as_parameter = safe_parameter($title);
 

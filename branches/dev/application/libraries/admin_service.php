@@ -74,11 +74,33 @@ class Admin_service {
             }
             return $approvals;
         } catch ( Exception $ex ) {
-            log_message(ERROR, 'Getting approval for ad (adId: '.$adId.') failed! '.$ex->faultstring);
+            log_message(ERROR, 'Getting approvals for ad (adId: '.$adId.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }
     
+    /**
+     * 
+     * @param long $adId
+     * @param integer $revision
+     * @return Approval_model
+     * @throws Exception
+     */
+    public function getApproval($adId, $revision) {
+        try {
+            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adminService->getApproval(array(
+                "adId" => $adId,
+                "revision" => $revision
+            ));
+            $approval = Approval_model::convertApproval($result->approval);
+            return $approval;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting approval for ad (adId: '.$adId.', revision: '.$revision.') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+
     /**
      * 
      * @param long $adId
@@ -103,7 +125,10 @@ class Admin_service {
     public function unapproveAd($adId, $message) {
         try {
             $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $adminService->unapproveAd(array("adId" => $adId, "message" => $message));
+            $adminService->unapproveAd(array(
+                "adId" => $adId,
+                "message" => $message
+            ));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Unapproving ad (adId: '.$adId.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);

@@ -9,6 +9,7 @@ class Approval_model extends CI_Model {
     
     var $id; //long
     var $adId; //long
+    var $revision; //integer
     var $deciderId; //long
     var $deciderFullName; //string
     var $approvedAt; //long - timestamp
@@ -20,6 +21,7 @@ class Approval_model extends CI_Model {
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
             $this->adId = getField($obj, 'adId');
+            $this->revision = getField($obj, 'revision');
             $this->deciderId = getField($obj, 'deciderId');
             $this->deciderFullName = getField($obj, 'deciderFullName');
             $this->approvedAt = getField($obj, 'approvedAt');

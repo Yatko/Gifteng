@@ -120,7 +120,10 @@ class Ad_service {
     public function addImageToAd($adId, $image) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->addImageToAd(array("adId" => $adId, "image" => $image));
+            $result = $adService->addImageToAd(array(
+                "adId" => $adId,
+                "image" => $image
+            ));
             $imageId = $result->imgId;
             return $imageId;
         } catch ( Exception $ex ) {
@@ -138,7 +141,10 @@ class Ad_service {
     public function deleteImageFromAd($adId, $imageId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $adService->deleteImageFromAd(array("adId" => $adId, "imageId" => $imageId));
+            $adService->deleteImageFromAd(array(
+                "adId" => $adId,
+                "imageId" => $imageId
+            ));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Remove image from ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
@@ -154,7 +160,10 @@ class Ad_service {
     public function deleteImagesFromAd($adId, $imageIds) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $adService->deleteImagesFromAd(array("adId" => $adId, "imageIds" => $imageIds));
+            $adService->deleteImagesFromAd(array(
+                "adId" => $adId,
+                "imageIds" => $imageIds
+            ));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Remove images from ad (adId: ' . $adId . ') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
@@ -183,6 +192,28 @@ class Ad_service {
             return $approvals;
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Getting approval for ad (adId: '.$adId.') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $adId
+     * @param integer $revision
+     * @return Approval_model
+     * @throws Exception
+     */
+    public function getApproval($adId, $revision) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getApproval(array(
+                "adId" => $adId,
+                "revision" => $revision
+            ));
+            $approval = Approval_model::convertApproval($result->approval);
+            return $approval;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting approval for ad (adId: '.$adId.', revision: '.$revision.') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }

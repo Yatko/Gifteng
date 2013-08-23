@@ -56,7 +56,7 @@ if ( $small == false ) {
     <div class="ge-name">
         <a href="<?= $profile_link ?>"><?= $name ?></a>
         <? if( $canEdit && $is_owner ): ?>
-            <a href="<?=base_url()?>edit_profile" data-target="#editProfileContainer" data-toggle="modal" class="ge-icon-pencil"></a>
+            <a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
         <? endif; ?>
     </div>
     <? if ($joined != ''): ?>
@@ -67,7 +67,15 @@ if ( $small == false ) {
     <? endif; ?>
     <div class="ge-points">
     <? if ($points != ''): ?>
-        <span class="<?= $label_css ?>"><?= ($small) ? 'G' : 'Generosity Score'?> <?= $points ?></span>
+        <span class="<?= $label_css ?>">
+        
+        <? if ($is_owner): ?>
+            <a href="http://help.gifteng.com/entries/25071768" target="_blank">Generosity Score <?= $points ?></a>
+        <? else: ?>
+            G <?= $points ?>
+        <? endif; ?>
+        
+        </span>
     <? endif; ?>
     <? if (!$is_owner): ?>
         <? if ($is_in_followings): ?>
