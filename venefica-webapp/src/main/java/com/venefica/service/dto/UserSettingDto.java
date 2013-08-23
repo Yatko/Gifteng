@@ -19,28 +19,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class UserSettingDto extends DtoBase {
     
     // in, out
-    private Long userId;
-    // in, out
     private Set<NotificationType> notifiableTypes;
     
     public UserSettingDto() {
     }
 
     public UserSettingDto(User user, UserSetting userSetting) {
-        this.userId = user.getId();
         this.notifiableTypes = userSetting != null ? userSetting.getNotifiableTypes() : null;
     }
     
     // getters/setters
     
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Set<NotificationType> getNotifiableTypes() {
         return notifiableTypes;
     }

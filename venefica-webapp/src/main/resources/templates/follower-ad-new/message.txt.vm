@@ -2,7 +2,7 @@ Hi ${follower.userData.getFirstName()},
 
 ${ad.creator.getFullName()} posted a new Gift!
 
-To view gift access the following address:
+Click on the following link to view the gift:
 ${baseUrl}view/${ad.id}
 
 Happy gifting!

@@ -2,7 +2,7 @@ Hi ${ad.creator.userData.getFirstName()},
 
 ${comment.publisher.getFullName()} commented your Gift!
 
-To view comment access the following address:
+Click on the following link to view the comment:
 ${baseUrl}view/${ad.id}
 
 Happy gifting!

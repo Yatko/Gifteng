@@ -2,7 +2,7 @@ Hi ${ad.creator.userData.getFirstName()},
 
 ${request.user.getFullName()} is excited to have your Gift!
 
-To view request access the following address:
+Click on the following link to view request:
 ${baseUrl}request/${request.id}
 
 Happy gifting!
