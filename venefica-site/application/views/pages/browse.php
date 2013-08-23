@@ -118,7 +118,7 @@
 
 <div class="row">
     <div class="ge-tile-view ge-browse">
-        <div id="boxContainer" class="transitions-enabled infinite-scroll clearfix">
+        <div id="boxContainer" class="transitions-enabled infinite-scroll clearfix masonry">
 
 <? endif; ?>
 
@@ -131,9 +131,14 @@
         $can_bookmark = $ad_can_request ? true : false;
         $can_share = $ad_can_request ? true : false;
         $can_comment = $ad_can_request ? true : false;
+        
+        $inactive = false;
+        if ( !$ad->owner && !$ad_can_request ) {
+            $inactive = true;
+        }
         ?>
 
-        <div class="ge-ad-item-box <?=($ad_can_request == false ? 'ge-inactive' : 'ge-active')?>">
+        <div class="ge-ad-item-box masonry-brick <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
             <div class="span4">
             	<div class="ge-box">
                     <div class="well ge-well">

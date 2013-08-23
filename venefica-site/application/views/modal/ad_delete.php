@@ -54,34 +54,38 @@
     }
 </script>
 
-<div id="adDeleteContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="adDeleteContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-header">
-        <label class="control-label" for="fieldset">
-            <blockquote>
-                <p>
-                    Are you sure you want to delete it?
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </p>
-            </blockquote>
-        </label>
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-header-content">
+        	<div class="ge-modal_header">
+		        <label class="control-label" for="fieldset">
+	                <h3>
+	                    Are you sure you want to delete it?
+	                </h3>
+		        </label>
+        	</div>
+        </div>
     </div>
     
-    <div class="modal-body">
-        <form id="ad_delete_form">
-            <input type="hidden" name="adId"/>
-            
-            <fieldset>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <div class="control-group control-form">
-                            <div class="controls">
-                                <button type="button" onclick="ad_delete_modal();" class="span6 btn">YES</button>
-                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
-                            </div>
-                        </div>
-                    </div>
-                </div><!--./submit-->
-            </fieldset>
-        </form>
+    <div class="modal-footer">
+    	<div class="ge-modal_footer">
+	        <form id="ad_delete_form">
+	            <input type="hidden" name="adId"/>
+	            
+	            <fieldset>
+	                <div class="row-fluid">
+	                    <div class="span12">
+	                        <div class="control-group control-form">
+	                            <div class="controls">
+	                                <button type="button" onclick="ad_delete_modal();" class="span6 btn">YES</button>
+	                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge pull-right">NO</button>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div><!--./submit-->
+	            </fieldset>
+	        </form>
+        </div>
     </div>
 </div>

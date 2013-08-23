@@ -20,15 +20,20 @@ $view_link = $ad->getViewUrl();
 
 ?>
 
+<? if ( !$is_modal ): ?>
 <div class="span6">
     <div class="well ge-well">
-	
-        <div class="row-fluid">
-            <div class="ge-user">
-                <? $this->load->view('element/user', array('user' => $requestor_user, 'canEdit' => false, 'small' => true)); ?>
-            </div><!--./ge-user-->
-        </div>
-		
+<? else: ?>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-header-content">
+            <div class="ge-modal_header">
+<? endif; ?>
+
+        <div class="ge-user">
+            <? $this->load->view('element/user', array('user' => $requestor_user, 'canEdit' => false, 'small' => true)); ?>
+        </div><!--./ge-user-->
+
 <? if( $request->sent ): ?>
 
         <? /** ?>
@@ -68,7 +73,16 @@ $view_link = $ad->getViewUrl();
         </div>
         
 <? endif; ?>
-		
+
+<? if ( $is_modal ): ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-body">
+    	<div class="well ge-well">
+<? endif; ?>
+
         <div class="ge-messages">
             <div class="row-fluid">
                 <div class="span12">
@@ -82,9 +96,16 @@ $view_link = $ad->getViewUrl();
                 </div>
             </div>
         </div><!--./ge-messages-->
-	
-    </div><!--./ge-well-->
+
+<? if ( $is_modal ): ?>
+        </div>
+    </div>
+<? else: ?>
+    </div>
 </div>
+<? endif; ?>
+        
+    
 
 <? if( $is_modal ): ?>
 <script language="javascript">

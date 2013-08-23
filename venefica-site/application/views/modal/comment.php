@@ -16,15 +16,6 @@
 <div id="commentContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-body">
         
-        <label class="control-label" for="fieldset">
-            <blockquote>
-                <p>
-                    Comment
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </p>
-            </blockquote>
-        </label>
-        
         <?=form_open('/ajax/comment', array('id' => 'comment_post_form'))?>
         
             <input type="hidden" name="commentAdId" value=""/>
@@ -34,7 +25,7 @@
                     <textarea name="commentText" placeholder="Your comment ..."></textarea>
                 </div>
                 <div class="span3">
-                    <button type="button" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>
+                    <button type="button" style="height:60px;" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>
                 </div>
             </div>
         

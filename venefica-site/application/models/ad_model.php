@@ -386,6 +386,16 @@ class Ad_model extends CI_Model {
         return false;
     }
     
+    public function isMaxAllowedRequestsReached() {
+        if ( !$this->hasRequest() ) {
+            return false;
+        }
+        if ( count($this->requests) >= MAX_ALLOWED_REQUESTS ) {
+            return true;
+        }
+        return false;
+    }
+    
     // static helpers
     
     public static function convertAds($adsResult) {

@@ -91,4 +91,14 @@
     
 </div>
 
+<? else: ?>
+
+<div class="row">
+    <div class="span12">
+        <div class="text-center">
+            You have no messages.
+        </div>
+    </div>
+</div>
+
 <? endif; ?>
