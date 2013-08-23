@@ -74,7 +74,7 @@ class Registration extends CI_Controller {
                 $email = $this->input->post('registration_email');
                 $password = $this->input->post('registration_password');
 
-                if ( login($email, $password) ) {
+                if ( login($email, $password, false) ) {
                     redirect('/profile?first');
                 } else {
                     log_message(ERROR, 'Newly created business cannot auto login into system');
@@ -123,7 +123,7 @@ class Registration extends CI_Controller {
                 $email = $this->input->post('email');
                 $password = $this->input->post('password_1');
 
-                if ( login($email, $password) ) {
+                if ( login($email, $password, false) ) {
                     redirect('/profile');
                 } else {
                     log_message(ERROR, 'Newly created business cannot auto login into system');

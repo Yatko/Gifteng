@@ -44,35 +44,39 @@
 
 <div id="requestCancelContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
-        <label class="control-label" for="fieldset">
-            <blockquote>
-                <p>
-                    Are you sure you want to cancel the request?
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </p>
-            </blockquote>
-        </label>
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-header-content">
+        	<div class="ge-modal_header">
+		        <label class="control-label" for="fieldset">
+	                <h3>
+	                    Are you sure you want to cancel the request?
+	                </h3>
+		        </label>
+        	</div>
+        </div>
     </div>
     
-    <div class="modal-body">
-        <form id="request_cancel_form">
-            <input type="hidden" name="requestType"/>
-            <input type="hidden" name="requestId"/>
-            <input type="hidden" name="adId"/>
-            <input type="hidden" name="userId"/>
-
-            <fieldset>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <div class="control-group control-form">
-                            <div class="controls">
-                                <button type="button" onclick="request_cancel_modal();" class="span6 btn">YES</button>
-                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
-                            </div>
-                        </div>
-                    </div>
-                </div><!--./submit-->
-            </fieldset>
-        </form>
+    <div class="modal-footer">
+    	<div class="ge-modal_footer">
+	        <form id="request_cancel_form">
+	            <input type="hidden" name="requestType"/>
+	            <input type="hidden" name="requestId"/>
+	            <input type="hidden" name="adId"/>
+	            <input type="hidden" name="userId"/>
+	
+	            <fieldset>
+	                <div class="row-fluid">
+	                    <div class="span12">
+	                        <div class="control-group control-form">
+	                            <div class="controls">
+	                                <button type="button" onclick="request_cancel_modal();" class="span6 btn">YES</button>
+	                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div><!--./submit-->
+	            </fieldset>
+	        </form>
+        </div>
     </div>
 </div>

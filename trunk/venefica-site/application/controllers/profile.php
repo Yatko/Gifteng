@@ -349,8 +349,7 @@ class Profile extends CI_Controller {
      */
     public function notification($user) {
         if ( $_POST ) {
-            $user_setting = new \UserSetting_model();
-            $user_setting->userId = $this->input->post('userId');
+            $user_setting = new UserSetting_model();
             $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
             
             try {

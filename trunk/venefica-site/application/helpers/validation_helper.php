@@ -3,8 +3,6 @@
 if ( ! function_exists('validate_login')) {
     function validate_login() {
         if ( !isLogged() ) {
-            logSession();
-            
             $is_modal = key_exists('modal', $_GET);
             $CI =& get_instance();
             

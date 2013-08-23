@@ -99,6 +99,7 @@ $route['request']          = 'request/view/';
 
 $route['authentication/(:any)'] = 'authentication/$1';
 $route['authentication']        = 'authentication/view';
+$route['logout']                = 'authentication/logout';
 
 // invitation
 

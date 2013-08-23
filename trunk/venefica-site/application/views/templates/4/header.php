@@ -63,9 +63,9 @@ $subpage = key($_GET); //gets the first element from the array
     
     <!--MASONRY -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>masonry.css" />
-    <script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>
+    <!--<script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>-->
     <script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>
-    <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
+    <!--<script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>-->
     
     
     
@@ -184,7 +184,9 @@ $subpage = key($_GET); //gets the first element from the array
                     </div>
                 </li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
-                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation"><i class="fui-user"></i> Invite Friends</a></li>
+                <? /** ?>
+                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
+                <? /**/ ?>
                 <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
@@ -238,7 +240,7 @@ $subpage = key($_GET); //gets the first element from the array
                                 <?=form_open('/authentication/login')?>
                                     <input name="login_email" style="width: 142px; margin-bottom: 15px;" type="text" size="30" placeholder="Email address" />
                                     <input name="login_password" style="width: 142px; margin-bottom: 15px;" type="password" size="30" placeholder="Password" />
-                                    <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" />
+                                    <input name="login_remember_me" id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" value="1" />
                                     <label class="string optional" for="user_remember_me" style="color: #ffffff; text-shadow: none;">Remember me</label>
                                     <input class="btn btn-ge" style="clear: left; width: 100%; height: 32px; font-size: 16px; font-weight: 400; padding-bottom: 30px;" type="submit" value="Sign In" />
                                 <?=form_close()?>

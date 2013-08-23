@@ -24,14 +24,12 @@ class UserSetting_model extends CI_Model {
         UserSetting_model::NOTIFICATION_FOLLOWER_AD_CREATED,
     );
     
-    var $userId; //long
     var $notifiableTypes; //array of enum: FOLLOWER_ADDED, AD_COMMENTED, AD_REQUESTED, REQUEST_MESSAGED, REQUEST_ACCEPTED, REQUEST_SENT, REQUEST_CANCELED, REQUEST_DECLINED, FOLLOWER_AD_CREATED
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing UserSetting_model");
         
         if ( $obj != null ) {
-            $this->userId = getField($obj, 'userId');
             $this->notifiableTypes = getField($obj, 'notifiableTypes');
         }
     }

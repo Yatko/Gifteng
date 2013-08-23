@@ -49,11 +49,12 @@ if ( $is_modal ) {
 
 <div class="row">
     <div class="span8 offset2">
+
+<? endif; ?>
+
         <div class="well ge-well ge-form">
             <div class="row-fluid">
                 <div class="span12">
-
-<? endif; ?>
                     
                     <?
                     $message = isset($this->edit_profile_form) ? $this->edit_profile_form->error_string() : "";
@@ -175,11 +176,12 @@ if ( $is_modal ) {
 
                     </form>
 
-<? if( !$is_modal ): ?>
-
                 </div>
             </div>
         </div><!--./ge-well-->
+
+<? if( !$is_modal ): ?>
+
     </div>
 </div><!--./row-->
 

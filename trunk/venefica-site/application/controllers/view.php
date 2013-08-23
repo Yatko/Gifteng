@@ -16,6 +16,9 @@ class View extends CI_Controller {
                 $ad = null;
             } else {
                 $ad = $this->ad_service->getAdById($adId);
+                if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
+                    $ad = null;
+                }
             }
         } catch ( Exception $ex ) {
             $ad = null;

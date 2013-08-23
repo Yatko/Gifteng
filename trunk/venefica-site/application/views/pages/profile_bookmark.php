@@ -30,7 +30,7 @@
 <div class="row">
     <div class="container user-favorites">
         <div class="row">
-            <div class="ge-tile-view ge-browse">
+            <div class="ge-tile-view ge-browse masonry">
             
             <? if( isset($bookmarks) && is_array($bookmarks) && count($bookmarks) > 0 ): ?>
             <? foreach( $bookmarks as $ad ): ?>
@@ -41,9 +41,11 @@
                 $ad_is_expired = $ad->expired;
                 $ad_is_owned = $ad->owner;
                 $ad_can_request = $ad->canRequest;
+                
+                $inactive = !$ad_can_request;
                 ?>		
-				
-                <div id="ad_<?=$ad_id?>">
+		
+                <div id="ad_<?=$ad_id?>" class="masonry-brick ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
                     <div class="span3">
                         <div class="ge-box">
                             <div class="well ge-well">
@@ -91,17 +93,15 @@
             <? endforeach; ?>
             <? else: ?>
                 
-                <!-- <div class="row"> -->
-                    <div class="span12">
-                        <div class="well ge-well">
-                            <div class="row-fluid">
-                                <div class="span10 offset1 text-center">
-                                	<img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
-                                </div>
-                        </div>
+                <div class="span12">
+                    <div class="well ge-well">
+                        <div class="row-fluid">
+                            <div class="span10 offset1 text-center">
+                                    <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
+                            </div>
                         </div>
                     </div>
-                <!-- </div> -->
+                </div>
                 
             <? endif; ?>
 

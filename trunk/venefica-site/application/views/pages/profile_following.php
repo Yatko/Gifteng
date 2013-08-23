@@ -37,7 +37,7 @@ $active_tab = Profile::getActiveTab($active_menu);
 <div class="row">			
     <div class="container user-follow">
         <div class="row">
-            <div class="ge-tile-view ge-browse">
+            <div class="ge-tile-view ge-browse masonry">
             
             <? if( isset($follow_users) && is_array($follow_users) && count($follow_users) > 0 ): ?>
             <? foreach( $follow_users as $follow ): ?>
@@ -47,7 +47,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                 $ads = $follow_ads[$user_id];
                 ?>
 		
-                <div id="user_<?=$user_id?>" class="ge-user-following">
+                <div id="user_<?=$user_id?>" class="ge-user-following masonry-brick">
                 <div class="span3">
                     <div class="ge-box">
                         <div class="well ge-well">
@@ -57,9 +57,10 @@ $active_tab = Profile::getActiveTab($active_menu);
                                     <div class="ge-user">
                                         <? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
                                     </div><!--./ge-user-->
-									
+				
                 <? if( count($ads) > 0 ): ?>
                                     
+                                    <div class="ge-ad-item-box ge-inactive">
                                     <div class="ge-text ge-description ge-user-image ge-action">
                                         <div class="row-fluid">
                                         
@@ -76,6 +77,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                                         <? endforeach; ?>
                                         
                                         </div>
+                                    </div>
                                     </div>
                                     
                 <? else: ?>

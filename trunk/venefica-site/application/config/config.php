@@ -247,7 +247,7 @@ $config['encryption_key'] = 'VENEFICA_SECRET_KEY';
 
 /**
 // MYSQL
-CREATE TABLE IF NOT EXISTS  `venefica_session` (
+CREATE TABLE IF NOT EXISTS `venefica_session` (
     session_id varchar(40) DEFAULT '0' NOT NULL,
     ip_address varchar(45) DEFAULT '0' NOT NULL,
     user_agent varchar(120) NOT NULL,
@@ -272,7 +272,7 @@ CREATE TABLE venefica_session (
 
 $config['sess_cookie_name']	= 'venefica_session';
 $config['sess_expiration']	= 86400; //24 hours
-$config['sess_expire_on_close']	= FALSE;
+$config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= TRUE;
 $config['sess_table_name']	= 'venefica_session';
