@@ -16,7 +16,6 @@ public class AdExpirationJob implements Job {
     private static final Log log = LogFactory.getLog(AdExpirationJob.class);
     
     @Override
-    //@Transactional
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.AD_DAO);
 

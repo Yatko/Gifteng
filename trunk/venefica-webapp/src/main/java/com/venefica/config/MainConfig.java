@@ -7,6 +7,7 @@ import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.dao.InvitationDao;
+import com.venefica.dao.UserDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.job.AdExpirationJob;
 import com.venefica.job.AdOnlineJob;
@@ -73,6 +74,8 @@ public class MainConfig {
     @Inject
     private AdDao adDao;
     @Inject
+    private UserDao userDao;
+    @Inject
     private InvitationDao invitationDao;
     @Inject
     private ForgotPasswordDao forgotPasswordDao;
@@ -125,6 +128,8 @@ public class MainConfig {
     public JobDetail adOnlineJobDetail() {
         JobDetail job = createJobDetail(AdOnlineJob.class, AD_ONLINE_JOB_KEY);
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
+        job.getJobDataMap().put(Constants.USER_DAO, userDao);
+        job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
         return job;
     }
 

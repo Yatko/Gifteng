@@ -46,6 +46,7 @@ public interface Constants {
     public static final String MODEL_PACKAGE = "com.venefica.model";
     
     public static final String AD_DAO = "AdDao";
+    public static final String USER_DAO = "UserDao";
     public static final String INVITATION_DAO = "InvitationDao";
     public static final String FORGOT_PASSWORD_DAO = "ForgotPasswordDao";
     public static final String USER_VERIFICATION_DAO = "UserVerificationDao";

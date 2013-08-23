@@ -23,7 +23,6 @@ public class InvitationExpirationJob implements Job {
     private static final Log log = LogFactory.getLog(InvitationExpirationJob.class);
     
     @Override
-    //@Transactional
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         InvitationDao invitationDao = (InvitationDao) ctx.getJobDetail().getJobDataMap().get(Constants.INVITATION_DAO);
         

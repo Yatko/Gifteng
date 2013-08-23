@@ -25,6 +25,13 @@ public interface UserDao {
     public List<User> getAll();
     
     /**
+     * 
+     * @param userId
+     * @return list of user followers
+     */
+    public List<User> getFollowers(Long userId);
+    
+    /**
      * Finds the user by his name.
      *
      * @param name name of the user
