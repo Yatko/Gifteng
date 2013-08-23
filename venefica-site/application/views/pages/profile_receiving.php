@@ -52,7 +52,7 @@
 	                    <div class="span12">
 		                    <div class="well ge-well">
 			                    <div class="row-fluid">
-				                    <div class="span10 offset2 text-center">
+				                    <div class="span10 offset1 text-center">
 				                    	<img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
 				                    </div>
 		                    </div>
