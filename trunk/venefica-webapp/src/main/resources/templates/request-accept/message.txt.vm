@@ -6,6 +6,7 @@ To arrange an exchange access the following address:
 ${baseUrl}request/${request.id}
 
 Happy receiving!
+The Gifteng Team
 
 To change your general email notifications click here:
 ${baseUrl}profile?notification

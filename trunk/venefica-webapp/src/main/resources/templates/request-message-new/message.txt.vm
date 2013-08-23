@@ -6,6 +6,7 @@ To view message access the following address:
 ${baseUrl}request/${request.id}
 
 Happy gifting!
+The Gifteng Team
 
 To change your general email notifications click here:
 ${baseUrl}profile?notification

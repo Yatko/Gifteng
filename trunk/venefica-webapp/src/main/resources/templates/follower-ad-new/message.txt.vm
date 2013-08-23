@@ -6,6 +6,7 @@ To view gift access the following address:
 ${baseUrl}view/${ad.id}
 
 Happy gifting!
+The Gifteng Team
 
 To change your general email notifications click here:
 ${baseUrl}profile?notification
