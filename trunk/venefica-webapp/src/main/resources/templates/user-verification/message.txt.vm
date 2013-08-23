@@ -2,7 +2,7 @@ Dear ${user.userData.getFirstName()},
 
 Thank you for using Gifteng!
 
-Confirm your email address, by accessing the following address:
+Click on the following link to confirm your email address:
 ${baseUrl}verify/${code}
 
 Happy gifting! 

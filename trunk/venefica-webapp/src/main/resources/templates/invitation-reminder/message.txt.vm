@@ -6,7 +6,7 @@ ${invitationCode}
 
 will expire in 24 hours.
 
-Access the following link to activate your account:
+Click on the following link to activate your account:
 ${baseUrl}invitation/verify
 
 Happy giving & receiving, 

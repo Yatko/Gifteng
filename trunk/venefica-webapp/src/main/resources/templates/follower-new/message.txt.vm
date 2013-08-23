@@ -1,6 +1,6 @@
 Hi ${user.userData.getFirstName()},
 
-To find out who is your new follower access the following address:
+Click on the following link to find out who is your new follower:
 ${baseUrl}profile?follower
 
 Happy gifting!

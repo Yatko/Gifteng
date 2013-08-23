@@ -2,7 +2,7 @@ Hi ${to.userData.getFirstName()},
 
 You received a new message from ${from.getFullName()}.
 
-To view message access the following address:
+Click on the following link to  view the message:
 ${baseUrl}request/${request.id}
 
 Happy gifting!

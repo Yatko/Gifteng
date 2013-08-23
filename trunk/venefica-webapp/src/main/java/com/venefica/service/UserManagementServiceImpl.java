@@ -443,9 +443,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         if ( currentUser.isBusinessAccount() ) {
             throw new GeneralException("User is a business type, there is no setting for it.");
         }
-        if ( !currentUser.getId().equals(userSettingDto.getUserId()) ) {
-            throw new GeneralException("Cannot update different user setting.");
-        }
         
         MemberUserData userData = (MemberUserData) currentUser.getUserData();
         UserSetting userSetting = userData.getUserSetting();

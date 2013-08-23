@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Your Gift request was accepted!</title>
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    
 <style>
-html, body {font-family: 'Lato', sans-serif;text-align: center;text-shadow: 0 1px 0 #fff;background:url('http://gifteng.com/assets/4/temp-sample/ge-background.png') #eeedea;}
+html, body {font-family: sans-serif;text-align: center;text-shadow: 0 1px 0 #fff;background:url('http://gifteng.com/assets/4/temp-sample/ge-background.png') #eeedea;}
 h1{font-size: 136%;}
 .btn, .btn-ge {border: none;background: #00bebe;color: #ffffff;padding: 9px 12px 10px;line-height: 22px;font-size: 14.994px;font-weight: 500;text-decoration: none;text-shadow: none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;-webkit-transition: 0.25s;-moz-transition: 0.25s;-o-transition: 0.25s;transition: 0.25s;-webkit-backface-visibility: hidden;}
 .btn:hover, .btn:focus {background-color: #cacfd2;color: #ffffff;outline: none;-webkit-transition: 0.25s;-moz-transition: 0.25s;-o-transition: 0.25s;transition: 0.25s;-webkit-backface-visibility: hidden;}
@@ -18,19 +18,19 @@ hr.splendid:after {color: #bab8b6;text-shadow: 0 1px 2px #fff;display: inline-bl
 hr.splendid2:after {content: "Give. Receive. Inspire.";}
 hr.splendid1:after {content: "·";font-size: 1.2em;top: -0.7em;}
 .img-social-rounded {margin: 3px;width: 24px;height: 24px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px; background: center center no-repeat;}
-.ge-facebook {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-facebook2.png");background-size:24px 24px;}
-.ge-twitter {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-twitter2.png");background-size:24px 24px;}
-.ge-pinterest {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-pinterest2.png");background-size:24px 24px;}
-.ge-facebook:hover {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-facebook.png");background-size:24px 24px;}
-.ge-twitter:hover {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-twitter.png");background-size:24px 24px;}
-.ge-pinterest:hover {background: url("http://veneficalabs.com/dev/sample-flat/images/ge-pinterest.png");background-size:24px 24px;}
+.ge-facebook {background: url("http://gifteng.com/images/mail/ge-facebook2.png");background-size:24px 24px;}
+.ge-twitter {background: url("http://gifteng.com/images/mail/ge-twitter2.png");background-size:24px 24px;}
+.ge-pinterest {background: url("http://gifteng.com/images/mail/ge-pinterest2.png");background-size:24px 24px;}
+.ge-facebook:hover {background: url("http://gifteng.com/images/mail/ge-facebook.png");background-size:24px 24px;}
+.ge-twitter:hover {background: url("http://gifteng.com/images/mail/ge-twitter.png");background-size:24px 24px;}
+.ge-pinterest:hover {background: url("http://gifteng.com/images/mail/ge-pinterest.png");background-size:24px 24px;}
 .message-header, .message-footer, .message-note {padding:36px 0;}
 </style>
   </head>
   
   <body>
   	<div class="message-header">
-		<img src="http://veneficalabs.com/dev/sample-flat/temp-sample/gifteng.png">
+		<img src="http://gifteng.com/images/mail/gifteng.png">
 		<hr class="splendid splendid1">
 	</div>
 	<!-- message-content -->
@@ -43,7 +43,8 @@ hr.splendid1:after {content: "·";font-size: 1.2em;top: -0.7em;}
 			<a href="${baseUrl}request/${request.id}" class="btn btn-ge">Click here to arrange an exchange.</a> 
 		</p>
 		<p>
-		Happy receiving!
+		Happy receiving!<br />
+		The Gifteng Team
 		</p>
 	</div>
 	<!-- message-note -->

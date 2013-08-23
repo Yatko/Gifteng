@@ -3,7 +3,7 @@ Hi ${ad.creator.userData.getFirstName()},
 Unfortunately your gift can’t be posted because:
 ${text}
 
-Please access the foloowing address if you want to make changes:
+Click on the following link to edit it:
 ${baseUrl}view/${ad.id}
 
 Thanks, 

@@ -2,7 +2,7 @@ Hi ${user.userData.getFirstName()},
 
 Congratulations, your request was accepted!
 
-To arrange an exchange access the following address:
+Click on the following link to arrange an exchange:
 ${baseUrl}request/${request.id}
 
 Happy receiving!
