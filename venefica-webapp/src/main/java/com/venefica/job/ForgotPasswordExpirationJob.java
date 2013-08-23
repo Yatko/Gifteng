@@ -23,7 +23,6 @@ public class ForgotPasswordExpirationJob implements Job {
     private static final Log log = LogFactory.getLog(ForgotPasswordExpirationJob.class);
     
     @Override
-    //@Transactional
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         ForgotPasswordDao forgotPasswordDao = (ForgotPasswordDao) ctx.getJobDetail().getJobDataMap().get(Constants.FORGOT_PASSWORD_DAO);
 

@@ -18,7 +18,7 @@ public interface AdDao {
      * @return id of the saved object
      */
     Long save(Ad ad);
-
+    
     /**
      * Returns the ad by its id.
      *
@@ -63,6 +63,12 @@ public interface AdDao {
      * @param ad
      */
     void approveAd(Ad ad);
+    
+    /**
+     * Sets an ad to online state. This means that will appear in ad browser.
+     * @param ad 
+     */
+    void onlineAd(Ad ad);
     
     /**
      * Returns a list of 'active' or 'expired' ads created by the specified

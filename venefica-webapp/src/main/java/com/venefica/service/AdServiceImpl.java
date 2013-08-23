@@ -185,18 +185,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             userTransactionDao.save(transaction);
         }
         
-        //all followers should be notified (if configured) about the new ad
-        Set<User> followers = currentUser.getFollowers();
-        if ( followers != null && !followers.isEmpty() ) {
-            for ( User follower : followers ) {
-                Map<String, Object> vars = new HashMap<String, Object>(0);
-                vars.put("ad", ad);
-                vars.put("follower", follower);
-                
-                emailSender.sendNotification(NotificationType.FOLLOWER_AD_CREATED, follower, vars);
-            }
-        }
-        
         return adId;
     }
     

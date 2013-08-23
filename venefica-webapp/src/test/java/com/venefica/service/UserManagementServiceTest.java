@@ -246,6 +246,9 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         UserDto user_2 = client.getUserByName(SECOND_USER_NAME);
         assertTrue(user_2.isInFollowers() == false);
         assertTrue(user_2.isInFollowings() == true);
+        
+        List<User> user_followers_2 = userDao.getFollowers(SECOND_USER_ID);
+        assertEquals(user_followers_2.size(), 2);
     }
     
     @Test

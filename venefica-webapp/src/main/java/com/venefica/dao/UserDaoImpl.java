@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.User;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,23 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
                 + "")
                 .list();
         return users;
+    }
+    
+    @Override
+    public List<User> getFollowers(Long userId) {
+        List<User> followers = createQuery(""
+                + "select u.followers "
+                + "from " + getDomainClassName() + " u "
+                + "where "
+                + "u.id = :userId"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+        
+        //User user = get(userId);
+        //List<User> followers = new ArrayList<User>(user.getFollowers());
+        
+        return followers;
     }
 
     @Override

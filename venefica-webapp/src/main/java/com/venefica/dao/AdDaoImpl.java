@@ -184,7 +184,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
         return query.list();
     }
-
+    
     @Override
     public void markExpiredAds() {
         // @formatter:off		
@@ -219,6 +219,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.online = true, "
                 + "a.onlinedAt = :onlinedAt "
                 + "where "
+                + "a.deleted = false and "
+                + "a.expired = false and "
                 + "a.online = false and "
                 + "a.approved = true"
                 + "")
@@ -235,6 +237,13 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     public void approveAd(Ad ad) {
         ad.setApproved(true);
         ad.setApprovedAt(new Date());
+        updateEntity(ad);
+    }
+    
+    @Override
+    public void onlineAd(Ad ad) {
+        ad.setOnline(true);
+        ad.setOnlinedAt(new Date());
         updateEntity(ad);
     }
 
@@ -266,9 +275,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @Override
     public List<Ad> getOfflineAds() {
         return createQuery(""
-                + "from " + getDomainClassName() + " a where "
+                + "from " + getDomainClassName() + " a "
+                + "where "
                 + "a.deleted = false and "
-                + "a.online = false "
+                + "a.expired = false and "
+                + "a.online = false and "
+                + "a.approved = true "
                 + "order by a.id desc"
                 + "")
                 .list();
