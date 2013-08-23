@@ -79,30 +79,17 @@ $is_owner = isOwner($user);
                 
             <? else: ?>
                 
-                <div class="span4 ge-box ge-no-ad">
-                    <div class="well ge-well">
-
-                        <div class="ge-item">	
-                            <div class="row-fluid ge-item-image">
-                                <img src="<?=BASE_PATH?>temp-sample/ge-gift.png" class="img" />
-
-                                <div class="row-fluid">
-                                    <div class="ge-action">
-                                        <div class="span12">
-                                            <button data-target="#postContainer" data-toggle="modal" class="btn btn-small btn-block btn-ge">
-                                                <i class="ge-icon-giftbox"></i>
-                                                Post Your First Gift Now!
-                                            </button>
-                                        </div>
-
-                                        <a href="<?=base_url()?>browse">Or click here to see what others are giving away.</a>
-                                    </div>
+                <!-- <div class="row"> -->
+                    <div class="span12">
+                        <div class="well ge-well">
+                            <div class="row-fluid">
+                                <div class="span10 offset2 text-center">
+                                	<img src="<?=BASE_PATH?>images/ge-post_your_first_gift.jpg" width="800" height="500" alt="Post Your First Gift Now!" />
                                 </div>
-                            </div><!--./ge-item-image-->
-                        </div><!--./ge-item-->
-
+                        </div>
+                        </div>
                     </div>
-                </div><!--/item-->
+                <!-- </div> -->
                 
             <? endif; ?>
             
