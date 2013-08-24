@@ -178,8 +178,10 @@ $subpage = key($_GET); //gets the first element from the array
                 <li>
                     <div class="row-fluid ge-user">
                         <?
-                        $user = $this->usermanagement_service->loadUser();
-                        $this->load->view('element/user', array('user' => $user, 'canEdit' => false, 'small' => true));
+                        $currentUser = $this->usermanagement_service->loadUser();
+                        if ( isset($currentUser) && $currentUser != null ) {
+                            $this->load->view('element/user', array('user' => $currentUser, 'canEdit' => false, 'small' => true));
+                        }
                         ?>
                     </div>
                 </li>
