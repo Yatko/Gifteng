@@ -64,7 +64,9 @@ class Remember_me {
             ));
             if ($query->num_rows()) {
                 $row = $query->row();
-                $orig_page_requested = $row->orig_page_requested;
+                if ( isset($row) && $row != null ) {
+                    $orig_page_requested = $row->orig_page_requested;
+                }
             }
             $this->CI->db->delete($this->table_name, array(
                 'php_session_id' => session_id()
@@ -117,6 +119,9 @@ class Remember_me {
         ));
         if ($query->num_rows()) {
             $row = $query->row();
+            if ( !isset($row) || $row == null ) {
+                return false;
+            }
             return $row->orig_page_requested;
         } else {
             return false;
