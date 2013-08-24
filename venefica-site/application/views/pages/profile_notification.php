@@ -22,6 +22,7 @@
                 <div class="span12">
                     
                     <form action="<?=base_url()?>profile?notification" method="post" id="notifications_form">
+                        <input type="hidden" name="userId" value="<?=$user->id?>">
                     
                     <table class="table table-hover">
                         <thead>

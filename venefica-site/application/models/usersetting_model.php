@@ -21,7 +21,7 @@ class UserSetting_model extends CI_Model {
         //UserSetting_model::NOTIFICATION_REQUEST_SENT,
         UserSetting_model::NOTIFICATION_REQUEST_CANCELED,
         UserSetting_model::NOTIFICATION_REQUEST_DECLINED,
-        UserSetting_model::NOTIFICATION_FOLLOWER_AD_CREATED,
+        //UserSetting_model::NOTIFICATION_FOLLOWER_AD_CREATED,
     );
     
     var $notifiableTypes; //array of enum: FOLLOWER_ADDED, AD_COMMENTED, AD_REQUESTED, REQUEST_MESSAGED, REQUEST_ACCEPTED, REQUEST_SENT, REQUEST_CANCELED, REQUEST_DECLINED, FOLLOWER_AD_CREATED
@@ -30,7 +30,16 @@ class UserSetting_model extends CI_Model {
         log_message(DEBUG, "Initializing UserSetting_model");
         
         if ( $obj != null ) {
-            $this->notifiableTypes = getField($obj, 'notifiableTypes');
+            $this->notifiableTypes = array();
+            $notifiableTypes = getField($obj, 'notifiableTypes');
+            if ( is_array($notifiableTypes) && count($notifiableTypes) > 0 ) {
+                foreach ( $notifiableTypes as $notifiableType ) {
+                    array_push($this->notifiableTypes, $notifiableType);
+                }
+            } elseif ( !is_empty($notifiableTypes) ) {
+                $notifiableType = $notifiableTypes;
+                array_push($this->notifiableTypes, $notifiableType);
+            }
         }
     }
     
