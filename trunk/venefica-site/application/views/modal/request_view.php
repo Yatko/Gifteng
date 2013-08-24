@@ -11,6 +11,7 @@
                 $('#ad_' + adId).html(result);
             }
             //if ( $('#request_' + requestId).length > 0 ) {
+            //    $('#request_' + requestId).removeClass('masonry-brick');
             //    $('#request_' + requestId).addClass('hide');
             //}
         });

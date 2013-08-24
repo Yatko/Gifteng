@@ -12,6 +12,7 @@
 <script language="javascript">
     $(function() {
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
+            $('#request_' + requestId).removeClass('masonry-brick');
             $('#request_' + requestId).addClass('hide');
         });
         /**

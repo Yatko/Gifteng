@@ -11,7 +11,13 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                $('#request_' + requestId).removeClass('masonry-brick');
                 $('#request_' + requestId).addClass('hide');
+                
+                if ( $('.user_receiving').length > 0 ) {
+                    var num_receivings = response.<?=AJAX_STATUS_RESULT?>.<?=USER_RECEIVINGS_NUM?>;
+                    $('.user_receiving').text(num_receivings);
+                }
             } else {
                 //TODO: unknown response received
             }

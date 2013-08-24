@@ -28,6 +28,7 @@ $active_tab = Profile::getActiveTab($active_menu);
         
         <? if( $active_menu == Profile::MENU_FOLLOWING ): ?>
         $(".ge-user-following").on('unfollowed', function(event, userId) {
+            $('#user_' + userId).removeClass('masonry-brick');
             $('#user_' + userId).addClass('hide');
         });
         <? endif; ?>

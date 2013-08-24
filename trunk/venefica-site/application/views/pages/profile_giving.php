@@ -14,6 +14,7 @@ $is_owner = isOwner($user);
 <script language="javascript">
     $(function() {
         $('.ge-ad').on('ad_deleted', function(event, adId) {
+            $('#ad_' + adId).removeClass('masonry-brick');
             $('#ad_' + adId).addClass('hide');
         });
         $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
