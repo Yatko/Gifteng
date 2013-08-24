@@ -11,6 +11,7 @@
 <script language="javascript">
     $(function() {
         $('.ge-request').on('request_created', function(event, adId) {
+            $('#ad_' + adId).removeClass('masonry-brick');
             $('#ad_' + adId).addClass('hide');
         });
         /**

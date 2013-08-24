@@ -51,6 +51,7 @@
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                 if ( $('#ad_' + adId) ) {
+                    $('#ad_' + adId).removeClass('masonry-brick');
                     $('#ad_' + adId).addClass('hide');
                 }
                 

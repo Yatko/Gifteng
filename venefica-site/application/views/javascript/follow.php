@@ -34,6 +34,15 @@
                         $this.text('Unfollow');
                     });
                 }
+                
+                if ( $('.user_following').length > 0 ) {
+                    var num_following = response.<?=AJAX_STATUS_RESULT?>.<?=USER_FOLLOWINGS_NUM?>;
+                    $('.user_following').text(num_following);
+                }
+                if ( $('.user_follower').length > 0 ) {
+                    var num_follower = response.<?=AJAX_STATUS_RESULT?>.<?=USER_FOLLOWERS_NUM?>;
+                    $('.user_follower').text(num_follower);
+                }
             } else {
                 //TODO: unknown response received
             }
@@ -67,6 +76,15 @@
                         $this.html('Follow');
                         $this.text('Follow');
                     });
+                }
+                
+                if ( $('.user_following').length > 0 ) {
+                    var num_following = response.<?=AJAX_STATUS_RESULT?>.<?=USER_FOLLOWINGS_NUM?>;
+                    $('.user_following').text(num_following);
+                }
+                if ( $('.user_follower').length > 0 ) {
+                    var num_follower = response.<?=AJAX_STATUS_RESULT?>.<?=USER_FOLLOWERS_NUM?>;
+                    $('.user_follower').text(num_follower);
                 }
             } else {
                 //TODO: unknown response received
