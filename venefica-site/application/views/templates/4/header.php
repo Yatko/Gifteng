@@ -50,7 +50,7 @@ $subpage = key($_GET); //gets the first element from the array
     <script src="<?=JS_PATH?>jquery.stacktable.js"></script>
     <script src="<?=JS_PATH?>application.js"></script>
     <script src="<?=JS_PATH?>snap_krasi.js"></script>
-    <script src="<?=JS_PATH?>jquery.vgrid.min.js"></script>
+    <!--<script src="<?=JS_PATH?>jquery.vgrid.min.js"></script>-->
     
     <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
     <script src="<?=JS_PATH?>leaflet-providers.js"></script>
@@ -63,9 +63,9 @@ $subpage = key($_GET); //gets the first element from the array
     
     <!--MASONRY -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>masonry.css" />
-    <!--<script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>-->
-    <script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>
-    <!--<script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>-->
+    <script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>
+    <!--<script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>-->
+    <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
     
     
     
