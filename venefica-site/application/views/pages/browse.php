@@ -167,6 +167,7 @@
 
 
 <? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
+
     <? foreach ($ads as $ad): ?>
         <?
         $ad_id = $ad->id;
@@ -208,6 +209,7 @@
         </div>
 
     <? endforeach; ?>
+
 <? else: ?>
     
     <? if( key_exists('q', $_GET) ): ?>
@@ -222,8 +224,13 @@
 <? if ( !$boxContainer_exists ): ?>
         </div>
         <div id="loadingPage"></div>
+    
+        <? if( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
+            <button onclick="load_more(this);" class="span12 btn btn-block btn-ge">VIEW MORE</button>
+        <? else: ?>
+            
+        <? endif; ?>
         
-        <button onclick="load_more(this);" class="span12 btn btn-block btn-ge">VIEW MORE</button>
     </div>
 </div>
 <? endif; ?>
