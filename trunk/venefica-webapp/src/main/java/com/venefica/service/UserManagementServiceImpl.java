@@ -178,7 +178,15 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         UserSetting userSetting = new UserSetting();
-        userSetting.setNotifiableTypes(EnumSet.of(NotificationType.FOLLOWER_ADDED, NotificationType.AD_COMMENTED, NotificationType.AD_REQUESTED, NotificationType.REQUEST_MESSAGED));
+        userSetting.setNotifiableTypes(EnumSet.of(
+                NotificationType.FOLLOWER_ADDED,
+                NotificationType.AD_COMMENTED,
+                NotificationType.AD_REQUESTED,
+                NotificationType.REQUEST_MESSAGED,
+                NotificationType.REQUEST_ACCEPTED,
+                NotificationType.REQUEST_CANCELED,
+                NotificationType.REQUEST_DECLINED
+                ));
         userSettingDao.save(userSetting);
         
         invitation.use();
