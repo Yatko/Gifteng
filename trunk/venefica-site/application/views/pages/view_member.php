@@ -215,7 +215,7 @@ if ( !$ad->owner && !$ad_can_request ) {
                                             } else {
                                                 $request_js = '';
                                                 $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'INACTIVE';
+                                                $request_text = 'REQUESTS PENDING'; //originally was: INACTIVE
                                             }
                                             ?>
 
