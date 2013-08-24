@@ -23,9 +23,64 @@
     ?>
     
     <script langauge="javascript">
+        /**
+        var vg = $("#boxContainer").vgrid({
+            easing: "easeOutQuint",
+            time: 500,
+            delay: 20,
+            fadeIn: {
+                time: 300,
+                delay: 50
+            }
+        });
+        $(window).load(function(e) {
+            vg.vgrefresh();
+        });
+        /**/
+        
+        function load_more(callerElement) {
+            if ( $(".ge-ad-id:last").length === 0 ) {
+                return;
+            }
+            
+            if ( callerElement !== null ) {
+                var $element = $(callerElement);
+                $element.html('PLEASE WAIT ... LOADING GIFTS');
+                $element.addClass('disabled');
+                $element.attr("disabled", true);
+            }
+            
+            var $container = $('#boxContainer');
+            var lastAdId = $(".ge-ad-id:last").attr("id");
+            lastAdId = lastAdId.split('_')[1];
+            var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>';
+            
+            $.get(url, function(newElements) {
+                if ( newElements === null || $(newElements).length === 0 ) {
+                    return;
+                }
+                $container.append($(newElements));
+                
+                if ( callerElement !== null ) {
+                    var $element = $(callerElement);
+                    $element.html('VIEW MORE');
+                    $element.removeClass('disabled');
+                    $element.removeAttr("disabled");
+                }
+                
+                /**
+                var items = $(newElements).fadeTo(0, 0);
+                vg.prepend(items);
+                vg.vgrefresh(null, null, null, function(){
+                    items.fadeTo(300, 1);
+		});
+                /**/
+            });
+        }
+        
         $(function() {
             if ( $('#boxContainer').length > 0 ) {
-                var $container = $('#boxContainer');
+//                var $container = $('#boxContainer');
                 
                 /**
                 $container.imagesLoaded(function() {
@@ -49,55 +104,43 @@
                 });
                 /**/
                 
-                $container.infinitescroll({
-                    navSelector: ".nextPage:last",
-                    nextSelector: "a.nextPage:last",
-                    itemSelector: '.ge-ad-item-box',
-                    //debug: true,
-                    loading: {
-                        finishedMsg: 'No more pages to load.',
-                        msgText: 'Loading...',
-                        img: 'http://i.imgur.com/6RMhx.gif',
-                        selector: '#loadingPage'
-                    },
-                    path: function(page) {
-                        if ( $(".ge-ad-id:last").length === 0 ) {
-                            return;
-                        }
-                        
-                        var lastAdId = $(".ge-ad-id:last").attr("id");
-                        lastAdId = lastAdId.split('_')[1];
-                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>'];
-                    },
-                    prefill: true
-                }, function(newElements) {
-                    if ( newElements === null || $(newElements).length === 0 ) {
-                        return;
-                    }
-                    
-                    $container.append($(newElements));
-                    
-                    /**
-                    var $newElems = $(newElements).css({opacity: 0});
-                    $newElems.imagesLoaded(function() {
-                        $newElems.animate({opacity: 1});
-                        $container.masonry('appended', $newElems, true); 
-                    });
-                    /**/
-                });
+//                $container.infinitescroll({
+//                    navSelector: ".nextPage:last",
+//                    nextSelector: "a.nextPage:last",
+//                    itemSelector: '.ge-ad-item-box',
+//                    //debug: true,
+//                    loading: {
+//                        finishedMsg: 'No more pages to load.',
+//                        msgText: 'Loading...',
+//                        img: 'http://i.imgur.com/6RMhx.gif',
+//                        selector: '#loadingPage'
+//                    },
+//                    path: function(page) {
+//                        if ( $(".ge-ad-id:last").length === 0 ) {
+//                            return;
+//                        }
+//                        
+//                        var lastAdId = $(".ge-ad-id:last").attr("id");
+//                        lastAdId = lastAdId.split('_')[1];
+//                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>'];
+//                    },
+//                    prefill: true
+//                }, function(newElements) {
+//                    if ( newElements === null || $(newElements).length === 0 ) {
+//                        return;
+//                    }
+//                    
+//                    $container.append($(newElements));
+//                    
+//                    /**
+//                    var $newElems = $(newElements).css({opacity: 0});
+//                    $newElems.imagesLoaded(function() {
+//                        $newElems.animate({opacity: 1});
+//                        $container.masonry('appended', $newElems, true); 
+//                    });
+//                    /**/
+//                });
             }
-            
-            /**
-            $("#boxContainer").vgrid({
-                easing: "easeOutQuint",
-                time: 500,
-                delay: 20,
-                fadeIn: {
-                    time: 300,
-                    delay: 50
-                }
-            });
-            /**/
         });
     </script>
 <? endif; ?>
@@ -179,6 +222,8 @@
 <? if ( !$boxContainer_exists ): ?>
         </div>
         <div id="loadingPage"></div>
+        
+        <button onclick="load_more(this);" class="span12 btn btn-block btn-ge">VIEW MORE</button>
     </div>
 </div>
 <? endif; ?>
