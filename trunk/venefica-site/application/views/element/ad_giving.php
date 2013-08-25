@@ -11,6 +11,7 @@ $ad_id = $ad->id;
 $is_owner = isOwner($user_id);
 $revision = $ad->revision;
 $approval = $ad->approval;
+$ad_can_request = $ad->canRequest;
 
 $has_approval = false;
 if ( $approval != null ) {
@@ -32,6 +33,8 @@ if ( $is_owner ) {
     }
 } else {
     if ( $ad->expired ) {
+        $inactive = true;
+    } else if ( !$ad_can_request ) {
         $inactive = true;
     }
 }
