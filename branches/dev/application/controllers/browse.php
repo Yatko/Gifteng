@@ -4,7 +4,7 @@ class Browse extends CI_Controller {
     
     private $initialized = false;
     
-    const STARTING_AD_NUM = 5;
+    const STARTING_AD_NUM = 15;
     const CONTINUING_AD_NUM = 10;
     const COMMENTS_NUM = 2;
     
@@ -126,7 +126,8 @@ class Browse extends CI_Controller {
                 unset($ads[$key]);
             }
             
-            if ( count($ads) == 0 && $has_ads ) {
+            //if ( $has_ads && count($ads) == 0 ) {
+            if ( $has_ads && count($ads) < Browse::CONTINUING_AD_NUM ) {
                 $ads = $this->getAds($last_ad_id, $numberAds, $filter);
             }
             

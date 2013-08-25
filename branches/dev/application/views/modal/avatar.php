@@ -8,7 +8,7 @@
                 if ( !$error.attr('original_text') ) {
                     $error.attr('original_text', $error.html());
                 }
-                $error.html("<div class='error'>Please limit photo size to 2MB !</div>");
+                $error.html("<div class='error'>Please limit photo size to 5 MB !</div>");
                 
                 $this.html($this.attr('original_text'));
                 return;
@@ -69,7 +69,7 @@
     </div>
     <div class="modal-body">
 		<div class="well ge-well  ge-form">
-    <?= form_open_multipart('/profile/ajax/change_avatar', array('id' => 'avatar_post_form')) ?>
+        <?= form_open_multipart('/profile/ajax/change_avatar', array('id' => 'avatar_post_form')) ?>
 
         <button id="avatar" for="avatar_image" type="button" class="btn btn-huge btn-block file">
             Upload photo
@@ -77,7 +77,7 @@
         </button>
         <input type="file" name="avatar_image" id="avatar_image" />
 
-    <?= form_close() ?>
+        <?= form_close() ?>
 		</div>
     </div>
 </div>

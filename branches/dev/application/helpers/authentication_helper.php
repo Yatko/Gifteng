@@ -44,9 +44,10 @@ if ( ! function_exists('login')) {
      * 
      * @param string $email
      * @param string $password
+     * @param boolean $remember_me
      * @return boolean true is login success
      */
-    function login($email, $password) {
+    function login($email, $password, $remember_me) {
         $CI =& get_instance();
         $CI->load->library('auth_service');
         $CI->load->library('usermanagement_service');
@@ -54,11 +55,26 @@ if ( ! function_exists('login')) {
         try {
             $token = $CI->auth_service->authenticateEmail($email, $password);
             $CI->usermanagement_service->storeUser($email, $token);
+            
+            if ( $remember_me ) {
+                $CI->load->library('remember_me');
+                $user = $CI->usermanagement_service->loadUser();
+                $CI->remember_me->setCookie($user->id);
+            }
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Email and/or password is incorrect: '.$ex->getMessage());
             return FALSE;
         }
         return TRUE;
+    }
+}
+if ( !function_exists('logout') ) {
+    function logout() {
+        destroySession();
+        
+        $CI =& get_instance();
+        $CI->load->library('remember_me');
+        $CI->remember_me->deleteCookie();
     }
 }
 if ( ! function_exists('isLogged')) {
@@ -68,7 +84,11 @@ if ( ! function_exists('isLogged')) {
      * @return boolean
      */
     function isLogged() {
-        if ( loadToken() ) {
+        $CI =& get_instance();
+        $CI->load->library('remember_me');
+        $cookie_user = $CI->remember_me->verifyCookie();
+        
+        if ( $cookie_user || loadToken() ) {
             return TRUE;
         }
         return FALSE;

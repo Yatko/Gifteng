@@ -33,6 +33,7 @@
         <div class="ge-modal_footer">
         <?=form_open('/ajax/post', array('id' => 'edit_post_form'))?>
             <input type="hidden" name="adId"/>
+            <fieldset>
                 <div class="row-fluid">
                     <div class="span12">
                         <div class="control-group control-form">

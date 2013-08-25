@@ -19,20 +19,9 @@ $view_link = $ad->getViewUrl();
 
 ?>
 
-<? if (!$is_modal) : ?>
 <div class="span6">
     <div class="well ge-well">
-<? endif; ?>	
-
-
-<?php if ($is_modal) : ?>
-	
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <div class="modal-header-content">
-        	<div class="ge-modal_header">
-<? endif; ?>
-
+		
         <div class="row-fluid">
             <div class="ge-user">
                 <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
@@ -55,14 +44,6 @@ $view_link = $ad->getViewUrl();
 
 <? endif; ?>
 
-<?php if ($is_modal) : ?>
-</div></div></div>
-<?php endif; ?>
-
-<?php if ($is_modal) : ?>
-    <div class="modal-body">
-    	<div class="well ge-well">
-<?php endif; ?>
         <div class="row-fluid">
             <div class="ge-messages">
                 <div class="span12">

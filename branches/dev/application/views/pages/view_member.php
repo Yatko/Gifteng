@@ -98,6 +98,15 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
     $ad_description_rest = '';
 }
 
+$can_bookmark = $ad_can_request ? true : false;
+$can_share = $ad_can_request ? true : false;
+$can_comment = false;
+
+$inactive = false;
+if ( !$ad->owner && !$ad_can_request ) {
+    $inactive = true;
+}
+
 ?>
 
 <? if ($this->agent->is_referral()): ?>
@@ -115,6 +124,7 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
 <div class="row">
     <div class="ge-detail-view">
 
+        <div class="ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
         <div class="span6">
             <div class="well ge-well">
                 <div class="row-fluid">
@@ -123,12 +133,13 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
                             <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => false)); ?>
                         </div>
                         <div class="ge-item">
-                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => true, 'canComment' => false, 'canShare' => true)); ?>
+                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div><!--./ge-item main-->
+        </div>
+        </div>
 
         <div class="span6">
             <div class="ge-item">
@@ -176,14 +187,14 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
                                             <?
                                             if ($user_request != null) {
                                                 //there is a user request for this ad
-                                                if ($ad_is_sold) {
+                                                if ($user_request->isDeclined()) {
+                                                    $request_js = '';
+                                                    $request_class = 'class="btn btn-large btn-block disabled"';
+                                                    $request_text = 'REQUEST DECLINED';
+                                                } else if ($ad_is_sold) {
                                                     $request_js = '';
                                                     $request_class = 'class="btn btn-large btn-block disabled"';
                                                     $request_text = 'GIFT RECEIVED';
-                                                } else if ($user_request->isDeclined()) {
-                                                    $request_js = '';
-                                                    $request_class = 'class="btn btn-large btn-block disabled"';
-                                                    $request_text = 'EXPIRED';
                                                 } else {
                                                     $request_js = '';
                                                     $request_class = 'class="btn btn-large btn-block disabled"';
@@ -197,35 +208,15 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
                                                 $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
                                                 $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
                                                 $request_text = 'REQUEST GIFT';
+                                            } else if ( $ad->isMaxAllowedRequestsReached() ) {
+                                                $request_js = '';
+                                                $request_class = 'class="btn btn-large btn-block disabled"';
+                                                $request_text = 'REQUESTS PENDING';
                                             } else {
                                                 $request_js = '';
                                                 $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'INACTIVE';
+                                                $request_text = 'REQUESTS PENDING'; //originally was: INACTIVE
                                             }
-
-                                            /**
-                                            if ($ad_is_sold) {
-                                                $request_js = '';
-                                                $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'GIFTED';
-                                            } elseif ($user_request != null && $user_request->isDeclined()) {
-                                                $request_js = '';
-                                                $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'EXPIRED';
-                                            } elseif ($ad_can_request) {
-                                                $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
-                                                $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
-                                                $request_text = 'REQUEST GIFT';
-                                            } else if ($user_request != null) {
-                                                $request_js = '';
-                                                $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'REQUEST SENT';
-                                            } else {
-                                                $request_js = '';
-                                                $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'INACTIVE';
-                                            }
-                                            /* */
                                             ?>
 
                                             <button <?= $request_js ?> <?= $request_class ?> type="button"><?= $request_text ?></button>

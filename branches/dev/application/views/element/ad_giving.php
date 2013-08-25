@@ -17,8 +17,28 @@ if ( $approval != null ) {
     $has_approval = true;
 }
 
+$inactive = false;
+if ( $is_owner ) {
+    if ( !$ad->online ) {
+        $inactive = false;
+    } elseif ( $ad->sold ) {
+        $inactive = true;
+    } elseif ( $ad->expired ) {
+        $inactive = false;
+    } elseif ( !$ad->hasActiveRequest() ) {
+        $inactive = false;
+    } elseif ( $ad->hasSentRequest() ) {
+        $inactive = true;
+    }
+} else {
+    if ( $ad->expired ) {
+        $inactive = true;
+    }
+}
+
 ?>
 
+<div class="ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
 <div class="span3 ge-box">
     <div class="well ge-well">
         <div class="row-fluid">
@@ -106,7 +126,9 @@ if ( $approval != null ) {
 
                     <div class="row-fluid ge-text ge-description">
                         <div class="span6">
+                            <? /** ?>
                             <button onclick="ad_relist(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
+                            <? /**/ ?>
                         </div>
                         <div class="span6">
                             <button onclick="startAdDeleteModal(this, <?=$ad_id?>);" type="button" class="ge-ad btn btn-small btn-block">DELETE</button>
@@ -262,3 +284,4 @@ if ( $approval != null ) {
         </div>
     </div>
 </div><!--./ge-box-->
+</div>

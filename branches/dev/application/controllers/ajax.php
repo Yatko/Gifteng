@@ -189,8 +189,12 @@ class Ajax extends CI_Controller {
             $userId = $_GET['userId'];
             $this->usermanagement_service->follow($userId);
             $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_FOLLOWINGS_NUM => $currentUser->statistics->numFollowings,
+                USER_FOLLOWERS_NUM => $currentUser->statistics->numFollowers
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -209,8 +213,12 @@ class Ajax extends CI_Controller {
             $userId = $_GET['userId'];
             $this->usermanagement_service->unfollow($userId);
             $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_FOLLOWINGS_NUM => $currentUser->statistics->numFollowings,
+                USER_FOLLOWERS_NUM => $currentUser->statistics->numFollowers
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -403,8 +411,11 @@ class Ajax extends CI_Controller {
             $requestId = $_GET['requestId'];
             $this->ad_service->hideRequest($requestId);
             $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->loadUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_RECEIVINGS_NUM => $currentUser->statistics->numReceivings
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }

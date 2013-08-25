@@ -312,9 +312,14 @@ class Post_member extends CI_Controller {
             $is_valid = false;
         }
         
+        if ( $this->input->post('category') == "" ) {
+            $this->post_form->setError(lang('post_member_category_missing'));
+            $is_valid = false;
+        }
+        
         $this->post_form->set_rules('title', 'lang:post_title', 'trim|required');
         $this->post_form->set_rules('price', 'lang:post_price', 'trim|numeric');
-        $this->post_form->set_rules('category', 'lang:post_category', 'required');
+        $this->post_form->set_rules('category');
         $this->post_form->set_rules('description');
         $this->post_form->set_rules('zipCode', 'lang:post_zipCode', 'required');
         $this->post_form->set_rules('pickUp');
@@ -339,7 +344,7 @@ class Post_member extends CI_Controller {
             $this->ad->price = $this->input->post('price');
             $this->ad->address->zipCode = $this->input->post('zipCode');
             $this->ad->pickUp = hasElement($_POST, 'pickUp') && $this->input->post('pickUp') == '1' ? true : false;
-            $this->ad->freeShipping = hasElement($_POST, 'freeShipping') && $this->input->post('freeShipping') == '1' ? true : false;;
+            $this->ad->freeShipping = hasElement($_POST, 'freeShipping') && $this->input->post('freeShipping') == '1' ? true : false;
         }
         
         return $is_valid;

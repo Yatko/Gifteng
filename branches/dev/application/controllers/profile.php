@@ -256,6 +256,10 @@ class Profile extends CI_Controller {
 
                     $follow_ads[$following->id] = array();
                     foreach ($ads as $ad) {
+                        if ( !$ad->approved || !$ad->online ) {
+                            continue;
+                        }
+                        
                         array_push($follow_ads[$following->id], $ad);
                         if ( count($follow_ads[$following->id]) == Profile::ADS_NUM ) {
                             //max to display reached
@@ -303,6 +307,10 @@ class Profile extends CI_Controller {
 
                     $follow_ads[$follower->id] = array();
                     foreach ($ads as $ad) {
+                        if ( !$ad->approved || !$ad->online ) {
+                            continue;
+                        }
+                        
                         array_push($follow_ads[$follower->id], $ad);
                         if ( count($follow_ads[$follower->id]) == Profile::ADS_NUM ) {
                             //max to display reached
@@ -341,8 +349,7 @@ class Profile extends CI_Controller {
      */
     public function notification($user) {
         if ( $_POST ) {
-            $user_setting = new \UserSetting_model();
-            $user_setting->userId = $this->input->post('userId');
+            $user_setting = new UserSetting_model();
             $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
             
             try {

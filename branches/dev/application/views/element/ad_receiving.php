@@ -11,8 +11,16 @@
 $ad_id = $ad->id;
 $request_id = $request->id;
 
+$inactive = false;
+if( $ad->expired || $request->isExpired() ) {
+    $inactive = false;
+} elseif ( $ad->sold ) {
+    $inactive = true;
+}
+
 ?>
 
+<div class="ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
 <div class="span3 ge-box">
     <div class="well ge-well">
         <div class="row-fluid">
@@ -135,3 +143,4 @@ $request_id = $request->id;
         </div>
     </div>
 </div><!--./ge-box-->
+</div>

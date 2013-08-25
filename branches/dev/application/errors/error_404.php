@@ -1,18 +1,8 @@
-<?php
-
-$base_path  = base_url().'assets/'.TEMPLATES.'/';
-$js_path    = $base_path.'js/';
-$css_path   = $base_path.'css/';
-$img_path   = $base_path.'img/';
-$font_path  = $base_path.'font/';
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Gifteng - 404 Page Not Found</title>
-<link rel="shortcut icon" href="<?=$img_path?>favicon.ico" >
+<link rel="shortcut icon" href="assets/<?=TEMPLATES?>/images/favicon.ico" />
 <style type="text/css">
 
 ::selection{ background-color: #E13300; color: white; }

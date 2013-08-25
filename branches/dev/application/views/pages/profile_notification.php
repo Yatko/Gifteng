@@ -9,13 +9,20 @@
 
 ?>
 
+<script language="javascript">
+    $(function() {
+        disable_form_buttons_on_submit('notifications_form', null);
+    });
+</script>
+
 <div class="row">
     <div class="span6 offset3">
         <div class="well ge-well ge-form">
             <div class="row-fluid">
                 <div class="span12">
                     
-                    <?=form_open('/profile?notification', '', array("userId" => $user->id))?>
+                    <form action="<?=base_url()?>profile?notification" method="post" id="notifications_form">
+                        <input type="hidden" name="userId" value="<?=$user->id?>">
                     
                     <table class="table table-hover">
                         <thead>
@@ -52,9 +59,15 @@ $index = 0;
                         </tbody>
                     </table>
 
-                    <button type="submit" class="btn pull-right">SAVE</button>
+                    <div class="ge-modal_footer">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <button type="submit" class="span4 btn btn-large btn-ge pull-right">SAVE</button>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <?=form_close()?>
+                    </form>
                     
                 </div>
             </div>

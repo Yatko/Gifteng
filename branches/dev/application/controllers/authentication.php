@@ -44,10 +44,14 @@ class Authentication extends CI_Controller {
         if ( $is_valid ) {
             //$remember_me = $this->input->post('login_remember_me');
             
+            /**
             if ( $this->agent->is_referral() ) {
                 redirect($this->agent->referrer());
             }
             redirect('/authentication/login');
+            /**/
+            
+            redirect('/profile');
         }
         
         $this->view();
@@ -109,7 +113,7 @@ class Authentication extends CI_Controller {
     public function logout() {
         $this->init();
         
-        destroySession();
+        logout();
         
         redirect('/index');
     }
@@ -146,7 +150,6 @@ class Authentication extends CI_Controller {
         }
         return $is_valid;
     }
-
 
     private function login_forgot() {
         $this->load->library('form_validation', null, 'forgot_password_form');
@@ -212,7 +215,9 @@ class Authentication extends CI_Controller {
         }
         
         $email = $this->input->post('login_email');
-        if ( !login($email, $password) ) {
+        $remember_me = hasElement($_POST, 'login_remember_me') && $this->input->post('login_remember_me') == '1' ? true : false;
+        
+        if ( !login($email, $password, $remember_me) ) {
             $this->login_form->set_message('authorize_email_password', lang('login_failed'));
             return FALSE;
         }

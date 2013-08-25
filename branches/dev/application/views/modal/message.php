@@ -32,18 +32,20 @@
         </div>
 	</div>
     <div class="modal-body">
+        
         <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
-        <input type="hidden" name="messageRequestId" value=""/>
-        <input type="hidden" name="messageToId" value=""/>
+            <input type="hidden" name="messageRequestId" value=""/>
+            <input type="hidden" name="messageToId" value=""/>
 
-        <div class="row-fluid ge-message ge-input ge-text">
-            <div class="span9">
-                <textarea name="messageText" placeholder="Your message ..."></textarea>
+            <div class="row-fluid ge-message ge-input ge-text">
+                <div class="span9">
+                    <textarea name="messageText" placeholder="Your message ..."></textarea>
+                </div>
+                <div class="span3">
+                    <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
+                </div>
             </div>
-            <div class="span3">
-                <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
-            </div>
-        </div>
+        
         <?=form_close()?>
         
     </div>

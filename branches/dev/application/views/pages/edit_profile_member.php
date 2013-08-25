@@ -51,6 +51,7 @@ if ( $is_modal ) {
     <div class="span8 offset2">
 
 <? endif; ?>
+
         <div class="well ge-well ge-form">
             <div class="row-fluid">
                 <div class="span12">
@@ -178,6 +179,7 @@ if ( $is_modal ) {
                 </div>
             </div>
         </div><!--./ge-well-->
+
 <? if( !$is_modal ): ?>
 
     </div>
