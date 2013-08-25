@@ -69,7 +69,7 @@ delete from `ad`;
 insert into `ad` (`adData_id`, `creator_id`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `numexpire`, `status`, `expires`, `approved`, `online`) values (1, 1, now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', 'ACTIVE', '1', '1', '1');
 
 delete from `user_transaction`;
-insert into `user_transaction` (`finalized`, `pendingGivingNumber`, `pendingReceivingNumber`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '2.2625', '0', 1, 1, 1);
+insert into `user_transaction` (`finalized`, `approved`, `pendingGivingNumber`, `pendingReceivingNumber`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '1', '2.2625', '0', 1, 1, 1);
 
 -- Bookmarks
 delete from `bookmark`;

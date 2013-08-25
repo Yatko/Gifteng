@@ -178,6 +178,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 //            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
 
             UserTransaction transaction = new UserTransaction(ad);
+            transaction.setApproved(false);
             transaction.setUser(currentUser);
             transaction.setUserPoint(currentUser.getUserPoint());
 //            transaction.setPendingNumber(currentPendingNumber);
@@ -303,7 +304,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidAdStateException("Ad (adId: " + adId + ") is already deleted");
         }
         if ( transaction == null ) {
-            throw new InvalidAdStateException("There is no transaction assiciated with this ad (adId: " + adId + ")");
+            throw new InvalidAdStateException("There is no transaction associated with this ad (adId: " + adId + ")");
         }
 
         ad.markAsDeleted();
@@ -522,15 +523,22 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getUserAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
+        User currentUser = getCurrentUser();
         User user = validateUser(userId);
         List<Ad> ads = adDao.getByUser(userId);
         List<AdDto> result = new LinkedList<AdDto>();
+        boolean includeUnapproved = currentUser.equals(user);
         
         if ( includeRequests == null ) {
             includeRequests = false;
         }
         
         for (Ad ad : ads) {
+            if ( !includeUnapproved && (!ad.isApproved() || !ad.isOnline()) ) {
+                //ad is not approved or is not marked as online
+                continue;
+            }
+            
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(user)
                     .includeRequests(includeRequests)
@@ -759,6 +767,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 //            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
 
             UserTransaction transaction = new UserTransaction(request);
+            transaction.setApproved(true);
             transaction.setUser(user);
             transaction.setUserPoint(user.getUserPoint());
 //            transaction.setPendingNumber(currentPendingNumber);
