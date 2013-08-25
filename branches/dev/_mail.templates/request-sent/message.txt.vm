@@ -1,0 +1,12 @@
+Hi ${user.userData.getFirstName()},
+
+Congratulations, you received a Gift!
+
+Click on the following link to  finalize the transaction:
+${baseUrl}request/${request.id}
+
+Happy receiving!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

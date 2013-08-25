@@ -1,0 +1,12 @@
+Hi ${ad.creator.userData.getFirstName()},
+
+${request.user.getFullName()} is excited to have your Gift!
+
+Click on the following link to view request:
+${baseUrl}request/${request.id}
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

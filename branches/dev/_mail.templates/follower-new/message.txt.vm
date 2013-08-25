@@ -1,0 +1,10 @@
+Hi ${user.userData.getFirstName()},
+
+Click on the following link to find out who is your new follower:
+${baseUrl}profile?follower
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

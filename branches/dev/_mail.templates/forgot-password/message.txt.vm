@@ -1,0 +1,12 @@
+Hi ${user.userData.getFirstName()},
+
+We received a request to reset your password.
+If you didn’t make this request, simply ignore this email. 
+
+Click on the following link to reset your password:
+${baseUrl}authentication/reset/${code}
+
+Please do this within 24 hours, otherwise the link will expire! 
+
+Happy gifting! 
+The Gifteng Team

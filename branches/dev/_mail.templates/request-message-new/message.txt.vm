@@ -1,0 +1,12 @@
+Hi ${to.userData.getFirstName()},
+
+You received a new message from ${from.getFullName()}.
+
+Click on the following link to  view the message:
+${baseUrl}request/${request.id}
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}profile?notification
