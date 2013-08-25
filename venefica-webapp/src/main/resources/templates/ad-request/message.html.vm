@@ -6,18 +6,18 @@
   </head>
   
   <body style="font-family:sans-serif;text-align:center;text-shadow: 0 1px 0 #fff;background:url('http://gifteng.com/assets/4/temp-sample/ge-background.png') #eeedea;">
-  	<div style="padding:36px 0;">
-		<img src="http://gifteng.com/images/mail/gifteng.png">
-		<hr style="border: 0;height: 1px;margin-top:36px;background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));" />
-	</div>
-	<!-- message-content -->
-	<div id="message-content">
+  	<div style="padding-top:36px;width: 160px;margin: auto;">
+  		<img src="http://gifteng.com/images/mail/gifteng.png">
+  	</div>
+  	<hr style="border: 0;height: 1px;margin:36px 0;background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));" />
+  	<!-- message-content -->
+  	<div id="message-content" style="text-align:center;">
 		<h1 style="font-size: 136%;">Hi ${ad.creator.userData.getFirstName()},</h1>
 		<p>
 		${request.user.getFullName()} is excited to have your Gift!
 		</p>
 		<p>
-			<a href="${baseUrl}request/${request.id}" style="border: none;background: #00bebe;color: #ffffff;padding: 9px 12px 10px;line-height: 22px;font-size: 14.994px;font-weight: 500;text-decoration: none;text-shadow: none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;-webkit-transition: 0.25s;-moz-transition: 0.25s;-o-transition: 0.25s;transition: 0.25s;-webkit-backface-visibility: hidden;">Click here to view the request</a> 
+			<br /><br /><a href="${baseUrl}request/${request.id}" style="border: none;background: #00bebe;color: #ffffff;padding: 9px 12px 10px;line-height: 22px;font-size: 14.994px;font-weight: 500;text-decoration: none;text-shadow: none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;-webkit-transition: 0.25s;-moz-transition: 0.25s;-o-transition: 0.25s;transition: 0.25s;-webkit-backface-visibility: hidden;">Click here to view the request</a><br /><br />
 		</p>
 		<p>
 		Happy receiving!<br />
@@ -25,7 +25,7 @@
 		</p>
 	</div>
 	<!-- message-note -->
-	<div style="padding:36px 0;">
+	<div style="padding:36px 0;text-align:center;">
 		<p style="color: #333333;font-size: 11px;">
 			You can also copy and paste this link into your browser:
 			${baseUrl}request/${request.id}
@@ -33,7 +33,7 @@
 	</div>
 	<!-- ./message-note -->
 	<!-- ./message-content -->	
-	<div style="padding:36px 0;">
+	<div style="padding:36px 0;text-align:center;">
 		<p style="color: #aaaaaa;font-size: 136%;">
 			Give. Receive. Inspire.
 		</p>
