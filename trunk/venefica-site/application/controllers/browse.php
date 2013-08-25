@@ -52,6 +52,9 @@ class Browse extends CI_Controller {
         $lastAdId = $_GET['lastAdId'];
         $filter = $this->buildFilter($query);
         $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM, $filter);
+        if (is_empty($ads) ) {
+            return '';
+        }
         
         $data = array();
         $data['is_ajax'] = true;
@@ -128,7 +131,9 @@ class Browse extends CI_Controller {
             
             //if ( $has_ads && count($ads) == 0 ) {
             if ( $has_ads && count($ads) < Browse::CONTINUING_AD_NUM ) {
-                $ads = $this->getAds($last_ad_id, $numberAds, $filter);
+                foreach ( $this->getAds($last_ad_id, $numberAds, $filter) as $ad ) {
+                    array_push($ads, $ad);
+                }
             }
             
             return $ads;

@@ -61,7 +61,6 @@ $active_tab = Profile::getActiveTab($active_menu);
 				
                 <? if( count($ads) > 0 ): ?>
                                     
-                                    <div class="ge-ad-item-box ge-inactive">
                                     <div class="ge-text ge-description ge-user-image ge-action">
                                         <div class="row-fluid">
                                         
@@ -73,12 +72,13 @@ $active_tab = Profile::getActiveTab($active_menu);
                                             ?>
                                             
                                             <div class="span4">
-                                                <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                                <div class="ge-ad-item-box <?= ($inactive ? 'ge-inactive' : 'ge-active') ?>">
+                                                    <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                                </div>
                                             </div>
                                         <? endforeach; ?>
                                         
                                         </div>
-                                    </div>
                                     </div>
                                     
                 <? else: ?>
