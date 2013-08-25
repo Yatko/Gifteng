@@ -68,12 +68,21 @@ $active_tab = Profile::getActiveTab($active_menu);
                                             <?
                                             $img = $ad->getImageUrl();
                                             $view_link = $ad->getViewUrl();
-                                            $inactive = ($ad->status == Ad_model::STATUS_FINALIZED || $ad->status == Ad_model::STATUS_EXPIRED)
+                                            $ad_can_request = $ad->canRequest;
+                                            
+                                            //$inactive = ($ad->status == Ad_model::STATUS_FINALIZED || $ad->status == Ad_model::STATUS_EXPIRED);
+                                            
+                                            $inactive = false;
+                                            if ( !$ad_can_request ) {
+                                                $inactive = true;
+                                            }
                                             ?>
                                             
                                             <div class="span4">
                                                 <div class="ge-ad-item-box <?= ($inactive ? 'ge-inactive' : 'ge-active') ?>">
-                                                    <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                                    <div class="ge-item-image">
+                                                        <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         <? endforeach; ?>

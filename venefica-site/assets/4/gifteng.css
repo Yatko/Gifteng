@@ -518,6 +518,7 @@ hr.ge-hr-dotted {
 }
 
 /* masonry */
+/*
 .masonry {
     -moz-column-count: 3;
     -moz-column-gap: 0px;
@@ -531,4 +532,34 @@ hr.ge-hr-dotted {
     display: inline-block;
     margin-bottom: 0px;
     width: 100%;
+}
+*/
+
+/* business registration */
+.ge-business .ge-headline h4 {
+	text-transform: uppercase;
+	color: #333333;
+	margin-bottom: 0px;
+}
+.ge-business .ge-headline p {
+	color:#00bebe;
+	font-size:18px;
+	font-weight:600;
+}
+.ge-business .ge-well.ge-topspace {
+	margin-top:-66px;	
+	padding-top: 66px;
+}
+.ge-business .ge-well.ge-bottomspace {
+	padding-bottom: 66px;
+}
+.ge-business .ge-welcome img.img-rounded {
+	border-radius: 180px;
+	width: 120px;
+	height: 120px;
+	background-size: 120px 120px;
+}
+.ge-business .control-label {
+	color:#34495e;
+	font-size:14px;
 }
