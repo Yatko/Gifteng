@@ -256,7 +256,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             }
             if ( canRequest ) {
                 if ( model.getCreator().equals(currentUser) ) {
-                    //owner cannot request its ad
+                    //owner cannot request owned ads
                     canRequest = false;
                 }
             }

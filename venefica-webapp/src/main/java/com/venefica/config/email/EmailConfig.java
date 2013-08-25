@@ -29,6 +29,7 @@ public class EmailConfig {
     public EmailSender emailSender() {
         int smtpPort = environment.getProperty("email.smtpPort", int.class);
         int smtpPortSSL = environment.getProperty("email.smtpPortSSL", int.class);
+        String baseUrl = environment.getProperty("email.baseUrl");
         String charset = environment.getProperty("email.charset");
         String hostName = environment.getProperty("email.hostName");
         String username = environment.getProperty("email.username");
@@ -68,6 +69,7 @@ public class EmailConfig {
         emailService.setFromEmailAddress(fromEmailAddress);
         emailService.setFromName(fromName);
         emailService.setUndeliveredEmailAddress(undeliveredEmailAddress);
+        emailService.setBaseUrl(baseUrl);
         emailService.setImagesBaseUrls(imagesBaseUrls);
         emailService.setEnabled(enabled);
         return emailService;

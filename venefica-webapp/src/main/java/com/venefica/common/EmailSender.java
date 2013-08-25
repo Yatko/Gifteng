@@ -13,7 +13,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -43,7 +42,6 @@ public class EmailSender {
     private static final Log logger = LogFactory.getLog(EmailSender.class);
     
     private static final String TEMPLATES_FOLDER = "templates/";
-    private static final String BASE_URL = "http://veneficalabs.com/gifteng/";
     
     private int smtpPort;
     private int smtpPortSSL;
@@ -55,6 +53,7 @@ public class EmailSender {
     private String fromEmailAddress;
     private String fromName;
     private String undeliveredEmailAddress;
+    private String baseUrl;
     private String[] imagesBaseUrls;
     private boolean enabled;
     
@@ -221,7 +220,7 @@ public class EmailSender {
         try {
             Template template = velocityEngine.getTemplate(templateName);
             VelocityContext context = new VelocityContext();
-            context.put("baseUrl", BASE_URL); //global key available for all templates
+            context.put("baseUrl", baseUrl); //global key available for all templates
             
             if ( vars != null && !vars.isEmpty() ) {
                 for ( Map.Entry<String, Object> entry : vars.entrySet() ) {
@@ -295,5 +294,9 @@ public class EmailSender {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

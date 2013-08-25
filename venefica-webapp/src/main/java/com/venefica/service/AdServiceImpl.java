@@ -66,7 +66,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.apache.commons.lang.time.DateUtils;
@@ -473,7 +472,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber) {
         List<AdDto> result = new LinkedList<AdDto>();
         List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
-
         User currentUser = getCurrentUser();
 
         // TODO: Optimize this
@@ -540,7 +538,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
             
             AdDto adDto = new AdDtoBuilder(ad)
-                    .setCurrentUser(user)
+                    //.setCurrentUser(user)
+                    .setCurrentUser(currentUser)
                     .includeRequests(includeRequests)
                     .includeCanRequest()
                     .build();
@@ -638,9 +637,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public AdStatisticsDto getStatistics(Long adId) throws AdNotFoundException {
+        User currentUser = getCurrentUser();
         Ad ad = validateAd(adId);
         
-        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getCurrentUser()).build();
+        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(currentUser).build();
         return adDto.getStatistics();
     }
 
@@ -700,10 +700,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         Request request = validateRequest(requestId);
-        User user = getCurrentUser();
+        User currentUser = getCurrentUser();
         Ad ad = request.getAd();
         
-        if ( !request.getUser().equals(user) ) {
+        if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can hide requests.");
         }
         if ( !ad.isExpired() && !request.isUnaccepted() && !request.isDeclined() ) {
@@ -717,8 +717,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public Long requestAd(Long adId, String text) throws AdNotFoundException, AlreadyRequestedException, InvalidRequestException, InvalidAdStateException {
         Ad ad = validateAd(adId);
-        User user = getCurrentUser();
-        Long userId = getCurrentUserId();
+        User currentUser = getCurrentUser();
+        Long currentUserId = getCurrentUserId();
         User creator = ad.getCreator();
         
         if (ad.getStatus() == AdStatus.ACTIVE || ad.getStatus() == AdStatus.IN_PROGRESS) {
@@ -728,15 +728,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidAdStateException("Ad can't be requested as its state (" + ad.getStatus() + ") is not as expected!");
         }
         
-        Request request = requestDao.get(userId, adId);
+        Request request = requestDao.get(currentUserId, adId);
         if ( request != null ) {
-            throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + userId + ")");
+            throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + currentUserId + ")");
         }
         
-        if ( user.isBusinessAccount() ) {
+        if ( currentUser.isBusinessAccount() ) {
             throw new InvalidRequestException("Business users cannot request ads.");
         }
-        if ( creator.equals(user) ) {
+        if ( creator.equals(currentUser) ) {
             throw new InvalidRequestException("Cannot request owned ads.");
         }
         if ( ad.getAdData().getQuantity() <= 0 ) {
@@ -756,20 +756,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
         request.setSent(false);
         request.setReceived(false);
         request.setAd(ad);
-        request.setUser(user);
+        request.setUser(currentUser);
         request.setStatus(RequestStatus.PENDING);
         Long requestId = requestDao.save(request);
         
         ad.setStatus(AdStatus.IN_PROGRESS);
         
-        if ( !user.isBusinessAccount() ) {
+        if ( !currentUser.isBusinessAccount() ) {
 //            BigDecimal currentPendingNumber = calculatePendingNumber(user);
 //            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
 
             UserTransaction transaction = new UserTransaction(request);
             transaction.setApproved(true);
-            transaction.setUser(user);
-            transaction.setUserPoint(user.getUserPoint());
+            transaction.setUser(currentUser);
+            transaction.setUserPoint(currentUser.getUserPoint());
 //            transaction.setPendingNumber(currentPendingNumber);
 //            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
@@ -778,7 +778,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( text != null && !text.trim().isEmpty() ) {
             Message message = new Message(text);
             message.setTo(creator);
-            message.setFrom(user);
+            message.setFrom(currentUser);
             message.setRequest(request);
             messageDao.save(message);
         }
@@ -870,9 +870,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public void selectRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException, InvalidAdStateException {
         Request request = validateRequest(requestId);
-        User user = getCurrentUser();
+        User currentUser = getCurrentUser();
         
-        selectRequest(request, user);
+        selectRequest(request, currentUser);
     }
     
     @Override
@@ -938,9 +938,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public void markAsSent(Long requestId) throws RequestNotFoundException, InvalidRequestException {
-        User user = getCurrentUser();
+        User currentUser = getCurrentUser();
         Request request = validateRequest(requestId);
-        markAsSent(user, request);
+        markAsSent(currentUser, request);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("user", request.getUser());
@@ -953,11 +953,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public void markAsReceived(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         Request request = validateRequest(requestId);
-        User user = getCurrentUser();
+        User currentUser = getCurrentUser();
         Ad ad = request.getAd();
-        UserTransaction transaction = userTransactionDao.getByRequest(user.getId(), requestId);
+        UserTransaction transaction = userTransactionDao.getByRequest(currentUser.getId(), requestId);
         
-        if ( !request.getUser().equals(user) ) {
+        if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can mark as received.");
         }
         if ( !request.isAccepted()) {
@@ -988,7 +988,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         transaction.markAsFinalized();
         userTransactionDao.update(transaction);
         
-        UserPoint userPoint = user.getUserPoint();
+        UserPoint userPoint = currentUser.getUserPoint();
         userPoint.addGivingNumber(transaction.getPendingGivingNumber());
         userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
 //        userPoint.removeNumber(transaction.getPendingNumber());
@@ -1046,7 +1046,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public List<AdDto> getBookmarkedAds() {
         try {
-            return getBookmarkedAds(getCurrentUserId());
+            Long currentUserId = getCurrentUserId();
+            return getBookmarkedAds(currentUserId);
         } catch ( UserNotFoundException ex ) {
             logger.error("User (current/logged) not found", ex);
             return new ArrayList<AdDto>();
@@ -1056,6 +1057,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getBookmarkedAds(Long userId) throws UserNotFoundException {
+        User currentUser = getCurrentUser();
         User user = validateUser(userId);
         List<Ad> bookmarkedAds = bookmarkDao.getBookmarkedAds(user);
         List<AdDto> result = new LinkedList<AdDto>();
@@ -1063,7 +1065,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( bookmarkedAds != null && !bookmarkedAds.isEmpty() ) {
             for (Ad ad : bookmarkedAds) {
                 AdDto adDto = new AdDtoBuilder(ad)
-                        .setCurrentUser(user)
+                        //.setCurrentUser(user)
+                        .setCurrentUser(currentUser)
                         .includeCreator(true) //TODO: maybe this is not needed
                         .includeCanRequest()
                         .build();
