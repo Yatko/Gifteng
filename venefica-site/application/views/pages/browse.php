@@ -14,9 +14,9 @@
 <? if ( isset($is_ajax) && $is_ajax ): ?>
     <?
     $boxContainer_exists = true;
-    ?>
     
-    <!-- on ajax call there is no need for javascripts -->
+    //on ajax call there is no need for javascripts
+    ?>
 <? else: ?>
     <?
     $boxContainer_exists = false;
@@ -57,6 +57,11 @@
             
             $.get(url, function(newElements) {
                 if ( newElements === null || $(newElements).length === 0 ) {
+                    if ( callerElement !== null ) {
+                        var $element = $(callerElement);
+                        $element.addClass('hide');
+                    }
+                    
                     return;
                 }
                 $container.append($(newElements));
@@ -146,7 +151,7 @@
 <? endif; ?>
 
 
-<!-- this is required by the infinite scroll javascript library -->
+<? /* this is required by the infinite scroll javascript library */ ?>
 <a class="nextPage hide" href="#"></a>
 
 <? if ( !$boxContainer_exists ): ?>
