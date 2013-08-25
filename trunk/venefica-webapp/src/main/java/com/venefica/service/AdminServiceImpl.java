@@ -6,10 +6,12 @@ package com.venefica.service;
 
 import com.venefica.common.MailException;
 import com.venefica.dao.ApprovalDao;
+import com.venefica.dao.UserTransactionDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Approval;
 import com.venefica.model.User;
+import com.venefica.model.UserTransaction;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.UserDto;
@@ -53,6 +55,8 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
     
     @Inject
     private ApprovalDao approvalDao;
+    @Inject
+    private UserTransactionDao userTransactionDao;
 
     //***************
     //* approval    *
@@ -146,6 +150,10 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         Ad ad = validateAd(adId);
         ad.markAsApproved();
         ad.setStatus(AdStatus.ACTIVE);
+        
+        UserTransaction transaction = userTransactionDao.getByAd(ad.getCreator().getId(), adId);
+        transaction.setApproved(true);
+        userTransactionDao.update(transaction);
         
         Approval approval = new Approval(true);
         approval.setDecider(currentUser);

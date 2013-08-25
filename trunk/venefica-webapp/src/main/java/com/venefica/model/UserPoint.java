@@ -81,7 +81,9 @@ public class UserPoint {
         }
         BigDecimal pendingGivingNumber = BigDecimal.ZERO;
         for ( UserTransaction transaction : transactions ) {
-            if ( transaction.isFinalized() ) {
+            if ( !transaction.isApproved() ) {
+                continue;
+            } else if ( transaction.isFinalized() ) {
                 continue;
             }
             pendingGivingNumber = pendingGivingNumber.add(transaction.getPendingGivingNumber() != null ? transaction.getPendingGivingNumber() : BigDecimal.ZERO);
@@ -95,7 +97,9 @@ public class UserPoint {
         }
         BigDecimal pendingReceivingNumber = BigDecimal.ZERO;
         for ( UserTransaction transaction : transactions ) {
-            if ( transaction.isFinalized() ) {
+            if ( !transaction.isApproved() ) {
+                continue;
+            } else if ( transaction.isFinalized() ) {
                 continue;
             }
             pendingReceivingNumber = pendingReceivingNumber.add(transaction.getPendingReceivingNumber() != null ? transaction.getPendingReceivingNumber() : BigDecimal.ZERO);
@@ -178,7 +182,7 @@ public class UserPoint {
         return givingNumber;
     }
 
-    public void setGivingNumber(BigDecimal givingNumber) {
+    private void setGivingNumber(BigDecimal givingNumber) {
         this.givingNumber = givingNumber;
     }
 
@@ -186,7 +190,7 @@ public class UserPoint {
         return receivingNumber;
     }
 
-    public void setReceivingNumber(BigDecimal receivingNumber) {
+    private void setReceivingNumber(BigDecimal receivingNumber) {
         this.receivingNumber = receivingNumber;
     }
 }

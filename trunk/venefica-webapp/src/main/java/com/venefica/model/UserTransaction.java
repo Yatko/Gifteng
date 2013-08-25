@@ -55,6 +55,7 @@ public class UserTransaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date finalizedAt;
     private boolean finalized;
+    private boolean approved;
 
     public UserTransaction() {
     }
@@ -173,6 +174,14 @@ public class UserTransaction {
 
     public void setPendingReceivingNumber(BigDecimal pendingReceivingNumber) {
         this.pendingReceivingNumber = pendingReceivingNumber;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
 }
