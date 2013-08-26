@@ -35,7 +35,6 @@ public class UserTransactionDaoImpl extends DaoBase<UserTransaction> implements 
         List<UserTransaction> transactions = createQuery(""
                 + "from " + UserTransaction.class.getSimpleName() + " ut "
                 + "where "
-                + "ut.finalized = false and "
                 + "ut.user.id = :userId and "
                 + "ut.ad.id = :adId"
                 + "")
@@ -50,7 +49,6 @@ public class UserTransactionDaoImpl extends DaoBase<UserTransaction> implements 
         List<UserTransaction> transactions = createQuery(""
                 + "from " + UserTransaction.class.getSimpleName() + " ut "
                 + "where "
-                + "ut.finalized = false and "
                 + "ut.user.id = :userId and "
                 + "ut.request.id = :requestId"
                 + "")
