@@ -1,8 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-//define('SERVER_URL',                'http://veneficalabs.com:8080/venefica');
-define('SERVER_URL',                'http://veneficalabs.com:8080/gifteng');
-//define('SERVER_URL',                'http://gifteng.jelastic.servint.net/gifteng');
+define('SERVER_URL',                'http://veneficalabs.com:8080/venefica'); //dev server
+//define('SERVER_URL',                'http://veneficalabs.com:8080/gifteng'); //live server
+//define('SERVER_URL',                'http://gifteng.jelastic.servint.net/gifteng'); //another dev server (unused)
 
 define('AUTH_SERVICE_WSDL',         SERVER_URL.'/services/AuthService?wsdl');
 define('AD_SERVICE_WSDL',           SERVER_URL.'/services/AdService?wsdl');
