@@ -129,7 +129,7 @@ if( $ad->expired || $request->isExpired() ) {
                             </div>
                             <div class="span8">
                                 <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
-                                    Mark Received
+                                    Gift Received
                                 </button>
                             </div>
                         </div>
