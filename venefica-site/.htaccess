@@ -1,4 +1,11 @@
 RewriteEngine on
+
+# Add www
+RewriteBase /
+RewriteCond %{HTTP_HOST} !^www\.               [NC]
+RewriteCond %{HTTP_HOST} ^([^.]+\.[a-z]{2,6})$ [NC]
+RewriteRule ^(.*)$       http://www.%1/$1      [R=301,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond $1 !^(index\.php|assets|robots\.txt)
