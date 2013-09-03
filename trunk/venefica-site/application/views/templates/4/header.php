@@ -14,9 +14,37 @@ $subpage = key($_GET); //gets the first element from the array
     
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="author" content="gifteng.com"> 
+    <meta name="copyright" content="(c) 2012, gifteng.com">
+    <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />
+    
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" /> 
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" /> 
+    <meta name="DC.title" xml:lang="EN" content="Gifteng" />
+    <meta name="DC.title" lang="en" content="Gifteng" /> 
+    <meta name="DC.creator" content="gifteng.com" /> 
+    <meta name="DC.subject" lang="en" content="Give. Receive. Inspire." /> 
+    <meta name="DC.description" lang="en" content="An invitation-only social community where you can give and receive things you love for free." /> 
+    <meta name="DC.publisher" content="Gifteng" />
+    <meta name="DC.format" content="text/html" />  
+    <meta name="DC.identifier" scheme="DCTERMS.URI" content="http://www.gifteng.com" /> 
+    <meta name="DC.language" scheme="DCTERMS.URI" content="en" /> 
+    <meta name="DC.relation" scheme="DCTERMS.URI" content="free gifts" /> 
+    <meta name="DC.coverage" scheme="DCTERMS.URI" content="New York, NY, USA" />
+    
+    <meta property="og:site_name" content="Gifteng"/>
+    <meta property="og:url" content="http://www.gifteng.com"/>
+    <meta property="og:title" content="Gifteng ♥"/>
+    <meta property="og:description" content="Give. Receive. Inspire."/>
+    <meta property="og:image" content="<?=BASE_PATH?>images/logo.png"/>
+    <meta property="og:type" content="website"/>
+
+    <meta name="google-site-verification" content="zW7qDZZCQYPFLciEL7ySIjCfccgznWjY5MHr1vkKiN8" />
+    <meta name="p:domain_verify" content="592c562546fda58a9ba3de536deafeca"/>
+    <meta property="fb:admins" content="100006621787064" />
+    <meta property="fb:page_id" content="240475762731626" />
     
     <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
     <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png" />
@@ -59,27 +87,14 @@ $subpage = key($_GET); //gets the first element from the array
     <!--[if lt IE 9]>
       <script src="<?=JS_PATH?>html5shiv.js"></script>
     <![endif]-->
-    
-    
+       
     <!--MASONRY -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>masonry.css" />
     <script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>
     <!--<script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>-->
     <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
-    
-    
-    
-    
+  
     <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
-    
-    
-    
-    <meta property="og:site_name" content="Gifteng"/>
-    <meta property="og:url" content="http://gifteng.com/"/>
-    <meta property="og:title" content="Gifteng ♥"/>
-    <meta property="og:description" content="Give. Receive. Inspire."/>
-    <meta property="og:image" content="<?=BASE_PATH?>images/logo.png"/>
-    <meta property="og:type" content="website"/>
     
    <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
