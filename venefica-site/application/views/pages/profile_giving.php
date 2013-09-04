@@ -83,11 +83,11 @@ $is_owner = isOwner($user);
                         <? $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $user->id)); ?>
                     </div>
                 <? endforeach; ?>
-                    
+                
                 </div>
                 <? endfor; ?>
                 
-            <? else: ?>
+            <? elseif ( $is_owner ): ?>
                 
                 <div class="span12 ge-no-ad">
                     <div class="well ge-well">
@@ -108,6 +108,18 @@ $is_owner = isOwner($user);
                                 <div class="span4 offset4 text-center">
                                         <a href="<?=base_url()?>browse"><span style="font-size: 90%;color: #6f6f6f;margin-bottom: 19px;">Or click here to see what others are giving away.</span></a>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            <? else: ?>
+                
+                <div class="span12">
+                    <div class="well ge-well">
+                        <div class="row-fluid">
+                            <div class="span10 offset1 text-center">
+                                    <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
                             </div>
                         </div>
                     </div>
