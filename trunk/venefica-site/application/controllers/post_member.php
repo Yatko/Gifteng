@@ -305,6 +305,25 @@ class Post_member extends CI_Controller {
         $this->load->library('form_validation', null, 'post_form');
         $this->post_form->set_error_delimiters('<div class="error">', '</div>');
         
+        /**
+        if ( trim($this->input->post('title')) == "" ) {
+            $this->post_form->setError(lang('post_member_title_empty'));
+            $is_valid = false;
+        } else if ( $this->input->post('category') == "" ) {
+            $this->post_form->setError(lang('post_member_category_missing'));
+            $is_valid = false;
+        } else if ( !$this->post_form->numeric(trim($this->input->post('price'))) ) {
+            $this->post_form->setError(lang('post_member_price_invalid'));
+            $is_valid = false;
+        } else if ( trim($this->input->post('zipCode')) == "" ) {
+            $this->post_form->setError(lang('post_member_zipCode_empty'));
+            $is_valid = false;
+        } else if ( !$this->input->post('pickUp') && !$this->input->post('freeShipping') ) {
+            $this->post_form->setError(lang('post_member_delivery_missing'));
+            $is_valid = false;
+        }
+        /**/
+        
         if ( $this->input->post('pickUp') || $this->input->post('freeShipping') ) {
             //we got at least one value
         } else {

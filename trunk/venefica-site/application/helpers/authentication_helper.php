@@ -87,8 +87,13 @@ if ( ! function_exists('isLogged')) {
         $CI =& get_instance();
         $CI->load->library('remember_me');
         $cookie_user = $CI->remember_me->verifyCookie();
+        $token = loadToken();
         
-        if ( $cookie_user || loadToken() ) {
+        if ( $cookie_user || $token ) {
+            if ( empty($token) ) {
+                //TODO: here should refresh the user by the cookie user ID
+                return false;
+            }
             return TRUE;
         }
         return FALSE;

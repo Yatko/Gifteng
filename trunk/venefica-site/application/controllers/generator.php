@@ -32,6 +32,7 @@ class Generator extends CI_Controller {
         if ( !$this->image_lib->resize() ) {
             echo $this->image_lib->display_errors(); // print error if it fails
         }
+        $this->image_lib->clear();
     }
     
     // internal

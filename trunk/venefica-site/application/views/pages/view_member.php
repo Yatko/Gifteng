@@ -175,10 +175,10 @@ if ( !$ad->owner && !$ad_can_request ) {
                                             }
                                             ?>
 
-                                            <div class="span6">
+                                            <div class="span6 mobile-two">
                                                 <button <?= $edit_js ?> <?= $edit_class ?> type="button">EDIT GIFT</button>
                                             </div>
-                                            <div class="span6">
+                                            <div class="span6 mobile-two">
                                                 <button <?= $delete_js ?> <?= $delete_class ?> type="button">DELETE GIFT</button>
                                             </div>
 
@@ -260,13 +260,13 @@ if ( !$ad->owner && !$ad_can_request ) {
                                     <li><em>Current value: </em><?= $ad_price ?></li>
                                 </ul>
                                 <div class="row-fluid">
-                                    <div class="span6">
+                                    <div class="span6 mobile-two">
                                         <label class="checkbox" for="pickup">
                                             <input id="pickup" <?= (isset($ad_pickUp) && $ad_pickUp) ? 'checked="checked"' : '' ?> type="checkbox" disabled="disabled" data-toggle="checkbox"/>
                                             Pick up
                                         </label>
                                     </div>
-                                    <div class="span6">
+                                    <div class="span6 mobile-two">
                                         <label class="checkbox" for="free_shipping">
                                             <input id="free_shipping" <?= (isset($ad_freeShipping) && $ad_freeShipping) ? 'checked="checked"' : '' ?> type="checkbox" disabled="disabled" data-toggle="checkbox"/>
                                             Free shipping

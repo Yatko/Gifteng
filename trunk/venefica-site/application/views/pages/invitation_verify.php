@@ -32,7 +32,19 @@
                                 <p><?=lang('invitation_verified')?></p>
                             </div>
                         </div>
-
+                        
+                        <? /** ?>
+                        <div class="row-fluid">
+                            <div class="span8 offset2">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <a href="submit" class="btn btn-large btn-block btn-social-facebook ge-submit"><em class="fui-facebook"></em> <?=lang('invitation_join_facebook')?></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <? /**/ ?>
+                       
                         <div class="row-fluid">
                             <div class="span8 offset2">
                                 <div class="control-group">
@@ -44,7 +56,15 @@
                         </div><!--./submit-->
                     </div>
 
-                    <div class="ge-footline empty"></div>
+                    
+                    
+                    <div class="ge-footline">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <a href="<?=base_url()?>authentication/login"><?=lang('invitation_footer')?></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,13 @@ class Index extends CI_Controller {
         $this->lang->load('index');
         $this->lang->load('invitation');
         
+        $this->load->library('user_agent');
+        
+        /* mobile redirection */
+        if ( $this->agent->is_mobile() ) {
+            redirect('/authentication/login/', 'refresh');
+        }
+	
         $this->load->view('templates/'.TEMPLATES.'/header');
         //$this->load->view('pages/index');
         $this->load->view('pages/welcome');

@@ -174,13 +174,13 @@ if ( $is_owner ) {
                     </div>
 
                     <div class="row-fluid ge-text ge-description ge-action">
-                        <div class="span4">
+                        <div class="span4 mobile-one">
                             <button onclick="shareOnFacebook('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-facebook link fui-facebook"></button>
                         </div>
-                        <div class="span4">
+                        <div class="span4 mobile-one">
                             <button onclick="shareOnTwitter('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-twitter link fui-twitter"></button>
                         </div>
-                        <div class="span4">
+                        <div class="span4 mobile-one">
                             <button onclick="shareOnPinterest('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" class="btn btn-mini btn-block btn-social-pinterest link fui-pinterest"></button>
                         </div>
                     </div><!--./ge-action-->
@@ -273,7 +273,7 @@ if ( $is_owner ) {
                         $requestor_img = $request->getUserAvatarUrl();
                         ?>
 
-                        <div class="span4"><img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
+                        <div class="span4 mobile-one"><img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link"></div>
                     <? endforeach; ?>
 
                     </div><!--./ge-action-->

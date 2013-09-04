@@ -50,9 +50,13 @@
                 $element.attr("disabled", true);
             }
             
+            var ids = $(".ge-ad-id[id]").map(function() {
+                var id = this.id.split('_')[1];
+                return parseInt(id, 10);
+            }).get();
+            var lastAdId = Math.min.apply(Math, ids);
+            
             var $container = $('#boxContainer');
-            var lastAdId = $(".ge-ad-id:last").attr("id");
-            lastAdId = lastAdId.split('_')[1];
             var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>';
             
             $.get(url, function(newElements) {
@@ -172,9 +176,17 @@
 
 
 <? if ( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
-
-    <? foreach ($ads as $ad): ?>
+    
+    <div class="row">
+    <? for ( $iii = 3; $iii > 0; $iii-- ): ?>
+    <div class="span4">
+    
+    <? foreach ($ads as $index => $ad): ?>
         <?
+        if ( ($index + $iii) % 3 != 0 ) {
+            continue;
+        }
+        
         $ad_id = $ad->id;
         $ad_can_request = $ad->canRequest;
         $can_bookmark = $ad_can_request ? true : false;
@@ -188,25 +200,23 @@
         ?>
 
         <div class="ge-ad-item-box masonry-brick <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
-            <div class="span4">
-            	<div class="ge-box">
-                    <div class="well ge-well">
-                        <div class="ge-ad-id hide" id="ad_<?=$ad_id?>"></div>
-                        
-                        <div class="row-fluid">
-                            <div class="span12">
+            <div class="ge-box">
+                <div class="well ge-well">
+                    <div class="ge-ad-id hide" id="ad_<?=$ad_id?>"></div>
 
-                                <div class="ge-user">
-                                    <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
-                                </div>
+                    <div class="row-fluid">
+                        <div class="span12">
 
-                                <div class="ge-item">
-                                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
-                                    <? $this->load->view('element/ad_data', array('ad' => $ad, 'currentUser' => $currentUser)); ?>
-                                </div><!--./ge-item-->
-
-                                <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
+                            <div class="ge-user">
+                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
                             </div>
+
+                            <div class="ge-item">
+                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
+                                <? $this->load->view('element/ad_data', array('ad' => $ad, 'currentUser' => $currentUser)); ?>
+                            </div><!--./ge-item-->
+
+                            <? $this->load->view('element/comments', array('comments' => $ad->comments, 'canComment' => false)); ?>
                         </div>
                     </div>
                 </div>
@@ -215,6 +225,10 @@
 
     <? endforeach; ?>
 
+    </div>
+    <? endfor; ?>
+    </div>
+    
 <? else: ?>
     
     <? if( key_exists('q', $_GET) ): ?>
@@ -227,11 +241,12 @@
 
 
 <? if ( !$boxContainer_exists ): ?>
+        
         </div>
         <div id="loadingPage"></div>
     
         <? if( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
-            <button onclick="load_more(this);" class="span12 btn btn-block btn-ge">VIEW MORE</button>
+            <button onclick="load_more(this);" class="btn btn-block btn-ge">VIEW MORE</button>
         <? else: ?>
             
         <? endif; ?>

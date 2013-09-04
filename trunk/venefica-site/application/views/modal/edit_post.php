@@ -38,8 +38,8 @@
                     <div class="span12">
                         <div class="control-group control-form">
                             <div class="controls">
-                                <button type="button" onclick="edit_post_modal();" class="span4 btn">Edit</button>
-                                <button type="button" data-dismiss="modal" class="span8 btn btn-ge">Don't Edit</button>
+                                <button type="button" onclick="edit_post_modal();" class="span4 mobile-two btn">Edit</button>
+                                <button type="button" data-dismiss="modal" class="span8 mobile-two btn btn-ge">Don't Edit</button>
                             </div>
                         </div>
                     </div>

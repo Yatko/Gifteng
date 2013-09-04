@@ -39,7 +39,8 @@ define('PASSWORD_MIN_SIZE', 6);
 define('UPLOAD_FILE_MAX_SIZE', 5 * 1024 * 1024); //in bytes
 define('UPLOAD_IMAGE_MIN_WIDTH', 400); //in pixels
 define('UPLOAD_IMAGE_MIN_HEIGHT', 400); //in pixels
-define('UPLOAD_FILE_PREFIX', 'gifteng_');
+define('UPLOAD_FILE_PREFIX', 'venefica_'); //dev server
+//define('UPLOAD_FILE_PREFIX', 'gifteng_'); //live server
 define('TEMPLATES', 4);
 define('TEMP_FOLDER', sys_get_temp_dir());
 

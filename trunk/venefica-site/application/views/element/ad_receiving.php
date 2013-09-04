@@ -122,12 +122,12 @@ if( $ad->expired || $request->isExpired() ) {
                         </div>
 
                         <div class="row-fluid">
-                            <div class="span4">
+                            <div class="span4 mobile-one">
                                 <button onclick="startRequestViewModal(<?=$request_id?>, 'receiving', <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     <i class="fui-mail"></i>
                                 </button>
                             </div>
-                            <div class="span8">
+                            <div class="span8 mobile-three">
                                 <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     Gift Received
                                 </button>

@@ -34,7 +34,7 @@
             var $this = $(this);
             
             if ( get_file_size($('#image').get(0)) > <?=UPLOAD_FILE_MAX_SIZE?> ) {
-                $(".ge-modal_header h3").html("<div class='error'>Please limit photo size to 5 MB !</div>");
+                $(".ge-modal_header h3").html("<?=lang('validation_max_upload_size')?>");
                 $this.html($this.attr('original_text'));
                 return;
             }
@@ -127,9 +127,9 @@ if ( $is_modal ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                            <button type="button" data-dismiss="modal" class="span2 mobile-one btn btn-huge"><i class="fui-cross"></i></button>
                                         <? endif; ?>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 mobile-three btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -246,9 +246,9 @@ if ( $is_modal ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                            <button type="button" data-dismiss="modal" class="span2 mobile-one btn btn-huge"><i class="fui-cross"></i></button>
                                         <? endif; ?>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 mobile-three btn btn-huge btn-ge pull-right">NEXT <i class="fui-arrow-right pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -295,9 +295,9 @@ if ( $is_modal ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <? if( $is_modal ): ?>
-                                            <button type="button" data-dismiss="modal" class="span2 btn btn-huge"><i class="fui-cross"></i></button>
+                                            <button type="button" data-dismiss="modal" class="span2 mobile-one btn btn-huge"><i class="fui-cross"></i></button>
                                         <? endif; ?>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 btn btn-huge btn-block btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span10 mobile-three btn btn-huge btn-ge pull-right">PREVIEW <i class="fui-arrow-right pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -347,13 +347,13 @@ if ( $is_modal ) {
                                     <li><em>Current value: $</em><?=$price?></li>
                                 </ul>
                                 <div class="row-fluid">
-                                    <div class="span6">
+                                    <div class="span6 mobile-two">
                                         <label class="checkbox">
                                             <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
                                             Pick up
                                         </label>
                                     </div>
-                                    <div class="span6">
+                                    <div class="span6 mobile-two">
                                         <label class="checkbox">
                                             <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
                                             Free shipping
@@ -369,8 +369,8 @@ if ( $is_modal ) {
                             <div class="span12">
                                 <div class="control-group control-form">
                                     <div class="controls">
-                                        <button type="button" onclick="edit_post();" class="span3 btn btn-huge">EDIT</button>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span9 btn btn-huge btn-ge pull-right"><?=$submit_text?> <i class="fui-arrow-right pull-right"></i></button>
+                                        <button type="button" onclick="edit_post();" class="span3 btn btn-huge mobile-one">EDIT</button>
+                                        <button type="button" onclick="submit_form('member_post_form');" class="span9 btn btn-huge btn-ge pull-right mobile-three"><?=$submit_text?> <i class="fui-arrow-right hidden-phone pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -432,15 +432,15 @@ if ( $is_modal ) {
                                             
                                             <? if( $is_modal ): ?>
                                                 
-                                                <button type="button" data-dismiss="modal" class="span3 btn btn-huge">OK</button>
+                                                <button type="button" data-dismiss="modal" class="span3 btn btn-huge mobile-one">OK</button>
                                                 <? if( $is_new ): ?>
-                                                    <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</button>
+                                                    <button type="button" onclick="another_post();" class="span9 btn btn-huge btn-ge pull-right mobile-three"><i class="fui-arrow-right hidden-phone pull-right"></i>POST ANOTHER GIFT</button>
                                                 <? endif; ?>
                                                 
                                             <? else: ?>
                                                 
                                                 <? if( $is_new ): ?>
-                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right"></i>POST ANOTHER GIFT</a>
+                                                    <a href="<?=base_url()?>post" class="span9 btn btn-huge btn-ge pull-right"><i class="fui-arrow-right pull-right hidden-phone"></i>POST ANOTHER GIFT</a>
                                                 <? endif; ?>
                                                 
                                             <? endif; ?>

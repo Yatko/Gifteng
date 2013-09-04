@@ -78,8 +78,8 @@
 	                    <div class="span12">
 	                        <div class="control-group control-form">
 	                            <div class="controls">
-	                                <button type="button" onclick="ad_delete_modal();" class="span6 btn">YES</button>
-	                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge pull-right">NO</button>
+	                                <button type="button" onclick="ad_delete_modal();" class="span6 mobile-two btn">YES</button>
+	                                <button type="button" data-dismiss="modal" class="span6 mobile-two btn btn-ge pull-right">NO</button>
 	                            </div>
 	                        </div>
 	                    </div>

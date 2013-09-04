@@ -28,70 +28,81 @@
     });
 </script>
 
-<div class="row">
     <div class="container user-favorites">
         <div class="row">
             <div class="ge-tile-view ge-browse masonry">
             
             <? if( isset($bookmarks) && is_array($bookmarks) && count($bookmarks) > 0 ): ?>
-            <? foreach( $bookmarks as $ad ): ?>
-                <?
-                $ad_id = $ad->id;
-                $ad_is_requested = $ad->requested;
-                $ad_is_business = $ad->isBusiness();
-                $ad_is_expired = $ad->expired;
-                $ad_is_owned = $ad->owner;
-                $ad_can_request = $ad->canRequest;
                 
-                $inactive = !$ad_can_request;
-                ?>		
-		
-                <div id="ad_<?=$ad_id?>" class="masonry-brick ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
-                    <div class="span3">
-                        <div class="ge-box">
-                            <div class="well ge-well">
+                <? for ( $iii = 4; $iii > 0; $iii-- ): ?>
+                <div class="span3">
+                
+                <? foreach( $bookmarks as $index => $ad ): ?>
+                    <?
+                    if ( ($index + $iii) % 4 != 0 ) {
+                        continue;
+                    }
+                    
+                    $ad_id = $ad->id;
+                    $ad_is_requested = $ad->requested;
+                    $ad_is_business = $ad->isBusiness();
+                    $ad_is_expired = $ad->expired;
+                    $ad_is_owned = $ad->owner;
+                    $ad_can_request = $ad->canRequest;
 
-                                <div class="row-fluid">
-                                    <div class="span12">
+                    $inactive = !$ad_can_request;
+                    ?>		
 
-                                        <div class="ge-user">
-                                            <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true)); ?>
-                                        </div><!--./ge-user-->
+                    <div id="ad_<?=$ad_id?>" class="masonry-brick ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
+                        <div class="span3">
+                            <div class="ge-box">
+                                <div class="well ge-well">
 
-                                        <div class="ge-item">	
-                                            <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
+                                    <div class="row-fluid">
+                                        <div class="span12">
 
-                                            <div class="ge-action">
-                                                <div class="row-fluid">
-                                                    <div class="span4 mobile-one">
-                                                        <button onclick="remove_bookmark(this, <?=$ad_id?>);" class="ge-bookmark btn btn-small btn-block fui-cross"></button>
+                                            <div class="ge-user">
+                                                <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true)); ?>
+                                            </div><!--./ge-user-->
+
+                                            <div class="ge-item">	
+                                                <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
+
+                                                <div class="ge-action">
+                                                    <div class="row-fluid">
+                                                        <div class="span4 mobile-one">
+                                                            <button onclick="remove_bookmark(this, <?=$ad_id?>);" class="ge-bookmark btn btn-small btn-block fui-cross"></button>
+                                                        </div>
+                                                        <div class="span8 mobile-three">
+
+                                                        <? if( $ad_is_owned ): ?>
+                                                            <p class="text-center">MINE</p>
+                                                        <? elseif( $ad_is_expired ): ?>
+                                                            <p class="text-center">ENDED</p>
+                                                        <? elseif( $ad_is_requested ): ?>
+                                                            <p class="text-center">REQUESTED</p>
+                                                        <? elseif ( $ad_can_request  ): ?>
+                                                            <button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="btn btn-small btn-block btn-ge">Request Gift</button>
+                                                        <? endif; ?>
+
+                                                        </div>
                                                     </div>
-                                                    <div class="span8 mobile-three">
-                                                    
-                                                    <? if( $ad_is_owned ): ?>
-                                                        <p class="text-center">MINE</p>
-                                                    <? elseif( $ad_is_expired ): ?>
-                                                        <p class="text-center">ENDED</p>
-                                                    <? elseif( $ad_is_requested ): ?>
-                                                        <p class="text-center">REQUESTED</p>
-                                                    <? elseif ( $ad_can_request  ): ?>
-                                                        <button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="btn btn-small btn-block btn-ge">Request Gift</button>
-                                                    <? endif; ?>
-                                                    
-                                                    </div>
-                                                </div>
-                                            </div><!--./ge-action-->					
-                                        </div><!--./ge-item-->
+                                                </div><!--./ge-action-->					
+                                            </div><!--./ge-item-->
 
+                                        </div>
                                     </div>
-                                </div>
 
-                            </div>
-                        </div><!--./ge-box-->
+                                </div>
+                            </div><!--./ge-box-->
+                        </div>
                     </div>
-                </div>
+
+                <? endforeach; ?>
                 
-            <? endforeach; ?>
+                </div>
+                <? endfor; ?>
+            
             <? else: ?>
                 
                 <div class="span12">
@@ -109,4 +120,3 @@
             </div><!--./ge-tile-view-->
         </div>
     </div>
-</div>

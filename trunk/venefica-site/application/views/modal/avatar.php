@@ -8,7 +8,7 @@
                 if ( !$error.attr('original_text') ) {
                     $error.attr('original_text', $error.html());
                 }
-                $error.html("<div class='error'>Please limit photo size to 5 MB !</div>");
+                $error.html("<?=lang('validation_max_upload_size')?>");
                 
                 $this.html($this.attr('original_text'));
                 return;

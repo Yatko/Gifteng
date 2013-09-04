@@ -42,7 +42,7 @@ if ( $ad->statistics != null ) {
         <div class="row-fluid">
             <div class="span12 ge-action">
                 <div class="row-fluid">
-                    <div class="span4">
+                    <div class="span4 mobile-one">
                         <? if( !$canBookmark || $is_bookmarked || $is_owner ): ?>
                             <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="fui-star-2"></i>
@@ -55,7 +55,7 @@ if ( $ad->statistics != null ) {
                             </button>
                         <? endif; ?>
                     </div>
-                    <div class="span4">
+                    <div class="span4 mobile-one">
                         <? if( !$canComment ): ?>
                             <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="fui-bubble"></i>
@@ -68,7 +68,7 @@ if ( $ad->statistics != null ) {
                             </button>
                         <? endif; ?>
                     </div>
-                    <div class="span4">
+                    <div class="span4 mobile-one">
                         <? if( !$canShare ): ?>
                             <button type="button" class="btn btn-small btn-block btn-ge disabled">
                                 <i class="ge-icon-share"></i>

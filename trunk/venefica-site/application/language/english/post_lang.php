@@ -14,5 +14,8 @@ $lang['post_bar_code'] = "bar code";
 #
 #member post
 #
+$lang['post_member_title_empty'] = 'Please name your gift.';
+$lang['post_member_price_invalid'] = 'The current value must contain only numbers.';
+$lang['post_member_zipCode_empty'] = 'Please set your Zip code.';
 $lang['post_member_delivery_missing'] = 'Please select the delivery method.';
 $lang['post_member_category_missing'] = 'Please select a category.';

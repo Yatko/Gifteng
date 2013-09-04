@@ -73,7 +73,7 @@
 <div id="postContainer" class="modal hide fade" data-remote="<?=base_url()?>post?modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <div class="modal-header-content"></div>
+        <div class="modal-header-content hidden-phone"></div>
     </div>
     <div class="modal-body"></div>
     <div class="modal-footer"></div>

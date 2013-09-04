@@ -29,15 +29,21 @@
     });
 </script>
 
-<div class="row">
     <div class="container user-receiving_items">
         <div class="row">
             <div class="ge-tile-view ge-browse masonry">
 
                 <? if( isset($receivings) && is_array($receivings) && count($receivings) > 0 ): ?>
                     
-                    <? foreach( $receivings as $ad ): ?>
+                    <? for ( $iii = 4; $iii > 0; $iii-- ): ?>
+                    <div class="span3">
+                    
+                    <? foreach( $receivings as $index => $ad ): ?>
                         <?
+                        if ( ($index + $iii) % 4 != 0 ) {
+                            continue;
+                        }
+                        
                         $request = $ad->getRequestByUser($user->id);
                         $request_id = $request->id;
                         ?>
@@ -46,6 +52,9 @@
                             <? $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $user->id)); ?>
                         </div>
                     <? endforeach; ?>
+                        
+                    </div>
+                    <? endfor; ?>
                     
                 <? else: ?>
                 
@@ -64,4 +73,3 @@
             </div>
         </div>
     </div>
-</div>

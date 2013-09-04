@@ -563,3 +563,66 @@ hr.ge-hr-dotted {
 	color:#34495e;
 	font-size:14px;
 }
+.mobile-header {
+	font-size:26px;
+}
+
+@media (max-width: 979px) { 
+	.navbar .nav li.dropdown .dropdown-menu {
+		background: #34495e;
+		position:absolute;
+		width:100px;
+	}
+	.ge-navbar {
+		padding-left:20px;
+		padding-right:20px;
+		margin-left:0;
+		margin-right:0;
+		height:auto;
+	}
+	.modal {
+		left:50% !important;
+	}
+	.input-prepend {
+		width:90%;
+	}
+	#browse_form {
+		padding:0 10px !important;
+	}
+	#browse_form input {
+		max-width: 90%;
+	}
+}
+@media (max-width: 760px) {
+	.ge-well {
+		margin-left:8px;
+		margin-right:8px;
+	}
+	.ge-item-image .ge-action {
+		padding:10px 20px;
+	}
+}
+@media (max-width: 480px) {
+	.modal {
+		left:0 !important;
+		width:100% !important;
+		margin-left:0 !important;
+		position:absolute;
+		top:0;
+	}
+	#zenbox_tab {
+		display:none !important;
+	}
+	#login_ .form_wrapper {
+		padding:0 20px;
+	}
+	.input-prepend {
+		width:80% !important;
+	}
+	.modal-header {
+		min-height:30px;
+	}
+	.ge-navbar .nav > li > a {
+		padding: 16px 10px 15px;
+	}
+}

@@ -158,14 +158,14 @@ if ( $is_modal ) {
                         
                         <div class="ge-modal_footer">
                             <div class="row-fluid">
-                                <div class="span12 mobile-two">
+                                <div class="span12">
                                     <div class="control-group control-form">
                                         <div class="controls">
                                             
                                             <? if( $is_modal ): ?>
-                                                <button type="button" data-dismiss="modal" class="span3 btn btn-large">Cancel</button>
+                                                <button type="button" data-dismiss="modal" class="span3 mobile-two btn btn-large">Cancel</button>
                                             <? endif; ?>
-                                            <button onclick="submit_form('edit_profile_form');" class="span9 pull-right btn btn-large btn-ge">Save Profile</button>
+                                            <button onclick="submit_form('edit_profile_form');" class="span9 mobile-two pull-right btn btn-large btn-ge">Save Profile</button>
                                             
                                         </div>
                                     </div>

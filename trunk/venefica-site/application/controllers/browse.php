@@ -121,13 +121,22 @@ class Browse extends CI_Controller {
                 $last_ad_id = -1;
             }
             
-            foreach ( $ads as $key => $ad ) {
+            
+            //remove all non approved and non online ads
+            $remove_indexes = array();
+            foreach ( $ads as $index => $ad ) {
                 if ( $ad->approved && $ad->online ) {
                     continue;
                 }
-                //remove all non approved and non online ads
-                unset($ads[$key]);
+                array_push($remove_indexes, $index);
             }
+            
+            $remove_indexes = array_reverse($remove_indexes);
+            foreach ( $remove_indexes as $index ) {
+                //unset($ads[$index]);
+                array_splice($ads, $index, 1);
+            }
+            
             
             //if ( $has_ads && count($ads) == 0 ) {
             if ( $has_ads && count($ads) < Browse::CONTINUING_AD_NUM ) {
