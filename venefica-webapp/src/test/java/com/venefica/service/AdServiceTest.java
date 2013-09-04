@@ -787,7 +787,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
                 updatedAd.getNumAvailProlongations() == ad.getNumAvailProlongations());
     }
 
-    @Test(expected = InvalidAdStateException.class)
+    @Test(expected = AdNotFoundException.class)
     public void relistDeletedAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(ad.getId());
