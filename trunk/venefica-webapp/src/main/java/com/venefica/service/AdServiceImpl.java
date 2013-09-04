@@ -192,17 +192,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public void updateAd(AdDto adDto) throws AdNotFoundException, AdValidationException, AuthorizationException {
         Ad ad = validateAd(adDto.getId());
+        User currentUser = getCurrentUser();
         
         // ++ TODO: create ad validator
         if (adDto.getTitle() == null) {
             throw new AdValidationException(AdField.TITLE, "Title is null!");
         }
-
-        Category category = validateCategory(adDto.getCategoryId());
-        User currentUser = getCurrentUser();
-
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("You can update only your own ads!");
+        }
+
+        Category category = validateCategory(adDto.getCategoryId());
+        UserTransaction transaction = userTransactionDao.getByAd(ad.getCreator().getId(), ad.getId());
+        
+        if ( !currentUser.isBusinessAccount() && transaction == null ) {
+            throw new AdValidationException("There is no attached transaction for ad (adId: " + ad.getId() + ") - update failed.");
         }
 
         // WARNING: This update must be performed within an active transaction!
@@ -281,6 +285,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         adDataDao.update(ad.getAdData());
 
+        if ( !currentUser.isBusinessAccount() ) {
+            transaction.setPendingGivingNumber(UserPoint.getGivingNumber(ad));
+            transaction.setApproved(false);
+            userTransactionDao.update(transaction);
+        }
+        
 //        if (adDto.getExpiresAt() != null && currentUser.isBusinessAcc()) {
 //                ad.setExpiresAt(adDto.getExpiresAt());
 //                ad.setExpired(false);
