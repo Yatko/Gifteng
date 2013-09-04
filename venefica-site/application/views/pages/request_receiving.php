@@ -19,9 +19,18 @@ $view_link = $ad->getViewUrl();
 
 ?>
 
-<div class="span6">
-    <div class="well ge-well">
-		
+
+<? if ( $is_modal ): ?>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <div class="modal-header-content">
+            <div class="ge-modal_header">
+<? else: ?>
+    <div class="span6">
+        <div class="well ge-well">
+<? endif; ?>
+
+
         <div class="row-fluid">
             <div class="ge-user">
                 <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
@@ -29,23 +38,36 @@ $view_link = $ad->getViewUrl();
         </div>
 		
 <? if( $ad->sold ): ?>
-
-        
-
+            
+    <? /* nothing here */ ?>
+            
 <? elseif( $request->accepted ): ?>
             
         <div class="row-fluid">
             <div class="ge-action">
                 <div class="span6">
-                    <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Received</button>
+                    <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Gift Received</button>
                 </div>
             </div>
         </div>
 
 <? endif; ?>
 
-        <div class="row-fluid">
-            <div class="ge-messages">
+            
+            
+<? if ( $is_modal ): ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-body">
+    	<div class="well ge-well">
+<? endif; ?>
+        
+        
+        
+        <div class="ge-messages">
+            <div class="row-fluid">
                 <div class="span12">
                     <div class="row-fluid">
                         <div class="ge-subject">
@@ -57,10 +79,11 @@ $view_link = $ad->getViewUrl();
                 </div>
             </div><!--./ge-messages-->
         </div>
-		
-    </div><!--./ge-well-->
+            
+    </div>
 </div>
 
+            
 <? if( $is_modal ): ?>
 <script language="javascript">
     initRequestViewModal();

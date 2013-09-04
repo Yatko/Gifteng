@@ -5,6 +5,7 @@ $lang['validation_required'] = 'Please enter your %s.';
 $lang['validation_valid_email'] = 'Please enter a valid email address.';
 $lang['validation_integer'] = 'The %s must be a number.';
 $lang['validation_is_natural_no_zero'] = 'The %s must be a positive and non zero number.';
+$lang['validation_max_upload_size'] = '<div class=\'error\'>Please limit photo size to 5 MB !</div>';
 
 
 $lang['main_title'] = "Gifteng | Give. Receive. Inspire.";

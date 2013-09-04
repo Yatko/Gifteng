@@ -10,13 +10,17 @@ class View extends CI_Controller {
         $this->init();
         
         if ( !validate_login() ) return;
+        $referrer = $this->agent->referrer();
         
         try {
             if ( $adId == null ) {
                 $ad = null;
             } else {
                 $ad = $this->ad_service->getAdById($adId);
-                if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
+                if ( endsWith($referrer, '/admin') ) {
+                    //coming from admin
+                    //TODO: find a better and nicer solution
+                } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
                     $ad = null;
                 }
             }

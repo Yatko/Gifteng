@@ -1828,7 +1828,7 @@ a.muted:focus {
   .navbar .nav > li > a:hover,
   .navbar .nav > li.dropdown > a:hover {
     background: none;
-    padding: 7px 20px;
+    /*padding: 7px 20px;*/
   }
   .navbar .nav > li ul,
   .navbar .nav > li.dropdown ul {
@@ -5017,7 +5017,7 @@ input.search-query {
 }
 @media (max-width: 767px) {
   .table {
-    display: none;
+    /*display: none;*/
   }
   .rwd-table {
     display: block;

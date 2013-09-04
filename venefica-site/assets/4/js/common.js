@@ -168,10 +168,12 @@ $(function() {
         });
 
         //set width and height of wrapper (same of current form)
+        /*
         $form_wrapper.css({
             width: maxWidth + 'px',
             height: maxHeight + 'px'
         });
+        */
 
         //clicking a link (change form event) in the form
         //makes the current form hide.

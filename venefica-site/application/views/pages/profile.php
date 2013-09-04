@@ -26,12 +26,41 @@ $active_tab = Profile::getActiveTab($active_menu);
     <div class="span12">
         <div class="ge-profile ge-detail-view">
             <div class="well ge-well">
-
+            	<? if( !empty($_GET) ) : ?>
+                    <?
+                    if ( $active_menu == Profile::MENU_MESSAGE ) {
+                        $menu_text = 'Messages';
+                    } else if ( $active_menu == Profile::MENU_NOTIFICATION ) {
+                        $menu_text = 'Notifications';
+                    } else if ( $active_menu == Profile::MENU_FAVORITE ) {
+                        $menu_text = 'Favorites';
+                    } else if ( $active_menu == Profile::MENU_FOLLOWING || $active_menu == Profile::MENU_FOLLOWER ) {
+                        $menu_text = 'Connections';
+                    } else if ( $active_menu == Profile::MENU_GIVING ) {
+                        $menu_text = 'Giving';
+                    } else if ( $active_menu == Profile::MENU_RECEIVING ) {
+                        $menu_text = 'Receiving';
+                    }
+                    //else if ( $active_menu == Profile::MENU_RATING ) {
+                    //    $menu_text = 'Rating';
+                    //}
+                    else if ( $active_menu == Profile::MENU_SETTING ) {
+                        $menu_text = 'Setting';
+                    } else if ( $active_menu == Profile::MENU_ABOUT ) {
+                        $menu_text = 'About';
+                    } else {
+                        $menu_text = '';
+                    }
+                    ?>
+                    
+                    <h3 class="visible-phone text-center mobile-header"><?=$menu_text?></h3>
+                <? endif; ?>
+                
                 <div class="row-fluid ge-user">
-                    <div class="span6">
+                    <div class="span6 <?= empty($_GET) ? '' : 'hidden-phone'?>">
                         <? $this->load->view('element/user', array('user' => $user, 'canEdit' => true, 'small' => false)); ?>
                     </div>
-                    <div class="span6 mobile-four">
+                    <div class="span6 mobile-four <?= ($active_tab == Profile::TAB_CONNECTIONS) ? '' : 'hidden-phone' ?>">
                         <div class="ge-info">
                             <ul class="nav nav-tabs nav-append-content hidden-phone">
                                 <li class="hidden-tablet <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
@@ -54,7 +83,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                             <div class="tab-content">
                                 <div id="tab_gifts" class="tab-pane <?= ($active_tab == Profile::TAB_GIFTS ? 'active' : '') ?>">
                                     <div class="row-fluid">
-                                        <div class="span4">
+                                        <div class="span4 mobile-one">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_GIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_GIVING ? 'active-tab' : '' ?>">
                                                 Giving<br />
                                                 <span class="user_giving"><?= $givings_num ?></span>
@@ -62,13 +91,13 @@ $active_tab = Profile::getActiveTab($active_menu);
                                         </div>
                                         
 <? if( $is_owner ): ?>
-                                            <div class="span4">
+                                            <div class="span4 mobile-one">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_RECEIVING ? 'active-tab' : '' ?>">
                                                     Receiving<br />
                                                     <span class="user_receiving"><?= $receivings_num ?></span>
                                                 </a>
                                             </div>
-                                            <div class="span4">
+                                            <div class="span4 mobile-one">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FAVORITE ? 'active-tab' : '' ?>">
                                                     Favorites<br />
                                                     <span class="user_bookmark"><?= $bookmarks_num ?></span>
@@ -80,13 +109,13 @@ $active_tab = Profile::getActiveTab($active_menu);
                                 </div><!-- /tab-->
                                 <div id="tab_connections" class="tab-pane <?= ($active_tab == Profile::TAB_CONNECTIONS ? 'active' : '') ?>">
                                     <div class="row-fluid">
-                                        <div class="span4">
+                                        <div class="span4 mobile-two">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FOLLOWING? 'active-tab' : '' ?>">
                                                 <span class="user_following"><?= $followings_num ?></span><br />
                                                 Following
                                             </a>
                                         </div>
-                                        <div class="span4">
+                                        <div class="span4 mobile-two">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_FOLLOWER ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FOLLOWER ? 'active-tab' : '' ?>">
                                                 <span class="user_follower"><?= $followers_num ?></span><br />
                                                 Followers
@@ -106,13 +135,13 @@ $active_tab = Profile::getActiveTab($active_menu);
 <? if( $is_owner ): ?>
                                 <div id="tab_account" class="tab-pane <?= ($active_tab == Profile::TAB_ACCOUNT ? 'active' : '') ?>">
                                     <div class="row-fluid">
-                                        <div class="span4">
+                                        <div class="span4 mobile-two">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_NOTIFICATION ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_NOTIFICATION ? 'active-tab' : '' ?>">
                                                 <i class="fui-alert"></i>
                                                 <br />Notifications
                                             </a>
                                         </div>
-                                        <div class="span4">
+                                        <div class="span4 mobile-two">
                                             <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_MESSAGE ? 'active-tab' : '' ?>">
                                                 <i class="fui-mail"></i>
                                                 <br />Messages

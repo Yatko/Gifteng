@@ -15,6 +15,7 @@ $lang['invitation_confirm_button'] = "Confirm Request";
 $lang['invitation_invitation'] = "I have an invitation";
 $lang['invitation_code_hint'] = "Invitation Code";
 $lang['invitation_verify_button'] = "Verify Invitation";
+$lang['invitation_footer'] = "Already have an account? Log in here.";
 
 //$lang['invitation_confirmed_share'] = '';
 
@@ -29,6 +30,10 @@ $lang['invitation_verify_failed'] = "Cannot verify invitation!";
 
 $lang['invitation_verified'] = "Welcome to Gifteng!<br />You are few steps away to unlock the Giftbox.";
 $lang['invitation_join_button'] = "Join";
+
+//$lang['invitation_verified'] = "We promise not to post anything without your permission.";
+//$lang['invitation_join_facebook'] = "Sign up with Facebook";
+//$lang['invitation_join_button'] = "Sign up with E-mail";
 
 $lang['invitation_source_list'] = array(
     'Google',

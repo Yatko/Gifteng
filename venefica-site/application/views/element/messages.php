@@ -58,10 +58,10 @@ if ( $to != null ) {
                 <div class="row-fluid ge-input">
                     <div class="span12">
                         <div class="row-fluid ge-message">
-                            <div class="span9 ge-text">
+                            <div class="span9 mobile-three ge-text">
                                 <textarea name="messageText" placeholder="Your message ..."></textarea>
                             </div>
-                            <div class="span3 ge-text">
+                            <div class="span3 mobile-one ge-text">
                                 <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
                             </div>
                         </div>

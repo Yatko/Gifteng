@@ -61,15 +61,21 @@ $is_owner = isOwner($user);
     });
 </script>
 
-<div class="row">
-    <div class="container user-giving_items">
+    <div class="container user-giving_items <?= empty($_GET) ? 'hidden-phone' : '' ?>">
         <div class="row">
             <div class="ge-tile-view ge-browse masonry">
 
             <? if( isset($givings) && is_array($givings) && count($givings) > 0 ): ?>
                 
-                <? foreach( $givings as $ad ): ?>
+                <? for ( $iii = 4; $iii > 0; $iii-- ): ?>
+                <div class="span3">
+                
+                <? foreach( $givings as $index => $ad ): ?>
                     <?
+                    if ( ($index + $iii) % 4 != 0 ) {
+                        continue;
+                    }
+                    
                     $ad_id = $ad->id;
                     ?>
                     
@@ -77,6 +83,9 @@ $is_owner = isOwner($user);
                         <? $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $user->id)); ?>
                     </div>
                 <? endforeach; ?>
+                    
+                </div>
+                <? endfor; ?>
                 
             <? else: ?>
                 
@@ -109,4 +118,3 @@ $is_owner = isOwner($user);
             </div>
         </div>
     </div>
-</div>

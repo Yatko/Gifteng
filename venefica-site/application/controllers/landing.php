@@ -16,10 +16,14 @@ class Landing extends CI_Controller {
     public function jobs() {
         $this->init();
         
+        redirect('http://gifteng.zendesk.com/forums/22379438-Jobs');
+        
+        /**
         $data = array();
         $data['address'] = 'http://gifteng.zendesk.com/forums/22379438-Jobs';
         
         $this->load->view('iframe', $data);
+        /**/
     }
 
     // internal functions

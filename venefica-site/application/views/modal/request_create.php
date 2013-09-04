@@ -180,8 +180,8 @@
                                             <div class="span12">
                                                 <div class="control-group control-form">
                                                     <div class="controls">
-                                                        <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                                        <button onclick="request_modal('member');" type="button" class="span8 btn btn-ge">Send Request</button>
+                                                        <button type="button" class="span4 mobile-one btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                                        <button onclick="request_modal('member');" type="button" class="span8 mobile-three btn btn-ge">Send Request</button>
                                                     </div>
                                                 </div>
                                             </div>

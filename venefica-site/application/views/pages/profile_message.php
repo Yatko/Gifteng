@@ -14,7 +14,7 @@
 <? if( $messages != null && count($messages) > 0 ): ?>
 
 <div class="row">
-    <div class="span7">
+    <div class="span7 <?= ( $request != null ) ? 'hidden-phone' : ''?>">
         <div class="well ge-well">
 
             <div class="row-fluid">
@@ -56,10 +56,13 @@
         $view_link = $ad->getViewUrl();
         $to_user = $ad->owner ? $requestor_user : $ad->creator;
         ?>
-    
+        
+        
         <div class="span5"><!--conversation-->
             <div class="well ge-well">
 
+                <a href="<?=base_url()?>profile?message" class="visible-phone close pull-right" style="margin:10px;">X</a>
+                
                 <div class="row-fluid">
                     <div class="ge-user">
 

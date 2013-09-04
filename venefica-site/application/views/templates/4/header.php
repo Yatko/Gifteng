@@ -13,7 +13,8 @@ $subpage = key($_GET); //gets the first element from the array
     <title><?=lang('main_title')?></title>
     
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="author" content="gifteng.com"> 
@@ -40,7 +41,7 @@ $subpage = key($_GET); //gets the first element from the array
     <meta property="og:description" content="Give. Receive. Inspire."/>
     <meta property="og:image" content="<?=BASE_PATH?>images/logo.png"/>
     <meta property="og:type" content="website"/>
-
+    
     <meta name="google-site-verification" content="zW7qDZZCQYPFLciEL7ySIjCfccgznWjY5MHr1vkKiN8" />
     <meta name="p:domain_verify" content="592c562546fda58a9ba3de536deafeca"/>
     <meta property="fb:admins" content="100006621787064" />
@@ -53,7 +54,7 @@ $subpage = key($_GET); //gets the first element from the array
     <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png" />
     
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
-    <!--<link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />-->
+    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>snap.css" />
@@ -87,16 +88,19 @@ $subpage = key($_GET); //gets the first element from the array
     <!--[if lt IE 9]>
       <script src="<?=JS_PATH?>html5shiv.js"></script>
     <![endif]-->
-       
+    
+    <? /** ?>
     <!--MASONRY -->
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>masonry.css" />
     <script type="text/javascript" src="<?=JS_PATH?>jquery.masonry.min.js"></script>
     <!--<script type="text/javascript" src="<?=JS_PATH?>jquery.infinitescroll.min.js"></script>-->
+    <? /**/ ?>
     <script type="text/javascript" src="<?=JS_PATH?>modernizr-transitions.js"></script>
-  
+    
+    
     <script type="text/javascript" src="<?=JS_PATH?>common.js"></script>
     
-   <script>
+    <script language="javascript">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);
@@ -106,6 +110,13 @@ $subpage = key($_GET); //gets the first element from the array
         ga('send', 'pageview');
     </script>
     
+    <script language="javascript">
+        window.addEventListener("load", function() {
+            /mobi/i.test(navigator.userAgent) && !location.hash && setTimeout(function() {
+                window.scrollTo(0, 1);
+            }, 1000);
+        });
+    </script>
 </head>
 
 <body>
@@ -240,7 +251,13 @@ $subpage = key($_GET); //gets the first element from the array
 
                     <ul class="nav pull-right">
                         <li>
+                            <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
+                        </li>
+                        <li class="hidden-phone">
                             <a href="#" onclick="startPostModal();"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
+                        </li>
+                        <li class="visible-phone">
+                            <a href="<?=base_url()?>post/member"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
                         </li>
                     </ul>
 
@@ -250,7 +267,7 @@ $subpage = key($_GET); //gets the first element from the array
                         <li>
                             <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown hidden-phone">
                             <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
 
                             <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
