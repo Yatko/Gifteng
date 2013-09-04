@@ -17,7 +17,7 @@ class View extends CI_Controller {
                 $ad = null;
             } else {
                 $ad = $this->ad_service->getAdById($adId);
-                if ( endsWith($referrer, '/admin') ) {
+                if ( endsWith($referrer, '/admin') || endsWith($referrer, '/admin/') ) {
                     //coming from admin
                     //TODO: find a better and nicer solution
                 } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
