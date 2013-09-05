@@ -62,6 +62,7 @@ public interface Constants {
             "RegisterUser",
             "RegisterBusinessUser",
             "GetAllBusinessCategories",
+            "VerifyUser",
             
             //AuthService: login related
             "Authenticate",

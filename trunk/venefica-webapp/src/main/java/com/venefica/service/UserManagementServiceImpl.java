@@ -347,7 +347,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 
     @Override
     @Transactional
-    public void follow(Long userId) throws UserNotFoundException {
+    public UserStatisticsDto follow(Long userId) throws UserNotFoundException {
         User user = getCurrentUser();
         User following = userDao.get(userId);
         
@@ -362,11 +362,13 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         vars.put("follower", user);
 
         emailSender.sendNotification(NotificationType.FOLLOWER_ADDED, following, vars);
+        
+        return buildStatistics(user);
     }
     
     @Override
     @Transactional
-    public void unfollow(Long userId) throws UserNotFoundException {
+    public UserStatisticsDto unfollow(Long userId) throws UserNotFoundException {
         User user = getCurrentUser();
         User following = userDao.get(userId);
         
@@ -375,6 +377,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
         
         user.removeFollowing(following);
+        
+        return buildStatistics(user);
     }
     
     @Override
@@ -515,14 +519,22 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
     }
 
+    private int getFollowersSize(User user) throws UserNotFoundException {
+        return user.getFollowers() != null ? user.getFollowers().size() : 0;
+    }
+    
+    private int getFollowingsSize(User user) throws UserNotFoundException {
+        return user.getFollowings() != null ? user.getFollowings().size() : 0;
+    }
+    
     private UserStatisticsDto buildStatistics(User user) throws UserNotFoundException {
         Long userId = user.getId();
-        int numReceivings = adService.getUserRequestedAds(userId, false).size();
-        int numGivings = adService.getUserAds(userId, false).size();
-        int numRatings = adService.getReceivedRatings(userId).size();
-        int numBookmarks = adService.getBookmarkedAds(userId).size();
-        int numFollowers = this.getFollowers(userId).size();
-        int numFollowings = this.getFollowings(userId).size();
+        int numReceivings = adService.getUserRequestedAdsSize(userId);
+        int numGivings = adService.getUserAdsSize(userId);
+        int numRatings = adService.getReceivedRatingsSize(userId);
+        int numBookmarks = adService.getBookmarkedAdsSize(userId);
+        int numFollowers = this.getFollowersSize(user);
+        int numFollowings = this.getFollowingsSize(user);
         
         UserStatisticsDto statistics = new UserStatisticsDto();
         statistics.setNumReceivings(numReceivings);

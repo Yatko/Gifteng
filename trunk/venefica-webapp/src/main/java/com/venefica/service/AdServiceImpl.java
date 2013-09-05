@@ -570,6 +570,28 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
+    public int getUserAdsSize(Long userId) throws UserNotFoundException {
+        User currentUser = getCurrentUser();
+        User user = validateUser(userId);
+        List<Ad> ads = adDao.getByUser(userId);
+        int result = 0;
+        boolean includeUnapproved = currentUser.equals(user);
+        
+        if ( ads != null && !ads.isEmpty() ) {
+            for (Ad ad : ads) {
+                if ( !includeUnapproved && (!ad.isApproved() || !ad.isOnline()) ) {
+                    //ad is not approved or is not marked as online
+                    continue;
+                }
+                result++;
+            }
+        }
+        
+        return result;
+    }
+    
+    @Override
+    @Transactional
     public List<AdDto> getUserRequestedAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         List<Request> requests = getActiveRequestsByUser(userId, false);
@@ -598,6 +620,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         return result;
+    }
+    
+    @Override
+    @Transactional
+    public int getUserRequestedAdsSize(Long userId) throws UserNotFoundException {
+        List<Request> requests = getActiveRequestsByUser(userId, false);
+        return requests != null ? requests.size() : 0;
     }
 
     @Override
@@ -647,11 +676,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public AdStatisticsDto getStatistics(Long adId) throws AdNotFoundException {
-        User currentUser = getCurrentUser();
         Ad ad = validateAd(adId);
-        
-        AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(currentUser).build();
-        return adDto.getStatistics();
+        return AdStatisticsDto.build(ad);
     }
 
     
@@ -1087,6 +1113,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         return result;
     }
+    
+    @Override
+    @Transactional
+    public int getBookmarkedAdsSize(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Ad> bookmarkedAds = bookmarkDao.getBookmarkedAds(user);
+        return bookmarkedAds != null ? bookmarkedAds.size() : 0;
+    }
 
     
     
@@ -1221,6 +1255,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
         }
         return result;
+    }
+    
+    @Override
+    @Transactional
+    public int getReceivedRatingsSize(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Rating> ratings = ratingDao.getReceivedForUser(user.getId());
+        return ratings != null ? ratings.size() : 0;
     }
     
     @Override
