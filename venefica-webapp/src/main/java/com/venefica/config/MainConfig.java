@@ -23,9 +23,8 @@ import static org.quartz.JobBuilder.newJob;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import static org.quartz.CronScheduleBuilder.dailyAtHourAndMinute;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
-import static org.quartz.SimpleScheduleBuilder.repeatHourlyForever;
-import static org.quartz.DateBuilder.*;
 import org.quartz.Trigger;
 import static org.quartz.TriggerBuilder.newTrigger;
 import org.quartz.impl.StdSchedulerFactory;
@@ -223,8 +222,8 @@ public class MainConfig {
         return newTrigger()
                 .withDescription("Trigger (identity: " + identity + ")")
                 .withIdentity(identity, JOB_GROUP)
-                .startAt(dateOf(startingHour, 0, 0))
-                .withSchedule(repeatHourlyForever(24)) // every day
+                .startNow()
+                .withSchedule(dailyAtHourAndMinute(startingHour, 0))
                 .build();
     }
 }

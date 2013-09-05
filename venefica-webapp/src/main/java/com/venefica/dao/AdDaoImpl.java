@@ -60,7 +60,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     + "from " + getDomainClassName() + " a where "
                     + "a.deleted = false and "
                     + "a.adData.category.hidden = false "
-                    + "order by a.createdAt desc"
+                    + "order by a.approvedAt desc, a.createdAt desc"
                     + "")
                     .setMaxResults(numberAds)
                     .list();
@@ -70,7 +70,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     + "a.deleted = false and "
                     + "a.adData.category.hidden = false and "
                     + "a.id < :lastId "
-                    + "order by a.createdAt desc"
+                    + "order by a.approvedAt desc, a.createdAt desc"
                     + "")
                     .setParameter("lastId", lastAdId)
                     .setMaxResults(numberAds)
@@ -140,7 +140,9 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.type = :type";
         }
 
-        queryStr += " order by a.id desc";
+        //queryStr += " order by a.id desc";
+        queryStr += " order by a.approvedAt desc, a.createdAt desc";
+        
         Query query = createQuery(queryStr);
 
         // Bind parameters
@@ -255,7 +257,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.creator.id = :userId and "
                 + "a.adData.category.hidden = false and "
                 + "a.deleted = false "
-                + "order by a.id desc"
+                //+ "order by a.id desc"
+                + "order by a.approvedAt desc, a.createdAt desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();

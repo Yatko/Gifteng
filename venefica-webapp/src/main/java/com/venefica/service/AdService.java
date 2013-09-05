@@ -239,6 +239,15 @@ public interface AdService {
             @WebParam(name = "includeRequests") Boolean includeRequests) throws UserNotFoundException;
     
     /**
+     * Not published via WS.
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    int getUserAdsSize(Long userId) throws UserNotFoundException;
+    
+    /**
      * Returns a list of all ads requested by the given user.
      * 
      * @return list of ads
@@ -249,6 +258,15 @@ public interface AdService {
     List<AdDto> getUserRequestedAds(
             @WebParam(name = "userId") Long userId,
             @WebParam(name = "includeRequests") Boolean includeRequests) throws UserNotFoundException;
+    
+    /**
+     * Not published via WS.
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    int getUserRequestedAdsSize(Long userId) throws UserNotFoundException;
     
     /**
      * Returns a list of ads with id is less than specified one which fit the filter.
@@ -518,6 +536,14 @@ public interface AdService {
     @WebResult(name = "ad")
     List<AdDto> getBookmarkedAds(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
 
+    /**
+     * Not published via WS.
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    int getBookmarkedAdsSize(Long userId) throws UserNotFoundException;
     
     
     
@@ -574,6 +600,15 @@ public interface AdService {
     @WebMethod(operationName = "GetReceivedRatings")
     @WebResult(name = "rating")
     List<RatingDto> getReceivedRatings(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    
+    /**
+     * Not published via WS.
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    int getReceivedRatingsSize(Long userId) throws UserNotFoundException;
     
     /**
      * Returns a list of ratings that were created by the given user.

@@ -191,19 +191,23 @@ public interface UserManagementService {
      * Adds the given user into the actual ones followers list.
      * 
      * @param userId the user identifier
+     * @return the current user statistics
      * @throws UserNotFoundException the given user could not be found
      */
     @WebMethod(operationName = "Follow")
-    public void follow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    @WebResult(name = "statistics")
+    public UserStatisticsDto follow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
     
     /**
      * Removes the given user from the followers list of the actual one.
      * 
      * @param userId the user identifier
+     * @return the current user statistics
      * @throws UserNotFoundException the given user could not be found
      */
     @WebMethod(operationName = "Unfollow")
-    public void unfollow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
+    @WebResult(name = "statistics")
+    public UserStatisticsDto unfollow(@WebParam(name = "userId") @NotNull Long userId) throws UserNotFoundException;
     
     /**
      * Returns the list of users that are following the given one.

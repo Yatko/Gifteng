@@ -277,16 +277,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         if (includeStatisticsFlag) {
-            AdStatisticsDto statistics = new AdStatisticsDto();
-            statistics.setNumAvailProlongations(model.getNumAvailProlongations());
-            statistics.setNumViews(model.getNumViews());
-            statistics.setRating(model.getRating());
-            statistics.setNumBookmarks(model.getBookmarks() != null ? model.getBookmarks().size() : 0);
-            statistics.setNumComments(model.getComments() != null ? model.getComments().size() : 0);
-            statistics.setNumRequests(model.getRequests() != null ? model.getRequests().size() : 0);
-            statistics.setNumShares(0); //TODO
-
-            adDto.setStatistics(statistics);
+            adDto.setStatistics(AdStatisticsDto.build(model));
         }
 
         return adDto;

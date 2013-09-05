@@ -4,6 +4,7 @@
  */
 package com.venefica.service.dto;
 
+import com.venefica.model.Ad;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -32,6 +33,22 @@ public class AdStatisticsDto {
     // WARNING: required for JAX-WS
     public AdStatisticsDto() {
     }
+    
+    // helper methods
+    
+    public static AdStatisticsDto build(Ad ad) {
+        AdStatisticsDto statistics = new AdStatisticsDto();
+        statistics.setNumAvailProlongations(ad.getNumAvailProlongations());
+        statistics.setNumViews(ad.getNumViews());
+        statistics.setRating(ad.getRating());
+        statistics.setNumBookmarks(ad.getBookmarks() != null ? ad.getBookmarks().size() : 0);
+        statistics.setNumComments(ad.getComments() != null ? ad.getComments().size() : 0);
+        statistics.setNumRequests(ad.getRequests() != null ? ad.getRequests().size() : 0);
+        statistics.setNumShares(0); //TODO
+        return statistics;
+    }
+    
+    // getters/setters
     
     public int getNumAvailProlongations() {
         return numAvailProlongations;
