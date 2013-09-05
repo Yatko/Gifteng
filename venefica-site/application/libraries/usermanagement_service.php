@@ -22,7 +22,7 @@ class Usermanagement_service {
      */
     public function verifyUser($code) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
             $userService->verifyUser(array("code" => $code));
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
@@ -201,12 +201,15 @@ class Usermanagement_service {
      * Follow the given user.
      * 
      * @param long $userId
+     * @return UserStatistics_model
      * @throws Exception if user not found or WS error
      */
     public function follow($userId) {
         try {
             $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $userService->follow(array("userId" => $userId));
+            $result = $userService->follow(array("userId" => $userId));
+            $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
+            return $statistics;
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);
@@ -217,12 +220,15 @@ class Usermanagement_service {
      * Unfollow the given user.
      * 
      * @param long $userId
+     * @return UserStatistics_model
      * @throws Exception if user not found or WS error
      */
     public function unfollow($userId) {
         try {
             $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $userService->unfollow(array("userId" => $userId));
+            $result = $userService->unfollow(array("userId" => $userId));
+            $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
+            return $statistics;
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);
@@ -362,19 +368,22 @@ class Usermanagement_service {
     /**
      * Loads the user from the session that was stored previously.
      * 
-     * @return User model
+     * @return User_model
      */
     public function loadUser() {
         return loadFromSession('user');
     }
     
     /**
-     * refresh the user in the session by requesting server
+     * Refresh the user in the session by requesting server.
+     * 
+     * @return User_model
      */
     public function refreshUser() {
         $user = $this->loadUser();
         $token = loadToken();
         $this->storeUser($user->email, $token);
+        return $this->loadUser();
     }
 
     /* internal functions */

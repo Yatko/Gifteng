@@ -48,10 +48,10 @@ $subpage = key($_GET); //gets the first element from the array
     <meta property="fb:page_id" content="240475762731626" />
     
     <link rel="shortcut icon" href="<?=BASE_PATH?>images/favicon.ico">
-    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="<?=BASE_PATH?>images/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="<?=BASE_PATH?>images/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="<?=BASE_PATH?>images/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?=BASE_PATH?>images/apple-icon-144x144.png" />
     
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
     <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />
@@ -267,8 +267,12 @@ $subpage = key($_GET); //gets the first element from the array
                         <li>
                             <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
+                        <li class="hidden-phone">
+                            <a href="<?=base_url()?>authentication/login"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>
+                        </li>
+                        <? /** ?>
                         <li class="dropdown hidden-phone">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>                      
+                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>
 
                             <div class="dropdown-menu login-drop" style="padding: 15px; padding-bottom: 10px;">
                                 <?=form_open('/authentication/login')?>
@@ -280,6 +284,7 @@ $subpage = key($_GET); //gets the first element from the array
                                 <?=form_close()?>
                             </div>
                         </li>
+                        <? /**/ ?>
                     </ul>
 
                 <? endif; ?>

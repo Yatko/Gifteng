@@ -1,16 +1,27 @@
 <script language="javascript">
-    function request_hide(requestId) {
+    function request_hide(callerElement, requestId) {
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
+        }
+        
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/hide_request?requestId=' + requestId,
+            url: '<?=base_url()?>ajax/hide_request',
             dataType: 'json',
-            cache: false
+            cache: false,
+            data: {
+                requestId: requestId
+            }
         }).done(function(response) {
             if ( !response || response === '' ) {
                 //TODO: empty result
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
+                
                 $('#request_' + requestId).removeClass('masonry-brick');
                 $('#request_' + requestId).addClass('hide');
                 
@@ -26,6 +37,10 @@
         });
     }
     function request_cancel(callerElement, requestType, requestId, adId, userId, callback) {
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
+        }
+        
         $.ajax({
             type: 'POST',
             url: '<?=base_url()?>ajax/cancel_request',
@@ -45,7 +60,7 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                 if ( callerElement !== null ) {
                     var $element = $(callerElement);
-                    //$element.addClass('disabled');
+                    $element.removeAttr("disabled");
                     $element.trigger('request_canceled', [requestId, adId, response.<?=AJAX_STATUS_RESULT?>]);
                 }
                 
@@ -63,18 +78,31 @@
             //TODO
         });
     }
-    function request_select(requestId, adId, userId) {
+    function request_select(callerElement, requestId, adId, userId) {
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
+        }
+        
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/select_request?requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
+            url: '<?=base_url()?>ajax/select_request',
             dataType: 'json',
-            cache: false
+            cache: false,
+            data: {
+                requestId: requestId,
+                adId: adId,
+                userId: userId
+            }
         }).done(function(response) {
             if ( !response || response === '' ) {
                 //TODO: empty result
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
+                
                 var result = response.<?=AJAX_STATUS_RESULT?>;
                 $('#ad_' + adId).html(result);
                 
@@ -89,18 +117,31 @@
         });
     }
     
-    function request_send(requestId, adId, userId) {
+    function request_send(callerElement, requestId, adId, userId) {
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
+        }
+        
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/send_request?requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
+            url: '<?=base_url()?>ajax/send_request',
             dataType: 'json',
-            cache: false
+            cache: false,
+            data: {
+                requestId: requestId,
+                adId: adId,
+                userId: userId
+            }
         }).done(function(response) {
             if ( !response || response === '' ) {
                 //TODO: empty result
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
+                
                 var result = response.<?=AJAX_STATUS_RESULT?>;
                 $('#ad_' + adId).html(result);
                 
@@ -114,18 +155,31 @@
             //TODO
         });
     }
-    function request_receive(requestId, adId, userId) {
+    function request_receive(callerElement, requestId, adId, userId) {
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
+        }
+        
         $.ajax({
             type: 'POST',
-            url: '<?=base_url()?>ajax/receive_request?requestId=' + requestId + '&adId=' + adId + '&userId=' + userId,
+            url: '<?=base_url()?>ajax/receive_request',
             dataType: 'json',
-            cache: false
+            cache: false,
+            data: {
+                requestId: requestId,
+                adId: adId,
+                userId: userId
+            }
         }).done(function(response) {
             if ( !response || response === '' ) {
                 //TODO: empty result
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
+                
                 var result = response.<?=AJAX_STATUS_RESULT?>;
                 $('#request_' + requestId).html(result);
                 

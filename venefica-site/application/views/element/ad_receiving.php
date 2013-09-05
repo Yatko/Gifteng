@@ -55,7 +55,7 @@ if( $ad->expired || $request->isExpired() ) {
                         </div>
 
                         <div class="span12">
-                            <button onclick="request_hide(<?= $request_id ?>);" class="btn btn-small btn-block">
+                            <button onclick="request_hide(this, <?= $request_id ?>);" class="btn btn-small btn-block">
                                 Delete Gift
                                 <i class=" fui-trash pull-left"></i>
                             </button>
@@ -128,7 +128,7 @@ if( $ad->expired || $request->isExpired() ) {
                                 </button>
                             </div>
                             <div class="span8 mobile-three">
-                                <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
+                                <button onclick="request_receive(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     Gift Received
                                 </button>
                             </div>

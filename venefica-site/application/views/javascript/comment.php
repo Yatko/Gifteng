@@ -13,9 +13,13 @@ $user = $CI->usermanagement_service->loadUser();
         $(callerElement).addClass('hide');
     }
     
-    function add_comment() {
+    function add_comment(callerElement) {
         if ( $("#comment_post_form").length === 0 ) {
             return;
+        }
+        
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
         }
         
         var $commentAdId = $("#comment_post_form input[name=commentAdId]");
@@ -37,6 +41,9 @@ $user = $CI->usermanagement_service->loadUser();
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
                 
                 if ( $('#ad_' + adId + '_comments').length > 0 ) {
                     var $name = "<?=$user->getFullName()?>";
@@ -51,7 +58,7 @@ $user = $CI->usermanagement_service->loadUser();
                     $('.ge-name', $newTemplate).html($name);
                     $('.ge-date', $newTemplate).html('Right now');
                     $('.ge-block', $newTemplate).html($commentText.val());
-
+                    
                     $('#ad_' + adId + '_comments .ge-messagelist .span12').prepend($newTemplate);
                 }
                 

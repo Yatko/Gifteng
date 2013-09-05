@@ -1,5 +1,5 @@
 <script langauge="javascript">
-    function startCommentModal(callerElement, adId) {
+    function startCommentModal(adId) {
         var $commentAdId = $("#comment_post_form input[name=commentAdId]");
         $commentAdId.val(adId);
         
@@ -15,9 +15,7 @@
 
 <div id="commentContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-body">
-        
-        <?=form_open('/ajax/comment', array('id' => 'comment_post_form'))?>
-        
+        <form id="comment_post_form">
             <input type="hidden" name="commentAdId" value=""/>
 
             <div class="row-fluid ge-message ge-input ge-text">
@@ -25,11 +23,9 @@
                     <textarea name="commentText" placeholder="Your comment ..."></textarea>
                 </div>
                 <div class="span3">
-                    <button type="button" style="height:60px;" onclick="add_comment();" class="btn btn-mini btn-block">Add</button>
+                    <button type="button" style="height:60px;" onclick="add_comment(this);" class="btn btn-mini btn-block">Add</button>
                 </div>
             </div>
-        
-        <?=form_close()?>
-        
+        </form>
     </div>
 </div>

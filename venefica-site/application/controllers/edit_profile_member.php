@@ -71,13 +71,17 @@ class Edit_profile_member extends CI_Controller {
     }
     
     private function process() {
+        $is_valid = true;
         
         if ( $_POST ) {
             if ( $this->input->post('password') != '' ) {
                 $this->load->library('form_validation', null, 'edit_profile_form');
                 $this->edit_profile_form->set_error_delimiters('<div class="error">', '</div>');
                 
-                if ( !$this->edit_profile_form->matches($this->input->post('new_password_1'), 'new_password_2') ) {
+                if ( !$this->edit_profile_form->required($this->input->post('new_password_1')) ) {
+                    $this->edit_profile_form->setError(lang('change_password_failed_empty_passwords'));
+                    $is_valid = false;
+                } else if ( !$this->edit_profile_form->matches($this->input->post('new_password_1'), 'new_password_2') ) {
                     $this->edit_profile_form->setError(lang('change_password_failed_not_matching_passwords'));
                     $is_valid = false;
                 } else {
@@ -96,7 +100,10 @@ class Edit_profile_member extends CI_Controller {
             }
         }
         
-        $is_valid = $this->post_form();
+        if ( $is_valid ) {
+            $is_valid = $this->post_form();
+        }
+        
         if ( $is_valid ) {
             //form data valid after post
             
@@ -158,7 +165,8 @@ class Edit_profile_member extends CI_Controller {
             $this->edit_profile_form->set_rules('firstName', 'lang:m_edit_profile_firstName', 'trim|required');
             $this->edit_profile_form->set_rules('lastName', 'lang:m_edit_profile_lastName', 'trim|required');
             $this->edit_profile_form->set_rules('about');
-            $this->edit_profile_form->set_rules('zipCode', 'lang:m_edit_profile_zipCode', 'trim|required');
+            //$this->edit_profile_form->set_rules('zipCode', 'lang:m_edit_profile_zipCode', 'trim|required');
+            $this->edit_profile_form->set_rules('zipCode');
             $this->edit_profile_form->set_rules('email', 'lang:m_edit_profile_email', 'trim|required|valid_email');
 
             $this->edit_profile_form->set_message('required', lang('validation_required'));

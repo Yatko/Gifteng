@@ -29,7 +29,10 @@ $is_owner = isOwner($user);
                 }
 
                 if ( $('#ad_' + adId).length === 0 ) {
-                    $('.ge-browse').prepend('<div id="ad_' + adId + '"></div>');
+                    if ( $('.ge-browse .span3:first').length === 0 ) {
+                        $('.ge-browse').prepend('<div class="span3"></div>');
+                    }
+                    $('.ge-browse .span3:first').prepend('<div id="ad_' + adId + '" class="masonry-brick"></div>');
                 }
                 
                 $.getJSON('<?=base_url()?>ajax/getAdGiving/' + adId + '/<?=$user->id?>', function(response) {

@@ -32,22 +32,22 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <div class="modal-header-content">
-        	<div class="ge-modal_header">
-        		<label class="control-label">
-        			<h3>Unfortunately your gift can’t be posted because...</h3>
-        		</label>
-        	</div>
+            <div class="ge-modal_header">
+                <label class="control-label">
+                    <h3>Unfortunately your gift can’t be posted because...</h3>
+                </label>
+            </div>
         </div>
     </div>
     <div class="modal-body">
     	<div class="well ge-well ge-form">
-        	<p></p>
-		</div>
+            <p></p>
+        </div>
     </div>
     <div class="modal-footer">
-		<div class="ge-modal_footer">
-        	<button type="button" data-dismiss="modal" class="btn btn-large"><i class="fui-cross pull-right"></i>OK</button>
-        	<a id="approval_modal_view_gift" class="btn btn-large btn-ge">View Gift</a>
+        <div class="ge-modal_footer">
+            <button type="button" data-dismiss="modal" class="btn btn-large"><i class="fui-cross pull-right"></i>OK</button>
+            <a id="approval_modal_view_gift" class="btn btn-large btn-ge">View Gift</a>
         </div>
     </div>
 </div>

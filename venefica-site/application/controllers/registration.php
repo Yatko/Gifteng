@@ -45,9 +45,7 @@ class Registration extends CI_Controller {
         }
         
         try {
-            $this->load->library('usermanagement_service');
             $this->usermanagement_service->verifyUser($code);
-            $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {
         }
         
@@ -145,7 +143,6 @@ class Registration extends CI_Controller {
         }
         
         try {
-            $this->load->library('usermanagement_service');
             $categories = $this->usermanagement_service->getAllBusinessCategories();
         } catch ( Exception $ex ) {
             $categories = array();
@@ -175,7 +172,6 @@ class Registration extends CI_Controller {
         $user->email = $this->input->post('registration_email');
         
         try {
-            $this->load->library('usermanagement_service');
             $this->usermanagement_service->registerUser($user, $password, $code);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'User registration failed! '.$ex->getMessage());
@@ -212,7 +208,6 @@ class Registration extends CI_Controller {
         $user->businessCategoryId = $this->input->post('businessCategory');
         
         try {
-            $this->load->library('usermanagement_service');
             $this->usermanagement_service->registerBusinessUser($user, $password);
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Business user registration failed! '.$ex->getMessage());
@@ -229,6 +224,8 @@ class Registration extends CI_Controller {
             //load translations
             $this->lang->load('main');
             $this->lang->load('registration');
+            
+            $this->load->library('usermanagement_service');
             
             $this->load->model('image_model');
             $this->load->model('address_model');

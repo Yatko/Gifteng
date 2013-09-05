@@ -305,7 +305,6 @@ class Post_member extends CI_Controller {
         $this->load->library('form_validation', null, 'post_form');
         $this->post_form->set_error_delimiters('<div class="error">', '</div>');
         
-        /**
         if ( trim($this->input->post('title')) == "" ) {
             $this->post_form->setError(lang('post_member_title_empty'));
             $is_valid = false;
@@ -322,36 +321,8 @@ class Post_member extends CI_Controller {
             $this->post_form->setError(lang('post_member_delivery_missing'));
             $is_valid = false;
         }
-        /**/
-        
-        if ( $this->input->post('pickUp') || $this->input->post('freeShipping') ) {
-            //we got at least one value
-        } else {
-            $this->post_form->setError(lang('post_member_delivery_missing'));
-            $is_valid = false;
-        }
-        
-        if ( $this->input->post('category') == "" ) {
-            $this->post_form->setError(lang('post_member_category_missing'));
-            $is_valid = false;
-        }
-        
-        $this->post_form->set_rules('title', 'lang:post_title', 'trim|required');
-        $this->post_form->set_rules('price', 'lang:post_price', 'trim|numeric');
-        $this->post_form->set_rules('category');
-        $this->post_form->set_rules('description');
-        $this->post_form->set_rules('zipCode', 'lang:post_zipCode', 'required');
-        $this->post_form->set_rules('pickUp');
-        $this->post_form->set_rules('freeShipping');
-        
-        $this->post_form->set_message('required', lang('validation_required'));
         
         if ( $is_valid ) {
-            $is_valid = $this->post_form->run();
-        }
-        
-        if ( $is_valid ) {
-            
             if ( $this->ad->address->zipCode != $this->input->post('zipCode') ) {
                 $this->ad->address->longitude = '';
                 $this->ad->address->latitude = '';

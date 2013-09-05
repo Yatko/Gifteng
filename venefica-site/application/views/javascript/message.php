@@ -13,9 +13,13 @@ $user = $CI->usermanagement_service->loadUser();
         $(callerElement).addClass('hide');
     }
     
-    function add_message() {
+    function add_message(callerElement) {
         if ( $("#message_post_form").length === 0 ) {
             return;
+        }
+        
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
         }
         
         var $messageRequestId = $("#message_post_form input[name=messageRequestId]");
@@ -38,6 +42,9 @@ $user = $CI->usermanagement_service->loadUser();
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                 //TODO
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                if ( callerElement !== null ) {
+                    $(callerElement).removeAttr("disabled");
+                }
                 
                 if ( $('#messages').length > 0 ) {
                     var $name = "<?=$user->getFullName()?>";
@@ -52,7 +59,7 @@ $user = $CI->usermanagement_service->loadUser();
                     $(".ge-name", $newTemplate).html($name);
                     $(".ge-date", $newTemplate).html('Right now');
                     $('.ge-block', $newTemplate).html($messageText.val());
-
+                    
                     $('#messages .ge-conversation .span12').append($newTemplate);
                 }
                 

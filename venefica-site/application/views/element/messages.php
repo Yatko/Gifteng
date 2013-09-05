@@ -32,43 +32,39 @@ if ( $to != null ) {
     <div class="row-fluid ge-messages" id="messages">
         <div class="span12">
 
-            <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
-            
-                <div class="row-fluid ge-conversation">
-                    <div class="span12">
-                        
-                        <? foreach ($messages as $message): ?>
-                            
-                            <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false)); ?>
+            <div class="row-fluid ge-conversation">
+                <div class="span12">
+                    
+                <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
+                    <? foreach ($messages as $message): ?>
 
-                        <? endforeach; ?>
-                        
-                    </div>
-                </div><!--./ge-conversation-->
-            
-            <? endif; ?>
+                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false)); ?>
+
+                    <? endforeach; ?>
+                <? endif; ?>
+                
+                </div>
+            </div><!--./ge-conversation-->
 
             <? if( $canMessage ): ?>
             
-                <?=form_open('/ajax/message', array('id' => 'message_post_form'))?>
-                
-                <input type="hidden" name="messageRequestId" value="<?= $request_id ?>"/>
-                <input type="hidden" name="messageToId" value="<?= $to_id ?>"/>
+                <form id="message_post_form">
+                    <input type="hidden" name="messageRequestId" value="<?= $request_id ?>" />
+                    <input type="hidden" name="messageToId" value="<?= $to_id ?>" />
 
-                <div class="row-fluid ge-input">
-                    <div class="span12">
-                        <div class="row-fluid ge-message">
-                            <div class="span9 mobile-three ge-text">
-                                <textarea name="messageText" placeholder="Your message ..."></textarea>
-                            </div>
-                            <div class="span3 mobile-one ge-text">
-                                <button type="button" onclick="add_message();" class="btn btn-mini btn-block">Add</button>
+                    <div class="row-fluid ge-input">
+                        <div class="span12">
+                            <div class="row-fluid ge-message">
+                                <div class="span9 mobile-three ge-text">
+                                    <textarea name="messageText" placeholder="Your message ..."></textarea>
+                                </div>
+                                <div class="span3 mobile-one ge-text">
+                                    <button type="button" onclick="add_message(this);" class="btn btn-mini btn-block">Add</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div><!--./ge-input-->
-
-                <?=form_close()?>
+                    </div><!--./ge-input-->
+                </form>
             
             <? endif; ?>
         </div>

@@ -14,9 +14,12 @@
         }
     }
     
-    function request_cancel_modal() {
+    function request_cancel_modal(callerElement) {
         if ( $("#request_cancel_form").length === 0 ) {
             return;
+        }
+        if ( callerElement !== null ) {
+            $(callerElement).attr("disabled", true);
         }
         
         var $requestType = $("#request_cancel_form input[name=requestType]");
@@ -30,6 +33,10 @@
         var userId = $userId.val();
         
         request_cancel(requestCallerElement, requestType, requestId, adId, userId, function() {
+            if ( callerElement !== null ) {
+                $(callerElement).removeAttr("disabled");
+            }
+            
             $requestType.val('');
             $requestId.val('');
             $adId.val('');
@@ -46,37 +53,35 @@
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <div class="modal-header-content">
-        	<div class="ge-modal_header">
-		        <label class="control-label" for="fieldset">
-	                <h3>
-	                    Are you sure you want to cancel the request?
-	                </h3>
-		        </label>
-        	</div>
+            <div class="ge-modal_header">
+                <label class="control-label" for="fieldset">
+                    <h3>Are you sure you want to cancel the request?</h3>
+                </label>
+            </div>
         </div>
     </div>
     
     <div class="modal-footer">
     	<div class="ge-modal_footer">
-	        <form id="request_cancel_form">
-	            <input type="hidden" name="requestType"/>
-	            <input type="hidden" name="requestId"/>
-	            <input type="hidden" name="adId"/>
-	            <input type="hidden" name="userId"/>
-	
-	            <fieldset>
-	                <div class="row-fluid">
-	                    <div class="span12">
-	                        <div class="control-group control-form">
-	                            <div class="controls">
-	                                <button type="button" onclick="request_cancel_modal();" class="span6 btn">YES</button>
-	                                <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div><!--./submit-->
-	            </fieldset>
-	        </form>
+            <form id="request_cancel_form">
+                <input type="hidden" name="requestType"/>
+                <input type="hidden" name="requestId"/>
+                <input type="hidden" name="adId"/>
+                <input type="hidden" name="userId"/>
+
+                <fieldset>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="control-group control-form">
+                                <div class="controls">
+                                    <button type="button" onclick="request_cancel_modal(this);" class="span6 btn">YES</button>
+                                    <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--./submit-->
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>

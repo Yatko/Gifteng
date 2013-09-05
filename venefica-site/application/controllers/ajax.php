@@ -187,13 +187,11 @@ class Ajax extends CI_Controller {
         
         try {
             $userId = $_GET['userId'];
-            $this->usermanagement_service->follow($userId);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $statistics = $this->usermanagement_service->follow($userId);
             
             respond_ajax(AJAX_STATUS_RESULT, array(
-                USER_FOLLOWINGS_NUM => $currentUser->statistics->numFollowings,
-                USER_FOLLOWERS_NUM => $currentUser->statistics->numFollowers
+                USER_FOLLOWINGS_NUM => $statistics->numFollowings,
+                USER_FOLLOWERS_NUM => $statistics->numFollowers
             ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
@@ -211,13 +209,11 @@ class Ajax extends CI_Controller {
         
         try {
             $userId = $_GET['userId'];
-            $this->usermanagement_service->unfollow($userId);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $statistics = $this->usermanagement_service->unfollow($userId);
             
             respond_ajax(AJAX_STATUS_RESULT, array(
-                USER_FOLLOWINGS_NUM => $currentUser->statistics->numFollowings,
-                USER_FOLLOWERS_NUM => $currentUser->statistics->numFollowers
+                USER_FOLLOWINGS_NUM => $statistics->numFollowings,
+                USER_FOLLOWERS_NUM => $statistics->numFollowers
             ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
@@ -317,8 +313,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->bookmarkAd($adId);
             $ad_statistics = $this->ad_service->getStatistics($adId);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
@@ -342,8 +337,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->removeBookmark($adId);
             $ad_statistics = $this->ad_service->getStatistics($adId);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
@@ -403,15 +397,15 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
         try {
-            $requestId = $_GET['requestId'];
+            $requestId = $this->input->post('requestId');
+            
             $this->ad_service->hideRequest($requestId);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 USER_RECEIVINGS_NUM => $currentUser->statistics->numReceivings
@@ -454,14 +448,14 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
         try {
-            $requestId = $_GET['requestId'];
-            $adId = $_GET['adId'];
-            $userId = $_GET['userId'];
+            $requestId = $this->input->post('requestId');
+            $adId = $this->input->post('adId');
+            $userId = $this->input->post('userId');
             
             $this->ad_service->selectRequest($requestId);
             
@@ -476,14 +470,14 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
         try {
-            $requestId = $_GET['requestId'];
-            $adId = $_GET['adId'];
-            $userId = $_GET['userId'];
+            $requestId = $this->input->post('requestId');
+            $adId = $this->input->post('adId');
+            $userId = $this->input->post('userId');
             
             $this->ad_service->markAsSent($requestId);
             
@@ -503,14 +497,14 @@ class Ajax extends CI_Controller {
         
         if ( !isLogged() ) {
             return;
-        } else if ( !$_GET ) {
+        } else if ( !$_POST ) {
             return;
         }
         
         try {
-            $requestId = $_GET['requestId'];
-            $adId = $_GET['adId'];
-            $userId = $_GET['userId'];
+            $requestId = $this->input->post('requestId');
+            $adId = $this->input->post('adId');
+            $userId = $this->input->post('userId');
             
             $this->ad_service->markAsReceived($requestId);
             $ad = $this->ad_service->getAdById($adId);

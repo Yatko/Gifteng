@@ -58,34 +58,32 @@
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <div class="modal-header-content">
-        	<div class="ge-modal_header">
-		        <label class="control-label" for="fieldset">
-	                <h3>
-	                    Are you sure you want to delete it?
-	                </h3>
-		        </label>
-        	</div>
+            <div class="ge-modal_header">
+                <label class="control-label" for="fieldset">
+                    <h3>Are you sure you want to delete it?</h3>
+                </label>
+            </div>
         </div>
     </div>
     
     <div class="modal-footer">
     	<div class="ge-modal_footer">
-	        <form id="ad_delete_form">
-	            <input type="hidden" name="adId"/>
-	            
-	            <fieldset>
-	                <div class="row-fluid">
-	                    <div class="span12">
-	                        <div class="control-group control-form">
-	                            <div class="controls">
-	                                <button type="button" onclick="ad_delete_modal();" class="span6 mobile-two btn">YES</button>
-	                                <button type="button" data-dismiss="modal" class="span6 mobile-two btn btn-ge pull-right">NO</button>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div><!--./submit-->
-	            </fieldset>
-	        </form>
+            <form id="ad_delete_form">
+                <input type="hidden" name="adId"/>
+
+                <fieldset>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="control-group control-form">
+                                <div class="controls">
+                                    <button type="button" onclick="ad_delete_modal();" class="span6 mobile-two btn">YES</button>
+                                    <button type="button" data-dismiss="modal" class="span6 mobile-two btn btn-ge pull-right">NO</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--./submit-->
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>

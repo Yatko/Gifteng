@@ -54,7 +54,7 @@ $view_link = $ad->getViewUrl();
                     <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                 </div>
                 <div class="span6 mobile-two">
-                    <button onclick="request_send(<?=$request_id?>, <?=$ad_id?>, <?-$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Shipped / Handed Over</button>
+                    <button onclick="request_send(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Shipped / Handed Over</button>
                 </div>
             </div><!--./ge-action-->
         </div>
@@ -67,7 +67,7 @@ $view_link = $ad->getViewUrl();
                     <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                 </div>
                 <div class="span6 mobile-two">
-                    <button onclick="request_select(<?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
+                    <button onclick="request_select(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Accept Request</button>
                 </div>
             </div><!--./ge-action-->
         </div>
