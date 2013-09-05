@@ -92,7 +92,7 @@ if ( $is_modal ) {
                                 <div class="control-group">
                                     <label class="control-label" for="about">About me</label>
                                     <div class="controls">
-                                        <textarea id="about" name="about" rows="2" placeholder="..."><?=set_value('about', $about)?></textarea>
+                                        <textarea id="about" name="about" rows="2" maxlength="220" placeholder="..."><?=set_value('about', $about)?></textarea>
                                     </div>
                                 </div>
                             </div>

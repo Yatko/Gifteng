@@ -63,7 +63,7 @@
     function shareOnTwitter(title, itemUrl, imgUrl) {
         var width = 575;
         var height = 450;
-        var safeTitle = encodeURIComponent(title.replace(/&amp;/g, "&"));
+        var safeTitle = encodeURIComponent(('#Free ' + title).replace(/&amp;/g, "&"));
         safeTitle = safeTitle.substring(0, 30);
         var safeItemUrl = encodeURIComponent(itemUrl.replace(/&amp;/g, "&"));
         var safeImgUrl = encodeURIComponent(imgUrl.replace(/&amp;/g, "&"));

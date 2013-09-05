@@ -66,8 +66,7 @@ class Profile extends CI_Controller {
                 }
             } else {
                 //needs to refresh the user as cached statistic data can reflect incorrect values
-                $this->usermanagement_service->refreshUser();
-                $user = $this->usermanagement_service->loadUser();
+                $user = $this->usermanagement_service->refreshUser();
             }
         } catch ( Exception $ex ) {
             $user = null;
@@ -510,8 +509,7 @@ class Profile extends CI_Controller {
             $currentUser->avatar = $image;
             
             $this->usermanagement_service->updateUser($currentUser);
-            $this->usermanagement_service->refreshUser();
-            $currentUser = $this->usermanagement_service->loadUser();
+            $currentUser = $this->usermanagement_service->refreshUser();
             
             respond_ajax(AJAX_STATUS_RESULT, $currentUser->getAvatarUrl());
         } catch ( Exception $ex ) {

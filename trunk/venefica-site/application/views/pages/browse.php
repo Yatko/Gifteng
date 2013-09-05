@@ -189,9 +189,10 @@
         
         $ad_id = $ad->id;
         $ad_can_request = $ad->canRequest;
+        $is_owner = $ad->owner;
         $can_bookmark = $ad_can_request ? true : false;
-        $can_share = $ad_can_request ? true : false;
-        $can_comment = $ad_can_request ? true : false;
+        $can_share = ($is_owner || $ad_can_request) ? true : false;
+        $can_comment = ($is_owner || $ad_can_request) ? true : false;
         
         $inactive = false;
         if ( !$ad->owner && !$ad_can_request ) {

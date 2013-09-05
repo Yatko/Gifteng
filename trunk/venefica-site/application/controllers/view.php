@@ -11,6 +11,7 @@ class View extends CI_Controller {
         
         if ( !validate_login() ) return;
         $referrer = $this->agent->referrer();
+        $is_admin = false;
         
         try {
             if ( $adId == null ) {
@@ -20,6 +21,7 @@ class View extends CI_Controller {
                 if ( endsWith($referrer, '/admin') || endsWith($referrer, '/admin/') ) {
                     //coming from admin
                     //TODO: find a better and nicer solution
+                    $is_admin = true;
                 } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
                     $ad = null;
                 }
@@ -46,10 +48,10 @@ class View extends CI_Controller {
         /**/
         
         $data = array();
-        $data['adId'] = $adId;
         $data['ad'] = $ad;
         $data['currentUser'] = $currentUser;
         $data['comments'] = $comments;
+        $data['isAdmin'] = $is_admin;
         
         $modal = '';
         $modal .= $this->load->view('modal/request_create', array(), true);

@@ -46,7 +46,7 @@ $view_link = $ad->getViewUrl();
         <div class="row-fluid">
             <div class="ge-action">
                 <div class="span6">
-                    <button onclick="request_receive(<?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Gift Received</button>
+                    <button onclick="request_receive(this, <?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Gift Received</button>
                 </div>
             </div>
         </div>

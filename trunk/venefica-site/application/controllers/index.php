@@ -12,7 +12,7 @@ class Index extends CI_Controller {
         
         /* mobile redirection */
         if ( $this->agent->is_mobile() ) {
-            redirect('/authentication/login/', 'refresh');
+            redirect('/authentication/login', 'refresh');
         }
 	
         $this->load->view('templates/'.TEMPLATES.'/header');

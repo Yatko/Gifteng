@@ -2,9 +2,10 @@
 /**
  * Input params:
  * 
- * currentUser: User_model
  * ad: Ad_model
+ * currentUser: User_model
  * comments: array of Comment_model
+ * isAdmin: boolean
  */
 ?>
 
@@ -66,7 +67,7 @@ if ($ad->address != null) {
     $ad_latitude = 0;
 }
 
-if ($ad_is_sold || !$ad_can_request) {
+if ( $ad_is_sold || (!$is_owner && !$ad_can_request) ) {
     $canComment = false;
 } else {
     $canComment = true;
@@ -99,11 +100,10 @@ if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
 }
 
 $can_bookmark = $ad_can_request ? true : false;
-$can_share = $ad_can_request ? true : false;
-$can_comment = false;
+$can_share = ($is_owner || $ad_can_request) ? true : false;
 
 $inactive = false;
-if ( !$ad->owner && !$ad_can_request ) {
+if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
     $inactive = true;
 }
 
@@ -133,7 +133,7 @@ if ( !$ad->owner && !$ad_can_request ) {
                             <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => false)); ?>
                         </div>
                         <div class="ge-item">
-                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
+                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => false, 'canShare' => $can_share)); ?>
                         </div>
                     </div>
                 </div>

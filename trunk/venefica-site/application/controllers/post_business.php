@@ -124,8 +124,7 @@ class Post_business extends CI_Controller {
         try {
             $this->currentUser->addAddress($address);
             $this->usermanagement_service->updateUser($this->currentUser);
-            $this->usermanagement_service->refreshUser();
-            $this->currentUser = $this->usermanagement_service->loadUser();
+            $this->currentUser = $this->usermanagement_service->refreshUser();
             
             $data['obj'] = $this->currentUser->getLastAddress();
             $this->load->view('json', $data);

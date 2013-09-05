@@ -3,8 +3,10 @@
 /**
  * Input params:
  * 
- * currentUser: User_model
  * ad: Ad_model
+ * currentUser: User_model
+ * comments: array of Comment_model
+ * isAdmin: boolean
  */
 
 $user_is_business = $currentUser->businessAccount;
