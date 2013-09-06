@@ -65,14 +65,19 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     .setMaxResults(numberAds)
                     .list();
         } else {
+            Ad lastAd = get(lastAdId);
+            Date lastApprovedAt = lastAd.getApprovedAt();
+            
             ads = createQuery(""
                     + "from " + getDomainClassName() + " a where "
                     + "a.deleted = false and "
                     + "a.adData.category.hidden = false and "
-                    + "a.id < :lastId "
+                    //+ "a.id < :lastId "
+                    + "a.approvedAt < :lastApprovedAt "
                     + "order by a.approvedAt desc, a.createdAt desc"
                     + "")
-                    .setParameter("lastId", lastAdId)
+                    //.setParameter("lastId", lastAdId)
+                    .setParameter("lastApprovedAt", lastApprovedAt)
                     .setMaxResults(numberAds)
                     .list();
         }
@@ -84,6 +89,16 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     public List<Ad> get(Long lastAdId, int numberAds, FilterDto filter) {
         if ( filter == null ) {
             return get(lastAdId, numberAds);
+        }
+        
+        //NOTE:
+        //as the ordering is based on approvedAt field the lastAdId cannot be used
+        //directly, instead is should be queried it's approvedAt value and used it
+        //in the where clause
+        
+        Ad lastAd = null;
+        if ( lastAdId >= 0 ) {
+            lastAd = get(lastAdId);
         }
         
         String searchString = filter.getSearchString();
@@ -101,8 +116,9 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "select distinct a "
                 + "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false and a.sold = false";
 
-        if (lastAdId >= 0) {
-            queryStr += " and a.id < :lastId";
+        if (lastAdId >= 0 && lastAd != null) {
+            //queryStr += " and a.id < :lastId";
+            queryStr += " and a.approvedAt < :lastApprovedAt";
         }
 
         if (searchString != null) {
@@ -146,8 +162,10 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         Query query = createQuery(queryStr);
 
         // Bind parameters
-        if (lastAdId >= 0) {
-            query.setParameter("lastId", lastAdId);
+        if (lastAdId >= 0 && lastAd != null) {
+            //query.setParameter("lastId", lastAdId);
+            Date lastApprovedAt = lastAd.getApprovedAt();
+            query.setParameter("lastApprovedAt", lastApprovedAt);
         }
 
         if (searchString != null) {
