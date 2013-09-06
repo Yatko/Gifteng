@@ -26,6 +26,7 @@ define('AJAX_STATUS_ERROR', 'error');
 
 define('AD_BOOKMARKS_NUM', 'ad_bookmarks_num');
 define('USER_BOOKMARKS_NUM', 'user_bookmarks_num');
+define('USER_GIVINGS_NUM', 'user_givings_num');
 define('USER_RECEIVINGS_NUM', 'user_receivings_num');
 define('USER_FOLLOWINGS_NUM', 'user_followings_num');
 define('USER_FOLLOWERS_NUM', 'user_followers_num');

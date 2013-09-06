@@ -47,8 +47,8 @@
     
     $(function() {
         $('#postContainer').on('hide', function() {
-            var step = $("#member_post_form input[name=step]");
-            var adId = $("#member_post_form input[name=adId]");
+            var $step = $("#member_post_form input[name=step]");
+            var $adId = $("#member_post_form input[name=adId]");
             var $unique_id = $("#member_post_form input[name=unique_id]");
             
             $.ajax({
@@ -57,11 +57,19 @@
                 dataType: 'json',
                 cache: false,
                 data: {
-                    unique_id: $unique_id.val()
+                    unique_id: $unique_id.val(),
+                    step: $step.val()
                 }
             }).done(function(response) {
-                if ( step.val() === 'post' && adId.val() !== '' ) {
-                    $('#postContainer').trigger('ad_posted', [adId.val()]);
+                if ( $step.val() === 'post' && $adId.val() !== '' ) {
+                    if ( response !== null && response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
+                        if ( $('.user_giving').length > 0 ) {
+                            var num_giving = response.<?=AJAX_STATUS_RESULT?>.<?=USER_GIVINGS_NUM?>;
+                            $('.user_giving').text(num_giving);
+                        }
+                    }
+                    
+                    $('#postContainer').trigger('ad_posted', [$adId.val()]);
                 }
             }).fail(function(data) {
                 //TODO
