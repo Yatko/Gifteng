@@ -7,11 +7,15 @@
  * givings: array of Ad_model
  */
 
+//A very good example: http://bragthemes.com/demo/pinstrap/
+
 $is_owner = isOwner($user);
 
 ?>
 
 <script language="javascript">
+    var numberOfCreatedAds = 0;
+    
     $(function() {
         $('.ge-ad').on('ad_deleted', function(event, adId) {
             $('#ad_' + adId).removeClass('masonry-brick');
@@ -24,15 +28,14 @@ $is_owner = isOwner($user);
         <? if( $is_owner ): ?>
         if ( $('#postContainer').length > 0 ) {
             $('#postContainer').on('ad_posted', function(event, adId) {
+                numberOfCreatedAds++;
+                
                 if ( $('.ge-no-ad').length > 0 ) {
                     $('.ge-no-ad').addClass('hide');
                 }
 
                 if ( $('#ad_' + adId).length === 0 ) {
-                    if ( $('.ge-browse .span3:first').length === 0 ) {
-                        $('.ge-browse').prepend('<div class="span3"></div>');
-                    }
-                    $('.ge-browse .span3:first').prepend('<div id="ad_' + adId + '" class="masonry-brick"></div>');
+                    $('.ge-browse .span3:nth-child(' + (((numberOfCreatedAds - 1) % 4) + 1) + ')').prepend('<div id="ad_' + adId + '" class="masonry-brick"></div>');
                 }
                 
                 $.getJSON('<?=base_url()?>ajax/getAdGiving/' + adId + '/<?=$user->id?>', function(response) {

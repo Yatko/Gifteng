@@ -8,6 +8,8 @@
 
 ?>
 
+<div class="snap-content ge-topspace">
+
 <div class="container">
     <div class="row">
     	<div class="ge-welcome">
@@ -21,13 +23,13 @@
 	                        <div class="well ge-well" style="min-height: 330px;">
 	                            <div class="row-fluid">
 	                            	<div class="ge-item-image">
-	                                	<img src="<?=BASE_PATH?>temp-sample/treasure.jpg" class="img">
+	                                	<img src="<?=BASE_PATH?>temp-sample/gift.jpg" class="img">
 	                                </div>
 	                            </div><!--./ge-item-image-->
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Discover hidden treasures</p>
-		                                <p>Everyone wants a diamond in the rough. Gifteng has made it possible for you to pick up the missing pieces of the puzzle in your wardrobe, in your home and in your heart.</p>
+		                                <p class="ge-title">Give</p>
+		                                <p>On Gifteng you can give away things you no longer need. Pick a friend or a neighbor and put a smile on their face.<br/><br/></p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -36,13 +38,13 @@
 	                        <div class="well ge-well" style="min-height: 330px;">
 	                            <div class="row-fluid">
 	                            	<div class="ge-item-image">
-	                                	<img src="<?=BASE_PATH?>temp-sample/gift.jpg" class="img">
+	                                	<img src="<?=BASE_PATH?>temp-sample/treasure.jpg" class="img">
 	                                </div>
 	                            </div><!--./ge-item-image-->
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Walk in Santa's boots</p>
-		                                <p>Inspire warmth and fuzziness. Doesn't it feel good to bring joy to those around you? Put a smile on someone's face today.<br />With a gift.</p>
+		                                <p class="ge-title">Receive</p>
+		                                <p>Need a good book? Or a coffeemaker? How about a new pair of shoes? Find what you want by browsing through great gifts. They are free.</p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -101,8 +103,8 @@
 	                            </div>
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Meet other Giftengers</p>
-		                                <p>Bump into old friends and meet new ones. Plus find goodies and discounts from your favorite brands. Sharing is caring. We just made it a whole lot easier for you.</p>
+		                                <p class="ge-title">Inspire</p>
+		                                <p>Giving helps you live longer. Generosity makes our world a better place. Sharing is caring... and it all starts with you.<br/><br/></p>
 	                            	</div>
 	                            </div>
 	                        </div>

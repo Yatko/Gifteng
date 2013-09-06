@@ -8,6 +8,7 @@
 
 ?>
 
+
 <div class="bottom-menu bottom-menu-inverse">
     <div class="container">
         <div id="contact" class="vcard">
@@ -31,3 +32,6 @@
         </div>
     </div>
 </div> <!-- /bottom-menu -->
+
+<? /* opened in the welcom.php */ ?>
+</div>

@@ -52,16 +52,28 @@ class Post_member extends CI_Controller {
     }
     
     public function remove() {
+        $this->init();
+        
         if ( !isLogged() ) {
             return;
         } else if ( !$_POST ) {
             return;
         }
         
+        $step = $this->input->post('step');
+        
         $this->unique_id = $this->input->post('unique_id');
         $this->removeAd();
         
-        respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        if ( $step == Post_member::STEP_POST ) {
+            $currentUser = $this->usermanagement_service->refreshUser();
+
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_GIVINGS_NUM => $currentUser->statistics->numGivings
+            ));
+        } else {
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        }
     }
     
     // internal
