@@ -18,11 +18,13 @@ class Browse extends CI_Controller {
         $lastAdId = -1;
         $filter = $this->buildFilter($query);
         $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM, $filter);
+        $last_ad_id = $this->getLastAdId($ads);
         
         $data = array();
         $data['is_ajax'] = false;
         $data['query'] = $query;
         $data['ads'] = $ads;
+        $data['last_ad_id'] = $last_ad_id;
         $data['currentUser'] = $currentUser;
         
         $modal = $this->load->view('modal/comment', array(), true);
@@ -52,6 +54,7 @@ class Browse extends CI_Controller {
         $lastAdId = $_GET['lastAdId'];
         $filter = $this->buildFilter($query);
         $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM, $filter);
+        $last_ad_id = $this->getLastAdId($ads);
         if (is_empty($ads) ) {
             return '';
         }
@@ -60,6 +63,7 @@ class Browse extends CI_Controller {
         $data['is_ajax'] = true;
         $data['query'] = $query;
         $data['ads'] = $ads;
+        $data['last_ad_id'] = $last_ad_id;
         $data['currentUser'] = $currentUser;
         
         $this->load->view('pages/browse', $data);
@@ -112,15 +116,8 @@ class Browse extends CI_Controller {
         try {
             $ads = $this->ad_service->getAdsExDetail($lastAdId, $numberAds, $filter, true, true, Browse::COMMENTS_NUM);
             
-            if ( count($ads) > 0 ) {
-                $has_ads = true;
-                $last_ad = end(array_values($ads));
-                $last_ad_id = $last_ad->id;
-            } else {
-                $has_ads = false;
-                $last_ad_id = -1;
-            }
-            
+            $last_ad_id = $this->getLastAdId($ads);
+            $has_ads = count($ads) > 0 ? true : false;
             
             //remove all non approved and non online ads
             $remove_indexes = array();
@@ -151,6 +148,16 @@ class Browse extends CI_Controller {
         }
     }
     
+    private function getLastAdId($ads) {
+        if ( isset($ads) && is_array($ads) && count($ads) > 0 ) {
+            $last_ad = end(array_values($ads));
+            $last_ad_id = $last_ad->id;
+        } else {
+            $last_ad_id = -1;
+        }
+        return $last_ad_id;
+    }
+
     private function buildFilter($query) {
         if ( $query == null || trim($query) == '' ) {
             return null;
