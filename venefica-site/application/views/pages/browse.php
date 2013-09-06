@@ -5,24 +5,25 @@
  * 
  * is_ajax: boolean
  * ads: array of Ad_model
+ * last_ad_id: long
  * currentUser: User_model
  * query: string
  */
 
+if ( isset($is_ajax) && $is_ajax ) {
+} else {
+    $is_ajax = false;
+}
 ?>
 
-<? if ( isset($is_ajax) && $is_ajax ): ?>
-    <?
-    $boxContainer_exists = true;
-    
-    //on ajax call there is no need for javascripts
-    ?>
-<? else: ?>
-    <?
-    $boxContainer_exists = false;
-    ?>
-    
+<? if ( $is_ajax ): ?>
     <script langauge="javascript">
+        lastAdId = <?=$last_ad_id?>;
+    </script>
+<? else: ?>
+    <script langauge="javascript">
+        var lastAdId = <?=$last_ad_id?>;
+        
         /**
         var vg = $("#boxContainer").vgrid({
             easing: "easeOutQuint",
@@ -50,11 +51,14 @@
                 $element.attr("disabled", true);
             }
             
-            var ids = $(".ge-ad-id[id]").map(function() {
-                var id = this.id.split('_')[1];
-                return parseInt(id, 10);
-            }).get();
-            var lastAdId = Math.min.apply(Math, ids);
+            //var ids = $(".ge-ad-id[id]").map(function() {
+            //    var id = this.id.split('_')[1];
+            //    return parseInt(id, 10);
+            //}).get();
+            //var lastAdId = Math.min.apply(Math, ids);
+            
+            //var lastAdId = $(".ge-ad-id:last").attr("id");
+            //lastAdId = lastAdId.split('_')[1];
             
             var $container = $('#boxContainer');
             var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>';
@@ -158,7 +162,7 @@
 <? /* this is required by the infinite scroll javascript library */ ?>
 <a class="nextPage hide" href="#"></a>
 
-<? if ( !$boxContainer_exists ): ?>
+<? if ( !$is_ajax ): ?>
 
 <div class="row">
     <div class="span12">
@@ -241,7 +245,7 @@
 <? endif; ?>
 
 
-<? if ( !$boxContainer_exists ): ?>
+<? if ( !$is_ajax ): ?>
         
         </div>
         <div id="loadingPage"></div>
