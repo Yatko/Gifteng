@@ -3,7 +3,7 @@ Hi ${to.userData.getFirstName()},
 You received a new message from ${from.getFullName()}.
 
 Click on the following link to  view the message:
-${baseUrl}request/${request.id}
+${baseUrl}profile?message&${request.id}
 
 Happy gifting!
 The Gifteng Team
