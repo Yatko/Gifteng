@@ -11,9 +11,10 @@ class Registration extends CI_Controller {
     private $auto_login = true;
     
     public function user() {
+        $this->init();
+        
         $extra_data = array();
         
-        $this->init();
         $this->registerUser($extra_data);
         
         $data = $extra_data;
@@ -24,9 +25,10 @@ class Registration extends CI_Controller {
     }
     
     public function business() {
+        $this->init();
+        
         $extra_data = array();
         
-        $this->init();
         $this->registerBusiness($extra_data);
         
         $data = $extra_data;
@@ -232,6 +234,8 @@ class Registration extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             $this->load->model('businesscategory_model');
+            
+            clear_cache();
             
             $this->initialized = true;
         }

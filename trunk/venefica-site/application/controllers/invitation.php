@@ -323,6 +323,8 @@ class Invitation extends CI_Controller {
             
             $this->load->model('invitation_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

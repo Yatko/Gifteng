@@ -103,7 +103,7 @@ class Profile extends CI_Controller {
      * 
      * @param User_model $user
      */
-    public function first($user) {
+    private function first($user) {
         $modal = $this->getProfileModal();
         
         $data = array();
@@ -119,7 +119,7 @@ class Profile extends CI_Controller {
      * Giving profile submenu.
      * @param User_model $user
      */
-    public function giving($user) {
+    private function giving($user) {
         try {
             $givings = $this->ad_service->getUserAds($user->id, true);
         } catch ( Exception $ex ) {
@@ -151,7 +151,7 @@ class Profile extends CI_Controller {
      * Receiving profile submenu.
      * @param User_model $user
      */
-    public function receiving($user) {
+    private function receiving($user) {
         try {
             $receivings = $this->ad_service->getUserRequestedAds($user->id, true);
         } catch ( Exception $ex ) {
@@ -182,7 +182,7 @@ class Profile extends CI_Controller {
      * Favorite/bookmark profile submenu.
      * @param User_model $user
      */
-    public function favorite($user) {
+    private function favorite($user) {
         try {
             $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
         } catch ( Exception $ex ) {
@@ -214,7 +214,7 @@ class Profile extends CI_Controller {
      * Rating profile submenu.
      * @param User_model $user
      */
-    public function rating($user) {
+    private function rating($user) {
         try {
             $ratings = $this->ad_service->getReceivedRatings($user->id);
         } catch ( Exception $ex ) {
@@ -242,7 +242,7 @@ class Profile extends CI_Controller {
      * Following profile submenu.
      * @param User_model $user
      */
-    public function following($user) {
+    private function following($user) {
         try {
             $follow_users = $this->usermanagement_service->getFollowings($user->id);
 
@@ -293,7 +293,7 @@ class Profile extends CI_Controller {
      * Follower profile submenu.
      * @param User_model $user
      */
-    public function follower($user) {
+    private function follower($user) {
         try {
             $follow_users = $this->usermanagement_service->getFollowers($user->id);
 
@@ -344,7 +344,7 @@ class Profile extends CI_Controller {
      * Notification profile submenu.
      * @param User_model $user
      */
-    public function notification($user) {
+    private function notification($user) {
         if ( $_POST ) {
             $user_setting = new UserSetting_model();
             $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
@@ -389,7 +389,7 @@ class Profile extends CI_Controller {
      * Message profile submenu.
      * @param User_model $user
      */
-    public function message($user) {
+    private function message($user) {
         try {
             $messages = $this->message_service->getLastMessagePerRequest();
         } catch ( Exception $ex ) {
@@ -448,7 +448,7 @@ class Profile extends CI_Controller {
      * Setting profile submenu.
      * @param User_model $user
      */
-    public function setting($user) {
+    private function setting($user) {
         try {
             $networks = $this->usermanagement_service->getConnectedSocialNetworks();
         } catch ( Exception $ex ) {
@@ -471,6 +471,7 @@ class Profile extends CI_Controller {
     }
     
     //ajax call
+    
     public function change_avatar() {
         $this->init();
         
@@ -539,6 +540,8 @@ class Profile extends CI_Controller {
             $this->load->model('request_model');
             $this->load->model('message_model');
             $this->load->model('approval_model');
+            
+            clear_cache();
             
             $this->initialized = true;
         }

@@ -2,13 +2,10 @@
 
 class Index extends CI_Controller {
     
+    private $initialized = false;
+    
     public function view() {
-        //load translations
-        $this->lang->load('main');
-        $this->lang->load('index');
-        $this->lang->load('invitation');
-        
-        $this->load->library('user_agent');
+        $this->init();
         
         /* mobile redirection */
         if ( $this->agent->is_mobile() ) {
@@ -20,5 +17,22 @@ class Index extends CI_Controller {
         $this->load->view('pages/welcome');
         $this->load->view('pages/footer');
         $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    // internal
+    
+    private function init() {
+        if ( !$this->initialized ) {
+            //load translations
+            $this->lang->load('main');
+            $this->lang->load('index');
+            $this->lang->load('invitation');
+
+            $this->load->library('user_agent');
+            
+            clear_cache();
+            
+            $this->initialized = true;
+        }
     }
 }

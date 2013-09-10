@@ -151,6 +151,8 @@ class Post_business extends CI_Controller {
             $this->load->model('userstatistics_model');
             $this->load->model('category_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }
@@ -432,6 +434,8 @@ class Post_business extends CI_Controller {
             $this->post_form->set_message('file_upload', $error);
             return FALSE;
         }
+        
+        //TODO: this is not the correct way
         
         $data = $this->upload->data();
         $_FILES[$field]['data'] = $data; //extending super global to store CI upload data in the session

@@ -96,6 +96,8 @@ class View extends CI_Controller {
             $this->load->model('comment_model');
             $this->load->model('request_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }
