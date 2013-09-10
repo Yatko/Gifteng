@@ -1,8 +1,8 @@
 <script language="javascript">
-    var requestCallerElement;
+    var requestCancelCallerElement;
     
     function startRequestCancelModal(callerElement, requestType, requestId, adId, userId) {
-        requestCallerElement = callerElement;
+        requestCancelCallerElement = callerElement;
         
         $("#request_cancel_form input[name=requestType]").val(requestType);
         $("#request_cancel_form input[name=requestId]").val(requestId);
@@ -32,7 +32,7 @@
         var adId = $adId.val();
         var userId = $userId.val();
         
-        request_cancel(requestCallerElement, requestType, requestId, adId, userId, function() {
+        request_cancel(requestCancelCallerElement, requestType, requestId, adId, userId, function() {
             if ( callerElement !== null ) {
                 $(callerElement).removeAttr("disabled");
             }
@@ -74,8 +74,8 @@
                         <div class="span12">
                             <div class="control-group control-form">
                                 <div class="controls">
-                                    <button type="button" onclick="request_cancel_modal(this);" class="span6 btn">YES</button>
-                                    <button type="button" data-dismiss="modal" class="span6 btn btn-ge">NO</button>
+                                    <button type="button" onclick="request_cancel_modal(this);" class="span6 btn mobile-two">YES</button>
+                                    <button type="button" data-dismiss="modal" class="span6 btn btn-ge mobile-two">NO</button>
                                 </div>
                             </div>
                         </div>

@@ -33,7 +33,7 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-user .ge-user-image {float: left;margin-right: 9px;}
 .ge-user .ge-user-image img {width: 60px;height: 60px;}
 .ge-user .ge-detail {font-size: 70%;line-height:110%;color:#aaaaaa;}
-.ge-user .ge-detail .ge-name a {font-size:136%;font-weight:600;color:#aaaaaa;}
+.ge-user .ge-detail .ge-name a, .ge-user .ge-detail .ge-name a:visited {font-size:136%;font-weight:600;color:#aaaaaa !important;}
 .ge-user .ge-detail .ge-name a.ge-pencil {font-size:90%;color:#00bebe;} /*edit*/
 .ge-user .ge-detail .ge-name span.label-ge {float: right;color:#ffffff;background:#00bebe;} /*follow btn*/
 .ge-user .ge-detail .ge-name span.label-ge.active {background:#e4e4e4;}
@@ -621,6 +621,10 @@ hr.ge-hr-dotted {
 	}
 	.modal-header {
 		min-height:30px;
+	}
+	.ge-navbar {
+		top:0 !important;
+		margin-top:0 !important;
 	}
 	.ge-navbar .nav > li > a {
 		padding: 16px 10px 15px;

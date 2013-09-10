@@ -111,11 +111,21 @@ $subpage = key($_GET); //gets the first element from the array
     </script>
     
     <script language="javascript">
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		
+		$('.snap-slide').hide();
+		$('.snap-drawers').hide();
+		
         window.addEventListener("load", function() {
             /mobi/i.test(navigator.userAgent) && !location.hash && setTimeout(function() {
                 window.scrollTo(0, 1);
             }, 1000);
+			$('.snap-slide').show();
+			$('.snap-drawers').show();
         });
+        
+        
+	}
     </script>
 </head>
 
@@ -212,9 +222,7 @@ $subpage = key($_GET); //gets the first element from the array
                     </div>
                 </li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
-                <? /** ?>
                 <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
-                <? /**/ ?>
                 <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>

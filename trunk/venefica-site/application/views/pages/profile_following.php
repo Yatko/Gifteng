@@ -55,7 +55,6 @@ $active_tab = Profile::getActiveTab($active_menu);
                     ?>
 
                     <div id="user_<?=$user_id?>" class="ge-user-following masonry-brick">
-                    <div class="span3">
                         <div class="ge-box">
                             <div class="well ge-well">
                                 <div class="row-fluid">
@@ -112,7 +111,6 @@ $active_tab = Profile::getActiveTab($active_menu);
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
 
                 <? endforeach; ?>
