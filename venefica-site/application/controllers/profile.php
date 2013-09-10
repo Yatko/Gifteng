@@ -161,6 +161,7 @@ class Profile extends CI_Controller {
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
         $modal .= $this->load->view('modal/request_cancel', array(), true);
+        $modal .= $this->load->view('modal/request_receive', array(), true);
         
         $data = array();
         $data['user'] = $user;
@@ -173,10 +174,7 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        if ( isOwner($user) ) {
-            //only owner can see receiving list
-            $this->load->view('pages/profile_receiving', $data);
-        }
+        $this->load->view('pages/profile_receiving', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
     

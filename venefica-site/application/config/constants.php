@@ -24,6 +24,8 @@ define('ERROR', 'error');
 define('AJAX_STATUS_RESULT', 'result');
 define('AJAX_STATUS_ERROR', 'error');
 
+define('AD_GIVING_HTML', 'ad_giving_html');
+define('AD_RECEIVING_HTML', 'ad_receiving_html');
 define('AD_BOOKMARKS_NUM', 'ad_bookmarks_num');
 define('USER_BOOKMARKS_NUM', 'user_bookmarks_num');
 define('USER_GIVINGS_NUM', 'user_givings_num');

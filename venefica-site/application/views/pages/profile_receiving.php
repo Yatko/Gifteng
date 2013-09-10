@@ -11,9 +11,13 @@
 
 <script language="javascript">
     $(function() {
-        $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
+        $('.ge-request').on('request_canceled', function(event, requestId, adId, resultHtml, resultNum) {
             $('#request_' + requestId).removeClass('masonry-brick');
             $('#request_' + requestId).addClass('hide');
+            
+            if ( resultNum !== null ) {
+                $('.user_receiving').text(resultNum);
+            }
         });
         /**
         $(".ge-browse").vgrid({

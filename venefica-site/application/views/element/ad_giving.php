@@ -240,7 +240,7 @@ if ( $is_owner ) {
                             
                             <? /** ?>
                             <div class="row-fluid">
-                                <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
+                                <button onclick="request_cancel(this, 'giving', <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>, null);" type="button" class="ge-request btn btn-small btn-block">Decline Request</button>
                             </div>
                             <div class="row-fluid">
                                 <button onclick="request_send(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" type="button" class="btn btn-small btn-block btn-ge">Mark Gifted</button>

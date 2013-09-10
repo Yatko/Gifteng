@@ -6,14 +6,10 @@
         });
     }
     function initRequestViewModal() {
-        $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
+        $('.ge-request').on('request_canceled', function(event, requestId, adId, resultHtml, resultNum) {
             if ( $('#ad_' + adId).length > 0 ) {
-                $('#ad_' + adId).html(result);
+                $('#ad_' + adId).html(resultHtml);
             }
-            //if ( $('#request_' + requestId).length > 0 ) {
-            //    $('#request_' + requestId).removeClass('masonry-brick');
-            //    $('#request_' + requestId).addClass('hide');
-            //}
         });
     }
     
