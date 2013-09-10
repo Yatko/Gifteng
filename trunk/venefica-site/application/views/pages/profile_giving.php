@@ -21,8 +21,8 @@ $is_owner = isOwner($user);
             $('#ad_' + adId).removeClass('masonry-brick');
             $('#ad_' + adId).addClass('hide');
         });
-        $('.ge-request').on('request_canceled', function(event, requestId, adId, result) {
-            $('#ad_' + adId).html(result);
+        $('.ge-request').on('request_canceled', function(event, requestId, adId, resultHtml, resultNum) {
+            $('#ad_' + adId).html(resultHtml);
         });
         
         <? if( $is_owner ): ?>

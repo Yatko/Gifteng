@@ -111,20 +111,18 @@ $subpage = key($_GET); //gets the first element from the array
     </script>
     
     <script language="javascript">
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		
-		$('.snap-slide').hide();
-		$('.snap-drawers').hide();
-		
-        window.addEventListener("load", function() {
-            /mobi/i.test(navigator.userAgent) && !location.hash && setTimeout(function() {
-                window.scrollTo(0, 1);
-            }, 1000);
-			$('.snap-slide').show();
-			$('.snap-drawers').show();
-        });
-        
-        
+        if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            $('.snap-slide').hide();
+            $('.snap-drawers').hide();
+
+            window.addEventListener("load", function() {
+                /mobi/i.test(navigator.userAgent) && !location.hash && setTimeout(function() {
+                    window.scrollTo(0, 1);
+                }, 1000);
+                
+                $('.snap-slide').show();
+                $('.snap-drawers').show();
+            });
 	}
     </script>
 </head>

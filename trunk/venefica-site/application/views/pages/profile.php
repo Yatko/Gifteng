@@ -89,14 +89,14 @@ $active_tab = Profile::getActiveTab($active_menu);
                                                 <span class="user_giving"><?= $givings_num ?></span>
                                             </a>
                                         </div>
+                                        <div class="span4 mobile-one">
+                                            <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_RECEIVING ? 'active-tab' : '' ?>">
+                                                Receiving<br />
+                                                <span class="user_receiving"><?= $receivings_num ?></span>
+                                            </a>
+                                        </div>
                                         
 <? if( $is_owner ): ?>
-                                            <div class="span4 mobile-one">
-                                                <a href="<?= current_url() ?>?<?= Profile::MENU_RECEIVING ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_RECEIVING ? 'active-tab' : '' ?>">
-                                                    Receiving<br />
-                                                    <span class="user_receiving"><?= $receivings_num ?></span>
-                                                </a>
-                                            </div>
                                             <div class="span4 mobile-one">
                                                 <a href="<?= current_url() ?>?<?= Profile::MENU_FAVORITE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_FAVORITE ? 'active-tab' : '' ?>">
                                                     Favorites<br />

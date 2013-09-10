@@ -9,6 +9,7 @@
  */
 
 $ad_id = $ad->id;
+$is_owner = isOwner($user_id);
 $request_id = $request->id;
 
 $inactive = false;
@@ -25,16 +26,23 @@ if( $ad->expired || $request->isExpired() ) {
     <div class="well ge-well">
         <div class="row-fluid">
             <div class="span12">
+                
+<? if( $is_owner ): ?>
+                
                 <div class="ge-user">
                     <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true)); ?>
                 </div>
+                
+<? endif; ?>
 
                 <div class="ge-item">	
                     <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
 
+<? if( $is_owner ): ?>
+                    
                     <div class="row-fluid ge-action">
 
-<? if( $ad->expired || $request->isExpired() ): ?>
+    <? if( $ad->expired || $request->isExpired() ): ?>
 
                         <?
                         if ( $ad->expired ) {
@@ -61,7 +69,7 @@ if( $ad->expired || $request->isExpired() ) {
                             </button>
                         </div>
 
-<? elseif( $ad->sold ): ?>
+    <? elseif( $ad->sold ): ?>
 
                         <?
                         $accepted_request = $ad->getAcceptedRequest();
@@ -90,7 +98,7 @@ if( $ad->expired || $request->isExpired() ) {
                         </div>
                         <? /**/ ?>
 
-<? elseif( $request->isPending() ): ?>
+    <? elseif( $request->isPending() ): ?>
 
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
@@ -109,7 +117,7 @@ if( $ad->expired || $request->isExpired() ) {
                             </button>
                         </div>
 
-<? elseif( $request->accepted ): ?>
+    <? elseif( $request->accepted ): ?>
 
                         <div class="row-fluid ge-text ge-description">
                             <div class="span12">
@@ -128,15 +136,18 @@ if( $ad->expired || $request->isExpired() ) {
                                 </button>
                             </div>
                             <div class="span8 mobile-three">
-                                <button onclick="request_receive(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
+                                <button onclick="startRequestReceiveModal(this, <?=$request_id?>, <?=$ad_id?>, <?=$user_id?>);" class="btn btn-small btn-block btn-ge">
                                     Gift Received
                                 </button>
                             </div>
                         </div>
 
-<? endif; ?>
+    <? endif; ?>
 
                     </div><!--./ge-action-->
+                    
+<? endif; ?>
+                    
                 </div><!--./ge-item-->
                 
             </div>

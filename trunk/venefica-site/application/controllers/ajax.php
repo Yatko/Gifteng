@@ -8,7 +8,7 @@ class Ajax extends CI_Controller {
         return;
     }
     
-    public function getAdGiving($adId = null, $userId = null) {
+    public function getAdGiving($adId = null, $userId = null, $currentUser = null) {
         $this->init();
         
         if ( !isLogged() ) {
@@ -32,13 +32,15 @@ class Ajax extends CI_Controller {
             $ad = $this->ad_service->getAdById($adId);
             $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
             
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                AD_GIVING_HTML => $result
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
     }
     
-    public function getAdReceiving($adId = null, $requestId = null, $userId = null) {
+    public function getAdReceiving($adId = null, $requestId = null, $userId = null, $currentUser = null) {
         $this->init();
         
         if ( !isLogged() ) {
@@ -66,7 +68,10 @@ class Ajax extends CI_Controller {
             $request = $this->ad_service->getRequestById($requestId);
             $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
             
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                AD_RECEIVING_HTML => $result,
+                USER_RECEIVINGS_NUM => $currentUser != null ? $currentUser->statistics->numReceivings : null
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -431,12 +436,12 @@ class Ajax extends CI_Controller {
             $is_giving = $this->input->post('requestType') == 'giving' ? true : false;
             
             $this->ad_service->cancelRequest($requestId);
-            $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshUser();
             
             if ( $is_giving ) {
-                $this->getAdGiving($adId, $userId);
+                $this->getAdGiving($adId, $userId, $currentUser);
             } else {
-                $this->getAdReceiving($adId, $requestId, $userId);
+                $this->getAdReceiving($adId, $requestId, $userId, $currentUser);
             }
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
@@ -459,7 +464,7 @@ class Ajax extends CI_Controller {
             
             $this->ad_service->selectRequest($requestId);
             
-            $this->getAdGiving($adId, $userId);
+            $this->getAdGiving($adId, $userId, null);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -481,12 +486,7 @@ class Ajax extends CI_Controller {
             
             $this->ad_service->markAsSent($requestId);
             
-            $this->getAdGiving($adId, $userId);
-            
-//            $ad = $this->ad_service->getAdById($adId);
-//            
-//            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
-//            respond_ajax(AJAX_STATUS_RESULT, $result);
+            $this->getAdGiving($adId, $userId, null);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -507,11 +507,8 @@ class Ajax extends CI_Controller {
             $userId = $this->input->post('userId');
             
             $this->ad_service->markAsReceived($requestId);
-            $ad = $this->ad_service->getAdById($adId);
-            $request = $this->ad_service->getRequestById($requestId);
             
-            $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
-            respond_ajax(AJAX_STATUS_RESULT, $result);
+            $this->getAdReceiving($adId, $requestId, $userId, null);
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }

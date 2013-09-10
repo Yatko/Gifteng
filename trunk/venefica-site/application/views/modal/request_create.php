@@ -1,8 +1,8 @@
 <script langauge="javascript">
-    var requestCallerElement;
+    var requestCreateCallerElement;
     
     function startRequestModal(callerElement, type, adId) {
-        requestCallerElement = callerElement;
+        requestCreateCallerElement = callerElement;
         
         var $requestAdId = $("#" + type + "_request_post_form input[name=requestAdId]");
         $requestAdId.val(adId);
@@ -51,8 +51,8 @@
                 $requestAdId.val('');
                 $requestText.val('');
 
-                if ( requestCallerElement !== null ) {
-                    var $element = $(requestCallerElement);
+                if ( requestCreateCallerElement !== null ) {
+                    var $element = $(requestCreateCallerElement);
                     $element.trigger('request_created', [adId]);
                 }
 

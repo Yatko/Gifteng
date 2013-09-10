@@ -11,8 +11,8 @@
  * userId: long
  */
 
-$ad_id = $ad->id;
-$request_id = $request->id;
+//$ad_id = $ad->id;
+//$request_id = $request->id;
 $ad_creator = $ad->creator;
 $ad_title = $ad->getSafeTitle();
 $view_link = $ad->getViewUrl();
@@ -42,14 +42,16 @@ $view_link = $ad->getViewUrl();
     <? /* nothing here */ ?>
             
 <? elseif( $request->accepted ): ?>
-            
+        
+        <? /** ?>
         <div class="row-fluid">
             <div class="ge-action">
                 <div class="span6">
-                    <button onclick="request_receive(this, <?=$request_id?>, <?=$ad_id?>, <?=$userId?>);" type="button" class="btn btn-small btn-block btn-ge">Gift Received</button>
+                    <button onclick="request_receive(this, <?=$request_id?>, <?=$ad_id?>, <?=$userId?>, null);" type="button" class="btn btn-small btn-block btn-ge">Gift Received</button>
                 </div>
             </div>
         </div>
+        <? /**/ ?>
 
 <? endif; ?>
 
