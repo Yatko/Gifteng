@@ -32,6 +32,8 @@ class Landing extends CI_Controller {
         if ( !$this->initialized ) {
             //TODO:
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

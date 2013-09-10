@@ -23,6 +23,8 @@ class Stat extends CI_Controller {
             //load translations
             $this->lang->load('main');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

@@ -19,6 +19,8 @@ class Contact extends CI_Controller {
         if ( !$this->initialized ) {
             $this->lang->load('main');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

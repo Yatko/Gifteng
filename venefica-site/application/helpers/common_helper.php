@@ -61,6 +61,22 @@ if ( ! function_exists('safe_redirect')) {
     }
 }
 
+if ( !function_exists('clear_cache') ) {
+    //References:
+    //http://stackoverflow.com/questions/8860953/codeigniter-session-problems
+    //http://stackoverflow.com/questions/4781737/how-to-avoid-browser-cache-using-codeigniter
+    //http://stackoverflow.com/questions/5429386/browser-cache-issue-in-codeigniter
+    function clear_cache() {
+        $CI =& get_instance();
+        
+        $CI->output->set_header("HTTP/1.0 200 OK");
+        $CI->output->set_header("HTTP/1.1 200 OK");
+        $CI->output->set_header('Last-Modified: Sat, 26 Jul 1997 05:00:00 GMT'); //date in the  past
+        $CI->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, no-transform, max-age=0, post-check=0, pre-check=0");
+        $CI->output->set_header("Pragma: no-cache");
+    }
+}
+
 
 // making a safer world
 

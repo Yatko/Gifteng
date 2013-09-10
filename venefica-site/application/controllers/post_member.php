@@ -110,6 +110,8 @@ class Post_member extends CI_Controller {
                 $this->loadAd(); //loading Ad_model from the session
             }
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }
@@ -446,6 +448,9 @@ class Post_member extends CI_Controller {
         
         $data = $this->upload->data();
         $file_name = $data['file_name'];
+        $full_path = $data['full_path'];
+        
+        $this->load->library('image_autorotate', array('filepath' => $full_path)); 
         
         $image = new Image_model();
         $image->url = $file_name;

@@ -17,6 +17,9 @@ $subpage = key($_GET); //gets the first element from the array
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="author" content="gifteng.com"> 
     <meta name="copyright" content="(c) 2012, gifteng.com">
     <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />

@@ -91,6 +91,8 @@ class Browse extends CI_Controller {
             $this->load->model('request_model');
             $this->load->model('filter_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

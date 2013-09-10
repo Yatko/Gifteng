@@ -66,6 +66,8 @@ class Edit_profile_member extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

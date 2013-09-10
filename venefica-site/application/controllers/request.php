@@ -107,6 +107,8 @@ class Request extends CI_Controller {
             $this->load->model('message_model');
             $this->load->model('request_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

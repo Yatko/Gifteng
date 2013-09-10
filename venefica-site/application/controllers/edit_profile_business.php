@@ -29,6 +29,8 @@ class Edit_profile_business extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }

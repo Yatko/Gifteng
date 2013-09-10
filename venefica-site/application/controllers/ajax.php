@@ -534,6 +534,8 @@ class Ajax extends CI_Controller {
             $this->load->model('request_model');
             $this->load->model('approval_model');
             
+            clear_cache();
+            
             $this->initialized = true;
         }
     }
