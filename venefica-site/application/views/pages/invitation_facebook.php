@@ -1,4 +1,3 @@
-<div id="fb-root"></div>
 <script>
 	$(function() {
 		$.ajaxSetup({ cache: true });
@@ -20,6 +19,20 @@
 				}
 			});
 		});
+		
+		$('#filter_friends').keydown(function() {
+			var filter = $(this).val();
+			$('#friendlist .span3').hide();
+			$('#friendlist .span3').each(function() {
+				if( $(".ge-name", this).text().search(new RegExp(filter, "i")) < 0 ) {
+					
+				}
+				else {
+					$(this).show();
+				}
+			});
+		});
+		
 	});
 	function showFriends() {
 		$('#fblogin').remove();
@@ -30,7 +43,7 @@
 		  	friendbox += '<div class="ge-user-image"><img src="https://graph.facebook.com/'+value.id+'/picture"></div>';
 		  	friendbox += '<div class="ge-detail">';
 		  	friendbox += '<div class="ge-name"><a>'+value.name+'</a></div>';
-		  	friendbox += '<div class="ge-points"><span onclick="sendInvitation('+value.id+')" class="label link ge-user-unfollow">Invite</span></div>'
+		  	friendbox += '<div class="ge-points"><span id="btn_'+value.id+'" onclick="sendInvitation('+value.id+')" class="label link ge-user-unfollow">Invite</span></div>'
 		  	friendbox += '</div></div></div></div>';
 		  	$('#friendlist').append(friendbox);
 		  });
@@ -41,6 +54,9 @@
 		  method: 'send',
 		  to: to,
 		  link: 'http://www.gifteng.com/'
+		},
+		function() {
+			$('#btn_'+to).html('Invited').removeClass('ge-user-unfollow').addClass('ge-user-follow');
 		});
 	}
 </script>
@@ -48,7 +64,15 @@
     <div class="row">
     	<div class="span12">	
     		<div class="text-center">
-				<fb:login-button id="fblogin" show-faces="true" width="200" max-rows="1"></fb:login-button>
+				<fb:login-button size="large" id="fblogin">Login with Facebook to Invite Friends</fb:login-button>
+				<div class="row">
+					<div class="span6 offset3">
+						<div class="well ge-well">
+							<h4 style="padding-top:10px;">Invite friends</h4>
+							<input type="text" id="filter_friends" placeholder="Search friends" />
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="row" id="friendlist"></div>
     	</div>

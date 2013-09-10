@@ -42,7 +42,7 @@ if ( $is_owner ) {
 ?>
 
 <div class="ge-ad-item-box <?=($inactive ? 'ge-inactive' : 'ge-active')?>">
-<div class="span3 ge-box">
+<div class="ge-box">
     <div class="well ge-well">
         <div class="row-fluid">
             <div class="span12">
