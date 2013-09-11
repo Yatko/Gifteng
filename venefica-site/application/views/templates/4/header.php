@@ -126,7 +126,14 @@ $subpage = key($_GET); //gets the first element from the array
                 $('.snap-slide').show();
                 $('.snap-drawers').show();
             });
-	}
+		    $("input, textarea").live("focus", function(e) {
+		        $('.snap-content').css('-webkit-overflow-scrolling','auto');
+		    });
+		
+		    $("input, textarea").live("blur", function(e) {
+		        $('.snap-content').css('-webkit-overflow-scrolling','touch');
+		    });
+		}
     </script>
 </head>
 
@@ -135,13 +142,70 @@ $subpage = key($_GET); //gets the first element from the array
 
 <div id="fb-root"></div>
 <script language="javascript">
-    (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=285994388213208";
-    fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    
+    window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '285994388213208',
+	      cookie     : true, // enable cookies to allow the server to access the session
+	      xfbml      : true  // parse XFBML
+	    });
+	    
+	    <?php if($page=='invitation') : ?>
+	    	FB.getLoginStatus(function(response){
+				if (response.status === 'connected') {
+					showFriends();
+				} else if (response.status === 'not_authorized') {
+					window.location='<?=base_url()?>';
+				} else {
+					window.location='<?=base_url()?>';
+				}
+	    	});
+	    <?php endif; ?>
+   	};
+	// Load the SDK asynchronously
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/all.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+   
+	function doFBLogin() {
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				window.location='<?=base_url()?>invitation/facebook';
+			} else if (response.status === 'not_authorized') {
+				// not_authorized
+				loginFB();
+			} else {
+				// not_logged_in
+				loginFB();
+			}
+		});
+	}
+	
+	function loginFB() {
+		FB.login(function(response) {
+			if (response.authResponse) {
+				window.location='<?=base_url()?>invitation/facebook';
+			}
+		});
+	}
+	
+	function doLogout() {
+    	FB.getLoginStatus(function(response){
+			if (response.status === 'connected') {
+				FB.logout(function(response) {
+				  window.location='<?=base_url()?>authentication/logout';
+				});
+			} else if (response.status === 'not_authorized') {
+				window.location='<?=base_url()?>authentication/logout';
+			} else {
+				window.location='<?=base_url()?>authentication/logout';
+			}
+    	});
+	}
 </script>
 
 

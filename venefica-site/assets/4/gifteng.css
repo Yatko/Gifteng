@@ -566,6 +566,34 @@ hr.ge-hr-dotted {
 .mobile-header {
 	font-size:26px;
 }
+.friend-filter {
+	padding:20px 10px 10px;
+}
+.friend-filter label {
+	font-size:18px;
+	line-height:38px;
+}
+.friend-filter input {
+	height:auto !important;
+}
+#friendlist img {
+	width:64px;
+	height:64px;
+}
+#friendlist .ge-name {
+	height:30px;
+}
+#friendlist .ge-name a {	
+	font-size: 14px;
+	line-height: 18px;
+}
+#friendlist .link {
+	font-size: 16px;
+	line-height: 26px;
+}
+#friend-list .ge-user {
+	height: 90px;
+}
 
 @media (max-width: 979px) { 
 	.navbar .nav li.dropdown .dropdown-menu {
@@ -592,6 +620,9 @@ hr.ge-hr-dotted {
 	#browse_form input {
 		max-width: 90%;
 	}
+	.friend-filter label {
+		font-size:16px;
+	}
 }
 @media (max-width: 760px) {
 	.ge-well {
@@ -600,6 +631,9 @@ hr.ge-hr-dotted {
 	}
 	.ge-item-image .ge-action {
 		padding:10px 20px;
+	}
+	.friend-filter .text-left, .friend-filter .text-right {
+		text-align:center !important;
 	}
 }
 @media (max-width: 480px) {
