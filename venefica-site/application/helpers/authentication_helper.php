@@ -54,12 +54,12 @@ if ( ! function_exists('login')) {
         
         try {
             $token = $CI->auth_service->authenticateEmail($email, $password);
-            $CI->usermanagement_service->storeUser($email, $token);
+            $CI->usermanagement_service->storeUserByEmail($email, $token);
+            $user = $CI->usermanagement_service->loadUser();
             
             if ( $remember_me ) {
                 $CI->load->library('remember_me');
-                $user = $CI->usermanagement_service->loadUser();
-                $CI->remember_me->setCookie($user->id);
+                $CI->remember_me->setCookie($user->id, $token);
             }
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Email and/or password is incorrect: '.$ex->getMessage());
@@ -84,17 +84,28 @@ if ( ! function_exists('isLogged')) {
      * @return boolean
      */
     function isLogged() {
-        $CI =& get_instance();
-        $CI->load->library('remember_me');
-        $cookie_user = $CI->remember_me->verifyCookie();
         $token = loadToken();
         
-        if ( $cookie_user || $token ) {
-            if ( empty($token) ) {
-                //TODO: here should refresh the user by the cookie user ID
-                return false;
-            }
+        if ( $token ) {
+            //log_message(ERROR, 'we have token');
             return TRUE;
+        } else {
+            $CI =& get_instance();
+            $CI->load->library('usermanagement_service');
+            $CI->load->library('remember_me');
+            $cookie_user = $CI->remember_me->verifyCookie();
+            
+            if ( !empty($cookie_user) && is_array($cookie_user) ) {
+                //log_message(ERROR, 'we have remember me cookie, but no token');
+                $userId = $cookie_user['netid'];
+                $token = $cookie_user['token'];
+                
+                storeToken($token);
+                $user = $CI->usermanagement_service->getUserById($userId);
+                $CI->usermanagement_service->storeUser($user);
+                
+                return TRUE;
+            }
         }
         return FALSE;
     }
@@ -109,9 +120,7 @@ if ( ! function_exists('isOwner')) {
      * @return boolean
      */
     function isOwner($user) {
-        if ( !isLogged() ) {
-            return false;
-        } else if ( $user == null ) {
+        if ( $user == null ) {
             return false;
         }
         

@@ -51,7 +51,7 @@
         <div class="modal-header-content">
             <div class="ge-modal_header">
                 <label class="control-label" for="fieldset">
-                    <h3>By clicking here you confirm that you received the gift.</h3>
+                    <h3>If you received the gift, click on CONFIRM.</h3>
                 </label>
             </div>
         </div>

@@ -80,7 +80,7 @@ $autoload['helper'] = array('url', 'cookie', 'language', 'form', 'authentication
 |
 */
 
-$autoload['config'] = array('remember_me');
+$autoload['config'] = array();
 
 
 /*
