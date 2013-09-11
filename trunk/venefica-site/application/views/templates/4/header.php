@@ -4,6 +4,7 @@ $page = $this->uri->segment(1, null);
 
 reset($_GET); //reset the array pointer
 $subpage = key($_GET); //gets the first element from the array
+$is_logged = isLogged();
 
 ?>
 
@@ -126,14 +127,14 @@ $subpage = key($_GET); //gets the first element from the array
                 $('.snap-slide').show();
                 $('.snap-drawers').show();
             });
-		    $("input, textarea").live("focus", function(e) {
-		        $('.snap-content').css('-webkit-overflow-scrolling','auto');
-		    });
-		
-		    $("input, textarea").live("blur", function(e) {
-		        $('.snap-content').css('-webkit-overflow-scrolling','touch');
-		    });
-		}
+            
+            $("input, textarea").live("focus", function(e) {
+                $('.snap-content').css('-webkit-overflow-scrolling','auto');
+            });
+            $("input, textarea").live("blur", function(e) {
+                $('.snap-content').css('-webkit-overflow-scrolling','touch');
+            });
+        }
     </script>
 </head>
 
@@ -144,68 +145,69 @@ $subpage = key($_GET); //gets the first element from the array
 <script language="javascript">
     
     window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '285994388213208',
-	      cookie     : true, // enable cookies to allow the server to access the session
-	      xfbml      : true  // parse XFBML
-	    });
-	    
-	    <?php if($page=='invitation') : ?>
-	    	FB.getLoginStatus(function(response){
-				if (response.status === 'connected') {
-					showFriends();
-				} else if (response.status === 'not_authorized') {
-					window.location='<?=base_url()?>';
-				} else {
-					window.location='<?=base_url()?>';
-				}
-	    	});
-	    <?php endif; ?>
-   	};
-	// Load the SDK asynchronously
-	(function(d, s, id){
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) {return;}
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_US/all.js";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-   
-	function doFBLogin() {
-		FB.getLoginStatus(function(response) {
-			if (response.status === 'connected') {
-				window.location='<?=base_url()?>invitation/facebook';
-			} else if (response.status === 'not_authorized') {
-				// not_authorized
-				loginFB();
-			} else {
-				// not_logged_in
-				loginFB();
-			}
-		});
-	}
+        FB.init({
+            appId      : '285994388213208',
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+        });
 	
-	function loginFB() {
-		FB.login(function(response) {
-			if (response.authResponse) {
-				window.location='<?=base_url()?>invitation/facebook';
-			}
-		});
-	}
-	
-	function doLogout() {
-    	FB.getLoginStatus(function(response){
-			if (response.status === 'connected') {
-				FB.logout(function(response) {
-				  window.location='<?=base_url()?>authentication/logout';
-				});
-			} else if (response.status === 'not_authorized') {
-				window.location='<?=base_url()?>authentication/logout';
-			} else {
-				window.location='<?=base_url()?>authentication/logout';
-			}
-    	});
-	}
+        <? if ($page=='invitation') : ?>
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                showFriends();
+            } else if (response.status === 'not_authorized') {
+                window.location = '<?=base_url()?>';
+            } else {
+                window.location = '<?=base_url()?>';
+            }
+        });
+        <? endif; ?>
+    };
+    
+    // Load the SDK asynchronously
+    (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    
+    function doFBLogin() {
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                window.location = '<?=base_url()?>invitation/facebook';
+            } else if (response.status === 'not_authorized') {
+                // not_authorized
+                loginFB();
+            } else {
+                // not_logged_in
+                loginFB();
+            }
+        });
+    }
+
+    function loginFB() {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                window.location = '<?=base_url()?>invitation/facebook';
+            }
+        });
+    }
+
+    function doLogout() {
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                FB.logout(function(response) {
+                    window.location = '<?=base_url()?>authentication/logout';
+                });
+            } else if (response.status === 'not_authorized') {
+                window.location = '<?=base_url()?>authentication/logout';
+            } else {
+                window.location = '<?=base_url()?>authentication/logout';
+            }
+        });
+    }
 </script>
 
 
@@ -237,7 +239,7 @@ $subpage = key($_GET); //gets the first element from the array
 <?= isset($modal) ? $modal : '' ?>
 
 
-<? if( isLogged() ): ?>
+<? if( $is_logged ): ?>
     
     <? $this->load->view('javascript/post'); ?>
     <? $this->load->view('modal/post'); ?>
@@ -246,7 +248,7 @@ $subpage = key($_GET); //gets the first element from the array
 
 
 
-<? if( isLogged() ): ?>
+<? if( $is_logged ): ?>
 
 
 <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
@@ -287,7 +289,9 @@ $subpage = key($_GET); //gets the first element from the array
                     </div>
                 </li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
-                <li<?=($page == "invitation" ? ' class="active"' : '')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
+                <? /** ?>
+                <li<?=($page == "invitation" ? ' class="active hidden-phone"' : ' class="hidden-phone"')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
+                <? /**/ ?>
                 <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
@@ -295,6 +299,7 @@ $subpage = key($_GET); //gets the first element from the array
                 <li<?=($page == "stat" ? ' class="active"' : '')?>><a href="<?=base_url()?>stat"><i class="fui-star"></i> Top Giftengers</a></li>
                 <li<?=($page == "profile" && $subpage == "message" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?message"><i class="fui-mail"></i> Messages</a></li>
                 <li<?=($page == "profile" && $subpage == "notification" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?notification"><i class="fui-alert"></i> Notifications</a></li>
+                <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AHCR7BYEB68UC" target="_blank"><i class="ge-icon-clover"></i> Donate</a></li>
                 <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
             </ul>
         </div>
@@ -310,7 +315,7 @@ $subpage = key($_GET); //gets the first element from the array
         <div class="container">
             <div class="nav-collapse">
                 
-                <? if( isLogged() ): ?>
+                <? if( $is_logged ): ?>
                 <span class="nav">
                     <a id="open-left" class="link"><span class="fui-list"></span></a>
                 </span>
@@ -320,7 +325,7 @@ $subpage = key($_GET); //gets the first element from the array
                     <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
                 </span>
 
-                <? if( isLogged() ): ?>
+                <? if( $is_logged ): ?>
 
                     <ul class="nav pull-right">
                         <li>
@@ -367,4 +372,4 @@ $subpage = key($_GET); //gets the first element from the array
 </div>
 
 <div class="ge-container snap-content snap-slide">
-    <div class="<?= isLogged() ? 'container' : '' ?> ge-topspace">
+    <div class="<?= $is_logged ? 'container' : '' ?> ge-topspace">

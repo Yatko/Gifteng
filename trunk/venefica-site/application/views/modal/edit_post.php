@@ -18,6 +18,7 @@
         
         var $adId = $("#edit_post_form input[name=adId]");
         window.location.href = "<?=base_url()?>post/edit/" + $adId.val();
+        //window.location.replace("<?=base_url()?>post/edit/" + $adId.val());
     }
 </script>
 

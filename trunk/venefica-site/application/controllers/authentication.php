@@ -15,7 +15,7 @@ class Authentication extends CI_Controller {
         $isLogged = isLogged();
         $currentUser = $this->usermanagement_service->loadUser();
         
-        if ( isLogged() && $currentUser ) {
+        if ( $isLogged && $currentUser ) {
             redirect('/profile');
         }
         

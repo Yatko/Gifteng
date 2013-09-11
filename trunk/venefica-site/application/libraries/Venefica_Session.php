@@ -25,6 +25,10 @@ class Venefica_Session extends CI_Session {
         parent::__construct($params);
     }
     
+    public function sess_id() {
+        return $this->userdata('session_id');
+    }
+    
     /**
      * Fetch a specific flashdata item from the session array. First tries to extract
      * the 'old' data, and if not found tries with the 'new'.

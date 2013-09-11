@@ -1,5 +1,15 @@
 <? if( $is_modal ): ?>
 
+<div id="needLogout"></div>
+
+<script language="javascript">
+    var $parentModal = $('#needLogout').closest('.modal');
+    $parentModal.modal('hide');
+    
+    window.location.replace("<?=base_url()?>authentication/login");
+</script>
+
+<? /** ?>
 <label class="control-label">
     <blockquote>
         You NEED to log in!
@@ -15,6 +25,7 @@
         </div>
     </div>
 </div>
+<? /**/ ?>
 
 <? else: ?>
 

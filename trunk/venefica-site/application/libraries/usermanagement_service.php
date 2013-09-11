@@ -353,15 +353,23 @@ class Usermanagement_service {
     
     
     /**
-     * Gets the user from the server by the given email and stores into session
-     * under 'user' key.
+     * Gets the user from the server by the given email and stores into session.
      * 
      * @param string $email the user email
      * @param string $token
      * @throws Exception in case of WS invocation error
      */
-    public function storeUser($email, $token) {
+    public function storeUserByEmail($email, $token) {
         $user = $this->getUserByEmail($email, $token);
+        $this->storeUser($user);
+    }
+    
+    /**
+     * Stores the given user into session under 'user' key.
+     * 
+     * @param User_model $user
+     */
+    public function storeUser($user) {
         storeIntoSession('user', $user);
     }
     
@@ -382,7 +390,7 @@ class Usermanagement_service {
     public function refreshUser() {
         $user = $this->loadUser();
         $token = loadToken();
-        $this->storeUser($user->email, $token);
+        $this->storeUserByEmail($user->email, $token);
         return $this->loadUser();
     }
 
