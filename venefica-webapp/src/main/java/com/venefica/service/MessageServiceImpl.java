@@ -334,7 +334,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         }
         
         // ++ TODO: create comment validator
-        if (commentDto.getText() == null) {
+        if (commentDto.getText() == null || commentDto.getText().trim().isEmpty()) {
             throw new CommentValidationException(CommentField.TEXT, "Text field not specified!");
         }
         // ++
@@ -345,7 +345,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             throw new NullPointerException("message is null!");
         }
 
-        if (messageDto.getText() == null) {
+        if (messageDto.getText() == null || messageDto.getText().trim().isEmpty()) {
             throw new MessageValidationException(MessageField.TEXT, "Text field not specified!");
         }
     }
