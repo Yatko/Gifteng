@@ -289,9 +289,7 @@ $is_logged = isLogged();
                     </div>
                 </li>
                 <li<?=($page == "browse" ? ' class="active"' : '')?>><a href="<?=base_url()?>browse"><i class="fui-eye"></i> Browse</a></li>
-                <? /** ?>
-                <li<?=($page == "invitation" ? ' class="active hidden-phone"' : ' class="hidden-phone"')?>><a href="<?=base_url()?>invitation/facebook"><i class="fui-user"></i> Invite Friends</a></li>
-                <? /**/ ?>
+                <li<?=($page == "invitation" ? ' class="active hidden-phone"' : ' class="hidden-phone"')?>><a href="#" onclick="doFBLogin();"><i class="fui-user"></i> Invite Friends</a></li>
                 <li<?=($page == "profile" && $subpage == "giving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
                 <li<?=($page == "profile" && $subpage == "receiving" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
                 <li<?=($page == "profile" && $subpage == "favorite" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?favorite"><i class="fui-star-2"></i> Favorites</a></li>
@@ -300,7 +298,7 @@ $is_logged = isLogged();
                 <li<?=($page == "profile" && $subpage == "message" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?message"><i class="fui-mail"></i> Messages</a></li>
                 <li<?=($page == "profile" && $subpage == "notification" ? ' class="active"' : '')?>><a href="<?=base_url()?>profile?notification"><i class="fui-alert"></i> Notifications</a></li>
                 <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AHCR7BYEB68UC" target="_blank"><i class="ge-icon-clover"></i> Donate</a></li>
-                <li><a href="<?=base_url()?>authentication/logout"><i class="fui-power"></i> Logout</a></li>
+                <li><a href="#" onclick="doLogout()"><i class="fui-power"></i> Logout</a></li>
             </ul>
         </div>
     </div>
