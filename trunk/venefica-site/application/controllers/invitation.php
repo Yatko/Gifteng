@@ -307,8 +307,10 @@ class Invitation extends CI_Controller {
     
     public function facebook() {
         $this->init();
+		
+		$data['isFb']=true;
             
-        $this->load->view('templates/'.TEMPLATES.'/header');
+        $this->load->view('templates/'.TEMPLATES.'/header',$data);
         $this->load->view('pages/invitation_facebook');
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }
