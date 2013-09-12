@@ -126,6 +126,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "from " + getDomainClassName() + " m "
                 + "where "
                 + "m.deleted = false and "
+                + "m.request.ad.deleted = false and "
                 + "(m.request.ad.creator.id = :userId or m.request.user.id = :userId) "
                 + "group by m.request "
                 + "order by m.createdAt desc "
@@ -134,17 +135,17 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 .list();
         for ( Request request : requests ) {
             List<Message> message = createQuery(""
-                + "from " + getDomainClassName() + " m "
-                + "where "
-                + "m.request = :request and "
-                + "m.deleted = false and "
-                + "m.from.id != :fromId "
-                + "order by m.createdAt desc, m.id desc "
-                + "")
-                .setParameter("request", request)
-                .setParameter("fromId", userId)
-                .setMaxResults(1)
-                .list();
+                    + "from " + getDomainClassName() + " m "
+                    + "where "
+                    + "m.request = :request and "
+                    + "m.deleted = false and "
+                    + "m.from.id != :fromId "
+                    + "order by m.createdAt desc, m.id desc "
+                    + "")
+                    .setParameter("request", request)
+                    .setParameter("fromId", userId)
+                    .setMaxResults(1)
+                    .list();
             if ( message != null && !message.isEmpty() ) {
                 messages.add(message.get(0));
             }
