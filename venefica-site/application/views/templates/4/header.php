@@ -151,7 +151,7 @@ $is_logged = isLogged();
             xfbml      : true  // parse XFBML
         });
 	
-        <? if ($page=='invitation') : ?>
+        <? if ($page=='invitation' && isset($isFb)) : ?>
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
                 showFriends();

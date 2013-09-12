@@ -204,7 +204,7 @@ if ( $is_owner ) {
                     </div>
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
-                        <div class="span4">
+                        <div class="span4 mobile-one">
                             <img onclick="startRequestViewModal(<?=$request_id?>, 'giving', <?=$user_id?>);" src="<?=$requestor_img?>" class="img img-rounded link">
                         </div>
                     </div>
@@ -228,7 +228,7 @@ if ( $is_owner ) {
                     </div><!--./ge-text ge-description-->
 
                     <div class="row-fluid ge-text ge-description ge-user-image ge-action">
-                        <div class="span4">
+                        <div class="span4 mobile-one">
                             <img src="<?=$requestor_img?>" class="img img-rounded">
                             
                             <? /** ?>

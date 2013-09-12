@@ -14,6 +14,7 @@ $user = $CI->usermanagement_service->loadUser();
     }
     
     function add_message(callerElement) {
+    	window.scrollTo(0,0);
         if ( $("#message_post_form").length === 0 ) {
             return;
         }
