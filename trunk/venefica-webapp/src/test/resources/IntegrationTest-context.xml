@@ -13,7 +13,7 @@
 
     
     <bean id="baseUrl" class="java.lang.String">
-        <constructor-arg value="http://veneficalabs.com:8080/gifteng/services/" />
+        <constructor-arg value="http://veneficalabs.com:8080/venefica/services/" />
     </bean>
     <bean id="authServiceUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'AuthService'}" />
