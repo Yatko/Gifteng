@@ -29,6 +29,9 @@ public class FilterDto {
     private Boolean hasPhoto;
     private AdType type;
     private Boolean includeOwned;
+    private Boolean orderAsc; //if true the older ads will be in the first position
+    private Boolean includeCannotRequest; //ads that cannot be requested by the caller user to be included or not
+    private Boolean includeOnlyCannotRequest; //load only requestable ads or not
 
     // WARNING: required for JAX-WS
     public FilterDto() {
@@ -112,5 +115,29 @@ public class FilterDto {
 
     public void setType(AdType type) {
         this.type = type;
+    }
+
+    public Boolean getOrderAsc() {
+        return orderAsc;
+    }
+
+    public void setOrderAsc(Boolean orderAsc) {
+        this.orderAsc = orderAsc;
+    }
+
+    public Boolean getIncludeCannotRequest() {
+        return includeCannotRequest;
+    }
+
+    public void setIncludeCannotRequest(Boolean includeCannotRequest) {
+        this.includeCannotRequest = includeCannotRequest;
+    }
+
+    public Boolean getIncludeOnlyCannotRequest() {
+        return includeOnlyCannotRequest;
+    }
+
+    public void setIncludeOnlyCannotRequest(Boolean includeOnlyCannotRequest) {
+        this.includeOnlyCannotRequest = includeOnlyCannotRequest;
     }
 }

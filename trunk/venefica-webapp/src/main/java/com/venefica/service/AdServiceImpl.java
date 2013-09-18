@@ -109,13 +109,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     public List<CategoryDto> getCategories(Long categoryId) {
-        return getCategoriesInternal(categoryId, false);
+        return getCategories(categoryId, false);
     }
 
     @Override
     @Transactional
     public List<CategoryDto> getAllCategories() {
-        return getCategoriesInternal(null, true);
+        return getCategories(null, true);
     }
     
     
@@ -483,7 +483,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<AdDto> result = new LinkedList<AdDto>();
         List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
         User currentUser = getCurrentUser();
-
+        boolean includeOnlyCannotRequest = (filter != null && filter.getIncludeOnlyCannotRequest() != null) ? filter.getIncludeOnlyCannotRequest() : false;
+        boolean includeCannotRequest = (filter != null && filter.getIncludeCannotRequest() != null) ? filter.getIncludeCannotRequest() : false;
+        //boolean includeCanRequest = (includeOnlyCannotRequest == false && includeCannotRequest == false);
+        
         // TODO: Optimize this
         // Get current user's bookmarks
         // TODO: REMOVE IT!!!!!!!!
@@ -510,9 +513,28 @@ public class AdServiceImpl extends AbstractService implements AdService {
             adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
             adDto.setRequested(ad.isRequested(currentUser, false));
             
+            boolean canRequest = (adDto.getCanRequest() != null && adDto.getCanRequest());
+            if ( includeOnlyCannotRequest && canRequest ) {
+                //not including ads that can be requested
+                continue;
+            } else if ( includeCannotRequest == false && !canRequest ) {
+                //not including ads that cannot be requested
+                continue;
+            } else {
+                //including all type (can or cannot request) of ads
+            }
+            
             result.add(adDto);
         }
 
+        if ( ads.size() > 0 && result.size() < numberAds ) {
+            long lastAdId_ = ads.get(ads.size() - 1).getId();
+            int numberAds_ = numberAds - result.size();
+            
+            List<AdDto> result_ = getAds(lastAdId_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
+            result.addAll(result_);
+        }
+        
         return result;
     }
 
@@ -1333,7 +1355,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     
     
-    private List<CategoryDto> getCategoriesInternal(Long categoryId, boolean includeSubcategories) {
+    private List<CategoryDto> getCategories(Long categoryId, boolean includeSubcategories) {
         List<CategoryDto> result = new LinkedList<CategoryDto>();
         List<Category> categories = categoryDao.getSubcategories(categoryId);
 

@@ -32,6 +32,18 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     }
     
     @Override
+    public List<User> getTopUsers(int numberUsers) {
+        List<User> users = createQuery(""
+                + "select u "
+                + "from " + getDomainClassName() + " u "
+                + "order by u.userPoint.givingNumber desc "
+                + "")
+                .setMaxResults(numberUsers)
+                .list();
+        return users;
+    }
+    
+    @Override
     public List<User> getFollowers(Long userId) {
         List<User> followers = createQuery(""
                 + "select u.followers "

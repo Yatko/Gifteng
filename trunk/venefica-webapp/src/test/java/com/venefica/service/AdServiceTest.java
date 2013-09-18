@@ -140,7 +140,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************************
     
     @Test
-    public void placeAdTest() throws CategoryNotFoundException, AdValidationException {
+    public void placeAdTest() throws CategoryNotFoundException, AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
+        AdminService adminService = buildAdminService();
+        
         authenticateClientAsFirstUser();
         
         CategoryDto category = client.getCategories(null).get(0);
@@ -155,7 +157,11 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
 
         Long adId = client.placeAd(adDto);
         assertNotNull("The id of the ad must be returned!", adId);
-
+        
+        authenticateClientWithToken(adminService, firstUserAuthToken);
+        adminService.approveAd(adId);
+        adminService.onlineAd(adId);
+        
         Ad ad_ = adDao.get(adId);
         assertNotNull("The ad with id = " + adId + " not found!", ad_);
         assertTrue("The ad must be marked as unreviewed!", !ad_.isReviewed());
@@ -192,20 +198,28 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test
     public void getAdsTest() {
         authenticateClientAsFirstUser();
-        List<AdDto> ads = client.getAds(-1L, 10);
+        
+        FilterDto filter;
+        
+        filter = new FilterDto();
+        filter.setIncludeCannotRequest(true);
+        
+        List<AdDto> ads = client.getAds(-1L, 10, filter);
         assertTrue("There must be at least one ad in the collection.", ads != null
                 && ads.size() > 0);
 
         ads = client.getAds(1L, 10);
         assertTrue(ads == null || ads.isEmpty());
         
-        FilterDto filter = new FilterDto();
+        filter = new FilterDto();
+        filter.setIncludeCannotRequest(true);
         filter.setSearchString("test");
         
         ads = client.getAds(-1L, 10, filter);
         assertTrue(ads != null && !ads.isEmpty());
         
         filter = new FilterDto();
+        filter.setIncludeCannotRequest(true);
         filter.setSearchString("first");
         
         ads = client.getAds(-1L, 10, filter);
@@ -484,6 +498,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         categories.add(new Long(3));
         
         FilterDto filter = new FilterDto();
+        filter.setIncludeCannotRequest(true);
         filter.setCategories(categories);
         filter.setDistance(new Long(100));
         filter.setMaxPrice(new BigDecimal("5.3"));
@@ -495,7 +510,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void getAdsExLocationTest() throws AdValidationException {
+    public void getAdsExLocationTest() throws AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
+        AdminService adminService = buildAdminService();
+        
         authenticateClientAsFirstUser();
         
         AdDto adDto = new AdDto();
@@ -508,7 +525,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         Long adId = client.placeAd(adDto);
         assertNotNull("The id of the ad must be returned!", adId);
         
+        authenticateClientWithToken(adminService, firstUserAuthToken);
+        adminService.approveAd(adId);
+        adminService.onlineAd(adId);
+        
         FilterDto filter = new FilterDto();
+        filter.setIncludeCannotRequest(true);
         filter.setLongitude(new Double("77.0256938"));
         filter.setLatitude(new Double("20.7118088"));
         filter.setDistance(new Long(50));
