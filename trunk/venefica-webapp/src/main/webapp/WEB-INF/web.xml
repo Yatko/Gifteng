@@ -49,7 +49,6 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-    
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -60,7 +59,6 @@
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
     </filter>
-    
     <filter-mapping>
         <filter-name>hiddenHttpMethodFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -77,7 +75,6 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>H2Console</servlet-name>
         <url-pattern>/admin/h2/*</url-pattern>
@@ -90,36 +87,10 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value></param-value>
+            <param-value/>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    
-    <!-- the following settings are new -->
-    <!--
-    <servlet>
-        <servlet-name>UserManagementServiceImplService</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>AdServiceImplService</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>MessageServiceImplService</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>AuthServiceImplService</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    -->
-    <!-- -->
-    
     <servlet-mapping>
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
@@ -136,24 +107,74 @@
         <url-pattern>/services/*</url-pattern>
     </servlet-mapping>
     
-    <!-- the following settings are new -->
-    <!--
+    <servlet>
+        <servlet-name>InvitationServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InvitationServiceImplService</servlet-name>
+        <url-pattern>/InvitationServiceImplService</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UserManagementServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserManagementServiceImplService</servlet-name>
         <url-pattern>/UserManagementServiceImplService</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AdServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdServiceImplService</servlet-name>
         <url-pattern>/AdServiceImplService</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>MessageServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MessageServiceImplService</servlet-name>
         <url-pattern>/MessageServiceImplService</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AuthServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AuthServiceImplService</servlet-name>
         <url-pattern>/AuthServiceImplService</url-pattern>
     </servlet-mapping>
-    -->
-    <!-- -->
+    
+    <servlet>
+        <servlet-name>AdminServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServiceImplService</servlet-name>
+        <url-pattern>/AdminServiceImplService</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UtilityServiceImplService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UtilityServiceImplService</servlet-name>
+        <url-pattern>/UtilityServiceImplService</url-pattern>
+    </servlet-mapping>
+    
 </web-app>
