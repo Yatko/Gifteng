@@ -117,8 +117,9 @@
     
     <!-- import java-based configurations -->
     <bean class="com.venefica.config.data.TestDataConfig" />
-    <bean class="com.venefica.config.email.EmailConfig" />
-    <bean class="com.venefica.config.file.FileConfig" />
+    <bean class="com.venefica.config.EmailConfig" />
+    <bean class="com.venefica.config.FileConfig" />
+    <bean class="com.venefica.config.InvitationConfig" />
     
     
     
