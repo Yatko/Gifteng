@@ -9,7 +9,6 @@
     <spring-data xmlns="http://www.netbeans.org/ns/spring-data/1">
         <config-files>
             <config-file>src/main/resources/cxf-services.xml</config-file>
-            <config-file>src/main/resources/email.xml</config-file>
             <config-file>src/main/resources/jdbc.xml</config-file>
             <config-file>src/main/resources/main.xml</config-file>
             <config-file>src/test/resources/AdServiceTest-context.xml</config-file>
@@ -29,6 +28,11 @@
                 <config-file>src/test/resources/MessageServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/UserManagementServiceTest-context.xml</config-file>
                 <config-file>src/test/resources/common-context.xml</config-file>
+            </config-file-group>
+            <config-file-group name="Resources">
+                <config-file>src/main/resources/cxf-services.xml</config-file>
+                <config-file>src/main/resources/jdbc.xml</config-file>
+                <config-file>src/main/resources/main.xml</config-file>
             </config-file-group>
         </config-file-groups>
     </spring-data>
