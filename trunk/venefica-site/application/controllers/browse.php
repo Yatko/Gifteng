@@ -4,28 +4,64 @@ class Browse extends CI_Controller {
     
     private $initialized = false;
     
+    const TYPE_NEWEST = 'newest';
+    const TYPE_OLDEST = 'oldest';
+    const TYPE_GIFTED = 'gifted';
+    
     const STARTING_AD_NUM = 15;
     const CONTINUING_AD_NUM = 10;
     const COMMENTS_NUM = 2;
     
-    public function view($category = null) {
+    const SESSION_KEY_NAME = 'browse_filter';
+    
+    public function view() {
         $this->init();
         
         if ( !validate_login() ) return;
         
-        $currentUser = $this->usermanagement_service->loadUser();
-        $query = key_exists('q', $_GET) ? $_GET['q'] : '';
+        try {
+            $categories = $this->ad_service->getAllCategories();
+        } catch ( Exception $ex ) {
+            $categories = array();
+        }
+        
+        if ( $_POST ) {
+            $q = $this->input->post('q');
+            $category = $this->input->post('category');
+            $type = $this->input->post('type');
+            
+            if ( trim($category) == "" ) $category = null;
+            if ( trim($type) == "" ) $type = null;
+        } else if ( $_GET ) {
+            $q = key_exists('q', $_GET) ? $_GET['q'] : '';
+            $category = null;
+            $type = null;
+        } else {
+            $q = null;
+            $category = null;
+            $type = null;
+        }
+        
+        $filter = $this->buildFilter($q, $category, $type);
+        
+        $selected_q = $q;
+        $selected_category = $category;
+        $selected_type = $type;
         $lastAdId = -1;
-        $filter = $this->buildFilter($query);
+        
         $ads = $this->getAds($lastAdId, Browse::STARTING_AD_NUM, $filter);
         $last_ad_id = $this->getLastAdId($ads);
+        $currentUser = $this->usermanagement_service->loadUser();
         
         $data = array();
         $data['is_ajax'] = false;
-        $data['query'] = $query;
         $data['ads'] = $ads;
         $data['last_ad_id'] = $last_ad_id;
         $data['currentUser'] = $currentUser;
+        $data['categories'] = $categories;
+        $data['selected_q'] = $selected_q;
+        $data['selected_category'] = $selected_category;
+        $data['selected_type'] = $selected_type;
         
         $modal = $this->load->view('modal/comment', array(), true);
         $modal .= $this->load->view('modal/social', array(), true);
@@ -49,19 +85,22 @@ class Browse extends CI_Controller {
             return;
         }
         
-        $currentUser = $this->usermanagement_service->loadUser();
-        $query = key_exists('q', $_GET) ? $_GET['q'] : '';
         $lastAdId = $_GET['lastAdId'];
-        $filter = $this->buildFilter($query);
+        $q = $this->input->post('q');
+        $category = $this->input->post('category');
+        $type = $this->input->post('type');
+        $filter = $this->buildFilter($q, $category, $type);
+        
         $ads = $this->getAds($lastAdId, Browse::CONTINUING_AD_NUM, $filter);
         $last_ad_id = $this->getLastAdId($ads);
+        $currentUser = $this->usermanagement_service->loadUser();
+        
         if (is_empty($ads) ) {
             return '';
         }
         
         $data = array();
         $data['is_ajax'] = true;
-        $data['query'] = $query;
         $data['ads'] = $ads;
         $data['last_ad_id'] = $last_ad_id;
         $data['currentUser'] = $currentUser;
@@ -90,6 +129,7 @@ class Browse extends CI_Controller {
             $this->load->model('comment_model');
             $this->load->model('request_model');
             $this->load->model('filter_model');
+            $this->load->model('category_model');
             
             clear_cache();
             
@@ -117,33 +157,6 @@ class Browse extends CI_Controller {
         
         try {
             $ads = $this->ad_service->getAdsExDetail($lastAdId, $numberAds, $filter, true, true, Browse::COMMENTS_NUM);
-            
-            $last_ad_id = $this->getLastAdId($ads);
-            $has_ads = count($ads) > 0 ? true : false;
-            
-            //remove all non approved and non online ads
-            $remove_indexes = array();
-            foreach ( $ads as $index => $ad ) {
-                if ( $ad->approved && $ad->online ) {
-                    continue;
-                }
-                array_push($remove_indexes, $index);
-            }
-            
-            $remove_indexes = array_reverse($remove_indexes);
-            foreach ( $remove_indexes as $index ) {
-                //unset($ads[$index]);
-                array_splice($ads, $index, 1);
-            }
-            
-            
-            //if ( $has_ads && count($ads) == 0 ) {
-            if ( $has_ads && count($ads) < Browse::CONTINUING_AD_NUM ) {
-                foreach ( $this->getAds($last_ad_id, $numberAds, $filter) as $ad ) {
-                    array_push($ads, $ad);
-                }
-            }
-            
             return $ads;
         } catch ( Exception $ex ) {
             return $ex->getMessage();
@@ -160,12 +173,31 @@ class Browse extends CI_Controller {
         return $last_ad_id;
     }
 
-    private function buildFilter($query) {
-        if ( $query == null || trim($query) == '' ) {
+    private function buildFilter($query, $category = null, $type = null) {
+        if ( $query != null && trim($query) == "" ) {
+            $query = null;
+        }
+        
+        if ( $query == null && $category == null && $type == null ) {
             return null;
         }
+        
         $filter = new Filter_model();
         $filter->searchString = $query;
+        $filter->categories = ($category != null ? array($category) : null);
+        if ( $type != null ) {
+            if ( $type == Browse::TYPE_NEWEST ) {
+                $filter->orderAsc = false;
+                $filter->includeCannotRequest = false;
+            } else if ( $type == Browse::TYPE_OLDEST ) {
+                $filter->orderAsc = true;
+                $filter->includeCannotRequest = false;
+            } else if ( $type == Browse::TYPE_GIFTED ) {
+                $filter->orderAsc = false;
+                $filter->includeOnlyCannotRequest = true;
+                $filter->includeCannotRequest = true;
+            }
+        }
         return $filter;
     }
 }

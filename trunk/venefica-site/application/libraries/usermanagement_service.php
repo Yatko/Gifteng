@@ -157,6 +157,29 @@ class Usermanagement_service {
     //***************
     
     /**
+     * Returns a list of users having the highest score.
+     * 
+     * @param type $numberUsers
+     * @return type
+     * @throws Exception
+     */
+    public function getTopUsers($numberUsers) {
+        try {
+            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $userService->getTopUsers(array("numberUsers" => $numberUsers));
+            
+            $users = array();
+            if ( hasField($result, 'users') && $result->users ) {
+                $users = User_model::convertUsers($result->users);
+            }
+            return $users;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
      * Request user by its user name;
      * 
      * @param string $name

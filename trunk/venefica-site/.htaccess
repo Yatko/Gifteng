@@ -1,5 +1,10 @@
 RewriteEngine on
 
+# Redirect to under maintenance page
+#RewriteCond %{REQUEST_URI} !^.*/under-construction\.html$
+#RewriteCond %{REQUEST_URI} !^.*\.(jpg|gif|png|ico)$
+#RewriteRule ^(.*)$ /venefica-site/under-construction.html [R=307,L]
+
 ## Add www
 #RewriteBase /
 #RewriteCond %{HTTP_HOST} !^www\. [NC]

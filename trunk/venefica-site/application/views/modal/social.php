@@ -31,7 +31,7 @@
         <div class="modal-header-content">
         	<div class="ge-modal_header">
         		<label class="control-label">
-        			<h3>Select your favorite social network!</h3>
+        			<h3>Sharing is caring... Select your favorite social network!</h3>
         		</label>
         	</div>
         </div>

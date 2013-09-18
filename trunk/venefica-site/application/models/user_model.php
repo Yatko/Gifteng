@@ -179,9 +179,13 @@ class User_model extends CI_Model {
         return $this->address->zipCode;
     }
     
-    public function getPoints() {
+    public function getPoints($includePendingScore = true) {
         $score = round($this->score != null && is_numeric($this->score) ? $this->score : 0);
-        $pendingScore = round($this->pendingScore != null && is_numeric($this->pendingScore) ? $this->pendingScore : 0);
+        if ( $includePendingScore ) {
+            $pendingScore = round($this->pendingScore != null && is_numeric($this->pendingScore) ? $this->pendingScore : 0);
+        } else {
+            $pendingScore = 0;
+        }
         return $score . ($pendingScore > 0 ? '/'.$pendingScore : '');
     }
     

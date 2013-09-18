@@ -7,37 +7,36 @@
  * ads: array of Ad_model
  * last_ad_id: long
  * currentUser: User_model
- * query: string
+ * categories: array of Category_model
+ * selected_q: string
+ * selected_category: long
+ * selected_type: string
  */
 
 if ( isset($is_ajax) && $is_ajax ) {
 } else {
     $is_ajax = false;
 }
+
+if ( isset($ads) && is_array($ads) ) {
+    $ads_size = count($ads);
+} else {
+    $ads_size = 0;
+}
 ?>
 
 <? if ( $is_ajax ): ?>
     <script langauge="javascript">
         lastAdId = <?=$last_ad_id?>;
+        
+    <? if( $ads_size < Browse::CONTINUING_AD_NUM ): ?>
+        $('#load_more_btn').addClass('hide');
+    <? endif; ?>
+    
     </script>
 <? else: ?>
     <script langauge="javascript">
         var lastAdId = <?=$last_ad_id?>;
-        
-        /**
-        var vg = $("#boxContainer").vgrid({
-            easing: "easeOutQuint",
-            time: 500,
-            delay: 20,
-            fadeIn: {
-                time: 300,
-                delay: 50
-            }
-        });
-        $(window).load(function(e) {
-            vg.vgrefresh();
-        });
-        /**/
         
         function load_more(callerElement) {
             if ( $(".ge-ad-id:last").length === 0 ) {
@@ -61,9 +60,23 @@ if ( isset($is_ajax) && $is_ajax ) {
             //lastAdId = lastAdId.split('_')[1];
             
             var $container = $('#boxContainer');
-            var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>';
+            var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId;
+            var q = '<?=$selected_q?>';
+            var category = '<?=$selected_category?>';
+            var type = '<?=$selected_type?>';
             
-            $.get(url, function(newElements) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'html',
+                cache: false,
+                data: {
+                    q: q,
+                    category: category,
+                    type: type
+                }
+            }).done(function(response) {
+                var newElements = response;
                 if ( newElements === null || $(newElements).length === 0 ) {
                     if ( callerElement !== null ) {
                         var $element = $(callerElement);
@@ -80,19 +93,13 @@ if ( isset($is_ajax) && $is_ajax ) {
                     $element.removeClass('disabled');
                     $element.removeAttr("disabled");
                 }
-                
-                /**
-                var items = $(newElements).fadeTo(0, 0);
-                vg.prepend(items);
-                vg.vgrefresh(null, null, null, function(){
-                    items.fadeTo(300, 1);
-		});
-                /**/
+            }).fail(function(data) {
+                //TODO
             });
         }
         
         $(function() {
-            if ( $('#boxContainer').length > 0 ) {
+//            if ( $('#boxContainer').length > 0 ) {
 //                var $container = $('#boxContainer');
                 
                 /**
@@ -135,7 +142,7 @@ if ( isset($is_ajax) && $is_ajax ) {
 //                        
 //                        var lastAdId = $(".ge-ad-id:last").attr("id");
 //                        lastAdId = lastAdId.split('_')[1];
-//                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId + '&q=<?=$query?>'];
+//                        return ['<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId];
 //                    },
 //                    prefill: true
 //                }, function(newElements) {
@@ -153,7 +160,11 @@ if ( isset($is_ajax) && $is_ajax ) {
 //                    });
 //                    /**/
 //                });
-            }
+//            }
+            
+            $('#browse_form select').change(function() {
+                $(this).closest('form').trigger('submit');
+            });
         });
     </script>
 <? endif; ?>
@@ -170,6 +181,49 @@ if ( isset($is_ajax) && $is_ajax ) {
             New Gifts are available daily at 12pm ET. Make someone happy tomorrow with yours!<br/><br/>
         </div>
     </div>
+</div>
+
+<div class="row">
+    <!-- search -->
+    <form action="<?=base_url()?>browse" method="post" id="browse_form">
+    
+    <div class="span10 offset1">
+        <div class="ge-form">
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="control-group">
+                        <input type="text" name="q" placeholder="Find Friends & Search Gifts" class="span12" value="<?=$selected_q?>">
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="control-group">
+                        <select name="category" class="select-block mbl select-info" data-size="10">
+                            <option value="">All Categories</option>
+                            <? foreach ($categories as $cat): ?>
+                                <?
+                                $category_id = $cat->id;
+                                $category_name = $cat->name;
+                                ?>
+
+                                <option value="<?=$category_id ?>" <?=$selected_category == $category_id ? 'selected="selected"' : ''?>><?=$category_name ?></option> 
+                            <? endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="control-group">
+                        <select name="type" class="select-block mbl select-info">
+                            <? foreach ( lang('browse_type_list') as $key => $value ): ?>
+                                <option value="<?=$key?>" <?=$selected_type == $key ? 'selected="selected"' : ''?>><?=$value?></option> 
+                            <? endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- #/search -->
+    
+    </form>
 </div>
 
 <div class="row">
@@ -250,8 +304,8 @@ if ( isset($is_ajax) && $is_ajax ) {
         </div>
         <div id="loadingPage"></div>
     
-        <? if( isset($ads) && is_array($ads) && count($ads) > 0 ): ?>
-            <button onclick="load_more(this);" class="btn btn-block btn-ge">VIEW MORE</button>
+        <? if( $ads_size >= Browse::STARTING_AD_NUM ): ?>
+            <button onclick="load_more(this);" id="load_more_btn" class="btn btn-block btn-ge">VIEW MORE</button>
         <? else: ?>
             
         <? endif; ?>

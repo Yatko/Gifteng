@@ -48,6 +48,15 @@ class Registration extends CI_Controller {
         
         try {
             $this->usermanagement_service->verifyUser($code);
+            if ( isLogged() ) {
+                $this->usermanagement_service->refreshUser();
+            }
+            
+            $this->load->view('templates/'.TEMPLATES.'/header');
+            $this->load->view('pages/registration_verified');
+            $this->load->view('templates/'.TEMPLATES.'/footer');
+            
+            return;
         } catch ( Exception $ex ) {
         }
         
