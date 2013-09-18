@@ -125,6 +125,16 @@ public interface UserManagementService {
     //***************
     
     /**
+     * Retrieves a list of users having the highest score.
+     * 
+     * @param numberUsers
+     * @return 
+     */
+    @WebMethod(operationName = "GetTopUsers")
+    @WebResult(name = "users")
+    public List<UserDto> getTopUsers(@WebParam(name = "numberUsers") int numberUsers);
+    
+    /**
      * Retrieves information about the current (logged) user.
      *
      * @return user object

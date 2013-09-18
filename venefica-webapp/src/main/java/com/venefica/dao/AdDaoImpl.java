@@ -52,15 +52,18 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     @SuppressWarnings("unchecked")
     public List<Ad> get(Long lastAdId, int numberAds) {
         List<Ad> ads;
-
+        
+        boolean orderAsc = false;
         numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
         if (lastAdId < 0) {
             ads = createQuery(""
                     + "from " + getDomainClassName() + " a where "
                     + "a.deleted = false and "
+                    + "a.approved = true and "
+                    + "a.online = true and "
                     + "a.adData.category.hidden = false "
-                    + "order by a.approvedAt desc, a.createdAt desc"
+                    + "order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
                     + "")
                     .setMaxResults(numberAds)
                     .list();
@@ -71,10 +74,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             ads = createQuery(""
                     + "from " + getDomainClassName() + " a where "
                     + "a.deleted = false and "
+                    + "a.approved = true and "
+                    + "a.online = true and "
                     + "a.adData.category.hidden = false and "
-                    //+ "a.id < :lastId "
-                    + "a.approvedAt < :lastApprovedAt "
-                    + "order by a.approvedAt desc, a.createdAt desc"
+                    //+ "a.id " + (orderAsc ? ">" : "<") + " :lastId "
+                    + "a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt "
+                    + "order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
                     + "")
                     //.setParameter("lastId", lastAdId)
                     .setParameter("lastApprovedAt", lastApprovedAt)
@@ -93,7 +98,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         
         //NOTE:
         //as the ordering is based on approvedAt field the lastAdId cannot be used
-        //directly, instead is should be queried it's approvedAt value and used it
+        //directly, instead it should be queried it's approvedAt value and used it
         //in the where clause
         
         Ad lastAd = null;
@@ -110,18 +115,25 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         BigDecimal maxPrice = filter.getMaxPrice();
         Boolean hasPhoto = filter.getHasPhoto();
         AdType type = filter.getType();
+        boolean orderAsc = filter.getOrderAsc() == null ? false : filter.getOrderAsc();
+        boolean hasSearchString = (searchString != null && !searchString.trim().isEmpty());
         
         // Build query string
         String queryStr = ""
                 + "select distinct a "
-                + "from " + getDomainClassName() + " a where a.deleted = false and a.expired = false and a.sold = false";
+                + "from " + getDomainClassName() + " a where "
+                + "a.deleted = false and "
+                + "a.approved = true and "
+                + "a.online = true and "
+                + "a.expired = false and "
+                + "a.sold = false";
 
         if (lastAdId >= 0 && lastAd != null) {
-            //queryStr += " and a.id < :lastId";
-            queryStr += " and a.approvedAt < :lastApprovedAt";
+            //queryStr += " and a.id " + (orderAsc ? ">" : "<") + " :lastId";
+            queryStr += " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt";
         }
 
-        if (searchString != null) {
+        if (hasSearchString) {
             queryStr += " and "
                     + "("
                     + "lower(a.adData.title) like '%' || :searchstr || '%' or "
@@ -156,8 +168,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.type = :type";
         }
 
-        //queryStr += " order by a.id desc";
-        queryStr += " order by a.approvedAt desc, a.createdAt desc";
+        //queryStr += " order by a.id " + (orderAsc ? "asc" : "desc") + "";
+        queryStr += " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc";
         
         Query query = createQuery(queryStr);
 
@@ -168,7 +180,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("lastApprovedAt", lastApprovedAt);
         }
 
-        if (searchString != null) {
+        if (hasSearchString) {
             query.setParameter("searchstr", searchString.toLowerCase());
         }
 
@@ -339,10 +351,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         String queryStr = "";
         if ( isDataValidForDWithin(filter) ) {
             //NOTE:
-            //It's possible that the returning (calculated distance) value to be in degrees.
-            //If so use a conversion into km or m
+            //- maybe the best accurate soltion, but needs to be tested
+            //- reference: http://derickrethans.nl/spatial-indexes-mysql.html
             
-            //queryStr += " and glength(linestringfromwkb(linestring(GeomFromText(astext(a.adData.location)), GeomFromText(astext(:curpos))))) <= :maxdist";
+            //queryStr += " and (2 * ASIN(SQRT((SIN((radians(y(a.adData.location)) - radians(y(:curpos))) / 2) * SIN((radians(y(a.adData.location)) - radians(y(:curpos))) / 2)) + COS(radians(y(a.adData.location))) * COS(radians(y(:curpos))) * SIN((radians(x(a.adData.location)) - radians(x(:curpos))) / 2) * SIN((radians(x(a.adData.location)) - radians(x(:curpos))) / 2))) * 6371.01) <= :maxdist";
+            //queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
+            
             queryStr += " and glength(linestring(a.adData.location, GeomFromText(astext(:curpos)))) <= :maxdist";
             queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
         }

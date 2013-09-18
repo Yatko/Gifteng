@@ -265,6 +265,20 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
+    public List<UserDto> getTopUsers(int numberUsers) {
+        List<UserDto> result = new LinkedList<UserDto>();
+        List<User> users = userDao.getTopUsers(numberUsers);
+        
+        for (User user : users) {
+            UserDto userDto = new UserDto(user);
+            result.add(userDto);
+        }
+        
+        return result;
+    }
+    
+    @Override
+    @Transactional
     public UserDto getUser() throws UserNotFoundException {
         User user = getCurrentUser();
         

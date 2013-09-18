@@ -25,6 +25,14 @@ public interface UserDao {
     public List<User> getAll();
     
     /**
+     * Returns a list of top users having the highest giving number.
+     * 
+     * @param numberUsers
+     * @return 
+     */
+    public List<User> getTopUsers(int numberUsers);
+    
+    /**
      * 
      * @param userId
      * @return list of user followers

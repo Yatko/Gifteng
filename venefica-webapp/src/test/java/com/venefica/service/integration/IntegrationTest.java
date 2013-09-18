@@ -52,7 +52,7 @@ public class IntegrationTest {
     
     @Test
     public void getAdsExLocationTest() throws AuthenticationException {
-        String token = authService.authenticateEmail("aa@aa.com", "qwerty");
+        String token = authService.authenticateEmail("a@a.com", "Gift2020");
         ServiceTestBase.authenticateClientWithToken(adService, token);
         
         FilterDto filter = new FilterDto();
