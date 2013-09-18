@@ -13,6 +13,18 @@
         </properties>
     </action>
     <action>
+        <actionName>CUSTOM-env=local-dev - skip tests</actionName>
+        <displayName>env=local-dev - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>local-dev</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
         <actionName>CUSTOM-env=venefica-live - skip tests</actionName>
         <displayName>env=venefica-live - skip tests</displayName>
         <goals>
@@ -79,5 +91,18 @@
         <activatedProfiles>
             <activatedProfile>integration</activatedProfile>
         </activatedProfiles>
+    </action>
+    
+    <action>
+        <actionName>CUSTOM-deploy into local tomcat with local-dev env</actionName>
+        <displayName>deploy into local tomcat with local-dev env</displayName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <netbeans.deploy>true</netbeans.deploy>
+            <skipTests>true</skipTests>
+            <env>local-dev</env>
+        </properties>
     </action>
 </actions>
