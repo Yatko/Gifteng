@@ -485,7 +485,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User currentUser = getCurrentUser();
         boolean includeOnlyCannotRequest = (filter != null && filter.getIncludeOnlyCannotRequest() != null) ? filter.getIncludeOnlyCannotRequest() : false;
         boolean includeCannotRequest = (filter != null && filter.getIncludeCannotRequest() != null) ? filter.getIncludeCannotRequest() : false;
-        //boolean includeCanRequest = (includeOnlyCannotRequest == false && includeCannotRequest == false);
         
         // TODO: Optimize this
         // Get current user's bookmarks

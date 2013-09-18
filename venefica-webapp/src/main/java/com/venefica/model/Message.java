@@ -44,7 +44,7 @@ public class Message {
     private boolean hiddenByRecipient;
     private boolean hiddenBySender;
     
-    @Basic(optional = false)
+    @Column(length = 2000)
     private String text;
     
     @Column(name = "readd")

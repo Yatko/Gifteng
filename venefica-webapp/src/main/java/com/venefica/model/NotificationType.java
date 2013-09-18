@@ -10,10 +10,6 @@ package com.venefica.model;
  */
 public enum NotificationType {
     
-    //invitation service
-    //INVITATION_REQUESTED("invitation-request"), //sending out the Invitation Code
-    //INVITATION_WILL_EXPIRE("invitation-reminder"), //when there is a small amount of time till the invitation will expire (invitation code reminder)
-    
     //user management service
     //PASSWORD_RESET_REQUESTED("forgot-password"), //this will contain the link to reset password
     FOLLOWER_ADDED("follower-new"), //someone followed me

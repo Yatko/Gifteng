@@ -8,6 +8,7 @@ import com.venefica.common.MailChimpSender;
 import com.venefica.common.MailException;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
+import com.venefica.config.InvitationConfig;
 import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
 import com.venefica.model.UserType;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.jws.WebService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,17 +34,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvitationServiceImpl extends AbstractService implements InvitationService {
 
     private static final String INVITATION_REQUEST_TEMPLATE = "invitation-request/";
-    private static final String INVITATION_REQUEST_SUBJECT_TEMPLATE = INVITATION_REQUEST_TEMPLATE + "subject.vm";
-    private static final String INVITATION_REQUEST_HTML_MESSAGE_TEMPLATE = INVITATION_REQUEST_TEMPLATE + "message.html.vm";
-    private static final String INVITATION_REQUEST_PLAIN_MESSAGE_TEMPLATE = INVITATION_REQUEST_TEMPLATE + "message.txt.vm";
+    
+    //spcial invitation request message for users with defined zipcodes
+    private static final String INVITATION_REQUEST_1_TEMPLATE = INVITATION_REQUEST_TEMPLATE + "1/";
+    private static final String INVITATION_REQUEST_1_SUBJECT_TEMPLATE = INVITATION_REQUEST_1_TEMPLATE + "subject.vm";
+    private static final String INVITATION_REQUEST_1_HTML_MESSAGE_TEMPLATE = INVITATION_REQUEST_1_TEMPLATE + "message.html.vm";
+    private static final String INVITATION_REQUEST_1_PLAIN_MESSAGE_TEMPLATE = INVITATION_REQUEST_1_TEMPLATE + "message.txt.vm";
+    
+    //other type of invitation request message for users being outside of the defined zipcodes
+    private static final String INVITATION_REQUEST_2_TEMPLATE = INVITATION_REQUEST_TEMPLATE + "2/";
+    private static final String INVITATION_REQUEST_2_SUBJECT_TEMPLATE = INVITATION_REQUEST_2_TEMPLATE + "subject.vm";
+    private static final String INVITATION_REQUEST_2_HTML_MESSAGE_TEMPLATE = INVITATION_REQUEST_2_TEMPLATE + "message.html.vm";
+    private static final String INVITATION_REQUEST_2_PLAIN_MESSAGE_TEMPLATE = INVITATION_REQUEST_2_TEMPLATE + "message.txt.vm";
     
     @Inject
     private InvitationDao invitationDao;
     @Inject
     private MailChimpSender mailChimpSender;
+    @Inject
+    private InvitationConfig invitationConfig;
     
-    private final boolean useEmailSender = false;
-    private final boolean useMailChimp = true;
+    private final boolean useEmailSender = true;
+    private final boolean useMailChimp = false;
     
     @Override
     @Transactional
@@ -83,12 +96,30 @@ public class InvitationServiceImpl extends AbstractService implements Invitation
                 vars.put("invitationCode", code);
                 vars.put("invitation", invitation);
 
-                emailSender.sendHtmlEmailByTemplates(
-                        INVITATION_REQUEST_SUBJECT_TEMPLATE,
-                        INVITATION_REQUEST_HTML_MESSAGE_TEMPLATE,
-                        INVITATION_REQUEST_PLAIN_MESSAGE_TEMPLATE,
-                        email,
-                        vars);
+                String subject;
+                String htmlMessage;
+                String plainMessage;
+                boolean containsZipcode = false;
+                
+                if ( invitationConfig.getZipCodes() != null ) {
+                    if ( invitationConfig.getZipCodes().contains(zipcode) ) {
+                        containsZipcode = true;
+                    } else if ( invitationConfig.getZipCodes().contains(StringUtils.stripStart(zipcode, "0")) ) {
+                        containsZipcode = true;
+                    }
+                }
+                        
+                if ( containsZipcode ) {
+                    subject = INVITATION_REQUEST_1_SUBJECT_TEMPLATE;
+                    htmlMessage = INVITATION_REQUEST_1_HTML_MESSAGE_TEMPLATE;
+                    plainMessage = INVITATION_REQUEST_1_PLAIN_MESSAGE_TEMPLATE;
+                } else {
+                    subject = INVITATION_REQUEST_2_SUBJECT_TEMPLATE;
+                    htmlMessage = INVITATION_REQUEST_2_HTML_MESSAGE_TEMPLATE;
+                    plainMessage = INVITATION_REQUEST_2_PLAIN_MESSAGE_TEMPLATE;
+                }
+                
+                emailSender.sendHtmlEmailByTemplates(subject, htmlMessage, plainMessage, email, vars);
             } catch ( MailException ex ) {
                 logger.error("Email exception", ex);
                 throw new InvitationException(ex.getErrorCode(), "Could not send invitation mail!");
