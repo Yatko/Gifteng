@@ -107,6 +107,7 @@
         <url-pattern>/services/*</url-pattern>
     </servlet-mapping>
     
+    <!--
     <servlet>
         <servlet-name>InvitationServiceImplService</servlet-name>
         <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
@@ -176,5 +177,5 @@
         <servlet-name>UtilityServiceImplService</servlet-name>
         <url-pattern>/UtilityServiceImplService</url-pattern>
     </servlet-mapping>
-    
+    -->
 </web-app>
