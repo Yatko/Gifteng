@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.venefica.config.email;
+package com.venefica.config;
 
 import com.venefica.common.EmailSender;
 import com.venefica.common.MailChimpSender;

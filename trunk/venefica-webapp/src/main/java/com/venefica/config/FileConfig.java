@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.venefica.config.file;
+package com.venefica.config;
 
 import com.venefica.common.FileUpload;
 import javax.inject.Inject;

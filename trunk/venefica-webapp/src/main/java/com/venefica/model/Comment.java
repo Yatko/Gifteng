@@ -2,6 +2,7 @@ package com.venefica.model;
 
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +37,7 @@ public class Comment {
     @ForeignKey(name = "comment_usr_fk")
     private User publisher;
     
-    @Basic(optional = false)
+    @Column(length = 255)
     private String text;
     
     @Basic(optional = false)

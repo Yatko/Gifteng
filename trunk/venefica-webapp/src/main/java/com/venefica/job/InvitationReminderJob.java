@@ -20,7 +20,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- *
+ * When there is a small amount of time till the invitation will expire (invitation code reminder).
+ * 
  * @author gyuszi
  */
 @DisallowConcurrentExecution
