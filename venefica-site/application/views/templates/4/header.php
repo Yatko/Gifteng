@@ -327,7 +327,7 @@ $is_logged = isLogged();
 
                     <ul class="nav pull-right">
                         <li>
-                            <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
+                            <a href="http://gifteng.zendesk.com/home" target="_blank"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
                         <li class="hidden-phone">
                             <a href="#" onclick="startPostModal();"><i class="ge-icon-giftbox text-inverted" style="font-size: 1.25em;"></i></a>
@@ -341,7 +341,7 @@ $is_logged = isLogged();
 
                     <ul class="nav pull-right">
                         <li>
-                            <a href="http://gifteng.zendesk.com/home"><i class="ge-icon-help text-inverted"></i></a>
+                            <a href="http://gifteng.zendesk.com/home" target="_blank"><i class="ge-icon-help text-inverted"></i></a>
                         </li>
                         <li class="hidden-phone">
                             <a href="<?=base_url()?>authentication/login"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>

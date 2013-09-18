@@ -141,7 +141,7 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                         <div class="row-fluid">
                             <div class="span8 offset2">
                                 <select name="invitation_source" id="invitation_source" class="select-block select-info">
-                                    <option value="0">How did you hear about us?</option>
+                                    <option value="">How did you hear about us?</option>
                                     
                         <? foreach ( lang('invitation_source_list') as $source ): ?>
                                     <option value="<?=$source?>" <?=set_select('invitation_source', $source)?>><?=$source?></option> 

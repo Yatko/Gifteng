@@ -25,14 +25,16 @@ $message_link = base_url().'profile?message&'.$request_id;
 $read = $message->read;
 
 if ( trim($ad_title) == '' ) $ad_title = '-';
+
 /*
-	if (strlen($text) > MESSAGE_MAX_LENGTH) {
-	    $text_rest = substr($text, MESSAGE_MAX_LENGTH);
-	    $text = substr($text, 0, MESSAGE_MAX_LENGTH);
-	} else {
-	    $text_rest = '';
-	}
+if (strlen($text) > MESSAGE_MAX_LENGTH) {
+    $text_rest = substr($text, MESSAGE_MAX_LENGTH);
+    $text = substr($text, 0, MESSAGE_MAX_LENGTH);
+} else {
+    $text_rest = '';
+}
 */
+$text_rest = '';
 
 ?>
 

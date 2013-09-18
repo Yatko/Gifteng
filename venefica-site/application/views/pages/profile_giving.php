@@ -32,6 +32,7 @@ $is_owner = isOwner($user);
                 
                 if ( $('.ge-no-ad').length > 0 ) {
                     $('.ge-no-ad').addClass('hide');
+                    $('.ge-browse').html('<div class="span3"></div><div class="span3"></div><div class="span3"></div><div class="span3"></div>');
                 }
 
                 if ( $('#ad_' + adId).length === 0 ) {
@@ -44,7 +45,7 @@ $is_owner = isOwner($user);
                     } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
                         //TODO
                     } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
-                        $('#ad_' + adId).html(response.<?=AJAX_STATUS_RESULT?>);
+                        $('#ad_' + adId).html(response.<?=AJAX_STATUS_RESULT?>.<?=AD_GIVING_HTML?>);
                     } else {
                         //TODO: unknown response received
                     }
@@ -99,21 +100,21 @@ $is_owner = isOwner($user);
                     <div class="well ge-well">
                         <div class="row-fluid">
                             <div class="span10 offset1 text-center">
-                                    <img src="<?=BASE_PATH?>images/ge-post_your_first_gift.jpg" width="800" height="500" class="hidden-phone" alt="Post Your First Gift Now!" />
-                                    <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" class="visible-phone" alt="Post Your First Gift Now!" />
+                                <img src="<?=BASE_PATH?>images/ge-post_your_first_gift.jpg" width="800" height="500" class="hidden-phone" alt="Post Your First Gift Now!" />
+                                <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" class="visible-phone" alt="Post Your First Gift Now!" />
                             </div>
-                        </div>
-                        <div class="row-fluid">
-                                <div class="ge-action">
-                                        <div class="span4 offset4 text-center">
-                                                <button data-target="#postContainer" data-toggle="modal" class="btn btn-small btn-block btn-ge"><i class="ge-icon-giftbox"></i>Post Your First Gift Now!</button>
-                                        </div>
-                                </div>
                         </div>
                         <div class="row-fluid">
                             <div class="ge-action">
                                 <div class="span4 offset4 text-center">
-                                        <a href="<?=base_url()?>browse"><span style="font-size: 90%;color: #6f6f6f;margin-bottom: 19px;">Or click here to see what others are giving away.</span></a>
+                                    <button data-target="#postContainer" data-toggle="modal" class="btn btn-small btn-block btn-ge"><i class="ge-icon-giftbox"></i>Post Your First Gift Now!</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="ge-action">
+                                <div class="span4 offset4 text-center">
+                                    <a href="<?=base_url()?>browse"><span style="font-size: 90%;color: #6f6f6f;margin-bottom: 19px;">Or click here to see what others are giving away.</span></a>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +127,7 @@ $is_owner = isOwner($user);
                     <div class="well ge-well">
                         <div class="row-fluid">
                             <div class="span10 offset1 text-center">
-                                    <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
+                                <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
                             </div>
                         </div>
                     </div>

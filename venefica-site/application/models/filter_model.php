@@ -20,6 +20,9 @@ class Filter_model extends CI_Model {
     var $hasPhoto; //boolean
     var $type; //enum: MEMBER, BUSINESS
     var $includeOwned; //boolean
+    var $orderAsc; //boolean
+    var $includeCannotRequest; //bolean
+    var $includeOnlyCannotRequest; //boolean
     
     public function __construct() {
         log_message(DEBUG, "Initializing Filter_model");
