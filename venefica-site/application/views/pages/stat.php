@@ -10,8 +10,8 @@
 
 	<div class="row">
 	    <div class="span12">
-	        <div class="text-center ge-bottomspace">
-	            Top Giftengers
+	        <div class="text-center">
+	            <h4>Top Giftengers</h4>
 	        </div>
 	    </div>
 	</div>
