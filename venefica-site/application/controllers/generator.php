@@ -4,8 +4,13 @@ class Generator extends CI_Controller {
     
     private $initialized = false;
     
-    function get_photo($file, $width, $height) {
+    function get_photo($file, $width, $height, $folder) {
         $this->init();
+        
+        //log_message(ERROR, 'file:     ' . $file);
+        //log_message(ERROR, 'width:    ' . $width);
+        //log_message(ERROR, 'height:   ' . $height);
+        //log_message(ERROR, 'folder:   ' . $folder);
         
         $this->session->keep_all_flashdata();
         
@@ -15,11 +20,17 @@ class Generator extends CI_Controller {
             return;
         }
         
+        if ( $folder == null || empty($folder) ) {
+            $folder = TEMP_FOLDER;
+        } else {
+            $folder = './' . $folder;
+        }
+        
         //$this->image_lib->clear();
         $config['image_library'] = 'gd2';
         $config['quality'] = '90%'; // set quality
         $config['dynamic_output'] = true; // set to true to generate it dynamically
-        $config['source_image'] = TEMP_FOLDER .'/'. $file;
+        $config['source_image'] = $folder .'/'. $file;
         $config['maintain_ratio'] = true;
         if ( $width ) {
             $config['width'] = $width;

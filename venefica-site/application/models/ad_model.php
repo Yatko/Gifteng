@@ -164,7 +164,7 @@ class Ad_model extends CI_Model {
     public function getImageUrl() {
         $url = '';
         if ( $this->hasImage() ) {
-            $url = SERVER_URL.$this->image->url;
+            $url = get_image_url($this->image->url);
         }
         if ( trim($url) == '' ) {
             $url = DEFAULT_AD_URL;

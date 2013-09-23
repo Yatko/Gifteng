@@ -3,6 +3,7 @@
 /**
  * Input params:
  * 
+ * user: User_model
  * bookmarks: array of Ad_model
  */
 

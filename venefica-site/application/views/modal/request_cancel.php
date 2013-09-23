@@ -1,10 +1,9 @@
 <script language="javascript">
     var requestCancelCallerElement;
     
-    function startRequestCancelModal(callerElement, requestType, requestId, adId, userId) {
+    function startRequestCancelModal(callerElement, requestId, adId, userId) {
         requestCancelCallerElement = callerElement;
         
-        $("#request_cancel_form input[name=requestType]").val(requestType);
         $("#request_cancel_form input[name=requestId]").val(requestId);
         $("#request_cancel_form input[name=adId]").val(adId);
         $("#request_cancel_form input[name=userId]").val(userId);
@@ -22,12 +21,11 @@
             $(callerElement).attr("disabled", true);
         }
         
-        var $requestType = $("#request_cancel_form input[name=requestType]");
         var $requestId = $("#request_cancel_form input[name=requestId]");
         var $adId = $("#request_cancel_form input[name=adId]");
         var $userId = $("#request_cancel_form input[name=userId]");
         
-        var requestType = $requestType.val();
+        var requestType = 'receiving';
         var requestId = $requestId.val();
         var adId = $adId.val();
         var userId = $userId.val();
@@ -37,7 +35,6 @@
                 $(callerElement).removeAttr("disabled");
             }
             
-            $requestType.val('');
             $requestId.val('');
             $adId.val('');
             $userId.val('');
@@ -64,7 +61,6 @@
     <div class="modal-footer">
     	<div class="ge-modal_footer">
             <form id="request_cancel_form">
-                <input type="hidden" name="requestType"/>
                 <input type="hidden" name="requestId"/>
                 <input type="hidden" name="adId"/>
                 <input type="hidden" name="userId"/>

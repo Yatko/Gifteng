@@ -4,7 +4,7 @@ class Stat extends CI_Controller {
     
     private $initialized = false;
     
-    const USERS_NUM = 8;
+    const USERS_NUM = 9;
     
     public function view() {
         $this->init();
@@ -21,6 +21,7 @@ class Stat extends CI_Controller {
         $data['users'] = $users;
         
         $this->load->view('templates/'.TEMPLATES.'/header');
+        $this->load->view('javascript/follow');
         $this->load->view('pages/stat', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
     }

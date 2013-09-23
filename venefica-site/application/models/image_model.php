@@ -62,7 +62,7 @@ class Image_model extends CI_Model {
             if ( $this->isUploaded() ) {
                 $url = base_url() . 'get_photo/' . $this->url;
             } else {
-                $url = SERVER_URL . $this->url;
+                $url = get_image_url($this->url);
             }
         }
         return $url;

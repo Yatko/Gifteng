@@ -106,6 +106,13 @@ class Request_model extends CI_Model {
         return false;
     }
     
+    public function isCanceled() {
+        if ( $this->status == Request_model::STATUS_CANCELED ) {
+            return true;
+        }
+        return false;
+    }
+    
     public function isPending() {
         if ( $this->status == Request_model::STATUS_PENDING ) {
             return true;
@@ -116,7 +123,8 @@ class Request_model extends CI_Model {
     public function isExpired() {
         if (
             $this->status == Request_model::STATUS_UNACCEPTED ||
-            $this->status == Request_model::STATUS_DECLINED
+            $this->status == Request_model::STATUS_DECLINED ||
+            $this->status == Request_model::STATUS_CANCELED
         ) {
             return true;
         }

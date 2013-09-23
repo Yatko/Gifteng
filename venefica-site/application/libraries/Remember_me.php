@@ -40,13 +40,12 @@ class Remember_me {
     private $requirelibrary = 'usermanagement_service';
     // Provide the reference to your authorize function here as a string
     private $authfunc = ''; //'Usermanagement_service::authorize';
-
-    function __construct() {
-        $this->CI =& get_instance();
-        $this->CI->load->library('user_agent');
-    }
-
+    
+    private $initialized = false;
+    
     public function setCookie($netid = "", $token = "", $nocookie = false) {
+        $this->init();
+        
         if (!$netid && !$nocookie) {
             show_error("setCookie request missing netid");
             return;
@@ -125,6 +124,8 @@ class Remember_me {
     }
 
     public function deleteCookie() {
+        $this->init();
+        
         $this->CI->session->sess_destroy();
 
         $query = $this->CI->db->get_where($this->table_name, array(
@@ -145,6 +146,8 @@ class Remember_me {
     }
 
     public function verifyCookie() {
+        $this->init();
+        
         if (!$this->CI->input->cookie($this->getCookieName())) {
             return false;
         }
@@ -195,6 +198,16 @@ class Remember_me {
             );
         } else {
             return false;
+        }
+    }
+    
+    private function init() {
+        if ( !$this->initialized ) {
+            $this->CI =& get_instance();
+            
+            $this->CI->load->library('user_agent');
+            
+            $this->initialized = true;
         }
     }
     

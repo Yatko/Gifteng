@@ -36,7 +36,7 @@
 
             <div class="row-fluid ge-message ge-input ge-text">
                 <div class="span9">
-                    <textarea name="messageText" placeholder="Your message ..."></textarea>
+                    <textarea name="messageText" maxlength="<?=MESSAGE_MAX_SIZE?>" placeholder="Your message ..."></textarea>
                 </div>
                 <div class="span3">
                     <button type="button" onclick="add_message(this);" class="btn btn-mini btn-block">Add</button>

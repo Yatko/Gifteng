@@ -20,7 +20,7 @@
 
             <div class="row-fluid ge-message ge-input ge-text">
                 <div class="span9">
-                    <textarea name="commentText" placeholder="Your comment ..."></textarea>
+                    <textarea name="commentText" maxlength="<?=COMMENT_MAX_SIZE?>" placeholder="Your comment ..."></textarea>
                 </div>
                 <div class="span3">
                     <button type="button" style="height:60px;" onclick="add_comment(this);" class="btn btn-mini btn-block">Add</button>

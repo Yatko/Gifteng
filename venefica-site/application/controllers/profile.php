@@ -183,10 +183,14 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     private function favorite($user) {
-        try {
-            $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
-        } catch ( Exception $ex ) {
-            $bookmarks = null;
+        $is_owner = isOwner($user);
+        $bookmarks = null;
+        
+        if ( $is_owner ) {
+            try {
+                $bookmarks = $this->ad_service->getBookmarkedAds($user->id);
+            } catch ( Exception $ex ) {
+            }
         }
         
         $modal = $this->getProfileModal();
@@ -203,7 +207,7 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        if ( isOwner($user) ) {
+        if ( $is_owner ) {
             //only owner can see bookmark list
             $this->load->view('pages/profile_bookmark', $data);
         }
@@ -345,22 +349,26 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     private function notification($user) {
-        if ( $_POST ) {
-            $user_setting = new UserSetting_model();
-            $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
-            
+        $is_owner = isOwner($user);
+        $user_setting = null;
+        
+        if ( $is_owner ) {
+            if ( $_POST ) {
+                $user_setting = new UserSetting_model();
+                $user_setting->notifiableTypes = hasElement($_POST, 'notifiableTypes') ? $this->input->post('notifiableTypes') : null;
+
+                try {
+                    $this->usermanagement_service->saveUserSetting($user_setting);
+                } catch ( Exception $ex ) {
+                }
+
+                redirect('/profile?notification');
+            }
+
             try {
-                $this->usermanagement_service->saveUserSetting($user_setting);
+                $user_setting = $this->usermanagement_service->getUserSetting();
             } catch ( Exception $ex ) {
             }
-            
-            redirect('/profile?notification');
-        }
-        
-        try {
-            $user_setting = $this->usermanagement_service->getUserSetting();
-        } catch ( Exception $ex ) {
-            $user_setting = null;
         }
         
         $modal = $this->getProfileModal();
@@ -378,7 +386,7 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        if ( isOwner($user) ) {
+        if ( $is_owner ) {
             $this->load->view('pages/profile_notification', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');
@@ -390,36 +398,42 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     private function message($user) {
-        try {
-            $messages = $this->message_service->getLastMessagePerRequest();
-        } catch ( Exception $ex ) {
-            $messages = null;
-        }
+        $is_owner = isOwner($user);
+        $messages = null;
+        $request = null;
+        $ad = null;
+        $request_messages = null;
+        $currentUser = $this->usermanagement_service->loadUser();
         
-        if ( count($_GET) > 1 ) {
-            $requestId = key(array_slice($_GET, 1, 1, true));
-            
-            try {
-                $request = $this->ad_service->getRequestById($requestId);
-            } catch ( Exception $ex ) {
-                $request = null;
+        if ( $is_owner ) {
+            if ( count($_GET) > 1 ) {
+                $requestId = key(array_slice($_GET, 1, 1, true));
+
+                try {
+                    $request = $this->ad_service->getRequestById($requestId);
+                } catch ( Exception $ex ) {
+                }
+
+                try {
+                    $ad = $this->ad_service->getAdById($request->adId);
+                } catch ( Exception $ex ) {
+                }
+
+                try {
+                    $request_messages = $this->message_service->getMessagesByRequest($requestId);
+                } catch ( Exception $ex ) {
+                }
+                
+                try {
+                    $user = $this->usermanagement_service->refreshUser();
+                } catch ( Exception $ex ) {
+                }
             }
             
             try {
-                $ad = $this->ad_service->getAdById($request->adId);
+                $messages = $this->message_service->getLastMessagePerRequest();
             } catch ( Exception $ex ) {
-                $ad = null;
             }
-            
-            try {
-                $request_messages = $this->message_service->getMessagesByRequest($requestId);
-            } catch ( Exception $ex ) {
-                $request_messages = null;
-            }
-        } else {
-            $request = null;
-            $ad = null;
-            $request_messages = null;
         }
         
         $modal = $this->getProfileModal();
@@ -430,6 +444,7 @@ class Profile extends CI_Controller {
         $data['request'] = $request;
         $data['ad'] = $ad;
         $data['request_messages'] = $request_messages;
+        $data['currentUser'] = $currentUser;
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
@@ -438,7 +453,7 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
-        if ( isOwner($user) ) {
+        if ( $is_owner ) {
             $this->load->view('pages/profile_message', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');
@@ -449,10 +464,14 @@ class Profile extends CI_Controller {
      * @param User_model $user
      */
     private function setting($user) {
-        try {
-            $networks = $this->usermanagement_service->getConnectedSocialNetworks();
-        } catch ( Exception $ex ) {
-            $networks = array();
+        $is_owner = isOwner($user);
+        $networks = array();
+        
+        if ( $is_owner ) {
+            try {
+                $networks = $this->usermanagement_service->getConnectedSocialNetworks();
+            } catch ( Exception $ex ) {
+            }
         }
         
         $modal = $this->getProfileModal();
@@ -464,7 +483,7 @@ class Profile extends CI_Controller {
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/social');
         $this->load->view('pages/profile', $data);
-        if ( isOwner($user) ) {
+        if ( $is_owner ) {
             $this->load->view('pages/profile_setting', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');

@@ -148,7 +148,7 @@ if ( $ad_is_business ) {
                     
                     <? foreach ($messages as $message): ?>
                         
-                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true)); ?>
+                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true, 'currentUser' => $currentUser)); ?>
                         
                     <? endforeach; ?>
 

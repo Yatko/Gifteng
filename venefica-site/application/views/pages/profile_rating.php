@@ -3,7 +3,8 @@
 /**
  * Input params:
  * 
- * 
+ * user: User_model
+ * ratings: array of Rating_model
  */
 
 ?>

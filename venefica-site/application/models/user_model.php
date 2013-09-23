@@ -93,7 +93,7 @@ class User_model extends CI_Model {
     public function getAvatarUrl() {
         $url = '';
         if ( $this->avatar != null ) {
-            $url = SERVER_URL.$this->avatar->url;
+            $url = get_image_url($this->avatar->url);
         }
         if ( trim($url) == '' ) {
             $url = DEFAULT_USER_URL;

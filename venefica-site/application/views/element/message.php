@@ -7,22 +7,32 @@
  * showTitle: boolean
  * showDelete: boolean
  * showProfileLinks: boolean
+ * currentUser: User_model
  */
 
 if ( !isset($showTitle) ) $showTitle = false;
 if ( !isset($showDelete) ) $showDelete = false;
 if ( !isset($showProfileLinks)) $showProfileLinks = false;
 
-$profile_link = $message->getFromProfileUrl();
-$img = $message->getFromAvatarUrl();
-$name = $message->fromFullName;
+if ( !$showProfileLinks && $message->fromId == $currentUser->id ) {
+    $profile_link = $message->getToProfileUrl();
+    $name = $message->toFullName;
+    $img = $message->getToAvatarUrl();
+    $text = '&crarr; ' . $message->getSafeText();
+    $read = true;
+} else {
+    $profile_link = $message->getFromProfileUrl();
+    $name = $message->fromFullName;
+    $img = $message->getFromAvatarUrl();
+    $text = $message->getSafeText();
+    $read = $message->read;
+}
+
 $since = $message->getCreateDateHumanTiming();
-$text = $message->getSafeText();
 $id = $message->id;
 $ad_title = $message->getSafeAdTitle();
 $request_id = $message->requestId;
 $message_link = base_url().'profile?message&'.$request_id;
-$read = $message->read;
 
 if ( trim($ad_title) == '' ) $ad_title = '-';
 

@@ -46,7 +46,7 @@ if ( $ad != null ) {
                         <div class="span12">
                             <div class="row-fluid ge-message">
                                 <div class="span9 ge-text">
-                                    <textarea name="commentText" placeholder="Your comment ..."></textarea>
+                                    <textarea name="commentText" maxlength="<?=COMMENT_MAX_SIZE?>" placeholder="Your comment ..."></textarea>
                                 </div>
                                 <div class="span3 ge-text">
                                     <button type="button" onclick="add_comment(this);" class="btn btn-mini btn-block">Add</button>

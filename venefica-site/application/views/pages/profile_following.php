@@ -3,6 +3,7 @@
 /**
  * Input params:
  * 
+ * user: User_model
  * follow_users: array of User_model
  * follow_ads: array of Ad_model
  */
