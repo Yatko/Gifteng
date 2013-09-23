@@ -115,10 +115,11 @@ $route['verify/(:any)']         = 'registration/verify/$1';
 
 // helpers
 
-$route['get_photo/(:any)']                  = 'generator/get_photo/$1/0/0'; //original sized image
-$route['get_photo/(:any)/(:num)']           = 'generator/get_photo/$1/$2/$2'; //width and heoght will be the same size
-$route['get_photo/(:any)/(:num)/(:num)']    = 'generator/get_photo/$1/$2/$3';
-$route['get_photo']                         = 'generator/get_photo//0/0'; //empty image
+$route['get_photo/(:any)']                  = 'generator/get_photo/$1/0/0/'; //original sized image
+$route['get_photo/(:any)/(:num)']           = 'generator/get_photo/$1/$2/$2/'; //width and heoght will be the same size
+$route['get_photo/(:any)/(:num)/(:num)']    = 'generator/get_photo/$1/$2/$3/';
+$route['get_photo/(:any)/0/0/cache']        = 'generator/get_photo/$1/0/0/cache'; //full sized image with folder specified
+$route['get_photo']                         = 'generator/get_photo//0/0/'; //empty image
 
 // statistics
 
@@ -132,6 +133,7 @@ $route['contact'] = 'contact/view';
 
 $route['totegiveaway']  = 'landing/totegiveaway';
 $route['jobs']          = 'landing/jobs';
+$route['help']          = 'landing/help';
 
 
 $route['(:any)'] = 'index/view';

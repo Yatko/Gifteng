@@ -12,8 +12,6 @@ class Browse extends CI_Controller {
     const CONTINUING_AD_NUM = 10;
     const COMMENTS_NUM = 2;
     
-    const SESSION_KEY_NAME = 'browse_filter';
-    
     public function view() {
         $this->init();
         
@@ -177,26 +175,25 @@ class Browse extends CI_Controller {
         if ( $query != null && trim($query) == "" ) {
             $query = null;
         }
-        
-        if ( $query == null && $category == null && $type == null ) {
-            return null;
+        if ( $type == null ) {
+            $type = Browse::TYPE_NEWEST;
         }
         
         $filter = new Filter_model();
         $filter->searchString = $query;
         $filter->categories = ($category != null ? array($category) : null);
-        if ( $type != null ) {
-            if ( $type == Browse::TYPE_NEWEST ) {
-                $filter->orderAsc = false;
-                $filter->includeCannotRequest = false;
-            } else if ( $type == Browse::TYPE_OLDEST ) {
-                $filter->orderAsc = true;
-                $filter->includeCannotRequest = false;
-            } else if ( $type == Browse::TYPE_GIFTED ) {
-                $filter->orderAsc = false;
-                $filter->includeOnlyCannotRequest = true;
-                $filter->includeCannotRequest = true;
-            }
+        if ( $type == Browse::TYPE_NEWEST ) {
+            $filter->orderAsc = false;
+            $filter->includeCannotRequest = true;
+            $filter->includeInactive = false;
+        } else if ( $type == Browse::TYPE_OLDEST ) {
+            $filter->orderAsc = true;
+            $filter->includeCannotRequest = true;
+            $filter->includeInactive = false;
+        } else if ( $type == Browse::TYPE_GIFTED ) {
+            $filter->orderAsc = false;
+            $filter->includeCannotRequest = true;
+            $filter->includeOnlyInactive = true;
         }
         return $filter;
     }

@@ -2,13 +2,25 @@
 
 
 define('BASE_PATH', base_url().'assets/'.TEMPLATES.'/');
-define('JS_PATH', BASE_PATH.'js/');
-define('CSS_PATH', BASE_PATH.'css/');
-define('IMG_PATH', BASE_PATH.'img/');
+define('JS_PATH',   BASE_PATH.'js/');
+define('CSS_PATH',  BASE_PATH.'css/');
+define('IMG_PATH',  BASE_PATH.'img/');
 
-define('DEFAULT_USER_URL', BASE_PATH.'temp-sample/ge-no-profile-picture.png');
-define('DEFAULT_AD_URL', BASE_PATH.'temp-sample/gifteng.png');
+//define('IMAGE_URL_PREFIX',  base_url().'get_photo/'); //live server
+define('IMAGE_URL_PREFIX',  'http://veneficalabs.com/gifteng/'.'get_photo/'); //local dev server
 
+define('DEFAULT_USER_URL',  BASE_PATH.'temp-sample/ge-no-profile-picture.png');
+define('DEFAULT_AD_URL',    BASE_PATH.'temp-sample/gifteng.png');
+
+
+if ( ! function_exists('get_image_url')) {
+    function get_image_url($url) {
+        //return IMAGE_SERVER_URL . $url;
+        
+        $img_num = str_replace("/images/img", "", $url);
+        return IMAGE_URL_PREFIX . $img_num . '/0/0/cache';
+    }
+}
 
 
 /**

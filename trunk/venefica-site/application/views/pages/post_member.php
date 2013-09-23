@@ -76,7 +76,7 @@ if ( $is_modal ) {
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Giving makes you live longer. Seriously, google it. :)';
+            if ( $message == '' ) $message = 'Giving makes you live longer. Seriously, it\'s true.';
             
             if ( $is_new && is_empty($image->getDetectedImageUrl()) ) {
                 $image_text = 'Add photo';

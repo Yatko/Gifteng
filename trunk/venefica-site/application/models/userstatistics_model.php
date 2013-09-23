@@ -13,6 +13,7 @@ class UserStatistics_model extends CI_Model {
     var $numFollowers = 0; //int
     var $numFollowings = 0; //int
     var $numRatings = 0; //int
+    var $numUnreadMessages = 0; //int
     
     public function __construct($obj = null) {
         log_message(DEBUG, "Initializing UserStatistics_model");
@@ -24,6 +25,7 @@ class UserStatistics_model extends CI_Model {
             $this->numFollowers = getField($obj, 'numFollowers');
             $this->numFollowings = getField($obj, 'numFollowings');
             $this->numRatings = getField($obj, 'numRatings');
+            $this->numUnreadMessages = getField($obj, 'numUnreadMessages');
         }
     }
     

@@ -5,6 +5,9 @@ define('SERVER_URL',                'http://veneficalabs.com:8080/venefica'); //
 //define('SERVER_URL',                'http://gifteng.jelastic.servint.net/gifteng'); //another dev server (unused)
 //define('SERVER_URL',                'http://localhost:8080/venefica'); //local server
 
+//define('IMAGE_SERVER_URL',          SERVER_URL); //live server
+//define('IMAGE_SERVER_URL',          'http://veneficalabs.com:8080/venefica'); //dev server
+
 define('AUTH_SERVICE_WSDL',         SERVER_URL.'/services/AuthService?wsdl');
 define('AD_SERVICE_WSDL',           SERVER_URL.'/services/AdService?wsdl');
 define('INVITATION_SERVICE_WSDL',   SERVER_URL.'/services/InvitationService?wsdl');
@@ -15,8 +18,8 @@ define('ADMIN_SERVICE_WSDL',        SERVER_URL.'/services/AdminService?wsdl');
 
 define('CONNECT_TO_FACEBOOK_URL',   SERVER_URL.'/connect/facebook?scope=email,publish_stream,user_status&display=popup');
 define('SIGN_IN_FACEBOOK_URL',      SERVER_URL.'/signin/facebook?scope=email,publish_stream,user_status&display=popup');
-define('CONNECT_TO_TWITTER_URL',   SERVER_URL.'/connect/twitter?display=popup');
-define('SIGN_IN_TWITTER_URL',      SERVER_URL.'/signin/twitter?display=popup');
+define('CONNECT_TO_TWITTER_URL',    SERVER_URL.'/connect/twitter?display=popup');
+define('SIGN_IN_TWITTER_URL',       SERVER_URL.'/signin/twitter?display=popup');
 
 define('DEBUG', 'debug');
 define('INFO',  'info');
@@ -37,8 +40,10 @@ define('USER_FOLLOWERS_NUM', 'user_followers_num');
 //define('DATE_FORMAT', 'd-m-Y'); //dd-mm-yyyy
 define('MAX_ALLOWED_REQUESTS', 3);
 define('DESCRIPTION_MAX_LENGTH', 750);
-define('COMMENT_MAX_LENGTH', 100);
-define('MESSAGE_MAX_LENGTH', 100);
+define('COMMENT_MAX_LENGTH', 100); ////the number of chars for a comment before truncate
+define('COMMENT_MAX_SIZE', 255); //the maximum length of a comment when editing
+define('MESSAGE_MAX_LENGTH', 100); //the number of chars for a message before truncate
+define('MESSAGE_MAX_SIZE', 2000); //the maximum length of a message when editing
 define('PASSWORD_MIN_SIZE', 6);
 define('UPLOAD_FILE_MAX_SIZE', 5 * 1024 * 1024); //in bytes
 define('UPLOAD_IMAGE_MIN_WIDTH', 400); //in pixels

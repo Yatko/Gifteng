@@ -90,6 +90,8 @@ if ($ad_subtitle != '') {
 }
 if ($ad_price != '') {
     $ad_price = '$' . $ad_price;
+} else {
+    $ad_price = '$0';
 }
 
 if (strlen($ad_description) > DESCRIPTION_MAX_LENGTH) {
@@ -191,6 +193,10 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                                     $request_js = '';
                                                     $request_class = 'class="btn btn-large btn-block disabled"';
                                                     $request_text = 'REQUEST DECLINED';
+                                                } else if ($user_request->isCanceled()) {
+                                                    $request_js = '';
+                                                    $request_class = 'class="btn btn-large btn-block disabled"';
+                                                    $request_text = 'REQUEST CANCELED';
                                                 } else if ($ad_is_sold) {
                                                     $request_js = '';
                                                     $request_class = 'class="btn btn-large btn-block disabled"';

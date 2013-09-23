@@ -58,7 +58,7 @@ class Message_model extends CI_Model {
         if ( $url == null || trim($url) == '' ) {
             return DEFAULT_USER_URL;
         }
-        return SERVER_URL.$url;
+        return get_image_url($url);
     }
     
     public function getFromAvatarUrl() {
@@ -66,7 +66,7 @@ class Message_model extends CI_Model {
         if ( $url == null || trim($url) == '' ) {
             return DEFAULT_USER_URL;
         }
-        return SERVER_URL.$url;
+        return get_image_url($url);
     }
     
     public function getToProfileUrl() {

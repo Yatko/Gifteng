@@ -126,7 +126,17 @@ if ( $is_owner ) {
                     </div>
 
     <? elseif( $ad->expired ): ?>
-
+                    
+                    <div class="row-fluid ge-text ge-description">
+                        <div class="span12">
+                            <p class="text-center">
+                                <span class="fui-arrow-right"></span>
+                                Expired
+                                <span class="fui-arrow-left"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div class="row-fluid ge-text ge-description">
                         <div class="span6">
                             <? /** ?>

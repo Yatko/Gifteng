@@ -25,6 +25,12 @@ class Landing extends CI_Controller {
         $this->load->view('iframe', $data);
         /**/
     }
+    
+    public function help() {
+        $this->init();
+        
+        redirect('http://gifteng.zendesk.com/home');
+    }
 
     // internal functions
     

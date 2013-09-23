@@ -45,6 +45,9 @@ class Post_member extends CI_Controller {
         
         if ( $this->is_first_page ) {
             $ad = $this->ad_service->getAdById($adId);
+            if ( $ad->owner == false ) {
+                redirect("/view/" . $adId);
+            }
             $this->storeAd($ad);
         }
         
@@ -94,6 +97,7 @@ class Post_member extends CI_Controller {
             $this->load->model('user_model');
             $this->load->model('userstatistics_model');
             $this->load->model('category_model');
+            $this->load->model('request_model');
             
             $this->is_first_page = ($_POST || $_FILES ? false : true);
             if ( $this->is_first_page ) {

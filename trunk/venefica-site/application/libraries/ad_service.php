@@ -498,71 +498,71 @@ class Ad_service {
         }
     }
     
-    /**
-     * 
-     * @param long $adId
-     * @return array of Request_model
-     * @throws Exception
-     */
-    public function getRequests($adId) {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getRequests(array("adId" => $adId));
-            
-            $requests = array();
-            if ( hasField($result, 'request') && $result->request ) {
-                $requests = Request_model::convertRequests($result->request);
-            }
-            return $requests;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+//    /**
+//     * 
+//     * @param long $adId
+//     * @return array of Request_model
+//     * @throws Exception
+//     */
+//    public function getRequests($adId) {
+//        try {
+//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $result = $adService->getRequests(array("adId" => $adId));
+//            
+//            $requests = array();
+//            if ( hasField($result, 'request') && $result->request ) {
+//                $requests = Request_model::convertRequests($result->request);
+//            }
+//            return $requests;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Requests (adId: ' . $adId . ') request failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
     
-    /**
-     * 
-     * @param long $userId
-     * @return array of Request_model
-     * @throws Exception
-     */
-    public function getRequestsByUser($userId) {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getRequestsByUser(array("userId" => $userId));
-            
-            $requests = array();
-            if ( hasField($result, 'request') && $result->request ) {
-                $requests = Request_model::convertRequests($result->request);
-            }
-            return $requests;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Requests of user (userId: ' . $userId . ') failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+//    /**
+//     * 
+//     * @param long $userId
+//     * @return array of Request_model
+//     * @throws Exception
+//     */
+//    public function getRequestsByUser($userId) {
+//        try {
+//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $result = $adService->getRequestsByUser(array("userId" => $userId));
+//            
+//            $requests = array();
+//            if ( hasField($result, 'request') && $result->request ) {
+//                $requests = Request_model::convertRequests($result->request);
+//            }
+//            return $requests;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Requests of user (userId: ' . $userId . ') failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
     
-    /**
-     * 
-     * @param long $userId
-     * @return array of Request_model
-     * @throws Exception
-     */
-    public function getRequestsForUserWithoutRating($userId) {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getRequestsForUserWithoutRating(array("userId" => $userId));
-            
-            $requests = array();
-            if ( hasField($result, 'request') && $result->request ) {
-                $requests = Request_model::convertRequests($result->request);
-            }
-            return $requests;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Requests user without rating (userId: ' . $userId . ') failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+//    /**
+//     * 
+//     * @param long $userId
+//     * @return array of Request_model
+//     * @throws Exception
+//     */
+//    public function getRequestsForUserWithoutRating($userId) {
+//        try {
+//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $result = $adService->getRequestsForUserWithoutRating(array("userId" => $userId));
+//            
+//            $requests = array();
+//            if ( hasField($result, 'request') && $result->request ) {
+//                $requests = Request_model::convertRequests($result->request);
+//            }
+//            return $requests;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Requests user without rating (userId: ' . $userId . ') failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
     
     /**
      * 

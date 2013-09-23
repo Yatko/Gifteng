@@ -12,6 +12,7 @@ $bookmarks_num = $user->statistics->numBookmarks;
 $followers_num = $user->statistics->numFollowers;
 $followings_num = $user->statistics->numFollowings;
 //$ratings_num = $user->statistics->numRatings;
+$unread_messages_num = $user->statistics->numUnreadMessages;
 
 $user_about = $user->about;
 $is_owner = isOwner($user);
@@ -142,10 +143,20 @@ $active_tab = Profile::getActiveTab($active_menu);
                                             </a>
                                         </div>
                                         <div class="span4 mobile-two">
-                                            <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_MESSAGE ? 'active-tab' : '' ?>">
-                                                <i class="fui-mail"></i>
-                                                <br />Messages
-                                            </a>
+                                            <? if( $unread_messages_num > 0 ): ?>
+                                                <div class="navbar navbar-inverse"><div class="nav">
+                                                    <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_MESSAGE ? 'active-tab' : '' ?>">
+                                                        <i class="fui-mail"></i>
+                                                        <br />Messages
+                                                        <span class="navbar-new"><?= $unread_messages_num ?></span>
+                                                    </a>
+                                                </div></div>
+                                            <? else: ?>
+                                                <a href="<?= current_url() ?>?<?= Profile::MENU_MESSAGE ?>" class="btn btn-small btn-block btn-ge <?= $active_menu == Profile::MENU_MESSAGE ? 'active-tab' : '' ?>">
+                                                    <i class="fui-mail"></i>
+                                                    <br />Messages
+                                                </a>
+                                            <? endif; ?>
                                         </div>
                                         <? /** ?>
                                         <div class="span4">

@@ -26,3 +26,8 @@
     margin-left: 12px !important;
 }
 /**/
+
+.active .navbar-new {
+    background-color: #E74C3C !important;
+    display: inline !important;
+}

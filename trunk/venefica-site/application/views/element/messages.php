@@ -8,6 +8,7 @@
  * to: User_model
  * canMessage: boolean (default: true)
  * showProfileLinks: boolean
+ * currentUser: User_model
  */
 
 if ( !isset($canMessage) ) $canMessage = false;
@@ -38,7 +39,7 @@ if ( $to != null ) {
                 <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
                     <? foreach ($messages as $message): ?>
 
-                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false)); ?>
+                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false, 'currentUser' => $currentUser)); ?>
 
                     <? endforeach; ?>
                 <? endif; ?>
@@ -56,7 +57,7 @@ if ( $to != null ) {
                         <div class="span12">
                             <div class="row-fluid ge-message">
                                 <div class="span9 mobile-three ge-text">
-                                    <textarea name="messageText" placeholder="Your message ..."></textarea>
+                                    <textarea name="messageText" maxlength="<?=MESSAGE_MAX_SIZE?>" placeholder="Your message ..."></textarea>
                                 </div>
                                 <div class="span3 mobile-one ge-text">
                                     <button type="button" onclick="add_message(this);" class="btn btn-mini btn-block">Add</button>

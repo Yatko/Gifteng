@@ -47,7 +47,7 @@
             dataType: 'json',
             cache: false,
             data: {
-                requestType: requestType,
+                requestType: requestType, //possible values: giving, receiving
                 requestId: requestId,
                 adId: adId,
                 userId: userId

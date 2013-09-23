@@ -3,10 +3,12 @@
 /**
  * Input params:
  * 
+ * user: User_model
  * messages: array of Message_model
  * request: Request_model
  * ad: Ad_model
  * request_messages: array of Message_model
+ * currentUser: User_model
  */
 
 ?>
@@ -33,7 +35,7 @@
                                 
                                 <? foreach ($messages as $message): ?>
                                     
-                                    <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true, 'showProfileLinks' => false)); ?>
+                                    <? $this->load->view('element/message', array('message' => $message, 'showTitle' => true, 'showDelete' => true, 'showProfileLinks' => false, 'currentUser' => $currentUser)); ?>
                                     
                                 <? endforeach; ?>
 
@@ -81,7 +83,7 @@
                                 </div><!--./ge-subject-->
                             </div>
 
-                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true, 'showProfileLinks' => true)); ?>
+                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
 
                         </div>
                     </div><!--./ge-messages-->

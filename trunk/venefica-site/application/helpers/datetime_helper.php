@@ -32,7 +32,8 @@ if ( ! function_exists('convertTimestampToDateForComment')) {
 }
 if ( ! function_exists('convertTimestampToDateForMessage')) {
     function convertTimestampToDateForMessage($timestamp) {
-        $strDate = date("F j, Y", $timestamp);
+        //$strDate = date("F j, Y", $timestamp);
+        $strDate = date("n/j, g:i a", $timestamp);
         return $strDate;
     }
 }

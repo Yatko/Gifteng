@@ -23,6 +23,8 @@ class Filter_model extends CI_Model {
     var $orderAsc; //boolean
     var $includeCannotRequest; //bolean
     var $includeOnlyCannotRequest; //boolean
+    var $includeInactive; //boolean
+    var $includeOnlyInactive; //boolean
     
     public function __construct() {
         log_message(DEBUG, "Initializing Filter_model");

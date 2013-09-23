@@ -47,7 +47,10 @@ if( $ad->expired || $request->isExpired() ) {
                         <?
                         if ( $ad->expired ) {
                             $status_text = 'Gift expired';
+                        } else if ( $request->isCanceled() ) {
+                            $status_text = 'Request canceled';
                         } else {
+                            //DECLINED or UNACCEPTED
                             $status_text = 'Request declined';
                         }
                         ?>
@@ -111,7 +114,7 @@ if( $ad->expired || $request->isExpired() ) {
                         </div>
 
                         <div class="span12">
-                            <button onclick="startRequestCancelModal(this, 'receiving', <?=$request_id?>, <?=$ad_id?>, 0);" class="ge-request btn btn-small btn-block">
+                            <button onclick="startRequestCancelModal(this, <?=$request_id?>, <?=$ad_id?>, 0);" class="ge-request btn btn-small btn-block">
                                 Cancel Request
                                 <i class="fui-cross pull-left"></i>
                             </button>

@@ -162,7 +162,13 @@ if ( isset($ads) && is_array($ads) ) {
 //                });
 //            }
             
-            $('#browse_form select').change(function() {
+            $('#browse_search_form input[name=q]').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#browse_search_form').submit();
+                    return false;
+                }
+            });
+            $('#browse_search_form select').change(function() {
                 $(this).closest('form').trigger('submit');
             });
         });
@@ -183,9 +189,9 @@ if ( isset($ads) && is_array($ads) ) {
     </div>
 </div>
 
-<div class="row">
+<div class="row hidden-phone">
     <!-- search -->
-    <form action="<?=base_url()?>browse" method="post" id="browse_form">
+    <form action="<?=base_url()?>browse" method="post" id="browse_search_form">
     
     <div class="span10 offset1">
         <div class="ge-form">
@@ -290,10 +296,10 @@ if ( isset($ads) && is_array($ads) ) {
     
 <? else: ?>
     
-    <? if( key_exists('q', $_GET) ): ?>
-        No results for "<?=$_GET['q']?>"
+    <? if( !empty($selected_q) ): ?>
+        No results for "<?=$selected_q?>"
     <? else: ?>
-        There are no gifts!
+        No gifts found
     <? endif; ?>
     
 <? endif; ?>

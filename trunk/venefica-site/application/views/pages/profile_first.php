@@ -1,3 +1,13 @@
+<?
+
+/**
+ * Input params:
+ * 
+ * user: User_model
+ */
+
+?>
+
 <div class="row">
     <div class="span12">
         <div class="well ge-well">

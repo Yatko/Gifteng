@@ -92,7 +92,7 @@ $view_link = $ad->getViewUrl();
                         </div>
                     </div><!--./ge-subject-->
 
-                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $requestor_user, 'canMessage' => true)); ?>
+                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $requestor_user, 'canMessage' => true, 'currentUser' => $currentUser)); ?>
                 </div>
             </div>
         </div><!--./ge-messages-->
