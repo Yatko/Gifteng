@@ -39,7 +39,7 @@ if ( $to != null ) {
                 <? if( isset($messages) && is_array($messages) && count($messages) > 0 ): ?>
                     <? foreach ($messages as $message): ?>
 
-                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false, 'currentUser' => $currentUser)); ?>
+                        <? $this->load->view('element/message', array('message' => $message, 'showTitle' => false, 'showDelete' => false, 'showProfileLinks' => $showProfileLinks, 'currentUser' => $currentUser)); ?>
 
                     <? endforeach; ?>
                 <? endif; ?>
