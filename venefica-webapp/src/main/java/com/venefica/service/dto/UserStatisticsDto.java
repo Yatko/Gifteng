@@ -21,6 +21,7 @@ public class UserStatisticsDto {
     private int numFollowers;
     private int numFollowings;
     private int numRatings;
+    private int numUnreadMessages;
 
     // WARNING: required for JAX-WS
     public UserStatisticsDto() {
@@ -72,6 +73,14 @@ public class UserStatisticsDto {
 
     public void setNumRatings(int numRatings) {
         this.numRatings = numRatings;
+    }
+
+    public int getNumUnreadMessages() {
+        return numUnreadMessages;
+    }
+
+    public void setNumUnreadMessages(int numUnreadMessages) {
+        this.numUnreadMessages = numUnreadMessages;
     }
     
 }

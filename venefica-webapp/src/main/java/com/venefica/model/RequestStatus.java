@@ -19,4 +19,22 @@ public enum RequestStatus {
     SENT, //the giver/owner clicked on 'Mark as shipped'
     RECEIVED, //the receiver/requestor selected 'Received'
     ;
+    
+    /**
+     * If the request is having CANCELED or DECLINED status is considered
+     * to be inactive.
+     * 
+     * @return 
+     */
+    public boolean isActive() {
+        switch ( this ) {
+            case PENDING:
+            case ACCEPTED:
+            case UNACCEPTED:
+            case SENT:
+            case RECEIVED:
+                return true;
+        }
+        return false;
+    }
 }

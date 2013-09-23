@@ -50,6 +50,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Inject
     private AdService adService;
+    @Inject
+    private MessageService messageService;
     
     @Inject
     private ImageDao imageDao;
@@ -266,11 +268,13 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public List<UserDto> getTopUsers(int numberUsers) {
+        User currentUser = getCurrentUser();
         List<UserDto> result = new LinkedList<UserDto>();
         List<User> users = userDao.getTopUsers(numberUsers);
         
         for (User user : users) {
             UserDto userDto = new UserDto(user);
+            populateRelations(userDto, currentUser, user);
             result.add(userDto);
         }
         
@@ -549,6 +553,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         int numBookmarks = adService.getBookmarkedAdsSize(userId);
         int numFollowers = this.getFollowersSize(user);
         int numFollowings = this.getFollowingsSize(user);
+        int numUnreadMessages = messageService.getUnreadMessagesSize(userId);
         
         UserStatisticsDto statistics = new UserStatisticsDto();
         statistics.setNumReceivings(numReceivings);
@@ -557,6 +562,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         statistics.setNumFollowers(numFollowers);
         statistics.setNumFollowings(numFollowings);
         statistics.setNumRatings(numRatings);
+        statistics.setNumUnreadMessages(numUnreadMessages);
         return statistics;
     }
     

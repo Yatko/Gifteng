@@ -2,7 +2,6 @@ package com.venefica.dao;
 
 import com.venefica.model.Message;
 import com.venefica.model.Request;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -138,12 +137,12 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                     + "from " + getDomainClassName() + " m "
                     + "where "
                     + "m.request = :request and "
-                    + "m.deleted = false and "
-                    + "m.from.id != :fromId "
+                    + "m.deleted = false "
+                    //+ "m.from.id != :fromId "
                     + "order by m.createdAt desc, m.id desc "
                     + "")
                     .setParameter("request", request)
-                    .setParameter("fromId", userId)
+                    //.setParameter("fromId", userId)
                     .setMaxResults(1)
                     .list();
             if ( message != null && !message.isEmpty() ) {
@@ -151,6 +150,22 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
             }
         }
         /**/
+        return messages;
+    }
+
+    @Override
+    public List<Message> getUnreadMessages(Long userId) {
+        List<Message> messages = createQuery(""
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.deleted = false and "
+                + "m.read = false and "
+                //+ "(m.to.id = :userId or m.from.id = :userId) "
+                + "m.to.id = :userId "
+                + "order by m.createdAt desc, m.id desc "
+                + "")
+                .setParameter("userId", userId)
+                .list();
         return messages;
     }
 }

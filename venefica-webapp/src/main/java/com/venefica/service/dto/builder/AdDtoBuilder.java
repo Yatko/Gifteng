@@ -146,6 +146,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         if ( includeRequestsFlag ) {
+            //using all visible requests (not hidden and not deleted)
             LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
             
             for (Request request : model.getVisibleRequests()) {
@@ -233,7 +234,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             boolean canRequest = true;
             
             if ( canRequest ) {
-                if ( model.getStatus() != AdStatus.ACTIVE && model.getStatus() != AdStatus.IN_PROGRESS ) {
+                if ( model.isInactive() ) {
                     canRequest = false;
                 }
             }
@@ -246,11 +247,6 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             if ( canRequest ) {
                 if ( model.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
                     //active requests limit reched the allowed size
-                    canRequest = false;
-                }
-            }
-            if ( canRequest ) {
-                if ( model.isExpired() ) {
                     canRequest = false;
                 }
             }

@@ -96,6 +96,10 @@ public class Request {
         return status == RequestStatus.DECLINED;
     }
     
+    public boolean isCanceled() {
+        return status == RequestStatus.CANCELED;
+    }
+    
     public boolean isVisible() {
         return !isHidden() && !isDeleted();
     }
@@ -110,16 +114,7 @@ public class Request {
         if ( !isVisible() ) {
             return false;
         }
-        
-        switch ( status ) {
-            case PENDING:
-            case ACCEPTED:
-            case UNACCEPTED:
-            case SENT:
-            case RECEIVED:
-                return true;
-        }
-        return false;
+        return status.isActive();
     }
     
     public void markAsDeleted() {

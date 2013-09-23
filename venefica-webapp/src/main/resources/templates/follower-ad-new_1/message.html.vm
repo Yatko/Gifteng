@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[Gifteng ADMIN] ${ad.creator.getFullName()} posted a new gift!</title>
+  </head>
+  
+  <body style="font-family:sans-serif;text-align:center;text-shadow: 0 1px 0 #fff;background:url('http://gifteng.com/assets/4/temp-sample/ge-background.png') #eeedea;">
+  	<div style="padding-top:36px;width: 160px;margin: auto;">
+  		<img src="http://gifteng.com/images/mail/gifteng.png">
+  	</div>
+  	<hr style="border: 0;height: 1px;margin:36px 0;background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));" />
+  	<!-- message-content -->
+  	<div id="message-content" style="text-align:center;">
+		<h1 style="font-size: 136%;">Dear admin,</h1>
+		<p>
+                    ${ad.creator.getFullName()} posted a new Gift!
+		</p>
+		<p>
+                    The newly created gift ID is: ${ad.id}
+                    <br /><br /><a href="${baseUrl}admin/" style="border: none;background: #00bebe;color: #ffffff;padding: 9px 12px 10px;line-height: 22px;font-size: 14.994px;font-weight: 500;text-decoration: none;text-shadow: none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;-webkit-transition: 0.25s;-moz-transition: 0.25s;-o-transition: 0.25s;transition: 0.25s;-webkit-backface-visibility: hidden;"> Click here to view and approve (or reject) the gift!</a><br /><br /> 
+		</p>
+	</div>
+  </body>
+</html>

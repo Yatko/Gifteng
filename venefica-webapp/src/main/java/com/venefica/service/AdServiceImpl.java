@@ -1,5 +1,6 @@
 package com.venefica.service;
 
+import com.venefica.common.MailException;
 import com.venefica.config.Constants;
 import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ApprovalDao;
@@ -76,6 +77,11 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AdService")
 public class AdServiceImpl extends AbstractService implements AdService {
 
+    private static final String AD_NEW_TEMPLATE = "ad-new/";
+    private static final String AD_NEW_SUBJECT_TEMPLATE = AD_NEW_TEMPLATE + "subject.vm";
+    private static final String AD_NEW_HTML_MESSAGE_TEMPLATE = AD_NEW_TEMPLATE + "message.html.vm";
+    private static final String AD_NEW_PLAIN_MESSAGE_TEMPLATE = AD_NEW_TEMPLATE + "message.txt.vm";
+    
     @Inject
     private ApprovalDao approvalDao;
     @Inject
@@ -101,7 +107,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Inject
     private UserTransactionDao userTransactionDao;
 
-    
+    private final boolean useEmailSender = true;
     
     //**********************
     //* categories related *
@@ -183,6 +189,29 @@ public class AdServiceImpl extends AbstractService implements AdService {
 //            transaction.setPendingNumber(currentPendingNumber);
 //            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
+        }
+        
+        if ( useEmailSender ) {
+            List<User> admins = userDao.getAdminUsers();
+            if ( admins != null ) {
+                for ( User admin : admins ) {
+                    String email = admin.getEmail();
+                    Map<String, Object> vars = new HashMap<String, Object>(0);
+                    vars.put("ad", ad);
+
+                    try {
+                        emailSender.sendHtmlEmailByTemplates(
+                                AD_NEW_SUBJECT_TEMPLATE,
+                                AD_NEW_HTML_MESSAGE_TEMPLATE,
+                                AD_NEW_PLAIN_MESSAGE_TEMPLATE,
+                                email,
+                                vars
+                                );
+                    } catch ( MailException ex ) {
+                        logger.error("Could not send ad created notification email to admin user (email: " + email+ ")", ex);
+                    }
+                }
+            }
         }
         
         return adId;
@@ -483,8 +512,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<AdDto> result = new LinkedList<AdDto>();
         List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
         User currentUser = getCurrentUser();
-        boolean includeOnlyCannotRequest = (filter != null && filter.getIncludeOnlyCannotRequest() != null) ? filter.getIncludeOnlyCannotRequest() : false;
+        
         boolean includeCannotRequest = (filter != null && filter.getIncludeCannotRequest() != null) ? filter.getIncludeCannotRequest() : false;
+        boolean includeOnlyCannotRequest = (filter != null && filter.getIncludeOnlyCannotRequest() != null) ? filter.getIncludeOnlyCannotRequest() : false;
+        
+        boolean includeInactive = (filter != null && filter.getIncludeInactive() != null) ? filter.getIncludeInactive() : true;
+        boolean includeOnlyInactive = (filter != null && filter.getIncludeOnlyInactive() != null) ? filter.getIncludeOnlyInactive() : false;
         
         // TODO: Optimize this
         // Get current user's bookmarks
@@ -494,6 +527,15 @@ public class AdServiceImpl extends AbstractService implements AdService {
         for (Ad ad : ads) {
             if ( !includeOwnedAd(ad, currentUser, filter) ) {
                 //skipping owned ads
+                continue;
+            }
+            
+            boolean inactive = ad.isInactive();
+            if ( includeOnlyInactive && !inactive ) {
+                //not including ads that are active
+                continue;
+            } else if ( includeInactive == false && inactive ) {
+                //not including ads that are inactive
                 continue;
             }
             
@@ -554,22 +596,16 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public List<AdDto> getUserAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         User user = validateUser(userId);
-        List<Ad> ads = adDao.getByUser(userId);
-        List<AdDto> result = new LinkedList<AdDto>();
         boolean includeUnapproved = currentUser.equals(user);
+        List<Ad> ads = getUserOwnedAds(userId, includeUnapproved);
+        List<AdDto> result = new LinkedList<AdDto>();
         
         if ( includeRequests == null ) {
             includeRequests = false;
         }
         
         for (Ad ad : ads) {
-            if ( !includeUnapproved && (!ad.isApproved() || !ad.isOnline()) ) {
-                //ad is not approved or is not marked as online
-                continue;
-            }
-            
             AdDto adDto = new AdDtoBuilder(ad)
-                    //.setCurrentUser(user)
                     .setCurrentUser(currentUser)
                     .includeRequests(includeRequests)
                     .includeCanRequest()
@@ -585,7 +621,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             
             result.add(adDto);
         }
-        
         return result;
     }
     
@@ -594,60 +629,42 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public int getUserAdsSize(Long userId) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         User user = validateUser(userId);
-        List<Ad> ads = adDao.getByUser(userId);
-        int result = 0;
         boolean includeUnapproved = currentUser.equals(user);
-        
-        if ( ads != null && !ads.isEmpty() ) {
-            for (Ad ad : ads) {
-                if ( !includeUnapproved && (!ad.isApproved() || !ad.isOnline()) ) {
-                    //ad is not approved or is not marked as online
-                    continue;
-                }
-                result++;
-            }
-        }
-        
-        return result;
+        List<Ad> ads = getUserOwnedAds(userId, includeUnapproved);
+        return ads != null ? ads.size() : 0;
     }
     
     @Override
     @Transactional
     public List<AdDto> getUserRequestedAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
         User currentUser = getCurrentUser();
-        List<Request> requests = getActiveRequestsByUser(userId, false);
+        List<Ad> ads = getUserRequestedAds(userId);
         List<AdDto> result = new LinkedList<AdDto>();
         
         if ( includeRequests == null ) {
             includeRequests = false;
         }
         
-        for ( Request request : requests ) {
-            Ad ad = request.getAd();
-            
-            // @formatter:off
+        for ( Ad ad : ads ) {
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
                     .includeCreator()
                     .includeRequests(includeRequests)
                     .includeCanRequest()
                     .build();
-            // @formatter:on
-            
             adDto.setInBookmarks(inBookmarks(currentUser, ad));
             adDto.setRequested(ad.isRequested(currentUser, false));
             
             result.add(adDto);
         }
-        
         return result;
     }
     
     @Override
     @Transactional
     public int getUserRequestedAdsSize(Long userId) throws UserNotFoundException {
-        List<Request> requests = getActiveRequestsByUser(userId, false);
-        return requests != null ? requests.size() : 0;
+        List<Ad> ads = getUserRequestedAds(userId);
+        return ads != null ? ads.size() : 0;
     }
 
     @Override
@@ -763,8 +780,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can hide requests.");
         }
-        if ( !ad.isExpired() && !request.isUnaccepted() && !request.isDeclined() ) {
-            throw new InvalidRequestException("Only 'expired' (unaccepted or declined) requests (or expired ads) can be hidden.");
+        if ( !ad.isExpired() && !request.isUnaccepted() && (!request.isDeclined() || !request.isCanceled()) ) {
+            throw new InvalidRequestException("Only 'expired' (unaccepted or declined or canceled) requests (or expired ads) can be hidden.");
         }
         
         requestDao.hide(requestId);
@@ -899,6 +916,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
             if ( ad.getType() == AdType.MEMBER && request.isAccepted() ) {
                 //member typed ads accepted request cannot be cancelled
                 throw new InvalidRequestException("Request (requestId: " + requestId + ") is already accepted/selected, canceling not allowed.");
+            } else if ( request.isCanceled() ) {
+                throw new InvalidRequestException("Request (requestId: " + requestId + ") is already canceled");
             }
             
             //canceling by the requestor
@@ -1393,7 +1412,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     /**
      * Returns all the visible requests for the specified user. The 2nd
      * parameter should be used to explicitly set the active status. If is set
-     * to false visible (not hidden and not deleted) requests will be included.
+     * to false only visible (not hidden and not deleted) requests will be included.
      * 
      * @param user
      * @return 
@@ -1417,6 +1436,62 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         return result;
     }
+    
+    /**
+     * Returns all visible (not hidden and not deleted) requests that are
+     * not having CANCELED state for the given user.
+     * 
+     * @param userId
+     * @return
+     */
+    private List<Ad> getUserRequestedAds(Long userId) {
+        List<Request> requests = getActiveRequestsByUser(userId, false);
+        List<Ad> result = new LinkedList<Ad>();
+        if ( requests == null || requests.isEmpty() ) {
+            return result;
+        }
+        
+        for ( Request request : requests ) {
+            if ( request.isCanceled() ) {
+                //CANCELED requests are not used
+                continue;
+            }
+            
+            Ad ad = request.getAd();
+            if ( !result.contains(ad) ) {
+                result.add(ad);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Returns all ads for the given user.
+     * 
+     * @param userId
+     * @param includeUnapproved
+     * @return 
+     */
+    private List<Ad> getUserOwnedAds(Long userId, boolean includeUnapproved) {
+        List<Ad> ads = adDao.getByUser(userId);
+        List<Ad> result = new LinkedList<Ad>();
+        if ( ads == null || ads.isEmpty() ) {
+            return result;
+        }
+        
+        for (Ad ad : ads) {
+            if ( !includeUnapproved && (!ad.isApproved() || !ad.isOnline()) ) {
+                //ad is not approved or is not marked as online
+                continue;
+            }
+
+            if ( !result.contains(ad) ) {
+                result.add(ad);
+            }
+        }
+        return result;
+    }
+    
     
     
     private void selectRequest(Request request, User selector) throws InvalidRequestException, InvalidAdStateException {

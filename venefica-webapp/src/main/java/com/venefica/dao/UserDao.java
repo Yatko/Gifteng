@@ -25,6 +25,12 @@ public interface UserDao {
     public List<User> getAll();
     
     /**
+     * 
+     * @return the list of admin users
+     */
+    public List<User> getAdminUsers();
+    
+    /**
      * Returns a list of top users having the highest giving number.
      * 
      * @param numberUsers

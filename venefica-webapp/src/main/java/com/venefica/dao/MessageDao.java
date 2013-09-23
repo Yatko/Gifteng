@@ -77,4 +77,12 @@ public interface MessageDao {
      * @return 
      */
     List<Message> getLastMessagePerRequestByUser(Long userId);
+    
+    /**
+     * Returns all the unread messages for the given user.
+     * 
+     * @param userId
+     * @return 
+     */
+    List<Message> getUnreadMessages(Long userId);
 }

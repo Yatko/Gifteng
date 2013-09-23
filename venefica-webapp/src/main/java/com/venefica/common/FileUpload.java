@@ -5,6 +5,7 @@
 package com.venefica.common;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -17,6 +18,9 @@ import org.apache.commons.logging.LogFactory;
 public class FileUpload {
     
     private static final Log logger = LogFactory.getLog(FileUpload.class);
+    
+    private static final Long FILE_NOT_FOUND_IMGID = -1L;
+    private static final Long ERROR_IMGID = -9L;
     
     private String path;
     private boolean deleteOnExit = false;
@@ -36,7 +40,23 @@ public class FileUpload {
     
     public byte[] getData(Long imgId) throws IOException {
         File file = buildFile(imgId);
-        return FileUtils.readFileToByteArray(file);
+        try {
+            return FileUtils.readFileToByteArray(file);
+        } catch ( FileNotFoundException ex ) {
+            logger.error("File not found trying to read image (imgId: " + imgId + ")", ex);
+            if ( !imgId.equals(FILE_NOT_FOUND_IMGID) ) {
+                return getData(FILE_NOT_FOUND_IMGID);
+            } else {
+                throw ex;
+            }
+        } catch ( IOException ex ) {
+            logger.error("Exception caught when trying to read image (imgId: " + imgId + ")", ex);
+            if ( !imgId.equals(ERROR_IMGID) ) {
+                return getData(ERROR_IMGID);
+            } else {
+                throw ex;
+            }
+        }
     }
     
     public void setPath(String path) {
