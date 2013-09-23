@@ -21,16 +21,38 @@ class Generator extends CI_Controller {
         }
         
         if ( $folder == null || empty($folder) ) {
-            $folder = TEMP_FOLDER;
+            $source_folder = TEMP_FOLDER;
         } else {
-            $folder = './' . $folder;
+            $source_folder = './' . $folder;
         }
+        
+        $source_image = $source_folder .'/'. $file;
+        
+        
+        if (
+            ($width == null || empty($width) || $width == 0) &&
+            ($height == null || empty($height) || $height == 0) &&
+            !empty($folder)
+        ) {
+            $vals = @getimagesize($source_image);
+            $types = array(1 => 'gif', 2 => 'jpeg', 3 => 'png');
+            $mime = (isset($types[$vals['2']])) ? 'image/'.$types[$vals['2']] : 'image/jpg';
+            
+            $this->output->set_header("Content-Disposition: filename=".$source_image.";");
+            $this->output->set_header("Content-Type: ".$mime);
+            $this->output->set_header('Content-Transfer-Encoding: binary');
+            $this->output->set_header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
+            
+            readfile($source_image);
+            return;
+        }
+        
         
         //$this->image_lib->clear();
         $config['image_library'] = 'gd2';
         $config['quality'] = '90%'; // set quality
         $config['dynamic_output'] = true; // set to true to generate it dynamically
-        $config['source_image'] = $folder .'/'. $file;
+        $config['source_image'] = $source_image;
         $config['maintain_ratio'] = true;
         if ( $width ) {
             $config['width'] = $width;
