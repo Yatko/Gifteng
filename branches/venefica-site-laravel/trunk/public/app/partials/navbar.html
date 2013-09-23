@@ -1,0 +1,85 @@
+<nav class="navbar navbar-default navbar-fixed-top snap-slide" role="navigation">
+	<div class="container">
+		<div class="col-12-lg col-12-md">
+			<div class="navbar-header">
+				<a id="open-left" class="navbar-brand" href="">
+					<span class="glyphicon glyphicon-align-justify"></span>
+				</a>
+				<a class="navbar-brand" href="#">
+					<span class="ge-icon-gifteng"></span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse navbar-ex5-collapse">
+				<ul class="nav navbar-nav nav-buttons pull-right">
+					<li>
+						<a href="#">
+							<span class="ge-icon-help"></span>
+						</a>
+					</li>
+					<li>
+						<a href="#/login">
+							<span class="glyphicon glyphicon-user"></span>
+						</a>
+					</li>
+					<li>
+						<a href="#/post">
+							<span class="ge-icon-giftbox"></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
+
+
+<div class="snap-drawers">
+    <div class="snap-drawer snap-drawer-left">
+        <div>
+            <ul>
+            	<li class="text-center">
+					<input type="text" name="q" class="form-control" placeholder="Find friends and gifts" value="">
+                </li>
+                <li>
+                    <div class="row ge-user">
+                    	<div class="col-xs-4">
+							<div class="ge-user-image">
+								<img src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img img-rounded img-responsive">
+							</div>
+                    	</div>
+                    	<div class="col-xs-8">
+							<div class="ge-detail">
+							    <div class="ge-name">
+							        <a href="#/profile">Krasi K</a>
+								</div>
+					            <div class="ge-age">Giftenger since August 2013</div>
+					            <div class="ge-points">
+						            <span class="btn btn-xs btn-default">
+										<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">Generosity Score 0/1</a>
+									</span>
+								</div>
+							</div>
+                    	</div>
+                    </div>
+                </li>
+                <li><a href="#/browse"><i class="fui-eye"></i> Browse</a></li>
+                <li class="hidden-phone"><a href="#" onclick="doFBLogin();"><i class="fui-user"></i> Invite Friends</a></li>
+                <li><a href="#/profile/gifts/giving"><i class="ge-icon-giftbox"></i> Giving</a></li>
+                <li><a href="#/profile/gifts/receiving"><i class="ge-icon-giftbox"></i> Receiving</a></li>
+                <li><a href="#/profile/gifts/favorites"><i class="fui-star-2"></i> Favorites</a></li>
+                <li><a href="#/profile/connections/following"><i class="fui-heart"></i> Connections</a></li>
+                <li><a href="#/top-giftengers"><i class="fui-star"></i> Top Giftengers</a></li>
+                <li><a href="#/profile/account/messages"><i class="fui-mail"></i> Messages</a></li>
+                <li><a href="#/profile/account/notifications"><i class="fui-alert"></i> Notifications</a></li>
+                <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=AHCR7BYEB68UC" target="_blank"><i class="ge-icon-clover"></i> Donate</a></li>
+                <li><a href="#/" onclick="doLogout()"><i class="fui-power"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+	$(function() {
+		$('#open-left').snap();
+	});
+</script>
