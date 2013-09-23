@@ -122,11 +122,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         String queryStr = ""
                 + "select distinct a "
                 + "from " + getDomainClassName() + " a where "
-                + "a.deleted = false and "
-                + "a.approved = true and "
-                + "a.online = true and "
-                + "a.expired = false and "
-                + "a.sold = false";
+                + "a.deleted = false"
+                + " and a.approved = true"
+                + " and a.online = true"
+                //+ " and a.expired = false"
+                //+ " and a.sold = false"
+                + "";
 
         if (lastAdId >= 0 && lastAd != null) {
             //queryStr += " and a.id " + (orderAsc ? ">" : "<") + " :lastId";

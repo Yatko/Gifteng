@@ -32,7 +32,9 @@ public class FilterDto {
     private Boolean orderAsc; //if true the older ads will be in the first position
     private Boolean includeCannotRequest; //ads that cannot be requested by the caller user to be included or not
     private Boolean includeOnlyCannotRequest; //load only requestable ads or not
-
+    private Boolean includeInactive;
+    private Boolean includeOnlyInactive;
+    
     // WARNING: required for JAX-WS
     public FilterDto() {
     }
@@ -139,5 +141,21 @@ public class FilterDto {
 
     public void setIncludeOnlyCannotRequest(Boolean includeOnlyCannotRequest) {
         this.includeOnlyCannotRequest = includeOnlyCannotRequest;
+    }
+
+    public Boolean getIncludeInactive() {
+        return includeInactive;
+    }
+
+    public void setIncludeInactive(Boolean includeInactive) {
+        this.includeInactive = includeInactive;
+    }
+
+    public Boolean getIncludeOnlyInactive() {
+        return includeOnlyInactive;
+    }
+
+    public void setIncludeOnlyInactive(Boolean includeOnlyInactive) {
+        this.includeOnlyInactive = includeOnlyInactive;
     }
 }

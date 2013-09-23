@@ -50,7 +50,12 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
     @Override
     public List<Request> getByAd(Long adId) {
         // @formatter:off
-        return createQuery("from " + getDomainClassName() + " r where r.deleted = false and r.ad.id = :adId")
+        return createQuery(""
+                + "from " + getDomainClassName() + " r "
+                + "where "
+                + "r.deleted = false and "
+                + "r.ad.id = :adId"
+                + "")
                 .setParameter("adId", adId)
                 .list();
         // @formatter:off
@@ -59,7 +64,12 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
     @Override
     public List<Request> getByUser(Long userId) {
         // @formatter:off
-        return createQuery("from " + getDomainClassName() + " r where r.deleted = false and r.user.id = :userId")
+        return createQuery(""
+                + "from " + getDomainClassName() + " r "
+                + "where "
+                + "r.deleted = false and "
+                + "r.user.id = :userId"
+                + "")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off
@@ -68,7 +78,12 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
     @Override
     public List<Request> getForUser(Long userId) {
         // @formatter:off
-        return createQuery("from " + getDomainClassName() + " r where r.deleted = false and r.ad.creator.id = :userId")
+        return createQuery(""
+                + "from " + getDomainClassName() + " r "
+                + "where "
+                + "r.deleted = false and "
+                + "r.ad.creator.id = :userId"
+                + "")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off

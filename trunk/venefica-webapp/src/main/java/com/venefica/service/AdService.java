@@ -248,7 +248,9 @@ public interface AdService {
     int getUserAdsSize(Long userId) throws UserNotFoundException;
     
     /**
-     * Returns a list of all ads requested by the given user.
+     * Returns a list of all ads requested by the given user. The matching
+     * requests should be visible (not hidden and not deleted) and their state
+     * should not be CANCELED.
      * 
      * @return list of ads
      * @throws UserNotFoundException is thrown when the user with the specified id is not found

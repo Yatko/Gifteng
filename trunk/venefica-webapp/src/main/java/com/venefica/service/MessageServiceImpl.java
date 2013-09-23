@@ -114,7 +114,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     @Transactional
     public List<MessageDto> getLastMessagePerRequest() {
         List<Message> messages = messageDao.getLastMessagePerRequestByUser(getCurrentUserId());
-        return buildMessages(messages);
+        return buildMessages(messages, getCurrentUser(), false);
     }
     
 //    @Override
@@ -135,7 +135,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         }
         
         List<Message> messages = messageDao.getByRequest(requestId);
-        return buildMessages(messages);
+        return buildMessages(messages, currentUser, true);
     }
     
     @Override
@@ -144,7 +144,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
         List<Message> messages = messageDao.getByUsers(user1Id, user2Id);
-        return buildMessages(messages);
+        return buildMessages(messages, getCurrentUser(), true);
     }
     
     @Override
@@ -154,7 +154,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
         List<Message> messages = messageDao.getByAdAndUsers(adId, user1Id, user2Id);
-        return buildMessages(messages);
+        return buildMessages(messages, getCurrentUser(), true);
     }
     
     @Override
@@ -254,6 +254,13 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
 
     @Override
+    public int getUnreadMessagesSize(Long userId) throws UserNotFoundException {
+        User user = validateUser(userId);
+        List<Message> unreadMessages = messageDao.getUnreadMessages(userId);
+        return unreadMessages != null ? unreadMessages.size() : 0;
+    }
+    
+    @Override
     @Transactional
     public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
         Message message = validateMessage(messageId);
@@ -352,10 +359,8 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     
     
-    private List<MessageDto> buildMessages(List<Message> messages) {
+    private List<MessageDto> buildMessages(List<Message> messages, User currentUser, boolean markAsRead) {
         List<MessageDto> result = new LinkedList<MessageDto>();
-        User currentUser = getCurrentUser();
-        
         for (Message message : messages) {
             if ( message.isDeleted() || message.isHiddenByRecipient() || message.isHiddenBySender() ) {
                 continue;
@@ -366,7 +371,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
                     .build();
             result.add(messageDto);
             
-            message.setRead(true); // mark as read
+            if ( markAsRead && !messageDto.isOwner() ) {
+                message.setRead(true); // mark as read
+            }
         }
         return result;
     }

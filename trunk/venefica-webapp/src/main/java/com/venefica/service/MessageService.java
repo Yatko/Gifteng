@@ -182,7 +182,16 @@ public interface MessageService {
     @WebMethod(operationName = "GetAllMessages")
     @WebResult(name = "message")
     List<MessageDto> getAllMessages();
-
+    
+    /**
+     * Not published via WS.
+     * 
+     * @param userId
+     * @return
+     * @throws UserNotFoundException 
+     */
+    int getUnreadMessagesSize(Long userId) throws UserNotFoundException;
+    
     /**
      * Marks the message as hidden one.
      *

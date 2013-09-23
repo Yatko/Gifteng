@@ -23,5 +23,17 @@ public enum AdStatus {
     IN_PROGRESS, //there is an (one or more) active request for this ad
     FINALIZED,
     EXPIRED,
+    ;
     
+    /**
+     * An ad is considered inactive if its status is other than ACTIVE and IN_PROGRESS.
+     * 
+     * @return 
+     */
+    public boolean isInactive() {
+        if ( this != ACTIVE && this != IN_PROGRESS ) {
+            return true;
+        }
+        return false;
+    }
 }

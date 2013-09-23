@@ -139,6 +139,25 @@ public class Ad {
         numAvailProlongations = Constants.AD_MAX_ALLOWED_PROLONGATION;
     }
 
+    /**
+     * An ad is considered inactive if:
+     * - its status is other than ACTIVE and IN_PROGRESS
+     * - is expired
+     * 
+     * Inactive ads cannot be requested.
+     * 
+     * @return 
+     */
+    public boolean isInactive() {
+        boolean inactive = false;
+        if ( status.isInactive() ) {
+            inactive = true;
+        } else if ( expired ) {
+            inactive = true;
+        }
+        return inactive;
+    }
+    
     public void visit() {
         numViews++;
     }
@@ -194,7 +213,7 @@ public class Ad {
         }
         
         request.cancel();
-        request.markAsDeleted();
+        //request.markAsDeleted();
         
         updateStatus();
     }
