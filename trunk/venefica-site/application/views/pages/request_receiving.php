@@ -77,7 +77,7 @@ $view_link = $ad->getViewUrl();
                         </div><!--./ge-subject-->
                     </div>
 
-                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $ad_creator, 'canMessage' => true, 'currentUser' => $currentUser)); ?>
+                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $ad_creator, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
                 </div>
             </div><!--./ge-messages-->
         </div>
