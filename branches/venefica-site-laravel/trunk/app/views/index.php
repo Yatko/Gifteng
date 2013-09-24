@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Gifteng | Give. Receive. Inspire.</title>
 		
+		<link href="assets/css/gifteng.css" type="text/css" rel="stylesheet" />
 		<link rel="stylesheet/less" type="text/css" href="assets/less/app.less" />
 		
 		<script src="assets/js/less.min.js" type="text/javascript"></script>
