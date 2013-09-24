@@ -32,6 +32,7 @@ public enum AdStatus {
      */
     public boolean isInactive() {
         if ( this != ACTIVE && this != IN_PROGRESS ) {
+            //OFFLINE, FINALIZED or EXPIRED
             return true;
         }
         return false;
