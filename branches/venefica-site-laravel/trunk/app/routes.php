@@ -13,5 +13,9 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('index');
+});
+
+Route::group(array('prefix' => 'api','before'=>'auth'), function() {
+	Route::resource('ad','AdController');
 });

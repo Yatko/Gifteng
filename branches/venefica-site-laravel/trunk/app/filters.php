@@ -35,13 +35,25 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::guest('login');
-});
-
-
-Route::filter('auth.basic', function()
-{
-	return Auth::basic();
+	$token = Session::get('token');
+	if($token!=null) {
+        ini_set('soap.wsdl_cache_enabled', '0');
+		ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
+	}
+	else {
+		try {
+            $authService = new SoapClient(Config::get('wsdl.auth'));
+	        $token = $authService->authenticateEmail(array(
+                "email" => Input::get('email'),
+                "password" => Input::get('password')
+            ));
+	        ini_set('soap.wsdl_cache_enabled', '0');
+			ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
+			Session::put('user.token', $token);
+	    } catch ( Exception $ex ) {
+	        return $ex->faultstring."\n";
+	    }
+	}
 });
 
 /*
