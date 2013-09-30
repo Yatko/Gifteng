@@ -126,7 +126,8 @@
 		                                <input name="email" value="<?=set_value('email')?>" type="text" placeholder="Email address" class="input-block-level" required="">
 		                            </div>
 		                        </div>
-		
+                                        
+                                        <? /** ?>
 		                        <div class="control-group">
 		                            <div class="controls">
 		                                <input name="password_1" type="password" placeholder="Password" class="input-block-level" required="">
@@ -138,6 +139,7 @@
 		                                <input name="password_2" type="password" placeholder="Confirm password" class="input-block-level" required="">
 		                            </div>
 		                        </div>
+                                        <? /**/ ?>
 		
 		                        <div class="control-group">
 		                            <div class="controls">

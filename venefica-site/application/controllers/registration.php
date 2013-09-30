@@ -115,17 +115,20 @@ class Registration extends CI_Controller {
         $this->registration_form->set_rules('businessName', 'lang:b_registration_businessName', 'trim|required');
         $this->registration_form->set_rules('contactName');
         $this->registration_form->set_rules('phoneNumber');
-        $this->registration_form->set_rules('email', 'lang:b_registration_email', 'trim|required|valid_email');
         $this->registration_form->set_rules('zipCode', 'lang:b_registration_zipCode', 'trim|required');
         $this->registration_form->set_rules('businessCategory', 'lang:b_registration_category', 'required');
+        $this->registration_form->set_rules('email', 'lang:b_registration_email', 'trim|required|valid_email|callback_register_business');
+        /**
         $this->registration_form->set_rules('password_1', 'lang:b_registration_password_1', 'required|matches[password_2]');
         $this->registration_form->set_rules('password_2', 'lang:b_registration_password_2', 'required|callback_register_business');
+        /**/
         
         $this->registration_form->set_message('required', lang('validation_required'));
         $this->registration_form->set_message('valid_email', lang('validation_valid_email'));
         
         $is_valid = $this->registration_form->run();
         if ( $is_valid ) {
+            /**
             //form data valid after post
             if ( $this->auto_login ) {
                 //logging in into system automatically
@@ -141,6 +144,10 @@ class Registration extends CI_Controller {
                 $this->session->set_flashdata('registration_success', true);
                 redirect('/registration/business');
             }
+            /**/
+            
+            $this->session->set_flashdata('registration_success', true);
+            redirect('/registration/business');
         } elseif ( $_POST ) {
             //form data not valid after post
         } else {
@@ -198,7 +205,7 @@ class Registration extends CI_Controller {
     }
     
     //callback
-    public function register_business($password) {
+    public function register_business($email) {
         if ( $this->registration_form->hasErrors() ) {
             $this->registration_form->set_message('register_business', '');
             return FALSE;
@@ -217,6 +224,8 @@ class Registration extends CI_Controller {
         $user->email = $this->input->post('email');
         $user->addresses = $addresses;
         $user->businessCategoryId = $this->input->post('businessCategory');
+        
+        $password = "*** AUTO ***";
         
         try {
             $this->usermanagement_service->registerBusinessUser($user, $password);
