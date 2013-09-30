@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="NavController">
 	<div class="col-xs-12">
 		<div class="well well-lg">
 			<div class="row">
@@ -8,14 +8,14 @@
 				<div class="col-sm-4 col-xs-8">
 					<div class="ge-detail">
 					    <div class="ge-name">
-					        <a href="">Krasi K</a>
+					        <a href="">{{user.data.firstName}} {{user.data.lastName}}</a>
 					                    <a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
 					            </div>
-					            <div class="ge-age">Giftenger since August 2013</div>
+					            <div class="ge-age">Giftenger since {{user.data.joinedAt | date:'MMMM yyyy'}}</div>
 					            <div class="ge-points">
 					            	<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
 					            		<span class="label label-default label-ge">
-						            		Generosity Score 0/1
+						            		Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}}
 					            		</span>
 					            	</a>
 					            </div>

@@ -9,7 +9,7 @@ class AuthController extends \BaseController {
 	  */ 
 	  public function index() {
 	  	if(Session::get('user.token')) {
-	  		return array('logged'=>true);
+	  		return array_merge(Session::get('user'),array('logged'=>true));
 	  	}
 		else {
 			return array('logged'=>false);
@@ -33,7 +33,18 @@ class AuthController extends \BaseController {
 	        ini_set('soap.wsdl_cache_enabled', '0');
 			ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
 			Session::put('user.token', $token);
-			return array('success'=>'true');
+			
+	        try {
+	            $userService = new SoapClient(Config::get('wsdl.user'));
+	            $result = $userService->getUserByEmail(array("email" => Input::get('email')));
+	            $user = $result->user;
+				Session::put('user.data',$user);
+			
+				return array('success'=>'true');
+				
+	        } catch ( InnerException $ex ) {
+	            throw new Exception($ex->faultstring);
+	        }
 	    } catch ( Exception $ex ) {
 	        return array('error'=>$ex->faultstring);
 	    }

@@ -17,13 +17,13 @@
                     	<div class="col-xs-8">
 							<div class="ge-detail">
 							    <div class="ge-name">
-							        <a href="#/profile">Krasi K</a>
+							        <a href="#/profile">{{user.data.firstName}} {{user.data.lastName}}</a>
 								</div>
 					            <div class="ge-age">Giftenger since August 2013</div>
 					            <div class="ge-points">
 						            <a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
 						            	<span class="label label-default label-ge">
-						            		Generosity Score 0/1
+						            		Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}}
 						            	</span>
 						            </a>
 								</div>
