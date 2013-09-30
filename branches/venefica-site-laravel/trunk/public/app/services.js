@@ -1,10 +1,11 @@
 define(['angular'], function (angular) {
 	'use strict';
 	
-	angular.module('gifteng.services', []).factory('Contact', function($resource) {
-		return $resource('api/contact/:Id',
+	angular.module('gifteng.services', [])
+	.factory('Ad', function($resource) {
+		return $resource('api/ad/:id',
 			{ 
-				Id:'@id'
+				id:'@id'
         	},
         	{
         		update: {
@@ -12,6 +13,21 @@ define(['angular'], function (angular) {
         		}
         	}
 		);
+	})
+	.factory('Auth', function($resource) {
+		return $resource('api/auth/:id', { id: '@id' });
+	})
+	.factory('User', function(Auth) {
+		var user=Auth.get();
+		
+		return {
+			setUser: function(newUser) {
+				user = newUser;
+			},
+			getUser: function() {
+				return user;
+			}
+		}
 	});
 
 });

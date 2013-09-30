@@ -17,7 +17,7 @@ define(['angular','app','services'], function(angular,app) {
 			).
 			when('/login',
 				{
-					controller: 'IndexController',
+					controller: 'LoginController',
 					templateUrl: 'app/partials/login.html',
 				}
 			).

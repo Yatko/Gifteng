@@ -5,8 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Gifteng | Give. Receive. Inspire.</title>
 		
-		<link href="assets/css/gifteng.css" type="text/css" rel="stylesheet" />
 		<link rel="stylesheet/less" type="text/css" href="assets/less/app.less" />
+		<link href="assets/css/gifteng.css" type="text/css" rel="stylesheet" />
 		
 		<script src="assets/js/less.min.js" type="text/javascript"></script>
 		
@@ -14,7 +14,7 @@
 		<script type="text/javascript">var less=less||{};less.env='development';</script>
 	</head>
 	<body>
-		<div ng-include="'app/partials/navbar.html'"></div>
+		<div ng-include="'app/partials/navbar.html'" ng-controller="NavController"></div>
 		<div class="snap-content snap-slide">
 			<div class="container ge-container">
 				<div class="ng-view"></div>

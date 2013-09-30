@@ -41,18 +41,7 @@ Route::filter('auth', function()
 		ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
 	}
 	else {
-		try {
-            $authService = new SoapClient(Config::get('wsdl.auth'));
-	        $token = $authService->authenticateEmail(array(
-                "email" => Input::get('email'),
-                "password" => Input::get('password')
-            ));
-	        ini_set('soap.wsdl_cache_enabled', '0');
-			ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
-			Session::put('user.token', $token);
-	    } catch ( Exception $ex ) {
-	        return $ex->faultstring."\n";
-	    }
+		return array('error'=>'not_logged_in');
 	}
 });
 

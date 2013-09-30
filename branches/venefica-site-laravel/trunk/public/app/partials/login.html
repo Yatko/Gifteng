@@ -8,12 +8,12 @@
                 </div>
 				<form role="form">
 					<div class="form-group">
-						<input type="email" class="form-control input-lg" placeholder="Email address">
+						<input type="email" id="email" class="form-control input-lg" placeholder="Email address">
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control input-lg" placeholder="Password">
+						<input type="password" id="password" class="form-control input-lg" placeholder="Password">
 					</div>
-		  			<button type="submit" class="btn btn-primary btn-lg btn-block">Sign In</button>
+		  			<button type="submit" ng-click="login()" class="btn btn-primary btn-lg btn-block">Sign In</button>
 		  			<div class="row">
 		  				<div class="col-xs-6">
 							<div class="checkbox">

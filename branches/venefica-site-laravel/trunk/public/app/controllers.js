@@ -3,8 +3,39 @@ define(['angular','services'], function(angular) {
 	
 	return angular.module('gifteng.controllers', ['gifteng.services'])
 	
-		.controller('IndexController', function($scope, $routeParams, $route, $location, Contact) {
+		.controller('IndexController', function($scope, $routeParams, $route, $location) {
 			
+		})
+		.controller('NavController',function($scope, $location, Auth, User) {
+		
+			$scope.$watch(
+				function() {
+					return User.getUser();
+				},
+				function(user) {
+					$scope.user = user;
+				},
+				true
+			);
+			
+			$scope.logout = function() {
+				$('#open-left').click();
+				var user = new Auth.remove({id:0});
+				User.setUser({});
+				$location.path('/');
+			}
+		})
+		.controller('LoginController', function($scope, $location, Auth, User) {
+			$scope.login = function() {
+				var auth = new Auth;
+				auth.email = $('#email').val();
+				auth.password = $('#password').val();
+				auth.$save(function(response) {
+					var user = new Auth.get();
+					User.setUser(user);
+					$location.path('/browse');
+				});
+			}
 		})
 		.controller('ProfileController', function($scope, $routeParams) {
 			if(!$routeParams.profilePage && !$routeParams.section) {
