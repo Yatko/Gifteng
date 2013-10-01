@@ -2,10 +2,40 @@ define(['angular','services'], function(angular) {
 	'use strict';
 	
 	return angular.module('gifteng.controllers', ['gifteng.services'])
-	
-		.controller('IndexController', function($scope, $routeParams, $route, $location) {
+		
+		/**
+		 * Index Controller
+		 */
+		.controller('IndexController', function() {
 			
 		})
+		
+		/**
+		 * Browse Controller
+		 */
+		.controller('BrowseController', function($scope, Ad) {
+			var ads = Ad.query({}, function() {
+				$scope.col1 = [];
+				$scope.col2 = [];
+				$scope.col3 = [];
+				
+				for(var i=0;i<ads.length;i++) {
+					if((i%3)==0) {
+						$scope.col3.push(ads[i]);
+					}
+					else if((i%2)==0) {
+						$scope.col2.push(ads[i]);
+					}
+					else {
+						$scope.col1.push(ads[i]);
+					}
+				}
+			});
+		})
+		
+		/**
+		 * Nav Controller
+		 */
 		.controller('NavController',function($scope, $location, Auth, User) {
 		
 			$scope.$watch(
@@ -25,6 +55,10 @@ define(['angular','services'], function(angular) {
 				$location.path('/');
 			}
 		})
+		
+		/**
+		 * Login Controller
+		 */
 		.controller('LoginController', function($scope, $location, Auth, User) {
 			$scope.login = function() {
 				var auth = new Auth;
@@ -37,6 +71,10 @@ define(['angular','services'], function(angular) {
 				});
 			}
 		})
+		
+		/**
+		 * Profile Controller
+		 */
 		.controller('ProfileController', function($scope, $routeParams) {
 			if(!$routeParams.profilePage && !$routeParams.section) {
 				$scope.section="gifts";
@@ -57,6 +95,10 @@ define(['angular','services'], function(angular) {
 				$scope.tab_page=$routeParams.profilePage;
 			}
 		})
+		
+		/**
+		 * View -> Profile Controller
+		 */
 		.controller('ViewProfileController', function($scope, $routeParams) {
 			
 			$scope.profile = {

@@ -15,7 +15,8 @@ class AdController extends \BaseController {
                 "numberAds" => 20
             ));
 			
-            return get_object_vars($result);
+            $result = get_object_vars($result);
+			return $result['ad'];
         } catch ( Exception $ex ) {
             throw new Exception($ex->faultstring);
 		}

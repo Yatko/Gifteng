@@ -11,7 +11,7 @@ define(['angular','app','services'], function(angular,app) {
 			).
 			when('/browse',
 				{
-					controller: 'IndexController',
+					controller: 'BrowseController',
 					templateUrl: 'app/partials/browse.html',
 				}
 			).

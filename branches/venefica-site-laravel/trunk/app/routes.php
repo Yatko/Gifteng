@@ -16,7 +16,11 @@ Route::get('/', function()
 	return View::make('index');
 });
 
+
 Route::group(array('prefix' => 'api'), function() {
-	Route::resource('ad','AdController', array('before'=>'auth'));
 	Route::resource('auth','AuthController', array('only'=>array('store','index','destroy')));
+	Route::group(array('before'=>'auth'), function() {
+		Route::resource('ad','AdController');
+		Route::resource('image','ImageController');
+	});
 });

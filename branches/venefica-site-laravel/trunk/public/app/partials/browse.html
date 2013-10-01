@@ -1,11 +1,17 @@
 <div class="row">
 	<div class="col-sm-4">
-		<ad img="http://placehold.it/400x400/FF9999/FFF" title="Test Gift"></ad>
+		<div ng-repeat="ad in col1">
+			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+		</div>
 	</div>
 	<div class="col-sm-4">
-		<ad img="http://placehold.it/400x300/FF9999/FFF" title="Test Gift"></ad>
+		<div ng-repeat="ad in col2">
+			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+		</div>
 	</div>
 	<div class="col-sm-4">
-		<ad img="http://placehold.it/400x300/FF9999/FFF" title="Test Gift"></ad>
+		<div ng-repeat="ad in col3">
+			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+		</div>
 	</div>
 </div>
