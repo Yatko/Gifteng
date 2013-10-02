@@ -35,7 +35,7 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	$token = Session::get('token');
+	$token = Session::get('user.token');
 	if($token!=null) {
         ini_set('soap.wsdl_cache_enabled', '0');
 		ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
