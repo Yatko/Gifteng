@@ -6,6 +6,7 @@ import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserSettingDao;
 import com.venefica.model.Image;
+import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
@@ -99,7 +100,7 @@ public class UserSignUpAdapter implements ConnectionSignUp {
 
                 // FIXME: image type should be extracted form the URL
                 Image avatar = new Image(ImageType.JPEG, data);
-                imageDao.save(avatar);
+                imageDao.save(avatar, ImageModelType.USER);
                 
                 user.setAvatar(avatar);
             }

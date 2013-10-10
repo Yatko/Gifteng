@@ -26,8 +26,7 @@ public class UserVerificationDaoImpl extends DaoBase<UserVerification> implement
     @Override
     public UserVerification findByCode(String code) {
         List<UserVerification> verifications = createQuery(""
-                + "from " + getDomainClassName() + " uv "
-                + "where "
+                + "from " + getDomainClassName() + " uv where "
                 + "uv.code = :code"
                 + "")
                 .setParameter("code", code)
@@ -38,9 +37,9 @@ public class UserVerificationDaoImpl extends DaoBase<UserVerification> implement
     @Override
     public UserVerification findByUser(Long userId) {
         List<UserVerification> verifications = createQuery(""
-                + "from " + getDomainClassName() + " uv "
-                + "where "
-                + "uv.user.id = :userId "
+                + "from " + getDomainClassName() + " uv where "
+                + "uv.user.id = :userId and "
+                + "uv.user.deleted = false "
                 + "order by id desc"
                 + "")
                 .setParameter("userId", userId)

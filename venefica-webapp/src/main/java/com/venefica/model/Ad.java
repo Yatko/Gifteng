@@ -13,8 +13,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.Inheritance;
-//import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -24,7 +22,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Advertisement class containing generic fields.
@@ -33,13 +30,11 @@ import org.hibernate.annotations.ForeignKey;
  *
  */
 @Entity
-//@SequenceGenerator(name = "ad_gen", sequenceName = "ad_seq", allocationSize = 1)
 @Table(name = "ad")
 public class Ad {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ad_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @OneToOne
@@ -141,7 +136,7 @@ public class Ad {
 
     /**
      * An ad is considered inactive if:
-     * - its status is other than ACTIVE and IN_PROGRESS
+     * - its status is OFFLINE, FINALIZED or EXPIRED
      * - is expired
      * 
      * Inactive ads cannot be requested.
@@ -149,13 +144,10 @@ public class Ad {
      * @return 
      */
     public boolean isInactive() {
-        boolean inactive = false;
-        if ( status.isInactive() ) {
-            inactive = true;
-        } else if ( expired ) {
-            inactive = true;
+        if ( status.isInactive() || expired ) {
+            return true;
         }
-        return inactive;
+        return false;
     }
     
     public void visit() {
@@ -360,18 +352,23 @@ public class Ad {
      * Active means that is not DECLINED or CANCELED.
      * 
      * @param user
+     * @param considerOnlyActiveRequests 
      * @return 
      */
-    public boolean isRequested(User user, boolean includeOnlyActiveRequests) {
+    public boolean isRequested(User user, boolean considerOnlyActiveRequests) {
         for ( Request request : getVisibleRequests() ) {
-            if ( request.getUser().equals(user) ) {
-                if ( includeOnlyActiveRequests && request.isActive() ) {
+            if ( !request.getUser().equals(user) ) {
+                continue;
+            }
+            
+            if ( considerOnlyActiveRequests ) {
+                if ( request.isActive() ) {
                     //there is a visible and active request
                     return true;
-                } else {
-                    //there is a visible request
-                    return true;
                 }
+            } else {
+                //there is a visible request
+                return true;
             }
         }
         return false;

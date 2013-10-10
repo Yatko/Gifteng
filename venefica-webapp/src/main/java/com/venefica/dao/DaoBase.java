@@ -2,6 +2,7 @@ package com.venefica.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +23,8 @@ public class DaoBase<D> {
     
     @Inject
     private SessionFactory sessionFactory;
+    @Resource
+    protected DBType dbType;
     
     private Class<D> domainClass;
     

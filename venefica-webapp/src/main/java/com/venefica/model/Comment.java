@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Comment for an ad. Comments are publicly available for every user.
@@ -20,13 +19,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-//@SequenceGenerator(name = "comment_gen", sequenceName = "comment_seq", allocationSize = 1)
 @Table(name = "comment")
 public class Comment {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)

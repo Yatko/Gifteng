@@ -13,14 +13,14 @@
         </properties>
     </action>
     <action>
-        <actionName>CUSTOM-env=local-dev - skip tests</actionName>
-        <displayName>env=local-dev - skip tests</displayName>
+        <actionName>CUSTOM-env=local-tomcat-dev-db - skip tests</actionName>
+        <displayName>env=local-tomcat-dev-db - skip tests</displayName>
         <goals>
             <goal>clean</goal>
             <goal>install</goal>
         </goals>
         <properties>
-            <env>local-dev</env>
+            <env>local-tomcat-dev-db</env>
             <skipTests>true</skipTests>
         </properties>
     </action>
@@ -93,6 +93,7 @@
         </activatedProfiles>
     </action>
     
+    <!--
     <action>
         <actionName>CUSTOM-deploy into local tomcat with local-dev env</actionName>
         <displayName>deploy into local tomcat with local-dev env</displayName>
@@ -105,4 +106,5 @@
             <env>local-dev</env>
         </properties>
     </action>
+    -->
 </actions>

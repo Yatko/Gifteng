@@ -261,6 +261,21 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
     
     @Override
+    public void hideRequestMessages(Long requestId) throws RequestNotFoundException, AuthorizationException {
+        Request request = validateRequest(requestId);
+        Ad ad = request.getAd();
+        User currentUser = getCurrentUser();
+        
+        if (request.getUser().equals(currentUser)) {
+            request.setMessagesHiddenByRequestor(true);
+        } else if (ad.getCreator().equals(currentUser)) {
+            request.setMessagesHiddenByCreator(true);
+        } else {
+            throw new AuthorizationException("You are neither requestor nor creator to hide the conversation messages!");
+        }
+    }
+    
+    @Override
     @Transactional
     public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
         Message message = validateMessage(messageId);

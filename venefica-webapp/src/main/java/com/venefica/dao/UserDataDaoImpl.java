@@ -33,8 +33,8 @@ public class UserDataDaoImpl extends DaoBase<UserData> implements UserDataDao {
     @Override
     public BusinessUserData findByBusinessName(String businessName) {
         List<BusinessUserData> userDatas = createQuery(""
-                + "from " + BusinessUserData.class.getSimpleName() + " ud "
-                + "where ud.businessName = :businessName"
+                + "from " + BusinessUserData.class.getSimpleName() + " ud where "
+                + "ud.businessName = :businessName"
                 + "")
                 .setParameter("businessName", businessName)
                 .list();

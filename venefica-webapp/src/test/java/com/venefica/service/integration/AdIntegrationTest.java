@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.Resource;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = "/IntegrationTest-context.xml")
 @TestExecutionListeners({DumpErrorTestExecutionListener.class})
 @Category(IntegrationTestMarker.class)
-public class IntegrationTest {
+public class AdIntegrationTest {
     
     private AuthService authService;
     private AdService adService;
@@ -51,6 +52,7 @@ public class IntegrationTest {
     }
     
     @Test
+    @Ignore
     public void getAdsExLocationTest() throws AuthenticationException {
         String token = authService.authenticateEmail("a@a.com", "Gift2020");
         ServiceTestBase.authenticateClientWithToken(adService, token);

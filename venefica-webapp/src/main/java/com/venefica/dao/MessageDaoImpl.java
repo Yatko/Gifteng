@@ -118,7 +118,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 .list();
         /**/
         
-        /**/
+        //NOTE: this were worked with MySQL as database backend
+        /**
         List<Message> messages = new LinkedList<Message>();
         List<Request> requests = createQuery(""
                 + "select m.request "
@@ -126,7 +127,11 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "where "
                 + "m.deleted = false and "
                 + "m.request.ad.deleted = false and "
-                + "(m.request.ad.creator.id = :userId or m.request.user.id = :userId) "
+                + "m.request.ad.creator.deleted = false and "
+                + "("
+                + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
+                + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
+                + ") "
                 + "group by m.request "
                 + "order by m.createdAt desc "
                 + "")
@@ -150,6 +155,39 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
             }
         }
         /**/
+        
+        //NOTE: this is the working way with PostgreSQL (and should work also with MySQL)
+        List<Message> messages = new LinkedList<Message>();
+        List<Request> requests = createQuery(""
+                + "select distinct m.request "
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.deleted = false and "
+                + "m.request.ad.deleted = false and "
+                + "m.request.ad.creator.deleted = false and "
+                + "("
+                + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
+                + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
+                + ") "
+                + "")
+                .setParameter("userId", userId)
+                .list();
+        for ( Request request : requests ) {
+            List<Message> lastMessage = createQuery(""
+                    + "from " + getDomainClassName() + " m "
+                    + "where "
+                    + "m.request = :request and "
+                    + "m.deleted = false "
+                    + "order by m.createdAt desc, m.id desc "
+                    + "")
+                    .setParameter("request", request)
+                    .setMaxResults(1)
+                    .list();
+            if ( lastMessage != null && !lastMessage.isEmpty() ) {
+                messages.add(lastMessage.get(0));
+            }
+        }
+        
         return messages;
     }
 

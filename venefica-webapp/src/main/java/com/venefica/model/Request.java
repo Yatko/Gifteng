@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,7 +27,7 @@ import org.hibernate.annotations.ForeignKey;
 public class Request {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)
@@ -69,6 +68,9 @@ public class Request {
     
 //    @OneToOne(mappedBy = "request")
 //    private Review review;
+    
+    private boolean messagesHiddenByRequestor; //default is false
+    private boolean messagesHiddenByCreator; //default is false
     
     public Request() {
     }
@@ -294,5 +296,21 @@ public class Request {
 
     public void setHideAt(Date hideAt) {
         this.hideAt = hideAt;
+    }
+
+    public boolean isMessagesHiddenByRequestor() {
+        return messagesHiddenByRequestor;
+    }
+
+    public void setMessagesHiddenByRequestor(boolean messagesHiddenByRequestor) {
+        this.messagesHiddenByRequestor = messagesHiddenByRequestor;
+    }
+
+    public boolean isMessagesHiddenByCreator() {
+        return messagesHiddenByCreator;
+    }
+
+    public void setMessagesHiddenByCreator(boolean messagesHiddenByCreator) {
+        this.messagesHiddenByCreator = messagesHiddenByCreator;
     }
 }

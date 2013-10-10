@@ -35,6 +35,12 @@ public class FilterDto {
     private Boolean includeInactive;
     private Boolean includeOnlyInactive;
     
+    
+//    //TODO:
+//    private Boolean includeExpired;
+//    private Boolean includeSold; //sold if quantity=0
+    
+    
     // WARNING: required for JAX-WS
     public FilterDto() {
     }

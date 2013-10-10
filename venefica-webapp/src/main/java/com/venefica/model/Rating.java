@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Advertisement rating. After a successful product (ad, gift) pickup/delivery
@@ -20,13 +19,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-//@SequenceGenerator(name = "rating_gen", sequenceName = "rating_seq", allocationSize = 1)
 @Table(name = "rating")
 public class Rating {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rating_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne

@@ -94,6 +94,11 @@
             <artifactId>hibernate-validator</artifactId>
             <version>4.2.0.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-tools</artifactId>
+            <version>3.2.4.GA</version>
+        </dependency>
         
         <!-- WARNING postgis-jdbc 1.5.3 is not available in standard repo -->
         <dependency>
@@ -198,7 +203,21 @@
             <artifactId>mailjimp-core</artifactId>
             <version>0.3</version>
         </dependency>
-
+        
+        <!-- image resize/scaling library -->
+        <dependency>
+            <groupId>com.mortennobel</groupId>
+            <artifactId>java-image-scaling</artifactId>
+            <version>0.8.5</version>
+        </dependency>
+        
+        <!-- used for image repository -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.5.5</version>
+        </dependency>
+        
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>

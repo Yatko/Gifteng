@@ -23,13 +23,18 @@
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <!-- Resource can be found in library: cxf-rt-transports-http-2.6.0.jar -->
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+    <!-- MailChimp integration -->
+    <import resource="classpath:mailjimp-spring-config.xml" />
     
-
+    
+    <import resource="jdbc-mysql.xml" />
+<!--    <import resource="jdbc-postgresql.xml" />-->
+    
+    
     <bean id="tokenEncryptor" class="com.venefica.auth.TokenEncryptor">
         <constructor-arg value="YGTHhJgtlQd2S0LXUJ5CI+Wrskju9KUK" />
     </bean>
-    <bean id="messageEncryptor" class="com.venefica.auth.MessageEncryptor">
-    </bean>
+    <bean id="messageEncryptor" class="com.venefica.auth.MessageEncryptor" />
 
     <bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
     <bean id="messageSignatureInterceptor" class="com.venefica.auth.MessageSignatureInterceptor" />
@@ -43,99 +48,19 @@
     
     
     
-    <bean id="jdbcDriver" class="java.lang.String">
-        <constructor-arg value="com.mysql.jdbc.Driver" />
-    </bean>
-    <bean id="jdbcUrl" class="java.lang.String">
-        <constructor-arg value="jdbc:mysql://localhost:3306/venefica" />
-    </bean>
-    <bean id="jdbcUsername" class="java.lang.String">
-        <constructor-arg value="root" />
-    </bean>
-    <bean id="jdbcPassword" class="java.lang.String">
-        <constructor-arg value="" />
-    </bean>
-    <bean id="hibernateDialect" class="java.lang.String">
-        <constructor-arg value="org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect" />
-    </bean>
-    <bean id="hibernateHbmToDdlAuto" class="java.lang.String">
-        <constructor-arg value="create" />
-        <!--<constructor-arg value="update" />-->
-    </bean>
-    <bean id="hibernateHbmToDdlImportFiles" class="java.lang.String">
-        <constructor-arg value="sql/import_mysql.sql" />
-    </bean>
-    <bean id="hibernateShowSQL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
-    </bean>
-    <bean id="hibernateFormatSQL" class="java.lang.Boolean">
-        <constructor-arg value="false" />
-    </bean>
-    <util:map id="hibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="hibernate.connection.zeroDateTimeBehavior" value="convertToNull" />
-    </util:map>
-    
-    <!--
-    <bean id="smtpPort" class="java.lang.Integer">
-        <constructor-arg value="25" />
-    </bean>
-    <bean id="smtpPortSSL" class="java.lang.Integer">
-        <constructor-arg value="465" />
-    </bean>
-    <bean id="charset" class="java.lang.String">
-        <constructor-arg value="UTF-8" />
-    </bean>
-    <bean id="imagesBaseUrl" class="java.lang.String">
-        <constructor-arg value="http://veneficalabs.com/" />
-    </bean>
-    <bean id="hostName" class="java.lang.String">
-        <constructor-arg value="smtp.googlemail.com" />
-    </bean>
-    <bean id="username" class="java.lang.String">
-        <constructor-arg value="gyuszi@veneficalabs.com" />
-    </bean>
-    <bean id="password" class="java.lang.String">
-        <constructor-arg value="Bestseller2012" />
-    </bean>
-    <bean id="useSSL" class="java.lang.Boolean">
-        <constructor-arg value="true" />
-    </bean>
-    <bean id="fromEmailAddress" class="java.lang.String">
-        <constructor-arg value="do-not-reply@veneficalabs.com" />
-    </bean>
-    <bean id="fromName" class="java.lang.String">
-        <constructor-arg value="Venefica LABS" />
-    </bean>
-    <bean id="undeliveredEmailAddress" class="java.lang.String">
-        <constructor-arg value="support@veneficalabs.com" />
-    </bean>
-    <bean id="enabled" class="java.lang.Boolean">
-        <constructor-arg value="false" />
-    </bean>
-    -->
-    
-    
     <!-- import java-based configurations -->
     <bean class="com.venefica.config.data.TestDataConfig" />
     <bean class="com.venefica.config.EmailConfig" />
     <bean class="com.venefica.config.FileConfig" />
     <bean class="com.venefica.config.InvitationConfig" />
+    <bean class="com.venefica.config.ImageConfig" />
     
     
-    
-    
-    
-    <!-- MailChimp configurations -->
-    <bean id="listId" class="java.lang.String">
-        <constructor-arg value="${mj.listId}" />
-    </bean>
-    <bean id="doubleOpt" class="java.lang.Boolean">
-        <constructor-arg value="${mj.doubleOpt}" />
-    </bean>
-    
-    <!-- MailChimp integration -->
-    <import resource="classpath:mailjimp-spring-config.xml" />
-    
+    <bean class="com.venefica.common.ImageUtils" />
+    <bean class="com.venefica.common.EmailSender" />
+    <bean class="com.venefica.common.MailChimpSender" />
+    <bean class="com.venefica.common.FileUpload" />
+    <bean class="com.venefica.common.AmazonUpload" />
     
     
     

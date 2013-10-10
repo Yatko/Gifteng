@@ -24,15 +24,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author gyuszi
  */
 @Entity
-//@SequenceGenerator(name = "userpoint_gen", sequenceName = "userpoint_seq", allocationSize = 1)
 @Table(name = "user_point")
 public class UserPoint {
     
-//    private static final BigDecimal HUNDRED = new BigDecimal(100);
-    
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userpoint_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @OneToOne(optional = false)
@@ -81,11 +77,20 @@ public class UserPoint {
         }
         BigDecimal pendingGivingNumber = BigDecimal.ZERO;
         for ( UserTransaction transaction : transactions ) {
-            if ( !transaction.isApproved() ) {
-                continue;
-            } else if ( transaction.isFinalized() ) {
+            if ( transaction.isFinalized() ) {
+                //transaction is already finalized, the pending number already added to user final scores
                 continue;
             }
+            
+            Ad ad = getAd(transaction);
+            if ( ad == null ) {
+                continue;
+            } else if ( ad.isExpired() ) {
+                continue;
+            } else if ( !ad.isApproved() ) {
+                continue;
+            }
+            
             pendingGivingNumber = pendingGivingNumber.add(transaction.getPendingGivingNumber() != null ? transaction.getPendingGivingNumber() : BigDecimal.ZERO);
         }
         return pendingGivingNumber;
@@ -97,39 +102,33 @@ public class UserPoint {
         }
         BigDecimal pendingReceivingNumber = BigDecimal.ZERO;
         for ( UserTransaction transaction : transactions ) {
-            if ( !transaction.isApproved() ) {
-                continue;
-            } else if ( transaction.isFinalized() ) {
+            if ( transaction.isFinalized() ) {
+                //transaction is already finalized, the pending number already added to user final scores
                 continue;
             }
+            
+            Ad ad = getAd(transaction);
+            if ( ad == null ) {
+                continue;
+            } else if ( ad.isExpired() ) {
+                continue;
+            } else if ( !ad.isApproved() ) {
+                continue;
+            }
+            
             pendingReceivingNumber = pendingReceivingNumber.add(transaction.getPendingReceivingNumber() != null ? transaction.getPendingReceivingNumber() : BigDecimal.ZERO);
         }
         return pendingReceivingNumber;
     }
     
-//    private boolean containsTransaction(Ad ad) {
-//        if ( transactions == null || transactions.isEmpty() ) {
-//            return false;
-//        }
-//        for ( UserTransaction transaction : transactions ) {
-//            if ( transaction.getAd() != null && transaction.getAd().equals(ad) ) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    
-//    private boolean containsTransaction(Request request) {
-//        if ( transactions == null || transactions.isEmpty() ) {
-//            return false;
-//        }
-//        for ( UserTransaction transaction : transactions ) {
-//            if ( transaction.getRequest()!= null && transaction.getRequest().equals(request) ) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    private Ad getAd(UserTransaction transaction) {
+        if ( transaction.getAd() != null ) {
+            return transaction.getAd();
+        } else if ( transaction.getRequest() != null && transaction.getRequest().getAd() != null ) {
+            return transaction.getRequest().getAd();
+        }
+        return null;
+    }
     
     // static helpers
     
@@ -182,6 +181,7 @@ public class UserPoint {
         return givingNumber;
     }
 
+    @SuppressWarnings("unused")
     private void setGivingNumber(BigDecimal givingNumber) {
         this.givingNumber = givingNumber;
     }
@@ -190,6 +190,7 @@ public class UserPoint {
         return receivingNumber;
     }
 
+    @SuppressWarnings("unused")
     private void setReceivingNumber(BigDecimal receivingNumber) {
         this.receivingNumber = receivingNumber;
     }

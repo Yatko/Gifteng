@@ -34,9 +34,9 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     public List<User> getAdminUsers() {
         List<User> users = createQuery(""
                 + "select u "
-                + "from " + getDomainClassName() + " u "
-                + "where "
-                + "u.admin = true"
+                + "from " + getDomainClassName() + " u where "
+                + "u.admin = true and "
+                + "u.deleted = false"
                 + "")
                 .list();
         return users;
@@ -46,7 +46,8 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     public List<User> getTopUsers(int numberUsers) {
         List<User> users = createQuery(""
                 + "select u "
-                + "from " + getDomainClassName() + " u "
+                + "from " + getDomainClassName() + " u where "
+                + "u.deleted = false "
                 + "order by u.userPoint.givingNumber desc "
                 + "")
                 .setMaxResults(numberUsers)
@@ -60,7 +61,8 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
                 + "select u.followers "
                 + "from " + getDomainClassName() + " u "
                 + "where "
-                + "u.id = :userId"
+                + "u.id = :userId and "
+                + "u.deleted = false"
                 + "")
                 .setParameter("userId", userId)
                 .list();
@@ -74,8 +76,9 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public User findUserByName(String name) {
         List<User> users = createQuery(""
-                + "from " + getDomainClassName() + " u "
-                + "where u.name = :name"
+                + "from " + getDomainClassName() + " u where "
+                + "u.name = :name and "
+                + "u.deleted = false"
                 + "")
                 .setParameter("name", name)
                 .list();
@@ -85,8 +88,9 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public User findUserByEmail(String email) {
         List<User> users = createQuery(""
-                + "from " + getDomainClassName() + " u "
-                + "where u.email = :email"
+                + "from " + getDomainClassName() + " u where "
+                + "u.email = :email and "
+                + "u.deleted = false"
                 + "")
                 .setParameter("email", email)
                 .list();
@@ -96,8 +100,9 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public User findUserByPhoneNumber(String phoneNumber) {
         List<User> users = createQuery(""
-                + "from " + getDomainClassName() + " u "
-                + "where u.phoneNumber = :phoneNumber"
+                + "from " + getDomainClassName() + " u where "
+                + "u.phoneNumber = :phoneNumber and "
+                + "u.deleted = false"
                 + "")
                 .setParameter("phoneNumber", phoneNumber)
                 .list();
@@ -118,8 +123,8 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public boolean removeByName(String name) {
         int numUserDeleted = createQuery(""
-                + "delete from " + getDomainClassName() + " u "
-                + "where u.name = :name"
+                + "delete from " + getDomainClassName() + " u where "
+                + "u.name = :name"
                 + "")
                 .setParameter("name", name)
                 .executeUpdate();
@@ -129,8 +134,8 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public boolean removeByEmail(String email) {
         int numUserDeleted = createQuery(""
-                + "delete from " + getDomainClassName() + " u "
-                + "where u.email = :email"
+                + "delete from " + getDomainClassName() + " u where "
+                + "u.email = :email"
                 + "")
                 .setParameter("email", email)
                 .executeUpdate();

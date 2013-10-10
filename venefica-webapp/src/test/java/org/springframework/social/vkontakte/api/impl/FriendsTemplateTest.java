@@ -23,6 +23,7 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.text.ParseException;
 import java.util.List;
+import org.junit.Ignore;
 
 import org.junit.Test;
 import org.springframework.social.MissingAuthorizationException;
@@ -33,6 +34,7 @@ import org.springframework.social.vkontakte.api.VKontakteProfile;
  * {@link FriendsTemplate} test.
  * @author vkolodrevskiy
  */
+@Ignore
 public class FriendsTemplateTest extends AbstractVKontakteApiTest {
 
     @Test

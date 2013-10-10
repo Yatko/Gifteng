@@ -8,6 +8,7 @@ import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Bookmark;
 import com.venefica.model.Image;
+import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
 import com.venefica.model.RequestStatus;
 import com.venefica.model.User;
@@ -110,19 +111,19 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     public void listCategoriesTest() {
         authenticateClientAsFirstUser();
         
-        List<CategoryDto> categories = client.getCategories(null);
+        List<CategoryDto> categories = client.getSubCategories(null);
         assertNotNull("At least an empty list must be retured", categories);
         assertTrue("There are no root categoriles", categories.size() > 0);
 
         CategoryDto first = categories.get(0);
-        client.getCategories(first.getId());
+        client.getSubCategories(first.getId());
     }
 
     @Test
     public void unexistingParentCategoryTest() {
         authenticateClientAsFirstUser();
         
-        List<CategoryDto> categories = client.getCategories(new Long(-1));
+        List<CategoryDto> categories = client.getSubCategories(new Long(-1));
         assertTrue("There are subcategories in the unexisting category. WTF?", categories == null
                 || categories.isEmpty());
     }
@@ -145,7 +146,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         authenticateClientAsFirstUser();
         
-        CategoryDto category = client.getCategories(null).get(0);
+        CategoryDto category = client.getSubCategories(null).get(0);
 
         AdDto adDto = new AdDto();
         adDto.setCategoryId(category.getId());
@@ -180,7 +181,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             // it's OK
         }
 
-        CategoryDto category = client.getCategories(null).get(0);
+        CategoryDto category = client.getSubCategories(null).get(0);
         adDto.setCategoryId(category.getId());
 
         try {
@@ -326,7 +327,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         authenticateClientAsFirstUser();
 
         // Create an ad with an image
-        CategoryDto categoryDto = client.getCategories(null).get(0);
+        CategoryDto categoryDto = client.getSubCategories(null).get(0);
 
         AdDto adDto = new AdDto();
         adDto.setCategoryId(categoryDto.getId());
@@ -349,7 +350,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
                     0x02, 0x03}));
         client.deleteImageFromAd(FIRST_AD_ID, imageId);
 
-        Image image = imageDao.get(imageId);
+        Image image = imageDao.get(imageId, ImageModelType.AD);
         assertTrue("Image not deleted!", image == null);
     }
     
@@ -362,10 +363,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         client.deleteImagesFromAd(FIRST_AD_ID, Arrays.asList(imageId_1, imageId_2));
 
-        Image image_1 = imageDao.get(imageId_1);
+        Image image_1 = imageDao.get(imageId_1, ImageModelType.AD);
         assertTrue("Image 1 not deleted!", image_1 == null);
         
-        Image image_2 = imageDao.get(imageId_2);
+        Image image_2 = imageDao.get(imageId_2, ImageModelType.AD);
         assertTrue("Image 2 not deleted!", image_2 == null);
     }
 

@@ -6,6 +6,7 @@ import com.venefica.model.AddressWrapper;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.Gender;
 import com.venefica.model.Image;
+import com.venefica.model.ImageModelType;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import java.io.IOException;
@@ -133,11 +134,11 @@ public class UserDto extends DtoBase {
                 if (user.getAvatar() != null) {
                     Image avatarImage = user.getAvatar();
                     user.setAvatar(null);
-                    imageDao.delete(avatarImage);
+                    imageDao.delete(avatarImage, ImageModelType.USER);
                 }
 
                 Image avatarImage = avatar.toImage();
-                imageDao.save(avatarImage);
+                imageDao.save(avatarImage, ImageModelType.USER);
 
                 // Set new avatar image
                 user.setAvatar(avatarImage);

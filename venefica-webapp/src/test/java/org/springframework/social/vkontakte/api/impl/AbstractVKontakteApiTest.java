@@ -16,6 +16,7 @@
 package org.springframework.social.vkontakte.api.impl;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import org.springframework.social.test.client.MockRestServiceServer;
  * Generic class for template testing.
  * @author vkolodrevskiy
  */
+@Ignore
 public class AbstractVKontakteApiTest {
 
     protected VKontakteTemplate vkontakte;

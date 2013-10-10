@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes an advertisement category. Subcategories are also supported.
@@ -21,12 +20,10 @@ import org.hibernate.annotations.ForeignKey;
  */
 @Entity
 @Table(name = "category")
-//@SequenceGenerator(name = "cat_gen", sequenceName = "cat_seq", allocationSize = 1)
 public class Category {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cat_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne

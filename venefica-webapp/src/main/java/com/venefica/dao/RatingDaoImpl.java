@@ -31,7 +31,11 @@ public class RatingDaoImpl extends DaoBase<Rating> implements RatingDao {
     @Override
     public Rating get(Long fromUserId, Long adId) {
         // @formatter:off
-        return (Rating) createQuery("from " + getDomainClassName() + " r where r.from.id = :fromUserId and r.ad.id = :adId")
+        return (Rating) createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.from.id = :fromUserId and "
+                + "r.ad.id = :adId"
+                + "")
                 .setParameter("fromUserId", fromUserId)
                 .setParameter("adId", adId)
                 .uniqueResult();
@@ -41,7 +45,10 @@ public class RatingDaoImpl extends DaoBase<Rating> implements RatingDao {
     @Override
     public List<Rating> getReceivedForUser(Long userId) {
         // @formatter:off
-        return createQuery("from " + getDomainClassName() + " r where r.to.id = :userId")
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.to.id = :userId"
+                + "")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off
@@ -50,7 +57,10 @@ public class RatingDaoImpl extends DaoBase<Rating> implements RatingDao {
     @Override
     public List<Rating> getSentByUser(Long userId) {
         // @formatter:off
-        return createQuery("from " + getDomainClassName() + " r where r.from.id = :userId")
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.from.id = :userId"
+                + "")
                 .setParameter("userId", userId)
                 .list();
         // @formatter:off

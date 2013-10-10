@@ -23,7 +23,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Local user model.
@@ -31,13 +30,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-//@SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1)
 @Table(name = "local_user")
 public class User {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(unique = true, updatable = false)
@@ -95,6 +92,10 @@ public class User {
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
 
+    private boolean deleted;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedAt;
+    
     public User() {
         password = RandomGenerator.generateNumeric(Constants.USER_DEFAULT_PASSWORD_LENGTH);
         followers = new HashSet<User>(0);
@@ -208,6 +209,11 @@ public class User {
         if ( followings == null ) {
             followings = new HashSet<User>(0);
         }
+    }
+    
+    public void markAsDeleted() {
+        deleted = true;
+        deletedAt = new Date();
     }
     
     @Override
@@ -358,5 +364,21 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+    
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

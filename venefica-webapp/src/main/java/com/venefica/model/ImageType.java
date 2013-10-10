@@ -9,6 +9,9 @@ public enum ImageType {
     private static final String JPEG_MIME_TYPE = "image/jpeg";
     private static final String PNG_MIME_TYPE = "image/x-png";
     
+    private static final String JPEG_FORMAT_NAME = "jpg";
+    private static final String PNG_FORMAT_NAME = "png";
+    
     public String getMimeType() {
         switch ( this ) {
             case JPEG:
@@ -17,6 +20,17 @@ public enum ImageType {
                 return PNG_MIME_TYPE;
             default:
                 return JPEG_MIME_TYPE;
+        }
+    }
+    
+    public String getFormatName() {
+        switch ( this ) {
+            case JPEG:
+                return JPEG_FORMAT_NAME;
+            case PNG:
+                return PNG_FORMAT_NAME;
+            default:
+                return JPEG_FORMAT_NAME;
         }
     }
     

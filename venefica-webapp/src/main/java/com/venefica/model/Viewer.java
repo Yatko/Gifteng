@@ -25,7 +25,7 @@ import org.hibernate.annotations.ForeignKey;
 public class Viewer {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)
