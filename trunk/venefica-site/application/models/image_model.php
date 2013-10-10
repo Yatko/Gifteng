@@ -39,30 +39,18 @@ class Image_model extends CI_Model {
     }
     
     /**
-     * Checks if the present url reflects an uploaded file name.
-     * 
-     * @return boolean
-     */
-    public function isUploaded() {
-        if ( $this->url == null ) {
-            return false;
-        }
-        return startsWith($this->url, UPLOAD_FILE_PREFIX);
-    }
-    
-    /**
      * Detectds and returnds the url of the image. This should be used at file
      * upload.
      * 
      * @return string
      */
-    public function getDetectedImageUrl() {
+    public function getDetectedImageUrl($type, $size) {
         $url = null;
         if ( $this->url != null ) {
             if ( $this->isUploaded() ) {
                 $url = base_url() . 'get_photo/' . $this->url;
             } else {
-                $url = get_image_url($this->url);
+                $url = get_image_url($this->url, $type, $size);
             }
         }
         return $url;
@@ -77,6 +65,18 @@ class Image_model extends CI_Model {
             $this->imgType = Image_model::getImgTypeByExtension($image_file_name);
             $this->data = readFileAsString(TEMP_FOLDER .'/'. $image_file_name);
         }
+    }
+    
+    /**
+     * Checks if the present url reflects an uploaded file name.
+     * 
+     * @return boolean
+     */
+    private function isUploaded() {
+        if ( $this->url == null ) {
+            return false;
+        }
+        return startsWith($this->url, UPLOAD_FILE_PREFIX);
     }
     
     // static helpers

@@ -24,6 +24,20 @@
  * error: string
  */
 
+if ( $is_modal ) {
+    $form_action = '';
+} else if ( $is_new ) {
+    $form_action = 'post/member' . ($is_modal ? '?modal' : '');
+} else {
+    $form_action = 'edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
+}
+
+if ( isset($image) && $image ) {
+    $image_link = $image->getDetectedImageUrl(IMAGE_TYPE_AD, POST_AD_IMAGE_SIZE);
+} else {
+    $image_link = "";
+}
+
 ?>
 
 <script langauge="javascript">
@@ -47,15 +61,6 @@
     });
 </script>
 
-<?
-if ( $is_modal ) {
-    $form_action = '';
-} else if ( $is_new ) {
-    $form_action = 'post/member' . ($is_modal ? '?modal' : '');
-} else {
-    $form_action = 'edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
-}
-?>
 
 <? if( !$is_modal ): ?>
 
@@ -78,7 +83,7 @@ if ( $is_modal ) {
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'Giving makes you live longer. Seriously, it\'s true.';
             
-            if ( $is_new && is_empty($image->getDetectedImageUrl()) ) {
+            if ( $is_new && is_empty($image_link) ) {
                 $image_text = 'Add photo';
             } else {
                 $image_text = 'Change photo';
@@ -111,8 +116,8 @@ if ( $is_modal ) {
                         <div class="row-fluid">
                             <div class="span12">
                             
-                            <? if( !is_empty($image->getDetectedImageUrl()) ): ?>
-                                <img src="<?=$image->getDetectedImageUrl()?>" class="ge-post-image img img-rounded file" for="image" />
+                            <? if( !is_empty($image_link) ): ?>
+                                <img src="<?= $image_link ?>" class="ge-post-image img img-rounded file" for="image" />
                             <? else: ?>
                                 <img src="<?=BASE_PATH?>temp-sample/ge-upload.png" class="ge-post-image noimage img img-rounded file" for="image" />
                             <? endif; ?>
@@ -331,7 +336,7 @@ if ( $is_modal ) {
                     
                     <div class="row-fluid">
                     	<div class="ge-item-image">
-                        <img src="<?=$image->getDetectedImageUrl()?>" class="img img-rounded" />
+                        <img src="<?= $image_link ?>" class="img img-rounded" />
                     	</div>
                     </div><!--./ge-item-image-->
 

@@ -13,7 +13,7 @@ $user_is_business = $currentUser->businessAccount;
 $ad_is_business = $ad->isBusiness();
 $ad_title = $ad->getSafeTitle();
 $ad_subtitle = $ad->getSafeSubtitle();
-$ad_description = $ad->getSafeDescription();
+$ad_description = $ad->getSafeDescription(true);
 $creator_phone_number = $ad->creator->phoneNumber;
 
 if ( !empty($ad->expires) && $ad->expires ) {
@@ -181,7 +181,7 @@ if ( $ad_is_business ) {
     <!--user panel-->
     
 	<div class="ge-user">
-            <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true)); ?>
+            <? $this->load->view('element/user', array('user' => $ad_creator, 'canEdit' => false, 'small' => true, 'size' => VIEW_USER_IMAGE_SIZE)); ?>
 	</div><!--./ge-user-->
 
 </div><!--/right side-->

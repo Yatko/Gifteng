@@ -1,6 +1,4 @@
 <script langauge="javascript">
-    var postCallerElement;
-    
     function startPostModal() {
         $('#postContainer').removeData("modal").modal('show');
     }
@@ -46,7 +44,7 @@
     }
     
     $(function() {
-        $('#postContainer').on('hide', function() {
+        $('#postContainer').on('hidden', function(e) {
             var $step = $("#member_post_form input[name=step]");
             var $adId = $("#member_post_form input[name=adId]");
             var $unique_id = $("#member_post_form input[name=unique_id]");

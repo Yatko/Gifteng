@@ -38,6 +38,7 @@ $is_owner = $ad->owner;
 $ad_is_business = $ad->isBusiness();
 $ad_is_online = $ad->isOnline();
 $ad_is_sold = $ad->sold;
+$ad_is_expired = $ad->expired;
 
 if ($comments == null || !is_array($comments)) {
     $comments = array();
@@ -53,8 +54,8 @@ if ($ad->statistics != null) {
     $num_shares = 0;
 }
 
-$ad_can_edit = $is_owner && !$ad->hasActiveRequest() && $num_bookmarks == 0 && $num_comments == 0 && $num_shares == 0;
-$ad_can_delete = $is_owner && !$ad->hasActiveRequest();
+$ad_can_edit = $is_owner && !$ad->hasActiveRequest() && !$ad_is_expired && $num_bookmarks == 0 && $num_comments == 0 && $num_shares == 0;
+$ad_can_delete = $is_owner && (!$ad->hasActiveRequest() || $ad_is_expired);
 $ad_can_request = $ad->canRequest;
 
 $user_request = $ad->getRequestByUser($currentUser->id);
@@ -80,7 +81,7 @@ $ad_category = trim($ad->category);
 $ad_price = trim($ad->price);
 $ad_pickUp = $ad->pickUp;
 $ad_freeShipping = $ad->freeShipping;
-$ad_description = $ad->getSafeDescription();
+$ad_description = $ad->getSafeDescription(true);
 
 $ad_price = trim($ad_price, '0'); //remove zeros from beginning/end of number ie. 00140.00000 becomes 140.
 $ad_price = trim($ad_price, '.'); //remove decimal point if an integer ie. 140. becomes 140
@@ -132,10 +133,10 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                 <div class="row-fluid">
                     <div class="span12">
                         <div class="ge-user">
-                            <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => false)); ?>
+                            <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => false, 'size' => VIEW_USER_IMAGE_SIZE)); ?>
                         </div>
                         <div class="ge-item">
-                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => false, 'canShare' => $can_share)); ?>
+                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => false, 'canShare' => $can_share, 'size' => VIEW_AD_IMAGE_SIZE)); ?>
                         </div>
                     </div>
                 </div>
@@ -155,79 +156,85 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
 
                                     <? if ($is_owner): ?>
 
-                                            <?
-                                            if ($ad_can_edit) {
-                                                //there is no active request for this ad (and no comment/bookmark/share on it)
-                                                $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
-                                                $edit_class = 'class="btn btn-large btn-ge btn-block"';
-                                            } else {
-                                                //there is at least one active request (or at least one comment/bookmark/share on it)
-                                                $edit_js = '';
-                                                $edit_class = 'class="btn btn-large btn-block disabled"';
-                                            }
+                                        <?
+                                        if ( $ad_can_edit ) {
+                                            //there is no active request for this ad (and no comment/bookmark/share on it)
+                                            $edit_text = 'EDIT GIFT';
+                                            $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
+                                            $edit_class = 'class="btn btn-large btn-ge btn-block"';
+                                        } else if ( $ad_is_expired ) {
+                                            $edit_text = 'RELIST';
+                                            $edit_js = '';
+                                            $edit_class = 'class="btn btn-large btn-ge btn-block"';
+                                        } else {
+                                            //there is at least one active request (or at least one comment/bookmark/share on it)
+                                            $edit_text = 'EDIT GIFT';
+                                            $edit_js = '';
+                                            $edit_class = 'class="btn btn-large btn-block disabled"';
+                                        }
 
-                                            if ($ad_can_delete) {
-                                                //there is no active request for this ad
-                                                $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
-                                                $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
-                                            } else {
-                                                //there is at least one active request
-                                                $delete_js = '';
-                                                $delete_class = 'class="btn btn-large btn-block disabled"';
-                                            }
-                                            ?>
+                                        if ($ad_can_delete) {
+                                            //there is no active request for this ad
+                                            $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
+                                            $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
+                                        } else {
+                                            //there is at least one active request
+                                            $delete_js = '';
+                                            $delete_class = 'class="btn btn-large btn-block disabled"';
+                                        }
+                                        ?>
 
-                                            <div class="span6 mobile-two">
-                                                <button <?= $edit_js ?> <?= $edit_class ?> type="button">EDIT GIFT</button>
-                                            </div>
-                                            <div class="span6 mobile-two">
-                                                <button <?= $delete_js ?> <?= $delete_class ?> type="button">DELETE GIFT</button>
-                                            </div>
+                                        <div class="span6 mobile-two">
+                                            <button <?= $edit_js ?> <?= $edit_class ?> type="button"><?=$edit_text?></button>
+                                        </div>
+                                        <div class="span6 mobile-two">
+                                            <button <?= $delete_js ?> <?= $delete_class ?> type="button">DELETE GIFT</button>
+                                        </div>
 
-                                        <? else: ?>
+                                    <? else: ?>
 
-                                            <?
-                                            if ($user_request != null) {
-                                                //there is a user request for this ad
-                                                if ($user_request->isDeclined()) {
-                                                    $request_js = '';
-                                                    $request_class = 'class="btn btn-large btn-block disabled"';
-                                                    $request_text = 'REQUEST DECLINED';
-                                                } else if ($user_request->isCanceled()) {
-                                                    $request_js = '';
-                                                    $request_class = 'class="btn btn-large btn-block disabled"';
-                                                    $request_text = 'REQUEST CANCELED';
-                                                } else if ($ad_is_sold) {
-                                                    $request_js = '';
-                                                    $request_class = 'class="btn btn-large btn-block disabled"';
-                                                    $request_text = 'GIFT RECEIVED';
-                                                } else {
-                                                    $request_js = '';
-                                                    $request_class = 'class="btn btn-large btn-block disabled"';
-                                                    $request_text = 'REQUEST SENT';
-                                                }
+                                        <?
+                                        if ($user_request != null) {
+                                            //there is a user request for this ad
+                                            if ($user_request->isDeclined()) {
+                                                $request_js = '';
+                                                $request_class = 'class="btn btn-large btn-block disabled"';
+                                                $request_text = 'REQUEST DECLINED';
+                                            } else if ($user_request->isCanceled()) {
+                                                $request_js = '';
+                                                $request_class = 'class="btn btn-large btn-block disabled"';
+                                                $request_text = 'REQUEST CANCELED';
                                             } else if ($ad_is_sold) {
                                                 $request_js = '';
                                                 $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'GIFTED';
-                                            } else if ($ad_can_request) {
-                                                $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
-                                                $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
-                                                $request_text = 'REQUEST GIFT';
-                                            } else if ( $ad->isMaxAllowedRequestsReached() ) {
-                                                $request_js = '';
-                                                $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'REQUESTS PENDING';
+                                                $request_text = 'GIFT RECEIVED';
                                             } else {
                                                 $request_js = '';
                                                 $request_class = 'class="btn btn-large btn-block disabled"';
-                                                $request_text = 'REQUESTS PENDING'; //originally was: INACTIVE
+                                                $request_text = 'REQUEST SENT';
                                             }
-                                            ?>
+                                        } else if ($ad_is_sold) {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'GIFTED';
+                                        } else if ($ad_can_request) {
+                                            $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
+                                            $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
+                                            $request_text = 'REQUEST GIFT';
+                                        } else if ( $ad->isMaxAllowedRequestsReached() ) {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'REQUESTS PENDING';
+                                        } else {
+                                            $request_js = '';
+                                            $request_class = 'class="btn btn-large btn-block disabled"';
+                                            $request_text = 'REQUESTS PENDING'; //originally was: INACTIVE
+                                        }
+                                        ?>
 
-                                            <button <?= $request_js ?> <?= $request_class ?> type="button"><?= $request_text ?></button>
+                                        <button <?= $request_js ?> <?= $request_class ?> type="button"><?= $request_text ?></button>
 
-                                        <? endif; ?>
+                                    <? endif; ?>
 
                                     </div>
                                 </div>

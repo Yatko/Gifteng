@@ -63,8 +63,7 @@
     function shareOnTwitter(title, itemUrl, imgUrl) {
         var width = 575;
         var height = 450;
-        var safeTitle = encodeURIComponent(('#Free ' + title).replace(/&amp;/g, "&"));
-        safeTitle = safeTitle.substring(0, 30);
+        var safeTitle = encodeURIComponent(('#Free ' + title.substring(0, 30)).replace(/&amp;/g, "&"));
         var safeItemUrl = encodeURIComponent(itemUrl.replace(/&amp;/g, "&"));
         var safeImgUrl = encodeURIComponent(imgUrl.replace(/&amp;/g, "&"));
         open_window_clear('https://twitter.com/share?text=' + safeTitle + '&url=' + safeItemUrl + '&via=gifteng&button_hashtag=free', '', width, height);

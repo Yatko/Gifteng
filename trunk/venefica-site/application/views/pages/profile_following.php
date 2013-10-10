@@ -62,7 +62,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                                     <div class="span12">
 
                                         <div class="ge-user">
-                                            <? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true)); ?>
+                                            <? $this->load->view('element/user', array('user' => $follow, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
                                         </div><!--./ge-user-->
 
                     <? if( count($ads) > 0 ): ?>
@@ -72,7 +72,7 @@ $active_tab = Profile::getActiveTab($active_menu);
 
                                             <? foreach ($ads as $ad): ?>
                                                 <?
-                                                $img = $ad->getImageUrl();
+                                                $img = $ad->getImageUrl(FOLLOWING_AD_IMAGE_SIZE);
                                                 $view_link = $ad->getViewUrl();
                                                 $ad_can_request = $ad->canRequest;
 
@@ -87,7 +87,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                                                 <div class="span4 mobile-one">
                                                     <div class="ge-ad-item-box <?= ($inactive ? 'ge-inactive' : 'ge-active') ?>">
                                                         <div class="ge-item-image">
-                                                            <a href="<?=$view_link?>"><img src = "<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
+                                                            <a href="<?=$view_link?>"><img src="<?=$img?>" class="img img-rounded <?= $inactive ? 'inactive' : '' ?>" /></a>
                                                         </div>
                                                     </div>
                                                 </div>

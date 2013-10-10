@@ -273,11 +273,11 @@ if ( isset($ads) && is_array($ads) ) {
                         <div class="span12">
 
                             <div class="ge-user">
-                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true)); ?>
+                                <? $this->load->view('element/user', array('user' => $ad->creator, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
                             </div>
 
                             <div class="ge-item">
-                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share)); ?>
+                                <? $this->load->view('element/ad_item', array('ad' => $ad, 'canBookmark' => $can_bookmark, 'canComment' => $can_comment, 'canShare' => $can_share, 'size' => LIST_AD_IMAGE_SIZE)); ?>
                                 <? $this->load->view('element/ad_data', array('ad' => $ad, 'currentUser' => $currentUser)); ?>
                             </div><!--./ge-item-->
 

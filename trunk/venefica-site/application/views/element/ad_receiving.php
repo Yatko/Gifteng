@@ -30,13 +30,13 @@ if( $ad->expired || $request->isExpired() ) {
 <? if( $is_owner ): ?>
                 
                 <div class="ge-user">
-                    <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true)); ?>
+                    <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
                 </div>
                 
 <? endif; ?>
 
                 <div class="ge-item">	
-                    <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
+                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE)); ?>
 
 <? if( $is_owner ): ?>
                     
@@ -75,12 +75,14 @@ if( $ad->expired || $request->isExpired() ) {
     <? elseif( $ad->sold ): ?>
 
                         <?
+                        /**
                         $accepted_request = $ad->getAcceptedRequest();
                         if ( $accepted_request != null ) {
                             $requestor_img = $accepted_request->getUserAvatarUrl();
                         } else {
                             $requestor_img = DEFAULT_USER_URL;
                         }
+                        /**/
                         ?>
 
                         <div class="row-fluid ge-text ge-description">

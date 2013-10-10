@@ -53,6 +53,9 @@ class View extends CI_Controller {
         $data['comments'] = $comments;
         $data['isAdmin'] = $is_admin;
         
+        $js_data = array();
+        $js_data['currentUser'] = $currentUser;
+        
         $modal = '';
         $modal .= $this->load->view('modal/request_create', array(), true);
         $modal .= $this->load->view('modal/edit_post', array(), true);
@@ -63,7 +66,7 @@ class View extends CI_Controller {
         $this->load->view('javascript/ad');
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
-        $this->load->view('javascript/comment');
+        $this->load->view('javascript/comment', $js_data);
         $this->load->view('javascript/map');
         $this->load->view('javascript/social');
         if ( isBusinessAccount() ) {

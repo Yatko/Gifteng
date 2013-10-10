@@ -99,6 +99,9 @@ class Post_member extends CI_Controller {
             $this->load->model('category_model');
             $this->load->model('request_model');
             
+            //log_message(ERROR, 'POST: ' . print_r($_POST, true));
+            //log_message(ERROR, 'FILES: ' . print_r($_FILES, true));
+            
             $this->is_first_page = ($_POST || $_FILES ? false : true);
             if ( $this->is_first_page ) {
                 $ad = new Ad_model();
@@ -113,6 +116,9 @@ class Post_member extends CI_Controller {
                 $this->unique_id = $this->input->post('unique_id');
                 $this->loadAd(); //loading Ad_model from the session
             }
+            
+            //log_message(ERROR, 'is_first_page: ' . $this->is_first_page);
+            //log_message(ERROR, 'ad: ' . print_r($this->ad, true));
             
             clear_cache();
             
@@ -144,7 +150,7 @@ class Post_member extends CI_Controller {
             $step = $current_step;
         }
         
-        //print_r($this->ad);
+        //log_message(ERROR, '- ad: ' . print_r($this->ad, true));
         
         $data = array();
         $data['step'] = $step;
@@ -196,23 +202,15 @@ class Post_member extends CI_Controller {
             $data['latitude'] = $latitude;
         } else if ( $step == Post_member::STEP_PREVIEW ) {
             try {
-                $categories = $this->ad_service->getAllCategories();
+                $cat = $this->ad_service->getCategory($this->ad->categoryId);
+                $category = $cat->name;
             } catch ( Exception $ex ) {
-                $categories = array();
-            }
-            
-            $category = '';
-            $categoryId = $this->ad->categoryId;
-            foreach ($categories as $cat) {
-                if ( $categoryId == $cat->id ) {
-                    $category = $cat->name;
-                    break;
-                }
+                $category = '';
             }
             
             $data['image'] = $this->ad->image;
             $data['title'] = $this->ad->getSafeTitle();
-            $data['description'] = $this->ad->getSafeDescription();
+            $data['description'] = $this->ad->getSafeDescription(true);
             $data['price'] = $this->ad->price;
             $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
             $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';
@@ -274,27 +272,28 @@ class Post_member extends CI_Controller {
         } else {
             $this->ad = $ad;
         }
-        
-        //log_message(ERROR, 'storing ad: ' . print_r($ad, true));
-        $key = $this->unique_id . '_ad';
-        storeIntoSession($key, $ad);
-        
-        //$this->session->set_flashdata($this->unique_id . '_ad', $ad);
+        storeIntoSession($this->getSessionKey(), $ad);
     }
     
     private function loadAd() {
-        //$ad = $this->session->userdata($this->unique_id . '_ad');
-        $key = $this->unique_id . '_ad';
-        $ad = loadFromSession($key);
-        //log_message(ERROR, 'loading ad: ' . print_r($ad, true));
+        $ad = loadFromSession($this->getSessionKey());
         $this->ad = $ad;
     }
     
     private function removeAd() {
-        $key = $this->unique_id . '_ad';
-        removeFromSession($key);
+        removeFromSession($this->getSessionKey());
     }
     
+    private function hasAd() {
+        $ad = loadFromSession($this->getSessionKey());
+        return !is_empty($ad);
+    }
+    
+    private function getSessionKey() {
+        $key = $this->unique_id . '_ad';
+        return $key;
+    }
+
     private function process($current_step) {
         if ( $current_step == Post_member::STEP_START ) {
             return $this->post_start();

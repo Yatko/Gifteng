@@ -7,15 +7,19 @@
  * canBookmark: boolean (default: false)
  * canComment: boolean (default: false)
  * canShare: boolean (default: false)
+ * size: int (default: LIST_AD_IMAGE_SIZE)
  */
 
 if ( !isset($canBookmark) ) $canBookmark = false;
 if ( !isset($canComment) ) $canComment = false;
 if ( !isset($canShare) ) $canShare = false;
+if ( !isset($size) ) $size = LIST_AD_IMAGE_SIZE;
+
 $is_bookmarked = $ad->inBookmarks;
 $is_owner = $ad->owner;
 $id = $ad->id;
-$img = $ad->getImageUrl();
+$title = safe_parameter($ad->title);
+$img = $ad->getImageUrl($size);
 $view_link = $ad->getViewUrl();
 
 if ( $ad->statistics != null ) {
@@ -77,14 +81,7 @@ if ( $ad->statistics != null ) {
                                 <? /**/ ?>
                             </button>
                         <? else: ?>
-                            
-                            <?
-                            $title = safe_parameter($ad->title);
-                            $itemUrl = $ad->getViewUrl();
-                            $imgUrl = $ad->getImageUrl();
-                            ?>
-                            
-                            <button onclick="startSocialModal('<?=$title?>', '<?=$itemUrl?>', '<?=$imgUrl?>');" type="button" class="btn btn-small btn-block btn-ge">
+                            <button onclick="startSocialModal('<?=$title?>', '<?=$view_link?>', '<?=$img?>');" type="button" class="btn btn-small btn-block btn-ge">
                                 <i class="ge-icon-share"></i>
                                 <? /** ?>
                                 <?= $num_shares ?>

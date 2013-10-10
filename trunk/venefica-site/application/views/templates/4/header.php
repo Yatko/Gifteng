@@ -283,7 +283,7 @@ $is_logged = isLogged();
                         <?
                         $currentUser = $this->usermanagement_service->loadUser();
                         if ( isset($currentUser) && $currentUser != null ) {
-                            $this->load->view('element/user', array('user' => $currentUser, 'canEdit' => false, 'small' => true));
+                            $this->load->view('element/user', array('user' => $currentUser, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE));
                         }
                         ?>
                     </div>
