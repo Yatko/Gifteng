@@ -23,6 +23,7 @@ import com.venefica.model.BusinessAdData;
 import com.venefica.model.Category;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
+import com.venefica.model.ImageModelType;
 import com.venefica.model.Message;
 import com.venefica.model.NotificationType;
 import com.venefica.model.Rating;
@@ -60,6 +61,7 @@ import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -114,7 +116,20 @@ public class AdServiceImpl extends AbstractService implements AdService {
     //**********************
     
     @Override
-    public List<CategoryDto> getCategories(Long categoryId) {
+    @Transactional
+    public CategoryDto getCategory(Long categoryId) {
+        try {
+            Category category = categoryDao.get(categoryId);
+            CategoryDto categoryDto = new CategoryDto(category, true);
+            return categoryDto;
+        } catch ( Exception ex ) {
+            logger.error("Exception thrown when trying to get category (categoryId: " + categoryId + ")", ex);
+            return null;
+        }
+    }
+    
+    @Override
+    public List<CategoryDto> getSubCategories(Long categoryId) {
         return getCategories(categoryId, false);
     }
 
@@ -145,14 +160,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // ++
         
         User currentUser = getCurrentUser();
-//        BigDecimal beforePendingNumber = null;
-        
-//        if ( !currentUser.isBusinessAccount() ) {
-//            beforePendingNumber = calculatePendingNumber(currentUser);
-//        }
-        
         boolean expires = adDto.getExpires() != null ? adDto.getExpires() : true;
-        Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : DateUtils.addDays(new Date(), Constants.AD_EXPIRATION_PERIOD_DAYS);
+        Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : calculateExpiration();
         Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
         
         Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
@@ -179,15 +188,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Long adId = adDao.save(ad);
         
         if ( !currentUser.isBusinessAccount() ) {
-//            BigDecimal currentPendingNumber = calculatePendingNumber(currentUser);
-//            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
-
             UserTransaction transaction = new UserTransaction(ad);
-            transaction.setApproved(false);
             transaction.setUser(currentUser);
             transaction.setUserPoint(currentUser.getUserPoint());
-//            transaction.setPendingNumber(currentPendingNumber);
-//            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
         }
         
@@ -232,9 +235,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
 
         Category category = validateCategory(adDto.getCategoryId());
-        UserTransaction transaction = userTransactionDao.getByAd(ad.getCreator().getId(), ad.getId());
+        UserTransaction adTransaction = userTransactionDao.getByAd(ad.getId());
         
-        if ( !currentUser.isBusinessAccount() && transaction == null ) {
+        if ( !currentUser.isBusinessAccount() && adTransaction == null ) {
             throw new AdValidationException("There is no attached transaction for ad (adId: " + ad.getId() + ") - update failed.");
         }
 
@@ -245,79 +248,30 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.unmarkAsApproved();
         ad.setStatus(AdStatus.OFFLINE);
         ad.getAdData().setCategory(category);
-
-        try {
-            if (adDto.getImage() != null) {
-                ImageDto imageDto = adDto.getImage();
-                if (imageDto.isValid()) {
-                    Image image = ad.getAdData().getMainImage();
-
-                    if (image != null) {
-                        ad.getAdData().setMainImage(null);
-                        imageDao.delete(image);
-                    }
-
-                    image = imageDto.toImage();
-                    imageDao.save(image);
-                    ad.getAdData().setMainImage(image);
-                } else if ( imageDto.getUrl() == null || imageDto.getUrl().trim().isEmpty() ) {
-                    throw new AdValidationException(AdField.IMAGE, "Invalid image specified!");
-                }
-            }
-        } catch ( IOException ex ) {
-            logger.error("Exception when saving ad main image", ex);
-        }
-
-        try {
-            if (adDto.getImageThumbnail() != null) {
-                ImageDto thumbImageDto = adDto.getImageThumbnail();
-                if (thumbImageDto.isValid()) {
-                    Image thumbImage = ad.getAdData().getThumbImage();
-
-                    if (thumbImage != null) {
-                        ad.getAdData().setThumbImage(null);
-                        imageDao.delete(thumbImage);
-                    }
-
-                    thumbImage = thumbImageDto.toImage();
-                    imageDao.save(thumbImage);
-                    ad.getAdData().setThumbImage(thumbImage);
-                } else if ( thumbImageDto.getUrl() == null || thumbImageDto.getUrl().trim().isEmpty() ) {
-                    throw new AdValidationException(AdField.THUMB_IMAGE, "Invalid image specified!");
-                }
-            }
-        } catch ( IOException ex ) {
-            logger.error("Exception when saving ad thumbnail image", ex);
-        }
         
-        try {
-            if (ad.getType() == AdType.BUSINESS && adDto.getImageBarcode() != null) {
-                ImageDto barcodeImageDto = adDto.getImageBarcode();
-                if (barcodeImageDto.isValid()) {
-                    Image barcodeImage = ((BusinessAdData) ad.getAdData()).getBarcodeImage();
-
-                    if (barcodeImage != null) {
-                        ad.getAdData().setThumbImage(null);
-                        imageDao.delete(barcodeImage);
-                    }
-
-                    barcodeImage = barcodeImageDto.toImage();
-                    imageDao.save(barcodeImage);
-                    ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
-                } else if ( barcodeImageDto.getUrl() == null || barcodeImageDto.getUrl().trim().isEmpty() ) {
-                    throw new AdValidationException(AdField.BARCODE_IMAGE, "Invalid image specified!");
-                }
-            }
-        } catch ( IOException ex ) {
-            logger.error("Exception when saving business ad barcode image", ex);
-        }
+        updateImage(ad, adDto, AdField.IMAGE);
+        updateImage(ad, adDto, AdField.THUMB_IMAGE);
+        updateImage(ad, adDto, AdField.BARCODE_IMAGE);
         
         adDataDao.update(ad.getAdData());
 
         if ( !currentUser.isBusinessAccount() ) {
-            transaction.setPendingGivingNumber(UserPoint.getGivingNumber(ad));
-            transaction.setApproved(false);
-            userTransactionDao.update(transaction);
+            adTransaction.setPendingGivingNumber(UserPoint.getGivingNumber(ad));
+            userTransactionDao.update(adTransaction);
+        }
+        
+        if ( ad.getRequests() != null && !ad.getRequests().isEmpty() ) {
+            for ( Request request : ad.getRequests() ) {
+                Long requestId = request.getId();
+                UserTransaction requestTransaction = userTransactionDao.getByRequest(requestId);
+                if ( requestTransaction == null ) {
+                    logger.error("There is no user transaction for the request (requestId: " + requestId + ")");
+                    continue;
+                }
+                
+                requestTransaction.setPendingReceivingNumber(UserPoint.getReceivingNumber(request));
+                userTransactionDao.update(requestTransaction);
+            }
         }
         
 //        if (adDto.getExpiresAt() != null && currentUser.isBusinessAcc()) {
@@ -333,7 +287,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         Ad ad = validateAd(adId);
         User currentUser = getCurrentUser();
-        UserTransaction transaction = userTransactionDao.getByAd(currentUser.getId(), adId);
+        UserTransaction transaction = userTransactionDao.getByAd(adId);
 
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("Only the creator can delete the ad");
@@ -371,7 +325,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // Save and attache the image to the ad
         Image image = imageDto.toImage();
         try {
-            imageDao.save(image);
+            imageDao.save(image, ImageModelType.AD);
         } catch ( IOException ex ) {
             logger.error("Exception when adding image to ad (adId: " + adId + ")", ex);
             throw new ImageValidationException(ImageField.DATA, "Image cannot be added to ad (adId: " + adId + ")");
@@ -411,8 +365,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
             
             try {
-                imageDao.delete(image);
-            } catch ( IOException ex ) {
+                imageDao.delete(image, ImageModelType.AD);
+            } catch ( Exception ex ) {
                 logger.error("Exception when removing image (imageId: " + imageId + ") from ad (adId: " + adId + ")", ex);
                 throw new ImageNotFoundException("Image (imageId: " + imageId + ") cannot be removed");
             }
@@ -436,9 +390,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 }
 
                 try {
-                    imageDao.delete(image);
+                    imageDao.delete(image, ImageModelType.AD);
                     ad.removeImage(image);
-                } catch ( IOException ex ) {
+                } catch ( Exception ex ) {
                     logger.error("Exception when removing image (imageId: " + imageId + ") from ad (adId: " + adId + ")", ex);
                 }
             }
@@ -554,7 +508,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
             adDto.setRequested(ad.isRequested(currentUser, false));
             
-            boolean canRequest = (adDto.getCanRequest() != null && adDto.getCanRequest());
+            boolean canRequest = adDto.getCanRequest() != null ? adDto.getCanRequest() : false;
             if ( includeOnlyCannotRequest && canRequest ) {
                 //not including ads that can be requested
                 continue;
@@ -820,12 +774,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Max request limit reached.");
         }
         
-//        BigDecimal beforePendingNumber = null;
-        
-//        if ( !user.isBusinessAccount() ) {
-//            beforePendingNumber = calculatePendingNumber(user);
-//        }
-        
         request = new Request();
         request.setSent(false);
         request.setReceived(false);
@@ -835,17 +783,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Long requestId = requestDao.save(request);
         
         ad.setStatus(AdStatus.IN_PROGRESS);
+        ad.setExpired(false);
+        ad.setExpiresAt(calculateExpiration());
         
         if ( !currentUser.isBusinessAccount() ) {
-//            BigDecimal currentPendingNumber = calculatePendingNumber(user);
-//            BigDecimal pendingDelta = currentPendingNumber.subtract(beforePendingNumber);
-
             UserTransaction transaction = new UserTransaction(request);
-            transaction.setApproved(true);
             transaction.setUser(currentUser);
             transaction.setUserPoint(currentUser.getUserPoint());
-//            transaction.setPendingNumber(currentPendingNumber);
-//            transaction.setPendingScore(pendingDelta.signum() > 0 ? pendingDelta : BigDecimal.ZERO);
             userTransactionDao.save(transaction);
         }
         
@@ -883,7 +827,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User currentUser = getCurrentUser();
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();
-        UserTransaction transaction;
         
         if ( ad.getStatus() == AdStatus.IN_PROGRESS ) {
             //continue
@@ -891,16 +834,13 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidAdStateException("Request can't be cancelled as its ad state (" + ad.getStatus() + ") is not as expected!");
         }
         
-        if ( ad.getCreator().equals(currentUser) ) {
-            //the ad creator cancelling the request
-            transaction = userTransactionDao.getByRequest(request.getUser().getId(), requestId);
-        } else if ( request.getUser().equals(currentUser) ) {
-            //the requestor cancelling the request
-            transaction = userTransactionDao.getByRequest(currentUser.getId(), requestId);
+        if ( ad.getCreator().equals(currentUser) || request.getUser().equals(currentUser) ) {
+            //the ad creator cancelling the request (or the requestor)
         } else {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
         
+        UserTransaction transaction = userTransactionDao.getByRequest(requestId);
         if ( transaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
@@ -1031,7 +971,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
         Ad ad = request.getAd();
-        UserTransaction transaction = userTransactionDao.getByRequest(currentUser.getId(), requestId);
+        UserTransaction transaction = userTransactionDao.getByRequest(requestId);
         
         if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can mark as received.");
@@ -1067,8 +1007,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         UserPoint userPoint = currentUser.getUserPoint();
         userPoint.addGivingNumber(transaction.getPendingGivingNumber());
         userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
-//        userPoint.removeNumber(transaction.getPendingNumber());
-//        userPoint.removeScore(transaction.getPendingScore());
         userPointDao.update(userPoint);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
@@ -1091,14 +1029,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Long currentUserId = getCurrentUserId();
         Bookmark bookmark = bookmarkDao.get(currentUserId, adId);
 
+        User currentUser = getCurrentUser();
+        Ad ad = validateAd(adId);
+        
+        if ( ad.getCreator().equals(currentUser) ) {
+            throw new GeneralException("Cannot bookmark owned ads.");
+        }
+        
         if (bookmark == null) {
-            User currentUser = getCurrentUser();
-            Ad ad = validateAd(adId);
-            
-            if ( ad.getCreator().equals(currentUser) ) {
-                throw new GeneralException("Cannot bookmark owned ads.");
-            }
-            
             bookmark = new Bookmark(currentUser, ad);
             bookmarkDao.save(bookmark);
         }
@@ -1327,7 +1265,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private Image validateImage(Long imageId) throws ImageNotFoundException {
         Image image = null;
         try {
-            image = imageDao.get(imageId);
+            image = imageDao.get(imageId, ImageModelType.AD);
         } catch ( IOException ex ) {
             logger.error("Could not load image (imageId: " + imageId + ")", ex);
             throw new ImageNotFoundException(imageId);
@@ -1361,7 +1299,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             
             try {
                 Image image = imageDto.toImage();
-                imageDao.save(image);
+                imageDao.save(image, ImageModelType.AD);
                 return image;
             } catch ( IOException ex ) {
                 logger.error("Exception when saving image", ex);
@@ -1369,6 +1307,58 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
         }
         return null;
+    }
+    
+    private void updateImage(Ad ad, AdDto adDto, AdField field) throws AdValidationException {
+        ImageDto imageDto;
+        Image image;
+        
+        if ( field == AdField.IMAGE ) {
+            imageDto = adDto.getImage();
+            image = ad.getAdData().getMainImage();
+        } else if ( field == AdField.THUMB_IMAGE ) {
+            imageDto = adDto.getImageThumbnail();
+            image = ad.getAdData().getThumbImage();
+        } else if ( ad.getType() == AdType.BUSINESS && field == AdField.BARCODE_IMAGE ) {
+            imageDto = adDto.getImageBarcode();
+            image = ((BusinessAdData) ad.getAdData()).getBarcodeImage();
+        } else {
+            return;
+        }
+        
+        if ( imageDto == null ) {
+            return;
+        } else if ( !imageDto.isValid() ) {
+            if ( imageDto.getUrl() == null || imageDto.getUrl().trim().isEmpty() ) {
+                throw new AdValidationException(field, "Invalid image specified!");
+            }
+            return;
+        }
+        
+        try {
+            if ( image != null ) {
+                if ( field == AdField.IMAGE ) {
+                    ad.getAdData().setMainImage(null);
+                } else if ( field == AdField.THUMB_IMAGE ) {
+                    ad.getAdData().setThumbImage(null);
+                } else if ( field == AdField.BARCODE_IMAGE ) {
+                    ((BusinessAdData) ad.getAdData()).setBarcodeImage(null);
+                }
+                imageDao.delete(image, ImageModelType.AD);
+            }
+
+            image = saveImage(imageDto, field);
+            
+            if ( field == AdField.IMAGE ) {
+                ad.getAdData().setMainImage(image);
+            } else if ( field == AdField.THUMB_IMAGE ) {
+                ad.getAdData().setThumbImage(image);
+            } else if ( field == AdField.BARCODE_IMAGE ) {
+                ((BusinessAdData) ad.getAdData()).setBarcodeImage(image);
+            }
+        } catch ( Exception ex ) {
+            logger.error("Exception when saving image (field: " + field + ")", ex);
+        }
     }
     
     
@@ -1526,7 +1516,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private void markAsSent(User user, Request request) throws RequestNotFoundException, InvalidRequestException {
         Ad ad = request.getAd();
         Long adId = ad.getId();
-        UserTransaction transaction = userTransactionDao.getByAd(user.getId(), adId);
+        UserTransaction transaction = userTransactionDao.getByAd(adId);
         
         if ( !ad.getCreator().equals(user) ) {
             throw new InvalidRequestException("Only creator users can mark as sent.");
@@ -1549,16 +1539,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
         UserPoint userPoint = user.getUserPoint();
         userPoint.addGivingNumber(transaction.getPendingGivingNumber());
         userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
-//        userPoint.addNumber(transaction.getPendingNumber());
-//        userPoint.addScore(transaction.getPendingScore());
         userPointDao.update(userPoint);
     }
     
-    
-    
-//    private BigDecimal calculatePendingNumber(User user) {
-//        BigDecimal number = UserPoint.getGenerosityNumber(user, false);
-//        BigDecimal pendingNumber = UserPoint.getGenerosityNumber(user, true).subtract(number);
-//        return pendingNumber;
-//    }
+    private Date calculateExpiration() {
+        Date start = new Date();
+        Date expiresAt = DateUtils.addDays(start, Constants.AD_EXPIRATION_PERIOD_DAYS);
+        return expiresAt;
+    }
 }

@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes a bookmark to an ad.
@@ -18,13 +17,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-//@SequenceGenerator(name = "bookmark_gen", sequenceName = "bookmark_seq", allocationSize = 1)
 @Table(name = "bookmark")
 public class Bookmark {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookmark_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)

@@ -18,10 +18,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class ProductionDataConfig {
 
-    //private final String hibernateDialect = "org.hibernate.spatial.dialect.mysql.MySQLSpatialDialect";
     private final String hibernateDialect = "org.hibernate.spatial.dialect.mysql.MySQLSpatialInnoDBDialect";
     private final String hibernateHbmToDdlAuto = "update";
-    private final Boolean hibernateShowSQL = true;
+    private final Boolean hibernateShowSQL = false;
     
     @Inject
     private DataSource dataSource;

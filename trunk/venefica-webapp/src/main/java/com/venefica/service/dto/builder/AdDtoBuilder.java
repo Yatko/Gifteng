@@ -2,7 +2,6 @@ package com.venefica.service.dto.builder;
 
 import com.venefica.config.Constants;
 import com.venefica.model.Ad;
-import com.venefica.model.AdStatus;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.Rating;
@@ -29,7 +28,9 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private User currentUser;
     private List<Comment> filteredComments;
     private boolean includeCreatorFlag;
+    private boolean includeFollowerFlag = true;
     private boolean includeImagesFlag;
+    private boolean includeCanRelistFlag = true;
     private boolean includeCanMarkAsSpamFlag;
     private boolean includeCanRateFlag;
     private boolean includeCanRequestFlag;
@@ -58,7 +59,12 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         includeCreatorFlag = include;
         return this;
     }
-
+    
+    public AdDtoBuilder includeFollower(boolean include) {
+        includeFollowerFlag = include;
+        return this;
+    }
+    
     public AdDtoBuilder includeImages() {
         return includeImages(true);
     }
@@ -94,6 +100,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     
     public AdDtoBuilder includeStatistics(boolean include) {
         includeStatisticsFlag = include;
+        return this;
+    }
+    
+    public AdDtoBuilder includeRelist(boolean include) {
+        includeCanRelistFlag = include;
         return this;
     }
 
@@ -172,10 +183,38 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         
         if (includeCreatorFlag) {
             UserDto creator = new UserDto(model.getCreator());
-            creator.setInFollowers(currentUser.inFollowers(model.getCreator()));
-            creator.setInFollowings(currentUser.inFollowings(model.getCreator()));
+            if ( includeFollowerFlag ) {
+                creator.setInFollowers(currentUser.inFollowers(model.getCreator()));
+                creator.setInFollowings(currentUser.inFollowings(model.getCreator()));
+            }
             
             adDto.setCreator(creator);
+        }
+        
+        if ( includeCanRelistFlag ) {
+            boolean canRelist = true;
+            
+            if ( canRelist ) {
+                if ( !model.getCreator().equals(currentUser) ) {
+                    canRelist = false;
+                }
+            }
+            if ( canRelist ) {
+                if ( model.isDeleted() ) {
+                    canRelist = false;
+                }
+            }
+            if ( canRelist ) {
+                if ( !model.isExpired() ) {
+                    canRelist = false;
+                }
+            }
+            if ( canRelist ) {
+                if ( !model.canProlong() ) {
+                    canRelist = false;
+                }
+            }
+            adDto.setCanRelist(canRelist);
         }
 
         if (includeCanMarkAsSpamFlag) {
@@ -234,6 +273,18 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             boolean canRequest = true;
             
             if ( canRequest ) {
+                if ( model.getCreator().equals(currentUser) ) {
+                    //owner cannot request owned ads
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
+                if ( currentUser.isBusinessAccount() ) {
+                    //business accounts cannot request at all
+                    canRequest = false;
+                }
+            }
+            if ( canRequest ) {
                 if ( model.isInactive() ) {
                     canRequest = false;
                 }
@@ -247,18 +298,6 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             if ( canRequest ) {
                 if ( model.getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
                     //active requests limit reched the allowed size
-                    canRequest = false;
-                }
-            }
-            if ( canRequest ) {
-                if ( model.getCreator().equals(currentUser) ) {
-                    //owner cannot request owned ads
-                    canRequest = false;
-                }
-            }
-            if ( canRequest ) {
-                if ( currentUser.isBusinessAccount() ) {
-                    //business accounts cannot request at all
                     canRequest = false;
                 }
             }

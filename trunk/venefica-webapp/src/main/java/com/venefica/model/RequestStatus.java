@@ -15,9 +15,12 @@ public enum RequestStatus {
     ACCEPTED, //SELECTED - the receiver/owner acceped the request
     UNACCEPTED, //someone else selected by the owner and the available quantity is 0 (auto status)
     CANCELED, //the receiver/requestor cancelled the request (it's own request)
-    DECLINED, //REJECTED - the giver/owner declined the request
+    DECLINED, //REJECTED - the giver/owner declined the request - no more status change on this request (it will remain as DECLINED forever)
     SENT, //the giver/owner clicked on 'Mark as shipped'
     RECEIVED, //the receiver/requestor selected 'Received'
+    
+    WAITING_FOR_PAYMENT, //used at shipping - not yet implemented
+    PAYMENT_RECEIVED, //used at shipping - not yet implemented
     ;
     
     /**

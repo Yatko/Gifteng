@@ -21,7 +21,6 @@ import com.venefica.service.fault.ImageValidationException;
 import com.venefica.service.fault.InvalidAdStateException;
 import com.venefica.service.fault.InvalidRateOperationException;
 import com.venefica.service.fault.InvalidRequestException;
-import com.venefica.service.fault.PermissionDeniedException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
@@ -49,15 +48,25 @@ public interface AdService {
     //**********************
     
     /**
-     * Returns a list of subcategories belonging to the specified parent category. If the parent
-     * categoryId is null then the root categories are returned.
+     * Returns the required category. If the ID is not found null will be returned.
+     * 
+     * @param categoryId
+     * @return 
+     */
+    @WebMethod(operationName = "GetCategory")
+    @WebResult(name = "category")
+    CategoryDto getCategory(@WebParam(name = "categoryId") Long categoryId);
+    
+    /**
+     * Returns a list of subcategories belonging to the specified parent category.
+     * If the parent categoryId is null then the root categories are returned.
      * 
      * @param categoryId parent category id
      * @return list of categories
      */
-    @WebMethod(operationName = "GetCategories")
+    @WebMethod(operationName = "GetSubCategories")
     @WebResult(name = "category")
-    List<CategoryDto> getCategories(@WebParam(name = "categoryId") Long categoryId);
+    List<CategoryDto> getSubCategories(@WebParam(name = "categoryId") Long categoryId);
 
     /**
      * Returns all the categories (including subcategories) available in the system .

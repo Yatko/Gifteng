@@ -6,7 +6,6 @@ package com.venefica.model;
 
 import com.venefica.service.dto.UserDto;
 import com.vividsolutions.jts.geom.Point;
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,14 +27,12 @@ import org.hibernate.annotations.Type;
  * @author gyuszi
  */
 @Entity
-//@SequenceGenerator(name = "userdata_gen", sequenceName = "userdata_seq", allocationSize = 1)
 @Table(name = "userdata")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UserData {
     
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userdata_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     protected String phoneNumber;

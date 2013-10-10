@@ -31,31 +31,26 @@ public class UserTransactionDaoImpl extends DaoBase<UserTransaction> implements 
     }
 
     @Override
-    public UserTransaction getByAd(Long userId, Long adId) {
+    public UserTransaction getByAd(Long adId) {
         List<UserTransaction> transactions = createQuery(""
-                + "from " + UserTransaction.class.getSimpleName() + " ut "
-                + "where "
-                + "ut.user.id = :userId and "
+                + "from " + UserTransaction.class.getSimpleName() + " ut where "
+                + "ut.user.deleted = false and "
                 + "ut.ad.id = :adId"
                 + "")
-                .setParameter("userId", userId)
                 .setParameter("adId", adId)
                 .list();
         return transactions.isEmpty() ? null : transactions.get(0);
     }
 
     @Override
-    public UserTransaction getByRequest(Long userId, Long requestId) {
+    public UserTransaction getByRequest(Long requestId) {
         List<UserTransaction> transactions = createQuery(""
-                + "from " + UserTransaction.class.getSimpleName() + " ut "
-                + "where "
-                + "ut.user.id = :userId and "
+                + "from " + UserTransaction.class.getSimpleName() + " ut where "
+                + "ut.user.deleted = false and "
                 + "ut.request.id = :requestId"
                 + "")
-                .setParameter("userId", userId)
                 .setParameter("requestId", requestId)
                 .list();
         return transactions.isEmpty() ? null : transactions.get(0);
     }
-    
 }

@@ -21,7 +21,7 @@ public enum AdStatus {
     OFFLINE, //unapproved ad status (status will be changed by admin user approval)
     ACTIVE, //there is no active request
     IN_PROGRESS, //there is an (one or more) active request for this ad
-    FINALIZED,
+    FINALIZED, //sold out
     EXPIRED,
     ;
     
@@ -31,10 +31,10 @@ public enum AdStatus {
      * @return 
      */
     public boolean isInactive() {
-        if ( this != ACTIVE && this != IN_PROGRESS ) {
-            //OFFLINE, FINALIZED or EXPIRED
+        if ( this == OFFLINE || this == FINALIZED || this == EXPIRED ) {
             return true;
         }
+        //ACTIVE or IN_PROGRESS
         return false;
     }
 }

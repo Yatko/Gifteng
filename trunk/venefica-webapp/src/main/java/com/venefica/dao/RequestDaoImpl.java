@@ -39,7 +39,9 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
                 + "r.deleted = false and "
                 + "r.hidden = false and "
                 + "r.user.id = :userId and "
-                + "r.ad.id = :adId"
+                + "r.user.deleted = false and "
+                + "r.ad.id = :adId and "
+                + "r.ad.creator.deleted = false"
                 + "")
                 .setParameter("userId", userId)
                 .setParameter("adId", adId)
@@ -54,7 +56,9 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
                 + "from " + getDomainClassName() + " r "
                 + "where "
                 + "r.deleted = false and "
-                + "r.ad.id = :adId"
+                + "r.user.deleted = false and "
+                + "r.ad.id = :adId and "
+                + "r.ad.creator.deleted = false"
                 + "")
                 .setParameter("adId", adId)
                 .list();
@@ -68,7 +72,8 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
                 + "from " + getDomainClassName() + " r "
                 + "where "
                 + "r.deleted = false and "
-                + "r.user.id = :userId"
+                + "r.user.id = :userId and "
+                + "r.user.deleted = false"
                 + "")
                 .setParameter("userId", userId)
                 .list();
@@ -82,7 +87,9 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
                 + "from " + getDomainClassName() + " r "
                 + "where "
                 + "r.deleted = false and "
-                + "r.ad.creator.id = :userId"
+                + "r.user.deleted = false and "
+                + "r.ad.creator.id = :userId and "
+                + "r.ad.creator.deleted = false"
                 + "")
                 .setParameter("userId", userId)
                 .list();

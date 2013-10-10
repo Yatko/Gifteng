@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes a message sent to a user. Messages are meant to be private.
@@ -20,13 +19,11 @@ import org.hibernate.annotations.ForeignKey;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-//@SequenceGenerator(name = "message_gen", sequenceName = "message_seq", allocationSize = 1)
 @Table(name = "message")
 public class Message {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne

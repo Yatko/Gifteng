@@ -5,6 +5,7 @@
 package com.venefica.common;
 
 import com.venefica.config.Constants;
+import com.venefica.config.EmailConfig;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.DataSourceResolver;
@@ -32,34 +35,26 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.TemplateInitException;
 import org.apache.velocity.runtime.RuntimeConstants;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
+@Component
 public class EmailSender {
     
     private static final Log logger = LogFactory.getLog(EmailSender.class);
     
     private static final String TEMPLATES_FOLDER = "templates/";
     
-    private int smtpPort;
-    private int smtpPortSSL;
-    private String charset;
-    private String hostName;
-    private String username;
-    private String password;
-    private boolean useSSL;
-    private String fromEmailAddress;
-    private String fromName;
-    private String undeliveredEmailAddress;
-    private String baseUrl;
-    private String[] imagesBaseUrls;
-    private boolean enabled;
+    @Inject
+    private EmailConfig emailConfig;
     
     private VelocityEngine velocityEngine;
     private DataSourceResolver dataSourceResolver;
     
+    @PostConstruct
     public void init() {
         try {
             Properties props = new Properties();
@@ -84,8 +79,8 @@ public class EmailSender {
         }
         
         List<DataSourceResolver> resolvers = new ArrayList<DataSourceResolver>(0);
-        if ( imagesBaseUrls != null && imagesBaseUrls.length > 0 ) {
-            for ( String imagesBaseUrl : imagesBaseUrls ) {
+        if ( emailConfig.getImagesBaseUrls() != null && emailConfig.getImagesBaseUrls().length > 0 ) {
+            for ( String imagesBaseUrl : emailConfig.getImagesBaseUrls() ) {
                 try {
                     DataSourceResolver resolver = new DataSourceUrlResolver(new URL(imagesBaseUrl));
                     resolvers.add(resolver);
@@ -96,14 +91,6 @@ public class EmailSender {
         }
         
         dataSourceResolver = new DataSourceCompositeResolver(resolvers.toArray(new DataSourceResolver[0]), true);
-    }
-    
-    /**
-     * Returns the enabled status of this service.
-     * @return 
-     */
-    public boolean isEnabled() {
-        return enabled;
     }
     
     /**
@@ -168,24 +155,24 @@ public class EmailSender {
      * invalid message, error when sending
      */
     public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws MailException {
-        if ( !enabled ) {
+        if ( !emailConfig.isEmailEnabled() ) {
             logger.info("Email sending is not enabled!");
             return;
         }
         
         ImageHtmlEmail email = new ImageHtmlEmail();
         email.setDataSourceResolver(dataSourceResolver);
-        email.setHostName(hostName);
-        email.setSmtpPort(smtpPort);
-        email.setSslSmtpPort(Integer.toString(smtpPortSSL));
-        email.setAuthenticator(new DefaultAuthenticator(username, password));
-        email.setSSLOnConnect(useSSL);
-        email.setCharset(charset);
-        email.setBounceAddress(undeliveredEmailAddress);
+        email.setHostName(emailConfig.getHostName());
+        email.setSmtpPort(emailConfig.getSmtpPort());
+        email.setSslSmtpPort(Integer.toString(emailConfig.getSmtpPortSSL()));
+        email.setAuthenticator(new DefaultAuthenticator(emailConfig.getUsername(), emailConfig.getPassword()));
+        email.setSSLOnConnect(emailConfig.isUseSSL());
+        email.setCharset(emailConfig.getCharset());
+        email.setBounceAddress(emailConfig.getUndeliveredEmailAddress());
         try {
-            email.setFrom(fromEmailAddress, fromName, charset);
+            email.setFrom(emailConfig.getFromEmailAddress(), emailConfig.getFromName(), emailConfig.getCharset());
         } catch ( EmailException ex ) {
-            logger.error("Invalid 'from' (" + fromEmailAddress + ") address", ex);
+            logger.error("Invalid 'from' (" + emailConfig.getFromEmailAddress() + ") address", ex);
             throw new MailException(MailException.INVALID_FROM_ADDRESS, ex);
         }
         try {
@@ -220,7 +207,7 @@ public class EmailSender {
         try {
             Template template = velocityEngine.getTemplate(templateName);
             VelocityContext context = new VelocityContext();
-            context.put("baseUrl", baseUrl); //global key available for all templates
+            context.put("baseUrl", emailConfig.getBaseUrl()); //global key available for all templates
             
             if ( vars != null && !vars.isEmpty() ) {
                 for ( Map.Entry<String, Object> entry : vars.entrySet() ) {
@@ -244,59 +231,5 @@ public class EmailSender {
         } catch ( Exception ex ) {
             throw new RuntimeException("Exception thrown on resource (" + templateName + "): " + ex.getMessage(), ex);
         }
-    }
-
-    // setters
-    
-    public void setSmtpPort(int smtpPort) {
-        this.smtpPort = smtpPort;
-    }
-
-    public void setSmtpPortSSL(int smtpPortSSL) {
-        this.smtpPortSSL = smtpPortSSL;
-    }
-
-    public void setCharset(String charset) {
-        this.charset = charset;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUseSSL(boolean useSSL) {
-        this.useSSL = useSSL;
-    }
-
-    public void setFromEmailAddress(String fromEmailAddress) {
-        this.fromEmailAddress = fromEmailAddress;
-    }
-
-    public void setFromName(String fromName) {
-        this.fromName = fromName;
-    }
-
-    public void setUndeliveredEmailAddress(String undeliveredEmailAddress) {
-        this.undeliveredEmailAddress = undeliveredEmailAddress;
-    }
-
-    public void setImagesBaseUrls(String[] imagesBaseUrls) {
-        this.imagesBaseUrls = imagesBaseUrls;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
     }
 }

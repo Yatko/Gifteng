@@ -25,6 +25,8 @@
     </bean>
     -->
     
+    <util:constant id="dbType" static-field="${assembly.jdbc.dbType}" />
+    
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${assembly.jdbc.driverClassName}" />
         <property name="url" value="${assembly.jdbc.url}" />

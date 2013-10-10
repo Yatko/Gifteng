@@ -26,7 +26,7 @@ import org.hibernate.annotations.ForeignKey;
 public class UserActivity {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)

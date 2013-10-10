@@ -4,12 +4,10 @@
  */
 package com.venefica.config;
 
-import com.venefica.common.EmailSender;
-import com.venefica.common.MailChimpSender;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -25,22 +23,39 @@ public class EmailConfig {
     @Inject
     private Environment environment;
     
-    @Bean(initMethod = "init")
-    public EmailSender emailSender() {
-        int smtpPort = environment.getProperty("email.smtpPort", int.class);
-        int smtpPortSSL = environment.getProperty("email.smtpPortSSL", int.class);
-        String baseUrl = environment.getProperty("email.baseUrl");
-        String charset = environment.getProperty("email.charset");
-        String hostName = environment.getProperty("email.hostName");
-        String username = environment.getProperty("email.username");
-        String password = environment.getProperty("email.password");
-        boolean useSSL = environment.getProperty("email.useSSL", boolean.class);
-        String fromEmailAddress = environment.getProperty("email.fromEmailAddress");
-        String fromName = environment.getProperty("email.fromName");
-        String undeliveredEmailAddress = environment.getProperty("email.undeliveredEmailAddress");
-        boolean enabled = environment.getProperty("email.enabled", boolean.class);
+    private int smtpPort;
+    private int smtpPortSSL;
+    private String baseUrl;
+    private String charset;
+    private String hostName;
+    private String username;
+    private String password;
+    private boolean useSSL;
+    private String fromEmailAddress;
+    private String fromName;
+    private String undeliveredEmailAddress;
+    private String[] imagesBaseUrls;
+    private boolean emailEnabled;
+    
+    private String mailChimpListId;
+    private boolean mailChimpDoubleOpt;
+    private boolean mailChimpEnabled;
+    
+    @PostConstruct
+    public void init() {
+        smtpPort = environment.getProperty("email.smtpPort", int.class);
+        smtpPortSSL = environment.getProperty("email.smtpPortSSL", int.class);
+        baseUrl = environment.getProperty("email.baseUrl");
+        charset = environment.getProperty("email.charset");
+        hostName = environment.getProperty("email.hostName");
+        username = environment.getProperty("email.username");
+        password = environment.getProperty("email.password");
+        useSSL = environment.getProperty("email.useSSL", boolean.class);
+        fromEmailAddress = environment.getProperty("email.fromEmailAddress");
+        fromName = environment.getProperty("email.fromName");
+        undeliveredEmailAddress = environment.getProperty("email.undeliveredEmailAddress");
+        emailEnabled = environment.getProperty("email.enabled", boolean.class);
         
-        String[] imagesBaseUrls;
         if ( environment.containsProperty("email.imagesBaseUrl") ) {
             imagesBaseUrls = new String[] {environment.getProperty("email.imagesBaseUrl")};
         } else {
@@ -58,33 +73,72 @@ public class EmailConfig {
             imagesBaseUrls = urls.toArray(new String[0]);
         }
         
-        EmailSender emailService = new EmailSender();
-        emailService.setSmtpPort(smtpPort);
-        emailService.setSmtpPortSSL(smtpPortSSL);
-        emailService.setCharset(charset);
-        emailService.setHostName(hostName);
-        emailService.setUsername(username);
-        emailService.setPassword(password);
-        emailService.setUseSSL(useSSL);
-        emailService.setFromEmailAddress(fromEmailAddress);
-        emailService.setFromName(fromName);
-        emailService.setUndeliveredEmailAddress(undeliveredEmailAddress);
-        emailService.setBaseUrl(baseUrl);
-        emailService.setImagesBaseUrls(imagesBaseUrls);
-        emailService.setEnabled(enabled);
-        return emailService;
+        mailChimpListId = environment.getProperty("mj.listId");
+        mailChimpDoubleOpt = environment.getProperty("mj.doubleOpt", boolean.class);
+        mailChimpEnabled = environment.getProperty("mj.enabled", boolean.class);
     }
-    
-    @Bean
-    public MailChimpSender mailChimpSender() {
-        String listId = environment.getProperty("mj.listId");
-        boolean doubleOpt = environment.getProperty("mj.doubleOpt", boolean.class);
-        boolean enabled = environment.getProperty("mj.enabled", boolean.class);
-        
-        MailChimpSender mailChimpSender = new MailChimpSender();
-        mailChimpSender.setListId(listId);
-        mailChimpSender.setDoubleOpt(doubleOpt);
-        mailChimpSender.setEnabled(enabled);
-        return mailChimpSender;
+
+    public int getSmtpPort() {
+        return smtpPort;
+    }
+
+    public int getSmtpPortSSL() {
+        return smtpPortSSL;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean isUseSSL() {
+        return useSSL;
+    }
+
+    public String getFromEmailAddress() {
+        return fromEmailAddress;
+    }
+
+    public String getFromName() {
+        return fromName;
+    }
+
+    public String getUndeliveredEmailAddress() {
+        return undeliveredEmailAddress;
+    }
+
+    public String[] getImagesBaseUrls() {
+        return imagesBaseUrls;
+    }
+
+    public boolean isEmailEnabled() {
+        return emailEnabled;
+    }
+
+    public String getMailChimpListId() {
+        return mailChimpListId;
+    }
+
+    public boolean isMailChimpDoubleOpt() {
+        return mailChimpDoubleOpt;
+    }
+
+    public boolean isMailChimpEnabled() {
+        return mailChimpEnabled;
     }
 }

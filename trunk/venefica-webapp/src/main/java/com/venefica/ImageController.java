@@ -2,6 +2,7 @@ package com.venefica;
 
 import com.venefica.dao.ImageDao;
 import com.venefica.model.Image;
+import com.venefica.model.ImageModelType;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
@@ -28,8 +29,18 @@ public class ImageController {
     public void image(
             @PathVariable Long imageId,
             HttpServletResponse response) throws IOException {
-        Image img = imageDao.get(imageId);
-
+        image(imageId, ImageModelType.ANY, null, response);
+    }
+    
+    @RequestMapping("/img{imageId}/{modelType}/{suffix}")
+    @Transactional
+    public void image(
+            @PathVariable Long imageId,
+            @PathVariable ImageModelType modelType,
+            @PathVariable String suffix,
+            HttpServletResponse response) throws IOException {
+        Image img = imageDao.get(imageId, modelType, suffix);
+        
         if (img == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

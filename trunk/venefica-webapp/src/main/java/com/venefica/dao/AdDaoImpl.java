@@ -6,11 +6,13 @@ import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.MemberUserData;
+import com.venefica.model.Request;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -29,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
     private static final int MAX_ADS_TO_RETURN = 100;
-    private static final double METERS_IN_ONE_DEGREE = 111319.9;
+    //private static final double METERS_IN_ONE_DEGREE = 111319.9;
     
     private static final Log log = LogFactory.getLog(AdDaoImpl.class);
 
@@ -59,11 +61,12 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         if (lastAdId < 0) {
             ads = createQuery(""
                     + "from " + getDomainClassName() + " a where "
-                    + "a.deleted = false and "
-                    + "a.approved = true and "
-                    + "a.online = true and "
-                    + "a.adData.category.hidden = false "
-                    + "order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
+                    + "a.deleted = false"
+                    + " and a.creator.deleted = false"
+                    + " and a.approved = true"
+                    + " and a.online = true"
+                    + " and a.adData.category.hidden = false"
+                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
                     + "")
                     .setMaxResults(numberAds)
                     .list();
@@ -73,13 +76,14 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             
             ads = createQuery(""
                     + "from " + getDomainClassName() + " a where "
-                    + "a.deleted = false and "
-                    + "a.approved = true and "
-                    + "a.online = true and "
-                    + "a.adData.category.hidden = false and "
-                    //+ "a.id " + (orderAsc ? ">" : "<") + " :lastId "
-                    + "a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt "
-                    + "order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
+                    + "a.deleted = false"
+                    + " and a.creator.deleted = false"
+                    + " and a.approved = true"
+                    + " and a.online = true"
+                    + " and a.adData.category.hidden = false"
+                    //+ " and a.id " + (orderAsc ? ">" : "<") + " :lastId"
+                    + " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt"
+                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
                     + "")
                     //.setParameter("lastId", lastAdId)
                     .setParameter("lastApprovedAt", lastApprovedAt)
@@ -123,6 +127,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "select distinct a "
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
+                + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
                 //+ " and a.expired = false"
@@ -141,8 +146,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                     + "lower(a.adData.subtitle) like '%' || :searchstr || '%' or "
                     + "lower(a.adData.description) like '%' || :searchstr || '%' or "
                     + "lower(a.adData.category.name) like '%' || :searchstr || '%' or "
-                    + "a.creator.userData in (select ud from " + MemberUserData.class.getSimpleName() + " ud where ud.firstName like '%' || :searchstr || '%' or ud.lastName like '%' || :searchstr || '%') or "
-                    + "a.creator.userData in (select ud from " + BusinessUserData.class.getSimpleName() + " ud where ud.businessName like '%' || :searchstr || '%' or ud.contactName like '%' || :searchstr || '%')"
+                    + "a.creator.userData in (select ud from " + MemberUserData.class.getSimpleName() + " ud where lower(ud.firstName) like '%' || :searchstr || '%' or lower(ud.lastName) like '%' || :searchstr || '%') or "
+                    + "a.creator.userData in (select ud from " + BusinessUserData.class.getSimpleName() + " ud where lower(ud.businessName) like '%' || :searchstr || '%' or lower(ud.contactName) like '%' || :searchstr || '%')"
                     + ")";
         }
 
@@ -150,8 +155,11 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.category.id in (:categories)";
         }
 
-        //queryStr += createSqlPartForPostgresql(filter);
-        queryStr += createSqlPartForMysql(filter);
+        if ( dbType == DBType.MYSQL ) {
+            queryStr += createSqlPartForMysql(filter);
+        } else if ( dbType == DBType.POSTGRESQL ) {
+            queryStr += createSqlPartForPostgresql(filter);
+        }
 
         if (isPositiveOrZero(minPrice)) {
             queryStr += " and a.adData.price >= :minPrice";
@@ -219,8 +227,42 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     }
     
     @Override
+    @Transactional
     public void markExpiredAds() {
-        // @formatter:off		
+        int numRows = 0;
+        List<Ad> ads = createQuery(""
+                + "from " + getDomainClassName() + " a where "
+                + "a.expires = true and "
+                + "a.expiresAt < current_date() and "
+                + "a.expired = false and "
+                + "a.deleted = false and "
+                + "a.creator.deleted = false and "
+                + "a.sold = false and "
+                + "a.adData.quantity > 0"
+                + "").list();
+        for ( Ad ad : ads ) {
+            Set<Request> requests = ad.getRequests();
+            boolean mark = true;
+            
+            if ( requests != null && !requests.isEmpty() ) {
+                for ( Request request : requests ) {
+                    if ( !request.isPending() ) {
+                        mark = false;
+                        break;
+                    }
+                }
+            }
+            
+            if ( mark ) {
+                ad.setExpired(true);
+                ad.setStatus(AdStatus.EXPIRED);
+                ad.setNumExpire(ad.getNumExpire() + 1);
+                
+                numRows++;
+            }
+        }
+        
+        /**
         int numRows = createQuery(""
                 + "update " + getDomainClassName() + " a "
                 + "set "
@@ -232,12 +274,14 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.expiresAt < current_date() and "
                 + "a.expired = false and "
                 + "a.deleted = false and "
-                + "a.sold = false"
+                + "a.creator.deleted = false and "
+                + "a.sold = false and "
+                + "a.adData.quantity > 0"
                 + "")
                 .setParameter("status", AdStatus.EXPIRED)
                 .executeUpdate();
-        // @formatter:on
-
+        /**/
+        
         if (numRows > 0) {
             log.info(numRows + " ads marked as expired.");
         }
@@ -253,6 +297,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.onlinedAt = :onlinedAt "
                 + "where "
                 + "a.deleted = false and "
+                + "a.creator.deleted = false and "
                 + "a.expired = false and "
                 + "a.online = false and "
                 + "a.approved = true"
@@ -287,7 +332,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "from " + getDomainClassName() + " a where "
                 + "a.creator.id = :userId and "
                 + "a.adData.category.hidden = false and "
-                + "a.deleted = false "
+                + "a.deleted = false and "
+                + "a.creator.deleted = false "
                 //+ "order by a.id desc"
                 + "order by a.approvedAt desc, a.createdAt desc"
                 + "")
@@ -300,6 +346,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         return createQuery(""
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false and "
+                + "a.creator.deleted = false and "
                 + "a.approved = false "
                 + "order by a.id desc"
                 + "")
@@ -312,6 +359,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "from " + getDomainClassName() + " a "
                 + "where "
                 + "a.deleted = false and "
+                + "a.creator.deleted = false and "
                 + "a.expired = false and "
                 + "a.online = false and "
                 + "a.approved = true "
@@ -332,7 +380,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         String queryStr = "";
         if ( isDataValidForDWithin(filter) ) {
             queryStr += " and dwithin(a.adData.location, :curpos, :maxdist) = true";
-            queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
+            queryStr += " and st_x(a.adData.location) != 0 and st_y(a.adData.location) != 0";
         }
         return queryStr;
     }

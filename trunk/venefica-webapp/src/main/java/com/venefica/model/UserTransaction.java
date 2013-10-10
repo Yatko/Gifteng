@@ -25,7 +25,7 @@ import org.hibernate.annotations.ForeignKey;
 public class UserTransaction {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)
@@ -47,15 +47,11 @@ public class UserTransaction {
     private BigDecimal pendingGivingNumber;
     private BigDecimal pendingReceivingNumber;
     
-//    private BigDecimal pendingNumber; //pending generosity number
-//    private BigDecimal pendingScore; //pending generosity score
-    
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Date finalizedAt;
     private boolean finalized;
-    private boolean approved;
 
     public UserTransaction() {
     }
@@ -103,22 +99,6 @@ public class UserTransaction {
     public void setRequest(Request request) {
         this.request = request;
     }
-
-//    public BigDecimal getPendingNumber() {
-//        return pendingNumber;
-//    }
-//
-//    public void setPendingNumber(BigDecimal pendingNumber) {
-//        this.pendingNumber = pendingNumber;
-//    }
-//
-//    public BigDecimal getPendingScore() {
-//        return pendingScore;
-//    }
-//
-//    public void setPendingScore(BigDecimal pendingScore) {
-//        this.pendingScore = pendingScore;
-//    }
 
     public boolean isFinalized() {
         return finalized;
@@ -175,13 +155,4 @@ public class UserTransaction {
     public void setPendingReceivingNumber(BigDecimal pendingReceivingNumber) {
         this.pendingReceivingNumber = pendingReceivingNumber;
     }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
 }

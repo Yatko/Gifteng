@@ -28,22 +28,20 @@ public interface UserTransactionDao {
     public void update(UserTransaction userPoint);
     
     /**
-     * Finds the user transaction if any for the given user and ad pair.
+     * Finds the user transaction if any for the given ad.
      * If there is no matching record null will be returned.
      * 
-     * @param userId
      * @param adId
      * @return 
      */
-    public UserTransaction getByAd(Long userId, Long adId);
+    public UserTransaction getByAd(Long adId);
     
     /**
-     * Finds the user transaction if any for the given user and request pair.
+     * Finds the user transaction if any for the given request.
      * If there is no matching record null will be returned.
      * 
-     * @param userId
      * @param requestId
      * @return 
      */
-    public UserTransaction getByRequest(Long userId, Long requestId);
+    public UserTransaction getByRequest(Long requestId);
 }

@@ -16,12 +16,10 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "image")
-//@SequenceGenerator(name = "img_gen", sequenceName = "img_seq", allocationSize = 1)
 public class Image {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "img_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Enumerated(EnumType.STRING)

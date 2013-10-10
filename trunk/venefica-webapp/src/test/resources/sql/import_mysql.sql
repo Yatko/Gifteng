@@ -20,17 +20,17 @@ insert into `memberuserdata` (`id`, `firstName`, `lastName`) values (4, 'Null', 
 
 -- Users
 delete from `local_user`;
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('first', '12345', 'firstUser@gmail.com', '1', '0', 1);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('second', '12345', 'secondUser@gmail.com', '0', '0', 2);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('third', '12345', 'thirdUser@gmail.com', '0', '0', 3);
-insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`) values ('null', '12345', 'null@gmail.com', '0', '0', 4);
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`, `deleted`) values ('first', '12345', 'firstUser@gmail.com', '1', '0', 1, '0');
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`, `deleted`) values ('second', '12345', 'secondUser@gmail.com', '0', '0', 2, '0');
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`, `deleted`) values ('third', '12345', 'thirdUser@gmail.com', '0', '0', 3, '0');
+insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `userData_id`, `deleted`) values ('null', '12345', 'null@gmail.com', '0', '0', 4, '0');
 
 -- User point
 delete from `user_point`;
-insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (1, '0', '0');
-insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (2, '0', '0');
-insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (3, '0', '0');
-insert into `user_point` (`id`, `givingNumber`, `receivingNumber`) values (4, '0', '0');
+insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
+insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
+insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
+insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
 
 update `local_user` set `userPoint_id`=1 where `id`=1;
 update `local_user` set `userPoint_id`=2 where `id`=2;
@@ -69,7 +69,7 @@ delete from `ad`;
 insert into `ad` (`adData_id`, `creator_id`, `createdAt`, `expired`, `deleted`, `sold`, `numviews`, `reviewed`, `spam`, `numavailprolongations`, `rating`, `numexpire`, `status`, `expires`, `approved`, `online`) values (1, 1, now(), '0', '0', '0', 0, '0', '0', 1, 0.0, '0', 'ACTIVE', '1', '1', '1');
 
 delete from `user_transaction`;
-insert into `user_transaction` (`finalized`, `approved`, `pendingGivingNumber`, `pendingReceivingNumber`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '1', '2.2625', '0', 1, 1, 1);
+insert into `user_transaction` (`finalized`, `pendingGivingNumber`, `pendingReceivingNumber`, `ad_id`, `user_id`, `userPoint_id`) values ('0', '2.2625', '0', 1, 1, 1);
 
 -- Bookmarks
 delete from `bookmark`;

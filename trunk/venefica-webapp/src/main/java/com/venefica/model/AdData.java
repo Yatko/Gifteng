@@ -26,21 +26,18 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Type;
-//import javax.persistence.SequenceGenerator;
 
 /**
  *
  * @author gyuszi
  */
 @Entity
-//@SequenceGenerator(name = "addata_gen", sequenceName = "addata_seq", allocationSize = 1)
 @Table(name = "addata")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AdData {
     
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addata_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne(optional = false)

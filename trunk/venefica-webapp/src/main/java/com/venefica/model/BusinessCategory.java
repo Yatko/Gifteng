@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Describes a business category.
@@ -19,12 +18,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "businesscategory")
-//@SequenceGenerator(name = "business_cat_gen", sequenceName = "business_cat_seq", allocationSize = 1)
 public class BusinessCategory {
     
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "business_cat_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(nullable = false)

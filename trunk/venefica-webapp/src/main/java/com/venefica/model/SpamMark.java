@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
-//import javax.persistence.SequenceGenerator;
 
 /**
  * Represents a spam mark for an ad.
@@ -19,12 +18,10 @@ import org.hibernate.annotations.ForeignKey;
  */
 @Entity
 @Table(name = "spammark")
-//@SequenceGenerator(name = "spammark_gen", sequenceName = "spammark_seq",  allocationSize = 1)
 public class SpamMark {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "spammark_gen")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne

@@ -28,7 +28,7 @@ import org.hibernate.annotations.ForeignKey;
 public class UserSetting {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ElementCollection(fetch=FetchType.EAGER, targetClass=NotificationType.class)

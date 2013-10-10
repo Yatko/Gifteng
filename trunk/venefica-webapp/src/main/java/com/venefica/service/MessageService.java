@@ -193,6 +193,16 @@ public interface MessageService {
     int getUnreadMessagesSize(Long userId) throws UserNotFoundException;
     
     /**
+     * Hides all messages underneath of the given request.
+     * 
+     * @param requestId
+     * @throws RequestNotFoundException
+     * @throws AuthorizationException 
+     */
+    @WebMethod(operationName = "HideRequestMessages")
+    void hideRequestMessages(@WebParam(name = "requestId") @NotNull Long requestId) throws RequestNotFoundException, AuthorizationException;
+    
+    /**
      * Marks the message as hidden one.
      *
      * @param messageId id of the message
