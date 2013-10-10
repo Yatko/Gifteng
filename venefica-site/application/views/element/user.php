@@ -6,10 +6,19 @@
  * user: User_model
  * canEdit: boolean (default: false)
  * small: boolean (default: true)
+ * size: int (default: LIST_USER_IMAGE_SIZE)
  */
 
 if ( !isset($small) ) $small = true;
 if ( !isset($canEdit) ) $canEdit = false;
+
+if ( !isset($size) ) {
+    if ( $small ) {
+        $size = LIST_USER_IMAGE_SIZE;
+    } else {
+        $size = VIEW_USER_IMAGE_SIZE;
+    }
+}
 
 $is_owner = isOwner($user);
 $is_in_followings = $user->inFollowings;
@@ -17,7 +26,7 @@ $is_in_followings = $user->inFollowings;
 $id = $user->id;
 $name = $user->getFullName();
 $profile_link = $user->getProfileUrl();
-$img = $user->getAvatarUrl();
+$img = $user->getAvatarUrl($size);
 $joined = $user->getJoinDateHumanTiming(); //$user->getJoinDate();
 $location = $user->getLocation();
 $points = $user->getPoints();

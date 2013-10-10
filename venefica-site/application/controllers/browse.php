@@ -61,13 +61,16 @@ class Browse extends CI_Controller {
         $data['selected_category'] = $selected_category;
         $data['selected_type'] = $selected_type;
         
+        $js_data = array();
+        $js_data['currentUser'] = $currentUser;
+        
         $modal = $this->load->view('modal/comment', array(), true);
         $modal .= $this->load->view('modal/social', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
-        $this->load->view('javascript/comment');
+        $this->load->view('javascript/comment', $js_data);
         $this->load->view('javascript/social');
         $this->load->view('pages/browse', $data);
         $this->load->view('templates/'.TEMPLATES.'/footer');
@@ -180,6 +183,7 @@ class Browse extends CI_Controller {
         }
         
         $filter = new Filter_model();
+        $filter->includeOwned = true;
         $filter->searchString = $query;
         $filter->categories = ($category != null ? array($category) : null);
         if ( $type == Browse::TYPE_NEWEST ) {

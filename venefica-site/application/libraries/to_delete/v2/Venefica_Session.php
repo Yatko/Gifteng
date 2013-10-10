@@ -45,6 +45,7 @@ class Venefica_Session extends CI_Session {
         $CI->load->model("userstatistics_model");
         $CI->load->model("ad_model");
         $CI->load->model("user_model");
+        $CI->load->model("request_model");
         $CI->load->model("filter_model");
 
         $this->_sess_run();

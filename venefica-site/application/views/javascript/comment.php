@@ -1,8 +1,10 @@
 <?
 
-$CI =& get_instance();
-$CI->load->library('usermanagement_service');
-$user = $CI->usermanagement_service->loadUser();
+/**
+ * Input params:
+ * 
+ * currentUser: User_model
+ */
 
 ?>
 
@@ -46,9 +48,9 @@ $user = $CI->usermanagement_service->loadUser();
                 }
                 
                 if ( $('#ad_' + adId + '_comments').length > 0 ) {
-                    var $name = "<?=$user->getFullName()?>";
-                    var $profile_link = "<?=$user->getProfileUrl()?>";
-                    var $img = "<?=$user->getAvatarUrl()?>";
+                    var $name = "<?=$currentUser->getFullName()?>";
+                    var $profile_link = "<?=$currentUser->getProfileUrl()?>";
+                    var $img = "<?=$currentUser->getAvatarUrl(COMMENT_USER_IMAGE_SIZE)?>";
                     var template = '<div class="row-fluid ge-message"><div class="ge-user-image"><a href=""><img src="" alt="" class="img img-rounded" /></a></div><div class="ge-text"><a class="ge-name" href=""></a><span class="ge-date"></span><span class="ge-block"></span></div></div>';
                     var $newTemplate = $(template);
                     

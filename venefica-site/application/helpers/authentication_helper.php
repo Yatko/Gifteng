@@ -100,10 +100,13 @@ if ( ! function_exists('isLogged')) {
                 $userId = $cookie_user['netid'];
                 $token = $cookie_user['token'];
                 
-                storeToken($token);
-                $user = $CI->usermanagement_service->getUserById($userId);
-                $CI->usermanagement_service->storeUser($user);
-                
+                try {
+                    storeToken($token);
+                    $user = $CI->usermanagement_service->getUserById($userId);
+                    $CI->usermanagement_service->storeUser($user);
+                } catch ( Exception $ex ) {
+                    return FALSE;
+                }
                 return TRUE;
             }
         }

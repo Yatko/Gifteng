@@ -41,12 +41,12 @@ class Rating_model extends CI_Model {
     
     // helper urls
     
-    public function getFromAvatarUrl() {
-        if ( $this->fromUser == null ) {
-            return DEFAULT_USER_URL;
-        }
-        return $this->fromUser->getAvatarUrl();
-    }
+//    public function getFromAvatarUrl() {
+//        if ( $this->fromUser == null ) {
+//            return DEFAULT_USER_URL;
+//        }
+//        return $this->fromUser->getAvatarUrl();
+//    }
     
     public function getFromProfileUrl() {
         if ( $this->fromUser == null ) {
@@ -55,12 +55,12 @@ class Rating_model extends CI_Model {
         return $this->fromUser->getProfileUrl();
     }
     
-    public function getToAvatarUrl() {
-        if ( $this->toUser == null ) {
-            return DEFAULT_USER_URL;
-        }
-        return $this->toUser->getAvatarUrl();
-    }
+//    public function getToAvatarUrl() {
+//        if ( $this->toUser == null ) {
+//            return DEFAULT_USER_URL;
+//        }
+//        return $this->toUser->getAvatarUrl();
+//    }
     
     public function getToProfileUrl() {
         if ( $this->toUser == null ) {

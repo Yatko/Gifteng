@@ -2,9 +2,19 @@
 
 if ( ! function_exists('validate_login')) {
     function validate_login() {
-        if ( !isLogged() ) {
+        $CI =& get_instance();
+        $is_logged = isLogged();
+        
+        if ( $is_logged ) {
+            $CI->load->library('usermanagement_service');
+            $currentUser = $CI->usermanagement_service->loadUser();
+            if ( is_empty($currentUser) ) {
+                $is_logged = false;
+            }
+        }
+        
+        if ( $is_logged == false ) {
             $is_modal = key_exists('modal', $_GET);
-            $CI =& get_instance();
             
             $data = array();
             $data['is_modal'] = $is_modal;

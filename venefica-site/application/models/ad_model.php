@@ -64,6 +64,7 @@ class Ad_model extends CI_Model {
     var $status; //enum: OFFLINE, ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED
     var $requests; //array of Request_model
     var $canRequest; //boolean
+    var $canRelist; //boolean
     var $statistics; //AdStatistics_model
     var $approval; //Approval_model
     
@@ -105,6 +106,7 @@ class Ad_model extends CI_Model {
             $this->canRate = getField($obj, 'canRate');
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
             $this->canRequest = getField($obj, 'canRequest');
+            $this->canRelist = getField($obj, 'canRelist');
             $this->freeShipping = getField($obj, 'freeShipping');
             $this->pickUp = getField($obj, 'pickUp');
             $this->place = getField($obj, 'place');
@@ -161,10 +163,10 @@ class Ad_model extends CI_Model {
     
     // helper urls
     
-    public function getImageUrl() {
+    public function getImageUrl($size) {
         $url = '';
         if ( $this->hasImage() ) {
-            $url = get_image_url($this->image->url);
+            $url = get_image_url($this->image->url, IMAGE_TYPE_AD, $size);
         }
         if ( trim($url) == '' ) {
             $url = DEFAULT_AD_URL;
@@ -172,12 +174,12 @@ class Ad_model extends CI_Model {
         return $url;
     }
     
-    public function getCreatorAvatarUrl() {
-        if ( $this->creator == null ) {
-            return DEFAULT_USER_URL;
-        }
-        return $this->creator->getAvatarUrl();
-    }
+//    public function getCreatorAvatarUrl() {
+//        if ( $this->creator == null ) {
+//            return DEFAULT_USER_URL;
+//        }
+//        return $this->creator->getAvatarUrl();
+//    }
     
     public function getCreatorProfileUrl() {
         if ( $this->creator == null ) {
@@ -281,8 +283,12 @@ class Ad_model extends CI_Model {
         return safe_content($this->subtitle);
     }
     
-    public function getSafeDescription() {
-        return safe_content($this->description);
+    public function getSafeDescription($convertLinks = false) {
+        $ret = safe_content($this->description);
+        if ( $convertLinks ) {
+            $ret = auto_link($ret, 'both', true);
+        }
+        return $ret;
     }
     
     // requests related

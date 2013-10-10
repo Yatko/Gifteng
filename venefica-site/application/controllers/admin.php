@@ -10,7 +10,7 @@ class Admin extends CI_Controller {
         if ( !validate_login() ) return;
         
         $data = array();
-        $data['businessUsers'] = $this->getBusinessUsers();
+        //$data['businessUsers'] = $this->getBusinessUsers();
         $data['unapprovedAds'] = $this->getUnapprovedAds();
         //$data['offlineAds'] = $this->getOfflineAds();
         

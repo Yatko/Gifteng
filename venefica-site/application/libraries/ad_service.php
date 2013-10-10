@@ -18,13 +18,31 @@ class Ad_service {
     /**
      * 
      * @param long $categoryId
+     * @return Category_model
+     * @throws Exception
+     */
+    public function getCategory($categoryId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->getCategory(array("categoryId" => $categoryId));
+            $category = Category_model::convertCategory($result->category);
+            return $category;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Getting category (categoryId: ' . $categoryId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
+     * @param long $categoryId
      * @return array of Category_model
      * @throws Exception
      */
-    public function getCategories($categoryId) {
+    public function getSubCategories($categoryId) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getCategories(array("categoryId" => $categoryId));
+            $result = $adService->getSubCategories(array("categoryId" => $categoryId));
             
             $categories = array();
             if ( hasField($result, 'category') && $result->category ) {

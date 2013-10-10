@@ -90,10 +90,10 @@ class User_model extends CI_Model {
         return base_url() . 'profile/' . $name;
     }
     
-    public function getAvatarUrl() {
+    public function getAvatarUrl($size) {
         $url = '';
         if ( $this->avatar != null ) {
-            $url = get_image_url($this->avatar->url);
+            $url = get_image_url($this->avatar->url, IMAGE_TYPE_USER, $size);
         }
         if ( trim($url) == '' ) {
             $url = DEFAULT_USER_URL;

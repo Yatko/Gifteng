@@ -31,7 +31,7 @@ $view_link = $ad->getViewUrl();
 <? endif; ?>
 
         <div class="ge-user">
-            <? $this->load->view('element/user', array('user' => $requestor_user, 'canEdit' => false, 'small' => true)); ?>
+            <? $this->load->view('element/user', array('user' => $requestor_user, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
         </div><!--./ge-user-->
 
 <? if( $request->sent ): ?>

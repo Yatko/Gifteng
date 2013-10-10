@@ -62,11 +62,11 @@
                                     <div class="span12">
 
                                         <div class="ge-user">
-                                            <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true)); ?>
+                                            <? $this->load->view('element/user', array('user' => $ad->creator, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
                                         </div><!--./ge-user-->
 
                                         <div class="ge-item">	
-                                            <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
+                                            <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE)); ?>
 
                                             <div class="ge-action">
                                                 <div class="row-fluid">
@@ -108,7 +108,7 @@
                     <div class="well ge-well">
                         <div class="row-fluid">
                             <div class="span10 offset1 text-center">
-                                    <img src="<?=BASE_PATH?>images/ge-nothing_here.jpg" width="800" height="500" alt="Nothing here ... :(" />
+                                    <img src="<?=BASE_PATH?>images/ge-nothing_here_favorites.jpg" width="800" height="500" alt="Nothing here ... :(" />
                             </div>
                         </div>
                     </div>

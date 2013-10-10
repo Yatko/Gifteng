@@ -48,7 +48,7 @@ if ( $is_owner ) {
             <div class="span12">
                 <div class="ge-item">
 
-                    <? $this->load->view('element/ad_item', array('ad' => $ad)); ?>
+                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE)); ?>
 
 <? if( $is_owner ): ?>
 
@@ -169,7 +169,7 @@ if ( $is_owner ) {
         <?
         $title = $ad->getSafeTitle();
         $itemUrl = $ad->getViewUrl();
-        $imgUrl = $ad->getImageUrl();
+        $imgUrl = $ad->getImageUrl(LIST_AD_IMAGE_SIZE);
         ?>
                     
 

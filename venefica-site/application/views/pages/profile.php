@@ -59,7 +59,7 @@ $active_tab = Profile::getActiveTab($active_menu);
                 
                 <div class="row-fluid ge-user">
                     <div class="span6 <?= empty($_GET) ? '' : 'hidden-phone'?>">
-                        <? $this->load->view('element/user', array('user' => $user, 'canEdit' => true, 'small' => false)); ?>
+                        <? $this->load->view('element/user', array('user' => $user, 'canEdit' => true, 'small' => false, 'size' => SELF_USER_IMAGE_SIZE)); ?>
                     </div>
                     <div class="span6 mobile-four <?= ($active_tab == Profile::TAB_CONNECTIONS) ? '' : 'hidden-phone' ?>">
                         <div class="ge-info">

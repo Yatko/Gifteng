@@ -64,7 +64,7 @@ class Request_model extends CI_Model {
         if ( $this->user == null ) {
             return DEFAULT_USER_URL;
         }
-        return $this->user->getAvatarUrl();
+        return $this->user->getAvatarUrl(LIST_USER_IMAGE_SIZE);
     }
     
     public function getUserProfileUrl() {

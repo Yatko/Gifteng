@@ -29,6 +29,8 @@
                 adId: $adId.val()
             }
         }).done(function(response) {
+            enable_buttons('#ad_delete_form button');
+            
             if ( !response || response === '' ) {
                 //TODO: empty result
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_ERROR?>') ) {
@@ -49,7 +51,7 @@
                 //TODO: unknown response received
             }
         }).fail(function(data) {
-            //
+            enable_buttons('#ad_delete_form button');
         });
     }
 </script>

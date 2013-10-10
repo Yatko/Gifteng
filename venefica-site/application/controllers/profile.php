@@ -529,7 +529,7 @@ class Profile extends CI_Controller {
             $this->usermanagement_service->updateUser($currentUser);
             $currentUser = $this->usermanagement_service->refreshUser();
             
-            respond_ajax(AJAX_STATUS_RESULT, $currentUser->getAvatarUrl());
+            respond_ajax(AJAX_STATUS_RESULT, $currentUser->getAvatarUrl(SELF_USER_IMAGE_SIZE));
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->getMessage());
             respond_ajax(AJAX_STATUS_ERROR, 'Something went wrong !');

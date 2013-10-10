@@ -50,7 +50,7 @@ class Comment_model extends CI_Model {
         if ( $url == null || trim($url) == '' ) {
             return DEFAULT_USER_URL;
         }
-        return get_image_url($url);
+        return get_image_url($url, IMAGE_TYPE_USER, COMMENT_USER_IMAGE_SIZE);
     }
     
     //

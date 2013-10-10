@@ -58,7 +58,7 @@ class Message_model extends CI_Model {
         if ( $url == null || trim($url) == '' ) {
             return DEFAULT_USER_URL;
         }
-        return get_image_url($url);
+        return get_image_url($url, IMAGE_TYPE_USER, MESSAGE_USER_IMAGE_SIZE);
     }
     
     public function getFromAvatarUrl() {
@@ -66,7 +66,7 @@ class Message_model extends CI_Model {
         if ( $url == null || trim($url) == '' ) {
             return DEFAULT_USER_URL;
         }
-        return get_image_url($url);
+        return get_image_url($url, IMAGE_TYPE_USER, MESSAGE_USER_IMAGE_SIZE);
     }
     
     public function getToProfileUrl() {
