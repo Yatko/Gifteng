@@ -33,7 +33,7 @@
             $id = $user->id;
             $name = $user->getFullName();
             $profile_link = $user->getProfileUrl();
-            $img = $user->getAvatarUrl(LIST_USER_IMAGE_SIZE);
+            $img = $user->getAvatarUrl(SELF_USER_IMAGE_SIZE);
             $joined = $user->getJoinDateHumanTiming();
             $location = $user->getLocation();
             $points = $user->getPoints(false);

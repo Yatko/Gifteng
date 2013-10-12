@@ -272,6 +272,21 @@ class Message_service {
     
     /**
      * 
+     * @param type $requestId
+     * @throws Exception
+     */
+    public function hideRequestMessages($requestId) {
+        try {
+            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService->hideRequestMessages(array("requestId" => $requestId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Hide request messages (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param long $messageId
      * @throws Exception
      */

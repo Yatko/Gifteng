@@ -39,7 +39,7 @@ class Image_model extends CI_Model {
     }
     
     /**
-     * Detectds and returnds the url of the image. This should be used at file
+     * Detects and returns the url of the image. This should be used at file
      * upload.
      * 
      * @return string

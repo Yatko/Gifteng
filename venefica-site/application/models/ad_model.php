@@ -240,6 +240,14 @@ class Ad_model extends CI_Model {
     
     // ad related
     
+    public function getPickUpForFormElement() {
+        return $this->pickUp ? '1' : '0';
+    }
+    
+    public function getFreeShippingForFormElement() {
+        return $this->freeShipping ? '1' : '0';
+    }
+    
     public function isBusiness() {
         return $this->type == Ad_model::ADTYPE_BUSINESS;
     }

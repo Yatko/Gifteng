@@ -28,6 +28,18 @@ class Post extends CI_Controller {
         }
     }
     
+    public function clone_redirect($adId) {
+        $this->init();
+        
+        if ( !validate_login() ) return;
+        
+        if ( isBusinessAccount() ) {
+            safe_redirect("/clone_post/business/" . $adId);
+        } else {
+            safe_redirect("/clone_post/member/" . $adId);
+        }
+    }
+    
     // internal
     
     private function init() {

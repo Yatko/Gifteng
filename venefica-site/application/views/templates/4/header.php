@@ -206,7 +206,7 @@ $is_logged = isLogged();
             } else {
                 window.location = '<?=base_url()?>authentication/logout';
             }
-        });
+        }, true);
     }
 </script>
 

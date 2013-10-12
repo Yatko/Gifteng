@@ -139,9 +139,11 @@ if ( $is_owner ) {
                     
                     <div class="row-fluid ge-text ge-description">
                         <div class="span6">
-                            <? /** ?>
-                            <button onclick="ad_relist(<?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
-                            <? /**/ ?>
+                            
+        <? if ( $ad->canRelist ): ?>
+                            <button onclick="startAdRelistModal(this, <?=$ad_id?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
+        <? endif; ?>
+                            
                         </div>
                         <div class="span6">
                             <button onclick="startAdDeleteModal(this, <?=$ad_id?>);" type="button" class="ge-ad btn btn-small btn-block">DELETE</button>
@@ -154,6 +156,10 @@ if ( $is_owner ) {
 
                     <? foreach( $ad->requests as $request ): ?>
                         <?
+                        if ( $request->isExpired() ) {
+                            continue;
+                        }
+                        
                         $requestor_img = $request->getUserAvatarUrl();
                         ?>
 

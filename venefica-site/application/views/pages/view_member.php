@@ -57,6 +57,7 @@ if ($ad->statistics != null) {
 $ad_can_edit = $is_owner && !$ad->hasActiveRequest() && !$ad_is_expired && $num_bookmarks == 0 && $num_comments == 0 && $num_shares == 0;
 $ad_can_delete = $is_owner && (!$ad->hasActiveRequest() || $ad_is_expired);
 $ad_can_request = $ad->canRequest;
+$ad_can_relist = $ad->canRelist;
 
 $user_request = $ad->getRequestByUser($currentUser->id);
 
@@ -162,9 +163,9 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                             $edit_text = 'EDIT GIFT';
                                             $edit_js = 'onclick="startEditPostModal(' . $ad_id . ');"';
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
-                                        } else if ( $ad_is_expired ) {
+                                        } else if ( $ad_can_relist ) {
                                             $edit_text = 'RELIST';
-                                            $edit_js = '';
+                                            $edit_js = 'onclick="startAdRelistModal(this, ' . $ad_id . ');"';
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
                                         } else {
                                             //there is at least one active request (or at least one comment/bookmark/share on it)
@@ -173,12 +174,10 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                             $edit_class = 'class="btn btn-large btn-block disabled"';
                                         }
 
-                                        if ($ad_can_delete) {
-                                            //there is no active request for this ad
+                                        if ( $ad_can_delete ) {
                                             $delete_class = 'class="ge-ad btn btn-large btn-ge btn-block"';
                                             $delete_js = 'onclick="startAdDeleteModal(this, ' . $ad_id . ');"';
                                         } else {
-                                            //there is at least one active request
                                             $delete_js = '';
                                             $delete_class = 'class="btn btn-large btn-block disabled"';
                                         }

@@ -12,6 +12,7 @@ class Post_member extends CI_Controller {
     
     var $ad;
     var $is_new;
+    var $is_clone;
     var $adId;
     var $is_first_page;
     var $unique_id;
@@ -25,6 +26,7 @@ class Post_member extends CI_Controller {
             safe_redirect("/post/business");
         }
         
+        $this->is_clone = false;
         $this->is_new = true;
         $this->adId = null;
         
@@ -40,7 +42,32 @@ class Post_member extends CI_Controller {
             safe_redirect("/edit_post/business/" . $adId);
         }
         
+        $this->is_clone = false;
         $this->is_new = false;
+        $this->adId = $adId;
+        
+        if ( $this->is_first_page ) {
+            $ad = $this->ad_service->getAdById($adId);
+            if ( $ad->owner == false ) {
+                redirect("/view/" . $adId);
+            }
+            $this->storeAd($ad);
+        }
+        
+        $this->render();
+    }
+    
+    public function clonee($adId) {
+        $this->init();
+        
+        if ( !validate_login() ) return;
+        
+        if ( isBusinessAccount() ) {
+            safe_redirect("/clone_post/business/" . $adId);
+        }
+        
+        $this->is_clone = true;
+        $this->is_new = true;
         $this->adId = $adId;
         
         if ( $this->is_first_page ) {
@@ -157,10 +184,12 @@ class Post_member extends CI_Controller {
         $data['is_modal'] = $is_modal;
         $data['unique_id'] = $this->unique_id;
         $data['is_new'] = $this->is_new;
+        $data['is_clone'] = $this->is_clone;
         $data['adId'] = $this->adId;
+        $data['ad'] = $this->ad;
         
         if ( $step == Post_member::STEP_START ) {
-            $data['image'] = $this->ad->image;
+            //nothing to set here
         } else if ( $step == Post_member::STEP_DETAILS ) {
             try {
                 $categories = $this->ad_service->getAllCategories();
@@ -168,13 +197,6 @@ class Post_member extends CI_Controller {
                 $categories = array();
             }
             
-            $data['title'] = $this->ad->getSafeTitle();
-            $data['description'] = $this->ad->getSafeDescription();
-            $data['category'] = $this->ad->categoryId;
-            $data['price'] = $this->ad->price;
-            $data['zipCode'] = $this->ad->address->zipCode;
-            $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
-            $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';
             $data['categories'] = $categories;
         } else if ( $step == Post_member::STEP_MAP ) {
             $zipCode = $this->ad->address->zipCode;
@@ -203,26 +225,18 @@ class Post_member extends CI_Controller {
         } else if ( $step == Post_member::STEP_PREVIEW ) {
             try {
                 $cat = $this->ad_service->getCategory($this->ad->categoryId);
-                $category = $cat->name;
+                $this->ad->category = $cat->name;
             } catch ( Exception $ex ) {
-                $category = '';
             }
-            
-            $data['image'] = $this->ad->image;
-            $data['title'] = $this->ad->getSafeTitle();
-            $data['description'] = $this->ad->getSafeDescription(true);
-            $data['price'] = $this->ad->price;
-            $data['pickUp'] = $this->ad->pickUp ? '1' : '0';
-            $data['freeShipping'] = $this->ad->freeShipping ? '1' : '0';
-            $data['category'] = $category;
         } else if ( $step == Post_member::STEP_POST ) {
-            if ( $this->is_new ) {
+            if ( $this->is_clone ) {
+                $error = $this->clone_ad();
+            } else if ( $this->is_new ) {
                 $error = $this->create_ad();
             } else {
                 $error = $this->update_ad();
             }
             $data['error'] = $error;
-            $data['adId'] = $this->adId;
         }
         
         if ( $is_modal ) {
@@ -406,6 +420,21 @@ class Post_member extends CI_Controller {
         try {
             $this->ad_service->updateAd($this->ad);
             log_message(INFO, 'Ad updated');
+            
+            $this->usermanagement_service->refreshUser();
+        } catch ( Exception $ex ) {
+            $errors .= $ex->getMessage();
+        }
+        return $errors;
+    }
+    
+    private function clone_ad() {
+        $this->fixAd();
+        
+        $errors = '';
+        try {
+            $this->adId = $this->ad_service->cloneAd($this->ad);
+            log_message(INFO, 'Ad cloned: ' . $this->adId);
             
             $this->usermanagement_service->refreshUser();
         } catch ( Exception $ex ) {
