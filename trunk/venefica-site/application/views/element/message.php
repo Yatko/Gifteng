@@ -33,6 +33,7 @@ $id = $message->id;
 $ad_title = $message->getSafeAdTitle();
 $request_id = $message->requestId;
 $message_link = base_url().'profile?message&'.$request_id;
+$message_delete_link = base_url().'profile?message&'.$request_id.'&delete';
 
 if ( trim($ad_title) == '' ) $ad_title = '-';
 
@@ -69,11 +70,9 @@ $text_rest = '';
         <? endif; ?>
         <span class="ge-date"><?= $since ?></span>
         
-        <? /** ?>
         <? if( $showDelete ): ?>
-            <a class="fui-trash"></a>
+            <a href="<?=$message_delete_link?>" class="fui-trash"></a>
         <? endif; ?>
-        <? /**/ ?>
         
         <? if( $showTitle ): ?>
             <? if( $showProfileLinks ): ?>

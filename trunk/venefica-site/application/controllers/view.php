@@ -13,20 +13,12 @@ class View extends CI_Controller {
         $referrer = $this->agent->referrer();
         $is_admin = false;
         
-        try {
-            if ( $adId == null ) {
-                $ad = null;
-            } else {
-                $ad = $this->ad_service->getAdById($adId);
-                if ( endsWith($referrer, '/admin') || endsWith($referrer, '/admin/') ) {
-                    //coming from admin
-                    //TODO: find a better and nicer solution
-                    $is_admin = true;
-                } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
-                    $ad = null;
-                }
-            }
-        } catch ( Exception $ex ) {
+        $ad = $this->getAd($adId);
+        if ( endsWith($referrer, '/admin') || endsWith($referrer, '/admin/') ) {
+            //coming from admin
+            //TODO: find a better and nicer solution
+            $is_admin = true;
+        } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
             $ad = null;
         }
         
@@ -60,10 +52,10 @@ class View extends CI_Controller {
         $modal .= $this->load->view('modal/request_create', array(), true);
         $modal .= $this->load->view('modal/edit_post', array(), true);
         $modal .= $this->load->view('modal/ad_delete', array(), true);
+        $modal .= $this->load->view('modal/ad_relist', array(), true);
         $modal .= $this->load->view('modal/social', array(), true);
         
         $this->load->view('templates/'.TEMPLATES.'/header', array('modal' => $modal));
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/comment', $js_data);
@@ -75,6 +67,20 @@ class View extends CI_Controller {
             $this->load->view('pages/view_member', $data);
         }
         $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
+    
+    public function preview($adId) {
+        $this->init();
+        
+        if ( !validate_login() ) return;
+        
+        $ad = $this->getAd($adId);
+        if ( !validate_ad($ad) ) return;
+        
+        $data = array();
+        $data['ad'] = $ad;
+        
+        $this->load->view('element/ad_preview', $data);
     }
     
     // internal
@@ -103,5 +109,15 @@ class View extends CI_Controller {
             
             $this->initialized = true;
         }
+    }
+    
+    private function getAd($adId) {
+        if ( $adId != null ) {
+            try {
+                return $this->ad_service->getAdById($adId);
+            } catch ( Exception $ex ) {
+            }
+        }
+        return null;
     }
 }

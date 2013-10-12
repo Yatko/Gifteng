@@ -5,17 +5,11 @@
  * 
  * is_new: boolean
  * is_modal: boolean
+ * is_clone: boolean
  * adId: long
  * step: string
  * unique_id: string
- * image: Image_model
- * title: string
- * description: string
- * category: long
- * price: float
- * zipCode: string
- * pickUp: 1 or 0
- * freeShipping: 1 or 0
+ * ad: Ad_model
  * categories: array of Category_model
  * longitude: float
  * latitude: float
@@ -26,16 +20,12 @@
 
 if ( $is_modal ) {
     $form_action = '';
+} else if ( $is_clone ) {
+    $form_action = 'clone_post/member/' . $adId . ($is_modal ? '?modal' : '');
 } else if ( $is_new ) {
     $form_action = 'post/member' . ($is_modal ? '?modal' : '');
 } else {
     $form_action = 'edit_post/member/' . $adId . ($is_modal ? '?modal' : '');
-}
-
-if ( isset($image) && $image ) {
-    $image_link = $image->getDetectedImageUrl(IMAGE_TYPE_AD, POST_AD_IMAGE_SIZE);
-} else {
-    $image_link = "";
 }
 
 ?>
@@ -58,6 +48,16 @@ if ( isset($image) && $image ) {
         });
         
         disable_form_buttons_on_submit('member_post_form', null);
+        $('#member_post_form').on('submit', function(e) {
+            var step = $('input[name=step]').val();
+            if ( step === '<?=Post_member::STEP_PREVIEW?>' ) {
+                var $submit = $('#member_post_submit');
+                if ( $submit.length > 0 ) {
+                    $submit.attr('value', 'Posting...');
+                    $submit.html('Posting...');
+                }
+            }
+        });
     });
 </script>
 
@@ -82,6 +82,13 @@ if ( isset($image) && $image ) {
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'Giving makes you live longer. Seriously, it\'s true.';
+            
+            $image = $ad->image;
+            if ( isset($image) && $image ) {
+                $image_link = $image->getDetectedImageUrl(IMAGE_TYPE_AD, POST_AD_IMAGE_SIZE);
+            } else {
+                $image_link = "";
+            }
             
             if ( $is_new && is_empty($image_link) ) {
                 $image_text = 'Add photo';
@@ -150,6 +157,14 @@ if ( isset($image) && $image ) {
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
             if ( $message == '' ) $message = 'The More You Give, The More You Get. Promise! :)';
+            
+            $title = $ad->getSafeTitle();
+            $description = $ad->getSafeDescription();
+            $category = $ad->categoryId;
+            $price = $ad->price;
+            $zipCode = $ad->address->zipCode;
+            $pickUp = $ad->getPickUpForFormElement();
+            $freeShipping = $ad->getFreeShippingForFormElement();
             
             if ( empty($title) ) $title = hasElement($_POST, 'title') ? $_POST['title'] : null;
             if ( empty($description) ) $description = hasElement($_POST, 'description') ? $_POST['description'] : null;
@@ -334,40 +349,7 @@ if ( isset($image) && $image ) {
                         </label>
                     </div>
                     
-                    <div class="row-fluid">
-                    	<div class="ge-item-image">
-                        <img src="<?= $image_link ?>" class="img img-rounded" />
-                    	</div>
-                    </div><!--./ge-item-image-->
-
-                    <div id="item_description" class="row-fluid">
-                    	<div class="ge-text">
-                            <div class="ge-title"><?=$title?></div>
-                            <div class="ge-description">
-                                <em>Description:</em> <?=$description?>
-                            </div>
-                            <div class="ge-details">
-                                <ul>
-                                    <li><em>Category: </em><?=$category?></li>
-                                    <li><em>Current value: $</em><?=$price?></li>
-                                </ul>
-                                <div class="row-fluid">
-                                    <div class="span6 mobile-two">
-                                        <label class="checkbox">
-                                            <input <?=(isset($pickUp) && $pickUp == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-                                            Pick up
-                                        </label>
-                                    </div>
-                                    <div class="span6 mobile-two">
-                                        <label class="checkbox">
-                                            <input <?=(isset($freeShipping) && $freeShipping == '1') ? 'checked="checked"' : ''?> type="checkbox" data-toggle="checkbox" disabled="disabled">
-                                            Free shipping
-                                        </label>	
-                                    </div>	
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--./ge-text-->
+                    <? $this->load->view('element/ad_preview', array('ad' => $ad, 'standalone' => false)); ?>
                     
                     <div class="ge-modal_footer">
                         <div class="row-fluid">
@@ -375,7 +357,7 @@ if ( isset($image) && $image ) {
                                 <div class="control-group control-form">
                                     <div class="controls">
                                         <button type="button" onclick="edit_post();" class="span3 btn btn-huge mobile-one">EDIT</button>
-                                        <button type="button" onclick="submit_form('member_post_form');" class="span9 btn btn-huge btn-ge pull-right mobile-three"><?=$submit_text?> <i class="fui-arrow-right hidden-phone pull-right"></i></button>
+                                        <button type="button" onclick="submit_form('member_post_form');" id="member_post_submit" class="span9 btn btn-huge btn-ge pull-right mobile-three"><?=$submit_text?> <i class="fui-arrow-right hidden-phone pull-right"></i></button>
                                     </div>
                                 </div>
                             </div>

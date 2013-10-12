@@ -52,11 +52,13 @@
 
     <? if( $request != null ): ?>
     
-        <? 
+        <?
         $requestor_user = $request->user;
+        $creator_user = $ad->creator;
+        
         $ad_title = $ad->getSafeTitle();
         $view_link = $ad->getViewUrl();
-        $to_user = $ad->owner ? $requestor_user : $ad->creator;
+        $to_user = $ad->owner ? $requestor_user : $creator_user;
         ?>
         
         
@@ -68,7 +70,7 @@
                 <div class="row-fluid">
                     <div class="ge-user">
 
-                        <? $this->load->view('element/user', array('user' => $requestor_user, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
+                        <? $this->load->view('element/user', array('user' => $to_user, 'canEdit' => false, 'small' => true, 'size' => LIST_USER_IMAGE_SIZE)); ?>
 
                     </div><!--./ge-user-->
                 </div>

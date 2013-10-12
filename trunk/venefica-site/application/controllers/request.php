@@ -75,7 +75,6 @@ class Request extends CI_Controller {
         } else {
             $this->load->view('templates/'.TEMPLATES.'/header');
             $this->load->view('javascript/message');
-            $this->load->view('javascript/ad');
             $this->load->view('javascript/request');
             if ( $is_giving ) {
                 $this->load->view('pages/request_giving', $data);

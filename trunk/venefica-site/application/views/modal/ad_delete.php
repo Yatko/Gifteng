@@ -1,8 +1,8 @@
 <script langauge="javascript">
-    var adCallerElement;
+    var adDeleteCallerElement;
     
     function startAdDeleteModal(callerElement, adId) {
-        adCallerElement = callerElement;
+        adDeleteCallerElement = callerElement;
         
         var $adId = $("#ad_delete_form input[name=adId]");
         $adId.val(adId);
@@ -39,8 +39,8 @@
                 var adId = $adId.val();
                 $adId.val('');
                 
-                if ( adCallerElement !== null ) {
-                    var $element = $(adCallerElement);
+                if ( adDeleteCallerElement !== null ) {
+                    var $element = $(adDeleteCallerElement);
                     $element.trigger('ad_deleted', [adId]);
                 }
                 

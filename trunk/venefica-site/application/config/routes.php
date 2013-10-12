@@ -70,7 +70,10 @@ $route['edit_profile/member']           = 'edit_profile_member/view';
 
 $route['edit_profile']                  = 'edit_profile/edit_profile_redirect';
 
-// posting (new) and edit ad (business and member)
+// posting new, 'edit as new' and edit ad (business and member)
+
+$route['clone_post/business/(:num)'] = 'post_business/clonee/$1';
+$route['clone_post/member/(:num)']   = 'post_member/clonee/$1';
 
 $route['edit_post/business/(:num)'] = 'post_business/edit/$1';
 $route['edit_post/member/(:num)']   = 'post_member/edit/$1';
@@ -82,13 +85,16 @@ $route['post/member/ajax/(:any)']   = 'post_member/$1';
 $route['post/member/(:any)']        = 'post_member/$1';
 $route['post/member']               = 'post_member/create';
 
+$route['post/clone/(:num)'] = 'post/clone_redirect/$1';
 $route['post/edit/(:num)']  = 'post/edit_redirect/$1';
 $route['post']              = 'post/post_redirect';
 
 // view ads
 
-$route['view/(:num)']   = 'view/show/$1';
-$route['view']          = 'view/show/';
+$route['preview/(:num)']    = 'view/preview/$1';
+$route['preview']           = 'view/preview/';
+$route['view/(:num)']       = 'view/show/$1';
+$route['view']              = 'view/show/';
 
 // request ads
 

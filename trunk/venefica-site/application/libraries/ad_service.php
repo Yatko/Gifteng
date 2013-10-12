@@ -115,6 +115,24 @@ class Ad_service {
     
     /**
      * 
+     * @param type $ad
+     * @return type
+     * @throws Exception
+     */
+    public function cloneAd($ad) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $result = $adService->cloneAd(array("ad" => $ad));
+            $adId = $result->adId;
+            return $adId;
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad clone failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param long $adId
      * @throws Exception
      */
@@ -245,16 +263,20 @@ class Ad_service {
      * exception will be thrown by ws.
      * 
      * @param long $userId
+     * @param int $numberAds
      * @param boolean $includeRequests
+     * @param boolean $includeUnapproved
      * @return array of Ad_model
      * @throws Exception
      */
-    public function getUserAds($userId, $includeRequests) {
+    public function getUserAds($userId, $numberAds, $includeRequests, $includeUnapproved) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
             $result = $adService->getUserAds(array(
                 "userId" => $userId,
-                "includeRequests" => $includeRequests
+                "numberAds" => $numberAds,
+                "includeRequests" => $includeRequests,
+                "includeUnapproved" => $includeUnapproved
             ));
             
             $ads = array();
@@ -420,6 +442,20 @@ class Ad_service {
             return $statistics;
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Ad statistics (id: '.$adId.') request failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    //***********************
+    //* ad lifecycle change *
+    //***********************
+    
+    public function relistAd($adId) {
+        try {
+            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService->relistAd(array("adId" => $adId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Ad relist (adId: ' . $adId . ') failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
     }

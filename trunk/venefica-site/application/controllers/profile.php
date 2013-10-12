@@ -121,7 +121,7 @@ class Profile extends CI_Controller {
      */
     private function giving($user) {
         try {
-            $givings = $this->ad_service->getUserAds($user->id, true);
+            $givings = $this->ad_service->getUserAds($user->id, 0, true, true);
         } catch ( Exception $ex ) {
             $givings = null;
         }
@@ -129,6 +129,7 @@ class Profile extends CI_Controller {
         $modal = $this->getProfileModal();
         $modal .= $this->load->view('modal/request_view', array(), true);
         $modal .= $this->load->view('modal/ad_delete', array(), true);
+        $modal .= $this->load->view('modal/ad_relist', array(), true);
         $modal .= $this->load->view('modal/approval', array(), true);
         
         $data = array();
@@ -139,7 +140,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('javascript/social');
         $this->load->view('pages/profile', $data);
@@ -171,7 +171,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         $this->load->view('pages/profile_receiving', $data);
@@ -204,7 +203,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         if ( $is_owner ) {
@@ -235,7 +233,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         $this->load->view('pages/profile_rating', $data);
@@ -253,20 +250,8 @@ class Profile extends CI_Controller {
             $follow_ads = array();
             foreach ($follow_users as $following) {
                 try {
-                    $ads = $this->ad_service->getUserAds($following->id, false);
-
-                    $follow_ads[$following->id] = array();
-                    foreach ($ads as $ad) {
-                        if ( !$ad->approved || !$ad->online ) {
-                            continue;
-                        }
-                        
-                        array_push($follow_ads[$following->id], $ad);
-                        if ( count($follow_ads[$following->id]) == Profile::ADS_NUM ) {
-                            //max to display reached
-                            break;
-                        }
-                    }
+                    $ads = $this->ad_service->getUserAds($following->id, Profile::ADS_NUM, false, false);
+                    $follow_ads[$following->id] = $ads;
                 } catch ( Exception $ex ) {
                 }
             }
@@ -286,7 +271,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         $this->load->view('pages/profile_following', $data);
@@ -304,20 +288,8 @@ class Profile extends CI_Controller {
             $follow_ads = array();
             foreach ($follow_users as $follower) {
                 try {
-                    $ads = $this->ad_service->getUserAds($follower->id, false);
-
-                    $follow_ads[$follower->id] = array();
-                    foreach ($ads as $ad) {
-                        if ( !$ad->approved || !$ad->online ) {
-                            continue;
-                        }
-                        
-                        array_push($follow_ads[$follower->id], $ad);
-                        if ( count($follow_ads[$follower->id]) == Profile::ADS_NUM ) {
-                            //max to display reached
-                            break;
-                        }
-                    }
+                    $ads = $this->ad_service->getUserAds($follower->id, Profile::ADS_NUM, false, false);
+                    $follow_ads[$follower->id] = $ads;
                 } catch ( Exception $ex ) {
                 }
             }
@@ -337,7 +309,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         $this->load->view('pages/profile_following', $data);
@@ -383,7 +354,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         if ( $is_owner ) {
@@ -408,25 +378,38 @@ class Profile extends CI_Controller {
         if ( $is_owner ) {
             if ( count($_GET) > 1 ) {
                 $requestId = key(array_slice($_GET, 1, 1, true));
-
-                try {
-                    $request = $this->ad_service->getRequestById($requestId);
-                } catch ( Exception $ex ) {
+                
+                if ( key_exists('delete', $_GET) ) {
+                    try {
+                        $this->message_service->hideRequestMessages($requestId);
+                    } catch ( Exception $ex ) {
+                    }
+                    
+                    redirect('/profile?message');
                 }
-
-                try {
-                    $ad = $this->ad_service->getAdById($request->adId);
-                } catch ( Exception $ex ) {
-                }
-
+                
+                
                 try {
                     $request_messages = $this->message_service->getMessagesByRequest($requestId);
                 } catch ( Exception $ex ) {
+                    $request_messages = array();
                 }
                 
-                try {
-                    $user = $this->usermanagement_service->refreshUser();
-                } catch ( Exception $ex ) {
+                if ( sizeof($request_messages) > 0 ) {
+                    try {
+                        $request = $this->ad_service->getRequestById($requestId);
+                    } catch ( Exception $ex ) {
+                    }
+
+                    try {
+                        $ad = $this->ad_service->getAdById($request->adId);
+                    } catch ( Exception $ex ) {
+                    }
+
+                    try {
+                        $user = $this->usermanagement_service->refreshUser();
+                    } catch ( Exception $ex ) {
+                    }
                 }
             }
             
@@ -450,7 +433,6 @@ class Profile extends CI_Controller {
         $this->load->view('javascript/follow');
         $this->load->view('javascript/bookmark');
         $this->load->view('javascript/message');
-        $this->load->view('javascript/ad');
         $this->load->view('javascript/request');
         $this->load->view('pages/profile', $data);
         if ( $is_owner ) {

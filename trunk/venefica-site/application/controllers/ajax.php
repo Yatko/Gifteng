@@ -373,6 +373,26 @@ class Ajax extends CI_Controller {
         }
     }
     
+    public function relist() {
+        $this->init();
+        
+        if ( !isLogged() ) {
+            return;
+        } else if ( !$_POST ) {
+            return;
+        }
+        
+        try {
+            $adId = $this->input->post('adId');
+            $this->ad_service->relistAd($adId);
+            $this->usermanagement_service->refreshUser();
+            
+            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+        } catch ( Exception $ex ) {
+            respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
+        }
+    }
+    
     // request related
     
     public function request() {
