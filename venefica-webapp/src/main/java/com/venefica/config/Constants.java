@@ -27,8 +27,6 @@ public interface Constants {
     public static final String USER_VERIFICATION_REMINDER_PLAIN_MESSAGE_TEMPLATE = USER_VERIFICATION_REMINDER_TEMPLATE + "message.txt.vm";
     
     public static final int AD_MAX_ALLOWED_PROLONGATION = 1; //number of allowed relisting
-    public static final int AD_PROLONGATION_PERIOD_DAYS = 30; //with how many days will be incremented the expiration date at relist
-    public static final int AD_EXPIRATION_PERIOD_DAYS = 30; //the default expiration in days at ad creation
     public static final int SPAMMARK_MAX_ALLOWED = 3; //number of allowed marks, after this the ad will be considered as spam
     public static final int REQUEST_MAX_ALLOWED = 3; //number of allowed requests for an ad
     
@@ -40,6 +38,8 @@ public interface Constants {
     public static final String MODEL_PACKAGE = "com.venefica.model";
     
     public static final String AD_DAO = "AdDao";
+    public static final String REQUEST_DAO = "RequestDao";
+    public static final String USER_TRANSACTION_DAO = "UserTransactionDao";
     public static final String USER_DAO = "UserDao";
     public static final String INVITATION_DAO = "InvitationDao";
     public static final String FORGOT_PASSWORD_DAO = "ForgotPasswordDao";

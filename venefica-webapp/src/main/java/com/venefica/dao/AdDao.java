@@ -20,6 +20,12 @@ public interface AdDao {
     Long save(Ad ad);
     
     /**
+     * 
+     * @param ad 
+     */
+    void update(Ad ad);
+    
+    /**
      * Returns the ad by its id.
      *
      * @param adId the id of the ad
@@ -48,9 +54,11 @@ public interface AdDao {
     List<Ad> get(Long lastAdId, int numberAds, FilterDto filter);
 
     /**
-     * Set 'expired' flag to true for all expired ads in the database.
+     * 
+     * @return 
      */
-    void markExpiredAds();
+    List<Ad> getExpiredAds();
+    
 
     /**
      * Set the 'online' flag for all approved ads in the database.
@@ -72,12 +80,13 @@ public interface AdDao {
     
     /**
      * Returns a list of 'active' or 'expired' ads created by the specified
-     * user.
+     * user. If the maxResult is equal with Integer.MAX_VALUE no max result is set.
      *
      * @param userId id of the user
+     * @param numberAds max result
      * @return list of ads
      */
-    List<Ad> getByUser(Long userId);
+    List<Ad> getByUser(Long userId, int numberAds);
     
     /**
      * 

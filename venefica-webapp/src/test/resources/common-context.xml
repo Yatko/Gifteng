@@ -54,6 +54,7 @@
     <bean class="com.venefica.config.FileConfig" />
     <bean class="com.venefica.config.InvitationConfig" />
     <bean class="com.venefica.config.ImageConfig" />
+    <bean class="com.venefica.config.AppConfig" />
     
     
     <bean class="com.venefica.common.ImageUtils" />

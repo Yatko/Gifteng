@@ -106,6 +106,21 @@ public interface AdService {
             throws AdNotFoundException, AdValidationException, AuthorizationException;
     
     /**
+     * Clones the given ad as a new one. The old one will be marked as deleted.
+     * 
+     * @param adDto
+     * @return
+     * @throws AdNotFoundException
+     * @throws AdValidationException
+     * @throws AuthorizationException 
+     * @throws InvalidAdStateException
+     */
+    @WebMethod(operationName = "CloneAd")
+    @WebResult(name = "adId")
+    Long cloneAd(@WebParam(name = "ad") @NotNull AdDto adDto)
+            throws AdNotFoundException, AdValidationException, AuthorizationException, InvalidAdStateException;
+    
+    /**
      * Deletes the ad with the specified id. Only ad creator can delete ad.
      * 
      * @param adId id of the ad
@@ -237,7 +252,9 @@ public interface AdService {
      * Returns a list of all ads created by the given user.
      * 
      * @param userId the creator user
+     * @param numberAds if is negative or equals with 0 no any max result will be used
      * @param includeRequests flag to include available requests
+     * @param includeUnapproved flag to mark if online and approved ads will be included in the result or not
      * @return list of ads
      * @throws UserNotFoundException is thrown when the user with the specified id is not found
      */
@@ -245,7 +262,9 @@ public interface AdService {
     @WebResult(name = "ad")
     List<AdDto> getUserAds(
             @WebParam(name = "userId") Long userId,
-            @WebParam(name = "includeRequests") Boolean includeRequests) throws UserNotFoundException;
+            @WebParam(name = "numberAds") int numberAds,
+            @WebParam(name = "includeRequests") Boolean includeRequests,
+            @WebParam(name = "includeUnapproved") Boolean includeUnapproved) throws UserNotFoundException;
     
     /**
      * Not published via WS.

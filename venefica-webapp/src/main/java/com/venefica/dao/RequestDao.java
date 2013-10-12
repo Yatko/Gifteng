@@ -22,6 +22,12 @@ public interface RequestDao {
     Long save(Request request);
     
     /**
+     * 
+     * @param request 
+     */
+    void update(Request request);
+    
+    /**
      * Returns the request with the given ID.
      *
      * @param requestId id of the request

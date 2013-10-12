@@ -44,7 +44,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = "/MessageServiceTest-context.xml")
 public class MessageServiceTest extends ServiceTestBase<MessageService> {
 
-    private static final Long TEST_AD_ID = new Long(1);
+    private static final Long TEST_AD_ID = 1L;
+    private static final Long TEST_REQUEST_ID = 1L;
     //private static final Long TestMessageId = new Long(1);
     
     @Inject
@@ -154,7 +155,15 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     @Test(expected = UserNotFoundException.class)
     public void sendMessageToUnexistingUserTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto("UnexisingUserName", "Test message");
+        MessageDto messageDto = new MessageDto("UnexisingUserName", "Test message: sendMessageToUnexistingUserTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        client.sendMessage(messageDto);
+    }
+    
+    @Test(expected = MessageValidationException.class)
+    public void sendMessageWithoutRequestTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
+        authenticateClientAsFirstUser();
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: sendMessageWithoutRequestTest");
         client.sendMessage(messageDto);
     }
 
@@ -162,20 +171,23 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     public void sendInvalidMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto(getSecondUser().getName(), null);
+        messageDto.setRequestId(TEST_REQUEST_ID);
         client.sendMessage(messageDto);
     }
 
     @Test(expected = MessageValidationException.class)
     public void sendMessageToMyselfTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto(getFirstUser().getName(), "Test message");
+        MessageDto messageDto = new MessageDto(getFirstUser().getName(), "Test message: sendMessageToMyselfTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
         client.sendMessage(messageDto);
     }
 
     @Test
     public void sendMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "This is a test message");
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: sendMessageTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
 
         Message message = messageDao.get(messageId);
@@ -184,6 +196,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         assertTrue("Message text not match", messageDto.getText().equals(message.getText()));
         assertNotNull("CreatedAt field is null!", message.getCreatedAt());
         assertTrue("Message must be marked as not read!", !message.isRead());
+        messageDao.deleteMessage(message);
     }
 
     @Test(expected = MessageNotFoundException.class)
@@ -197,28 +210,61 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void updateMessageWithDifferentUserTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+    public void updateMessageWithDifferentUserTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException, UserNotFoundException, RequestNotFoundException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = client.getAllMessages().get(0);
+        
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: updateMessageWithDifferentUserTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        Long messageId = client.sendMessage(messageDto);
+        
+        messageDto = client.getAllMessages().get(0);
         authenticateClientAsSecondUser();
-        messageDto.setText("updated text");
-        client.updateMessage(messageDto);
+        
+        try {
+            messageDto.setText("updated text");
+            client.updateMessage(messageDto);
+        } finally {
+            Message message = messageDao.get(messageId);
+            messageDao.deleteMessage(message);
+        }
     }
 
     @Test(expected = MessageValidationException.class)
-    public void updateWithInvalidMessageTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+    public void updateWithInvalidMessageTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException, UserNotFoundException, RequestNotFoundException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = client.getAllMessages().get(0);
-        messageDto.setText(null);
-        client.updateMessage(messageDto);
+        
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: updateWithInvalidMessageTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        Long messageId = client.sendMessage(messageDto);
+        
+        messageDto = client.getAllMessages().get(0);
+        
+        try {
+            messageDto.setText(null);
+            client.updateMessage(messageDto);
+        } finally {
+            Message message = messageDao.get(messageId);
+            messageDao.deleteMessage(message);
+        }
     }
 
     @Test
-    public void updateMessageTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+    public void updateMessageTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException, UserNotFoundException, RequestNotFoundException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = client.getAllMessages().get(0);
-        messageDto.setText("New Test Message");
-        client.updateMessage(messageDto);
+        
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: updateMessageTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        Long messageId = client.sendMessage(messageDto);
+        
+        messageDto = client.getAllMessages().get(0);
+        
+        try {
+            messageDto.setText("New test message: updateMessageTest");
+            client.updateMessage(messageDto);
+        } finally {
+            Message message = messageDao.get(messageId);
+            messageDao.deleteMessage(message);
+        }
     }
 
     @Test
@@ -231,7 +277,13 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void getAllMessagesTest() {
+    public void getAllMessagesTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException {
+        authenticateClientAsFirstUser();
+        
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Test message: getAllMessagesTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        client.sendMessage(messageDto);
+        
         authenticateClientAsSecondUser();
         List<MessageDto> messages = client.getAllMessages();
 
@@ -243,6 +295,8 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
 
         Message storedMessage = messageDao.get(message.getId());
         assertTrue("Message in the database must be marked as read!", storedMessage.isRead());
+        
+        messageDao.deleteMessage(storedMessage);
     }
 
     @Test(expected = MessageNotFoundException.class)
@@ -255,18 +309,25 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     public void hideMessageWithTirdUserTest() throws UserNotFoundException, RequestNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Second message");
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Second message: hideMessageWithTirdUserTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
 
-        authenticateClientAsThirdUser();
-        client.hideMessage(messageId);
+        try {
+            authenticateClientAsThirdUser();
+            client.hideMessage(messageId);
+        } finally {
+            Message message = messageDao.get(messageId);
+            messageDao.deleteMessage(message);
+        }
     }
 
     @Test
     public void hideMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Third message");
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Third message: hideMessageTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
         client.hideMessage(messageId);
 
@@ -279,6 +340,9 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
 
         updatedMessage = messageDao.get(messageId);
         assertTrue("HiddenByRecipient must be true!", updatedMessage.isHiddenByRecipient());
+        
+        Message message = messageDao.get(messageId);
+        messageDao.deleteMessage(message);
     }
 
     @Test(expected = MessageNotFoundException.class)
@@ -289,19 +353,29 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteMessageByTirdUserTest() throws UserNotFoundException, RequestNotFoundException,
+    public void deleteMessageByThirdUserTest() throws UserNotFoundException, RequestNotFoundException,
             MessageValidationException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Four message"));
-        authenticateClientAsThirdUser();
-        client.deleteMessage(messageId);
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Four message: deleteMessageByThirdUserTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        Long messageId = client.sendMessage(messageDto);
+        
+        try {
+            authenticateClientAsThirdUser();
+            client.deleteMessage(messageId);
+        } finally {
+            Message message = messageDao.get(messageId);
+            messageDao.deleteMessage(message);
+        }
     }
 
     @Test
     public void deleteMessageTest() throws UserNotFoundException, RequestNotFoundException, MessageValidationException,
             MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        Long messageId = client.sendMessage(new MessageDto(getSecondUser().getName(), "Five message"));
+        MessageDto messageDto = new MessageDto(getSecondUser().getName(), "Five message: deleteMessageTest");
+        messageDto.setRequestId(TEST_REQUEST_ID);
+        Long messageId = client.sendMessage(messageDto);
         client.deleteMessage(messageId);
 
         Message deletedMessage = messageDao.get(messageId);

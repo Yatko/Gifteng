@@ -161,9 +161,9 @@ public class Ad {
         return true;
     }
     
-    public void prolong(int days) {
+    public void prolong(int minutes) {
         expired = false;
-        expiresAt = DateUtils.addDays(new Date(), days);
+        expiresAt = DateUtils.addMinutes(new Date(), minutes);
         numAvailProlongations--;
         
         updateStatus();

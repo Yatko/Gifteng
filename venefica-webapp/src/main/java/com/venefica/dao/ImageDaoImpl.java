@@ -44,7 +44,7 @@ public class ImageDaoImpl extends DaoBase<Image> implements ImageDao {
         Long imageId = saveEntity(image);
         List<File> files = imageUtils.save(imageId, image.getData(), modelType, image.getImgType());
         
-        amazonUpload.transfer(files, modelType, image.getImgType());
+        amazonUpload.upload(files, modelType, image.getImgType());
         
         if ( imageConfig.isDeleteImages() ) {
             imageUtils.delete(imageId, modelType);
@@ -61,7 +61,11 @@ public class ImageDaoImpl extends DaoBase<Image> implements ImageDao {
     public Image get(Long imageId, ImageModelType modelType, String suffix) throws IOException {
         Image image = getEntity(imageId);
         if ( image != null && image.getData() == null ) {
-            image.setData(fileUpload.getData(image.getId(), modelType, suffix));
+            File file = fileUpload.buildFile(imageId, modelType, suffix, true);
+            amazonUpload.download(file, modelType);
+            
+            byte[] data = fileUpload.getData(image.getId(), modelType, suffix);
+            image.setData(data);
         }
         return image;
     }

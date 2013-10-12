@@ -673,7 +673,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adminService.approveAd(adId);
         adminService.onlineAd(adId);
         
-        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
+        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, Integer.MAX_VALUE, true, false);
         assertTrue("The user ads should not be empty", ads != null && !ads.isEmpty());
         boolean exists = false;
         for ( AdDto ad_ : ads ) {
@@ -886,7 +886,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         authenticateClientAsThirdUser();
         client.requestAd(adId, "Give me your gift please");
         
-        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, true);
+        List<AdDto> ads = client.getUserAds(FIRST_USER_ID, Integer.MAX_VALUE, true, false);
         assertNotNull(ads);
         assertTrue("At least one ad might have returned!", !ads.isEmpty());
         
