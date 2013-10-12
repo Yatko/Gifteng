@@ -95,7 +95,7 @@ public class FileUpload {
 //        return buildFile(imgId, modelType, null, isNew);
 //    }
     
-    private File buildFile(Long imgId, ImageModelType modelType, String suffix, boolean isNew) {
+    public File buildFile(Long imgId, ImageModelType modelType, String suffix, boolean isNew) {
         String target = buildFileName(imgId, modelType, suffix);
         return buildFile(target, isNew);
     }

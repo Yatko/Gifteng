@@ -7,6 +7,8 @@ package com.venefica.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,6 +54,9 @@ public class UserTransaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date finalizedAt;
     private boolean finalized;
+    
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
 
     public UserTransaction() {
     }
@@ -60,17 +65,20 @@ public class UserTransaction {
         this.ad = ad;
         this.pendingGivingNumber = UserPoint.getGivingNumber(ad);
         this.pendingReceivingNumber = BigDecimal.ZERO;
+        this.status = TransactionStatus.NONE;
     }
 
     public UserTransaction(Request request) {
         this.request = request;
         this.pendingGivingNumber = BigDecimal.ZERO;
         this.pendingReceivingNumber = UserPoint.getReceivingNumber(request);
+        this.status = TransactionStatus.NONE;
     }
     
-    public void markAsFinalized() {
+    public void markAsFinalized(TransactionStatus status) {
         finalized = true;
         finalizedAt = new Date();
+        this.status = status;
     }
     
     // getters/setters
@@ -154,5 +162,13 @@ public class UserTransaction {
 
     public void setPendingReceivingNumber(BigDecimal pendingReceivingNumber) {
         this.pendingReceivingNumber = pendingReceivingNumber;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
     }
 }

@@ -24,6 +24,11 @@ public class RequestDaoImpl extends DaoBase<Request> implements RequestDao {
         request.setRequestedAt(new Date());
         return saveEntity(request);
     }
+    
+    @Override
+    public void update(Request request) {
+        updateEntity(request);
+    }
 
     @Override
     public Request get(Long requestId) {

@@ -21,6 +21,7 @@ import com.venefica.service.fault.MessageNotFoundException;
 import com.venefica.service.fault.MessageValidationException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -134,6 +135,12 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             throw new AuthorizationException("You can access only implied ads/requests");
         }
         
+        if (request.getUser().equals(currentUser) && request.isMessagesHiddenByRequestor()) {
+            return Collections.<MessageDto>emptyList();
+        } else if (request.getAd().getCreator().equals(currentUser) && request.isMessagesHiddenByCreator()) {
+            return Collections.<MessageDto>emptyList();
+        }
+        
         List<Message> messages = messageDao.getByRequest(requestId);
         return buildMessages(messages, currentUser, true);
     }
@@ -178,10 +185,12 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             to = request.getAd().getCreator();
         }
 
+        if ( request == null ) {
+            throw new MessageValidationException("You can't send messages without request specified!");
+        }
         if ( to == null ) {
             throw new UserNotFoundException("Could not detect the receipient (to) user.");
         }
-        
         if (currentUser.equals(to)) {
             throw new MessageValidationException(MessageField.TO, "You can't send messages to yourself!");
         }
@@ -191,6 +200,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         message.setFrom(currentUser);
         message.setRequest(request);
         Long messageId = messageDao.save(message);
+        
+        request.setMessagesHiddenByRequestor(false);
+        request.setMessagesHiddenByCreator(false);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("to", to);
@@ -208,6 +220,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         validateMessageDto(messageDto);
         Message message = validateMessage(messageDto.getId());
         User currentUser = getCurrentUser();
+        Request request = message.getRequest();
 
         if (!message.getFrom().equals(currentUser)) {
             throw new AuthorizationException("Only owner can update the message!");
@@ -216,6 +229,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         // Only text can be updated!
         message.setText(messageDto.getText());
         message.setUpdatedAt(new Date());
+        
+        request.setMessagesHiddenByRequestor(false);
+        request.setMessagesHiddenByCreator(false);
     }
 
     @Override
@@ -261,6 +277,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
     
     @Override
+    @Transactional
     public void hideRequestMessages(Long requestId) throws RequestNotFoundException, AuthorizationException {
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();

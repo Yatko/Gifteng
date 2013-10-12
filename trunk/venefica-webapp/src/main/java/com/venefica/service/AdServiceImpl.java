@@ -1,7 +1,9 @@
 package com.venefica.service;
 
 import com.venefica.common.MailException;
+import com.venefica.config.AppConfig;
 import com.venefica.config.Constants;
+import com.venefica.config.MainConfig;
 import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ApprovalDao;
 import com.venefica.dao.BookmarkDao;
@@ -30,6 +32,7 @@ import com.venefica.model.Rating;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
 import com.venefica.model.SpamMark;
+import com.venefica.model.TransactionStatus;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.model.UserTransaction;
@@ -61,7 +64,6 @@ import com.venefica.service.fault.InvalidRequestException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -84,6 +86,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private static final String AD_NEW_HTML_MESSAGE_TEMPLATE = AD_NEW_TEMPLATE + "message.html.vm";
     private static final String AD_NEW_PLAIN_MESSAGE_TEMPLATE = AD_NEW_TEMPLATE + "message.txt.vm";
     
+    @Inject
+    private AppConfig appConfig;
     @Inject
     private ApprovalDao approvalDao;
     @Inject
@@ -188,10 +192,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Long adId = adDao.save(ad);
         
         if ( !currentUser.isBusinessAccount() ) {
-            UserTransaction transaction = new UserTransaction(ad);
-            transaction.setUser(currentUser);
-            transaction.setUserPoint(currentUser.getUserPoint());
-            userTransactionDao.save(transaction);
+            UserTransaction adTransaction = new UserTransaction(ad);
+            adTransaction.setUser(currentUser);
+            adTransaction.setUserPoint(currentUser.getUserPoint());
+            userTransactionDao.save(adTransaction);
         }
         
         if ( useEmailSender ) {
@@ -284,10 +288,36 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
+    public Long cloneAd(AdDto adDto) throws AdNotFoundException, AdValidationException, AuthorizationException, InvalidAdStateException {
+        Ad oldAd = validateAd(adDto.getId());
+        User currentUser = getCurrentUser();
+        
+        if (!oldAd.getCreator().equals(currentUser)) {
+            throw new AuthorizationException("You can clone only your own ads!");
+        }
+        
+        ImageDto imageDto = adDto.getImage();
+        if ( !imageDto.isValid() ) {
+            try {
+                Image image = imageDao.get(imageDto.getId(), ImageModelType.AD);
+                imageDto.updateImageDto(image);
+            } catch ( IOException ex ) {
+                logger.error("Exception thrown when trying to get cloned ad (adId: " + adDto.getId() + ") image", ex);
+            }
+        }
+        
+        Long adId = placeAd(adDto);
+        deleteAd(oldAd.getId()); //removing the old (cloned) ad
+        
+        return adId;
+    }
+    
+    @Override
+    @Transactional
     public void deleteAd(Long adId) throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
         Ad ad = validateAd(adId);
         User currentUser = getCurrentUser();
-        UserTransaction transaction = userTransactionDao.getByAd(adId);
+        UserTransaction adTransaction = userTransactionDao.getByAd(adId);
 
         if (!ad.getCreator().equals(currentUser)) {
             throw new AuthorizationException("Only the creator can delete the ad");
@@ -295,14 +325,28 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( ad.isDeleted() ) {
             throw new InvalidAdStateException("Ad (adId: " + adId + ") is already deleted");
         }
-        if ( transaction == null ) {
+        if ( adTransaction == null ) {
             throw new InvalidAdStateException("There is no transaction associated with this ad (adId: " + adId + ")");
         }
-
+        
         ad.markAsDeleted();
         
-        transaction.markAsFinalized();
-        userTransactionDao.update(transaction);
+        adTransaction.markAsFinalized(TransactionStatus.DELETED);
+        userTransactionDao.update(adTransaction);
+        
+        if ( ad.getRequests() != null && !ad.getRequests().isEmpty() ) {
+            for ( Request request : ad.getRequests() ) {
+                Long requestId = request.getId();
+                UserTransaction requestTransaction = userTransactionDao.getByRequest(requestId);
+                if ( requestTransaction == null ) {
+                    logger.error("There is no user transaction for the request (requestId: " + requestId + ")");
+                    continue;
+                }
+                
+                requestTransaction.markAsFinalized(TransactionStatus.DELETED);
+                userTransactionDao.update(requestTransaction);
+            }
+        }
     }
 
     @Override
@@ -538,7 +582,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public List<AdDto> getMyAds(Boolean includeRequests) {
         try {
             Long userId = getCurrentUserId();
-            return getUserAds(userId, includeRequests);
+            return getUserAds(userId, Integer.MAX_VALUE, includeRequests, true);
         } catch ( UserNotFoundException ex ) {
             logger.error("User (current/logged) not found", ex);
             return new ArrayList<AdDto>();
@@ -547,16 +591,22 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<AdDto> getUserAds(Long userId, Boolean includeRequests) throws UserNotFoundException {
+    public List<AdDto> getUserAds(Long userId, int numberAds, Boolean includeRequests, Boolean includeUnapproved) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         User user = validateUser(userId);
-        boolean includeUnapproved = currentUser.equals(user);
-        List<Ad> ads = getUserOwnedAds(userId, includeUnapproved);
-        List<AdDto> result = new LinkedList<AdDto>();
         
         if ( includeRequests == null ) {
             includeRequests = false;
         }
+        if ( includeUnapproved == null ) {
+            includeUnapproved = currentUser.equals(user);
+        }
+        if ( numberAds <= 0 ) {
+            numberAds = Integer.MAX_VALUE;
+        }
+        
+        List<Ad> ads = getUserOwnedAds(userId, numberAds, includeUnapproved);
+        List<AdDto> result = new LinkedList<AdDto>();
         
         for (Ad ad : ads) {
             AdDto adDto = new AdDtoBuilder(ad)
@@ -584,7 +634,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         User currentUser = getCurrentUser();
         User user = validateUser(userId);
         boolean includeUnapproved = currentUser.equals(user);
-        List<Ad> ads = getUserOwnedAds(userId, includeUnapproved);
+        List<Ad> ads = getUserOwnedAds(userId, Integer.MAX_VALUE, includeUnapproved);
         return ads != null ? ads.size() : 0;
     }
     
@@ -698,7 +748,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         //only EXPIRED ads can be relisted
-        ad.prolong(Constants.AD_PROLONGATION_PERIOD_DAYS);
+        ad.prolong(appConfig.getAdProlongationPeriodMinutes());
     }
 
     @Override
@@ -734,7 +784,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can hide requests.");
         }
-        if ( !ad.isExpired() && !request.isUnaccepted() && (!request.isDeclined() || !request.isCanceled()) ) {
+        if ( !ad.isExpired() && !request.isUnaccepted() && !request.isDeclined() && !request.isCanceled() ) {
             throw new InvalidRequestException("Only 'expired' (unaccepted or declined or canceled) requests (or expired ads) can be hidden.");
         }
         
@@ -787,10 +837,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         ad.setExpiresAt(calculateExpiration());
         
         if ( !currentUser.isBusinessAccount() ) {
-            UserTransaction transaction = new UserTransaction(request);
-            transaction.setUser(currentUser);
-            transaction.setUserPoint(currentUser.getUserPoint());
-            userTransactionDao.save(transaction);
+            UserTransaction requestTransaction = new UserTransaction(request);
+            requestTransaction.setUser(currentUser);
+            requestTransaction.setUserPoint(currentUser.getUserPoint());
+            userTransactionDao.save(requestTransaction);
         }
         
         if ( text != null && !text.trim().isEmpty() ) {
@@ -840,8 +890,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
         
-        UserTransaction transaction = userTransactionDao.getByRequest(requestId);
-        if ( transaction == null ) {
+        UserTransaction requestTransaction = userTransactionDao.getByRequest(requestId);
+        if ( requestTransaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
@@ -864,8 +914,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
             ad.cancel(request);
         }
         
-        transaction.markAsFinalized();
-        userTransactionDao.update(transaction);
+        requestTransaction.markAsFinalized(TransactionStatus.CANCELED);
+        userTransactionDao.update(requestTransaction);
         
         if ( ad.getCreator().equals(currentUser) ) {
             Map<String, Object> vars = new HashMap<String, Object>(0);
@@ -971,7 +1021,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
         Ad ad = request.getAd();
-        UserTransaction transaction = userTransactionDao.getByRequest(requestId);
+        UserTransaction requestTransaction = userTransactionDao.getByRequest(requestId);
         
         if ( !request.getUser().equals(currentUser) ) {
             throw new InvalidRequestException("Only requestor can mark as received.");
@@ -979,7 +1029,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.isAccepted()) {
             throw new InvalidRequestException("Cannot mark request (requestId: " + requestId + ") as received as it is not selected/accepted.");
         }
-        if ( transaction == null ) {
+        if ( requestTransaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
@@ -1001,12 +1051,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             //ad.setExpired(true);
         }
         
-        transaction.markAsFinalized();
-        userTransactionDao.update(transaction);
+        requestTransaction.markAsFinalized(TransactionStatus.RECEIVED);
+        userTransactionDao.update(requestTransaction);
         
         UserPoint userPoint = currentUser.getUserPoint();
-        userPoint.addGivingNumber(transaction.getPendingGivingNumber());
-        userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
+        userPoint.addGivingNumber(requestTransaction.getPendingGivingNumber());
+        userPoint.addReceivingNumber(requestTransaction.getPendingReceivingNumber());
         userPointDao.update(userPoint);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
@@ -1462,8 +1512,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
      * @param includeUnapproved
      * @return 
      */
-    private List<Ad> getUserOwnedAds(Long userId, boolean includeUnapproved) {
-        List<Ad> ads = adDao.getByUser(userId);
+    private List<Ad> getUserOwnedAds(Long userId, int numberAds, boolean includeUnapproved) {
+        List<Ad> ads = adDao.getByUser(userId, numberAds);
         List<Ad> result = new LinkedList<Ad>();
         if ( ads == null || ads.isEmpty() ) {
             return result;
@@ -1516,7 +1566,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private void markAsSent(User user, Request request) throws RequestNotFoundException, InvalidRequestException {
         Ad ad = request.getAd();
         Long adId = ad.getId();
-        UserTransaction transaction = userTransactionDao.getByAd(adId);
+        UserTransaction adTransaction = userTransactionDao.getByAd(adId);
         
         if ( !ad.getCreator().equals(user) ) {
             throw new InvalidRequestException("Only creator users can mark as sent.");
@@ -1524,7 +1574,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( !request.isAccepted() ) {
             throw new InvalidRequestException("The request (requestId: " + request.getId() + ") is not accepted, cannot mark as sent.");
         }
-        if ( transaction == null ) {
+        if ( adTransaction == null ) {
             throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
         }
         if ( request.getStatus() != RequestStatus.ACCEPTED ) {
@@ -1533,18 +1583,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         request.markAsSent();
         
-        transaction.markAsFinalized();
-        userTransactionDao.update(transaction);
+        adTransaction.markAsFinalized(TransactionStatus.SENT);
+        userTransactionDao.update(adTransaction);
         
         UserPoint userPoint = user.getUserPoint();
-        userPoint.addGivingNumber(transaction.getPendingGivingNumber());
-        userPoint.addReceivingNumber(transaction.getPendingReceivingNumber());
+        userPoint.addGivingNumber(adTransaction.getPendingGivingNumber());
+        userPoint.addReceivingNumber(adTransaction.getPendingReceivingNumber());
         userPointDao.update(userPoint);
     }
     
     private Date calculateExpiration() {
         Date start = new Date();
-        Date expiresAt = DateUtils.addDays(start, Constants.AD_EXPIRATION_PERIOD_DAYS);
+        Date expiresAt = DateUtils.addMinutes(start, appConfig.getAdExpirationPeriodMinutes());
         return expiresAt;
     }
 }

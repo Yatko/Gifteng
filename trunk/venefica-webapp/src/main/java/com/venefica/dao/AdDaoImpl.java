@@ -2,17 +2,14 @@ package com.venefica.dao;
 
 import com.venefica.model.Ad;
 import com.venefica.common.GeoUtils;
-import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.BusinessUserData;
 import com.venefica.model.MemberUserData;
-import com.venefica.model.Request;
 import com.venefica.service.dto.FilterDto;
 import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -39,6 +36,11 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     public Long save(Ad ad) {
         ad.setCreatedAt(new Date());
         return saveEntity(ad);
+    }
+    
+    @Override
+    public void update(Ad ad) {
+        updateEntity(ad);
     }
     
     @Override
@@ -190,7 +192,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         }
 
         if (hasSearchString) {
-            query.setParameter("searchstr", searchString.toLowerCase());
+            query.setParameter("searchstr", searchString != null ? searchString.toLowerCase() : "");
         }
 
         if (categories != null && !categories.isEmpty()) {
@@ -227,9 +229,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     }
     
     @Override
-    @Transactional
-    public void markExpiredAds() {
-        int numRows = 0;
+    public List<Ad> getExpiredAds() {
         List<Ad> ads = createQuery(""
                 + "from " + getDomainClassName() + " a where "
                 + "a.expires = true and "
@@ -240,51 +240,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.sold = false and "
                 + "a.adData.quantity > 0"
                 + "").list();
-        for ( Ad ad : ads ) {
-            Set<Request> requests = ad.getRequests();
-            boolean mark = true;
-            
-            if ( requests != null && !requests.isEmpty() ) {
-                for ( Request request : requests ) {
-                    if ( !request.isPending() ) {
-                        mark = false;
-                        break;
-                    }
-                }
-            }
-            
-            if ( mark ) {
-                ad.setExpired(true);
-                ad.setStatus(AdStatus.EXPIRED);
-                ad.setNumExpire(ad.getNumExpire() + 1);
-                
-                numRows++;
-            }
-        }
-        
-        /**
-        int numRows = createQuery(""
-                + "update " + getDomainClassName() + " a "
-                + "set "
-                + "a.expired = true, "
-                + "a.numExpire = a.numExpire + 1, "
-                + "a.status = :status "
-                + "where "
-                + "a.expires = true and "
-                + "a.expiresAt < current_date() and "
-                + "a.expired = false and "
-                + "a.deleted = false and "
-                + "a.creator.deleted = false and "
-                + "a.sold = false and "
-                + "a.adData.quantity > 0"
-                + "")
-                .setParameter("status", AdStatus.EXPIRED)
-                .executeUpdate();
-        /**/
-        
-        if (numRows > 0) {
-            log.info(numRows + " ads marked as expired.");
-        }
+        return ads;
     }
     
     @Override
@@ -327,18 +283,22 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Ad> getByUser(Long userId) {
-        return createQuery(""
+    public List<Ad> getByUser(Long userId, int numberAds) {
+        Query query = createQuery(""
                 + "from " + getDomainClassName() + " a where "
                 + "a.creator.id = :userId and "
                 + "a.adData.category.hidden = false and "
                 + "a.deleted = false and "
                 + "a.creator.deleted = false "
-                //+ "order by a.id desc"
-                + "order by a.approvedAt desc, a.createdAt desc"
+                + "order by a.id desc"
                 + "")
-                .setParameter("userId", userId)
-                .list();
+                .setParameter("userId", userId);
+        
+        if ( numberAds < Integer.MAX_VALUE ) {
+            query.setMaxResults(numberAds);
+        }
+        
+        return query.list();
     }
     
     @Override

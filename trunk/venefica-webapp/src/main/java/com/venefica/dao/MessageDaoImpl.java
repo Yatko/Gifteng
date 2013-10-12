@@ -169,6 +169,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
                 + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
                 + ") "
+                + "order by m.createdAt desc, m.id desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();
@@ -198,8 +199,11 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "where "
                 + "m.deleted = false and "
                 + "m.read = false and "
-                //+ "(m.to.id = :userId or m.from.id = :userId) "
-                + "m.to.id = :userId "
+                + "m.to.id = :userId and "
+                + "("
+                + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
+                + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
+                + ") "
                 + "order by m.createdAt desc, m.id desc "
                 + "")
                 .setParameter("userId", userId)

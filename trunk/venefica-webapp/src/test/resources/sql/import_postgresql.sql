@@ -68,8 +68,11 @@ insert into memberaddata (id) values (1);
 delete from ad;
 insert into ad (id, adData_id, creator_id, createdAt, expired, deleted, sold, numviews, reviewed, spam, numavailprolongations, rating, numexpire, status, expires, approved, online) values (nextval('ad_id_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't', 't', 't');
 
+delete from request;
+insert into request (id, ad_id, user_id, status, deleted, selected, hidden, sent, received, messagesHiddenByCreator, messagesHiddenByRequestor) values (nextval('request_id_seq'), 1, 4, 'PENDING', 'f', 'f', 'f', 'f', 'f', 'f', 'f');
+
 delete from user_transaction;
-insert into user_transaction (id, finalized, pendingGivingNumber, pendingReceivingNumber, ad_id, user_id, userPoint_id) values (nextval('user_transaction_id_seq'), 'f', '2.2625', '0', 1, 1, 1);
+insert into user_transaction (id, finalized, pendingGivingNumber, pendingReceivingNumber, ad_id, user_id, userPoint_id, status) values (nextval('user_transaction_id_seq'), 'f', '2.2625', '0', 1, 1, 1, 'NONE');
 
 -- Bookmarks
 delete from bookmark;

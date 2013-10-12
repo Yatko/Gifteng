@@ -48,7 +48,7 @@ public class ImageIntegrationTest {
         for ( Long imageId : imageIds ) {
             byte[] data = fileUpload.getData(imageId, modelType);
             List<File> files = imageUtils.save(imageId, data, modelType, type);
-            amazonUpload.transfer(files, modelType, type);
+            amazonUpload.upload(files, modelType, type);
         }
     }
     

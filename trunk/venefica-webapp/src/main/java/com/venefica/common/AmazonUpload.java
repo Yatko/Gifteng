@@ -8,15 +8,22 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.venefica.config.FileConfig;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -48,7 +55,7 @@ public class AmazonUpload {
         client = new AmazonS3Client(new BasicAWSCredentials(fileConfig.getAmazonAccessKeyID(), fileConfig.getAmazonSecretAccessKey()));
     }
     
-    public void transfer(List<File> files, ImageModelType modelType, ImageType type) throws IOException {
+    public void upload(List<File> files, ImageModelType modelType, ImageType type) throws IOException {
         if ( !fileConfig.isAmazonEnabled() ) {
             return;
         } else if ( files == null || files.isEmpty() ) {
@@ -83,6 +90,21 @@ public class AmazonUpload {
                 logger.error("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
                 throw new IOException("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
             }
+        }
+    }
+    
+    public void download(File file, ImageModelType modelType) throws IOException {
+        if ( !fileConfig.isAmazonEnabled() ) {
+            return;
+        }
+        
+        String key = modelType.getFolderName() + "/" + file.getName();
+        try {
+            GetObjectRequest objectRequest = new GetObjectRequest(fileConfig.getAmazonBucket(), key);
+            client.getObject(objectRequest, file);
+        } catch ( Exception ex ) {
+            logger.error("Exception thrown when trying to download from amazon S3 (key: " + key + ")", ex);
+            throw new IOException("Exception thrown when trying to download from amazon S3 (key: " + key + ")", ex);
         }
     }
     
