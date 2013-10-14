@@ -121,7 +121,8 @@ class Profile extends CI_Controller {
      */
     private function giving($user) {
         try {
-            $givings = $this->ad_service->getUserAds($user->id, 0, true, true);
+            $includeUnapproved = isOwner($user) ? true : false;
+            $givings = $this->ad_service->getUserAds($user->id, 0, true, $includeUnapproved);
         } catch ( Exception $ex ) {
             $givings = null;
         }
