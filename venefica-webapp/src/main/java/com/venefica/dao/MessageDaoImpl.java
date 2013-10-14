@@ -159,7 +159,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
         //NOTE: this is the working way with PostgreSQL (and should work also with MySQL)
         List<Message> messages = new LinkedList<Message>();
         List<Request> requests = createQuery(""
-                + "select distinct m.request "
+                + "select m.request "
                 + "from " + getDomainClassName() + " m "
                 + "where "
                 + "m.deleted = false and "
@@ -169,7 +169,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
                 + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
                 + ") "
-                + "order by m.createdAt desc, m.id desc"
+                + "group by m.request "
+                + "order by max(m.createdAt) desc, m.id desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();
