@@ -306,6 +306,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
             }
         }
         
+        adDto.setExpires(true);
+        adDto.setExpiresAt(calculateExpiration());
+        adDto.setAvailableAt(new Date());
+        
         Long adId = placeAd(adDto);
         deleteAd(oldAd.getId()); //removing the old (cloned) ad
         
