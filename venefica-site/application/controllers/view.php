@@ -18,7 +18,7 @@ class View extends CI_Controller {
             //coming from admin
             //TODO: find a better and nicer solution
             $is_admin = true;
-        } else if ( !$ad->owner && (!$ad->approved || !$ad->online) ) {
+        } else if ( $ad && !$ad->owner && (!$ad->approved || !$ad->online) ) {
             $ad = null;
         }
         

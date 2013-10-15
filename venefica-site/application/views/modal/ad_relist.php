@@ -1,7 +1,7 @@
 <script langauge="javascript">
     var adRelistCallerElement;
     
-    function startAdRelistModal(callerElement, adId) {
+    function startAdRelistModal(callerElement, adId, canProlong) {
         adRelistCallerElement = callerElement;
         
         var $adId = $("#ad_relist_form input[name=adId]");
@@ -10,6 +10,7 @@
         if ( $('#adRelistContainer').length > 0 ) {
             $('#adRelistContainer').removeData("modal").modal('show');
             $("#adRelistContainer .modal-body").html('<div class="well ge-well ge-form">Please wait...</div>');
+            $("#adRelistContainer #relistBtn").attr("disabled", !canProlong);
             
             $("#adRelistContainer .modal-body").load('<?=base_url()?>preview/' + adId + '?modal', function() {
                 init_select();
@@ -89,7 +90,7 @@
                         <div class="span12">
                             <div class="control-group control-form">
                                 <div class="controls">
-                                    <button type="button" onclick="ad_relist_modal();" class="span6 mobile-two btn btn-ge">RELIST</button>
+                                    <button type="button" onclick="ad_relist_modal();" id="relistBtn" class="span6 mobile-two btn btn-ge">RELIST</button>
                                     <button type="button" onclick="ad_edit_modal()" class="span6 mobile-two btn pull-right">EDIT</button>
                                 </div>
                             </div>

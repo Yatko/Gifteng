@@ -65,6 +65,7 @@ class Ad_model extends CI_Model {
     var $requests; //array of Request_model
     var $canRequest; //boolean
     var $canRelist; //boolean
+    var $canProlong; //boolean
     var $statistics; //AdStatistics_model
     var $approval; //Approval_model
     
@@ -107,6 +108,7 @@ class Ad_model extends CI_Model {
             $this->canMarkAsSpam = getField($obj, 'canMarkAsSpam');
             $this->canRequest = getField($obj, 'canRequest');
             $this->canRelist = getField($obj, 'canRelist');
+            $this->canProlong = getField($obj, 'canProlong');
             $this->freeShipping = getField($obj, 'freeShipping');
             $this->pickUp = getField($obj, 'pickUp');
             $this->place = getField($obj, 'place');
