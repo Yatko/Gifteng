@@ -193,6 +193,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         
         if ( includeCanRelistFlag ) {
             boolean canRelist = true;
+            boolean canProlong = false;
             
             if ( canRelist ) {
                 if ( !model.getCreator().equals(currentUser) ) {
@@ -210,11 +211,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                 }
             }
             if ( canRelist ) {
-                if ( !model.canProlong() ) {
-                    canRelist = false;
-                }
+                canProlong = model.canProlong();
             }
+            
             adDto.setCanRelist(canRelist);
+            adDto.setCanProlong(canProlong);
         }
 
         if (includeCanMarkAsSpamFlag) {

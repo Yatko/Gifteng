@@ -3,7 +3,6 @@ package com.venefica.service;
 import com.venefica.common.MailException;
 import com.venefica.config.AppConfig;
 import com.venefica.config.Constants;
-import com.venefica.config.MainConfig;
 import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ApprovalDao;
 import com.venefica.dao.BookmarkDao;
@@ -1010,7 +1009,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     public void markAsSent(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         User currentUser = getCurrentUser();
         Request request = validateRequest(requestId);
-        markAsSent(currentUser, request);
+        markAsSent(currentUser, request, false);
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("user", request.getUser());
@@ -1037,10 +1036,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
         }
         
-        if ( request.getStatus() == RequestStatus.ACCEPTED ) {
-            //marking automatically as sent if the status remained as ACCEPTED (if the SENT was skipped)
+        if ( request.getStatus() == RequestStatus.ACCEPTED || request.getStatus() == RequestStatus.SENT ) {
+            //received can be mark without passing via snet status as well
             User owner = ad.getCreator();
-            markAsSent(owner, request);
+            markAsSent(owner, request, true);
         }
         
         if ( !request.isSent() ) {
@@ -1567,7 +1566,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         emailSender.sendNotification(NotificationType.REQUEST_ACCEPTED, request.getUser(), vars);
     }
     
-    private void markAsSent(User user, Request request) throws RequestNotFoundException, InvalidRequestException {
+    private void markAsSent(User user, Request request, boolean finalizeTransaction) throws RequestNotFoundException, InvalidRequestException {
         Ad ad = request.getAd();
         Long adId = ad.getId();
         UserTransaction adTransaction = userTransactionDao.getByAd(adId);
@@ -1581,19 +1580,21 @@ public class AdServiceImpl extends AbstractService implements AdService {
         if ( adTransaction == null ) {
             throw new InvalidRequestException("No associated transaction for the ad (adId: " + adId + ")");
         }
-        if ( request.getStatus() != RequestStatus.ACCEPTED ) {
+        if ( request.getStatus() != RequestStatus.ACCEPTED && request.getStatus() != RequestStatus.SENT ) {
             throw new InvalidRequestException("The request (requestId: " + request.getId() + ") is not in accepted state, cannot mark as sent.");
         }
         
         request.markAsSent();
         
-        adTransaction.markAsFinalized(TransactionStatus.SENT);
-        userTransactionDao.update(adTransaction);
-        
-        UserPoint userPoint = user.getUserPoint();
-        userPoint.addGivingNumber(adTransaction.getPendingGivingNumber());
-        userPoint.addReceivingNumber(adTransaction.getPendingReceivingNumber());
-        userPointDao.update(userPoint);
+        if ( finalizeTransaction ) {
+            adTransaction.markAsFinalized(TransactionStatus.SENT);
+            userTransactionDao.update(adTransaction);
+            
+            UserPoint userPoint = user.getUserPoint();
+            userPoint.addGivingNumber(adTransaction.getPendingGivingNumber());
+            userPoint.addReceivingNumber(adTransaction.getPendingReceivingNumber());
+            userPointDao.update(userPoint);
+        }
     }
     
     private Date calculateExpiration() {

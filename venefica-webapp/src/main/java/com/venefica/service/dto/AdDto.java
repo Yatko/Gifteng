@@ -108,6 +108,8 @@ public class AdDto extends DtoBase {
     // out
     private Boolean canRelist;
     // out
+    private Boolean canProlong;
+    // out
     private AdStatisticsDto statistics;
     // out
     private ApprovalDto approval; // the approval of the ad on specified revision
@@ -526,5 +528,13 @@ public class AdDto extends DtoBase {
 
     public void setCanRelist(Boolean canRelist) {
         this.canRelist = canRelist;
+    }
+
+    public Boolean getCanProlong() {
+        return canProlong;
+    }
+
+    public void setCanProlong(Boolean canProlong) {
+        this.canProlong = canProlong;
     }
 }
