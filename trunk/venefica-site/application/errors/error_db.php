@@ -1,63 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Gifteng - Database Error</title>
-<link rel="shortcut icon" href="assets/<?=TEMPLATES?>/images/favicon.ico" />
-<style type="text/css">
-
-::selection{ background-color: #E13300; color: white; }
-::moz-selection{ background-color: #E13300; color: white; }
-::webkit-selection{ background-color: #E13300; color: white; }
-
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
-}
-
-a {
-	color: #003399;
-	background-color: transparent;
-	font-weight: normal;
-}
-
-h1 {
-	color: #444;
-	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
-	font-size: 19px;
-	font-weight: normal;
-	margin: 0 0 14px 0;
-	padding: 14px 15px 10px 15px;
-}
-
-code {
-	font-family: Consolas, Monaco, Courier New, Courier, monospace;
-	font-size: 12px;
-	background-color: #f9f9f9;
-	border: 1px solid #D0D0D0;
-	color: #002166;
-	display: block;
-	margin: 14px 0 14px 0;
-	padding: 12px 10px 12px 10px;
-}
-
-#container {
-	margin: 10px;
-	border: 1px solid #D0D0D0;
-	-webkit-box-shadow: 0 0 8px #D0D0D0;
-}
-
-p {
-	margin: 12px 15px 12px 15px;
-}
-</style>
+    <title>Gifteng - Database Error</title>
+    <link rel="shortcut icon" href="assets/<?=TEMPLATES?>/images/favicon.ico" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>bootstrap-responsive.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=CSS_PATH?>flat-ui.css">
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>snap.css" />
+    <link rel='stylesheet' type='text/css' media='all' href="<?=BASE_PATH?>gifteng-addon.css" />
 </head>
 <body>
-	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
-	</div>
+    
+    <? /** ?>
+    <div id="container">
+        <h1><?php echo $heading; ?></h1>
+        <?php echo $message; ?>
+    </div>
+    <? /**/ ?>
+    
+    <div class="ge-container"><div class="container ge-topspace">
+    <div class="row">
+        <div class="span12">
+            <div class="well ge-well">
+                <div class="row-fluid">
+                    <div class="span10 offset1 text-center">
+                        <a href="<?=base_url()?>profile"><img src="<?=BASE_PATH?>images/unknownlink.jpg" width="800" height="500" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div></div>
+    
 </body>
 </html>

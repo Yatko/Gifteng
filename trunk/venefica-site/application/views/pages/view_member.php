@@ -58,6 +58,7 @@ $ad_can_edit = $is_owner && !$ad->hasActiveRequest() && !$ad_is_expired && $num_
 $ad_can_delete = $is_owner && (!$ad->hasActiveRequest() || $ad_is_expired);
 $ad_can_request = $ad->canRequest;
 $ad_can_relist = $ad->canRelist;
+$ad_can_prolong = $ad->canProlong;
 
 $user_request = $ad->getRequestByUser($currentUser->id);
 
@@ -165,7 +166,7 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
                                         } else if ( $ad_can_relist ) {
                                             $edit_text = 'RELIST';
-                                            $edit_js = 'onclick="startAdRelistModal(this, ' . $ad_id . ');"';
+                                            $edit_js = 'onclick="startAdRelistModal(this, ' . $ad_id . ', ' . $ad_can_prolong . ');"';
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
                                         } else {
                                             //there is at least one active request (or at least one comment/bookmark/share on it)

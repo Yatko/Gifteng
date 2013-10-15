@@ -69,8 +69,8 @@
                         <div class="span12">
                             <div class="control-group control-form">
                                 <div class="controls">
-                                    <button type="button" onclick="request_receive_modal(this);" class="span6 btn mobile-two">CONFIRM</button>
-                                    <button type="button" data-dismiss="modal" class="span6 btn btn-ge mobile-two">CANCEL</button>
+                                    <button type="button" data-dismiss="modal" class="span6 btn mobile-two">CANCEL</button>
+                                    <button type="button" onclick="request_receive_modal(this);" class="span6 btn btn-ge mobile-two">CONFIRM</button>
                                 </div>
                             </div>
                         </div>
