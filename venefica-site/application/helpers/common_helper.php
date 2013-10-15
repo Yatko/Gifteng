@@ -134,11 +134,13 @@ if ( ! function_exists('safe_content')) {
         
         $str = trim($str);
         $str = trim(strip_tags($str));
+        /**
         $str = preg_replace("/\n+/", "\n", $str);
         $str = preg_replace("/\r+/", "\r", $str);
         $str = preg_replace("/[\r\n]+/", "\r\n", $str);
         $str = preg_replace("/[\n\r]+/", "\n\r", $str);
         //$str = str_replace("\n", "<br />", $str);
+        /**/
         $str = nl2br($str);
         return $str;
     }

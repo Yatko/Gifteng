@@ -159,7 +159,8 @@ if ( $is_modal ) {
             if ( $message == '' ) $message = 'The More You Give, The More You Get. Promise! :)';
             
             $title = $ad->getSafeTitle();
-            $description = $ad->getSafeDescription();
+            //$description = $ad->getSafeDescription();
+            $description = $ad->description;
             $category = $ad->categoryId;
             $price = $ad->price;
             $zipCode = $ad->address->zipCode;
