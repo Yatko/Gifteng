@@ -29,7 +29,7 @@ class Ajax extends CI_Controller {
         }
         
         try {
-            $ad = $this->ad_service->getAdById($adId);
+            $ad = $this->ad_service->getAdById($adId, true);
             $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
             
             respond_ajax(AJAX_STATUS_RESULT, array(
@@ -64,7 +64,7 @@ class Ajax extends CI_Controller {
         }
         
         try {
-            $ad = $this->ad_service->getAdById($adId);
+            $ad = $this->ad_service->getAdById($adId, false);
             $request = $this->ad_service->getRequestById($requestId);
             $result = $this->load->view('element/ad_receiving', array('ad' => $ad, 'request' => $request, 'user_id' => $userId), true);
             
@@ -318,7 +318,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->bookmarkAd($adId);
             $ad_statistics = $this->ad_service->getStatistics($adId);
-            $currentUser = $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
@@ -342,7 +342,7 @@ class Ajax extends CI_Controller {
             $adId = $_GET['adId'];
             $this->ad_service->removeBookmark($adId);
             $ad_statistics = $this->ad_service->getStatistics($adId);
-            $currentUser = $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_BOOKMARKS_NUM => $ad_statistics->numBookmarks,
@@ -430,7 +430,7 @@ class Ajax extends CI_Controller {
             $requestId = $this->input->post('requestId');
             
             $this->ad_service->hideRequest($requestId);
-            $currentUser = $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 USER_RECEIVINGS_NUM => $currentUser->statistics->numReceivings
@@ -456,7 +456,7 @@ class Ajax extends CI_Controller {
             $is_giving = $this->input->post('requestType') == 'giving' ? true : false;
             
             $this->ad_service->cancelRequest($requestId);
-            $currentUser = $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
             if ( $is_giving ) {
                 $this->getAdGiving($adId, $userId, $currentUser);

@@ -66,7 +66,7 @@ class Profile extends CI_Controller {
                 }
             } else {
                 //needs to refresh the user as cached statistic data can reflect incorrect values
-                $user = $this->usermanagement_service->refreshUser();
+                $user = $this->usermanagement_service->refreshStatistics();
             }
         } catch ( Exception $ex ) {
             $user = null;
@@ -403,12 +403,12 @@ class Profile extends CI_Controller {
                     }
 
                     try {
-                        $ad = $this->ad_service->getAdById($request->adId);
+                        $ad = $this->ad_service->getAdById($request->adId, false);
                     } catch ( Exception $ex ) {
                     }
 
                     try {
-                        $user = $this->usermanagement_service->refreshUser();
+                        $user = $this->usermanagement_service->refreshStatistics();
                     } catch ( Exception $ex ) {
                     }
                 }

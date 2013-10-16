@@ -418,10 +418,13 @@ class Ad_service {
      * @return Ad_model
      * @throws Exception
      */
-    public function getAdById($adId) {
+    public function getAdById($adId, $includeRequests) {
         try {
             $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getAdById(array("adId" => $adId));
+            $result = $adService->getAdById(array(
+                "adId" => $adId,
+                "includeRequests" => $includeRequests
+            ));
             $ad = Ad_model::convertAd($result->ad);
             return $ad;
         } catch ( Exception $ex ) {

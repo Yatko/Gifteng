@@ -12,7 +12,7 @@
  */
 
 //$ad_id = $ad->id;
-//$request_id = $request->id;
+$request_id = $request->id;
 $ad_creator = $ad->creator;
 $ad_title = $ad->getSafeTitle();
 $view_link = $ad->getViewUrl();
@@ -77,7 +77,7 @@ $view_link = $ad->getViewUrl();
                         </div><!--./ge-subject-->
                     </div>
 
-                    <? $this->load->view('element/messages', array('messages' => $messages, 'request' => $request, 'to' => $ad_creator, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
+                    <? $this->load->view('element/messages', array('messages' => $messages, 'requestId' => $request_id, 'to' => $ad_creator, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
                 </div>
             </div><!--./ge-messages-->
         </div>
