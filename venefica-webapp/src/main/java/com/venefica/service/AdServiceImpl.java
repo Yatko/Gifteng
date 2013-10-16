@@ -676,10 +676,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
     @Override
     @Transactional
-    public AdDto getAdById(Long adId) throws AdNotFoundException, AuthorizationException {
+    public AdDto getAdById(Long adId, Boolean includeRequests) throws AdNotFoundException, AuthorizationException {
         User currentUser = getCurrentUser();
         Ad ad = validateAd(adId);
-
+        
+        if ( includeRequests == null ) {
+            includeRequests = true;
+        }
+        
         if ( !ad.isOnline() || !ad.isApproved() ) {
             if ( !currentUser.isAdmin() && !ad.getCreator().equals(currentUser)  ) {
                 //current is not admin and is not ad owner
@@ -699,7 +703,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 .setCurrentUser(currentUser)
                 .includeImages()
                 .includeCreator()
-                .includeRequests()
+                .includeRequests(includeRequests)
                 .includeCanMarkAsSpam()
                 .includeCanRate()
                 .includeCanRequest()
