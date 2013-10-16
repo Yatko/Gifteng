@@ -342,7 +342,9 @@ public interface AdService {
      */
     @WebMethod(operationName = "GetAdById")
     @WebResult(name = "ad")
-    AdDto getAdById(@WebParam(name = "adId") Long adId)
+    AdDto getAdById(
+            @WebParam(name = "adId") Long adId,
+            @WebParam(name = "includeRequests") Boolean includeRequests)
             throws AdNotFoundException, AuthorizationException;
 
     

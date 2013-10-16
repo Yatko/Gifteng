@@ -230,7 +230,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test(expected = AdNotFoundException.class)
     public void getAdByIdTest() throws AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        client.getAdById(new Long(-1));
+        client.getAdById(new Long(-1), null);
     }
     
     //***********************************
@@ -561,7 +561,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         Ad updatedAd = adDao.get(ad.getId());
         assertTrue("Spam mark not added!", !updatedAd.getSpamMarks().isEmpty());
 
-        AdDto adDto = client.getAdById(ad.getId());
+        AdDto adDto = client.getAdById(ad.getId(), null);
         assertTrue("canMarkAsSpam must be false!", !adDto.getCanMarkAsSpam());
 
         // try to mark it twice
@@ -667,7 +667,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setPickUp(true);
         
         Long adId = client.placeAd(adDto);
-        assertNotNull("The ad should exist", client.getAdById(adId));
+        assertNotNull("The ad should exist", client.getAdById(adId, null));
         
         authenticateClientWithToken(adminService, firstUserAuthToken);
         adminService.approveAd(adId);
@@ -706,7 +706,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             //it's OK
         }
         
-        adDto = client.getAdById(adId);
+        adDto = client.getAdById(adId, null);
         assertTrue("After first request the ad status should be IN_PROGRESS", adDto.getStatus() == AdStatus.IN_PROGRESS);
         
         authenticateClientAsThirdUser();
@@ -748,7 +748,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         authenticateClientAsSecondUser();
         client.markAsReceived(secondUserRequestId);
         
-        adDto = client.getAdById(adId);
+        adDto = client.getAdById(adId, null);
         assertTrue("Ad should be in FINALIZED state", adDto.getStatus() == AdStatus.FINALIZED);
     }
     
@@ -875,7 +875,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setPickUp(true);
         
         Long adId = client.placeAd(adDto);
-        assertNotNull("The ad should exist", client.getAdById(adId));
+        assertNotNull("The ad should exist", client.getAdById(adId, null));
         
         authenticateClientWithToken(adminService, firstUserAuthToken);
         adminService.approveAd(adId);
@@ -915,7 +915,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         Ad updatedAd = adDao.get(adId);
         assertTrue("Rating value might have changed!", Math.abs(ad_.getRating() - updatedAd.getRating()) > EPSILON);
         
-        adDto = client.getAdById(adId);
+        adDto = client.getAdById(adId, null);
         assertTrue("Multiple ratings not allowed!", !adDto.getCanRate());
         
         

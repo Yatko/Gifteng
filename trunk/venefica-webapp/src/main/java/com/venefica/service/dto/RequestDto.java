@@ -37,9 +37,9 @@ public class RequestDto extends DtoBase {
     // out
     private AdType type;
     // out
-    private ImageDto image;
+    //private ImageDto image;
     // out
-    private ImageDto imageThumbnail;
+    //private ImageDto imageThumbnail;
     
     // out
     private boolean accepted;
@@ -64,12 +64,12 @@ public class RequestDto extends DtoBase {
         this.sent = request.isSent();
         this.received = request.isReceived();
         
-        if (request.getAd().getAdData().getMainImage() != null) {
-            this.image = new ImageDto(request.getAd().getAdData().getMainImage());
-        }
-        if (request.getAd().getAdData().getThumbImage()!= null) {
-            this.imageThumbnail = new ImageDto(request.getAd().getAdData().getThumbImage());
-        }
+        //if (request.getAd().getAdData().getMainImage() != null) {
+        //    this.image = new ImageDto(request.getAd().getAdData().getMainImage());
+        //}
+        //if (request.getAd().getAdData().getThumbImage()!= null) {
+        //    this.imageThumbnail = new ImageDto(request.getAd().getAdData().getThumbImage());
+        //}
     }
     
     public Long getId() {
@@ -112,21 +112,21 @@ public class RequestDto extends DtoBase {
         this.adId = adId;
     }
 
-    public ImageDto getImage() {
-        return image;
-    }
+    //public ImageDto getImage() {
+    //    return image;
+    //}
 
-    public void setImage(ImageDto image) {
-        this.image = image;
-    }
+    //public void setImage(ImageDto image) {
+    //    this.image = image;
+    //}
 
-    public ImageDto getImageThumbnail() {
-        return imageThumbnail;
-    }
+    //public ImageDto getImageThumbnail() {
+    //    return imageThumbnail;
+    //}
 
-    public void setImageThumbnail(ImageDto imageThumbnail) {
-        this.imageThumbnail = imageThumbnail;
-    }
+    //public void setImageThumbnail(ImageDto imageThumbnail) {
+    //    this.imageThumbnail = imageThumbnail;
+    //}
 
     public AdType getType() {
         return type;
