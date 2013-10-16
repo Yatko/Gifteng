@@ -150,7 +150,8 @@ if ( ! function_exists('safe_parameter')) {
         $str = safe_content($str);
         //$str = jsEscape($str);
         $str = str_replace("\"", "&quot;", $str); //&#34;
-        $str = str_replace("'", "&#39;", $str);
+        //$str = str_replace("'", "&#39;", $str); //somehow does not work as CI does some conversion before output (?)
+        $str = str_replace("'", "\\'", $str);
         return $str;
     }
 }
