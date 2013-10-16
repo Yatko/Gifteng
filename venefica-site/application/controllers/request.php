@@ -15,7 +15,7 @@ class Request extends CI_Controller {
                 $ad = null;
             } else {
                 $request = $this->ad_service->getRequestById($requestId);
-                $ad = $this->ad_service->getAdById($request->adId);
+                $ad = $this->ad_service->getAdById($request->adId, false);
             }
         } catch ( Exception $ex ) {
             $request = null;

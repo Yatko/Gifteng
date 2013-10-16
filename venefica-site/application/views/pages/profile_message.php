@@ -55,6 +55,7 @@
         <?
         $requestor_user = $request->user;
         $creator_user = $ad->creator;
+        $request_id = $request->id;
         
         $ad_title = $ad->getSafeTitle();
         $view_link = $ad->getViewUrl();
@@ -85,7 +86,7 @@
                                 </div><!--./ge-subject-->
                             </div>
 
-                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'request' => $request, 'to' => $to_user, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
+                            <? $this->load->view('element/messages', array('messages' => $request_messages, 'requestId' => $request_id, 'to' => $to_user, 'canMessage' => true, 'showProfileLinks' => true, 'currentUser' => $currentUser)); ?>
 
                         </div>
                     </div><!--./ge-messages-->

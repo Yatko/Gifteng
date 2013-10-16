@@ -21,8 +21,8 @@ class Request_model extends CI_Model {
     var $adStatus; //enum: ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED (see Ad_model)
     var $adExpiresAt; //long - timestamp
     var $type; //enum: MEMBER, BUSINESS (see Ad_model)
-    var $image; //Image_model
-    var $imageThumbnail; //Image_model
+    //var $image; //Image_model
+    //var $imageThumbnail; //Image_model
     var $accepted; //boolean
     var $sent; //boolean
     var $received; //boolean
@@ -43,12 +43,12 @@ class Request_model extends CI_Model {
             if ( hasField($obj, 'user') ) {
                 $this->user = User_model::convertUser($obj->user);
             }
-            if ( hasField($obj, 'image') ) {
-                $this->image = Image_model::convertImage($obj->image);
-            }
-            if ( hasField($obj, 'imageThumbnail') ) {
-                $this->imageThumbnail = Image_model::convertImage($obj->imageThumbnail);
-            }
+            //if ( hasField($obj, 'image') ) {
+            //    $this->image = Image_model::convertImage($obj->image);
+            //}
+            //if ( hasField($obj, 'imageThumbnail') ) {
+            //    $this->imageThumbnail = Image_model::convertImage($obj->imageThumbnail);
+            //}
         }
     }
     

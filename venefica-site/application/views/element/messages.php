@@ -4,27 +4,18 @@
  * Input params:
  * 
  * messages: array of Message_model
- * request: Request_model
  * to: User_model
  * canMessage: boolean (default: true)
  * showProfileLinks: boolean
  * currentUser: User_model
+ * requestId: long
  */
 
 if ( !isset($canMessage) ) $canMessage = false;
 if ( !isset($showProfileLinks)) $showProfileLinks = false;
 
-if ( $request != null ) {
-    $request_id = $request->id;
-} else {
-    $request_id = '';
-}
-
-if ( $to != null ) {
-    $to_id = $to->id;
-} else {
-    $to_id = '';
-}
+$request_id = ($requestId != null ? $requestId : '');
+$to_id = ($to != null ? $to->id : '');
 
 ?>
 

@@ -47,7 +47,7 @@ class Post_member extends CI_Controller {
         $this->adId = $adId;
         
         if ( $this->is_first_page ) {
-            $ad = $this->ad_service->getAdById($adId);
+            $ad = $this->ad_service->getAdById($adId, false);
             if ( $ad->owner == false ) {
                 redirect("/view/" . $adId);
             }
@@ -71,7 +71,7 @@ class Post_member extends CI_Controller {
         $this->adId = $adId;
         
         if ( $this->is_first_page ) {
-            $ad = $this->ad_service->getAdById($adId);
+            $ad = $this->ad_service->getAdById($adId, false);
             if ( $ad->owner == false ) {
                 redirect("/view/" . $adId);
             }
@@ -96,7 +96,7 @@ class Post_member extends CI_Controller {
         $this->removeAd();
         
         if ( $step == Post_member::STEP_POST ) {
-            $currentUser = $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
 
             respond_ajax(AJAX_STATUS_RESULT, array(
                 USER_GIVINGS_NUM => $currentUser->statistics->numGivings

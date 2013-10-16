@@ -114,7 +114,7 @@ class View extends CI_Controller {
     private function getAd($adId) {
         if ( $adId != null ) {
             try {
-                return $this->ad_service->getAdById($adId);
+                return $this->ad_service->getAdById($adId, true);
             } catch ( Exception $ex ) {
             }
         }

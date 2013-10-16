@@ -416,7 +416,25 @@ class Usermanagement_service {
         $this->storeUserByEmail($user->email, $token);
         return $this->loadUser();
     }
-
+    
+    /**
+     * Refresh the currently logged in user statistics.
+     * 
+     * @return User_model
+     */
+    public function refreshStatistics() {
+        $user = $this->loadUser();
+        
+        try {
+            $statistics = $this->getStatistics($user->id);
+            $user->statistics = $statistics;
+            $this->storeUser($user);
+        } catch ( Exception $ex ) {
+        }
+        
+        return $user;
+    }
+    
     /* internal functions */
     
     private function getUserByEmail($email, $token) {
