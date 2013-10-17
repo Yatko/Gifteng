@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Contains user data of business type.
@@ -28,7 +29,9 @@ import org.hibernate.annotations.ForeignKey;
 public class BusinessUserData  extends UserData {
     
     @Column(unique = true, nullable = false)
+    @Index(name = "idx_businessName")
     private String businessName;
+    @Index(name = "idx_contactName")
     private String contactName;
     private Boolean verified;
     

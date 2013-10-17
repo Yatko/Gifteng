@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Advertisement class containing generic fields.
@@ -31,11 +32,17 @@ import org.hibernate.annotations.ForeignKey;
  */
 @Entity
 @Table(name = "ad")
+@org.hibernate.annotations.Table(appliesTo = "ad", indexes = {
+})
 public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @ManyToOne()
+    @ForeignKey(name = "ad_cloned_from_fk")
+    private Ad clonedFrom;
     
     @OneToOne
     @ForeignKey(name = "addata_fk")
@@ -43,6 +50,7 @@ public class Ad {
     
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_createdAt")
     private Date createdAt;
     @ManyToOne(optional = false)
     @ForeignKey(name = "ad_creator_fk")
@@ -54,25 +62,33 @@ public class Ad {
     private Date availableAt; //beginning of the offer (available since)
     
     private int numExpire; //how many times expired
+    @Index(name = "idx_expires")
     private boolean expires; //never expire?
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_expiresAt")
     private Date expiresAt;
     
     @Column(nullable = false)
+    @Index(name = "idx_expired")
     private boolean expired; //ad is in expired state (flag changed by cron job)
     
+    @Index(name = "idx_deleted")
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
     
+    @Index(name = "idx_sold")
     private boolean sold; //product/gift ended
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldAt;
     
+    @Index(name = "idx_approved")
     private boolean approved; //can go live or not
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_approvedAt")
     private Date approvedAt;
     
+    @Index(name = "idx_online")
     private boolean online; //is visible on site
     @Temporal(TemporalType.TIMESTAMP)
     private Date onlinedAt;
@@ -110,6 +126,7 @@ public class Ad {
     private Set<Bookmark> bookmarks;
     
     @Enumerated(EnumType.STRING)
+    @Index(name = "idx_status")
     private AdStatus status;
     
     protected Ad() {
@@ -689,5 +706,13 @@ public class Ad {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public Ad getClonedFrom() {
+        return clonedFrom;
+    }
+
+    public void setClonedFrom(Ad clonedFrom) {
+        this.clonedFrom = clonedFrom;
     }
 }

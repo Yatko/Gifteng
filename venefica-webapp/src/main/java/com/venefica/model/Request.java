@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  *
@@ -42,8 +43,10 @@ public class Request {
     private Date requestedAt;
 
     @Enumerated(EnumType.STRING)
+    @Index(name = "idx_status")
     private RequestStatus status;
     
+    @Index(name = "idx_deleted")
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
@@ -62,6 +65,7 @@ public class Request {
     @Column(name = "selectedAt")
     private Date acceptedAt;
     
+    @Index(name = "idx_hidden")
     private boolean hidden; //marking hidden by the user in the GUI
     @Temporal(TemporalType.TIMESTAMP)
     private Date hideAt;

@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Local user model.
@@ -31,6 +32,10 @@ import org.hibernate.annotations.ForeignKey;
  */
 @Entity
 @Table(name = "local_user")
+@org.hibernate.annotations.Table(appliesTo = "local_user", indexes = {
+    @Index(name = "idx_email_pass", columnNames = {"email", "password"}),
+    @Index(name = "idx_name_pass", columnNames = {"name", "password"}),
+})
 public class User {
 
     @Id
@@ -38,10 +43,12 @@ public class User {
     private Long id;
     
     @Column(unique = true, updatable = false)
+    @Index(name = "idx_name")
     private String name;
     @Column(nullable = false)
     private String password;
     @Column(unique = true, nullable = false)
+    @Index(name = "idx_email")
     private String email;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -84,6 +91,7 @@ public class User {
     private Set<Message> receivedMessages;
     
     @Column(name = "adminn", nullable = false)
+    @Index(name = "idx_admin")
     private boolean admin;
     @Column(nullable = false)
     private boolean verified;
@@ -91,7 +99,8 @@ public class User {
     @ManyToOne
     @ForeignKey(name = "local_user_avatar_fk")
     private Image avatar;
-
+    
+    @Index(name = "idx_deleted")
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.Index;
 
 /**
  *
@@ -27,8 +28,10 @@ public class ForgotPassword {
     private Long id;
     
     @Column(nullable = false)
+    @Index(name = "idx_email")
     private String email; //email address is uniquely identifies the user
     @Column(unique = true, nullable = false)
+    @Index(name = "idx_code")
     private String code;
     
     @Column(nullable = false)
@@ -37,13 +40,16 @@ public class ForgotPassword {
     private String ipAddress;
     
     @Column(nullable = false)
+    @Index(name = "idx_used")
     private boolean used;
     @Temporal(TemporalType.TIMESTAMP)
     private Date usedAt;
     
     @Column(nullable = false)
+    @Index(name = "idx_expired")
     private boolean expired;
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_expiresAt")
     private Date expiresAt;
     
     public ForgotPassword() {

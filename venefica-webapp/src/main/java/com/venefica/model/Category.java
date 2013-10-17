@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Describes an advertisement category. Subcategories are also supported.
@@ -35,11 +36,13 @@ public class Category {
     private Set<Category> subcategories;
     
     @Column(nullable = false)
+    @Index(name = "idx_name")
     private String name;
     
     // private BigDecimal fixedPrice;
     // private String fixedCurrency;
     
+    @Index(name = "idx_hidden")
     private boolean hidden;
 
     public Category() {

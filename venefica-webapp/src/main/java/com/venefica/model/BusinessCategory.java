@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.Index;
 
 /**
  * Describes a business category.
@@ -25,8 +26,10 @@ public class BusinessCategory {
     private Long id;
     
     @Column(nullable = false)
+    @Index(name = "idx_name")
     private String name;
     
+    @Index(name = "idx_hidden")
     private boolean hidden;
     
     public BusinessCategory() {

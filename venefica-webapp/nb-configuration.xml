@@ -45,5 +45,6 @@
         -->
         <netbeans.hint.jdkPlatform>JDK_1.6</netbeans.hint.jdkPlatform>
         <netbeans.deploy.on.save>false</netbeans.deploy.on.save>
+        <org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>ide</org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>
     </properties>
 </project-shared-configuration>

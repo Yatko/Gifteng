@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Contains user data of member type.
@@ -30,7 +31,9 @@ public class MemberUserData extends UserData {
     private Gender gender;
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
+    @Index(name = "idx_firstName")
     private String firstName;
+    @Index(name = "idx_lastName")
     private String lastName;
     @Enumerated(EnumType.STRING)
     private UserType userType;

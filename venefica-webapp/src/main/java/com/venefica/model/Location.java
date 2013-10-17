@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.Index;
 
 /**
  *
@@ -24,6 +25,7 @@ public class Location {
     private Long id;
     
     @Column(unique = true)
+    @Index(name = "idx_zipcode")
     private String zipcode;
     private String stateAbbreviation;
     private Double longitude;

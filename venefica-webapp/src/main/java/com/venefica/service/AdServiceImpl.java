@@ -151,76 +151,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public Long placeAd(AdDto adDto) throws AdValidationException {
-        // ++ TODO: create ad validator
-        if (adDto.getTitle() == null) {
-            throw new AdValidationException(AdField.TITLE, "Title not specified!");
-        }
-        
-        Category category = validateCategory(adDto.getCategoryId());
-        Image image = saveImage(adDto.getImage(), AdField.IMAGE); //main image
-        Image thumbImage = saveImage(adDto.getImageThumbnail(), AdField.THUMB_IMAGE); //thumb image
-        Image barcodeImage = saveImage(adDto.getImageBarcode(), AdField.BARCODE_IMAGE); //barcode image
-        // ++
-        
-        User currentUser = getCurrentUser();
-        boolean expires = adDto.getExpires() != null ? adDto.getExpires() : true;
-        Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : calculateExpiration();
-        Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
-        
-        Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
-        ad.initRevision();
-        adDto.updateAd(ad);
-        
-        ad.getAdData().setCategory(category);
-        ad.getAdData().setMainImage(image);
-        ad.getAdData().setThumbImage(thumbImage);
-        
-        if ( ad.getType() == AdType.BUSINESS ) {
-            ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
-        }
-        
-        adDataDao.save(ad.getAdData());
-        
-        ad.unmarkAsApproved();
-        ad.setStatus(AdStatus.OFFLINE);
-        ad.setCreator(currentUser);
-        ad.setExpires(expires);
-        ad.setExpired(false);
-        ad.setExpiresAt(expiresAt);
-        ad.setAvailableAt(availableAt);
-        Long adId = adDao.save(ad);
-        
-        if ( !currentUser.isBusinessAccount() ) {
-            UserTransaction adTransaction = new UserTransaction(ad);
-            adTransaction.setUser(currentUser);
-            adTransaction.setUserPoint(currentUser.getUserPoint());
-            userTransactionDao.save(adTransaction);
-        }
-        
-        if ( useEmailSender ) {
-            List<User> admins = userDao.getAdminUsers();
-            if ( admins != null ) {
-                for ( User admin : admins ) {
-                    String email = admin.getEmail();
-                    Map<String, Object> vars = new HashMap<String, Object>(0);
-                    vars.put("ad", ad);
-
-                    try {
-                        emailSender.sendHtmlEmailByTemplates(
-                                AD_NEW_SUBJECT_TEMPLATE,
-                                AD_NEW_HTML_MESSAGE_TEMPLATE,
-                                AD_NEW_PLAIN_MESSAGE_TEMPLATE,
-                                email,
-                                vars
-                                );
-                    } catch ( MailException ex ) {
-                        logger.error("Could not send ad created notification email to admin user (email: " + email+ ")", ex);
-                    }
-                }
-            }
-        }
-        
-        return adId;
+        return placeAd(adDto, null);
     }
     
     @Override
@@ -308,8 +239,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         adDto.setExpires(true);
         adDto.setExpiresAt(calculateExpiration());
         adDto.setAvailableAt(new Date());
+        adDto.setQuantity(adDto.getQuantity() == null || adDto.getQuantity() <= 0 ? 1 : adDto.getQuantity()); //the default quantity
         
-        Long adId = placeAd(adDto);
+        Long adId = placeAd(adDto, oldAd);
         deleteAd(oldAd.getId()); //removing the old (cloned) ad
         
         return adId;
@@ -1318,6 +1250,81 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     
     // internal helpers
+    
+    private Long placeAd(AdDto adDto, Ad clonedFrom) throws AdValidationException {
+        // ++ TODO: create ad validator
+        if (adDto.getTitle() == null) {
+            throw new AdValidationException(AdField.TITLE, "Title not specified!");
+        }
+        
+        Category category = validateCategory(adDto.getCategoryId());
+        Image image = saveImage(adDto.getImage(), AdField.IMAGE); //main image
+        Image thumbImage = saveImage(adDto.getImageThumbnail(), AdField.THUMB_IMAGE); //thumb image
+        Image barcodeImage = saveImage(adDto.getImageBarcode(), AdField.BARCODE_IMAGE); //barcode image
+        // ++
+        
+        User currentUser = getCurrentUser();
+        boolean expires = adDto.getExpires() != null ? adDto.getExpires() : true;
+        Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : calculateExpiration();
+        Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
+        
+        Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
+        ad.setClonedFrom(clonedFrom);
+        ad.initRevision();
+        adDto.updateAd(ad);
+        
+        ad.getAdData().setCategory(category);
+        ad.getAdData().setMainImage(image);
+        ad.getAdData().setThumbImage(thumbImage);
+        
+        if ( ad.getType() == AdType.BUSINESS ) {
+            ((BusinessAdData) ad.getAdData()).setBarcodeImage(barcodeImage);
+        }
+        
+        adDataDao.save(ad.getAdData());
+        
+        ad.unmarkAsApproved();
+        ad.setStatus(AdStatus.OFFLINE);
+        ad.setCreator(currentUser);
+        ad.setExpires(expires);
+        ad.setExpired(false);
+        ad.setExpiresAt(expiresAt);
+        ad.setAvailableAt(availableAt);
+        Long adId = adDao.save(ad);
+        
+        if ( !currentUser.isBusinessAccount() ) {
+            UserTransaction adTransaction = new UserTransaction(ad);
+            adTransaction.setUser(currentUser);
+            adTransaction.setUserPoint(currentUser.getUserPoint());
+            userTransactionDao.save(adTransaction);
+        }
+        
+        if ( useEmailSender ) {
+            List<User> admins = userDao.getAdminUsers();
+            if ( admins != null ) {
+                for ( User admin : admins ) {
+                    String email = admin.getEmail();
+                    Map<String, Object> vars = new HashMap<String, Object>(0);
+                    vars.put("ad", ad);
+
+                    try {
+                        emailSender.sendHtmlEmailByTemplates(
+                                AD_NEW_SUBJECT_TEMPLATE,
+                                AD_NEW_HTML_MESSAGE_TEMPLATE,
+                                AD_NEW_PLAIN_MESSAGE_TEMPLATE,
+                                email,
+                                vars
+                                );
+                    } catch ( MailException ex ) {
+                        logger.error("Could not send ad created notification email to admin user (email: " + email+ ")", ex);
+                    }
+                }
+            }
+        }
+        
+        return adId;
+    }
+    
     
     private Image validateImage(Long imageId) throws ImageNotFoundException {
         Image image = null;
