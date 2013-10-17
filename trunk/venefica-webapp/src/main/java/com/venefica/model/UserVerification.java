@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  *
@@ -32,9 +33,11 @@ public class UserVerification {
     @ForeignKey(name = "userverification_user_fk")
     private User user;
     @Column(unique = true, nullable = false)
+    @Index(name = "idx_code")
     private String code;
     
     @Column(nullable = false)
+    @Index(name = "idx_verified")
     private boolean verified;
     @Temporal(TemporalType.TIMESTAMP)
     private Date verifiedAt;

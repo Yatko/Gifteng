@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Describes a message sent to a user. Messages are meant to be private.
@@ -45,15 +46,18 @@ public class Message {
     private String text;
     
     @Column(name = "readd")
+    @Index(name = "idx_read")
     private boolean read;
     
     @Basic(optional = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_createdAt")
     private Date createdAt;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
     
+    @Index(name = "idx_deleted")
     private boolean deleted;
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;

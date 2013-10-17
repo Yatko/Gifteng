@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Stores all the approve attempt made by the admin user. Un-approved ads will
@@ -33,14 +34,17 @@ public class Approval {
     @ForeignKey(name = "approval_ad_fk")
     private Ad ad;
     
+    @Index(name = "idx_revision")
     private Integer revision; //the revision of the ad when the approval was created
     
     @ManyToOne(optional = false)
     @ForeignKey(name = "approval_decider_fk")
     private User decider;
     
+    @Index(name = "idx_approved")
     private boolean approved;
     @Temporal(TemporalType.TIMESTAMP)
+    @Index(name = "idx_approvedAt")
     private Date approvedAt;
     
     private String text;

@@ -101,7 +101,7 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     public User findUserByPhoneNumber(String phoneNumber) {
         List<User> users = createQuery(""
                 + "from " + getDomainClassName() + " u where "
-                + "u.phoneNumber = :phoneNumber and "
+                + "u.userData.phoneNumber = :phoneNumber and "
                 + "u.deleted = false"
                 + "")
                 .setParameter("phoneNumber", phoneNumber)

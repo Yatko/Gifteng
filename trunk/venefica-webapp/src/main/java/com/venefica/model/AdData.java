@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 
 /**
@@ -34,6 +35,8 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(name = "addata")
 @Inheritance(strategy = InheritanceType.JOINED)
+@org.hibernate.annotations.Table(appliesTo = "addata", indexes = {
+})
 public abstract class AdData {
     
     @Id
@@ -59,13 +62,18 @@ public abstract class AdData {
     private Set<Image> images;
     
     @Column(length = 500, nullable = false)
+    @Index(name = "idx_title")
     private String title;
     @Column(length = 500)
+    @Index(name = "idx_subtitle")
     private String subtitle;
     @Column(length = 1000)
+    @Index(name = "idx_description")
     private String description;
     
+    @Index(name = "idx_quantity")
     private Integer quantity; //specifies how many requests can be selected also
+    @Index(name = "idx_price")
     private BigDecimal price; //original price, current value
     
     @Column(columnDefinition = "Geometry")
@@ -79,6 +87,7 @@ public abstract class AdData {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Index(name = "idx_type")
     private AdType type;
     @Enumerated(EnumType.STRING)
     private AdPlace place;
