@@ -72,7 +72,7 @@
         <div class="modal-header-content">
             <div class="ge-modal_header">
                 <label class="control-label" for="fieldset">
-                    <h3>Choose to relist or edit as new gift</h3>
+                    <h3></h3>
                 </label>
             </div>
         </div>
