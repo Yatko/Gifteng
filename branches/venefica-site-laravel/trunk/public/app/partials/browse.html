@@ -1,17 +1,65 @@
 <div class="row">
 	<div class="col-sm-4">
 		<div ng-repeat="ad in col1">
-			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+			<ad
+			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
+			id="{{ad.id}}"
+			num-shares="{{ad.statistics.numShares}}"
+			num-comments="{{ad.statistics.numComments}}"
+			num-bookmarks="{{ad.statistics.numBookmarks}}"
+			comments="{{ad.comments.item}}"
+			title="{{ad.title}}"
+			creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
+			creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-city="{{ad.creator.address.city}} {{ad.creator.address.state}}"
+			creator-avatar="{{ad.creator.avatar.id}}"
+			creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-id="{{ad.creator.id}}"
+			></ad>
 		</div>
 	</div>
 	<div class="col-sm-4">
 		<div ng-repeat="ad in col2">
-			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+			<ad
+			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
+			id="{{ad.id}}"
+			title="{{ad.title}}"
+			num-shares="{{ad.statistics.numShares}}"
+			num-comments="{{ad.statistics.numComments}}"
+			comments="{{ad.comments.item}}"
+			num-bookmarks="{{ad.statistics.numBookmarks}}"
+			creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
+			creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-city="{{ad.creator.address.city}} {{ad.creator.address.state}}"
+			creator-avatar="{{ad.creator.avatar.id}}"
+			creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-id="{{ad.creator.id}}"
+			></ad>
 		</div>
 	</div>
 	<div class="col-sm-4">
 		<div ng-repeat="ad in col3">
-			<ad img="http://veneficalabs.com/gifteng/get_photo/{{ad.image.id}}/0/0/cache" title="{{ad.title}}"></ad>
+			<ad
+			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
+			id="{{ad.id}}"
+			title="{{ad.title}}"
+			num-shares="{{ad.statistics.numShares}}"
+			num-comments="{{ad.statistics.numComments}}"
+			num-bookmarks="{{ad.statistics.numBookmarks}}"
+			comments="{{ad.comments.item}}"
+			creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
+			creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-city="{{ad.creator.address.city}} {{ad.creator.address.state}}"
+			creator-avatar="{{ad.creator.avatar.id}}"
+			creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+			creator-following="{{ad.creator.inFollowings}}"
+			creator-id="{{ad.creator.id}}"
+			></ad>
 		</div>
 	</div>
 </div>

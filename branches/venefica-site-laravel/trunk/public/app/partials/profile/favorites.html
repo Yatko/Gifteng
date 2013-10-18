@@ -1,13 +1,21 @@
-<div class="row">
-	<div class="col-sm-3">
-		<ad-item-box img="http://placehold.it/400x300/FF9999/FFF" type="receiving" status="not_requested"></ad-item-box>
-	</div>
-	<div class="col-sm-3">
-		<ad-item-box img="http://placehold.it/400x500/FF9999/FFF" type="receiving" status="ended"></ad-item-box>
-	</div>
-	<div class="col-sm-3">
-		<ad-item-box img="http://placehold.it/400x400/FF9999/FFF" type="receiving" status="ended"></ad-item-box>
-	</div>
-	<div class="col-sm-3">
+<div class="row" ng-controller="BookmarkedAdsController">
+	<div ng-repeat="ad in ads">
+		<div class="col-sm-3">
+			<ad-item-box
+				img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
+				id="{{ad.id}}"
+				type="receiving"
+				details="1"
+				status="{{ad.status}}"
+				creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
+				creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+				creator-following="{{ad.creator.inFollowings}}"
+				creator-city="{{ad.creator.address.city}}, {{ad.creator.address.state}}"
+				creator-avatar="{{ad.creator.avatar.id}}"
+				creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+				creator-following="{{ad.creator.inFollowings}}"
+				creator-id="{{ad.creator.id}}"
+			></ad-item-box>
+		</div>
 	</div>
 </div>

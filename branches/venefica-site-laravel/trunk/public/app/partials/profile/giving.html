@@ -1,5 +1,7 @@
-<div class="row">
-	<div class="col-sm-3">
-		<ad-item-box img="http://placehold.it/400x500/FF9999/FFF" type="giving" status="active"></ad-item-box>
+<div class="row" ng-controller="UserAdsController">
+	<div ng-repeat="ad in ads">
+		<div class="col-sm-3">
+			<ad-item-box id="{{ad.id}}" details="0" img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320" type="giving" status="{{ad.status}}"></ad-item-box>
+		</div>
 	</div>
 </div>

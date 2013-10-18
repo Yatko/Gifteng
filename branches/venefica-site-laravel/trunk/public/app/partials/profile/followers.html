@@ -1,12 +1,17 @@
-<div class="row">
-	<div class="col-sm-3">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013"
-			showgifts="true">
-		</user-profile>
+<div class="row" ng-controller="FollowersController">
+	<div ng-repeat="conn in data.follower">
+		<div class="col-sm-3">
+			<user-profile 
+				id="{{conn.id}}"
+				name="{{conn.firstName}} {{conn.lastName}}" 
+				location="{{conn.address.city}}, {{conn.address.state}}" 
+				img="https://s3.amazonaws.com/ge-dev/user/{{conn.avatar.id}}_60"
+				points="{{conn.score | number:0}}/{{conn.pendingScore | number:0}}" 
+				since="{{conn.joinedAt | date:'MMMM yyyy'}}"
+				showgifts="true"
+				following="{{conn.inFollowings}}"
+				ads="{{data.ads[conn.id]}}">
+			</user-profile>
+		</div>
 	</div>
 </div>

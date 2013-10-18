@@ -1,0 +1,53 @@
+<a href back-button class="btn btn-default">BACK</a>
+<div class="row">
+	<div class="col-xs-6">
+		<ad-item-box
+		img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_640"
+		type="details"
+		status="show"
+		creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
+		creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+		creator-following="{{ad.creator.inFollowings}}"
+		creator-city="{{ad.creator.address.city}}, {{ad.creator.address.state}}"
+		creator-avatar="{{ad.creator.avatar.id}}"
+		creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+		creator-following="{{ad.creator.inFollowings}}"></ad-item-box>
+	</div>
+	<div class="col-xs-6">
+		<div class="well">
+			<a href="" class="btn btn-primary btn-lg btn-block">BUTTON</a>
+			<p>
+				{{ad.title}}
+			</p>
+			<ul>
+				<li>
+					<b>Description:</b> {{ad.description}}
+				</li>
+				<li>
+					<b>Category:</b> {{ad.category}}
+				</li>
+				<li>
+					<b>Current value:</b> {{ad.price | currency:"$"}}
+				</li>
+			</ul>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox">
+							Pick Up </label>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox">
+							Free shipping </label>
+					</div>
+				</div>
+			</div>
+
+			<div id="view_map" class="map"></div>
+		</div>
+	</div>
+</div>

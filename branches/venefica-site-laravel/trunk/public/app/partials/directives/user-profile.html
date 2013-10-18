@@ -4,25 +4,28 @@
 			<div class="row">
 				<div class="col-xs-4">
 					<div class="ge-user-image">
-						<a href="#/view/profile">
-							<img src="{{img}}" class="img img-rounded img-responsive">
-						</a>
+						<a href="#/view/profile/{{id}}"> <img ng-src="{{img}}" class="img img-rounded img-responsive"> </a>
 					</div>
 				</div>
 				<div class="col-xs-8">
 					<div class="ge-detail">
 						<div class="ge-name">
-							<a href="#/view/profile">{{name}}</a>
+							<a href="#/view/profile/{{id}}">{{name}}</a>
 						</div>
-						<div class="ge-age">Giftenger since {{since}}</div>
-						<div class="ge-location">{{location}}</div>
+						<div class="ge-age">
+							Giftenger since {{since}}
+						</div>
+						<div class="ge-location">
+							{{location}}
+						</div>
 						<div class="ge-points">
-						        <span class="label label-default label-ge">
-						        G {{points}}
-						        </span>
-							<span class="label label-default label-ge">
-						        Unfollow
-						        </span>
+							<span class="label label-default label-ge">G {{points}}</span>
+							<a href="">
+								<span ng-switch on="following">
+									<span ng-switch-when="true" ng-click="unfollow()" class="label label-default">Unfollow</span>
+									<span ng-switch-default ng-click="follow()" class="label label-default label-ge">Follow</span>
+								</span>
+							</a>
 						</div>
 					</div>
 				</div>

@@ -1,8 +1,30 @@
-<div class="row">
+<div class="row" ng-controller="MessagesController">
 	<div class="col-sm-7">
-		<message-list></message-list>
+		<div class="well">
+			<h3>Messages</h3>
+			
+			<div ng-repeat="message in messages">
+				<a href="" ng-click="openmsg(message.requestId)">
+					<div class="row">
+						<div class="col-xs-4 col-md-2">
+							<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" />
+						</div>
+						<div class="col-xs-8 col-md-10">
+							<span>{{message.toFullName}}</span>
+							<span>{{message.createdAt | date:'longDate'}}</span>
+							<h4>{{message.adTitle}}</h4>
+							<p>
+								{{message.text}}
+							</p>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
 	</div>
-	<div class="col-sm-5">
-		<message></message>
+	<div class="col-sm-5" ng-show="showMessage">
+		<message ng-model="current_message">
+			
+		</message>
 	</div>
 </div>

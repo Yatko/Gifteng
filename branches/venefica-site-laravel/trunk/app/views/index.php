@@ -7,11 +7,15 @@
 		
 		<link rel="stylesheet/less" type="text/css" href="assets/less/app.less" />
 		<link href="assets/css/gifteng.css" type="text/css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+	    <!--[if lte IE 8]>
+	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+	    <![endif]-->
 		
 		<script src="assets/js/less.min.js" type="text/javascript"></script>
 		
 		<script data-main="app/requirements.js" src="app/lib/require.js"></script>
-		<script type="text/javascript">var less=less||{};less.env='development';</script>
+		<script> /* Provisory for dev environment: */ localStorage.clear(); </script>
 	</head>
 	<body>
 		<div ng-include="'app/partials/navbar.html'" ng-controller="NavController"></div>

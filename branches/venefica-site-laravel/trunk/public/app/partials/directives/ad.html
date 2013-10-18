@@ -1,35 +1,36 @@
 <div class="ge-ad">
-    <div class="well">
-    	<user-profile name="Krasimir Stavrev" location="Sofia, Bulgaria" img="http://placehold.it/200x200/FF9999/FFF" points="100" since="August 2013" nested="true"></user-profile>
+	<div class="well">
+		<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="{{creatorFollowing}}" nested="true"></user-profile>
 		<div class="ge-item-image">
-			<a href="#/view/gift">
-				<img src="{{img}}" class="img-responsive">
-			</a>
+			<a href="#/view/gift/{{id}}"> <img ng-src="{{img}}" class="img-responsive"> </a>
 			<div class="ge-icon-ribbon"></div>
 		</div><!--./ge-item-image-->
 		<div class="ge-action">
 			<div class="row">
 				<div class="col-xs-4">
-					<a href="" class="btn btn-block btn-primary">
-						<span class="glyphicon glyphicon-star"></span> 0
-					</a>
+					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
 				</div>
 				<div class="col-xs-4">
-					<a href="" class="btn btn-block btn-primary">
-						<span class="glyphicon glyphicon-comment"></span> 0
-					</a>
+					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-comment"></span> {{numComments}} </a>
 				</div>
 				<div class="col-xs-4">
-					<a href="" class="btn btn-block btn-primary">
-						<span class="glyphicon glyphicon-share"></span> 0
-					</a>
+					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-share"></span> {{numShares}} </a>
 				</div>
 			</div>
 		</div>
 		<div class="title">
-			<a href="#/view/gift">
-				{{title}}
-			</a>
+			<a href="#/view/gift/{{id}}"> {{title}} </a>
+		</div>
+		<div class="comments">
+			<div class="row" ng-repeat="comment in comments">
+				<div class="col-xs-3">
+					<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
+				</div>
+				<div class="col-xs-9">
+					<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a> <span>{{1378383886000 | date:mediumDate}}</span>
+					<p>{{comment.text}}</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

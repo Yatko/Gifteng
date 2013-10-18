@@ -320,3 +320,14 @@ you can use the generic selector below, but it's slower:
 .geicon-googleplus:before {
 	content: "\e008";
 }
+
+.loading {
+	width: 64px;
+	height: 64px;
+	position: absolute;
+	left: 50%;
+	margin-left: -32px;
+	top: 50%;
+	margin-top:-32px;
+	z-index: 999999999;
+}

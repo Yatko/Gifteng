@@ -20,7 +20,30 @@ Route::get('/', function()
 Route::group(array('prefix' => 'api'), function() {
 	Route::resource('auth','AuthController', array('only'=>array('store','index','destroy')));
 	Route::group(array('before'=>'auth'), function() {
+		/* ads */
 		Route::resource('ad','AdController');
-		Route::resource('image','ImageController');
+		Route::resource('image','ImageController', array('only'=>array('show','store')));
+		Route::get('ad/user/{id}', 'AdController@byUser');
+		Route::get('ad/requested/{id}', 'AdController@requestedByUser');
+		Route::get('ad/bookmarked/{id}', 'AdController@bookmarkedByUser');
+		
+		/* connections */
+		Route::get('user/following/{id}', array('uses' => 'UserController@getFollowing'));
+		Route::get('user/followers/{id}', array('uses' => 'UserController@getFollowers'));
+		Route::post('user/follow/{id}', array('uses' => 'UserController@setFollow'));
+		Route::post('user/unfollow/{id}', array('uses' => 'UserController@setUnfollow'));
+		
+		
+		/* notifications */
+		Route::get('user/notifications', array('uses' => 'UserController@getNotifications'));
+		Route::post('user/notifications', array('uses' => 'UserController@setNotifications'));
+		
+		/* messages */
+		Route::get('user/message', array('uses' => 'UserController@getMessages'));
+		Route::get('user/message/{id}', array('uses' => 'UserController@getMessage'));
+		
+		/* user */
+		Route::get('user/{id}', array('uses' => 'UserController@getProfile'));
+		Route::resource('geo','GeoController', array('only'=>array('show')));
 	});
 });

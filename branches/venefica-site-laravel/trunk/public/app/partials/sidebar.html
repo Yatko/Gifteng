@@ -1,56 +1,78 @@
-
-
 <div class="snap-drawers">
-    <div class="snap-drawer snap-drawer-left">
-        <div>
-            <ul>
-            	<li class="text-center">
+	<div class="snap-drawer snap-drawer-left">
+		<div>
+			<ul>
+				<li class="text-center">
 					<input type="text" name="q" class="form-control" placeholder="Find friends and gifts" value="">
-                </li>
-                <li>
-                    <div class="row ge-user">
-                    	<div class="col-xs-4">
+				</li>
+				<li>
+					<div class="row ge-user">
+						<div class="col-xs-4">
 							<div class="ge-user-image">
-								<img src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img img-rounded img-responsive">
+								<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{user.data.avatar.id}}_112" class="img-rounded img-responsive">
 							</div>
-                    	</div>
-                    	<div class="col-xs-8">
+						</div>
+						<div class="col-xs-8">
 							<div class="ge-detail">
-							    <div class="ge-name">
-							        <a href="#/profile">{{user.data.firstName}} {{user.data.lastName}}</a>
+								<div class="ge-name">
+									<a href="#/profile">{{user.data.firstName}} {{user.data.lastName}}</a>
 								</div>
-					            <div class="ge-age">Giftenger since August 2013</div>
-					            <div class="ge-points">
-						            <a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
-						            	<span class="label label-default label-ge">
-						            		Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}}
-						            	</span>
-						            </a>
+								<div class="ge-age">
+									Giftenger since {{user.data.joinedAt | date:'MMMM yyyy'}}
+								</div>
+								<div class="ge-points">
+									<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank"> <span class="label label-default label-ge"> Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}} </span> </a>
 								</div>
 							</div>
-                    	</div>
-                    </div>
-                </li>
-                <li><a href="#/browse"><i class="geicon-eye"></i> Browse</a></li>
-                <li><a href="#/profile/gifts/giving"><i class="geicon-giftbox"></i> Giving</a></li>
-                <li><a href="#/profile/gifts/receiving"><i class="geicon-giftbox"></i> Receiving</a></li>
-                <li><a href="#/profile/gifts/favorites"><i class="geicon-star"></i> Favorites</a></li>
-                <li><a href="#/profile/connections/following"><i class="geicon-heart"></i> Connections</a></li>
-                <li><a href="#/profile/account/notifications"><i class="geicon-alert"></i> Notifications</a></li>
-                <li><a href="#/profile/account/messages"><i class="geicon-mail"></i> Messages</a></li>
-                <li><span style="height:1px;"></span>&nbsp;</li>
-                <li><a href="#/top-giftengers"><i class="geicon-star-empty"></i> Top Giftengers</a></li>
-                <li class="hidden-phone"><a href="#" onclick="doFBLogin();"><i class="geicon-mail"></i> Invite Friends</a></li>
-                <li><a href="http://gifteng.zendesk.com/home" target="_blank"><i class="geicon-bug"></i> Report an issue</a></li>
-                <li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=AHCR7BYEB68UC" target="_blank"><i class="geicon-clover"></i> Help development</a></li>
-                <li><a href="#/" ng-click="logout()"><i class="geicon-power"></i> Logout</a></li>
-            </ul>
-        </div>
-    </div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<a href="#/browse"><i class="geicon-eye"></i> Browse</a>
+				</li>
+				<li>
+					<a href="#/profile/gifts/giving"><i class="geicon-giftbox"></i> Giving</a>
+				</li>
+				<li>
+					<a href="#/profile/gifts/receiving"><i class="geicon-giftbox"></i> Receiving</a>
+				</li>
+				<li>
+					<a href="#/profile/gifts/favorites"><i class="geicon-star"></i> Favorites</a>
+				</li>
+				<li>
+					<a href="#/profile/connections/following"><i class="geicon-heart"></i> Connections</a>
+				</li>
+				<li>
+					<a href="#/profile/account/notifications"><i class="geicon-alert"></i> Notifications</a>
+				</li>
+				<li>
+					<a href="#/profile/account/messages"><i class="geicon-mail"></i> Messages</a>
+				</li>
+				<li>
+					<span style="height:1px;"></span>&nbsp;
+				</li>
+				<li>
+					<a href="#/top-giftengers"><i class="geicon-star-empty"></i> Top Giftengers</a>
+				</li>
+				<li class="hidden-phone">
+					<a href="#" onclick="doFBLogin();"><i class="geicon-mail"></i> Invite Friends</a>
+				</li>
+				<li>
+					<a href="http://gifteng.zendesk.com/home" target="_blank"><i class="geicon-bug"></i> Report an issue</a>
+				</li>
+				<li>
+					<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=AHCR7BYEB68UC" target="_blank"><i class="geicon-clover"></i> Help development</a>
+				</li>
+				<li>
+					<a href="#/" ng-click="logout()"><i class="geicon-power"></i> Logout</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </div>
 
 <script>
 	$(function() {
 		$('#open-left').snap();
-	});
+	}); 
 </script>

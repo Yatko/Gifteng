@@ -3,36 +3,32 @@
 		<div class="ge-user">
 			<div class="row">
 				<div class="col-xs-4 col-md-2">
-					<a href="#/view/profile">
-						<img src="http://placehold.it/100x100/FF9999/FFF" class="img img-rounded img-responsive">
-					</a>
+					<a href="#/view/profile"> <img ng-src="https://s3.amazonaws.com/ge-dev/user/{{ngModel.from.avatar.id}}_42" class="img img-rounded img-responsive"> </a>
 				</div>
 				<div class="col-xs-8 col-md-10">
 					<div class="ge-detail">
 						<div class="ge-name">
-							<a href="#/view/profile">Test Sender</a>
+							<a href="#/view/profile">{{ngModel.from.firstName}} {{ngModel.from.lastName}}</a>
 						</div>
-						<div class="ge-age">Giftenger since August 2013</div>
-					        <div class="ge-points">
-						        <a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
-						            	<span class="label label-default label-ge">
-						            		Generosity Score 0/1
-						            	</span>
-						        </a>
+						<div class="ge-age">
+							Giftenger since {{ngModel.from.joinedAt | date:'MMMM yyyy'}}
+						</div>
+						<div class="ge-points">
+							<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank"> <span class="label label-default label-ge"> Generosity Score {{ngModel.from.score | number:0}}/{{ngModel.from.pendingScore | number:0}} </span> </a>
 						</div>
 					</div>
 				</div>
 			</div>
 			<h3>Test Message</h3>
-			<div class="row">
+			<div class="row" ng-repeat="message in ngModel.messages">
 				<div class="col-xs-4 col-md-2">
-					<img src="http://placehold.it/250x250/FF9999/FFF" class="img-rounded img-responsive" />
+					<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" />
 				</div>
 				<div class="col-xs-8 col-md-10">
-					<span>Test Sender 2</span>
-					<span>September 14, 2013</span>
+					<span>{{message.fromFullName}}</span>
+					<span>{{message.createdAt | date:'longDate'}}</span>
 					<p>
-						Lorem ipsum test message
+						{{message.text}}
 					</p>
 				</div>
 			</div>

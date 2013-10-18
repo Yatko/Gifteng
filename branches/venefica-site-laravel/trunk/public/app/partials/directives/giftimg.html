@@ -1,0 +1,24 @@
+<!-- uploader.html template -->
+<div class="uploader">
+
+	<!-- the real input[type=file] is hidden -->
+	<input type="file" name="uploader" style="display:none;"
+	onchange="angular.element(this).scope().sendFile(this);"/>
+
+	<!-- input field, used to open the real input[type=file]  -->
+	<div class="fake-uploader">
+		<a href="" class="btn btn-block btn-default btn-lg">Add photo</a>
+		<input type="text" id="giftimage" readonly="readonly" ng-model="giftimage" ng-hide="1" />
+	</div>
+
+	<!-- progress bar -->
+	<div class="progress" ng-show="progress!=0">
+		<div class="progress-bar" style="width:{{progress}}%;"></div>
+	</div>
+
+</div>
+
+<!-- preview -->
+<div ng-if="giftimage != ''">
+	<img ng-src="{{giftimage}}" class="img-responsive" />
+</div>

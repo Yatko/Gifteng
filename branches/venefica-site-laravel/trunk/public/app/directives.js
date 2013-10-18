@@ -1,4 +1,4 @@
-define(['angular','services','jquery'], function(angular) {
+define(['angular','services','jquery'], function(angular,services,jQuery) {
 	'use strict';
 	
 	return angular.module('gifteng.directives', ['gifteng.services'])
@@ -8,7 +8,15 @@ define(['angular','services','jquery'], function(angular) {
 				scope: {
 					img:'@',
 					status:'@',
-					type:'@'
+					type:'@',
+					creatorId:'@',
+					creatorName:'@',
+					creatorSince:'@',
+					creatorFollowing:'@',
+					creatorCity:'@',
+					creatorAvatar:'@',
+					creatorPoints:'@',
+					id:'@'
 				},
 				templateUrl: 'app/partials/directives/ad-item-box.html',
 				replace:true,
@@ -16,66 +24,66 @@ define(['angular','services','jquery'], function(angular) {
 				compile: function compile() {
 					return {
 				        post: function (scope, iElement, iAttrs) { 
-							var status = iAttrs.status;
-							var type = iAttrs.type;
-							
-							if(type=="receiving") {
+				        	iAttrs.$observe('status', function() {
+								var status = scope.status;
+								var type = iAttrs.type;
+								var action = '';
+								var text = '';
 								
-								var userprofile = '<user-profile name="Krasimir Stavrev" location="Sofia, Bulgaria" img="http://placehold.it/200x200/FF9999/FFF" points="100" since="August 2013" nested="true"></user-profile>';
-								$('.well',iElement).prepend($compile(userprofile)(scope));
-								if(status=='accepted') {
-									var action='<p class="text-center"><span class="fui-arrow-right"></span> Request accepted <span class="fui-arrow-left"></span></p>'+
-									'<div class="row">'+
-										'<div class="col-xs-4"><a href="" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-envelope"></span></a></div>'+
-										'<div class="col-xs-8"><a href="" class="btn btn-primary btn-block">Gift Received</a></div>'+
-									'</div>';
+								
+								if(iAttrs.details=='1' || type=="details") {
+									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="{{creatorFollowing}}" nested="true"></user-profile>';
+									$('.well',iElement).prepend($compile(userprofile)(scope));
 								}
-								if(status=='declined') {
-									var action='<p class="text-center"><span class="fui-arrow-right"></span> Request declined <span class="fui-arrow-left"></span></p>'+
-									'<a href="" class="btn btn-default btn-block">Delete gift</a>';
+								
+								if(type=="receiving") {
+									if(status=="EXPIRED") {
+										text = "Gift expired";
+										action = '<div class="row">'+
+												 	'<div class="col-xs-12">'+
+												 		'<a href class="btn btn-default btn-block">Delete gift</a>'+
+												 	'</div>'+
+												 '</div>';
+									}
+									else if(status=="RECEIVED") {
+										text = "Gift received";
+									}
+									else if(status=="UNACCEPTED") {
+										text = "Gift declined";
+										action = '<div class="row">'+
+												 	'<div class="col-xs-12">'+
+												 		'<a href class="btn btn-default btn-block">Delete gift</a>'+
+												 	'</div>'+
+												 '</div>';
+									}
 								}
-								if(status=='received') {
-									var action='<p class="text-center"><span class="fui-arrow-right"></span> Gift received <span class="fui-arrow-left"></span></p>';
+								else if(type=="giving") {
+									if(status=="EXPIRED") {
+										text = "Expired";
+										action = '<div class="row">'+
+												 	'<div class="col-xs-6">'+
+												 		'<a href class="btn btn-primary btn-block">RELIST</a>'+
+												 	'</div>'+
+												 	'<div class="col-xs-6">'+
+												 		'<a href class="btn btn-default btn-block">DELETE</a>'+
+												 	'</div>'+
+												 '</div>';
+									}
 								}
-								if(status=="not_requested") {
-									var action='<div class="row">'+
-										'<div class="col-xs-4"><a href="" class="btn btn-default btn-block"><span class="glyphicon glyphicon-remove"></span></a></div>'+
-										'<div class="col-xs-8"><a href="" class="btn btn-primary btn-block">Request Gift</a></div>'+
-									'</div>';
-								}
-								if(status=="ended") {
-									var action='<div class="row">'+
-										'<div class="col-xs-4"><a href="" class="btn btn-default btn-block"><span class="glyphicon glyphicon-remove"></span></a></div>'+
-										'<div class="col-xs-8">ENDED</div>'+
-									'</div>';
-								}
-							}
-							else {
-								if(status=='active') {
-									var action='<div class="row ge-text ge-description">'+
-													'<div class="col-xs-12">'+
-														'<p class="text-center">'+
-															'<span class="fui-arrow-right"></span>'+
-															'Share to receive requests'+
-															'<span class="fui-arrow-left"></span>'+
-														'</p>'+
-													'</div>'+
+								
+								
+								action = '<div class="row">'+
+												'<div class="col-xs-12">'+
+													'<p class="text-center">'+
+														'<span class="fui-arrow-right"></span>'+
+														text+
+														'<span class="fui-arrow-left"></span>'+
+													'</p>'+
 												'</div>'+
-												'<div class="row ge-text ge-description ge-action">'+
-													'<div class="col-xs-4">'+
-														'<button class="btn btn-mini btn-block btn-social-facebook link fui-facebook"></button>'+
-													'</div>'+
-													'<div class="col-xs-4">'+
-														'<button class="btn btn-mini btn-block btn-social-twitter link fui-twitter"></button>'+
-													'</div>'+
-													'<div class="col-xs-4">'+
-														'<button class="btn btn-mini btn-block btn-social-pinterest link fui-pinterest"></button>'+
-													'</div>'+
-												'</div>';
-								}
-							}
+											 '</div>'+action;
 								
-							$('.action',iElement).html(action);
+								$('.action',iElement).html(action);
+							});
 						}
 				      }
 				}
@@ -85,32 +93,48 @@ define(['angular','services','jquery'], function(angular) {
 			return {
 				restrict:'E',
 				scope: {
+					id:'@',
 					img:'@',
 					name:'@',
 					location:'@',
 					since:'@',
 					points:'@',
-					nested:'@'
+					nested:'@',
+					ads:'@',
+					following:'@'
 				},
 				templateUrl: 'app/partials/directives/user-profile.html',
 				replace:true,
 				transclude:true,
+				controller: function( $scope, $element, $attrs, $location, UserEx ) {
+					$scope.follow = function() {
+						$scope.data = UserEx.follow.query({id:$scope.id});
+						$scope.following=true;
+					}
+					$scope.unfollow = function() {
+						$scope.data = UserEx.unfollow.query({id:$scope.id});
+						$scope.following=false;
+					}
+				},
 				compile: function() {
 					return {
 						post: function(scope, iElement, iAttrs) {
 							if(iAttrs.showgifts) {
-								var gifts = '<div class="row">'+
-												'<div class="col-xs-4">'+
-													'<a href="#/view/gift"><img src="http://placehold.it/200x200/339999/FFF" class="img-rounded img-responsive" alt=""></a>'+
-												'</div>'+
-												'<div class="col-xs-4">'+
-													'<a href="#/view/gift"><img src="http://placehold.it/200x200/993399/FFF" class="img-rounded img-responsive" alt=""></a>'+
-												'</div>'+
-												'<div class="col-xs-4">'+
-													'<a href="#/view/gift"><img src="http://placehold.it/200x200/339933/FFF" class="img-rounded img-responsive" alt=""></a>'+
-												'</div>'+
-											'</div>';
-								$('.well',iElement).append(gifts);
+								iAttrs.$observe('ads', function() {
+									if(scope.ads!='undefined' && scope.ads!="") {
+										var ads = angular.fromJson(scope.ads);
+										var gifts = '<div class="row">';
+										for(var i=0;i<ads.length;i++) {
+											gifts += '<div class="col-xs-4">'+
+														'<a href="#/view/gift/'+ads[i].id+'"><img src="https://s3.amazonaws.com/ge-dev/ad/'+ads[i].image.id+'_320" class="img-rounded img-responsive" alt=""></a>'+
+													'</div>';
+										}
+										gifts += '</div>';
+									
+										$('.well',iElement).append(gifts);
+										
+									}
+								});
 							}
 							if(iAttrs.nested) {
 								$('.well',iElement).removeClass('well');
@@ -126,34 +150,137 @@ define(['angular','services','jquery'], function(angular) {
 				scope: {
 					img:'@',
 					title:'@',
-					simple:'@'
+					simple:'@',
+					numShares: '@',
+					numComments: '@',
+					numBookmarks: '@',
+					comments:'@',
+					creatorId:'@',
+					creatorName:'@',
+					creatorSince:'@',
+					creatorFollowing:'@',
+					creatorCity:'@',
+					creatorAvatar:'@',
+					creatorPoints:'@',
+					id:'@'
 				},
 				templateUrl: 'app/partials/directives/ad.html',
 				replace:true,
 				transclude:true,
 				compile: function() {
 					return {
-						post: function(scope, iElement, iAttrs) {
+						pre: function(scope, iElement, iAttrs) {
 							if(iAttrs.simple) {
 								$('.ge-action',iElement).remove();
 								$('.title',iElement).remove();
 								$('user-profile',iElement).remove();
 							}
+				        	iAttrs.$observe('comments', function() {
+				        		if(scope.numComments>0) {
+					        		scope.comments = angular.fromJson(scope.comments);
+					        		if(typeof(scope.comments.type) !== 'undefined') {
+					        			scope.comments = [scope.comments];
+					        		}
+				        		}
+				        	});
 						}
 					}
 				}
 			}
-		}).directive('messageList', function($compile) {
-			return {
-				restrict:'E',
-				templateUrl: 'app/partials/directives/message-list.html',
-				replace:true
-			}
-		}).directive('message', function($compile) {
+		})
+		.directive('message', function($compile) {
 			return {
 				restrict:'E',
 				templateUrl: 'app/partials/directives/message.html',
-				replace:true
+				scope: {
+      				ngModel: '='
+				},
+				replace:true,
+    			require: 'ngModel',
+			    link: function($scope, elem, attr, ctrl) {
+			      console.debug($scope);
+			    }
 			}
+		})
+		.directive('backButton', function(){
+		    return {
+		      restrict: 'A',
+		
+		      link: function(scope, element, attrs) {
+		        element.bind('click', goBack);
+		
+		        function goBack() {
+		          history.back();
+		          scope.$apply();
+		        }
+		      }
+		    }
+		})
+		.directive('giftimg', function() {
+			return {
+				restrict: 'E',
+				replace: false,
+				templateUrl: 'app/partials/directives/giftimg.html',
+				scope: {
+					action: '@',
+					def: '@'
+				},
+				controller: function ($scope) {
+					$scope.progress = 0;
+					$scope.giftimage = 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-upload.png';
+				
+					$scope.sendFile = function(el) {
+				
+						var $form = $(el).parents('form');
+				
+						if ($(el).val() == '') {
+							return false;
+						}
+				
+						$form.attr('action', $scope.action);
+				
+						$scope.$apply(function() {
+							$scope.progress = 0;
+						});				
+				
+						$form.ajaxSubmit({
+							type: 'POST',
+							uploadProgress: function(event, position, total, percentComplete) { 
+								
+								$scope.$apply(function() {
+									$scope.progress = percentComplete;
+								});
+				
+							},
+							error: function(event, statusText, responseText, form) { 
+								
+								$form.removeAttr('action');
+				
+							},
+							success: function(responseText, statusText, xhr, form) { 
+				
+								var ar = $(el).val().split('\\'), 
+									filename =  ar[ar.length-1];
+
+								$form.removeAttr('action');
+				
+								$scope.$apply(function() {
+									$scope.progress = 0;
+									$scope.giftimage = "api/image/"+filename;
+								});
+				
+							},
+						});
+				
+					}
+				
+				},
+				link: function(scope, elem, attrs, ctrl) {
+					elem.find('.fake-uploader').click(function() {
+						elem.find('input[type="file"]').click();
+					});
+				}
+			};
+		
 		});
 });

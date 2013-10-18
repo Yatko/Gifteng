@@ -3,99 +3,89 @@
 		<div class="well well-lg">
 			<div class="row">
 				<div class="col-sm-2 col-xs-4">
-					<img id="avatarImage" src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-rounded img-responsive">
+					<img ng-src="{{user.data.avatar.url}}" class="img-rounded img-responsive">
 				</div>
 				<div class="col-sm-4 col-xs-8">
 					<div class="ge-detail">
-					    <div class="ge-name">
-					        <a href="">{{user.data.firstName}} {{user.data.lastName}}</a>
-					                    <a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
-					            </div>
-					            <div class="ge-age">Giftenger since {{user.data.joinedAt | date:'MMMM yyyy'}}</div>
-					            <div class="ge-points">
-					            	<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
-					            		<span class="label label-default label-ge">
-						            		Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}}
-					            		</span>
-					            	</a>
-					            </div>
+						<div class="ge-name">
+							<a href="">{{user.data.firstName}} {{user.data.lastName}}</a>
+							<a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
+						</div>
+						<div class="ge-age">
+							Giftenger since {{user.data.joinedAt | date:'MMMM yyyy'}}
+						</div>
+						<div class="ge-points">
+							<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank"> <span class="label label-default label-ge"> Generosity Score {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}} </span> </a>
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-6 hidden-xs">
 					<div class="ge-info">
-                        <ul class="nav nav-tabs nav-append-content">
-                            <li class="hidden-sm" ng-class="{active:section=='gifts'}">
-                                <a href="" ng-click="section='gifts'"><i class="ge-icon-giftbox"></i> Gifts</a>
-                            </li>
-                            <li class="hidden-sm" ng-class="{active:section=='connections'}">
-                                <a href="" ng-click="section='connections'"><i class="fui-heart"></i> Connections</a>
-                            </li>
-                            <li class="hidden-sm" ng-class="{active:section=='account'}">
-                                <a href="" ng-click="section='account'"><i class="fui-user"></i> Account</a>
-                            </li>
-                            <li class="hidden-sm" ng-class="{active:section=='about'}">
-                                <a href="" ng-click="section='about'"><i class="fui-bubble"></i> About</a>
-                            </li>
-                        </ul><!-- /tabs -->
-                        <div class="tab-content">
-                            <div ng-show="section=='gifts'">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <a href="#/profile/gifts/giving" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='giving'}">
-                                            Giving<br>
-                                            <span class="user_giving">1</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <a href="#/profile/gifts/receiving" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='receiving'}">
-                                            Receiving<br>
-                                            <span class="user_receiving">4</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <a href="#/profile/gifts/favorites" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='favorites'}">
-                                            Favorites<br>
-                                            <span class="user_bookmark">2</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div><!-- /tab-->
-                            <div ng-show="section=='connections'">
-                                <div class="row">
-                                    <div class="col-sm-4 col-xs-6">
-                                        <a href="#/profile/connections/following" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='following'}">
-                                            <span class="user_following">11</span><br>
-                                            Following
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-xs-6">
-                                        <a href="#/profile/connections/followers" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='followers'}">
-                                            <span class="user_follower">1</span><br>
-                                            Followers
-                                        </a>
-                                    </div>
+						<ul class="nav nav-tabs nav-append-content">
+							<li class="hidden-sm" ng-class="{active:section=='gifts'}">
+								<a href="" ng-click="section='gifts'"><i class="ge-icon-giftbox"></i> Gifts</a>
+							</li>
+							<li class="hidden-sm" ng-class="{active:section=='connections'}">
+								<a href="" ng-click="section='connections'"><i class="fui-heart"></i> Connections</a>
+							</li>
+							<li class="hidden-sm" ng-class="{active:section=='account'}">
+								<a href="" ng-click="section='account'"><i class="fui-user"></i> Account</a>
+							</li>
+							<li class="hidden-sm" ng-class="{active:section=='about'}">
+								<a href="" ng-click="section='about'"><i class="fui-bubble"></i> About</a>
+							</li>
+						</ul><!-- /tabs -->
+						<div class="tab-content">
+							<div ng-show="section=='gifts'">
+								<div class="row">
+									<div class="col-xs-4">
+										<a href="#/profile/gifts/giving" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='giving'}"> Giving
+										<br>
+										<span class="user_giving">{{user.data.statistics.numGivings}}</span> </a>
+									</div>
+									<div class="col-xs-4">
+										<a href="#/profile/gifts/receiving" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='receiving'}"> Receiving
+										<br>
+										<span class="user_receiving">{{user.data.statistics.numReceivings}}</span> </a>
+									</div>
+									<div class="col-xs-4">
+										<a href="#/profile/gifts/favorites" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='favorites'}"> Favorites
+										<br>
+										<span class="user_bookmark">{{user.data.statistics.numBookmarks}}</span> </a>
+									</div>
 								</div>
-                            </div><!-- /tab-->
-                            <div ng-show="section=='account'">
-                                <div class="row">
-                                    <div class="col-sm-4 col-xs-6">
-                                        <a href="#/profile/account/notifications" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='notifications'}">
-                                            <i class="fui-alert"></i>
-                                            <br>Notifications
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-xs-6">
-                                        <a href="#/profile/account/messages" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='messages'}">
-                                            <i class="fui-mail"></i>
-                                            <br>Messages
-                                        </a>
-                                    </div>
+							</div><!-- /tab-->
+							<div ng-show="section=='connections'">
+								<div class="row">
+									<div class="col-sm-4 col-xs-6">
+										<a href="#/profile/connections/following" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='following'}"> <span class="user_following">{{user.data.statistics.numFollowings}}</span>
+										<br>
+										Following </a>
+									</div>
+									<div class="col-sm-4 col-xs-6">
+										<a href="#/profile/connections/followers" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='followers'}"> <span class="user_follower">{{user.data.statistics.numFollowers}}</span>
+										<br>
+										Followers </a>
+									</div>
 								</div>
-                            </div><!-- /tab-->
-                            <div ng-show="section=='about'">
-                            </div><!-- /tab-->
-                        </div><!-- /tab-content -->
-                    </div>
+							</div><!-- /tab-->
+							<div ng-show="section=='account'">
+								<div class="row">
+									<div class="col-sm-4 col-xs-6">
+										<a href="#/profile/account/notifications" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='notifications'}"> <i class="fui-alert"></i>
+										<br>
+										Notifications </a>
+									</div>
+									<div class="col-sm-4 col-xs-6">
+										<a href="#/profile/account/messages" class="btn btn-small btn-block btn-ge" ng-class="{'active-tab':tab_page=='messages'}"> <i class="fui-mail"></i>
+										<br>
+										Messages </a>
+									</div>
+								</div>
+							</div><!-- /tab-->
+							<div ng-show="section=='about'"></div><!-- /tab-->
+						</div><!-- /tab-content -->
+					</div>
 				</div>
 			</div>
 		</div>
