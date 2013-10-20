@@ -72,9 +72,9 @@ em {font-style: normal !important;color: #aaaaaa;} /* todo review place and hier
 .ge-item .ge-title{color:#34495e;font-size: 100%;font-weight: 600;line-height:1.5em;margin:0 0 12px 0;}
 .ge-item .ge-subtitle{color:#aaaaaa;}
 .ge-item .ge-subtitle em{margin:0 3px 0 6px;}
-.ge-item .ge-user-image img.inactive {opacity: 0.2;filter: alpha(opacity=20);} /* giving */
+.ge-item .ge-user-image img.inactive {opacity: 0.4;filter: alpha(opacity=40);} /* giving */
 .ge-box p.ge-location {font-weight:400;color: #aaaaaa;font-size: 80%;line-height:1.2em;text-align:right;margin-bottom: 3px;} /* browse location TODO review hierarchy */
-.ge-ad-item-box.ge-inactive .ge-item-image img {opacity: 0.2;filter: alpha(opacity=20);} /* inactive items */
+.ge-ad-item-box.ge-inactive .ge-item-image img {opacity: 0.4;filter: alpha(opacity=40);} /* inactive items */
 .ge-ad-item-box.ge-inactive .ge-item-image .ge-icon-ribbon {color: #eb8f89;} /* inactive items */
 
 /* DETAIL-VIEW */
