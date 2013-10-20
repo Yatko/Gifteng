@@ -355,11 +355,11 @@ $is_logged = isLogged();
                 <? else: ?>
 
                     <ul class="nav pull-right">
+                        <li class="hidden-phone">
+                            <a href="<?=base_url()?>authentication/login" style="color:#ffffff !important;">Log In</a>
+                        </li>
                         <li>
                             <a href="http://gifteng.zendesk.com/home" target="_blank"><i class="ge-icon-help text-inverted"></i></a>
-                        </li>
-                        <li class="hidden-phone">
-                            <a href="<?=base_url()?>authentication/login"><i class="fui-user text-inverted" style="font-size: 1.25em;"></i></a>
                         </li>
                         <? /** ?>
                         <li class="dropdown hidden-phone">
