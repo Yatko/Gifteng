@@ -322,20 +322,20 @@ $is_logged = isLogged();
                 <span class="nav">
                     <a href="<?=base_url()?>index"><i class="ge-icon-gifteng"><sup>Beta</sup></i></a>
                 </span>
-                <span class="nav">
-                	<div style="padding:16px 0 0 16px;">
-                    	<div style="float:left;margin-right: 6px;">
-                    		<div style='width:46px;overflow:hidden;'>
-                    		    <div class="fb-like" data-href="http://www.gifteng.com/" data-width="90" data-height="50" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div>
-                    		</div>
-                    	</div>
-                    	<div style="float:left;margin-right: 6px;">
-                    		<a href="https://twitter.com/gifteng" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @gifteng</a>
-                    	</div>
-                    	<div style="float:left;margin-right: 6px;">
-                    		<div class="g-plusone" data-size="medium" data-annotation="none" data-href="http://www.gifteng.com/"></div>
-                    	</div>
-                    </div>               
+                <span class="nav hidden-phone">
+                    <div style="padding:16px 0 0 16px;">
+                        <div style="float:left;margin-right: 6px;">
+                            <div style='width:46px;overflow:hidden;'>
+                                <div class="fb-like" data-href="http://www.gifteng.com/" data-width="90" data-height="50" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="false" data-send="false"></div>
+                            </div>
+                        </div>
+                        <div style="float:left;margin-right: 6px;">
+                            <a href="https://twitter.com/gifteng" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @gifteng</a>
+                        </div>
+                        <div style="float:left;margin-right: 6px;">
+                            <div class="g-plusone" data-size="medium" data-annotation="none" data-href="http://www.gifteng.com/"></div>
+                        </div>
+                    </div>
                 </span>
 
                 <? if( $is_logged ): ?>
