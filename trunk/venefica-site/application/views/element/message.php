@@ -52,7 +52,7 @@ $text_rest = '';
 <div class="row-fluid ge-message">
     
     <? if( !$showProfileLinks ): ?>
-        <a href="<?=$message_link?>">
+        <a href="<?=$message_link?>" class="pull-left">
     <? endif; ?>
     
     <span class="ge-user-image">
@@ -69,10 +69,6 @@ $text_rest = '';
             <span class="ge-name"><?= $name ?></span>
         <? endif; ?>
         <span class="ge-date"><?= $since ?></span>
-        
-        <? if( $showDelete ): ?>
-            <a href="<?=$message_delete_link?>" class="fui-trash"></a>
-        <? endif; ?>
         
         <? if( $showTitle ): ?>
             <? if( $showProfileLinks ): ?>
@@ -93,9 +89,12 @@ $text_rest = '';
             <? endif; ?>
         </span>
     </span>
-            
+    
     <? if( !$showProfileLinks ): ?>
         </a>
     <? endif; ?>
     
+    <? if( $showDelete ): ?>
+        <a href="<?=$message_delete_link?>" class="fui-trash"></a>
+    <? endif; ?>
 </div>
