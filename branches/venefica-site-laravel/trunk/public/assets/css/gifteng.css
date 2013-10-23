@@ -13,7 +13,7 @@ a, a:hover {text-decoration: none !important;}
 .snap-drawer ul li .ge-user .ge-detail .ge-age {font-size: 70%;font-weight: 300;color: #aaaaaa !important;margin-top: -2px !important;}
 .snap-drawer ul li .ge-user .ge-detail .ge-points {padding-top: 6px !important;}
 .snap-drawer ul li .ge-user .ge-detail .ge-points {padding-top: 6px !important;}
-
+.inactive { opacity: 0.4; filter: alpha(opacity=40);}
 
 
 @font-face {

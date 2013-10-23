@@ -13,7 +13,7 @@ define(['angular'], function (angular) {
         		},
   				query: {
   					method:'GET',
-  					isArray:true
+  					isArray:false
   				}
         	}
 		);
@@ -39,7 +39,7 @@ define(['angular'], function (angular) {
         	{
   				query: {
   					method:'GET',
-  					isArray:true
+  					isArray:false
   				}
         	}
 		);
@@ -52,7 +52,7 @@ define(['angular'], function (angular) {
         	{
   				query: {
   					method:'GET',
-  					isArray:true
+  					isArray:false
   				}
         	}
 		);

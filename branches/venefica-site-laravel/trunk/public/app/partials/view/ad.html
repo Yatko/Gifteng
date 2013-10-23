@@ -7,15 +7,37 @@
 		status="show"
 		creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
 		creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
-		creator-following="{{ad.creator.inFollowings}}"
+		creator-following="ad.creator.inFollowings"
 		creator-city="{{ad.creator.address.city}}, {{ad.creator.address.state}}"
 		creator-avatar="{{ad.creator.avatar.id}}"
 		creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
-		creator-following="{{ad.creator.inFollowings}}"></ad-item-box>
+		creator-id="{{ad.creator.id}}"
+		></ad-item-box>
 	</div>
 	<div class="col-xs-6">
 		<div class="well">
-			<a href="" class="btn btn-primary btn-lg btn-block">BUTTON</a>
+			<div ng-switch="ad.owner">
+				<div ng-switch-when="true">
+					<div class="row">
+						<div class="col-xs-6">
+							<a class="btn btn-large btn-block btn-primary">EDIT GIFT</a>
+						</div>
+						<div class="col-xs-6">
+							<a class="btn btn-large btn-block btn-danger">DELETE GIFT</a>
+						</div>
+					</div>
+				</div>
+				<div ng-switch-default>
+					<div ng-switch="ad.sold">
+						<div ng-switch-when="true">
+							<a class="btn btn-large btn-block btn-default btn-disabled">GIFTED</a>
+						</div>
+						<div ng-switch-default>
+							<a class="btn btn-large btn-block btn-default">REQUEST</a>
+						</div>
+					</div>
+				</div>
+			</div>
 			<p>
 				{{ad.title}}
 			</p>

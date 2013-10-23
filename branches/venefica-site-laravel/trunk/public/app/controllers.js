@@ -77,16 +77,17 @@ define(['angular','services','lang'], function(angular,services,lang) {
 				$scope.col1 = [];
 				$scope.col2 = [];
 				$scope.col3 = [];
+				$scope.creators = ads['creators'];
 				
-				for(var i=0;i<ads.length;i++) {
+				for(var i=0;i<ads['ads'].length;i++) {
 					if((i%3)==0) {
-						$scope.col3.push(ads[i]);
+						$scope.col3.push(ads['ads'][i]);
 					}
 					else if((i%2)==0) {
-						$scope.col2.push(ads[i]);
+						$scope.col2.push(ads['ads'][i]);
 					}
 					else {
-						$scope.col1.push(ads[i]);
+						$scope.col1.push(ads['ads'][i]);
 					}
 				}
 			});
@@ -153,7 +154,10 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		 */
 		.controller('RequestedAdsController',function($scope, $routeParams, User, AdRequested) {
 			if(typeof($routeParams.id)!=='undefined') {
-				$scope.ads = AdRequested.query({id:$routeParams.id});
+				var ads = AdRequested.query({id:$routeParams.id}, function() {
+					$scope.ads = ads.ads;
+					$scope.creators = ads.creators;
+				});
 			}
 			else {
 				$scope.$watch(
@@ -161,8 +165,12 @@ define(['angular','services','lang'], function(angular,services,lang) {
 						return User.getUser();
 					},
 					function(user) {
-						if(typeof(user.data) !== 'undefined')
-							$scope.ads = AdRequested.query({id:user.data.id});
+						if(typeof(user.data) !== 'undefined') {
+							var ads = AdRequested.query({id:user.data.id}, function() {
+								$scope.ads = ads.ads;
+								$scope.creators = ads.creators;
+							});
+						}
 					},
 					true
 				);
@@ -172,17 +180,29 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Bookmarked Ads Controller
 		 */
-		.controller('BookmarkedAdsController',function($scope, User, AdBookmarked) {
-			$scope.$watch(
-				function() {
-					return User.getUser();
-				},
-				function(user) {
-					if(typeof(user.data) !== 'undefined')
-						$scope.ads = AdBookmarked.query({id:user.data.id});
-				},
-				true
-			);
+		.controller('BookmarkedAdsController',function($scope, $routeParams, User, AdBookmarked) {
+			if(typeof($routeParams.id)!=='undefined') {
+				var ads = AdBookmarked.query({id:$routeParams.id}, function() {
+					$scope.ads = ads.ads;
+					$scope.creators = ads.creators;
+				});
+			}
+			else {
+				$scope.$watch(
+					function() {
+						return User.getUser();
+					},
+					function(user) {
+						if(typeof(user.data) !== 'undefined') {
+							var ads = AdBookmarked.query({id:user.data.id}, function() {
+								$scope.ads = ads.ads;
+								$scope.creators = ads.creators;
+							});
+						}
+					},
+					true
+				);
+			}
 		})
 		
 		/**
@@ -235,7 +255,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 				var texts = lang.notifications;
 				$scope.notifications = {};
 				angular.forEach(texts, function(value, key) {
-					if(values.notifiableTypes.indexOf(key)>-1) {
+					if(typeof(values.notifiableTypes)!=='undefined' && values.notifiableTypes.indexOf(key)>-1) {
 						$scope.notifications[key] = {
 							'text':value,
 							'checked':"checked"

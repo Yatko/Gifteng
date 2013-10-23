@@ -7,14 +7,13 @@
 				type="receiving"
 				details="1"
 				status="{{ad.status}}"
-				creator-name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
-				creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
-				creator-following="{{ad.creator.inFollowings}}"
-				creator-city="{{ad.creator.address.city}}, {{ad.creator.address.state}}"
-				creator-avatar="{{ad.creator.avatar.id}}"
-				creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
-				creator-following="{{ad.creator.inFollowings}}"
-				creator-id="{{ad.creator.id}}"
+				creator-name="{{creators[ad.creator].firstName}} {{creators[ad.creator].lastName}}"
+				creator-since="{{creators[ad.creator].joinedAt | date:'MMMM yyyy'}}"
+				creator-following="creators[ad.creator].inFollowings"
+				creator-city="{{creators[ad.creator].address.city}} {{creators[ad.creator].address.state}}"
+				creator-avatar="{{creators[ad.creator].avatar.id}}"
+				creator-points="{{creators[ad.creator].score | number:0}}/{{creators[ad.creator].pendingScore | number:0}}"
+				creator-id="{{creators[ad.creator].id}}"
 			></ad-item-box>
 		</div>
 	</div>

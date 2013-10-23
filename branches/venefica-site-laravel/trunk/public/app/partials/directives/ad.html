@@ -1,11 +1,11 @@
 <div class="ge-ad">
 	<div class="well">
-		<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="{{creatorFollowing}}" nested="true"></user-profile>
+		<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>
 		<div class="ge-item-image">
-			<a href="#/view/gift/{{id}}"> <img ng-src="{{img}}" class="img-responsive"> </a>
+			<a href="#/view/gift/{{id}}"> <img ng-src="{{img}}" class="img-responsive" ng-class="{inactive: canRequest=='false'}"> </a>
 			<div class="ge-icon-ribbon"></div>
 		</div><!--./ge-item-image-->
-		<div class="ge-action">
+		<div class="ge-action" ng-hide="canRequest=='false'">
 			<div class="row">
 				<div class="col-xs-4">
 					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>

@@ -12,7 +12,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorId:'@',
 					creatorName:'@',
 					creatorSince:'@',
-					creatorFollowing:'@',
+					creatorFollowing:'=',
 					creatorCity:'@',
 					creatorAvatar:'@',
 					creatorPoints:'@',
@@ -30,9 +30,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 								var action = '';
 								var text = '';
 								
-								
 								if(iAttrs.details=='1' || type=="details") {
-									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="{{creatorFollowing}}" nested="true"></user-profile>';
+									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>';
 									$('.well',iElement).prepend($compile(userprofile)(scope));
 								}
 								
@@ -101,20 +100,30 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					points:'@',
 					nested:'@',
 					ads:'@',
-					following:'@'
+					following:'='
 				},
 				templateUrl: 'app/partials/directives/user-profile.html',
 				replace:true,
-				transclude:true,
-				controller: function( $scope, $element, $attrs, $location, UserEx ) {
+				controller: function( $scope, $element, $attrs, UserEx ) {
 					$scope.follow = function() {
 						$scope.data = UserEx.follow.query({id:$scope.id});
+						$attrs.$set('following',true);
 						$scope.following=true;
 					}
 					$scope.unfollow = function() {
 						$scope.data = UserEx.unfollow.query({id:$scope.id});
+						$attrs.$set('following',false);
 						$scope.following=false;
 					}
+					$attrs.$observe('following', function(value) {
+						if(typeof value=="Boolean")
+							$scope.following=value;
+					});
+				},
+				link: function($scope, $element, $attrs) {
+					$attrs.$observe('following', function(value) {
+						$scope.following=value;
+					});
 				},
 				compile: function() {
 					return {
@@ -158,11 +167,13 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorId:'@',
 					creatorName:'@',
 					creatorSince:'@',
-					creatorFollowing:'@',
+					creatorFollowing:'=',
 					creatorCity:'@',
 					creatorAvatar:'@',
 					creatorPoints:'@',
-					id:'@'
+					id:'@',
+					status:'@',
+					canRequest:'@'
 				},
 				templateUrl: 'app/partials/directives/ad.html',
 				replace:true,
@@ -197,8 +208,14 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				},
 				replace:true,
     			require: 'ngModel',
-			    link: function($scope, elem, attr, ctrl) {
-			      console.debug($scope);
+			    controller: function($scope, UserEx) {
+			    	$scope.sendMsg = function() {
+			    		var message = new UserEx.message();
+			            message.text = $('#text_msg').val();
+			            message.requestId = $scope.ngModel.messages[0].requestId;
+			            message.toId = $scope.ngModel.messages[0].toId;
+			            message.$save();
+			    	};
 			    }
 			}
 		})

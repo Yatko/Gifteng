@@ -125,12 +125,13 @@ class UserController extends \BaseController {
 	 * @return Response
 	 */
 	public function setNotifications() {
-		$session = Session::get('user');
-        $user_setting['userId'] = $session['data']->id;
-        $user_setting['notifiableTypes'] = Input::get('notifiableTypes');
 		try {
+			$session = Session::get('user');
 			$userService = new SoapClient(Config::get('wsdl.user'),array());
-            $result = $userService->saveUserSetting($user_setting);
+			$user_setting = new UserSetting;
+			$user_setting->userId = $session['data']->id;
+			$user_setting->notifiableTypes = Input::get('notifiableTypes');
+            $result = $userService->saveUserSetting(array("setting" => $user_setting));
 			
 			return Response::json($result);
         } catch ( Exception $ex ) {
@@ -173,6 +174,25 @@ class UserController extends \BaseController {
 			return Response::json($return);
         } catch ( Exception $ex ) {
 			return Response::json(array());
+        }
+	}
+	
+	/**
+	 * Send Message
+	 * 
+	 * @return Response
+	 */
+	public function sendMessage() {
+		try {
+			$message = new Message();
+			$message->text = Input::get('text');
+			$message->requestId = Input::get('requestId');
+			$message->toId = Input::get('toId');
+            $messageService = new SoapClient(Config::get('wsdl.message'),array());
+            $messageService->sendMessage(array("message" => $message));
+			return array('success'=>true);
+        } catch ( Exception $ex ) {
+			return Response::json($ex);
         }
 	}
 	

@@ -41,6 +41,7 @@ Route::group(array('prefix' => 'api'), function() {
 		/* messages */
 		Route::get('user/message', array('uses' => 'UserController@getMessages'));
 		Route::get('user/message/{id}', array('uses' => 'UserController@getMessage'));
+		Route::post('user/message', array('uses' => 'UserController@sendMessage'));
 		
 		/* user */
 		Route::get('user/{id}', array('uses' => 'UserController@getProfile'));

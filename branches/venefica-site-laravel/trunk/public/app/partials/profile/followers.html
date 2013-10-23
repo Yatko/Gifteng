@@ -9,7 +9,7 @@
 				points="{{conn.score | number:0}}/{{conn.pendingScore | number:0}}" 
 				since="{{conn.joinedAt | date:'MMMM yyyy'}}"
 				showgifts="true"
-				following="{{conn.inFollowings}}"
+				following="conn.inFollowings"
 				ads="{{data.ads[conn.id]}}">
 			</user-profile>
 		</div>

@@ -9,10 +9,22 @@ class AdController extends \BaseController {
 	 */
 	public function index() {
 		try {
+			$filter = new Filter;
+			$filter->includeOwned=1;
+			$filter->includeCannotRequest=1;
+			$filter->includeInactive=0;
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
-			$result = $adService -> getAdsExDetail(array("lastAdId" => -1, "numberAds" => 20, "filter" => null, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 5));
+			$result = $adService -> getAdsExDetail(array("lastAdId" => -1, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 5));
+			
+			$ads = array();
+			$creators = array();
 
-			return $result->ad;
+			foreach($result->ad as $k=>$v) {
+				$creators[$v->creator->id]=$v->creator;
+				$v->creator=$v->creator->id;
+				$ads[]=$v;
+			}
+			return array('ads'=>$ads,'creators'=>$creators);
 		} catch ( Exception $ex ) {
 			throw new Exception($ex -> getMessage());
 		}
@@ -63,27 +75,31 @@ class AdController extends \BaseController {
 				$result=$result->ad;
 
 			$ads = array();
+			$creators = array();
+
 			foreach($result as $k=>$row) {
-				$ad = get_object_vars($row);
-				if($ad['status'] == 'FINALIZED') {
-					$requests = get_object_vars($ad['requests']);
+				$ad = $row;
+				if($ad->status == 'FINALIZED') {
+					$requests = get_object_vars($ad->requests);
 					
 					if(is_array($requests['item'])) {
 						foreach($requests['item'] as $request) {
 				 			$request = get_object_vars($request);
 							$usr = get_object_vars($request['user']);
 							if($usr['id']==$user_id) {
-								$ad['status']=$request['status'];
+								$ad->status=$request['status'];
 							}
 						}
 					}
 					else {
-						$ad['status'] = $ad['requests']->item->status;
+						$ad->status = $ad->requests->item->status;
 					}
 				}
+				$creators[$ad->creator->id]=$ad->creator;
+				$ad->creator=$ad->creator->id;
 				$ads[]=$ad;
 			}
-			return Response::json($ads);
+			return Response::json(array('ads'=>$ads,'creators'=>$creators));
 		} catch ( Exception $ex ) {
 			return Response::json(array());
 		}
@@ -101,11 +117,37 @@ class AdController extends \BaseController {
                 "userId" => $user_id
             ));
 
-			
 			if(isset($result->ad->type))
-				return Response::json($result);
+				$result=$result;
 			else
-				return Response::json($result->ad);
+				$result=$result->ad;
+
+			$ads = array();
+			$creators = array();
+
+			foreach($result as $k=>$row) {
+				$ad = $row;
+				if($ad->status == 'FINALIZED') {
+					$requests = get_object_vars($ad->requests);
+					
+					if(is_array($requests['item'])) {
+						foreach($requests['item'] as $request) {
+				 			$request = get_object_vars($request);
+							$usr = get_object_vars($request['user']);
+							if($usr['id']==$user_id) {
+								$ad->status=$request['status'];
+							}
+						}
+					}
+					else {
+						$ad->status = $ad->requests->item->status;
+					}
+				}
+				$creators[$ad->creator->id]=$ad->creator;
+				$ad->creator=$ad->creator->id;
+				$ads[]=$ad;
+			}
+			return Response::json(array('ads'=>$ads,'creators'=>$creators));
 		} catch ( Exception $ex ) {
 			return Response::json(array());
 		}
