@@ -7,6 +7,8 @@
         var $adId = $("#ad_relist_form input[name=adId]");
         $adId.val(adId);
         
+        enable_buttons('#ad_relist_form button');
+        
         if ( $('#adRelistContainer').length > 0 ) {
             $('#adRelistContainer').removeData("modal").modal('show');
             $("#adRelistContainer .modal-body").html('<div class="well ge-well ge-form">Please wait...</div>');
