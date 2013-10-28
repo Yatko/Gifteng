@@ -9,7 +9,7 @@
 	<div class="col-sm-8 col-sm-offset-2">
 		<div class="row">
 			<div class="col-sm-4">
-				<input type="text" placeholder="Find Friends & Search Gifts" class="form-control" />
+				<input type="text" ng-model="adsearch" value="" placeholder="Find Friends & Search Gifts" class="form-control" />
 			</div>
 			<div class="col-sm-4">
 				<select class="form-control">
@@ -27,7 +27,7 @@
 <br>
 <div class="row">
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col1">
+		<div ng-repeat="ad in col1 | ads:adsearch">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -49,7 +49,7 @@
 		</div>
 	</div>
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col2">
+		<div ng-repeat="ad in col2 | ads:adsearch">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -71,7 +71,7 @@
 		</div>
 	</div>
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col3">
+		<div ng-repeat="ad in col3 | ads:adsearch">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -91,5 +91,10 @@
 			can-request="{{ad.canRequest}}"
 			></ad>
 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<a ng-click="loadMore()" class="btn btn-block btn-primary">VIEW MORE</a>
 	</div>
 </div>

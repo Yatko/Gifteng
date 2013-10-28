@@ -72,7 +72,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Browse Controller
 		 */
-		.controller('BrowseController', function($scope, Ad) {
+		.controller('BrowseController', function($scope, AdMore, Ad) {
 			var ads = Ad.query({}, function() {
 				$scope.col1 = [];
 				$scope.col2 = [];
@@ -89,8 +89,36 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					else {
 						$scope.col1.push(ads['ads'][i]);
 					}
+					if(i==ads['ads'].length-1) {
+						$scope.last=ads['ads'][i].lastIndex;
+					}
 				}
 			});
+			function jsonConcat(o1, o2) {
+			 for (var key in o2) {
+			  o1[key] = o2[key];
+			 }
+			 return o1;
+			}
+			$scope.loadMore = function() {
+				var ads = AdMore.query({'last':$scope.last}, function() {
+				
+					for(var i=0;i<ads['ads'].length;i++) {
+						if((i%3)==0) {
+							$scope.col3.push(ads['ads'][i]);
+						}
+						else if((i%2)==0) {
+							$scope.col2.push(ads['ads'][i]);
+						}
+						else {
+							$scope.col1.push(ads['ads'][i]);
+						}
+						if(i==ads['ads'].length-1) {
+							$scope.last=ads['ads'][i].lastIndex;
+						}
+					}
+				});
+			}
 		})
 		
 		/**

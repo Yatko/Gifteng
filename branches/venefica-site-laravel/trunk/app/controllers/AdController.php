@@ -14,13 +14,14 @@ class AdController extends \BaseController {
 			$filter->includeCannotRequest=1;
 			$filter->includeInactive=0;
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
-			$result = $adService -> getAdsExDetail(array("lastAdId" => -1, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 5));
+			$result = $adService -> getAdsExDetail(array("lastIndex" => -1, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2));
 			
 			$ads = array();
 			$creators = array();
 
 			foreach($result->ad as $k=>$v) {
 				$creators[$v->creator->id]=$v->creator;
+				$v->creatorname=$v->creator->firstName." ".$v->creator->lastName;
 				$v->creator=$v->creator->id;
 				$ads[]=$v;
 			}
@@ -29,6 +30,37 @@ class AdController extends \BaseController {
 			throw new Exception($ex -> getMessage());
 		}
 	}
+	
+	/**
+	 * Load more
+	 * 
+	 * @return Response
+	 */ 
+	public function loadMore($last=-1) {
+		try {
+			$filter = new Filter;
+			$filter->includeOwned=1;
+			$filter->includeCannotRequest=1;
+			$filter->includeInactive=0;
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$result = $adService -> getAdsExDetail(array("lastIndex" => $last, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2));
+			
+			$ads = array();
+			$creators = array();
+
+			foreach($result->ad as $k=>$v) {
+				$creators[$v->creator->id]=$v->creator;
+				$v->creatorname=$v->creator->firstName." ".$v->creator->lastName;
+				$v->creator=$v->creator->id;
+				$ads[]=$v;
+			}
+			return Response::json(array('ads'=>$ads,'creators'=>$creators));
+		} catch ( Exception $ex ) {
+			return Response::json(array());
+		}
+	}
+	
+	
 
 	/**
 	 * Ads giving by user

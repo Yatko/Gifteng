@@ -18,6 +18,19 @@ define(['angular'], function (angular) {
         	}
 		);
 	})
+	.factory('AdMore', function($resource) {
+		return $resource('api/ad/more/:last',
+			{ 
+				last:'@last'
+        	},
+        	{
+  				query: {
+  					method:'GET',
+  					isArray:false
+  				}
+        	}
+		);
+	})
 	.factory('AdUser', function($resource) {
 		return $resource('api/ad/user/:id',
 			{ 

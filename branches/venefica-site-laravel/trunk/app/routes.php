@@ -23,6 +23,7 @@ Route::group(array('prefix' => 'api'), function() {
 		/* ads */
 		Route::resource('ad','AdController');
 		Route::resource('image','ImageController', array('only'=>array('show','store')));
+		Route::get('ad/more/{last}', 'AdController@loadMore');
 		Route::get('ad/user/{id}', 'AdController@byUser');
 		Route::get('ad/requested/{id}', 'AdController@requestedByUser');
 		Route::get('ad/bookmarked/{id}', 'AdController@bookmarkedByUser');
