@@ -12,13 +12,30 @@
 				<input type="text" ng-model="adsearch" value="" placeholder="Find Friends & Search Gifts" class="form-control" />
 			</div>
 			<div class="col-sm-4">
-				<select class="form-control">
-					<option>All Categories</option>
+				<select class="form-control" ng-model="adsrcat">
+					<option value="">All Categories</option>
+					<option value="11">Accessories &amp; Bags</option>
+					<option value="12">Art &amp; Photography</option>
+					<option value="13">Books</option>
+					<option value="10">Collectibles &amp; Craft</option>
+					<option value="14">Electronics</option>
+					<option value="15">Food</option>
+					<option value="20">Health &amp; Beauty</option>
+					<option value="21">Home</option>
+					<option value="9">Jewelry &amp; Watches</option>
+					<option value="16">Kids</option>
+					<option value="17">Men's Clothing</option>
+					<option value="22">Movie, Music, Games</option>
+					<option value="18">Pets</option>
+					<option value="24">Tickets &amp; Gift Cards</option>
+					<option value="19">Women's Clothing</option>
+					<option value="8">Women's Shoes</option>
 				</select>
 			</div>
 			<div class="col-sm-4">
 				<select class="form-control">
-					<option>Newest</option>
+					<option value="newest">Newest</option>
+					<option value="oldest">Oldest</option>
 				</select>
 			</div>
 		</div>
@@ -27,7 +44,7 @@
 <br>
 <div class="row">
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col1 | ads:adsearch">
+		<div ng-repeat="ad in col1 | ads:{keywords:adsearch,category:adsrcat}">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -45,11 +62,12 @@
 			creator-id="{{creators[ad.creator].id}}"
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
+			in-bookmarks="{{ad.inBookmarks}}"
 			></ad>
 		</div>
 	</div>
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col2 | ads:adsearch">
+		<div ng-repeat="ad in col2 | ads:{keywords:adsearch,category:adsrcat}">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -67,11 +85,12 @@
 			creator-id="{{creators[ad.creator].id}}"
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
+			in-bookmarks="{{ad.inBookmarks}}"
 			></ad>
 		</div>
 	</div>
 	<div class="col-sm-4">
-		<div ng-repeat="ad in col3 | ads:adsearch">
+		<div ng-repeat="ad in col3 | ads:{keywords:adsearch,category:adsrcat}">
 			<ad
 			img="https://s3.amazonaws.com/ge-dev/ad/{{ad.image.id}}_320"
 			id="{{ad.id}}"
@@ -89,6 +108,7 @@
 			creator-id="{{creators[ad.creator].id}}"
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
+			in-bookmarks="{{ad.inBookmarks}}"
 			></ad>
 		</div>
 	</div>

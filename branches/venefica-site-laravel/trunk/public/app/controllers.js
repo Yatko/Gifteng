@@ -124,7 +124,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Nav Controller
 		 */
-		.controller('NavController',function($scope, $location, Auth, User) {
+		.controller('NavController',function($scope, $location, $modal, Auth, User) {
 		
 			$scope.$watch(
 				function() {
@@ -147,6 +147,64 @@ define(['angular','services','lang'], function(angular,services,lang) {
 				},
 				true
 			);
+			
+			$scope.changePhoto = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/change_photo.html',
+					controller: function($scope, $modalInstance) {
+						$scope.progress = 0;
+						$scope.profileimage = "";
+						
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+						$scope.sendFile = function(el) {
+							$scope.action="api/image/profile";
+							var $form = $(el).parents('form');
+					
+							if ($(el).val() == '') {
+								return false;
+							}
+					
+							$form.attr('action', $scope.action);
+					
+							$scope.$apply(function() {
+								$scope.progress = 0;
+							});				
+					
+							$form.ajaxSubmit({
+								type: 'POST',
+								uploadProgress: function(event, position, total, percentComplete) { 
+									
+									$scope.$apply(function() {
+										$scope.progress = percentComplete;
+									});
+					
+								},
+								error: function(event, statusText, responseText, form) { 
+									
+									$form.removeAttr('action');
+					
+								},
+								success: function(responseText, statusText, xhr, form) { 
+					
+									var ar = $(el).val().split('\\'), 
+										filename =  ar[ar.length-1];
+	
+									$form.removeAttr('action');
+					
+									$scope.$apply(function() {
+										$scope.progress = 0;
+										$scope.profileimage = "api/image/"+filename;
+									});
+					
+								},
+							});
+					
+						}
+					}
+				});
+			}
 			
 			$scope.logout = function() {
 				$('#open-left').click();
@@ -374,8 +432,10 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * View Gift Controller
 		 */
-		.controller('ViewGiftController', function($scope, $routeParams, Ad) {
+		.controller('ViewGiftController', function($scope, $modal, $routeParams, Ad) {
 			$scope.ad = Ad.get({id:$routeParams.id}, function() {
+				$scope.comments = $scope.ad.comments;
+				$scope.ad = $scope.ad.ad;
 				try {
 	        		var locationIcon = new L.icon({
 		                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
@@ -396,5 +456,66 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		            console.log(ex);
 		        }
 			});
+			
+			$scope.requestGift = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/request_create.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
+			$scope.requestCancel = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/request_cancel.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
+			$scope.requestReceive = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/request_receive.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
+			$scope.editGift = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/edit_gift.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
+			$scope.deleteGift = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/delete_gift.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
+			$scope.relistGift = function() {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/relist_gift.html',
+					controller: function($scope, $modalInstance) {
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+					}
+				});
+			}
 		});
 });

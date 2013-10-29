@@ -8,7 +8,8 @@ require.config({
 		"jquery.form": "lib/jquery.form",
 		"leaflet": "lib/leaflet",
 		"leaflet-providers": "lib/leaflet-providers",
-		"leaflet-plugins": "lib/leaflet-plugins"
+		"leaflet-plugins": "lib/leaflet-plugins",
+		"ui-bootstrap-modal": "lib/ui-bootstrap-modal"
 	},
 	shim : {
 		angular: {
@@ -27,7 +28,7 @@ require(
 		"angular","angular-resource",
 		"jquery","jquery.form","snap","bootstrap",
 		"leaflet","leaflet-providers","leaflet-plugins",
-		"app","routes"
+		"app","routes","ui-bootstrap-modal"
 	],
 	function(angular) {
 		angular.bootstrap(document,["gifteng"]);

@@ -23,10 +23,13 @@ Route::group(array('prefix' => 'api'), function() {
 		/* ads */
 		Route::resource('ad','AdController');
 		Route::resource('image','ImageController', array('only'=>array('show','store')));
+		Route::post('image/profile','ImageController@profile');
 		Route::get('ad/more/{last}', 'AdController@loadMore');
 		Route::get('ad/user/{id}', 'AdController@byUser');
 		Route::get('ad/requested/{id}', 'AdController@requestedByUser');
 		Route::get('ad/bookmarked/{id}', 'AdController@bookmarkedByUser');
+		Route::post('ad/bookmark/{id}', 'AdController@bookmark');
+		Route::post('ad/comment/{id}', 'AdController@comment');
 		
 		/* connections */
 		Route::get('user/following/{id}', array('uses' => 'UserController@getFollowing'));

@@ -331,3 +331,6 @@ you can use the generic selector below, but it's slower:
 	margin-top:-32px;
 	z-index: 999999999;
 }
+.modal {
+	display:block;
+}

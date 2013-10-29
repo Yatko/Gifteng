@@ -19,20 +19,34 @@ define(['angular','services'], function (angular, services) {
 	})
 	.filter('ads', function() {
 		return function(input, replacements) {
+			var keywords = replacements.keywords;
+			var category = replacements.category;
+			var filtered;
 			
-	        if(typeof(replacements)!=='undefined') {
+	        if(typeof(keywords)!=='undefined') {
 	        	var ads=[];
 	        	angular.forEach(input, function(value, key) {
-					console.log(value);
-	        		if(value.creatorname.indexOf(replacements) !== -1 || value.title.indexOf(replacements) !== -1) {
+	        		if(value.creatorname.indexOf(keywords) !== -1 || value.title.indexOf(keywords) !== -1) {
 	        			ads.push(value);
 	        		}
 	        	});
-	        	return ads;
+	        	filtered=ads;
 	        }
 	        else {
-				return input;
+				filtered=input;
 	        }
+	        
+	        if(typeof(category)!=='undefined' && category!=='') {
+	        	var ads=[];
+	        	angular.forEach(filtered, function(value,key) {
+	        		if(value.categoryId==category) {
+	        			ads.push(value);
+	        		}
+	        	});
+	        	filtered=ads;
+	        }
+	        
+	        return filtered;
 		}
 	});
 });

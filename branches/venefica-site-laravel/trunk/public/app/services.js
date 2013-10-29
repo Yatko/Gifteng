@@ -78,7 +78,10 @@ define(['angular'], function (angular) {
 			notifications: $resource('api/user/notifications',{},{query:{method:'GET',isArray:false}}),
 			message: $resource('api/user/message/:id',{id:'@id'},{query:{method:'GET',isArray:true}}),
 			follow: $resource('api/user/follow/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
-			unfollow: $resource('api/user/unfollow/:id',{id:'@id'},{query:{method:'POST',isArray:false}})
+			unfollow: $resource('api/user/unfollow/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			bookmark: $resource('api/ad/bookmark/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			unbookmark: $resource('api/ad/unbookmark/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			comment: $resource('api/ad/comment/:id',{id:'@id'},{query:{method:'POST',isArray:false}})
 		}
 	})
 	.factory('Geo', function($resource) {

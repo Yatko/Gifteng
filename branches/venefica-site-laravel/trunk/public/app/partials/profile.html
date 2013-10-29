@@ -3,7 +3,9 @@
 		<div class="well well-lg">
 			<div class="row">
 				<div class="col-sm-2 col-xs-4">
-					<img ng-src="{{user.data.avatar.url}}" class="img-rounded img-responsive">
+					<a href ng-click="changePhoto()">
+						<img ng-src="{{user.data.avatar.url}}" class="img-rounded img-responsive">
+					</a>
 				</div>
 				<div class="col-sm-4 col-xs-8">
 					<div class="ge-detail">

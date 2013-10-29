@@ -27,7 +27,8 @@ class AuthController extends \BaseController {
 	        $token = $authService->authenticateEmail(
 	        	array(
 	        		"email" => Input::get('email'),
-	            	"password" => Input::get('password')
+	            	"password" => Input::get('password'),
+	            	"userAgent" => NULL
 				)
 			);
 	        ini_set('soap.wsdl_cache_enabled', '0');

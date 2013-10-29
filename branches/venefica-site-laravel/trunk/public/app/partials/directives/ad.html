@@ -8,10 +8,13 @@
 		<div class="ge-action" ng-hide="canRequest=='false'">
 			<div class="row">
 				<div class="col-xs-4">
-					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+					<span ng-switch="inBookmarks">
+						<a ng-switch-when="true" class="btn btn-block btn-primary bookmark"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+						<a ng-switch-default ng-click="bookmark(id)" class="btn btn-block btn-primary bookmark"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+					</span>
 				</div>
 				<div class="col-xs-4">
-					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-comment"></span> {{numComments}} </a>
+					<a ng-click="doComment(id)" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-comment"></span> {{numComments}} </a>
 				</div>
 				<div class="col-xs-4">
 					<a href="" class="btn btn-block btn-primary"> <span class="glyphicon glyphicon-share"></span> {{numShares}} </a>

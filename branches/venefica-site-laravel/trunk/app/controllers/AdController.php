@@ -34,6 +34,7 @@ class AdController extends \BaseController {
 	/**
 	 * Load more
 	 * 
+	 * @param int $last
 	 * @return Response
 	 */ 
 	public function loadMore($last=-1) {
@@ -111,22 +112,22 @@ class AdController extends \BaseController {
 
 			foreach($result as $k=>$row) {
 				$ad = $row;
-				if($ad->status == 'FINALIZED') {
-					$requests = get_object_vars($ad->requests);
-					
-					if(is_array($requests['item'])) {
-						foreach($requests['item'] as $request) {
-				 			$request = get_object_vars($request);
-							$usr = get_object_vars($request['user']);
-							if($usr['id']==$user_id) {
-								$ad->status=$request['status'];
-							}
+				
+				$requests = get_object_vars($ad->requests);
+				
+				if(is_array($requests['item'])) {
+					foreach($requests['item'] as $request) {
+			 			$request = get_object_vars($request);
+						$usr = get_object_vars($request['user']);
+						if($usr['id']==$user_id) {
+							$ad->status=$request['status'];
 						}
 					}
-					else {
-						$ad->status = $ad->requests->item->status;
-					}
 				}
+				else {
+					$ad->status = $ad->requests->item->status;
+				}
+				
 				$creators[$ad->creator->id]=$ad->creator;
 				$ad->creator=$ad->creator->id;
 				$ads[]=$ad;
@@ -220,9 +221,33 @@ class AdController extends \BaseController {
 	 */
 	public function show($id) {
 		try {
+			$session = Session::get('user');
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$messageService = new SoapClient(Config::get('wsdl.message'), array());
 			$result = $adService -> getAdById(array("adId" => $id));
-			return get_object_vars($result->ad);
+			$ad = new Ad($result->ad);
+
+			if($ad->requested) {
+				$request = $ad->getRequestByUser($session['data']->id);
+				if(isset($request)) {
+					$ad->status = $request->status;
+					$ad->user_request = $request;
+					$ad->user_requested = true;
+				}
+				else {
+					$ad->user_requested = false;
+				}
+			}
+			
+			$ad->canEdit = $ad->owner && !$ad->hasActiveRequest() && $ad->statistics->numBookmarks == 0 && $ad->statistics->numComments == 0 && $ad->statistics->numShares == 0;
+			$ad->canDelete = $ad->owner && (!$ad->hasActiveRequest() || $ad->expired);
+			
+        	$comments = $messageService->getCommentsByAd(array(
+                "adId" => $ad->id,
+                "lastCommentId" => -1,
+                "numComments" => 11));
+				
+			return array('ad'=>$ad,'comments'=>$comments);
 		} catch ( Exception $ex ) {
 			throw new Exception($ex -> getMessage());
 		}
@@ -246,5 +271,53 @@ class AdController extends \BaseController {
 	 */
 	public function destroy($id) {
 
+	}
+	
+	/**
+	 * Bookmark an ad
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function bookmark($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->bookmarkAd(array("adId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Unbookmark an ad
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function unbookmark($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->removeBookmark(array("adId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Comment ad
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function comment($id) {
+        try {
+            $messageService = new SoapClient(Config::get('wsdl.message'),array());
+            $comment = new Comment;
+            $comment->text = Input::get('commentText');
+            
+            $result = $messageService->addCommentToAd(array(
+                "adId" => $id,
+                "comment" => $comment
+            ));
+        } catch ( Exception $ex ) {
+        }
 	}
 }

@@ -153,7 +153,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				}
 			}
 		})
-		.directive('ad', function($compile) {
+		.directive('ad', function() {
 			return {
 				restrict:'E',
 				scope: {
@@ -171,14 +171,37 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorCity:'@',
 					creatorAvatar:'@',
 					creatorPoints:'@',
+					inBookmarks:'@',
 					id:'@',
 					status:'@',
-					canRequest:'@'
+					canRequest:'@',
+					category:'@'
 				},
 				templateUrl: 'app/partials/directives/ad.html',
 				replace:true,
 				transclude:true,
-				compile: function() {
+				controller: function($scope, $modal, UserEx) {
+					$scope.bookmark = function(id) {
+						UserEx.bookmark.query({id:id});
+						$scope.numBookmarks++;
+						$scope.inBookmarks=true;
+					}
+					$scope.unbookmark = function(id) {
+						UserEx.unbookmark.query({id:id});
+					}
+					$scope.doComment = function (id) {
+					    var modalInstance = $modal.open({
+      						templateUrl: 'app/partials/directives/modal/comment.html',
+      						controller: function($scope, $modalInstance) {
+      							$scope.add = function () {
+      								UserEx.comment.query({id:id,text:$('#comment_text').val()});
+									$modalInstance.close();
+								};
+      						}
+      					});
+					  };
+				},
+				link: function() {
 					return {
 						pre: function(scope, iElement, iAttrs) {
 							if(iAttrs.simple) {
@@ -199,7 +222,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				}
 			}
 		})
-		.directive('message', function($compile) {
+		.directive('message', function() {
 			return {
 				restrict:'E',
 				templateUrl: 'app/partials/directives/message.html',
