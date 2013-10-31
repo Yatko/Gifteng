@@ -11,6 +11,17 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		})
 		
 		/**
+		 * Edit Post Controller
+		 */
+		.controller('EditPostController', function($scope, Geo, Ad) {
+			$scope.step="step1";
+			$scope.toPost={} //place here the ad info
+			
+			
+		})
+		
+		
+		/**
 		 * Post Controller
 		 */
 		.controller('PostController', function($scope, Geo, Ad) {

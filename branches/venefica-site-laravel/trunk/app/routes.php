@@ -29,7 +29,14 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::get('ad/requested/{id}', 'AdController@requestedByUser');
 		Route::get('ad/bookmarked/{id}', 'AdController@bookmarkedByUser');
 		Route::post('ad/bookmark/{id}', 'AdController@bookmark');
+		Route::post('ad/unbookmark/{id}', 'AdController@unbookmark');
 		Route::post('ad/comment/{id}', 'AdController@comment');
+		Route::post('ad/relist/{id}', 'AdController@relist');
+		Route::post('ad/request/{id}', 'AdController@request');
+		Route::post('ad/request/cancel/{id}', 'AdController@request_cancel');
+		Route::post('ad/request/select/{id}', 'AdController@request_select');
+		Route::post('ad/request/send/{id}', 'AdController@request_send');
+		Route::post('ad/request/receive/{id}', 'AdController@request_send');
 		
 		/* connections */
 		Route::get('user/following/{id}', array('uses' => 'UserController@getFollowing'));
@@ -48,7 +55,10 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::post('user/message', array('uses' => 'UserController@sendMessage'));
 		
 		/* user */
+		Route::get('user/reinit', array('uses' => 'UserController@reinit'));
+		Route::get('top', array('uses' => 'UserController@top'));
 		Route::get('user/{id}', array('uses' => 'UserController@getProfile'));
+		Route::post('user', array('uses' => 'UserController@updateProfile'));
 		Route::resource('geo','GeoController', array('only'=>array('show')));
 	});
 });

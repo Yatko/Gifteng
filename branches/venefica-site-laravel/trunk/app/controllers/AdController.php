@@ -9,6 +9,7 @@ class AdController extends \BaseController {
 	 */
 	public function index() {
 		try {
+			$session = Session::get('user');
 			$filter = new Filter;
 			$filter->includeOwned=1;
 			$filter->includeCannotRequest=1;
@@ -23,6 +24,9 @@ class AdController extends \BaseController {
 				$creators[$v->creator->id]=$v->creator;
 				$v->creatorname=$v->creator->firstName." ".$v->creator->lastName;
 				$v->creator=$v->creator->id;
+				if($v->creator==$session['data']->id) {
+					$v->self=true;
+				}
 				$ads[]=$v;
 			}
 			return array('ads'=>$ads,'creators'=>$creators);
@@ -71,17 +75,21 @@ class AdController extends \BaseController {
 	public function byUser($user_id) {
 		try {
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$userService = new SoapClient(Config::get('wsdl.user'), array());
+			
 			$result = $adService -> getUserAds(array(
                 "userId" => $user_id,
-                'numberAds'=>-1,
+                'numberAds'=>0,
                 "includeRequests" => true,
                 "includeUnapproved" => false
             ));
 
 			if(isset($result->ad->type))
-				return Response::json($result);
+				$ads = $result;
 			else
-				return Response::json($result->ad);
+				$ads = $result->ad;
+			
+			return Response::json($ads);
 		} catch ( Exception $ex ) {
 			return Response::json(array());
 		}
@@ -121,11 +129,13 @@ class AdController extends \BaseController {
 						$usr = get_object_vars($request['user']);
 						if($usr['id']==$user_id) {
 							$ad->status=$request['status'];
+							$ad->requestId=$request['id'];
 						}
 					}
 				}
 				else {
 					$ad->status = $ad->requests->item->status;
+							$ad->requestId=$ad->requests->item->id;
 				}
 				
 				$creators[$ad->creator->id]=$ad->creator;
@@ -195,19 +205,11 @@ class AdController extends \BaseController {
         try {
 			$session = Session::get('user');
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
-			$ad=array(
-				'owner'=>$session['data']->id,
-				'inBookmarks'=>false,
-				'sold'=>false,
-				'expired'=>false,
-				'requested'=>false,
-				'online'=>false,
-				'approved'=>false
-			);
-			$ad = array_merge($ad,Input::get('ad'));
+			$ad = new Ad(Input::get('ad'));
+			
+	        $ad->image = ImageModel::createImageModel(str_replace('api/image/','',$ad->image['url']));
+			
             $result = $adService->placeAd(array("ad" => $ad));
-            $adId = $result->adId;
-            return $adId;
         } catch ( Exception $ex ) {
 			throw new Exception($ex -> getMessage());
         }
@@ -226,7 +228,7 @@ class AdController extends \BaseController {
 			$messageService = new SoapClient(Config::get('wsdl.message'), array());
 			$result = $adService -> getAdById(array("adId" => $id));
 			$ad = new Ad($result->ad);
-
+			
 			if($ad->requested) {
 				$request = $ad->getRequestByUser($session['data']->id);
 				if(isset($request)) {
@@ -249,7 +251,7 @@ class AdController extends \BaseController {
 				
 			return array('ad'=>$ad,'comments'=>$comments);
 		} catch ( Exception $ex ) {
-			throw new Exception($ex -> getMessage());
+			return $ex;
 		}
 	}
 
@@ -270,7 +272,11 @@ class AdController extends \BaseController {
 	 * @return Response
 	 */
 	public function destroy($id) {
-
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->deleteAd(array("adId" => $id));
+        } catch ( Exception $ex ) {
+        }
 	}
 	
 	/**
@@ -311,12 +317,96 @@ class AdController extends \BaseController {
         try {
             $messageService = new SoapClient(Config::get('wsdl.message'),array());
             $comment = new Comment;
-            $comment->text = Input::get('commentText');
-            
+            $comment->text = Input::get('text');
+			
             $result = $messageService->addCommentToAd(array(
                 "adId" => $id,
                 "comment" => $comment
             ));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Relist ad
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function relist($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->relistAd(array("adId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request create
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->requestAd(array("adId" => $id,"text" => Input::get('text')));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request cancel
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_cancel($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->cancelRequest(array("requestId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request select
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_select($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->selectRequest(array("requestId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request send
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_send($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->markAsSent(array("requestId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request receive
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_receive($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->markAsReceived(array("requestId" => $id));
         } catch ( Exception $ex ) {
         }
 	}

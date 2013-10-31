@@ -24,6 +24,7 @@ class Ad {
     const STATUS_EXPIRED = 'EXPIRED';
     
     public $id; //long
+    public $lastIndex;
     public $categoryId; //long
     public $category; //string
     public $title; //string
@@ -81,14 +82,10 @@ class Ad {
         	foreach(get_class_vars(__CLASS__) as $k=>$v) {
         		if(isset($obj->$k))
 					$this->$k = $obj->$k;
+				elseif(is_array($obj) && isset($obj[$k]))
+					$this->$k = $obj[$k];
         	}
         }
-    }
-    
-    public function __get($key) {
-        //the following is queried by the SoapClient
-        if ( $key == "type" ) return "Ad";
-        return parent::__get($key);
     }
     
     // ad related
@@ -177,8 +174,10 @@ class Ad {
         if ( !$this->hasRequest() ) {
             return false;
         }
-        foreach ( $this->requests as $request ) {
-            if ( $request->isActive() ) {
+		if(is_array($this->requests->item)) $requests = $this->requests->item;
+		else $requests = $this->requests;
+        foreach ( $requests as $request ) {
+            if ( $request->status != 'CANCELED' && $request->status != 'DECLINED' ) {
                 return true;
             }
         }
@@ -187,7 +186,9 @@ class Ad {
     
     public function hasAcceptedRequest() {
         if ( $this->requests != null && count($this->requests) > 0 ) {
-            foreach ( $this->requests as $request ) {
+			if(is_array($this->requests->item)) $requests = $this->requests->item;
+			else $requests = $this->requests;
+	        foreach ( $requests as $request ) {
                 if ( $request->accepted ) {
                     return true;
                 }
@@ -198,7 +199,9 @@ class Ad {
     
     public function hasSentRequest() {
         if ( $this->requests != null && count($this->requests) > 0 ) {
-            foreach ( $this->requests as $request ) {
+			if(is_array($this->requests->item)) $requests = $this->requests->item;
+			else $requests = $this->requests;
+	        foreach ( $requests as $request ) {
                 if ( $request->sent ) {
                     return true;
                 }
@@ -223,6 +226,6 @@ class Ad {
     }
     
     public static function convertAd($ad) {
-        return new Ad_model($ad);
+        return new Ad($ad);
     }
 }

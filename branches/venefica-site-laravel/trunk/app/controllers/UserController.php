@@ -228,4 +228,68 @@ class UserController extends \BaseController {
         }
 	}
 	
+	/**
+	 * Reinitialize user data
+	 * 
+	 * @return Response
+	 */
+	public function reinit() {
+		try {
+			$session = Session::get('user');
+            $userService = new SoapClient(Config::get('wsdl.user'));
+            $result = $userService->getUserByEmail(array("email" => $session['data']->email));
+            $user = $result->user;
+			Session::put('user.data',$user);
+		
+			return Response::json(array_merge(Session::get('user'),array('logged'=>true)));
+			
+        } catch ( InnerException $ex ) {
+        }
+	}
+	
+	/**
+	 * Top Giftengers
+	 * 
+	 * @return Response
+	 */
+	public function top() {
+        try {
+            $userService = new SoapClient(Config::get('wsdl.user'));
+            $users = $userService->getTopUsers(array("numberUsers" => 11));
+        } catch ( Exception $ex ) {
+            $users = array();
+        }
+		
+		return Response::json($users);
+	}
+	
+	/**
+	 * Update profile
+	 * 
+	 * @return Response
+	 */
+	public function updateProfile() {
+		$session = Session::get('user');
+		$userService = new SoapClient(Config::get('wsdl.user'),array());
+		$geoService = new SoapClient(Config::get('wsdl.utility'), array());
+		$currentUser = $userService->getUserByEmail(array('email'=>$session['data']->email))->user;
+		
+        if ( $currentUser->address == null ) {
+            $address = new Address;
+        } else {
+            $address = $currentUser->address;
+        }
+		
+		$currentUser->firstName = Input::get('first_name');
+		$currentUser->lastName = Input::get('last_name');
+		$currentUser->about = Input::get('about');
+		$currentUser->address = $geoService -> getAddressByZipcode(array("zipcode" => Input::get('zipCode')));
+		
+		try {
+            $userService->updateUser(array('user'=>$currentUser));
+        } catch ( Exception $ex ) {
+        }
+		
+	}
+	
 }	

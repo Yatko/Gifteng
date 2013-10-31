@@ -1,6 +1,6 @@
 <?php
 
-class Comment_model {
+class Comment {
     
     public $id; //long
     public $text; //string
