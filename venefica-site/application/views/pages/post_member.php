@@ -47,7 +47,9 @@ if ( $is_modal ) {
             submit_form('member_post_form');
         });
         
-        disable_form_buttons_on_submit('member_post_form', null);
+        disable_form_buttons_on_submit('member_post_form', '#member_post_form .ge-modal_footer button');
+        disable_form_buttons_on_submit('member_post_form', '#postContainer .ge-modal_footer button');
+        
         $('#member_post_form').on('submit', function(e) {
             var step = $('input[name=step]').val();
             if ( step === '<?=Post_member::STEP_PREVIEW?>' ) {

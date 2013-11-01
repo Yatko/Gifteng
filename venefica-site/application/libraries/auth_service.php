@@ -7,6 +7,8 @@
  */
 class Auth_service {
     
+    var $authService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Auth_service");
     }
@@ -23,10 +25,12 @@ class Auth_service {
      */
     public function authenticateEmail($email, $password) {
         try {
-            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
+            $userAgent = getUserAgent();
+            $authService = $this->getService();
             $result = $authService->authenticateEmail(array(
                 "email" => $email,
-                "password" => $password
+                "password" => $password,
+                "userAgent" => $userAgent
             ));
             $token = $result->AuthToken;
             storeToken($token);
@@ -45,7 +49,7 @@ class Auth_service {
      */
     public function changePassword($oldPassword, $newPassword) {
         try {
-            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $authService = $this->getService();
             $authService->changePassword(array(
                 "oldPassword" => $oldPassword,
                 "newPassword" => $newPassword
@@ -64,7 +68,7 @@ class Auth_service {
      */
     public function changeForgottenPassword($newPassword, $code) {
         try {
-            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
+            $authService = $this->getService();
             $authService->changeForgottenPassword(array(
                 "newPassword" => $newPassword,
                 "code" => $code
@@ -85,7 +89,7 @@ class Auth_service {
      */
     public function forgotPasswordEmail($email, $ipAddress) {
         try {
-            $authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions());
+            $authService = $this->getService();
             $authService->forgotPasswordEmail(array(
                 "email" => $email,
                 "ipAddress" => $ipAddress
@@ -94,5 +98,14 @@ class Auth_service {
             log_message(INFO, 'Email is incorrect! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    // internal methods
+    
+    private function getService() {
+        if ( $this->authService == null ) {
+            $this->authService = new SoapClient(AUTH_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->authService;
     }
 }

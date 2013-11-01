@@ -17,9 +17,13 @@ $is_owner = isOwner($user);
     var numberOfCreatedAds = 0;
     
     $(function() {
-        $('.ge-ad').on('ad_deleted', function(event, adId) {
+        $('.ge-ad').on('ad_deleted', function(event, adId, resultNum) {
             $('#ad_' + adId).removeClass('masonry-brick');
             $('#ad_' + adId).addClass('hide');
+            
+            if ( resultNum !== null ) {
+                $('.user_giving').text(resultNum);
+            }
         });
         $('.ge-request').on('request_canceled', function(event, requestId, adId, resultHtml, resultNum) {
             $('#ad_' + adId).html(resultHtml);

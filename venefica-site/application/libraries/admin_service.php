@@ -7,6 +7,8 @@
  */
 class Admin_service {
     
+    var $adminService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Admin_service");
     }
@@ -22,7 +24,7 @@ class Admin_service {
      */
     public function getUnapprovedAds() {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $result = $adminService->getUnapprovedAds();
             
             $ads = array();
@@ -43,7 +45,7 @@ class Admin_service {
      */
     public function getOfflineAds() {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $result = $adminService->getOfflineAds();
             
             $ads = array();
@@ -65,7 +67,7 @@ class Admin_service {
      */
     public function getApprovals($adId) {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $result = $adminService->getApprovals(array("adId" => $adId));
             
             $approvals = array();
@@ -88,7 +90,7 @@ class Admin_service {
      */
     public function getApproval($adId, $revision) {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $result = $adminService->getApproval(array(
                 "adId" => $adId,
                 "revision" => $revision
@@ -108,7 +110,7 @@ class Admin_service {
      */
     public function approveAd($adId) {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $adminService->approveAd(array("adId" => $adId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Approving ad (adId: '.$adId.') failed! '.$ex->faultstring);
@@ -124,7 +126,7 @@ class Admin_service {
      */
     public function unapproveAd($adId, $message) {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $adminService->unapproveAd(array(
                 "adId" => $adId,
                 "message" => $message
@@ -142,7 +144,7 @@ class Admin_service {
      */
     public function onlineAd($adId) {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $adminService->onlineAd(array("adId" => $adId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Making online ad (adId: '.$adId.') failed! '.$ex->faultstring);
@@ -161,7 +163,7 @@ class Admin_service {
      */
     public function getUsers() {
         try {
-            $adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adminService = $this->getService();
             $result = $adminService->getUsers();
             
             $users = array();
@@ -173,5 +175,14 @@ class Admin_service {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    // internal methods
+    
+    private function getService() {
+        if ( $this->adminService == null ) {
+            $this->adminService = new SoapClient(ADMIN_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->adminService;
     }
 }

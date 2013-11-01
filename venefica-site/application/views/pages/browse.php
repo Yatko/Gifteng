@@ -5,7 +5,8 @@
  * 
  * is_ajax: boolean
  * ads: array of Ad_model
- * last_ad_id: long
+ * //last_ad_id: long
+ * last_index: integer
  * currentUser: User_model
  * categories: array of Category_model
  * selected_q: string
@@ -27,7 +28,8 @@ if ( isset($ads) && is_array($ads) ) {
 
 <? if ( $is_ajax ): ?>
     <script langauge="javascript">
-        lastAdId = <?=$last_ad_id?>;
+        <? /** ?>lastAdId = <?=$last_ad_id?>;<? /**/ ?>
+        lastIndex = <?=$last_index?>;
         
     <? if( $ads_size < Browse::CONTINUING_AD_NUM ): ?>
         $('#load_more_btn').addClass('hide');
@@ -36,7 +38,8 @@ if ( isset($ads) && is_array($ads) ) {
     </script>
 <? else: ?>
     <script langauge="javascript">
-        var lastAdId = <?=$last_ad_id?>;
+        <? /** ?>var lastAdId = <?=$last_ad_id?>;<? /**/ ?>
+        var lastIndex = <?=$last_index?>;
         
         function load_more(callerElement) {
             if ( $(".ge-ad-id:last").length === 0 ) {
@@ -60,7 +63,8 @@ if ( isset($ads) && is_array($ads) ) {
             //lastAdId = lastAdId.split('_')[1];
             
             var $container = $('#boxContainer');
-            var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId;
+            <? /** ?>var url = '<?=base_url()?>browse/ajax/get_more?lastAdId=' + lastAdId;<? /**/ ?>
+            var url = '<?=base_url()?>browse/ajax/get_more?lastIndex=' + lastIndex;
             var q = '<?=$selected_q?>';
             var category = '<?=$selected_category?>';
             var type = '<?=$selected_type?>';
@@ -219,9 +223,10 @@ if ( isset($ads) && is_array($ads) ) {
                 <div class="span4">
                     <div class="control-group">
                         <select name="type" class="select-block mbl select-info">
-                            <? foreach ( lang('browse_type_list') as $key => $value ): ?>
-                                <option value="<?=$key?>" <?=$selected_type == $key ? 'selected="selected"' : ''?>><?=$value?></option> 
-                            <? endforeach; ?>
+                            <option value="<?=Browse::TYPE_NEWEST?>" <?=$selected_type == Browse::TYPE_NEWEST ? 'selected="selected"' : ''?>>Newest</option> 
+                            <option value="<?=Browse::TYPE_OLDEST?>" <?=$selected_type == Browse::TYPE_OLDEST ? 'selected="selected"' : ''?>>Oldest</option> 
+                            <option value="<?=Browse::TYPE_GIFTED?>" <?=$selected_type == Browse::TYPE_GIFTED ? 'selected="selected"' : ''?>>Gifted</option> 
+                            <option value="<?=Browse::TYPE_CLOSEST?>" <?=$selected_type == Browse::TYPE_CLOSEST ? 'selected="selected"' : ''?> <?=$currentUser->getZipCode() == '' ? 'disabled="disabled"' : ''?>>Closest</option> 
                         </select>
                     </div>
                 </div>

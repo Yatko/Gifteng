@@ -115,6 +115,26 @@ $is_logged = isLogged();
     </script>
     
     <script language="javascript">
+        window.onerror = function(m, u, l) {
+            $.ajax({
+                type: 'POST',
+                url: '<?=base_url()?>ajax/log_error',
+                dataType: 'json',
+                cache: false,
+                data: {
+                    msg: m,
+                    url: u,
+                    line: l,
+                    window: window.location.href
+                }
+            }).done(function(response) {
+            }).fail(function(data) {
+            });
+            return true;
+        };
+    </script>
+    
+    <script language="javascript">
         if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
             $('.snap-slide').hide();
             $('.snap-drawers').hide();

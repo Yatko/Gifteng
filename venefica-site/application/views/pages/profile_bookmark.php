@@ -7,6 +7,8 @@
  * bookmarks: array of Ad_model
  */
 
+$user_can_request = $user->canRequest();
+
 ?>
 
 <script language="javascript">
@@ -82,7 +84,11 @@
                                                     <? elseif( $ad_is_requested ): ?>
                                                         <p class="text-center">REQUESTED</p>
                                                     <? elseif ( $ad_can_request  ): ?>
-                                                        <button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="btn btn-small btn-block btn-ge">Request Gift</button>
+                                                        <? if( $user_can_request ): ?>
+                                                            <button onclick="startRequestModal(this, '<?= ($ad_is_business ? 'business' : 'member') ?>', <?=$ad_id?>);" class="ge-request btn btn-small btn-block btn-ge">Request Gift</button>
+                                                        <? else: ?>
+                                                            <button onclick="startCannotRequestModal();" class="ge-request btn btn-small btn-block btn-ge">Request Gift</button>
+                                                        <? endif; ?>
                                                     <? endif; ?>
 
                                                     </div>

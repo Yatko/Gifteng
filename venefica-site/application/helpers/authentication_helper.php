@@ -38,6 +38,28 @@ if ( ! function_exists('getSoapOptions')) {
 }
 
 
+if ( !function_exists('getUserAgent') ) {
+    function getUserAgent() {
+        //return print_r(get_browser(null, true), true);
+        
+        $CI =& get_instance();
+        $CI->load->library('user_agent');
+        
+        $userAgent = array(
+            "platform" => $CI->agent->platform(),
+            "browser" => $CI->agent->browser(),
+            "version" => $CI->agent->version(),
+            "mobile" => $CI->agent->mobile(),
+            "robot" => $CI->agent->robot(),
+            "agent" => $CI->agent->agent_string(),
+            "accept_lang" => $CI->agent->accept_lang(),
+            "accept_charset" => $CI->agent->accept_charset(),
+        );
+        return print_r($userAgent, true);
+    }
+}
+
+
 if ( ! function_exists('login')) {
     /**
      * Authenticates and login the user by its given email/pass combination.

@@ -8,6 +8,19 @@ class Ajax extends CI_Controller {
         return;
     }
     
+    public function log_error() {
+        if ( !$_POST ) {
+            return;
+        }
+        
+        $msg = $this->input->post('msg');
+        $url = $this->input->post('url');
+        $line = $this->input->post('line');
+        $window = $this->input->post('window');
+        
+        log_message(ERROR, 'JS error catched: msg=' . $msg . ', url=' . $url . ', line=' . $line . ', window=' . $window);
+    }
+    
     public function getAdGiving($adId = null, $userId = null, $currentUser = null) {
         $this->init();
         
@@ -365,9 +378,11 @@ class Ajax extends CI_Controller {
         try {
             $adId = $this->input->post('adId');
             $this->ad_service->deleteAd($adId);
-            $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_GIVINGS_NUM => $currentUser->statistics->numGivings
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }
@@ -409,9 +424,11 @@ class Ajax extends CI_Controller {
             $text = $this->input->post('requestText');
             
             $this->ad_service->requestAd($adId, $text);
-            $this->usermanagement_service->refreshUser();
+            $currentUser = $this->usermanagement_service->refreshStatistics();
             
-            respond_ajax(AJAX_STATUS_RESULT, 'OK');
+            respond_ajax(AJAX_STATUS_RESULT, array(
+                USER_BOOKMARKS_NUM => $currentUser->statistics->numBookmarks
+            ));
         } catch ( Exception $ex ) {
             respond_ajax(AJAX_STATUS_ERROR, $ex->getMessage());
         }

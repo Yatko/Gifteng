@@ -16,6 +16,9 @@
             $('#requestContainer').removeData("modal").modal('show');
         }
     }
+    function startCannotRequestModal() {
+        $('#cannotRequestContainer').removeData("modal").modal('show');
+    }
     
     function request_modal(callerElement, type) {
         if ( $("#" + type + "_request_post_form").length === 0 ) {
@@ -45,6 +48,11 @@
             } else if ( response.hasOwnProperty('<?=AJAX_STATUS_RESULT?>') ) {
                 if ( callerElement !== null ) {
                     $(callerElement).removeAttr("disabled");
+                }
+                
+                if ( $('.user_bookmark').length > 0 ) {
+                    var num_bookmarks = response.<?=AJAX_STATUS_RESULT?>.<?=USER_BOOKMARKS_NUM?>;
+                    $('.user_bookmark').text(num_bookmarks);
                 }
                 
                 var adId = $requestAdId.val();
@@ -196,6 +204,49 @@
                 </div>
             </form>
 
+        </div>
+    </div>
+</div>
+
+
+<div id="cannotRequestContainer" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="row-fluid">
+        <div class="span12">
+            
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div class="modal-header-content">
+                    <div class="ge-modal_header">
+                        <label class="control-label" for="fieldset">
+                            <h3>&nbsp;</h3>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <label class="control-label" for="fieldset">
+                    <blockquote>
+                        <p>Hi there! We appreciate your enthusiasm, but in order to request any more gifts you'll have to post one of your own. Click the button below to get started.</p>
+                    </blockquote>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <div class="ge-modal_footer">
+                    <fieldset>
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="control-group control-form">
+                                    <div class="controls">
+                                        <button type="button" class="span4 btn" data-dismiss="modal" aria-hidden="true">Later</button>
+                                        <button onclick="startPostModal();" data-dismiss="modal" aria-hidden="true" type="button" class="span8 mobile-three btn btn-ge">Post a gift</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--./submit-->
+                    </fieldset>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>

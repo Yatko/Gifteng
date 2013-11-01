@@ -74,7 +74,7 @@
         <div class="modal-header-content">
             <div class="ge-modal_header">
                 <label class="control-label" for="fieldset">
-                    <h3></h3>
+                    <h3>&nbsp;</h3>
                 </label>
             </div>
         </div>

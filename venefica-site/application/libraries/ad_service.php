@@ -7,6 +7,8 @@
  */
 class Ad_service {
     
+    var $adService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Ad_service");
     }
@@ -23,7 +25,7 @@ class Ad_service {
      */
     public function getCategory($categoryId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getCategory(array("categoryId" => $categoryId));
             $category = Category_model::convertCategory($result->category);
             return $category;
@@ -41,7 +43,7 @@ class Ad_service {
      */
     public function getSubCategories($categoryId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getSubCategories(array("categoryId" => $categoryId));
             
             $categories = array();
@@ -62,7 +64,7 @@ class Ad_service {
      */
     public function getAllCategories() {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getAllCategories();
             
             $categories = array();
@@ -88,7 +90,7 @@ class Ad_service {
      */
     public function placeAd($ad) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->placeAd(array("ad" => $ad));
             $adId = $result->adId;
             return $adId;
@@ -105,7 +107,7 @@ class Ad_service {
      */
     public function updateAd($ad) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->updateAd(array("ad" => $ad));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Ad update failed! '.$ex->faultstring);
@@ -121,7 +123,7 @@ class Ad_service {
      */
     public function cloneAd($ad) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->cloneAd(array("ad" => $ad));
             $adId = $result->adId;
             return $adId;
@@ -138,7 +140,7 @@ class Ad_service {
      */
     public function deleteAd($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->deleteAd(array("adId" => $adId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Ad removal (adId: ' . $adId . ') failed! '.$ex->faultstring);
@@ -155,7 +157,7 @@ class Ad_service {
      */
     public function addImageToAd($adId, $image) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->addImageToAd(array(
                 "adId" => $adId,
                 "image" => $image
@@ -176,7 +178,7 @@ class Ad_service {
      */
     public function deleteImageFromAd($adId, $imageId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->deleteImageFromAd(array(
                 "adId" => $adId,
                 "imageId" => $imageId
@@ -195,7 +197,7 @@ class Ad_service {
      */
     public function deleteImagesFromAd($adId, $imageIds) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->deleteImagesFromAd(array(
                 "adId" => $adId,
                 "imageIds" => $imageIds
@@ -218,7 +220,7 @@ class Ad_service {
      */
     public function getApprovals($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getApprovals(array("adId" => $adId));
             
             $approvals = array();
@@ -241,7 +243,7 @@ class Ad_service {
      */
     public function getApproval($adId, $revision) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getApproval(array(
                 "adId" => $adId,
                 "revision" => $revision
@@ -271,7 +273,7 @@ class Ad_service {
      */
     public function getUserAds($userId, $numberAds, $includeRequests, $includeUnapproved) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getUserAds(array(
                 "userId" => $userId,
                 "numberAds" => $numberAds,
@@ -301,7 +303,7 @@ class Ad_service {
      */
     public function getUserRequestedAds($userId, $includeRequests) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getUserRequestedAds(array(
                 "userId" => $userId,
                 "includeRequests" => $includeRequests
@@ -318,62 +320,62 @@ class Ad_service {
         }
     }
     
-    /**
-     * Gets a list of listings. The order of listing is by its id, the $lastAdId
-     * parameter specifies this start point and the $numberAds the limit.
-     * 
-     * @param long $lastAdId
-     * @param int $numberAds
-     * @return array of Ad_model
-     * @throws Exception
-     */
-    public function getAds($lastAdId, $numberAds) {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getAds(array(
-                "lastAdId" => $lastAdId,
-                "numberAds" => $numberAds
-            ));
-            
-            $ads = array();
-            if ( hasField($result, 'ad') && $result->ad ) {
-                $ads = Ad_model::convertAds($result->ad);
-            }
-            return $ads;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Ads request failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+//    /**
+//     * Gets a list of listings. The order of listing is by its id, the $lastAdId
+//     * parameter specifies this start point and the $numberAds the limit.
+//     * 
+//     * @param long $lastAdId
+//     * @param int $numberAds
+//     * @return array of Ad_model
+//     * @throws Exception
+//     */
+//    public function getAds($lastAdId, $numberAds) {
+//        try {
+//            $adService = $this->getService();
+//            $result = $adService->getAds(array(
+//                "lastAdId" => $lastAdId,
+//                "numberAds" => $numberAds
+//            ));
+//            
+//            $ads = array();
+//            if ( hasField($result, 'ad') && $result->ad ) {
+//                $ads = Ad_model::convertAds($result->ad);
+//            }
+//            return $ads;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Ads request failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
     
-    /**
-     * Gets a list of listings that satifies filter.
-     * 
-     * @param long $lastAdId
-     * @param int $numberAds
-     * @param Filter_model $filter
-     * @return array of Ad_model
-     * @throws Exception
-     */
-    public function getAdsEx($lastAdId, $numberAds, $filter = null) {
-        try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
-            $result = $adService->getAdsEx(array(
-                "lastAdId" => $lastAdId,
-                "numberAds" => $numberAds,
-                "filter" => $filter
-            ));
-            
-            $ads = array();
-            if ( hasField($result, 'ad') && $result->ad ) {
-                $ads = Ad_model::convertAds($result->ad);
-            }
-            return $ads;
-        } catch ( Exception $ex ) {
-            log_message(ERROR, 'Ads extended request failed! '.$ex->faultstring);
-            throw new Exception($ex->faultstring);
-        }
-    }
+//    /**
+//     * Gets a list of listings that satifies filter.
+//     * 
+//     * @param long $lastAdId
+//     * @param int $numberAds
+//     * @param Filter_model $filter
+//     * @return array of Ad_model
+//     * @throws Exception
+//     */
+//    public function getAdsEx($lastAdId, $numberAds, $filter = null) {
+//        try {
+//            $adService = $this->getService();
+//            $result = $adService->getAdsEx(array(
+//                "lastAdId" => $lastAdId,
+//                "numberAds" => $numberAds,
+//                "filter" => $filter
+//            ));
+//            
+//            $ads = array();
+//            if ( hasField($result, 'ad') && $result->ad ) {
+//                $ads = Ad_model::convertAds($result->ad);
+//            }
+//            return $ads;
+//        } catch ( Exception $ex ) {
+//            log_message(ERROR, 'Ads extended request failed! '.$ex->faultstring);
+//            throw new Exception($ex->faultstring);
+//        }
+//    }
     
     /**
      * Gets a list of listings that satifies filter. The include flag specifies
@@ -388,11 +390,11 @@ class Ad_service {
      * @return array of Ad_model
      * @throws Exception
      */
-    public function getAdsExDetail($lastAdId, $numberAds, $filter, $includeImages, $includeCreator, $includeCommentsNumber) {
+    public function getAdsExDetail($lastIndex, $numberAds, $filter, $includeImages, $includeCreator, $includeCommentsNumber) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getAdsExDetail(array(
-                "lastAdId" => $lastAdId,
+                "lastIndex" => $lastIndex,
                 "numberAds" => $numberAds,
                 "filter" => $filter,
                 "includeImages" => $includeImages,
@@ -420,7 +422,7 @@ class Ad_service {
      */
     public function getAdById($adId, $includeRequests) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getAdById(array(
                 "adId" => $adId,
                 "includeRequests" => $includeRequests
@@ -439,7 +441,7 @@ class Ad_service {
     
     public function getStatistics($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getStatistics(array("adId" => $adId));
             $statistics = AdStatistics_model::convertAdStatistics($result->statistics);
             return $statistics;
@@ -455,7 +457,7 @@ class Ad_service {
     
     public function relistAd($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->relistAd(array("adId" => $adId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Ad relist (adId: ' . $adId . ') failed! '.$ex->faultstring);
@@ -474,7 +476,7 @@ class Ad_service {
      */
     public function hideRequest($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->hideRequest(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Hide request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -492,7 +494,7 @@ class Ad_service {
      */
     public function requestAd($adId, $text) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->requestAd(array(
                 "adId" => $adId,
                 "text" => $text
@@ -513,7 +515,7 @@ class Ad_service {
      */
     public function cancelRequest($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->cancelRequest(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Cancel request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -529,7 +531,7 @@ class Ad_service {
      */
     public function selectRequest($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->selectRequest(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Select request (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -545,7 +547,7 @@ class Ad_service {
      */
     public function getRequestById($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getRequestById(array("requestId" => $requestId));
             $request = Request_model::convertRequest($result->request);
             return $request;
@@ -563,7 +565,7 @@ class Ad_service {
 //     */
 //    public function getRequests($adId) {
 //        try {
-//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $adService = $this->getService();
 //            $result = $adService->getRequests(array("adId" => $adId));
 //            
 //            $requests = array();
@@ -585,7 +587,7 @@ class Ad_service {
 //     */
 //    public function getRequestsByUser($userId) {
 //        try {
-//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $adService = $this->getService();
 //            $result = $adService->getRequestsByUser(array("userId" => $userId));
 //            
 //            $requests = array();
@@ -607,7 +609,7 @@ class Ad_service {
 //     */
 //    public function getRequestsForUserWithoutRating($userId) {
 //        try {
-//            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $adService = $this->getService();
 //            $result = $adService->getRequestsForUserWithoutRating(array("userId" => $userId));
 //            
 //            $requests = array();
@@ -628,7 +630,7 @@ class Ad_service {
      */
     public function markAsSent($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->markAsSent(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Mark request as sent (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -643,7 +645,7 @@ class Ad_service {
      */
     public function markAsReceived($requestId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->markAsReceived(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Mark request as received (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -663,7 +665,7 @@ class Ad_service {
      */
     public function bookmarkAd($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->bookmarkAd(array("adId" => $adId));
             $bookmarkId = $result->bookmarkId;
             return $bookmarkId;
@@ -680,7 +682,7 @@ class Ad_service {
      */
     public function removeBookmark($adId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $adService->removeBookmark(array("adId" => $adId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Remove bookmark ad (adId: ' . $adId . ') request failed! '.$ex->faultstring);
@@ -697,7 +699,7 @@ class Ad_service {
      */
     public function getBookmarkedAds($userId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getBookmarkedAdsForUser(array("userId" => $userId));
             
             $ads = array();
@@ -723,7 +725,7 @@ class Ad_service {
      */
     public function rateAd($rating) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->rateAd(array("rating" => $rating));
             return $result->rating;
         } catch ( Exception $ex ) {
@@ -740,7 +742,7 @@ class Ad_service {
      */
     public function getReceivedRatings($userId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getReceivedRatings(array("userId" => $userId));
             
             $ratings = array();
@@ -762,7 +764,7 @@ class Ad_service {
      */
     public function getSentRatings($userId) {
         try {
-            $adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $adService = $this->getService();
             $result = $adService->getSentRatings(array("userId" => $userId));
             
             $ratings = array();
@@ -774,5 +776,14 @@ class Ad_service {
             log_message(ERROR, 'User sent ratings (userId: ' . $userId . ') request failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    // internal methods
+    
+    private function getService() {
+        if ( $this->adService == null ) {
+            $this->adService = new SoapClient(AD_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->adService;
     }
 }

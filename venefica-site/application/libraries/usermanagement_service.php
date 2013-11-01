@@ -7,6 +7,9 @@
  */
 class Usermanagement_service {
     
+    var $userService;
+    var $token;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Usermanagement_service");
     }
@@ -22,7 +25,7 @@ class Usermanagement_service {
      */
     public function verifyUser($code) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $userService = $this->getService();
             $userService->verifyUser(array("code" => $code));
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
@@ -36,7 +39,7 @@ class Usermanagement_service {
      */
     public function resendVerification() {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $userService->resendVerification();
         } catch ( Exception $ex ) {
             log_message(ERROR, $ex->faultstring);
@@ -55,7 +58,7 @@ class Usermanagement_service {
      */
     public function getAllBusinessCategories() {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $userService = $this->getService();
             $result = $userService->getAllBusinessCategories();
             
             $categories = array();
@@ -83,7 +86,7 @@ class Usermanagement_service {
      */
     public function registerBusinessUser($user, $password) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $userService = $this->getService();
             $result = $userService->registerBusinessUser(array(
                 "user" => $user,
                 "password" => $password
@@ -106,7 +109,7 @@ class Usermanagement_service {
      */
     public function registerUser($user, $password, $code) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions());
+            $userService = $this->getService();
             $result = $userService->registerUser(array(
                 "user" => $user,
                 "password" => $password,
@@ -127,7 +130,7 @@ class Usermanagement_service {
      */
     public function updateUser($user) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->updateUser(array("user" => $user));
             return $result->complete;
         } catch ( Exception $ex ) {
@@ -142,7 +145,7 @@ class Usermanagement_service {
     
     public function getStatistics($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getStatistics(array("userId" => $userId));
             $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
             return $statistics;
@@ -165,7 +168,7 @@ class Usermanagement_service {
      */
     public function getTopUsers($numberUsers) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getTopUsers(array("numberUsers" => $numberUsers));
             
             $users = array();
@@ -188,7 +191,7 @@ class Usermanagement_service {
      */
     public function getUserByName($name) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getUserByName(array("name" => $name));
             $user = $result->user;
             return User_model::convertUser($user);
@@ -206,7 +209,7 @@ class Usermanagement_service {
      */
     public function getUserById($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getUserById(array("userId" => $userId));
             $user = $result->user;
             return User_model::convertUser($user);
@@ -229,7 +232,7 @@ class Usermanagement_service {
      */
     public function follow($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->follow(array("userId" => $userId));
             $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
             return $statistics;
@@ -248,7 +251,7 @@ class Usermanagement_service {
      */
     public function unfollow($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->unfollow(array("userId" => $userId));
             $statistics = UserStatistics_model::convertUserStatistics($result->statistics);
             return $statistics;
@@ -267,7 +270,7 @@ class Usermanagement_service {
      */
     public function getFollowers($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getFollowers(array("userId" => $userId));
             
             $users = array();
@@ -290,7 +293,7 @@ class Usermanagement_service {
      */
     public function getFollowings($userId) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getFollowings(array("userId" => $userId));
             
             $users = array();
@@ -315,7 +318,7 @@ class Usermanagement_service {
      */
     public function getUserSetting() {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getUserSetting();
             
             $userSetting = UserSetting_model::convertUserSetting($result->setting);
@@ -333,7 +336,7 @@ class Usermanagement_service {
      */
     public function saveUserSetting($userSetting) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $userService->saveUserSetting(array("setting" => $userSetting));
         } catch ( Exception $ex ) {
             log_message(ERROR, "Saving user setting failed! " . $ex->faultstring);
@@ -352,7 +355,7 @@ class Usermanagement_service {
      */
     public function getConnectedSocialNetworks() {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $userService = $this->getService();
             $result = $userService->getConnectedSocialNetworks();
             
             $networks = array();
@@ -439,7 +442,7 @@ class Usermanagement_service {
     
     private function getUserByEmail($email, $token) {
         try {
-            $userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions($token));
+            $userService = $this->getService($token);
             $result = $userService->getUserByEmail(array("email" => $email));
             $user = $result->user;
             return User_model::convertUser($user);
@@ -447,5 +450,17 @@ class Usermanagement_service {
             log_message(ERROR, $ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    private function getService($token = null) {
+        if ( $this->userService == null || $this->token != $token ) {
+            if ( $token == null ) {
+                $token = loadToken();
+            }
+            
+            $this->token = $token;
+            $this->userService = new SoapClient(USER_SERVICE_WSDL, getSoapOptions($this->token));
+        }
+        return $this->userService;
     }
 }

@@ -141,7 +141,7 @@ if ( $is_owner ) {
                         <div class="span6">
                             
         <? if ( $ad->canRelist ): ?>
-                            <button onclick="startAdRelistModal(this, <?=$ad_id?>, <?=$ad->canProlong?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
+                            <button onclick="startAdRelistModal(this, <?=$ad_id?>, <?=$ad->canProlong ? 'true' : 'false'?>);" type="button" class="btn btn-small btn-block btn-ge">RELIST</button>
         <? endif; ?>
                             
                         </div>

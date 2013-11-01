@@ -165,13 +165,13 @@ class Invitation extends CI_Controller {
         } elseif ( $step == 2 ) {
             if ( $_POST ) {
                 if (
-                    !$this->request_invitation_form->required($this->input->post('invitation_country')) &&
-                    !$this->request_invitation_form->required($this->input->post('invitation_usertype'))
+                    !$this->request_invitation_form->required($this->input->post('invitation_country'))
+                    //&& !$this->request_invitation_form->required($this->input->post('invitation_usertype'))
                 ) {
                     $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
                     $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
                     $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
-                    $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
+                    //$this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
                     $this->request_invitation_form->setError(lang('invitation_request_failed_empty_form'));
                     $is_valid = false;
                 } else if (
@@ -184,17 +184,19 @@ class Invitation extends CI_Controller {
                     $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
                     $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
                     $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
-                    $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
+                    //$this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
                     $this->request_invitation_form->setError(lang('invitation_request_failed_incorrect_zipcode'));
                     $is_valid = false;
                 } else if ( !$this->request_invitation_form->required($this->input->post('invitation_source')) ) {
                     $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
                     $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
                     $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
-                    $this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
+                    //$this->request_invitation_form->setFieldValue('invitation_usertype', $this->input->post('invitation_usertype'));
                     $this->request_invitation_form->setError(lang('invitation_request_failed_choose_source'));
                     $is_valid = false;
-                } else if ( !$this->request_invitation_form->required($this->input->post('invitation_usertype')) ) {
+                }
+                /**
+                else if ( !$this->request_invitation_form->required($this->input->post('invitation_usertype')) ) {
                     $this->request_invitation_form->setFieldValue('invitation_country', $this->input->post('invitation_country'));
                     $this->request_invitation_form->setFieldValue('invitation_zipcode', $this->input->post('invitation_zipcode'));
                     $this->request_invitation_form->setFieldValue('invitation_source', $this->input->post('invitation_source'));
@@ -202,6 +204,7 @@ class Invitation extends CI_Controller {
                     $this->request_invitation_form->setError(lang('invitation_request_failed_choose_usertype'));
                     $is_valid = false;
                 }
+                /**/
             }
             
             if ( $is_valid ) {
@@ -209,7 +212,7 @@ class Invitation extends CI_Controller {
                 $this->request_invitation_form->set_rules('invitation_zipcode', 'lang:invitation_zipcode', 'trim');
                 $this->request_invitation_form->set_rules('invitation_source', 'lang:invitation_source', 'trim|required');
                 $this->request_invitation_form->set_rules('invitation_source_other', 'lang:invitation_source_other', 'trim');
-                $this->request_invitation_form->set_rules('invitation_usertype', 'lang:invitation_usertype', 'trim|required');
+                //$this->request_invitation_form->set_rules('invitation_usertype', 'lang:invitation_usertype', 'trim|required');
                 $this->request_invitation_form->set_rules('invitation_email', 'lang:invitation_email', 'trim|required|valid_email|callback_request_invitation');
 
                 $this->request_invitation_form->set_message('required', lang('validation_required'));
@@ -256,7 +259,7 @@ class Invitation extends CI_Controller {
         $invitation->zipCode = $this->input->post('invitation_zipcode');
         $invitation->source = $this->input->post('invitation_source');
         $invitation->otherSource = $this->input->post('invitation_source_other');
-        $invitation->userType = $this->input->post('invitation_usertype');
+        //$invitation->userType = $this->input->post('invitation_usertype');
 
         try {
             $this->load->library('invitation_service');
