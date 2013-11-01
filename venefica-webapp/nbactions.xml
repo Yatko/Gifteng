@@ -60,6 +60,18 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    <action>
+        <actionName>CUSTOM-env=amazon - skip tests</actionName>
+        <displayName>env=amazon - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>amazon</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
     
     <!--
     <action>

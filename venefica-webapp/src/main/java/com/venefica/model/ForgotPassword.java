@@ -5,6 +5,8 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +27,7 @@ public class ForgotPassword {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
     @Column(nullable = false)

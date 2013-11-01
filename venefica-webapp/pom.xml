@@ -100,6 +100,24 @@
             <version>3.2.4.GA</version>
         </dependency>
         
+        <!--
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jta</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jdbc</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-hibernate3</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        -->
+        
         <!-- WARNING postgis-jdbc 1.5.3 is not available in standard repo -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -261,6 +279,11 @@
                     <artifactId>jms</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.lazyluke</groupId>
+            <artifactId>log4jdbc-remix</artifactId>
+            <version>0.2.7</version>
         </dependency>
         
         

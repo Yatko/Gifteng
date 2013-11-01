@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,6 +43,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
     @Column(unique = true, updatable = false)
@@ -55,6 +59,8 @@ public class User {
     private Date joinedAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginAt;
+    @Column(length = 3000)
+    private String lastUserAgent;
     
     @OneToMany(mappedBy = "creator")
     private Set<Ad> ads;
@@ -65,7 +71,7 @@ public class User {
     @ForeignKey(name = "userdata_fk")
     private UserData userData;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "userpoint_fk")
     private UserPoint userPoint;
     
@@ -194,6 +200,15 @@ public class User {
         return followings.contains(user);
     }
     
+    public boolean canRequest() {
+        if ( userPoint == null ) {
+            return false;
+        } else if ( userPoint.getRequestLimit() <= 0 ) {
+            return false;
+        }
+        return true;
+    }
+    
     public void addAd(Ad ad) {
         if ( ads == null ) {
             ads = new HashSet<Ad>(0);
@@ -201,12 +216,12 @@ public class User {
         ads.add(ad);
     }
     
-    public void addRequest(Request request) {
-        if ( requests == null ) {
-            requests = new HashSet<Request>(0);
-        }
-        requests.add(request);
-    }
+//    public void addRequest(Request request) {
+//        if ( requests == null ) {
+//            requests = new HashSet<Request>(0);
+//        }
+//        requests.add(request);
+//    }
     
     private void initFollowers() {
         if ( followers == null ) {
@@ -232,8 +247,7 @@ public class User {
         }
 
         User other = (User) obj;
-
-        return id != null && id.equals(other.id);
+        return id != null && id.equals(other.getId()); //the getter usage is a must as proxies needs to be activated
     }
 
     // getters/setters
@@ -389,5 +403,13 @@ public class User {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public String getLastUserAgent() {
+        return lastUserAgent;
+    }
+
+    public void setLastUserAgent(String lastUserAgent) {
+        this.lastUserAgent = lastUserAgent;
     }
 }

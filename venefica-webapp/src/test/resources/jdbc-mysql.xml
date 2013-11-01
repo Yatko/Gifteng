@@ -9,6 +9,8 @@
     
     <util:constant id="dbType" static-field="com.venefica.dao.DBType.MYSQL" />
     
+    
+    
     <bean id="jdbcDriver" class="java.lang.String">
         <constructor-arg value="com.mysql.jdbc.Driver" />
     </bean>
@@ -39,6 +41,22 @@
     </bean>
     <util:map id="hibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
         <entry key="hibernate.connection.zeroDateTimeBehavior" value="convertToNull" />
+        <!--
+        <entry key="hibernate.current_session_context_class" value="jta" />
+        <entry key="hibernate.transaction.manager_lookup_class" value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
+        <entry key="javax.persistence.transactionType" value="jta" />
+        -->
     </util:map>
+    
+    
+    
+    <bean id="xaDataSourceClassName" class="java.lang.String">
+        <constructor-arg value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" />
+    </bean>
+    <util:properties id="xaProperties">
+        <prop key="user">root</prop>
+        <prop key="password"></prop>
+        <prop key="URL">jdbc:mysql://localhost:3306/venefica</prop>
+    </util:properties>
     
 </beans>

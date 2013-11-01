@@ -9,13 +9,18 @@ import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.UserDao;
+import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserSettingDao;
 import com.venefica.model.Ad;
+import com.venefica.model.MemberUserData;
+import com.venefica.model.NotificationType;
 import com.venefica.model.Request;
 import com.venefica.model.User;
+import com.venefica.model.UserSetting;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.EnumSet;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +54,8 @@ public abstract class AbstractService {
     @Inject
     protected UserDao userDao;
     @Inject
+    protected UserDataDao userDataDao;
+    @Inject
     protected UserSettingDao userSettingDao;
     @Inject
     protected EmailSender emailSender;
@@ -61,17 +68,13 @@ public abstract class AbstractService {
     
     // internal helpers
     
-    //private User getCurrentUser() {
-    //    return securityContextHolder.getContext().getUser();
-    //}
-
     protected Long getCurrentUserId() {
         return securityContextHolder.getContext().getUserId();
     }
     
     protected User getCurrentUser() {
-        Long currentUserId = getCurrentUserId();
-        return userDao.get(currentUserId);
+        //return securityContextHolder.getContext().getUser(); //using this throws lazy fetch exceptions
+        return userDao.get(getCurrentUserId());
     }
     
     protected <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
@@ -159,5 +162,26 @@ public abstract class AbstractService {
             throw new RequestNotFoundException(requestId);
         }
         return request;
+    }
+    
+    protected UserSetting createUserSetting(MemberUserData userData) {
+        UserSetting userSetting = new UserSetting();
+        userSetting.setNotifiableTypes(EnumSet.of(
+                NotificationType.FOLLOWER_ADDED,
+                NotificationType.AD_COMMENTED,
+                NotificationType.AD_REQUESTED,
+                NotificationType.REQUEST_MESSAGED,
+                NotificationType.REQUEST_ACCEPTED,
+                NotificationType.REQUEST_CANCELED,
+                NotificationType.REQUEST_DECLINED
+                ));
+        userSettingDao.save(userSetting);
+        
+        if ( userData != null ) {
+            userData.setUserSetting(userSetting);
+            userDataDao.update(userData);
+        }
+        
+        return userSetting;
     }
 }

@@ -41,6 +41,7 @@ import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
+import com.venefica.service.dto.FilterType;
 import com.venefica.service.dto.ImageDto;
 import com.venefica.service.dto.RatingDto;
 import com.venefica.service.dto.RequestDto;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -429,48 +431,114 @@ public class AdServiceImpl extends AbstractService implements AdService {
     
     @Override
     @Transactional
-    public List<AdDto> getAds(Long lastAdId, int numberAds) {
-        return getAds(lastAdId, numberAds, null);
+    public List<AdDto> getAds(int lastIndex, int numberAds) {
+        return getAds(lastIndex, numberAds, null);
     }
 
     @Override
     @Transactional
-    public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter) {
-        return getAds(lastAdId, numberAds, filter, false, false, 0);
+    public List<AdDto> getAds(int lastIndex, int numberAds, FilterDto filter) {
+        return getAds(lastIndex, numberAds, filter, false, false, 0);
     }
     
     @Override
     @Transactional
-    public List<AdDto> getAds(Long lastAdId, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber) {
+    public List<AdDto> getAds(int lastIndex, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber) {
         List<AdDto> result = new LinkedList<AdDto>();
-        List<Ad> ads = adDao.get(lastAdId, numberAds, filter);
         User currentUser = getCurrentUser();
+        List<Ad> ads = adDao.get(lastIndex, numberAds, filter);
+        List<Long> bookmarkedAdIds = bookmarkDao.getBookmarkedAdIds(currentUser);
+        FilterType filterType = filter != null && filter.getFilterType() != null ? filter.getFilterType() : FilterType.ACTIVE;
         
-        boolean includeCannotRequest = (filter != null && filter.getIncludeCannotRequest() != null) ? filter.getIncludeCannotRequest() : false;
-        boolean includeOnlyCannotRequest = (filter != null && filter.getIncludeOnlyCannotRequest() != null) ? filter.getIncludeOnlyCannotRequest() : false;
+//        boolean includeAccepted = false;
+//        boolean includeInactive = (filter != null && filter.getIncludeInactive() != null) ? filter.getIncludeInactive() : FilterDto.DEFAULT_INCLUDE_INACTIVE;
+//        boolean includeShipped = (filter != null && filter.getIncludeShipped() != null) ? filter.getIncludeShipped() : FilterDto.DEFAULT_INCLUDE_SHIPPED;
+//        boolean includeRequested = (filter != null && filter.getIncludeRequested() != null) ? filter.getIncludeRequested() : FilterDto.DEFAULT_INCLUDE_REQUESTED;
+//        boolean includeCanRequest = (filter != null && filter.getIncludeCanRequest() != null) ? filter.getIncludeCanRequest() : FilterDto.DEFAULT_INCLUDE_CAN_REQUEST;
+//        boolean includeOwned = (filter != null && filter.getIncludeOwned() != null) ? filter.getIncludeOwned() : FilterDto.DEFAULT_INCLUDE_OWNED;
         
-        boolean includeInactive = (filter != null && filter.getIncludeInactive() != null) ? filter.getIncludeInactive() : true;
-        boolean includeOnlyInactive = (filter != null && filter.getIncludeOnlyInactive() != null) ? filter.getIncludeOnlyInactive() : false;
-        
-        // TODO: Optimize this
-        // Get current user's bookmarks
-        // TODO: REMOVE IT!!!!!!!!
-        List<Ad> bokmarkedAds = bookmarkDao.getBookmarkedAds(currentUser);
-
         for (Ad ad : ads) {
-            if ( !includeOwnedAd(ad, currentUser, filter) ) {
-                //skipping owned ads
+            if ( ad.isExpired() || ad.getStatus() == AdStatus.EXPIRED ) {
                 continue;
             }
             
-            boolean inactive = ad.isInactive();
-            if ( includeOnlyInactive && !inactive ) {
-                //not including ads that are active
-                continue;
-            } else if ( includeInactive == false && inactive ) {
-                //not including ads that are inactive
+            boolean include = false;
+            if ( filterType == FilterType.ACTIVE ) {
+                boolean isOwner = ad.getCreator().equals(currentUser);
+                boolean canRequest = ad.canRequest();
+                boolean isRequested = ad.isRequested(currentUser);
+                boolean hasAccepted = !ad.getAcceptedRequests().isEmpty();
+                
+                if ( canRequest || (!canRequest && isRequested && !hasAccepted) ) {
+                    include = true;
+                } else if ( isOwner && canRequest ) {
+                    include = true;
+                }
+            } else if ( filterType == FilterType.GIFTED ) {
+                boolean isSold = ad.isSold();
+                boolean hasShipped = !ad.getShippedRequests().isEmpty();
+                
+                if ( isSold || hasShipped ) {
+                    include = true;
+                }
+            }
+            
+            if ( !include ) {
                 continue;
             }
+            
+            
+            
+//            boolean isOwner = ad.getCreator().equals(currentUser);
+//            if ( !includeOwned && isOwner ) {
+//                //skipping owned ads
+//                continue;
+//            }
+//            
+//            boolean isInactive = ad.isInactive();
+//            if ( !includeInactive && isInactive ) {
+//                //not including inactive ads
+//                continue;
+//            }
+//            //else if ( includeInactive && !isInactive ) {
+//            //    //not including active ads
+//            //    continue;
+//            //}
+//            
+//            boolean hasAccepted = !ad.getAcceptedRequests().isEmpty();
+//            if ( !includeAccepted && hasAccepted ) {
+//                //not including ads that have accepted requests
+//                continue;
+//            }
+//            //else if ( includeAccepted && !hasAccepted ) {
+//            //    //not including ads that not having accepted requests
+//            //    continue;
+//            //}
+//            
+//            boolean hasShipped = !ad.getShippedRequests().isEmpty();
+//            if ( !includeShipped && hasShipped ) {
+//                //not including ads that have shipped requests
+//                continue;
+//            }
+//            //else if ( includeShipped && !hasShipped ) {
+//            //    //not including ads that not having shipped requests
+//            //    continue;
+//            //}
+//            
+//            boolean canRequest = ad.canRequest();
+//            if ( includeCanRequest && !canRequest ) {
+//                //not including ads that cannot be requested or already requested
+//                continue;
+//            } else if ( !includeCanRequest && canRequest ) {
+//                //not including ads that can be requested
+//                continue;
+//            }
+//            
+//            boolean isRequested = ad.isRequested(currentUser);
+//            if ( !includeRequested && isRequested ) {
+//                //already requested ads cannot be included
+//                continue;
+//            }
             
             List<Comment> comments = null;
             if ( includeCommentsNumber > 0 ) {
@@ -484,32 +552,35 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeCreator(includeCreator != null ? includeCreator : false)
                     .includeCanRequest()
                     .build();
-            adDto.setInBookmarks(inBookmarks(bokmarkedAds, ad));
-            adDto.setRequested(ad.isRequested(currentUser, false));
-            
-            boolean canRequest = adDto.getCanRequest() != null ? adDto.getCanRequest() : false;
-            if ( includeOnlyCannotRequest && canRequest ) {
-                //not including ads that can be requested
-                continue;
-            } else if ( includeCannotRequest == false && !canRequest ) {
-                //not including ads that cannot be requested
-                continue;
-            } else {
-                //including all type (can or cannot request) of ads
-            }
+            adDto.setInBookmarks(bookmarkedAdIds.contains(ad.getId()));
+            adDto.setRequested(ad.isRequested(currentUser));
+            adDto.setLastIndex(lastIndex + numberAds);
             
             result.add(adDto);
         }
-
+        
+//        if ( ads.size() > 0 && result.size() < numberAds ) {
+//            long lastAdId_ = ads.get(ads.size() - 1).getId();
+//            int numberAds_ = numberAds - result.size();
+//            
+//            if ( lastAdId_ == lastAdId && numberAds_ == numberAds ) {
+//                //possible infinite loop
+//                return result;
+//            }
+//            
+//            List<AdDto> result_ = getAds(lastAdId_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
+//            result.addAll(result_);
+//        }
+        
         if ( ads.size() > 0 && result.size() < numberAds ) {
-            long lastAdId_ = ads.get(ads.size() - 1).getId();
+            int lastIndex_ = lastIndex + numberAds;
             int numberAds_ = numberAds - result.size();
             
-            List<AdDto> result_ = getAds(lastAdId_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
+            List<AdDto> result_ = getAds(lastIndex_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
             result.addAll(result_);
         }
         
-        return result;
+        return new LinkedList<AdDto>(new LinkedHashSet<AdDto>(result)); //eliminating duplicates (if any)
     }
 
     @Override
@@ -592,7 +663,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                     .includeCanRequest()
                     .build();
             adDto.setInBookmarks(inBookmarks(currentUser, ad));
-            adDto.setRequested(ad.isRequested(currentUser, false));
+            adDto.setRequested(ad.isRequested(currentUser));
             
             result.add(adDto);
         }
@@ -643,7 +714,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         // @formatter:on
 
         adDto.setInBookmarks(inBookmarks(currentUser, ad));
-        adDto.setRequested(ad.isRequested(currentUser, false));
+        adDto.setRequested(ad.isRequested(currentUser));
         
         return adDto;
     }
@@ -688,6 +759,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         //only EXPIRED ads can be relisted
         ad.prolong(appConfig.getAdProlongationPeriodMinutes());
+        
+        UserTransaction adTransaction = userTransactionDao.getByAd(ad.getId());
+        if ( adTransaction != null ) {
+            adTransaction.unmarkAsFinalized();
+            userTransactionDao.update(adTransaction);
+        } else {
+            logger.error("There is no transaction associated with this ad (adId: " + ad.getId() + ")");
+        }
     }
 
     @Override
@@ -750,6 +829,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + currentUserId + ")");
         }
         
+        if ( !currentUser.canRequest() ) {
+            throw new InvalidRequestException("Request limit reached.");
+        }
         if ( currentUser.isBusinessAccount() ) {
             throw new InvalidRequestException("Business users cannot request ads.");
         }
@@ -770,6 +852,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         request.setUser(currentUser);
         request.setStatus(RequestStatus.PENDING);
         Long requestId = requestDao.save(request);
+        
+        UserPoint userPoint = currentUser.getUserPoint();
+        userPoint.setRequestLimit(userPoint.getRequestLimit() - 1);
+        userPointDao.update(userPoint);
         
         ad.setStatus(AdStatus.IN_PROGRESS);
         ad.setExpired(false);
@@ -803,6 +889,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("ad", ad);
+        vars.put("creator", ad.getCreator());
         vars.put("request", request);
         
         emailSender.sendNotification(NotificationType.AD_REQUESTED, creator, vars);
@@ -1074,7 +1161,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
                         .includeCanRequest()
                         .build();
                 adDto.setInBookmarks(true);
-                adDto.setRequested(ad.isRequested(user, false));
+                adDto.setRequested(ad.isRequested(user));
                 result.add(adDto);
             }
         }
@@ -1085,8 +1172,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public int getBookmarkedAdsSize(Long userId) throws UserNotFoundException {
         User user = validateUser(userId);
-        List<Ad> bookmarkedAds = bookmarkDao.getBookmarkedAds(user);
-        return bookmarkedAds != null ? bookmarkedAds.size() : 0;
+        List<Long> bookmarkedAdIds = bookmarkDao.getBookmarkedAdIds(user);
+        return bookmarkedAdIds != null ? bookmarkedAdIds.size() : 0;
     }
 
     
@@ -1268,7 +1355,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Date expiresAt = adDto.getExpiresAt() != null ? adDto.getExpiresAt() : calculateExpiration();
         Date availableAt = adDto.getAvailableAt() != null ? adDto.getAvailableAt() : new Date();
         
-        Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER);
+        Ad ad = new Ad(currentUser.isBusinessAccount() ? AdType.BUSINESS : AdType.MEMBER, appConfig.getAdMaxAllowedProlongations());
         ad.setClonedFrom(clonedFrom);
         ad.initRevision();
         adDto.updateAd(ad);
@@ -1439,22 +1526,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return result;
     }
     
-    private boolean includeOwnedAd(Ad ad, User user, FilterDto filter) {
-        if ( filter == null ) {
-            return true;
-        }
-        Boolean includeOwned = filter.getIncludeOwned() != null ? filter.getIncludeOwned() : true;
-        if ( !includeOwned && ad.getCreator().equals(user) ) {
-            //skipping owned ads
-            return false;
-        }
-        return true;
-    }
-    
-    private boolean inBookmarks(List<Ad> bokmarkedAds, Ad ad) {
-        return bokmarkedAds.contains(ad);
-    }
-    
     private boolean inBookmarks(User user, Ad ad) {
         Bookmark bookmark = bookmarkDao.get(user.getId(), ad.getId());
         if (bookmark != null) {
@@ -1475,16 +1546,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<Request> requests = requestDao.getByUser(userId);
         List<Request> result = new LinkedList<Request>();
         
-        if ( requests != null && !requests.isEmpty() ) {
-            for ( Request request : requests ) {
-                if ( includeOnlyActiveRequests ) {
-                    if ( request.isActive() ) {
-                        result.add(request);
-                    }
-                } else {
-                    if ( request.isVisible()) {
-                        result.add(request);
-                    }
+        if ( requests == null || requests.isEmpty() ) {
+            return result;
+        }
+        
+        for ( Request request : requests ) {
+            if ( includeOnlyActiveRequests ) {
+                if ( request.isActive() ) {
+                    result.add(request);
+                }
+            } else {
+                if ( request.isVisible() ) {
+                    result.add(request);
                 }
             }
         }

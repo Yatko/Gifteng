@@ -1,5 +1,6 @@
 package com.venefica.connect;
 
+import com.venefica.config.AppConfig;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserDataDao;
@@ -40,13 +41,15 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     private static final int BUFFER_SIZE = 4 * 1024;
     
     @Inject
+    private AppConfig appConfig;
+    @Inject
     private UserDao userDao;
     @Inject
     private UserDataDao userDataDao;
     @Inject
     private ImageDao imageDao;
     @Inject
-    protected UserSettingDao userSettingDao;
+    private UserSettingDao userSettingDao;
     @Inject
     private UserPointDao userPointDao;
 
@@ -80,7 +83,7 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         userData.setUserSetting(userSetting);
         userDataDao.save(userData);
         
-        UserPoint userPoint = new UserPoint(0, 0);
+        UserPoint userPoint = new UserPoint(appConfig.getRequestStartupLimit(), 0, 0);
         userPoint.setUser(user);
         userPointDao.save(userPoint);
         

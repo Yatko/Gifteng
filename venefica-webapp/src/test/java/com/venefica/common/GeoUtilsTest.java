@@ -15,7 +15,7 @@ public class GeoUtilsTest {
     
     @Test
     public void testWKT() {
-        Point positon = GeoUtils.createPoint(new Double("77.0256938"), new Double("20.7118088"));
+        Point positon = GeoUtils.createPoint(new Double("20.7118088"), new Double("77.0256938"));
         System.out.println("position WKT: " + positon.toText());
         System.out.println("position geometry type: " + positon.getGeometryType());
     }

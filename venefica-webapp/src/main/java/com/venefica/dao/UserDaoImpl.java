@@ -3,6 +3,9 @@ package com.venefica.dao;
 import com.venefica.model.User;
 import java.util.Date;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,15 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
     @Override
     public User get(Long id) {
         return getEntity(id);
+    }
+    
+    @Override
+    public User getEager(Long userId) {
+        Criteria criteria = createCriteria();
+        criteria.add(Restrictions.eq("id", userId));
+        criteria.setFetchMode("userData", FetchMode.JOIN); //EAGER
+        criteria.setFetchMode("userPoint", FetchMode.JOIN); //EAGER
+        return (User) criteria.uniqueResult();
     }
     
     @Override

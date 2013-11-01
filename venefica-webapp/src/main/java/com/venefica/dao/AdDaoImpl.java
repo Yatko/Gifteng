@@ -12,7 +12,10 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.spatial.GeometryType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
     private static final int MAX_ADS_TO_RETURN = 100;
-    //private static final double METERS_IN_ONE_DEGREE = 111319.9;
     
     private static final Log log = LogFactory.getLog(AdDaoImpl.class);
 
@@ -51,55 +53,80 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
 
         return getEntity(adId);
     }
+    
+    @Override
+    public Ad getEager(Long adId) {
+        Criteria criteria = createCriteria();
+        criteria.add(Restrictions.eq("id", adId));
+        criteria.setFetchMode("adData", FetchMode.JOIN); //EAGER
+        criteria.setFetchMode("creator", FetchMode.JOIN); //EAGER
+        return (Ad) criteria.uniqueResult();
+    }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Ad> get(Long lastAdId, int numberAds) {
-        List<Ad> ads;
+    public List<Ad> get(int lastIndex, int numberAds) {
+        Query query;
         
-        boolean orderAsc = false;
-        numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
+        boolean orderAsc = FilterDto.DEFAULT_ORDER_ASC;
+        //boolean orderClosest = FilterDto.DEFAULT_ORDER_CLOSEST; //this should be always false as we do not have user current position data
+        lastIndex = lastIndex < 0 ? 0 : lastIndex;
+        numberAds = numberAds <= 0 || numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
-        if (lastAdId < 0) {
-            ads = createQuery(""
-                    + "from " + getDomainClassName() + " a where "
-                    + "a.deleted = false"
-                    + " and a.creator.deleted = false"
-                    + " and a.approved = true"
-                    + " and a.online = true"
-                    + " and a.adData.category.hidden = false"
-                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
-                    + "")
-                    .setMaxResults(numberAds)
-                    .list();
-        } else {
-            Ad lastAd = get(lastAdId);
-            Date lastApprovedAt = lastAd.getApprovedAt();
-            
-            ads = createQuery(""
-                    + "from " + getDomainClassName() + " a where "
-                    + "a.deleted = false"
-                    + " and a.creator.deleted = false"
-                    + " and a.approved = true"
-                    + " and a.online = true"
-                    + " and a.adData.category.hidden = false"
-                    //+ " and a.id " + (orderAsc ? ">" : "<") + " :lastId"
-                    + " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt"
-                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
-                    + "")
-                    //.setParameter("lastId", lastAdId)
-                    .setParameter("lastApprovedAt", lastApprovedAt)
-                    .setMaxResults(numberAds)
-                    .list();
-        }
-        return ads;
+//        if (lastAdId < 0) {
+//            String hql = ""
+//                    + "from " + getDomainClassName() + " a where "
+//                    + "a.deleted = false"
+//                    + " and a.creator.deleted = false"
+//                    + " and a.approved = true"
+//                    + " and a.online = true"
+//                    + " and a.adData.category.hidden = false"
+//                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
+//                    + "";
+//            
+//            query = createQuery(hql);
+//        } else {
+//            Ad lastAd = get(lastAdId);
+//            Date lastApprovedAt = lastAd.getApprovedAt();
+//            
+//            String hql = ""
+//                    + "from " + getDomainClassName() + " a where "
+//                    + "a.deleted = false"
+//                    + " and a.creator.deleted = false"
+//                    + " and a.approved = true"
+//                    + " and a.online = true"
+//                    + " and a.adData.category.hidden = false"
+//                    //+ " and a.id " + (orderAsc ? ">" : "<") + " :lastId"
+//                    + " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt"
+//                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
+//                    + "";
+//            
+//            query = createQuery(hql);
+//            //query = query.setParameter("lastId", lastAdId)
+//            query = query.setParameter("lastApprovedAt", lastApprovedAt);
+//        }
+        
+        String hql = ""
+                + "from " + getDomainClassName() + " a where "
+                + "a.deleted = false"
+                + " and a.creator.deleted = false"
+                + " and a.approved = true"
+                + " and a.online = true"
+                + " and a.adData.category.hidden = false"
+                + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
+                + "";
+        query = createQuery(hql);
+        
+        query.setFirstResult(lastIndex);
+        query.setMaxResults(numberAds);
+        return query.list();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Ad> get(Long lastAdId, int numberAds, FilterDto filter) {
+    public List<Ad> get(int lastIndex, int numberAds, FilterDto filter) {
         if ( filter == null ) {
-            return get(lastAdId, numberAds);
+            return get(lastIndex, numberAds);
         }
         
         //NOTE:
@@ -107,10 +134,10 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         //directly, instead it should be queried it's approvedAt value and used it
         //in the where clause
         
-        Ad lastAd = null;
-        if ( lastAdId >= 0 ) {
-            lastAd = get(lastAdId);
-        }
+        //Ad lastAd = null;
+        //if ( lastAdId >= 0 ) {
+        //    lastAd = get(lastAdId);
+        //}
         
         String searchString = filter.getSearchString();
         List<Long> categories = filter.getCategories();
@@ -121,12 +148,16 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         BigDecimal maxPrice = filter.getMaxPrice();
         Boolean hasPhoto = filter.getHasPhoto();
         AdType type = filter.getType();
-        boolean orderAsc = filter.getOrderAsc() == null ? false : filter.getOrderAsc();
+        boolean orderAsc = filter.getOrderAsc() == null ? FilterDto.DEFAULT_ORDER_ASC : filter.getOrderAsc();
+        boolean orderClosest = filter.getOrderClosest() == null ? FilterDto.DEFAULT_ORDER_CLOSEST : filter.getOrderClosest();
         boolean hasSearchString = (searchString != null && !searchString.trim().isEmpty());
+        Point curPositon = (latitude != null && longitude != null) ? GeoUtils.createPoint(latitude, longitude) : null;
+        lastIndex = lastIndex < 0 ? 0 : lastIndex;
+        numberAds = numberAds <= 0 || numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
         
         // Build query string
         String queryStr = ""
-                + "select distinct a "
+                + "select a "
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
                 + " and a.creator.deleted = false"
@@ -136,10 +167,14 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 //+ " and a.sold = false"
                 + "";
 
-        if (lastAdId >= 0 && lastAd != null) {
-            //queryStr += " and a.id " + (orderAsc ? ">" : "<") + " :lastId";
-            queryStr += " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt";
-        }
+//        if (lastAd != null) {
+//            if ( orderClosest && curPositon != null ) {
+//                queryStr += " and " + getHarvesineSQL() + " " + (orderAsc ? ">" : "<") + " :lastDistance";
+//            } else {
+//                //queryStr += " and a.id " + (orderAsc ? ">" : "<") + " :lastId";
+//                queryStr += " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt";
+//            }
+//        }
 
         if (hasSearchString) {
             queryStr += " and "
@@ -157,11 +192,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.category.id in (:categories)";
         }
 
-        if ( dbType == DBType.MYSQL ) {
-            queryStr += createSqlPartForMysql(filter);
-        } else if ( dbType == DBType.POSTGRESQL ) {
-            queryStr += createSqlPartForPostgresql(filter);
-        }
+        queryStr += createWithinConditionSQL(filter);
 
         if (isPositiveOrZero(minPrice)) {
             queryStr += " and a.adData.price >= :minPrice";
@@ -179,17 +210,28 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.type = :type";
         }
 
-        //queryStr += " order by a.id " + (orderAsc ? "asc" : "desc") + "";
-        queryStr += " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc";
+        if ( orderClosest && curPositon != null ) {
+            queryStr += " order by " + GeoUtils.getHarvesineSQL(dbType) + " " + (orderAsc ? "asc" : "desc");
+        } else {
+            //queryStr += " order by a.id " + (orderAsc ? "asc" : "desc") + "";
+            queryStr += " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc";
+        }
         
         Query query = createQuery(queryStr);
 
         // Bind parameters
-        if (lastAdId >= 0 && lastAd != null) {
-            //query.setParameter("lastId", lastAdId);
-            Date lastApprovedAt = lastAd.getApprovedAt();
-            query.setParameter("lastApprovedAt", lastApprovedAt);
-        }
+//        if (lastAd != null) {
+//            if ( orderClosest && curPositon != null ) {
+//                double lat1 = lastAd.getAdData().getLocation().getY();
+//                double lon1 = lastAd.getAdData().getLocation().getX();
+//                double lastDistance = getHarvesineDistance(lat1, lon1, latitude, longitude);
+//                query.setParameter("lastDistance", lastDistance);
+//            } else {
+//                //query.setParameter("lastId", lastAdId);
+//                Date lastApprovedAt = lastAd.getApprovedAt();
+//                query.setParameter("lastApprovedAt", lastApprovedAt);
+//            }
+//        }
 
         if (hasSearchString) {
             query.setParameter("searchstr", searchString != null ? searchString.toLowerCase() : "");
@@ -199,14 +241,15 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameterList("categories", categories);
         }
 
-        if (distance != null && distance > 0 && longitude != null && latitude != null) {
-            Point curPositon = GeoUtils.createPoint(longitude, latitude);
-            //Double distanceInDecimalDegrees = distance.doubleValue() / METERS_IN_ONE_DEGREE;
-            Double distanceInDecimalDegrees = distance.doubleValue();
-            query.setParameter("curpos", curPositon, GeometryType.INSTANCE);
-            query.setParameter("maxdist", distanceInDecimalDegrees);
+        if (distance != null && distance > 0 && curPositon != null) {
+            Double distanceInDecimalDegrees = distance.doubleValue(); //distance.doubleValue() / GeoUtils.METERS_IN_ONE_DEGREE;
+            query.setParameter("maxDist", distanceInDecimalDegrees);
         }
 
+        if ( curPositon != null ) {
+            query.setParameter("curPos", curPositon, GeometryType.INSTANCE);
+        }
+        
         if (isPositiveOrZero(minPrice)) {
             query.setParameter("minPrice", minPrice);
         }
@@ -219,12 +262,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("type", type);
         }
 
-        numberAds = numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
-
-        if (numberAds > 0) {
-            query.setMaxResults(numberAds);
-        }
-
+        query.setFirstResult(lastIndex);
+        query.setMaxResults(numberAds);
         return query.list();
     }
     
@@ -327,57 +366,42 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "")
                 .list();
     }
-
-    /**
-     * This is a PostgreSQL dependent implementation.
-     * The dwithin() (postgis) function is a special one, inexistent in case of
-     * MySQL for instance.
-     * 
-     * @param filter
-     * @return 
-     */
-    private String createSqlPartForPostgresql(FilterDto filter) {
-        String queryStr = "";
-        if ( isDataValidForDWithin(filter) ) {
-            queryStr += " and dwithin(a.adData.location, :curpos, :maxdist) = true";
-            queryStr += " and st_x(a.adData.location) != 0 and st_y(a.adData.location) != 0";
-        }
-        return queryStr;
-    }
     
     /**
-     * This is a Mysql implementation.
+     * PostgreSQL/MySQL limitation:
+     * - the dwithin() (postgis) function is a special one, inexistent
+     * in case of MySQL for instance.
      * 
-     * Please refer to:
+     * In PostgreSQL a shorter condition would be:
+     * dwithin(a.adData.location, :curPos, :maxDist) = true
+     * 
+     * 
+     * References:
      * http://stackoverflow.com/questions/5324908/correct-way-of-finding-distance-between-two-coordinates-using-spatial-function-i
      * http://www.scribd.com/doc/2569355/Geo-Distance-Search-with-MySQL
      * http://www.tech-problems.com/calculating-distance-in-mysql-using-spatial-point-type/
+     * http://derickrethans.nl/spatial-indexes-mysql.html
      * 
      * @param filter
      * @return 
      */
-    private String createSqlPartForMysql(FilterDto filter) {
+    private String createWithinConditionSQL(FilterDto filter) {
         String queryStr = "";
-        if ( isDataValidForDWithin(filter) ) {
-            //NOTE:
-            //- maybe the best accurate soltion, but needs to be tested
-            //- reference: http://derickrethans.nl/spatial-indexes-mysql.html
-            
-            //queryStr += " and (2 * ASIN(SQRT((SIN((radians(y(a.adData.location)) - radians(y(:curpos))) / 2) * SIN((radians(y(a.adData.location)) - radians(y(:curpos))) / 2)) + COS(radians(y(a.adData.location))) * COS(radians(y(:curpos))) * SIN((radians(x(a.adData.location)) - radians(x(:curpos))) / 2) * SIN((radians(x(a.adData.location)) - radians(x(:curpos))) / 2))) * 6371.01) <= :maxdist";
-            //queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
-            
-            queryStr += " and glength(linestring(a.adData.location, GeomFromText(astext(:curpos)))) <= :maxdist";
-            queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
+        if ( isDataValidForWithin(filter) ) {
+            queryStr += " and " + GeoUtils.getHarvesineSQL(dbType) + " <= :maxDist";
+            if ( dbType == DBType.MYSQL ) {
+                queryStr += " and x(a.adData.location) != 0 and y(a.adData.location) != 0";
+            } else if ( dbType == DBType.POSTGRESQL ) {
+                queryStr += " and st_x(a.adData.location) != 0 and st_y(a.adData.location) != 0";
+            }
         }
         return queryStr;
     }
     
-    private boolean isDataValidForDWithin(FilterDto filter) {
+    private boolean isDataValidForWithin(FilterDto filter) {
         if (
-                filter.getDistance() != null &&
-                filter.getDistance() > 0 &&
-                filter.getLatitude() != null &&
-                filter.getLongitude() != null
+            filter.getDistance() != null && filter.getDistance() > 0 &&
+            filter.getLatitude() != null && filter.getLongitude() != null
         ) {
             return true;
         }

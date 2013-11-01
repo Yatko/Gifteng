@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,13 +41,14 @@ public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "ad_cloned_from_fk")
     private Ad clonedFrom;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "addata_fk")
     private AdData adData;
     
@@ -52,7 +56,7 @@ public class Ad {
     @Temporal(TemporalType.TIMESTAMP)
     @Index(name = "idx_createdAt")
     private Date createdAt;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "ad_creator_fk")
     private User creator;
     
@@ -132,7 +136,7 @@ public class Ad {
     protected Ad() {
     }
     
-    public Ad(AdType type) {
+    public Ad(AdType type, int maxAllowedProlongations) {
         if ( type == AdType.MEMBER ) {
             adData = new MemberAdData();
         } else if ( type == AdType.BUSINESS ) {
@@ -148,7 +152,7 @@ public class Ad {
         rating = 0.0f;
         numViews = 0;
         numExpire = 0;
-        numAvailProlongations = Constants.AD_MAX_ALLOWED_PROLONGATION;
+        numAvailProlongations = maxAllowedProlongations;
     }
 
     /**
@@ -184,6 +188,22 @@ public class Ad {
         numAvailProlongations--;
         
         updateStatus();
+    }
+    
+    public boolean canRequest() {
+        if ( isInactive() ) {
+            //inactive ads cannot be requested
+            return false;
+        }
+        if ( adData.getQuantity() <= 0 ) {
+            //no more available
+            return false;
+        }
+        if ( getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+            //active requests limit reched the allowed size
+            return false;
+        }
+        return true;
     }
     
     /**
@@ -351,40 +371,95 @@ public class Ad {
      */
     public Set<Request> getActiveRequests() {
         Set<Request> result = new LinkedHashSet<Request>();
-        if ( requests != null && !requests.isEmpty() ) {
-            for ( Request request : requests ) {
-                if ( request.isActive() ) {
-                    result.add(request);
-                }
+        for ( Request request : getVisibleRequests() ) {
+            if ( request.isActive() ) {
+                result.add(request);
             }
         }
         return result;
     }
     
     /**
-     * Verifies if a visible or active request is available for the given user.
-     * The active flag is configurable via include parameter.
+     * Returns all the accepted and visible (not hidden and not deleted) requests.
+     * In case of member ads only one request should exist.
+     * 
+     * @return 
+     */
+    public Set<Request> getAcceptedRequests() {
+        Set<Request> result = new LinkedHashSet<Request>();
+        for ( Request request : getVisibleRequests() ) {
+            boolean isAccepted = request.isAccepted() || request.getStatus() == RequestStatus.ACCEPTED;
+            
+            if ( isAccepted) {
+                result.add(request);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Returns all the visible requests those status is SENT or RECEIVED.
+     * 
+     * @return 
+     */
+    public Set<Request> getShippedRequests() {
+        Set<Request> result = new LinkedHashSet<Request>();
+        for ( Request request : getVisibleRequests() ) {
+            boolean isSent = request.isSent() || request.getStatus() == RequestStatus.SENT;
+            boolean isReceived = request.isReceived() || request.getStatus() == RequestStatus.RECEIVED;
+            
+            if ( isSent || isReceived ) {
+                result.add(request);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Verifies if a visible request is available for the given user.
+     * 
+     * Visible means that not hidden and not deleted.
+     * 
+     * @param user
+     * @return 
+     */
+    public boolean isRequested(User user) {
+        Set<Request> userRequests = getUserRequests(user);
+        if ( userRequests == null || userRequests.isEmpty() ) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Returns all the visible requests made by the given user.
+     * 
+     * @param user
+     * @return 
+     */
+    public Set<Request> getUserRequests(User user) {
+        Set<Request> result = new LinkedHashSet<Request>();
+        for ( Request request: getVisibleRequests() ) {
+            if ( request.getUser().equals(user) ) {
+                result.add(request);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Verifies if a visible and active request is available for the given user.
      * 
      * Visible means that not hidden and not deleted.
      * Active means that is not DECLINED or CANCELED.
      * 
      * @param user
-     * @param considerOnlyActiveRequests 
      * @return 
      */
-    public boolean isRequested(User user, boolean considerOnlyActiveRequests) {
-        for ( Request request : getVisibleRequests() ) {
-            if ( !request.getUser().equals(user) ) {
-                continue;
-            }
-            
-            if ( considerOnlyActiveRequests ) {
-                if ( request.isActive() ) {
-                    //there is a visible and active request
-                    return true;
-                }
-            } else {
-                //there is a visible request
+    public boolean hasActiveRequest(User user) {
+        for ( Request request : getUserRequests(user) ) {
+            if ( request.isActive() ) {
+                //there is a visible and active request
                 return true;
             }
         }
@@ -426,11 +501,10 @@ public class Ad {
         }
 
         Ad other = (Ad) obj;
-
-        return id != null && id.equals(other.id);
+        return id != null && id.equals(other.getId()); //the getter usage is a must as proxies needs to be activated
     }
     
-    private boolean hasActiveRequest() {
+    private boolean containsActiveRequest() {
         for ( Request r : getVisibleRequests() ) {
             if ( r.isActive() ) {
                 return true;
@@ -440,7 +514,7 @@ public class Ad {
     }
     
     private void updateStatus() {
-        if ( hasActiveRequest() ) {
+        if ( containsActiveRequest() ) {
             status = AdStatus.IN_PROGRESS;
         } else {
             //ad become ACTIVE as there are no other active requests

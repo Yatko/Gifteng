@@ -6,9 +6,12 @@ package com.venefica.model;
 
 import com.venefica.service.dto.UserDto;
 import com.vividsolutions.jts.geom.Point;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,6 +37,7 @@ public abstract class UserData {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
     @Index(name = "idx_phoneNumber")
@@ -47,7 +51,7 @@ public abstract class UserData {
     @Embedded
     protected Address address;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "invitation_fk")
     private Invitation invitation;
     

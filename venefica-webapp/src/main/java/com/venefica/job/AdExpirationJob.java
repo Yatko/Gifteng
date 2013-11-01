@@ -18,8 +18,10 @@ import com.venefica.model.TransactionStatus;
 import com.venefica.model.UserTransaction;
 import java.util.Date;
 import java.util.List;
+import org.quartz.ExecuteInJTATransaction;
 
 @DisallowConcurrentExecution
+//@ExecuteInJTATransaction
 public class AdExpirationJob implements Job {
 
     private static final Log log = LogFactory.getLog(AdExpirationJob.class);

@@ -10,6 +10,7 @@ import com.venefica.service.AuthService;
 import com.venefica.service.ServiceTestBase;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.FilterDto;
+import com.venefica.service.dto.FilterType;
 import com.venefica.service.fault.AuthenticationException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -54,7 +55,7 @@ public class AdIntegrationTest {
     @Test
     @Ignore
     public void getAdsExLocationTest() throws AuthenticationException {
-        String token = authService.authenticateEmail("a@a.com", "Gift2020");
+        String token = authService.authenticateEmail("a@a.com", "Gift2020", null);
         ServiceTestBase.authenticateClientWithToken(adService, token);
         
         FilterDto filter = new FilterDto();
@@ -65,8 +66,9 @@ public class AdIntegrationTest {
         filter.setMaxPrice(new BigDecimal("5000000"));
         filter.setHasPhoto(true);
         filter.setSearchString("");
-        filter.setIncludeOwned(false);
-        List<AdDto> ads = adService.getAds(-1L, 11, filter, false, true, 0);
+        //filter.setIncludeOwned(false);
+        filter.setFilterType(FilterType.ACTIVE);
+        List<AdDto> ads = adService.getAds(0, 11, filter, false, true, 0);
         
         System.out.println("ads: " + ads);
     }

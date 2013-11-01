@@ -19,6 +19,7 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CategoryDto;
 import com.venefica.service.dto.FilterDto;
+import com.venefica.service.dto.FilterType;
 import com.venefica.service.dto.ImageDto;
 import com.venefica.service.dto.RatingDto;
 import com.venefica.service.dto.RequestDto;
@@ -94,7 +95,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     @Before
     public void initAd() {
-        ad = adDao.get(FIRST_AD_ID);
+        ad = adDao.getEager(FIRST_AD_ID);
         assertNotNull("Fixture ad not found!", ad);
     }
     
@@ -203,27 +204,30 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         FilterDto filter;
         
         filter = new FilterDto();
-        filter.setIncludeCannotRequest(true);
+        //filter.setIncludeCanRequest(true);
+        filter.setFilterType(FilterType.ACTIVE);
         
-        List<AdDto> ads = client.getAds(-1L, 10, filter);
+        List<AdDto> ads = client.getAds(0, 10, filter);
         assertTrue("There must be at least one ad in the collection.", ads != null
                 && ads.size() > 0);
 
-        ads = client.getAds(1L, 10);
-        assertTrue(ads == null || ads.isEmpty());
+//        ads = client.getAds(2, 10);
+//        assertTrue("Empty ad list expected starting from last index 2", ads == null || ads.isEmpty());
         
         filter = new FilterDto();
-        filter.setIncludeCannotRequest(true);
+        //filter.setIncludeCanRequest(true);
+        filter.setFilterType(FilterType.ACTIVE);
         filter.setSearchString("test");
         
-        ads = client.getAds(-1L, 10, filter);
+        ads = client.getAds(0, 10, filter);
         assertTrue(ads != null && !ads.isEmpty());
         
         filter = new FilterDto();
-        filter.setIncludeCannotRequest(true);
+        //filter.setIncludeCanRequest(true);
+        filter.setFilterType(FilterType.ACTIVE);
         filter.setSearchString("first");
         
-        ads = client.getAds(-1L, 10, filter);
+        ads = client.getAds(0, 10, filter);
         System.out.println("ads: " + ads);
     }
 
@@ -432,7 +436,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setDescription("New Description");
         client.updateAd(adDto);
 
-        Ad ad_ = adDao.get(adDto.getId());
+        Ad ad_ = adDao.getEager(adDto.getId());
         assertNotNull(ad_);
         assertTrue("Ad not updated!", adDto.getTitle().equals(ad_.getAdData().getTitle()));
     }
@@ -499,13 +503,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         categories.add(new Long(3));
         
         FilterDto filter = new FilterDto();
-        filter.setIncludeCannotRequest(true);
+        //filter.setIncludeCanRequest(true);
+        filter.setFilterType(FilterType.ACTIVE);
         filter.setCategories(categories);
         filter.setDistance(new Long(100));
         filter.setMaxPrice(new BigDecimal("5.3"));
         filter.setHasPhoto(true);
 
-        List<AdDto> ads = client.getAds(new Long(-1), 10, filter);
+        List<AdDto> ads = client.getAds(0, 10, filter);
         assertTrue("There must be at least one ad in the collection.", ads != null
                 && ads.size() > 0);
     }
@@ -531,12 +536,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adminService.onlineAd(adId);
         
         FilterDto filter = new FilterDto();
-        filter.setIncludeCannotRequest(true);
+        //filter.setIncludeCanRequest(true);
+        filter.setFilterType(FilterType.ACTIVE);
         filter.setLongitude(new Double("77.0256938"));
         filter.setLatitude(new Double("20.7118088"));
         filter.setDistance(new Long(50));
         
-        List<AdDto> ads = client.getAds(new Long(-1), 10, filter);
+        List<AdDto> ads = client.getAds(0, 10, filter);
         assertTrue("There must be at least one ad in the collection.", ads != null && ads.size() == 1);
         assertEquals(adId, ads.get(0).getId());
     }

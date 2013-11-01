@@ -15,6 +15,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.ExecuteInJTATransaction;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -25,6 +26,7 @@ import org.quartz.JobExecutionException;
  * @author gyuszi
  */
 @DisallowConcurrentExecution
+//@ExecuteInJTATransaction
 public class InvitationReminderJob implements Job {
 
     private static final Log log = LogFactory.getLog(InvitationReminderJob.class);

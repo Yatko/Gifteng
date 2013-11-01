@@ -57,7 +57,24 @@ public class BookmarkDaoImpl extends DaoBase<Bookmark> implements BookmarkDao {
                 + "b.ad.deleted = false and "
                 + "b.ad.creator.deleted = false and "
                 + "b.ad.adData.category.hidden = false and "
-                + "b.user = :user "
+                + "b.user = :user and "
+                + "b.user.deleted = false "
+                + "order by b.id desc"
+                + "")
+                .setParameter("user", user)
+                .list();
+    }
+    
+    @Override
+    public List<Long> getBookmarkedAdIds(User user) {
+        return createQuery(""
+                + "select b.ad.id "
+                + "from " + getDomainClassName() + " b where "
+                + "b.ad.deleted = false and "
+                + "b.ad.creator.deleted = false and "
+                + "b.ad.adData.category.hidden = false and "
+                + "b.user = :user and "
+                + "b.user.deleted = false "
                 + "order by b.id desc"
                 + "")
                 .setParameter("user", user)

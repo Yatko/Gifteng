@@ -26,14 +26,17 @@ public interface AuthService {
      *
      * @param name the name of the user
      * @param password the password of the user
+     * @param userAgent the visiting users browser details
      * @return authorization token
      * @throws AuthenticationException is thrown when the user can't be
      * authenticated.
      */
     @WebMethod(operationName = "Authenticate")
     @WebResult(name = "AuthToken")
-    public String authenticate(@WebParam(name = "name") String name,
-            @WebParam(name = "password") String password) throws AuthenticationException;
+    public String authenticate(
+            @WebParam(name = "name") String name,
+            @WebParam(name = "password") String password,
+            @WebParam(name = "userAgent") String userAgent) throws AuthenticationException;
     
     /**
      * Authenticates the user by his email address and password and generates
@@ -41,14 +44,17 @@ public interface AuthService {
      *
      * @param name the email address of the user
      * @param password the password of the user
+     * @param userAgent the visiting users browser details
      * @return authorization token
      * @throws AuthenticationException is thrown when the user can't be
      * authenticated.
      */
     @WebMethod(operationName = "AuthenticateEmail")
     @WebResult(name = "AuthToken")
-    public String authenticateEmail(@WebParam(name = "email") String email,
-            @WebParam(name = "password") String password) throws AuthenticationException;
+    public String authenticateEmail(
+            @WebParam(name = "email") String email,
+            @WebParam(name = "password") String password,
+            @WebParam(name = "userAgent") String userAgent) throws AuthenticationException;
     
     /**
      * Authenticates the user by his phone number and password and generates
@@ -56,14 +62,17 @@ public interface AuthService {
      *
      * @param name the phone number of the user
      * @param password the password of the user
+     * @param userAgent the visiting users browser details
      * @return authorization token
      * @throws AuthenticationException is thrown when the user can't be
      * authenticated.
      */
     @WebMethod(operationName = "AuthenticatePhone")
     @WebResult(name = "AuthToken")
-    public String authenticatePhone(@WebParam(name = "phone") String phone,
-            @WebParam(name = "password") String password) throws AuthenticationException;
+    public String authenticatePhone(
+            @WebParam(name = "phone") String phone,
+            @WebParam(name = "password") String password,
+            @WebParam(name = "userAgent") String userAgent) throws AuthenticationException;
 
     /**
      * Changes user's password.

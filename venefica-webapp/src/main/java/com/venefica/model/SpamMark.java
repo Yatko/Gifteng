@@ -1,7 +1,10 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,13 +25,14 @@ public class SpamMark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "spammark_ad_fk")
     private Ad ad;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "spammark_witness_fk")
     private User witness;
     

@@ -7,7 +7,6 @@ import com.venefica.common.MailException;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.venefica.dao.ForgotPasswordDao;
-import com.venefica.dao.UserDataDao;
 import com.venefica.model.ForgotPassword;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
@@ -39,29 +38,29 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
     private static final String PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.html.vm";
     private static final String PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.txt.vm";
     
+    private static final boolean AUTO_CREATE_USER_SETTING = false;
+    
     @Inject
     private TokenEncryptor tokenEncryptor;
     @Inject
     private ForgotPasswordDao forgotPasswordDao;
-    @Inject
-    private UserDataDao userDataDao;
-
+    
     @Override
-    public String authenticate(String name, String password) throws AuthenticationException {
+    public String authenticate(String name, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByName(name);
-        return authenticate(user, password);
+        return authenticate(user, password, userAgent);
     }
     
     @Override
-    public String authenticateEmail(String email, String password) throws AuthenticationException {
+    public String authenticateEmail(String email, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByEmail(email);
-        return authenticate(user, password);
+        return authenticate(user, password, userAgent);
     }
     
     @Override
-    public String authenticatePhone(String phone, String password) throws AuthenticationException {
+    public String authenticatePhone(String phone, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByPhoneNumber(phone);
-        return authenticate(user, password);
+        return authenticate(user, password, userAgent);
     }
 
     @Override
@@ -163,7 +162,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
     // internal
     
     @Transactional
-    private String authenticate(User user, String password) throws AuthenticationException {
+    private String authenticate(User user, String password, String userAgent) throws AuthenticationException {
         if (user == null) {
             throw new AuthenticationException("Wrong user!");
         }
@@ -173,25 +172,23 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
                 Token token = new Token(user.getId());
                 String encryptedToken = tokenEncryptor.encrypt(token);
                 
-                //automatically creating user setting if not present
-                if ( !user.isBusinessAccount() ) {
+                if ( !user.isBusinessAccount() && AUTO_CREATE_USER_SETTING ) {
+                    //automatically creating user setting if not present
                     MemberUserData userData = (MemberUserData) user.getUserData();
                     UserSetting userSetting = userData.getUserSetting();
                     if ( userSetting == null ) {
-                        userSetting = new UserSetting();
-                        userSettingDao.save(userSetting);
-                        
-                        userData.setUserSetting(userSetting);
-                        userDataDao.update(userData);
+                        createUserSetting(userData);
                     }
                 }
                 
                 user.setLastLoginAt(new Date());
+                user.setLastUserAgent(userAgent);
                 userDao.update(user);
                 
                 return encryptedToken;
             }
         } catch (TokenEncryptionException e) {
+            logger.error("Encryption error", e);
             throw new AuthenticationException("Internal error!");
         }
 

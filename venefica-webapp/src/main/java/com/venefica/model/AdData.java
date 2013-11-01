@@ -9,6 +9,8 @@ import com.vividsolutions.jts.geom.Point;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -41,6 +43,7 @@ public abstract class AdData {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
     @ManyToOne(optional = false)

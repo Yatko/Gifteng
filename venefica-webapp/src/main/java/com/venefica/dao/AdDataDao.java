@@ -28,4 +28,11 @@ public interface AdDataDao {
      */
     public void update(AdData adData);
     
+    /**
+     * Returns the corresponding ad data for the given ad.
+     * 
+     * @param adId
+     * @return 
+     */
+    public AdData getByAd(Long adId);
 }

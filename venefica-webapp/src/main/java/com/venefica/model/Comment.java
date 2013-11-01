@@ -1,9 +1,12 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,13 +27,14 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "comment_ad_fk")
     private Ad ad;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "comment_usr_fk")
     private User publisher;
     
@@ -44,7 +48,7 @@ public class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
     
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "comment_reply_fk")
     private Comment reply;
 

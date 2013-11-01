@@ -6,7 +6,10 @@ package com.venefica.model;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +32,10 @@ public class UserPoint {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     @ForeignKey(name = "userpoint_user_fk")
     private User user;
@@ -39,13 +43,15 @@ public class UserPoint {
     @OneToMany(mappedBy = "userPoint")
     private Set<UserTransaction> transactions;
     
+    private int requestLimit;
     private BigDecimal givingNumber;
     private BigDecimal receivingNumber;
     
     public UserPoint() {
     }
     
-    public UserPoint(int givingNumber, int receivingNumber) {
+    public UserPoint(int requestLimit, int givingNumber, int receivingNumber) {
+        this.requestLimit = requestLimit;
         this.givingNumber = new BigDecimal(givingNumber);
         this.receivingNumber = new BigDecimal(receivingNumber);
     }
@@ -193,5 +199,13 @@ public class UserPoint {
     @SuppressWarnings("unused")
     private void setReceivingNumber(BigDecimal receivingNumber) {
         this.receivingNumber = receivingNumber;
+    }
+
+    public int getRequestLimit() {
+        return requestLimit;
+    }
+
+    public void setRequestLimit(int requestLimit) {
+        this.requestLimit = requestLimit;
     }
 }

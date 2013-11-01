@@ -9,6 +9,7 @@ import com.venefica.dao.ForgotPasswordDao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.DisallowConcurrentExecution;
+import org.quartz.ExecuteInJTATransaction;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,6 +19,7 @@ import org.quartz.JobExecutionException;
  * @author gyuszi
  */
 @DisallowConcurrentExecution
+//@ExecuteInJTATransaction
 public class ForgotPasswordExpirationJob implements Job {
     
     private static final Log log = LogFactory.getLog(ForgotPasswordExpirationJob.class);

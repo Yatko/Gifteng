@@ -8,9 +8,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -27,8 +25,8 @@ public class ProductionDataConfig {
     
     @Bean
     public SessionFactory sessionFactory() {
-        LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource)
-                .scanPackages(Constants.MODEL_PACKAGE);
+        LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource);
+        factoryBuilder.scanPackages(Constants.MODEL_PACKAGE);
         
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
@@ -39,10 +37,5 @@ public class ProductionDataConfig {
         factoryBuilder.getProperties().put("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
 
         return factoryBuilder.buildSessionFactory();
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new HibernateTransactionManager(sessionFactory());
     }
 }

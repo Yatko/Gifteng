@@ -27,6 +27,8 @@ public class AdDto extends DtoBase {
     // out
     private Long id;
     // out
+    private int lastIndex; //used at result pagination instead of lastAdId
+    // out
     private Integer revision;
     // in, out
     private Long categoryId;
@@ -536,5 +538,13 @@ public class AdDto extends DtoBase {
 
     public void setCanProlong(Boolean canProlong) {
         this.canProlong = canProlong;
+    }
+
+    public int getLastIndex() {
+        return lastIndex;
+    }
+
+    public void setLastIndex(int lastIndex) {
+        this.lastIndex = lastIndex;
     }
 }

@@ -79,8 +79,8 @@ public class AddressDto {
     // helper methods
     
     public Point getLocation() {
-        if (longitude != null && latitude != null) {
-            Point location = GeoUtils.createPoint(longitude, latitude);
+        if (latitude != null && longitude != null) {
+            Point location = GeoUtils.createPoint(latitude, longitude);
             return location;
         }
         return null;

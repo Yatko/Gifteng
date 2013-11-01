@@ -28,4 +28,12 @@ public class UserSettingDaoImpl extends DaoBase<UserSetting> implements UserSett
         updateEntity(userSetting);
     }
     
+    @Override
+    public UserSetting get(Long id) {
+        if (id == null) {
+            throw new NullPointerException("id");
+        }
+
+        return getEntity(id);
+    }
 }

@@ -34,24 +34,31 @@ public interface AdDao {
     Ad get(Long adId);
     
     /**
+     * 
+     * @param adId
+     * @return 
+     */
+    Ad getEager(Long adId);
+    
+    /**
      * Returns a list of ads with id is less than specified one.
      *
-     * @param lastAdId last ad id or -1 to return ads from the beginning
+     * @param lastIndex last index used at paging
      * @param numberAds the max number of ads to return
      * @return list of ads
      */
-    List<Ad> get(Long lastAdId, int numberAds);
+    List<Ad> get(int lastIndex, int numberAds);
 
     /**
      * Returns a list of ads with id is less than the specified one which fit
      * the filter.
      *
-     * @param lastAdId last ad id or -1 to return ads from the beginning
+     * @param lastIndex last index used at paging
      * @param numberAds the max number of ads to return
      * @param filter filter
      * @return list of ads
      */
-    List<Ad> get(Long lastAdId, int numberAds, FilterDto filter);
+    List<Ad> get(int lastIndex, int numberAds, FilterDto filter);
 
     /**
      * 

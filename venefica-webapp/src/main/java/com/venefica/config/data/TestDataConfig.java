@@ -8,6 +8,7 @@ import com.venefica.config.Constants;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,10 +17,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -36,15 +34,6 @@ public class TestDataConfig {
     protected static final Log logger = LogFactory.getLog(TestDataConfig.class);
     
     @Resource
-    private String jdbcDriver;
-    @Resource
-    private String jdbcUrl;
-    @Resource
-    private String jdbcUsername;
-    @Resource
-    private String jdbcPassword;
-    
-    @Resource
     private String hibernateDialect;
     @Resource
     private String hibernateHbmToDdlAuto = "update";
@@ -58,21 +47,14 @@ public class TestDataConfig {
     @Resource
     private Map<String, String> hibernateProperties = new HashMap<String, String>(0);
     
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(jdbcDriver);
-        dataSource.setUrl(jdbcUrl);
-        dataSource.setUsername(jdbcUsername);
-        dataSource.setPassword(jdbcPassword);
-        return dataSource;
-    }
-
+    @Inject
+    private DataSource dataSource;
+    
     @Bean
     public SessionFactory sessionFactory() {
-        LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource())
-                .scanPackages(Constants.MODEL_PACKAGE);
-
+        LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource);
+        factoryBuilder.scanPackages(Constants.MODEL_PACKAGE);
+        
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_IMPORT_FILES, hibernateHbmToDdlImportFiles);
@@ -92,10 +74,5 @@ public class TestDataConfig {
         }
 
         return factoryBuilder.buildSessionFactory();
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new HibernateTransactionManager(sessionFactory());
     }
 }

@@ -27,4 +27,11 @@ public interface UserSettingDao {
      */
     public void update(UserSetting userSetting);
     
+    /**
+     * Returns the user setting by its id.
+     *
+     * @param id the id
+     * @return userSetting object
+     */
+    public UserSetting get(Long id);
 }
