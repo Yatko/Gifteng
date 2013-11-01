@@ -16,7 +16,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorCity:'@',
 					creatorAvatar:'@',
 					creatorPoints:'@',
-					id:'@'
+					id:'@',
+					ad:'='
 				},
 				templateUrl: 'app/partials/directives/ad-item-box.html',
 				replace:true,
@@ -24,6 +25,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				compile: function compile() {
 					return {
 				        post: function (scope, iElement, iAttrs) { 
+				        	
 				        	iAttrs.$observe('status', function() {
 								var status = scope.status;
 								var type = iAttrs.type;
@@ -35,53 +37,6 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 									$('.well',iElement).prepend($compile(userprofile)(scope));
 								}
 								
-								if(type=="receiving") {
-									if(status=="EXPIRED") {
-										text = "Gift expired";
-										action = '<div class="row">'+
-												 	'<div class="col-xs-12">'+
-												 		'<a href class="btn btn-default btn-block">Delete gift</a>'+
-												 	'</div>'+
-												 '</div>';
-									}
-									else if(status=="RECEIVED") {
-										text = "Gift received";
-									}
-									else if(status=="UNACCEPTED") {
-										text = "Gift declined";
-										action = '<div class="row">'+
-												 	'<div class="col-xs-12">'+
-												 		'<a href class="btn btn-default btn-block">Delete gift</a>'+
-												 	'</div>'+
-												 '</div>';
-									}
-								}
-								else if(type=="giving") {
-									if(status=="EXPIRED") {
-										text = "Expired";
-										action = '<div class="row">'+
-												 	'<div class="col-xs-6">'+
-												 		'<a href class="btn btn-primary btn-block">RELIST</a>'+
-												 	'</div>'+
-												 	'<div class="col-xs-6">'+
-												 		'<a href class="btn btn-default btn-block">DELETE</a>'+
-												 	'</div>'+
-												 '</div>';
-									}
-								}
-								
-								
-								action = '<div class="row">'+
-												'<div class="col-xs-12">'+
-													'<p class="text-center">'+
-														'<span class="fui-arrow-right"></span>'+
-														text+
-														'<span class="fui-arrow-left"></span>'+
-													'</p>'+
-												'</div>'+
-											 '</div>'+action;
-								
-								$('.action',iElement).html(action);
 							});
 						}
 				      }
@@ -100,7 +55,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					points:'@',
 					nested:'@',
 					ads:'@',
-					following:'='
+					following:'=',
+					self:'@'
 				},
 				templateUrl: 'app/partials/directives/user-profile.html',
 				replace:true,

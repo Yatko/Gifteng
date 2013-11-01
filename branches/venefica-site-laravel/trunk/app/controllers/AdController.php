@@ -89,9 +89,74 @@ class AdController extends \BaseController {
 			else
 				$ads = $result->ad;
 			
-			return Response::json($ads);
+			$return=array();
+			foreach($ads as $k=>$ad) {
+				
+				$ad = new Ad($ad);
+				
+				if($ad->requested) {
+					if(is_array($ad->requests->item)) {
+						foreach($ad->requests->item as $k=>$v) {
+							$ad->requests->item[$k] = new Requested($v);
+						}
+						
+					}
+					else {
+						$ad->requests->item = new Requested($ad->requests->item);
+					}
+				}
+
+				if(!$ad->online) {
+					if($ad->approved) {
+						$ad->status = "APPROVED";
+					}
+					if($ad->approval!=null) {
+						$ad->status = "PENDING";
+					}
+					else {
+						$ad->status = "DECLINED";
+					}
+				}
+				elseif($ad->sold) {
+					$requestor=$ad->getAcceptedRequest()->user;
+					if(isset($requestor->avatar))
+						$ad->requestor = $requestor->id;
+					else $ad->requestor = null;
+					
+					$ad->status = "SOLD";
+				}
+				elseif($ad->expired) {
+					$ad->status = "EXPIRED";
+				}
+				elseif( !$ad->hasActiveRequest() ) {
+					$ad->status = "NO_REQUESTS";
+				}
+				elseif($ad->hasSentRequest()) {
+					$requestor=$ad->getAcceptedRequest()->user;
+					if(isset($requestor->avatar))
+						$ad->requestor = $requestor->id;
+					else $ad->requestor = null;
+					
+					$ad->status = "SENT";
+				}
+				elseif($ad->hasAcceptedRequest()) {
+					$requestor=$ad->getAcceptedRequest()->user;
+					if(isset($requestor->avatar))
+						$ad->requestor = $requestor->id;
+					else $ad->requestor = null;
+					
+					$ad->status = "SELECTED";
+				}
+				else {
+					$ad->status = "ACTIVE";
+				}
+
+				$return[]=$ad;
+			}
+			
+			return Response::json($return);
 		} catch ( Exception $ex ) {
-			return Response::json(array());
+			throw new Exception($ex -> getMessage());
 		}
 	}
 	
@@ -117,34 +182,54 @@ class AdController extends \BaseController {
 
 			$ads = array();
 			$creators = array();
-
+			
 			foreach($result as $k=>$row) {
-				$ad = $row;
 				
-				$requests = get_object_vars($ad->requests);
-				
-				if(is_array($requests['item'])) {
-					foreach($requests['item'] as $request) {
-			 			$request = get_object_vars($request);
-						$usr = get_object_vars($request['user']);
-						if($usr['id']==$user_id) {
-							$ad->status=$request['status'];
-							$ad->requestId=$request['id'];
+				if(is_array($row->requests->item)) {
+					foreach($row->requests->item as $k=>$v) {
+						$v = new Requested($v);
+						if($v->user->id == $user_id) {
+							$row->request = $v;
 						}
 					}
+					
 				}
 				else {
-					$ad->status = $ad->requests->item->status;
-							$ad->requestId=$ad->requests->item->id;
+					$v = new Requested($row->requests->item);
+					if($v->user->id == $user_id) {
+						$row->request = $v;
+					}
+				}
+				$request = $row->request;
+				if($row->expired || $request->isExpired) {
+					if($row->request->adStatus=="EXPIRED") {
+						$row->reqStat = "EXPIRED";
+					}
+					else if($row->request->isCanceled) {
+						$row->reqStat = "CANCELED";
+					}
+					else {
+						$row->reqStat = "DECLINED";
+					}
+				}
+				else if($row->sold) {
+					$row->reqStat = "RECEIVED";
+				}
+				else if($request->isPending) {
+					$row->reqStat = "PENDING";
+				}
+				else if($request->accepted) {
+					$row->reqStat = "ACCEPTED";
 				}
 				
-				$creators[$ad->creator->id]=$ad->creator;
-				$ad->creator=$ad->creator->id;
-				$ads[]=$ad;
+				$creators[$row->creator->id]=$row->creator;
+				$row->creator=$row->creator->id;
+				$ads[]=$row;
 			}
+			
 			return Response::json(array('ads'=>$ads,'creators'=>$creators));
 		} catch ( Exception $ex ) {
-			return Response::json(array());
+			throw new Exception($ex -> getMessage());
 		}
 	}
 	

@@ -135,7 +135,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Nav Controller
 		 */
-		.controller('NavController',function($scope, $location, $modal, Auth, User) {
+		.controller('NavController',function($scope, $location, $modal, Auth, User, UserEx) {
 		
 			$scope.$watch(
 				function() {
@@ -178,7 +178,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 							}
 					
 							$form.attr('action', $scope.action);
-					
+						
 							$scope.$apply(function() {
 								$scope.progress = 0;
 							});				
@@ -208,7 +208,10 @@ define(['angular','services','lang'], function(angular,services,lang) {
 										$scope.progress = 0;
 										$scope.profileimage = "api/image/"+filename;
 									});
-					
+									var user = UserEx.reinit.query({}, function() {
+										User.setUser(user);
+										$modalInstance.close();
+									});
 								},
 							});
 					
@@ -468,37 +471,55 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		        }
 			});
 			
-			$scope.requestGift = function() {
+			$scope.requestGift = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/request_create.html',
-					controller: function($scope, $modalInstance) {
+					controller: function($scope, UserEx, $location, $modalInstance) {
 						$scope.close = function () {
 							$modalInstance.close();
 						};
+						$scope.submit = function() {
+							UserEx.requestAd.query({id:id}, function() {
+								$modalInstance.close();
+								$location.path('/profile/gifts/receiving');
+							})
+						}
 					}
 				});
 			}
-			$scope.requestCancel = function() {
+			$scope.requestCancel = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/request_cancel.html',
-					controller: function($scope, $modalInstance) {
+					controller: function($scope, UserEx, $location, $modalInstance) {
 						$scope.close = function () {
 							$modalInstance.close();
 						};
+						$scope.submit = function() {
+							UserEx.requestCancel.query({id:id}, function() {
+								$modalInstance.close();
+								$location.path('/profile/gifts/receiving');
+							})
+						}
 					}
 				});
 			}
-			$scope.requestReceive = function() {
+			$scope.requestReceive = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/request_receive.html',
-					controller: function($scope, $modalInstance) {
+					controller: function($scope, UserEx, $location, $modalInstance) {
 						$scope.close = function () {
 							$modalInstance.close();
 						};
+						$scope.submit = function() {
+							UserEx.requestReceive.query({id:id}, function() {
+								$modalInstance.close();
+								$location.path('/profile/gifts/receiving');
+							})
+						}
 					}
 				});
 			}
-			$scope.editGift = function() {
+			$scope.editGift = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/edit_gift.html',
 					controller: function($scope, $modalInstance) {
@@ -508,23 +529,35 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					}
 				});
 			}
-			$scope.deleteGift = function() {
+			$scope.deleteGift = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/delete_gift.html',
-					controller: function($scope, $modalInstance) {
+					controller: function($scope, Ad, $location, $modalInstance) {
 						$scope.close = function () {
 							$modalInstance.close();
 						};
+						$scope.submit = function() {
+							Ad.remove({id:id}, function() {
+								$modalInstance.close();
+								$location.path('/profile/gifts/giving');
+							})
+						}
 					}
 				});
 			}
-			$scope.relistGift = function() {
+			$scope.relistGift = function(id) {
 			    var modalInstance = $modal.open({
 					templateUrl: 'app/partials/directives/modal/relist_gift.html',
 					controller: function($scope, $modalInstance) {
 						$scope.close = function () {
 							$modalInstance.close();
 						};
+						$scope.submit = function() {
+							UserEx.relist.query({id:id}, function() {
+								$modalInstance.close();
+								$location.path('/profile/gifts/giving');
+							})
+						}
 					}
 				});
 			}

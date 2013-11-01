@@ -81,7 +81,14 @@ define(['angular'], function (angular) {
 			unfollow: $resource('api/user/unfollow/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			bookmark: $resource('api/ad/bookmark/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			unbookmark: $resource('api/ad/unbookmark/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
-			comment: $resource('api/ad/comment/:id',{id:'@id'},{query:{method:'POST',isArray:false}})
+			comment: $resource('api/ad/comment/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			reinit: $resource('api/user/reinit',{},{query:{method:'GET',isArray:false}}),
+			relist: $resource('api/ad/relist/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestAd: $resource('api/ad/request/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestCancel: $resource('api/ad/request/cancel/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestSelect: $resource('api/ad/request/select/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestSend: $resource('api/ad/request/send/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestReceive: $resource('api/ad/request/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 		}
 	})
 	.factory('Geo', function($resource) {
