@@ -24,7 +24,7 @@
         });
         /**/
         
-        disable_form_buttons_on_submit('edit_profile_form', null);
+        disable_form_buttons_on_submit('edit_profile_form', '#edit_profile_form .ge-modal_footer button');
     });
 </script>
 

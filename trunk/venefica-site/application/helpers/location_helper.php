@@ -9,7 +9,7 @@ if (!function_exists('distance_haversine')) {
     //
     function distance_haversine($lat1, $lon1, $lat2, $lon2) {
         $precision = 1; //4
-        $earth_radius = 3960.00; # in miles
+        $earth_radius = 3959.00; # in miles
         $delta_lat = $lat2 - $lat1 ;
         $delta_lon = $lon2 - $lon1 ;
         $alpha = $delta_lat / 2;

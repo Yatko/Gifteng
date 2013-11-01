@@ -39,9 +39,12 @@
                 var adId = $adId.val();
                 $adId.val('');
                 
+                var result = response.<?=AJAX_STATUS_RESULT?>;
+                var resultNum = result.<?=USER_GIVINGS_NUM?>;
+                
                 if ( adDeleteCallerElement !== null ) {
                     var $element = $(adDeleteCallerElement);
-                    $element.trigger('ad_deleted', [adId]);
+                    $element.trigger('ad_deleted', [adId, resultNum]);
                 }
                 
                 if ( $('#adDeleteContainer').length > 0 ) {

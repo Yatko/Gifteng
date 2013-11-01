@@ -7,6 +7,8 @@
  */
 class Message_service {
     
+    var $messageService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Message_service");
     }
@@ -24,7 +26,7 @@ class Message_service {
      */
     public function addCommentToAd($adId, $comment) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->addCommentToAd(array(
                 "adId" => $adId,
                 "comment" => $comment
@@ -43,7 +45,7 @@ class Message_service {
      */
     public function updateComment($comment) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->addCommentToAd(array("comment" => $comment));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Update comment failed! '.$ex->faultstring);
@@ -61,7 +63,7 @@ class Message_service {
      */
     public function getCommentsByAd($adId, $lastCommentId, $numComments) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->getCommentsByAd(array(
                 "adId" => $adId,
                 "lastCommentId" => $lastCommentId,
@@ -90,7 +92,7 @@ class Message_service {
      */
     public function getLastMessagePerRequest() {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->getLastMessagePerRequest();
             
             $messages = array();
@@ -112,7 +114,7 @@ class Message_service {
 //     */
 //    public function getMessagesByAd($adId) {
 //        try {
-//            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $messageService = $this->getService();
 //            $result = $messageService->getMessagesByAd(array("adId" => $adId));
 //            
 //            $messages = array();
@@ -134,7 +136,7 @@ class Message_service {
      */
     public function getMessagesByRequest($requestId) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->getMessagesByRequest(array("requestId" => $requestId));
             
             $messages = array();
@@ -157,7 +159,7 @@ class Message_service {
 //     */
 //    public function getMessagesByUsers($user1Id, $user2Id) {
 //        try {
-//            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+//            $messageService = $this->getService();
 //            $result = $messageService->getMessagesByUsers(array(
 //                "user1Id" => $user1Id,
 //                "user2Id" => $user2Id
@@ -184,7 +186,7 @@ class Message_service {
      */
     public function getMessagesByAdAndUsers($adId, $user1Id, $user2Id) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->getMessagesByAdAndUsers(array(
                 "adId" => $adId,
                 "user1Id" => $user1Id,
@@ -210,7 +212,7 @@ class Message_service {
      */
     public function sendMessage($message) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->sendMessage(array("message" => $message));
             return $result->messageId;
         } catch ( Exception $ex ) {
@@ -226,7 +228,7 @@ class Message_service {
      */
     public function updateMessage($message) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->updateMessage(array("message" => $message));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Update message failed! '.$ex->faultstring);
@@ -241,7 +243,7 @@ class Message_service {
      */
     public function getAllMessages() {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $result = $messageService->getCommentsByAd();
             
             $messages = array();
@@ -262,7 +264,7 @@ class Message_service {
      */
     public function hideMessage($messageId) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->hideMessage(array("messageId" => $messageId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Hide message (messageId: ' . $messageId . ') failed! '.$ex->faultstring);
@@ -277,7 +279,7 @@ class Message_service {
      */
     public function hideRequestMessages($requestId) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->hideRequestMessages(array("requestId" => $requestId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Hide request messages (requestId: ' . $requestId . ') failed! '.$ex->faultstring);
@@ -292,7 +294,7 @@ class Message_service {
      */
     public function deleteMessage($messageId) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->deleteMessage(array("messageId" => $messageId));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Delete message (messageId: ' . $messageId . ') failed! '.$ex->faultstring);
@@ -306,11 +308,20 @@ class Message_service {
     
     public function shareOnSocialNetworks($text) {
         try {
-            $messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+            $messageService = $this->getService();
             $messageService->shareOnSocialNetworks(array("message" => $text));
         } catch ( Exception $ex ) {
             log_message(ERROR, 'Shareing on social networks failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    // internal methods
+    
+    private function getService() {
+        if ( $this->messageService == null ) {
+            $this->messageService = new SoapClient(MESSAGE_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->messageService;
     }
 }

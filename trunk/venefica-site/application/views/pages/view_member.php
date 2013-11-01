@@ -19,7 +19,7 @@
     $(function() {
         init_map('view_map', 'view_longitude', 'view_latitude', 'view_marker_longitude', 'view_marker_latitude', false);
 
-        $('.ge-ad').on('ad_deleted', function(event, adId) {
+        $('.ge-ad').on('ad_deleted', function(event, adId, resultNum) {
             window.location = '<?= base_url() ?>profile?giving';
         });
         $('.ge-request').on('request_created', function(event, adId) {
@@ -59,6 +59,7 @@ $ad_can_delete = $is_owner && (!$ad->hasActiveRequest() || $ad_is_expired);
 $ad_can_request = $ad->canRequest;
 $ad_can_relist = $ad->canRelist;
 $ad_can_prolong = $ad->canProlong;
+$user_can_request = $currentUser->canRequest();
 
 $user_request = $ad->getRequestByUser($currentUser->id);
 
@@ -115,10 +116,16 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
 ?>
 
 <? if ($this->agent->is_referral()): ?>
-
+    <?
+    $back_link = $this->agent->referrer();
+    if ( $back_link == get_current_url() ) {
+        $back_link = base_url() . 'browse';
+    }
+    ?>
+    
     <div class="row">
         <div class="span6">
-            <a href="<?= $this->agent->referrer() ?>" class="btn btn-large">Back</a>
+            <a href="<?=$back_link?>" class="btn btn-large">Back</a>
             <br/><br/>
         </div>
     </div>
@@ -166,7 +173,7 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
                                         } else if ( $ad_can_relist ) {
                                             $edit_text = 'RELIST';
-                                            $edit_js = 'onclick="startAdRelistModal(this, ' . $ad_id . ', ' . $ad_can_prolong . ');"';
+                                            $edit_js = 'onclick="startAdRelistModal(this, ' . $ad_id . ', ' . ($ad_can_prolong ? 'true' : 'false') . ');"';
                                             $edit_class = 'class="btn btn-large btn-ge btn-block"';
                                         } else {
                                             //there is at least one active request (or at least one comment/bookmark/share on it)
@@ -218,7 +225,11 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                                             $request_class = 'class="btn btn-large btn-block disabled"';
                                             $request_text = 'GIFTED';
                                         } else if ($ad_can_request) {
-                                            $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
+                                            if ( $user_can_request ) {
+                                                $request_js = 'onclick="startRequestModal(this, \'' . ($ad_is_business ? 'business' : 'member') . '\', ' . $ad_id . ');"';
+                                            } else {
+                                                $request_js = 'onclick="startCannotRequestModal();"';
+                                            }
                                             $request_class = 'class="ge-request btn btn-large btn-ge btn-block"';
                                             $request_text = 'REQUEST GIFT';
                                         } else if ( $ad->isMaxAllowedRequestsReached() ) {

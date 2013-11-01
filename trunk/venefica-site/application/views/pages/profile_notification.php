@@ -11,7 +11,7 @@
 
 <script language="javascript">
     $(function() {
-        disable_form_buttons_on_submit('notifications_form', null);
+        disable_form_buttons_on_submit('notifications_form', '#notifications_form .ge-modal_footer button');
     });
 </script>
 

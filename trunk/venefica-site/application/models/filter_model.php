@@ -10,6 +10,9 @@ class Filter_model extends CI_Model {
     const TYPE_MEMBER = "MEMBER";
     const TYPE_BUSINESS = "BUSINESS";
     
+    const FILTER_TYPE_ACTIVE = "ACTIVE";
+    const FILTER_TYPE_GIFTED = "GIFTED";
+    
     var $searchString; //string
     var $categories; //array of long
     var $distance; //long
@@ -19,12 +22,14 @@ class Filter_model extends CI_Model {
     var $maxPrice; //float
     var $hasPhoto; //boolean
     var $type; //enum: MEMBER, BUSINESS
-    var $includeOwned; //boolean
+//    var $includeOwned; //boolean
     var $orderAsc; //boolean
-    var $includeCannotRequest; //bolean
-    var $includeOnlyCannotRequest; //boolean
-    var $includeInactive; //boolean
-    var $includeOnlyInactive; //boolean
+    var $orderClosest; //boolean
+    var $filterType; //enum: ACTIVE, GIFTED
+//    var $includeInactive; //boolean
+//    var $includeShipped; //boolean
+//    var $includeRequested; //boolean
+//    var $includeCanRequest; //boolean
     
     public function __construct() {
         log_message(DEBUG, "Initializing Filter_model");

@@ -164,7 +164,8 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                                 </div>
                             </div><!--./other-->
                         </div>
-
+                        
+                        <? /** ?>
                         <div class="row-fluid">
                             <div id="invitation_usertype" class="span8 offset2">
                                 <div class="control-group">
@@ -182,15 +183,16 @@ if ( isset($invitation_country) && $invitation_country == '' ) {
                                 </div>
                             </div>
                         </div><!--./giftenger-->
+                        <? /**/ ?>
 
                         <div class="row-fluid">
-                                <div class="span8 offset2">
-                                        <div class="control-group">
-                                          <div class="controls">
-                                            <button type="submit" class="btn btn-large btn-block btn-ge ge-submit"><?=lang('invitation_confirm_button')?> <i class="fui-arrow-right pull-right"></i></button>
-                                          </div>
-                                        </div>
+                            <div class="span8 offset2">
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <button type="submit" class="btn btn-large btn-block btn-ge ge-submit"><?=lang('invitation_confirm_button')?> <i class="fui-arrow-right pull-right"></i></button>
+                                    </div>
                                 </div>
+                            </div>
                         </div><!--./submit-->
                     </div>
                     

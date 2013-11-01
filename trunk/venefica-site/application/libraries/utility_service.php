@@ -7,13 +7,15 @@
  */
 class Utility_service {
     
+    var $utilityService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Utility_service");
     }
     
     public function getAddressByZipcode($zipcode) {
         try {
-            $utilityService = new SoapClient(UTILITY_SERVICE_WSDL, getSoapOptions());
+            $utilityService = $this->getService();
             $result = $utilityService->getAddressByZipcode(array("zipcode" => $zipcode));
             
             $address = null;
@@ -27,4 +29,12 @@ class Utility_service {
         }
     }
     
+    // internal methods
+    
+    private function getService() {
+        if ( $this->utilityService == null ) {
+            $this->utilityService = new SoapClient(UTILITY_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->utilityService;
+    }
 }

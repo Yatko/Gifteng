@@ -29,6 +29,7 @@ class Ad_model extends CI_Model {
     const STATUS_EXPIRED = 'EXPIRED';
     
     var $id; //long
+    var $lastIndex; //integer
     var $revision; //integer
     var $categoryId; //long
     var $category; //string
@@ -84,6 +85,7 @@ class Ad_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->lastIndex = getField($obj, 'lastIndex');
             $this->revision = getField($obj, 'revision');
             $this->categoryId = getField($obj, 'categoryId');
             $this->category = getField($obj, 'category');

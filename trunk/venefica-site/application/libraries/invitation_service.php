@@ -16,6 +16,8 @@ class Invitation_service {
     //MailJimp related errors
     const ALREADY_SUBSCRIBED       = 11;
 
+    var $invitationService;
+    
     public function __construct() {
         log_message(DEBUG, "Initializing Invitation_service");
     }
@@ -29,7 +31,7 @@ class Invitation_service {
      */
     public function requestInvitation($invitation) {
         try {
-            $invitationService = new SoapClient(INVITATION_SERVICE_WSDL, getSoapOptions());
+            $invitationService = $this->getService();
             $result = $invitationService->requestInvitation(array("invitation" => $invitation));
             $invitationId = $result->invitationId;
             return $invitationId;
@@ -58,7 +60,7 @@ class Invitation_service {
      */
     public function isInvitationValid($code) {
         try {
-            $invitationService = new SoapClient(INVITATION_SERVICE_WSDL, getSoapOptions());
+            $invitationService = $this->getService();
             $result = $invitationService->isInvitationValid(array("code" => $code));
             $valid = $result->valid;
             return $valid;
@@ -66,5 +68,14 @@ class Invitation_service {
             log_message(INFO, 'Invitation validation failed! '.$ex->faultstring);
             throw new Exception($ex->faultstring);
         }
+    }
+    
+    // internal methods
+    
+    private function getService() {
+        if ( $this->invitationService == null ) {
+            $this->invitationService = new SoapClient(INVITATION_SERVICE_WSDL, getSoapOptions(loadToken()));
+        }
+        return $this->invitationService;
     }
 }

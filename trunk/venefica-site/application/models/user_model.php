@@ -189,6 +189,13 @@ class User_model extends CI_Model {
         return $score . ($pendingScore > 0 ? '/'.$pendingScore : '');
     }
     
+    public function canRequest() {
+        if ( $this->statistics->requestLimit <= 0 ) {
+            return false;
+        }
+        return true;
+    }
+    
     public function toString() {
         return "User ["
             ."name=".$this->name.", "
