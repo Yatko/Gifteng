@@ -10,24 +10,23 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import javax.inject.Named;
 import mailjimp.dom.enums.EmailType;
 import mailjimp.service.IMailJimpService;
 import mailjimp.service.MailJimpException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
-@Component
+@Named
 public class MailChimpSender {
     
     private static final Log logger = LogFactory.getLog(MailChimpSender.class);
     
-    @Autowired
+    @Inject
     private IMailJimpService mailJimpService;
     @Inject
     private EmailConfig emailConfig;

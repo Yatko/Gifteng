@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -54,6 +55,11 @@ public class DaoBase<D> {
      */
     protected Query createQuery(String queryString) {
         return getCurrentSession().createQuery(queryString);
+    }
+    
+    protected Criteria createCriteria() {
+        Criteria criteria = getCurrentSession().createCriteria(getDomainClass());
+        return criteria;
     }
 
 //    protected Query createFilter(Object collection, String queryString) {

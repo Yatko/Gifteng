@@ -19,8 +19,8 @@ public enum RequestStatus {
     SENT, //the giver/owner clicked on 'Mark as shipped'
     RECEIVED, //the receiver/requestor selected 'Received'
     
-    WAITING_FOR_PAYMENT, //used at shipping - not yet implemented
-    PAYMENT_RECEIVED, //used at shipping - not yet implemented
+    //WAITING_FOR_PAYMENT, //used at shipping - not yet implemented
+    //PAYMENT_RECEIVED, //used at shipping - not yet implemented
     ;
     
     /**

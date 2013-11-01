@@ -5,11 +5,14 @@
 package com.venefica.service;
 
 import com.venefica.common.MailException;
+import com.venefica.config.AppConfig;
 import com.venefica.dao.ApprovalDao;
+import com.venefica.dao.UserPointDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Approval;
 import com.venefica.model.User;
+import com.venefica.model.UserPoint;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.ApprovalDto;
 import com.venefica.service.dto.UserDto;
@@ -51,6 +54,10 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
     private static final String AD_ONLINE_HTML_MESSAGE_TEMPLATE = AD_ONLINE_TEMPLATE + "message.html.vm";
     private static final String AD_ONLINE_PLAIN_MESSAGE_TEMPLATE = AD_ONLINE_TEMPLATE + "message.txt.vm";
     
+    @Inject
+    private AppConfig appConfig;
+    @Inject
+    private UserPointDao userPointDao;
     @Inject
     private ApprovalDao approvalDao;
 
@@ -162,6 +169,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         String email = ad.getCreator().getEmail();
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("ad", ad);
+        vars.put("creator", ad.getCreator());
         
         try {
             emailSender.sendHtmlEmailByTemplates(
@@ -197,6 +205,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         String email = ad.getCreator().getEmail();
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("ad", ad);
+        vars.put("creator", ad.getCreator());
         vars.put("text", message);
         
         try {
@@ -221,6 +230,11 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         
         Ad ad = validateAd(adId);
         ad.markAsOnline();
+        
+        User creator = userDao.getEager(ad.getCreator().getId());
+        UserPoint userPoint = creator.getUserPoint();
+        userPoint.setRequestLimit(userPoint.getRequestLimit() + appConfig.getRequestIncrementLimit());
+        userPointDao.update(userPoint);
     }
     
     //***************

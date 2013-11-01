@@ -229,15 +229,50 @@ public interface AdService {
     /**
      * Returns a list of ads with id is less than specified one.
      * 
-     * @param lastAdId last ad id or -1 to return from the beginning
+     * @param lastIndex last index used at paging
      * @param numberAds the maximum number of ads to return
      * @return list of ads
      */
     @WebMethod(operationName = "GetAds")
     @WebResult(name = "ad")
-    List<AdDto> getAds(@WebParam(name = "lastAdId") Long lastAdId,
+    List<AdDto> getAds(@WebParam(name = "lastIndex") int lastIndex,
             @WebParam(name = "numberAds") int numberAds);
 
+    /**
+     * Returns a list of ads with id is less than specified one which fit the filter.
+     * 
+     * @param lastIndex last index used at paging
+     * @param numberAds the maximum number ads to return
+     * @param filter filter conditions
+     * @return list of ads
+     */
+    @WebMethod(operationName = "GetAdsEx")
+    @WebResult(name = "ad")
+    List<AdDto> getAds(
+            @WebParam(name = "lastIndex") int lastIndex,
+            @WebParam(name = "numberAds") int numberAds,
+            @WebParam(name = "filter") FilterDto filter);
+
+    /**
+     * @see AdService#getAds(int, int, com.venefica.service.dto.FilterDto) 
+     * 
+     * @param lastIndex last index used at paging
+     * @param numberAds the maximum number ads to return
+     * @param filter filter conditions
+     * @param includeImages flag to include ad images
+     * @param includeCreator flag to include creator details
+     * @return list of ads
+     */
+    @WebMethod(operationName = "GetAdsExDetail")
+    @WebResult(name = "ad")
+    List<AdDto> getAds(
+            @WebParam(name = "lastIndex") int lastIndex,
+            @WebParam(name = "numberAds") int numberAds,
+            @WebParam(name = "filter") FilterDto filter,
+            @WebParam(name = "includeImages") Boolean includeImages,
+            @WebParam(name = "includeCreator") Boolean includeCreator,
+            @WebParam(name = "includeCommentsNumber") int includeCommentsNumber);
+    
     /**
      * Returns a list of all ads created by the current user.
      * 
@@ -298,41 +333,6 @@ public interface AdService {
      */
     int getUserRequestedAdsSize(Long userId) throws UserNotFoundException;
     
-    /**
-     * Returns a list of ads with id is less than specified one which fit the filter.
-     * 
-     * @param lastAdId last ad id or -1 to return from the beginning
-     * @param numberAds the maximum number ads to return
-     * @param filter filter conditions
-     * @return list of ads
-     */
-    @WebMethod(operationName = "GetAdsEx")
-    @WebResult(name = "ad")
-    List<AdDto> getAds(
-            @WebParam(name = "lastAdId") Long lastAdId,
-            @WebParam(name = "numberAds") int numberAds,
-            @WebParam(name = "filter") FilterDto filter);
-
-    /**
-     * @see AdService#getAds(java.lang.Long, int, com.venefica.service.dto.FilterDto) 
-     * 
-     * @param lastAdId last ad id or -1 to return from the beginning
-     * @param numberAds the maximum number ads to return
-     * @param filter filter conditions
-     * @param includeImages flag to include ad images
-     * @param includeCreator flag to include creator details
-     * @return list of ads
-     */
-    @WebMethod(operationName = "GetAdsExDetail")
-    @WebResult(name = "ad")
-    List<AdDto> getAds(
-            @WebParam(name = "lastAdId") Long lastAdId,
-            @WebParam(name = "numberAds") int numberAds,
-            @WebParam(name = "filter") FilterDto filter,
-            @WebParam(name = "includeImages") Boolean includeImages,
-            @WebParam(name = "includeCreator") Boolean includeCreator,
-            @WebParam(name = "includeCommentsNumber") int includeCommentsNumber);
-
     /**
      * Returns the ad by its id.
      * 

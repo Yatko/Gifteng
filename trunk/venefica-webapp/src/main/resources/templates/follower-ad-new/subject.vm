@@ -1,1 +1,1 @@
-${ad.creator.getFullName()} posted a new gift!
+${creator.getFullName()} posted a new gift!

@@ -9,6 +9,8 @@
     
     <util:constant id="dbType" static-field="com.venefica.dao.DBType.POSTGRESQL" />
     
+    
+    
     <bean id="jdbcDriver" class="java.lang.String">
         <constructor-arg value="org.postgresql.Driver" />
     </bean>
@@ -25,8 +27,8 @@
         <constructor-arg value="org.hibernate.spatial.dialect.postgis.PostgisDialect" />
     </bean>
     <bean id="hibernateHbmToDdlAuto" class="java.lang.String">
-        <!--<constructor-arg value="create" />-->
-        <constructor-arg value="update" />
+        <constructor-arg value="create" />
+<!--        <constructor-arg value="update" />-->
     </bean>
     <bean id="hibernateHbmToDdlImportFiles" class="java.lang.String">
         <constructor-arg value="sql/import_postgresql.sql" />
@@ -38,6 +40,22 @@
         <constructor-arg value="false" />
     </bean>
     <util:map id="hibernateProperties" key-type="java.lang.String" value-type="java.lang.String">
+        <!--
+        <entry key="hibernate.current_session_context_class" value="jta" />
+        <entry key="hibernate.transaction.manager_lookup_class" value="com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup" />
+        <entry key="javax.persistence.transactionType" value="jta" />
+        -->
     </util:map>
+    
+    
+    
+    <bean id="xaDataSourceClassName" class="java.lang.String">
+        <constructor-arg value="org.postgresql.xa.PGXADataSource" />
+    </bean>
+    <util:properties id="xaProperties">
+        <prop key="user">postgres</prop>
+        <prop key="password">postgres</prop>
+        <prop key="URL">jdbc:postgresql://localhost:5432/gifteng</prop>
+    </util:properties>
     
 </beans>

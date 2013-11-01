@@ -17,6 +17,13 @@ public interface UserDao {
      * @return user object
      */
     public User get(Long id);
+    
+    /**
+     * 
+     * @param userId
+     * @return 
+     */
+    public User getEager(Long userId);
 
     /**
      * 

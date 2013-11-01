@@ -10,6 +10,7 @@ import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.UserDao;
+import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserTransactionDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.job.AdExpirationJob;
@@ -24,16 +25,15 @@ import static org.quartz.CronScheduleBuilder.dailyAtHourAndMinute;
 import org.quartz.Job;
 import static org.quartz.JobBuilder.newJob;
 import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import org.quartz.Trigger;
 import static org.quartz.TriggerBuilder.newTrigger;
-import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  *
@@ -65,7 +65,11 @@ public class JobConfig {
     
     @Inject
     private Environment environment;
+    @Inject
+    private PlatformTransactionManager transactionManager;
     
+    @Inject
+    private AppConfig appConfig;
     @Inject
     private AdDao adDao;
     @Inject
@@ -74,6 +78,8 @@ public class JobConfig {
     private UserTransactionDao userTransactionDao;
     @Inject
     private UserDao userDao;
+    @Inject
+    private UserPointDao userPointDao;
     @Inject
     private InvitationDao invitationDao;
     @Inject
@@ -100,21 +106,39 @@ public class JobConfig {
         userVerificationReminderIntervalCheckSecond = environment.getProperty("job.user.verificationReminderIntervalCheckSecond", int.class);
     }
     
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public Scheduler scheduler() throws SchedulerException {
-        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-        scheduler.scheduleJob(adExpirationJobDetail(), adExpirationTrigger());
-        scheduler.scheduleJob(adOnlineJobDetail(), adOnlineTrigger());
-        scheduler.scheduleJob(invitationExpirationJobDetail(), invitationExpirationTrigger());
-        scheduler.scheduleJob(invitationReminderJobDetail(), invitationReminderTrigger());
-        scheduler.scheduleJob(forgotPasswordExpirationJobDetail(), forgotPasswordExpirationTrigger());
-        return scheduler;
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public SchedulerFactoryBean scheduler() {
+        JobDetail adExpirationJobDetail = adExpirationJobDetail();
+        JobDetail adOnlineJobDetail = adOnlineJobDetail();
+        JobDetail invitationExpirationJobDetail = invitationExpirationJobDetail();
+        JobDetail invitationReminderJobDetail = invitationReminderJobDetail();
+        JobDetail forgotPasswordExpirationJobDetail = forgotPasswordExpirationJobDetail();
+        JobDetail userVerificationReminderJobDetail = userVerificationReminderJobDetail();
+        
+        SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
+        schedulerFactory.setTransactionManager(transactionManager); //TODO: no effect unfortunatelly
+        schedulerFactory.setJobDetails(new JobDetail[] {
+            adExpirationJobDetail,
+            adOnlineJobDetail,
+            invitationExpirationJobDetail,
+            invitationReminderJobDetail,
+            forgotPasswordExpirationJobDetail,
+            userVerificationReminderJobDetail,
+        });
+        schedulerFactory.setTriggers(new Trigger[] {
+            createRepeatTrigger(AD_EXPIRATION_TRIGGER_KEY, adExpirationIntervalCheckSecond, adExpirationJobDetail),
+            createDailyTrigger(AD_ONLINE_TRIGGER_KEY, adOnlineStartingCheckHour, adOnlineJobDetail),
+            createRepeatTrigger(INVITATION_TRIGGER_KEY, invitationExpirationIntervalCheckSecond, invitationExpirationJobDetail),
+            createRepeatTrigger(INVITATION_REMINDER_TRIGGER_KEY, invitationExpirationReminderCheckSecond, invitationReminderJobDetail),
+            createRepeatTrigger(FORGOT_PASSWORD_TRIGGER_KEY, forgotPasswordExpirationIntervalCheckSecond, forgotPasswordExpirationJobDetail),
+            createRepeatTrigger(USER_VERIFICATION_TRIGGER_KEY, userVerificationReminderIntervalCheckSecond, userVerificationReminderJobDetail),
+        });
+        return schedulerFactory;
     }
     
-    // Ad related job configs
+    // job details
     
-    @Bean
-    public JobDetail adExpirationJobDetail() {
+    private JobDetail adExpirationJobDetail() {
         JobDetail job = createJobDetail(AdExpirationJob.class, AD_EXPIRATION_JOB_KEY);
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
         job.getJobDataMap().put(Constants.REQUEST_DAO, requestDao);
@@ -122,79 +146,41 @@ public class JobConfig {
         return job;
     }
 
-    @Bean
-    public Trigger adExpirationTrigger() {
-        return createRepeatTrigger(AD_EXPIRATION_TRIGGER_KEY, adExpirationIntervalCheckSecond);
-    }
-    
-    @Bean
-    public JobDetail adOnlineJobDetail() {
+    private JobDetail adOnlineJobDetail() {
         JobDetail job = createJobDetail(AdOnlineJob.class, AD_ONLINE_JOB_KEY);
+        job.getJobDataMap().put(Constants.APP_CONFIG, appConfig);
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
         job.getJobDataMap().put(Constants.USER_DAO, userDao);
+        job.getJobDataMap().put(Constants.USER_POINT_DAO, userPointDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
         return job;
     }
 
-    @Bean
-    public Trigger adOnlineTrigger() {
-        return createDailyTrigger(AD_ONLINE_TRIGGER_KEY, adOnlineStartingCheckHour);
-    }
-    
-    // Invitation related job config
-    
-    @Bean
-    public JobDetail invitationExpirationJobDetail() {
+    private JobDetail invitationExpirationJobDetail() {
         JobDetail job = createJobDetail(InvitationExpirationJob.class, INVITATION_JOB_KEY);
         job.getJobDataMap().put(Constants.INVITATION_DAO, invitationDao);
         return job;
     }
     
-    @Bean
-    public Trigger invitationExpirationTrigger() {
-        return createRepeatTrigger(INVITATION_TRIGGER_KEY, invitationExpirationIntervalCheckSecond);
-    }
-    
-    @Bean
-    public JobDetail invitationReminderJobDetail() {
+    private JobDetail invitationReminderJobDetail() {
         JobDetail job = createJobDetail(InvitationReminderJob.class, INVITATION_REMINDER_JOB_KEY);
         job.getJobDataMap().put(Constants.INVITATION_DAO, invitationDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
         return job;
     }
     
-    @Bean
-    public Trigger invitationReminderTrigger() {
-        return createRepeatTrigger(INVITATION_REMINDER_TRIGGER_KEY, invitationExpirationReminderCheckSecond);
-    }
-    
-    // ForgotPassword requests related job config
-    
-    @Bean
-    public JobDetail forgotPasswordExpirationJobDetail() {
+    private JobDetail forgotPasswordExpirationJobDetail() {
         JobDetail job = createJobDetail(ForgotPasswordExpirationJob.class, FORGOT_PASSWORD_JOB_KEY);
         job.getJobDataMap().put(Constants.FORGOT_PASSWORD_DAO, forgotPasswordDao);
         return job;
     }
     
-    @Bean
-    public Trigger forgotPasswordExpirationTrigger() {
-        return createRepeatTrigger(FORGOT_PASSWORD_TRIGGER_KEY, forgotPasswordExpirationIntervalCheckSecond);
-    }
-    
-    // UserVerification reminder related job config
-    
-    @Bean
-    public JobDetail userVerificationReminderJobDetail() {
+    private JobDetail userVerificationReminderJobDetail() {
         JobDetail job = createJobDetail(UserVerificationReminderJob.class, USER_VERIFICATION_JOB_KEY);
         job.getJobDataMap().put(Constants.USER_VERIFICATION_DAO, userVerificationDao);
+        job.getJobDataMap().put(Constants.USER_DAO, userDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
         return job;
-    }
-    
-    @Bean
-    public Trigger userVerificationReminderTrigger() {
-        return createRepeatTrigger(USER_VERIFICATION_TRIGGER_KEY, userVerificationReminderIntervalCheckSecond);
     }
     
     // internal
@@ -206,8 +192,9 @@ public class JobConfig {
                 .build();
     }
     
-    private Trigger createRepeatTrigger(String identity, int intervalInSeconds) {
+    private Trigger createRepeatTrigger(String identity, int intervalInSeconds, JobDetail jobDetail) {
         return newTrigger()
+                .forJob(jobDetail)
                 .withDescription("Trigger (identity: " + identity + ")")
                 .withIdentity(identity, JOB_GROUP)
                 .withSchedule(repeatSecondlyForever(intervalInSeconds))
@@ -222,8 +209,9 @@ public class JobConfig {
      * @param startingHour
      * @return 
      */
-    private Trigger createDailyTrigger(String identity, int startingHour) {
+    private Trigger createDailyTrigger(String identity, int startingHour, JobDetail jobDetail) {
         return newTrigger()
+                .forJob(jobDetail)
                 .withDescription("Trigger (identity: " + identity + ")")
                 .withIdentity(identity, JOB_GROUP)
                 .startNow()

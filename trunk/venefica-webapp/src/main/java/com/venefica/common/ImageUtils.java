@@ -18,15 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
-@Component
+@Named
 public class ImageUtils {
     
     protected static final Log logger = LogFactory.getLog(ImageUtils.class);

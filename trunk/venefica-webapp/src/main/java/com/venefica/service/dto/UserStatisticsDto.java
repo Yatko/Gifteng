@@ -22,6 +22,7 @@ public class UserStatisticsDto {
     private int numFollowings;
     private int numRatings;
     private int numUnreadMessages;
+    private int requestLimit;
 
     // WARNING: required for JAX-WS
     public UserStatisticsDto() {
@@ -81,6 +82,14 @@ public class UserStatisticsDto {
 
     public void setNumUnreadMessages(int numUnreadMessages) {
         this.numUnreadMessages = numUnreadMessages;
+    }
+
+    public int getRequestLimit() {
+        return requestLimit;
+    }
+
+    public void setRequestLimit(int requestLimit) {
+        this.requestLimit = requestLimit;
     }
     
 }

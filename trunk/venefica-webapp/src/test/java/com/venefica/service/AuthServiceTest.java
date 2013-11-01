@@ -42,33 +42,33 @@ public class AuthServiceTest extends ServiceTestBase<AuthService> {
 
     @Test
     public void correctCredentialsTest() throws AuthenticationException {
-        String token = client.authenticate(FIRST_USER_NAME, RIGHT_PASSWORD);
+        String token = client.authenticate(FIRST_USER_NAME, RIGHT_PASSWORD, null);
         assertNotNull("Token is null!", token);
     }
 
     @Test(expected = AuthenticationException.class)
     public void incorrectCredentialsTest() throws AuthenticationException {
-        client.authenticate(FIRST_USER_NAME, WRONG_PASSWORD);
+        client.authenticate(FIRST_USER_NAME, WRONG_PASSWORD, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void unexistingUserTest() throws AuthenticationException {
-        client.authenticate(UNEXISTING_USER_NAME, RIGHT_PASSWORD);
+        client.authenticate(UNEXISTING_USER_NAME, RIGHT_PASSWORD, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void nullUserNameTest() throws AuthenticationException {
-        client.authenticate(null, RIGHT_PASSWORD);
+        client.authenticate(null, RIGHT_PASSWORD, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void nullPasswordTest() throws AuthenticationException {
-        client.authenticate(FIRST_USER_NAME, null);
+        client.authenticate(FIRST_USER_NAME, null, null);
     }
 
     @Test(expected = AuthenticationException.class)
     public void emptyPasswordTest() throws AuthenticationException {
-        client.authenticate(FIRST_USER_NAME, "");
+        client.authenticate(FIRST_USER_NAME, "", null);
     }
 
     @Test(expected = SOAPFaultException.class)

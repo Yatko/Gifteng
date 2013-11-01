@@ -5,10 +5,13 @@
 package com.venefica.model;
 
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,13 +32,14 @@ public class Request {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "request_ad_fk")
     private Ad ad;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "request_usr_fk")
     private User user;
     
@@ -86,8 +90,7 @@ public class Request {
         }
 
         Request other = (Request) obj;
-
-        return id != null && id.equals(other.id);
+        return id != null && id.equals(other.getId()); //the getter usage is a must as proxies needs to be activated
     }
     
     public boolean isPending() {
@@ -157,7 +160,7 @@ public class Request {
     }
     
     public void cancel() {
-        unmarkAsAccepted(); //this should have no effect as cancelation is possible only if rquest is not selected
+        unmarkAsAccepted(); //this should have no effect as cancelation is possible only if the request was not selected
         status = RequestStatus.CANCELED;
     }
     

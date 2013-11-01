@@ -4,6 +4,8 @@
  */
 package com.venefica.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ public class AddressWrapper {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
     private String name;

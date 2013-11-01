@@ -6,6 +6,7 @@ package com.venefica.common;
 
 import com.venefica.config.Constants;
 import com.venefica.config.EmailConfig;
+import com.venefica.dao.UserSettingDao;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.mail.DataSourceResolver;
@@ -35,13 +37,12 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.TemplateInitException;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
-@Component
+@Named
 public class EmailSender {
     
     private static final Log logger = LogFactory.getLog(EmailSender.class);
@@ -50,6 +51,8 @@ public class EmailSender {
     
     @Inject
     private EmailConfig emailConfig;
+    @Inject
+    private UserSettingDao userSettingDao;
     
     private VelocityEngine velocityEngine;
     private DataSourceResolver dataSourceResolver;
@@ -109,7 +112,7 @@ public class EmailSender {
         
         try {
             MemberUserData userData = (MemberUserData) user.getUserData();
-            UserSetting userSetting = userData.getUserSetting();
+            UserSetting userSetting = (userData != null && userData.getUserSetting() != null) ? userSettingDao.get(userData.getUserSetting().getId()) : null;
             if ( userSetting != null && userSetting.notificationExists(notificationType) ) {
                 sendHtmlEmailByTemplates(
                         notificationType.getSubjectVelocityTemplate(),

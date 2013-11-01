@@ -104,62 +104,9 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
     
     @Override
     public List<Message> getLastMessagePerRequestByUser(Long userId) {
-        /**
-        List<Message> messages = createQuery(""
-                + "select m "
-                + "from " + getDomainClassName() + " m "
-                + "where "
-                + "m.deleted = false and "
-                + "(m.from.id = :userId or m.to.id = :userId) "
-                + "group by m.request "
-                + "order by m.createdAt desc, m.id desc "
-                + "")
-                .setParameter("userId", userId)
-                .list();
-        /**/
-        
-        //NOTE: this were worked with MySQL as database backend
-        /**
         List<Message> messages = new LinkedList<Message>();
-        List<Request> requests = createQuery(""
-                + "select m.request "
-                + "from " + getDomainClassName() + " m "
-                + "where "
-                + "m.deleted = false and "
-                + "m.request.ad.deleted = false and "
-                + "m.request.ad.creator.deleted = false and "
-                + "("
-                + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
-                + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
-                + ") "
-                + "group by m.request "
-                + "order by m.createdAt desc "
-                + "")
-                .setParameter("userId", userId)
-                .list();
-        for ( Request request : requests ) {
-            List<Message> message = createQuery(""
-                    + "from " + getDomainClassName() + " m "
-                    + "where "
-                    + "m.request = :request and "
-                    + "m.deleted = false "
-                    //+ "m.from.id != :fromId "
-                    + "order by m.createdAt desc, m.id desc "
-                    + "")
-                    .setParameter("request", request)
-                    //.setParameter("fromId", userId)
-                    .setMaxResults(1)
-                    .list();
-            if ( message != null && !message.isEmpty() ) {
-                messages.add(message.get(0));
-            }
-        }
-        /**/
-        
-        //NOTE: this is the working way with PostgreSQL (and should work also with MySQL)
-        List<Message> messages = new LinkedList<Message>();
-        List<Request> requests = createQuery(""
-                + "select m.request "
+        List<Long> requestIds = createQuery(""
+                + "select m.request.id "
                 + "from " + getDomainClassName() + " m "
                 + "where "
                 + "m.deleted = false and "
@@ -171,20 +118,20 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
                 + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
                 + ") "
-                + "group by m.request "
-                + "order by max(m.createdAt) desc, m.id desc"
+                + "group by m.request.id "
+                + "order by max(m.createdAt) desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();
-        for ( Request request : requests ) {
+        for ( Long requestId : requestIds ) {
             List<Message> lastMessage = createQuery(""
                     + "from " + getDomainClassName() + " m "
                     + "where "
-                    + "m.request = :request and "
+                    + "m.request.id = :requestId and "
                     + "m.deleted = false "
                     + "order by m.createdAt desc, m.id desc "
                     + "")
-                    .setParameter("request", request)
+                    .setParameter("requestId", requestId)
                     .setMaxResults(1)
                     .list();
             if ( lastMessage != null && !lastMessage.isEmpty() ) {

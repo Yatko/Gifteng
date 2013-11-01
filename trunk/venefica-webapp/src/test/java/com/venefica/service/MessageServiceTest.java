@@ -217,7 +217,8 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
         
-        messageDto = client.getAllMessages().get(0);
+        List<MessageDto> messages = client.getAllMessages();
+        messageDto = messages.get(0);
         authenticateClientAsSecondUser();
         
         try {
@@ -237,7 +238,8 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
         
-        messageDto = client.getAllMessages().get(0);
+        List<MessageDto> messages = client.getAllMessages();
+        messageDto = messages.get(0);
         
         try {
             messageDto.setText(null);
@@ -256,7 +258,8 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         messageDto.setRequestId(TEST_REQUEST_ID);
         Long messageId = client.sendMessage(messageDto);
         
-        messageDto = client.getAllMessages().get(0);
+        List<MessageDto> messages = client.getAllMessages();
+        messageDto = messages.get(0);
         
         try {
             messageDto.setText("New test message: updateMessageTest");

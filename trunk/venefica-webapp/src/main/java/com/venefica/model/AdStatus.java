@@ -19,7 +19,7 @@ package com.venefica.model;
 public enum AdStatus {
     
     OFFLINE, //unapproved ad status (status will be changed by admin user approval)
-    ACTIVE, //there is no active request
+    ACTIVE, //there is no active requests - logically is INACTIVE or something similar (TODO: needs refactoring)
     IN_PROGRESS, //there is an (one or more) active request for this ad
     FINALIZED, //sold out
     EXPIRED,

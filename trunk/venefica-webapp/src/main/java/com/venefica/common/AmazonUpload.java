@@ -13,30 +13,23 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.venefica.config.FileConfig;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
-@Component
+@Named
 public class AmazonUpload {
     
     private static final Log logger = LogFactory.getLog(EmailSender.class);
@@ -61,21 +54,6 @@ public class AmazonUpload {
         } else if ( files == null || files.isEmpty() ) {
             return;
         }
-        
-        //
-        //NOTE:
-        //This is another way to trasfer multiple file at once, but the
-        //permission change needs to be set manually anyway
-        //
-        
-//        try {
-//            File folder = files.get(0).getParentFile();
-//            TransferManager tx = new TransferManager(client);
-//            MultipleFileUpload multipleFileUpload = tx.uploadFileList(fileConfig.getAmazonBucket(), modelType.getFolderName(), folder, files);
-//            multipleFileUpload.waitForCompletion();
-//        } catch ( Exception ex ) {
-//            throw new IOException("Exception thrown when trying to transfer files to amazon S3", ex);
-//        }
         
         for ( File file : files ) {
             String key = modelType.getFolderName() + "/" + file.getName();

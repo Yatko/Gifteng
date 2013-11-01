@@ -6,9 +6,12 @@ package com.venefica.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,21 +31,22 @@ public class UserTransaction {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Access(AccessType.PROPERTY)
     private Long id;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "usertransaction_user_fk")
     private User user;
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "usertransaction_userpoint_fk")
     private UserPoint userPoint;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "usertransaction_ad_fk")
     private Ad ad;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "usertransaction_request_fk")
     private Request request;
     
@@ -79,6 +83,12 @@ public class UserTransaction {
         finalized = true;
         finalizedAt = new Date();
         this.status = status;
+    }
+    
+    public void unmarkAsFinalized() {
+        finalized = false;
+        finalizedAt = null;
+        this.status = TransactionStatus.NONE;
     }
     
     // getters/setters

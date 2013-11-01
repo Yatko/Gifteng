@@ -33,6 +33,18 @@
         <property name="username" value="${assembly.jdbc.username}" />
         <property name="password" value="${assembly.jdbc.password}" />
     </bean>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    
+    
+    <!-- Reference: https://code.google.com/p/log4jdbc-remix/ -->
+    <!--
+    <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceSpied" />
+    </bean>
+    -->
     
     
     <!-- currently just a temporary solution to set the system properties -->

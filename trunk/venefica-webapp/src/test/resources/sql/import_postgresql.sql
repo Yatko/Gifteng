@@ -27,10 +27,10 @@ insert into local_user (id, name, password, email, adminn, verified, userData_id
 
 -- User point
 delete from user_point;
-insert into user_point (id, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '0', '0');
-insert into user_point (id, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '0', '0');
-insert into user_point (id, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '0', '0');
-insert into user_point (id, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '0', '0');
+insert into user_point (id, requestLimit, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '5', '0', '0');
+insert into user_point (id, requestLimit, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '5', '0', '0');
+insert into user_point (id, requestLimit, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '5', '0', '0');
+insert into user_point (id, requestLimit, givingNumber, receivingNumber) values (nextval('user_point_id_seq'), '5', '0', '0');
 
 update local_user set userPoint_id=1 where id=1;
 update local_user set userPoint_id=2 where id=2;

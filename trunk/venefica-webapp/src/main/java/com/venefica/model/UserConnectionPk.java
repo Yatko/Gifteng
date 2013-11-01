@@ -41,13 +41,25 @@ public class UserConnectionPk implements Serializable {
         }
 
         UserConnectionPk other = (UserConnectionPk) obj;
-        return userId.equals(other.userId)
-                && providerId == other.providerId
-                && providerUserId.equals(other.providerUserId);
+        return userId.equals(other.getUserId())
+                && providerId == other.getProviderId()
+                && providerUserId.equals(other.getProviderUserId()); //the getter usage is a must as proxies needs to be activated
     }
 
     @Override
     public int hashCode() {
         return userId.hashCode() * 1000 + providerId.hashCode() * 100 + providerUserId.hashCode();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Provider getProviderId() {
+        return providerId;
+    }
+
+    public String getProviderUserId() {
+        return providerUserId;
     }
 }

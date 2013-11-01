@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,7 +41,7 @@ public class MemberUserData extends UserData {
     @Enumerated(EnumType.STRING)
     private MaritalStatus maritalStatus;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "usersetting_fk")
     private UserSetting userSetting;
     

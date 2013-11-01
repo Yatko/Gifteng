@@ -2,12 +2,12 @@ package com.venefica.service;
 
 import com.venefica.common.MailException;
 import com.venefica.common.RandomGenerator;
+import com.venefica.config.AppConfig;
 import com.venefica.config.Constants;
 import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
-import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.model.BusinessCategory;
@@ -30,7 +30,6 @@ import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -54,11 +53,11 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private MessageService messageService;
     
     @Inject
+    private AppConfig appConfig;
+    @Inject
     private ImageDao imageDao;
     @Inject
     private InvitationDao invitationDao;
-    @Inject
-    private UserDataDao userDataDao;
     @Inject
     private BusinessCategoryDao businessCategoryDao;
     @Inject
@@ -94,6 +93,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     }
     
     @Override
+    @Transactional
     public void resendVerification() throws UserNotFoundException, GeneralException {
         UserVerification userVerification = userVerificationDao.findByUser(getCurrentUserId());
         if ( userVerification == null ) {
@@ -179,27 +179,16 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setPassword(password);
         user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
-        UserSetting userSetting = new UserSetting();
-        userSetting.setNotifiableTypes(EnumSet.of(
-                NotificationType.FOLLOWER_ADDED,
-                NotificationType.AD_COMMENTED,
-                NotificationType.AD_REQUESTED,
-                NotificationType.REQUEST_MESSAGED,
-                NotificationType.REQUEST_ACCEPTED,
-                NotificationType.REQUEST_CANCELED,
-                NotificationType.REQUEST_DECLINED
-                ));
-        userSettingDao.save(userSetting);
-        
         invitation.use();
         invitationDao.update(invitation);
         
+        UserSetting userSetting = createUserSetting(null);
         MemberUserData userData = ((MemberUserData) user.getUserData());
         userData.setInvitation(invitation);
         userData.setUserSetting(userSetting);
         userDataDao.save(userData);
         
-        UserPoint userPoint = new UserPoint(0, 0);
+        UserPoint userPoint = new UserPoint(appConfig.getRequestStartupLimit(), 0, 0);
         userPoint.setUser(user);
         userPointDao.save(userPoint);
         
@@ -444,6 +433,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     //*****************
     
     @Override
+    @Transactional
     public UserSettingDto getUserSetting() throws GeneralException {
         User currentUser = getCurrentUser();
         
@@ -454,19 +444,16 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         MemberUserData userData = (MemberUserData) currentUser.getUserData();
         UserSetting userSetting = userData.getUserSetting();
         
-        //automatically creating user setting if not present
         if ( userSetting == null ) {
-            userSetting = new UserSetting();
-            userSettingDao.save(userSetting);
-            
-            userData.setUserSetting(userSetting);
-            userDataDao.update(userData);
+            //automatically creating user setting if not present
+            userSetting = createUserSetting(userData);
         }
         
         return new UserSettingDto(currentUser, userSetting);
     }
     
     @Override
+    @Transactional
     public void saveUserSetting(UserSettingDto userSettingDto) throws GeneralException {
         User currentUser = getCurrentUser();
         
@@ -477,13 +464,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         MemberUserData userData = (MemberUserData) currentUser.getUserData();
         UserSetting userSetting = userData.getUserSetting();
         
-        //automatically creating user setting if not present
         if ( userSetting == null ) {
-            userSetting = new UserSetting();
-            userSettingDao.save(userSetting);
-            
-            userData.setUserSetting(userSetting);
-            userDataDao.update(userData);
+            //automatically creating user setting if not present
+            userSetting = createUserSetting(userData);
         }
         
         userSetting.setNotifiableTypes(userSettingDto.getNotifiableTypes());
@@ -554,6 +537,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         int numFollowers = this.getFollowersSize(user);
         int numFollowings = this.getFollowingsSize(user);
         int numUnreadMessages = messageService.getUnreadMessagesSize(userId);
+        int requestLimit = user.getUserPoint() != null ? user.getUserPoint().getRequestLimit() : 0;
         
         UserStatisticsDto statistics = new UserStatisticsDto();
         statistics.setNumReceivings(numReceivings);
@@ -563,6 +547,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         statistics.setNumFollowings(numFollowings);
         statistics.setNumRatings(numRatings);
         statistics.setNumUnreadMessages(numUnreadMessages);
+        statistics.setRequestLimit(requestLimit);
         return statistics;
     }
     

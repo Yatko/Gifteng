@@ -70,6 +70,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         if ( !creator.equals(currentUser) ) {
             Map<String, Object> vars = new HashMap<String, Object>(0);
             vars.put("ad", ad);
+            vars.put("creator", creator);
             vars.put("comment", comment);
 
             emailSender.sendNotification(NotificationType.AD_COMMENTED, creator, vars);

@@ -51,4 +51,12 @@ public interface BookmarkDao {
      * @return list of ads
      */
     List<Ad> getBookmarkedAds(User user);
+    
+    /**
+     * Returns a list of bookmarked ad ids for the given user.
+     * 
+     * @param user
+     * @return 
+     */
+    List<Long> getBookmarkedAdIds(User user);
 }

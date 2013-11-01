@@ -27,10 +27,10 @@ insert into `local_user` (`name`, `password`, `email`, `adminn`, `verified`, `us
 
 -- User point
 delete from `user_point`;
-insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
-insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
-insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
-insert into `user_point` (`givingNumber`, `receivingNumber`) values ('0', '0');
+insert into `user_point` (`requestLimit`, `givingNumber`, `receivingNumber`) values ('5', '0', '0');
+insert into `user_point` (`requestLimit`, `givingNumber`, `receivingNumber`) values ('5', '0', '0');
+insert into `user_point` (`requestLimit`, `givingNumber`, `receivingNumber`) values ('5', '0', '0');
+insert into `user_point` (`requestLimit`, `givingNumber`, `receivingNumber`) values ('5', '0', '0');
 
 update `local_user` set `userPoint_id`=1 where `id`=1;
 update `local_user` set `userPoint_id`=2 where `id`=2;

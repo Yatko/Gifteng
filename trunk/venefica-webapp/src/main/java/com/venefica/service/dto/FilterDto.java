@@ -16,6 +16,14 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FilterDto {
 
+//    public static final boolean DEFAULT_INCLUDE_CAN_REQUEST = true;
+//    public static final boolean DEFAULT_INCLUDE_REQUESTED = true;
+//    public static final boolean DEFAULT_INCLUDE_SHIPPED = false;
+//    public static final boolean DEFAULT_INCLUDE_INACTIVE = false;
+//    public static final boolean DEFAULT_INCLUDE_OWNED = true;
+    public static final boolean DEFAULT_ORDER_ASC = false;
+    public static final boolean DEFAULT_ORDER_CLOSEST = false;
+    
     private String searchString;
     // all fields are input ones
     @XmlElementWrapper(name = "categories")
@@ -28,18 +36,15 @@ public class FilterDto {
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
     private AdType type;
-    private Boolean includeOwned;
+    //private Boolean includeOwned;
     private Boolean orderAsc; //if true the older ads will be in the first position
-    private Boolean includeCannotRequest; //ads that cannot be requested by the caller user to be included or not
-    private Boolean includeOnlyCannotRequest; //load only requestable ads or not
-    private Boolean includeInactive;
-    private Boolean includeOnlyInactive;
+    private Boolean orderClosest; //if true the closest ads will be in the first position
+    private FilterType filterType;
     
-    
-//    //TODO:
-//    private Boolean includeExpired;
-//    private Boolean includeSold; //sold if quantity=0
-    
+    //private Boolean includeInactive;
+    //private Boolean includeShipped; //has request with SENT or RECEIVED status
+    //private Boolean includeRequested; //include already requested gifts or not
+    //private Boolean includeCanRequest; //quantity > 0; ad active (status != [OFFLINE, FINALIZED, EXPIRED]); sum of active (not deleted and not hidden and status = [PENDING, ACCEPTED, UNACCEPTED, SENT, RECEIVED]) requests < REQUEST_MAX_ALLOWED (3); is requested = false
     
     // WARNING: required for JAX-WS
     public FilterDto() {
@@ -109,13 +114,13 @@ public class FilterDto {
         this.hasPhoto = hasPhoto;
     }
 
-    public Boolean getIncludeOwned() {
-        return includeOwned;
-    }
-
-    public void setIncludeOwned(Boolean includeOwned) {
-        this.includeOwned = includeOwned;
-    }
+//    public Boolean getIncludeOwned() {
+//        return includeOwned;
+//    }
+//
+//    public void setIncludeOwned(Boolean includeOwned) {
+//        this.includeOwned = includeOwned;
+//    }
 
     public AdType getType() {
         return type;
@@ -133,35 +138,51 @@ public class FilterDto {
         this.orderAsc = orderAsc;
     }
 
-    public Boolean getIncludeCannotRequest() {
-        return includeCannotRequest;
+    public Boolean getOrderClosest() {
+        return orderClosest;
     }
 
-    public void setIncludeCannotRequest(Boolean includeCannotRequest) {
-        this.includeCannotRequest = includeCannotRequest;
+    public void setOrderClosest(Boolean orderClosest) {
+        this.orderClosest = orderClosest;
     }
 
-    public Boolean getIncludeOnlyCannotRequest() {
-        return includeOnlyCannotRequest;
+//    public Boolean getIncludeShipped() {
+//        return includeShipped;
+//    }
+//
+//    public void setIncludeShipped(Boolean includeShipped) {
+//        this.includeShipped = includeShipped;
+//    }
+//
+//    public Boolean getIncludeCanRequest() {
+//        return includeCanRequest;
+//    }
+//
+//    public void setIncludeCanRequest(Boolean includeCanRequest) {
+//        this.includeCanRequest = includeCanRequest;
+//    }
+//
+//    public Boolean getIncludeInactive() {
+//        return includeInactive;
+//    }
+//
+//    public void setIncludeInactive(Boolean includeInactive) {
+//        this.includeInactive = includeInactive;
+//    }
+//
+//    public Boolean getIncludeRequested() {
+//        return includeRequested;
+//    }
+//
+//    public void setIncludeRequested(Boolean includeRequested) {
+//        this.includeRequested = includeRequested;
+//    }
+
+    public FilterType getFilterType() {
+        return filterType;
     }
 
-    public void setIncludeOnlyCannotRequest(Boolean includeOnlyCannotRequest) {
-        this.includeOnlyCannotRequest = includeOnlyCannotRequest;
-    }
-
-    public Boolean getIncludeInactive() {
-        return includeInactive;
-    }
-
-    public void setIncludeInactive(Boolean includeInactive) {
-        this.includeInactive = includeInactive;
-    }
-
-    public Boolean getIncludeOnlyInactive() {
-        return includeOnlyInactive;
-    }
-
-    public void setIncludeOnlyInactive(Boolean includeOnlyInactive) {
-        this.includeOnlyInactive = includeOnlyInactive;
+    public void setFilterType(FilterType filterType) {
+        this.filterType = filterType;
     }
 }

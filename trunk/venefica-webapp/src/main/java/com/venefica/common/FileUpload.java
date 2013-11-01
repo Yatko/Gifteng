@@ -11,16 +11,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gyuszi
  */
-@Component
+@Named
 public class FileUpload {
     
     private static final Log logger = LogFactory.getLog(FileUpload.class);
