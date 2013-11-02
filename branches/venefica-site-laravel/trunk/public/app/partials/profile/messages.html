@@ -7,10 +7,26 @@
 				<a href="" ng-click="openmsg(message.requestId)">
 					<div class="row">
 						<div class="col-xs-4 col-md-2">
-							<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" />
+							<div ng-switch="message.owner">
+								<div ng-switch-when="true">
+									<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.toAvatarUrl" />
+									<img src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.toAvatarUrl" />
+								</div>
+								<div ng-switch-when="false">
+									<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.fromAvatarUrl" />
+									<img src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.fromAvatarUrl" />
+								</div>
+							</div>
 						</div>
 						<div class="col-xs-8 col-md-10">
-							<span>{{message.toFullName}}</span>
+							<div ng-switch="message.owner">
+								<div ng-switch-when="true">
+									<span>{{message.toFullName}}</span>
+								</div>
+								<div ng-switch-when="false">
+									<span>{{message.fromFullName}}</span>
+								</div>
+							</div>
 							<span>{{message.createdAt | date:'longDate'}}</span>
 							<h4>{{message.adTitle}}</h4>
 							<p>
@@ -23,7 +39,7 @@
 		</div>
 	</div>
 	<div class="col-sm-5" ng-show="showMessage">
-		<message ng-model="current_message">
+		<message ng-model="current_message" callback="openmsg(reqid)">
 			
 		</message>
 	</div>

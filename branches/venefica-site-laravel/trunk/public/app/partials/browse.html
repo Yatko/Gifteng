@@ -51,7 +51,7 @@
 			num-shares="{{ad.statistics.numShares}}"
 			num-comments="{{ad.statistics.numComments}}"
 			num-bookmarks="{{ad.statistics.numBookmarks}}"
-			comments="{{ad.comments.item}}"
+			comments="{{ad.comments}}"
 			title="{{ad.title}}"
 			creator-name="{{creators[ad.creator].firstName}} {{creators[ad.creator].lastName}}"
 			creator-since="{{creators[ad.creator].joinedAt | date:'MMMM yyyy'}}"
@@ -63,6 +63,8 @@
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
 			in-bookmarks="{{ad.inBookmarks}}"
+			callback="loadAds()"
+			self="ad.self"
 			></ad>
 		</div>
 	</div>
@@ -74,7 +76,7 @@
 			num-shares="{{ad.statistics.numShares}}"
 			num-comments="{{ad.statistics.numComments}}"
 			num-bookmarks="{{ad.statistics.numBookmarks}}"
-			comments="{{ad.comments.item}}"
+			comments="{{ad.comments}}"
 			title="{{ad.title}}"
 			creator-name="{{creators[ad.creator].firstName}} {{creators[ad.creator].lastName}}"
 			creator-since="{{creators[ad.creator].joinedAt | date:'MMMM yyyy'}}"
@@ -86,6 +88,8 @@
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
 			in-bookmarks="{{ad.inBookmarks}}"
+			callback="loadAds()"
+			self="ad.self"
 			></ad>
 		</div>
 	</div>
@@ -97,7 +101,7 @@
 			num-shares="{{ad.statistics.numShares}}"
 			num-comments="{{ad.statistics.numComments}}"
 			num-bookmarks="{{ad.statistics.numBookmarks}}"
-			comments="{{ad.comments.item}}"
+			comments="{{ad.comments}}"
 			title="{{ad.title}}"
 			creator-name="{{creators[ad.creator].firstName}} {{creators[ad.creator].lastName}}"
 			creator-since="{{creators[ad.creator].joinedAt | date:'MMMM yyyy'}}"
@@ -109,6 +113,8 @@
 			status="{{ad.status}}"
 			can-request="{{ad.canRequest}}"
 			in-bookmarks="{{ad.inBookmarks}}"
+			callback="loadAds()"
+			self="ad.self"
 			></ad>
 		</div>
 	</div>

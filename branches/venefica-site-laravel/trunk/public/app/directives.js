@@ -17,11 +17,120 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorAvatar:'@',
 					creatorPoints:'@',
 					id:'@',
-					ad:'='
+					ad:'=',
+					callback:'&'
 				},
 				templateUrl: 'app/partials/directives/ad-item-box.html',
 				replace:true,
 				transclude:true,
+				controller: function($scope, UserEx) {
+					
+					/* giving modals */
+					$scope.deleteGift = function(id) {
+						var callback=$scope.callback;
+					    var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/delete_gift.html',
+							controller: function($scope, Ad, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.submit = function() {
+									Ad.remove({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+							}
+						});
+					}
+					$scope.relistGift = function(id) {
+						var callback=$scope.callback;
+					    var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/relist_gift.html',
+							controller: function($scope, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.submit = function() {
+									UserEx.relist.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+							}
+						});
+					}
+					
+					/* receiving modals */
+					$scope.requestHide = function(id) {
+						UserEx.requestHide.query({id:id}, function() {
+							$scope.callback();
+						})
+					}
+					
+					
+					$scope.requestCancel = function(id) {
+						var callback=$scope.callback;
+					    var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/request_cancel.html',
+							controller: function($scope, UserEx, $location, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.submit = function() {
+									UserEx.requestCancel.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+							}
+						});
+					}
+					$scope.requestReceive = function(id) {
+						var callback=$scope.callback;
+					    var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/request_receive.html',
+							controller: function($scope, UserEx, $location, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.submit = function() {
+									UserEx.requestReceive.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+							}
+						});
+					}
+					
+					/* favorites modals */
+					$scope.requestGift = function(id) {
+						var callback=$scope.callback;
+					    var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/request_create.html',
+							controller: function($scope, UserEx, $location, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.submit = function() {
+									UserEx.requestAd.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+							}
+						});
+					}
+					
+					
+					$scope.unbookmark = function(id) {
+						UserEx.unbookmark.query({id:id}, function() {
+							$scope.callback();
+						});
+					}
+					
+				},
 				compile: function compile() {
 					return {
 				        post: function (scope, iElement, iAttrs) { 
@@ -33,7 +142,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 								var text = '';
 								
 								if(iAttrs.details=='1' || type=="details") {
-									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>';
+									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" avatar="{{creatorAvatar}}" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>';
 									$('.well',iElement).prepend($compile(userprofile)(scope));
 								}
 								
@@ -56,7 +165,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					nested:'@',
 					ads:'@',
 					following:'=',
-					self:'@'
+					self:'=',
+					avatar:'@'
 				},
 				templateUrl: 'app/partials/directives/user-profile.html',
 				replace:true,
@@ -131,7 +241,9 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					id:'@',
 					status:'@',
 					canRequest:'@',
-					category:'@'
+					category:'@',
+					callback:'&',
+					self:'='
 				},
 				templateUrl: 'app/partials/directives/ad.html',
 				replace:true,
@@ -142,24 +254,24 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 						$scope.numBookmarks++;
 						$scope.inBookmarks=true;
 					}
-					$scope.unbookmark = function(id) {
-						UserEx.unbookmark.query({id:id});
-					}
 					$scope.doComment = function (id) {
+						var callback=$scope.callback;
 					    var modalInstance = $modal.open({
       						templateUrl: 'app/partials/directives/modal/comment.html',
       						controller: function($scope, $modalInstance) {
       							$scope.add = function () {
-      								UserEx.comment.query({id:id,text:$('#comment_text').val()});
+      								UserEx.comment.query({id:id,text:$('#comment_text').val()},function() {
+										callback();
+									});
 									$modalInstance.close();
 								};
       						}
       					});
 					  };
 				},
-				link: function() {
+				compile: function() {
 					return {
-						pre: function(scope, iElement, iAttrs) {
+						post: function(scope, iElement, iAttrs) {
 							if(iAttrs.simple) {
 								$('.ge-action',iElement).remove();
 								$('.title',iElement).remove();
@@ -168,8 +280,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				        	iAttrs.$observe('comments', function() {
 				        		if(scope.numComments>0) {
 					        		scope.comments = angular.fromJson(scope.comments);
-					        		if(typeof(scope.comments.type) !== 'undefined') {
-					        			scope.comments = [scope.comments];
+					        		if(typeof(scope.comments.item.type) !== 'undefined') {
+					        			scope.comments.item = [scope.comments.item];
 					        		}
 				        		}
 				        	});
@@ -183,7 +295,8 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				restrict:'E',
 				templateUrl: 'app/partials/directives/message.html',
 				scope: {
-      				ngModel: '='
+      				ngModel: '=',
+      				callback: '&'
 				},
 				replace:true,
     			require: 'ngModel',
@@ -192,8 +305,15 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 			    		var message = new UserEx.message();
 			            message.text = $('#text_msg').val();
 			            message.requestId = $scope.ngModel.messages[0].requestId;
+			            if($scope.ngModel.messages[0].owner)
 			            message.toId = $scope.ngModel.messages[0].toId;
-			            message.$save();
+			            else
+			            message.toId = $scope.ngModel.messages[0].fromId;
+			            
+			            message.$save(function() {
+			            	$('#text_msg').val('');
+			            	$scope.callback({reqid:$scope.ngModel.messages[0].requestId});
+			            });
 			    	};
 			    }
 			}

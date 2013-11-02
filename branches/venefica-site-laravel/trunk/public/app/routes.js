@@ -47,7 +47,7 @@ define(['angular','app','services'], function(angular,app) {
 			).
 			when('/top-giftengers',
 				{
-					controller: 'IndexController',
+					controller: 'TopController',
 					templateUrl: 'app/partials/top.html',
 				}
 			).

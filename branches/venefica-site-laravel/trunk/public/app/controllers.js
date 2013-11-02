@@ -11,6 +11,15 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		})
 		
 		/**
+		 * Top Giftengers Controller
+		 */
+		.controller('TopController', function($scope, Top) {
+			var top = Top.query({},function() {
+				$scope.users = top.users;
+			});
+		})
+		
+		/**
 		 * Edit Post Controller
 		 */
 		.controller('EditPostController', function($scope, Geo, Ad) {
@@ -24,87 +33,98 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Post Controller
 		 */
-		.controller('PostController', function($scope, Geo, Ad) {
-			$scope.step="step1";
-			$scope.toPost={};
-			$scope.toPost.image='';
-			$scope.setImg = function() {
-				$scope.toPost.image=$('#giftimage').val();
-			}
-			$scope.step1 = function() {
+		.controller('PostController', function($scope, Geo, Ad,UserEx,User) {
+			$scope.newPost = function() {
 				$scope.step="step1";
-			}
-			$scope.step2 = function() {
-				$scope.step="step2";
-			};
-			$scope.step3 = function() {
-				$scope.step="step3";
-				showMap();
-			};
-			$scope.step4 = function() {
-				$scope.step="step4";
-				showMap();
-			}
-			$scope.log = function() {
-				var posting={
-					title: $scope.toPost.title,
-					description: $scope.toPost.description,
-					categoryId: $scope.toPost.category,
-					address: $scope.toPost.address,
-					pickUp: $scope.toPost.pickUp,
-					freeShipping: $scope.toPost.freeShipping,
-					image: {url:$scope.toPost.image}
+				$scope.toPost={};
+				$scope.toPost.image='';
+				$scope.setImg = function() {
+					$scope.toPost.image=$('#giftimage').val();
+				}
+				$scope.step1 = function() {
+					$scope.step="step1";
+				}
+				$scope.step2 = function() {
+					$scope.step="step2";
 				};
-				Ad.save({ad:posting});
-				
-			}
-			var showMap = function() {
-        		var locationIcon = new L.icon({
-	                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
-	                iconSize: [64, 64]
-	            });
-	            
-				var geo = Geo.query({zip: $scope.toPost.zip}, function() {
-					$scope.toPost.address = geo.address;
-		            
-		            var locationMarker = new L.marker([$scope.toPost.address.latitude, $scope.toPost.address.longitude], {
-		                icon: locationIcon
+				$scope.step3 = function() {
+					$scope.step="step3";
+					showMap();
+				};
+				$scope.step4 = function() {
+					$scope.step="step4";
+					showMap();
+				}
+				$scope.log = function() {
+					var posting={
+						title: $scope.toPost.title,
+						description: $scope.toPost.description,
+						categoryId: $scope.toPost.category,
+						address: $scope.toPost.address,
+						pickUp: $scope.toPost.pickUp,
+						freeShipping: $scope.toPost.freeShipping,
+						image: {url:$scope.toPost.image}
+					};
+					Ad.save({ad:posting}, function() {
+						$scope.step='step5';
+						var user = UserEx.reinit.query({}, function() {
+							User.setUser(user);
+						});
+					});
+					
+				}
+				var showMap = function() {
+	        		var locationIcon = new L.icon({
+		                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
+		                iconSize: [64, 64]
 		            });
 		            
-		            var tileLayer = new L.tileLayer.provider('Esri.WorldStreetMap');
-		
-		            var map = new L.map('view_map').setView([$scope.toPost.address.latitude, $scope.toPost.address.longitude], 16);
-		            tileLayer.addTo(map);
-		            locationMarker.addTo(map);
-				});
+					var geo = Geo.query({zip: $scope.toPost.zip}, function() {
+						$scope.toPost.address = geo.address;
+			            
+			            var locationMarker = new L.marker([$scope.toPost.address.latitude, $scope.toPost.address.longitude], {
+			                icon: locationIcon
+			            });
+			            
+			            var tileLayer = new L.tileLayer.provider('Esri.WorldStreetMap');
+			
+			            var map = new L.map('view_map').setView([$scope.toPost.address.latitude, $scope.toPost.address.longitude], 16);
+			            tileLayer.addTo(map);
+			            locationMarker.addTo(map);
+					});
+				}
 			}
+			
+			$scope.newPost();
 		})
 		
 		/**
 		 * Browse Controller
 		 */
 		.controller('BrowseController', function($scope, AdMore, Ad) {
-			var ads = Ad.query({}, function() {
-				$scope.col1 = [];
-				$scope.col2 = [];
-				$scope.col3 = [];
-				$scope.creators = ads['creators'];
-				
-				for(var i=0;i<ads['ads'].length;i++) {
-					if((i%3)==0) {
-						$scope.col3.push(ads['ads'][i]);
+			$scope.loadAds = function () {
+				var ads = Ad.query({}, function() {
+					$scope.col1 = [];
+					$scope.col2 = [];
+					$scope.col3 = [];
+					$scope.creators = ads['creators'];
+					
+					for(var i=0;i<ads['ads'].length;i++) {
+						if((i%3)==0) {
+							$scope.col3.push(ads['ads'][i]);
+						}
+						else if((i%2)==0) {
+							$scope.col2.push(ads['ads'][i]);
+						}
+						else {
+							$scope.col1.push(ads['ads'][i]);
+						}
+						if(i==ads['ads'].length-1) {
+							$scope.last=ads['ads'][i].lastIndex;
+						}
 					}
-					else if((i%2)==0) {
-						$scope.col2.push(ads['ads'][i]);
-					}
-					else {
-						$scope.col1.push(ads['ads'][i]);
-					}
-					if(i==ads['ads'].length-1) {
-						$scope.last=ads['ads'][i].lastIndex;
-					}
-				}
-			});
+				});
+			}
 			function jsonConcat(o1, o2) {
 			 for (var key in o2) {
 			  o1[key] = o2[key];
@@ -130,6 +150,8 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					}
 				});
 			}
+			
+			$scope.loadAds();
 		})
 		
 		/**
@@ -158,6 +180,33 @@ define(['angular','services','lang'], function(angular,services,lang) {
 				},
 				true
 			);
+			
+			$scope.updateProfile = function(user) {
+			    var modalInstance = $modal.open({
+					templateUrl: 'app/partials/directives/modal/edit_profile.html',
+					controller: function($scope, $modalInstance, User, UserEx) {
+						$scope.user=user;
+						
+						$scope.close = function () {
+							$modalInstance.close();
+						};
+						$scope.submit = function() {
+							
+							UserEx.updateProfile.query({
+								'first_name':$('#firstName').val(),
+								'last_name':$('#lastName').val(),
+								'about':$('#about').val(),
+								'zipCode':$('#zipCode').val()
+							}, function (){
+								var user = UserEx.reinit.query({}, function() {
+									User.setUser(user);
+									$modalInstance.close();
+								});
+							});
+						}
+					}
+				});
+			}
 			
 			$scope.changePhoto = function() {
 			    var modalInstance = $modal.open({
@@ -232,77 +281,86 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		 * User Ads Controller
 		 */
 		.controller('UserAdsController',function($scope, $routeParams, User, AdUser) {
-			if(typeof($routeParams.id)!=='undefined') {
-				$scope.ads = AdUser.query({id:$routeParams.id});
-			}
-			else {
-				$scope.$watch(
-					function() {
-						return User.getUser();
-					},
-					function(user) {
-						if(typeof(user.data) !== 'undefined')
-							$scope.ads = AdUser.query({id:user.data.id});
-					},
-					true
-				);
-			}
+			$scope.loadAds = function() {
+				if(typeof($routeParams.id)!=='undefined') {
+					$scope.ads = AdUser.query({id:$routeParams.id});
+				}
+				else {
+					$scope.$watch(
+						function() {
+							return User.getUser();
+						},
+						function(user) {
+							if(typeof(user.data) !== 'undefined')
+								$scope.ads = AdUser.query({id:user.data.id});
+						},
+						true
+					);
+				}
+			};
+			$scope.loadAds();
 		})
 		
 		/**
 		 * Requested Ads Controller
 		 */
 		.controller('RequestedAdsController',function($scope, $routeParams, User, AdRequested) {
-			if(typeof($routeParams.id)!=='undefined') {
-				var ads = AdRequested.query({id:$routeParams.id}, function() {
-					$scope.ads = ads.ads;
-					$scope.creators = ads.creators;
-				});
-			}
-			else {
-				$scope.$watch(
-					function() {
-						return User.getUser();
-					},
-					function(user) {
-						if(typeof(user.data) !== 'undefined') {
-							var ads = AdRequested.query({id:user.data.id}, function() {
-								$scope.ads = ads.ads;
-								$scope.creators = ads.creators;
-							});
-						}
-					},
-					true
-				);
-			}
+			$scope.loadAds = function() {
+				if(typeof($routeParams.id)!=='undefined') {
+					var ads = AdRequested.query({id:$routeParams.id}, function() {
+						$scope.ads = ads.ads;
+						$scope.creators = ads.creators;
+					});
+				}
+				else {
+					$scope.$watch(
+						function() {
+							return User.getUser();
+						},
+						function(user) {
+							if(typeof(user.data) !== 'undefined') {
+								var ads = AdRequested.query({id:user.data.id}, function() {
+									$scope.ads = ads.ads;
+									$scope.creators = ads.creators;
+								});
+							}
+						},
+						true
+					);
+				}
+			};
+			$scope.loadAds();
 		})
 		
 		/**
 		 * Bookmarked Ads Controller
 		 */
 		.controller('BookmarkedAdsController',function($scope, $routeParams, User, AdBookmarked) {
-			if(typeof($routeParams.id)!=='undefined') {
-				var ads = AdBookmarked.query({id:$routeParams.id}, function() {
-					$scope.ads = ads.ads;
-					$scope.creators = ads.creators;
-				});
-			}
-			else {
-				$scope.$watch(
-					function() {
-						return User.getUser();
-					},
-					function(user) {
-						if(typeof(user.data) !== 'undefined') {
-							var ads = AdBookmarked.query({id:user.data.id}, function() {
-								$scope.ads = ads.ads;
-								$scope.creators = ads.creators;
-							});
-						}
-					},
-					true
-				);
-			}
+			$scope.loadAds = function() {
+				if(typeof($routeParams.id)!=='undefined') {
+					var ads = AdBookmarked.query({id:$routeParams.id}, function() {
+						$scope.ads = ads.ads;
+						$scope.creators = ads.creators;
+					});
+				}
+				else {
+					$scope.$watch(
+						function() {
+							return User.getUser();
+						},
+						function(user) {
+							if(typeof(user.data) !== 'undefined') {
+								var ads = AdBookmarked.query({id:user.data.id}, function() {
+									$scope.ads = ads.ads;
+									$scope.creators = ads.creators;
+								});
+							}
+						},
+						true
+					);
+				}
+			};
+			$scope.loadAds();
 		})
 		
 		/**
@@ -388,7 +446,13 @@ define(['angular','services','lang'], function(angular,services,lang) {
 			$scope.openmsg = function(id) {
 				$scope.showMessage = true;
 				var messages = UserEx.message.query({id:id}, function () {
-					var from = UserEx.profile.query({id:messages[0].toId});
+					if(messages[0].owner) {
+						var fromId=messages[0].toId;
+					}
+					else {
+						var fromId=messages[0].fromId;
+					}
+					var from = UserEx.profile.query({id:fromId});
 					$scope.current_message = {
 						messages: messages,
 						from: from

@@ -1,58 +1,14 @@
 <div class="row">
-	<div class="col-sm-4">
+	<div class="col-sm-4" ng-repeat="user in users">
 		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
-		</user-profile>
-	</div>
-	<div class="col-sm-4">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
-		</user-profile>
-	</div>
-	<div class="col-sm-4">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
-		</user-profile>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-4">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
-		</user-profile>
-	</div>
-	<div class="col-sm-4">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
-		</user-profile>
-	</div>
-	<div class="col-sm-4">
-		<user-profile 
-			name="Krasimir Stavrev" 
-			location="Sofia, Bulgaria" 
-			img="http://placehold.it/200x200/FF9999/FFF" 
-			points="100" 
-			since="August 2013">
+			name="{{user.firstName}} {{user.lastName}}" 
+			location="{{user.address.city}}, {{user.address.state}}" 
+			img="https://s3.amazonaws.com/ge-dev/user/{{user.avatar.id}}_112"
+			avatar="{{user.avatar.id}}" 
+			points="{{user.score | number:0}}/{{user.pendingScore | number:0}}" 
+			since="{{user.joinedAt | date:'MMMM yyyy'}}"
+			following="user.inFollowings"
+		>
 		</user-profile>
 	</div>
 </div>

@@ -1,6 +1,6 @@
 <div class="ge-ad">
 	<div class="well">
-		<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>
+		<user-profile name="{{creatorName}}" avatar="{{creatorAvatar}}" self="self" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>
 		<div class="ge-item-image">
 			<a href="#/view/gift/{{id}}"> <img ng-src="{{img}}" class="img-responsive" ng-class="{inactive: canRequest=='false'}"> </a>
 			<div class="ge-icon-ribbon"></div>
@@ -25,12 +25,12 @@
 			<a href="#/view/gift/{{id}}"> {{title}} </a>
 		</div>
 		<div class="comments">
-			<div class="row" ng-repeat="comment in comments">
+			<div class="row" ng-repeat="comment in comments.item">
 				<div class="col-xs-3">
 					<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
 				</div>
 				<div class="col-xs-9">
-					<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a> <span>{{1378383886000 | date:mediumDate}}</span>
+					<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a> <span>{{comment.createdAt | date:mediumDate}}</span>
 					<p>{{comment.text}}</p>
 				</div>
 			</div>

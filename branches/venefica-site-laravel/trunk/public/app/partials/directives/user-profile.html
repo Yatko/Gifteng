@@ -4,7 +4,10 @@
 			<div class="row">
 				<div class="col-xs-4">
 					<div class="ge-user-image">
-						<a href="#/view/profile/{{id}}"> <img ng-src="{{img}}" class="img img-rounded img-responsive"> </a>
+						<a href="#/view/profile/{{id}}">
+							<img ng-src="{{img}}" ng-show="avatar" class="img img-rounded img-responsive">
+							<img src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" ng-hide="avatar" class="img img-rounded img-responsive">
+						</a>
 					</div>
 				</div>
 				<div class="col-xs-8">
@@ -18,7 +21,7 @@
 						<div class="ge-location">
 							{{location}}
 						</div>
-						<div class="ge-points">
+						<div class="ge-points" ng-hide="self">
 							<span class="label label-default label-ge">G {{points}}</span>
 							<a href="">
 								<span ng-switch on="following">
@@ -26,6 +29,9 @@
 									<span ng-switch-default ng-click="follow()" class="label label-default label-ge">Follow</span>
 								</span>
 							</a>
+						</div>
+						<div class="ge-points" ng-show="self">
+							<span class="label label-default label-ge">Generosity Score {{points}}</span>
 						</div>
 					</div>
 				</div>

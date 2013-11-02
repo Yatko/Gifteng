@@ -11,7 +11,7 @@
 					<div class="ge-detail">
 						<div class="ge-name">
 							<a href="">{{user.data.firstName}} {{user.data.lastName}}</a>
-							<a href="#" onclick="startEditProfileModal()"><i class="ge-icon-pencil"></i></a>
+							<a href="" ng-click="updateProfile(user)"><i class="ge-icon-pencil"></i></a>
 						</div>
 						<div class="ge-age">
 							Giftenger since {{user.data.joinedAt | date:'MMMM yyyy'}}

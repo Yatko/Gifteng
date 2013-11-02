@@ -88,8 +88,13 @@ define(['angular'], function (angular) {
 			requestCancel: $resource('api/ad/request/cancel/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			requestSelect: $resource('api/ad/request/select/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			requestSend: $resource('api/ad/request/send/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
-			requestReceive: $resource('api/ad/request/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestReceive: $resource('api/ad/request/receive/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			requestHide: $resource('api/ad/request/hide/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
+			updateProfile: $resource('api/user',{},{query:{method:'POST',isArray:false}}),
 		}
+	})
+	.factory('Top', function($resource) {
+		return $resource('api/top', {},{query:{method:'GET',isArray:false}});
 	})
 	.factory('Geo', function($resource) {
 		return $resource('api/geo/:zip', { zip: '@zip' },{query:{method:'GET',isArray:false}});

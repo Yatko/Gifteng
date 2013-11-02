@@ -74,6 +74,14 @@ class AdController extends \BaseController {
 	 */
 	public function byUser($user_id) {
 		try {
+			$session = Session::get('user');
+			if($user_id==$session['data']->id) {
+				$includeUnapproved=true;
+			}
+			else {
+				$includeUnapproved=false;
+			}
+			
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
 			$userService = new SoapClient(Config::get('wsdl.user'), array());
 			
@@ -81,7 +89,7 @@ class AdController extends \BaseController {
                 "userId" => $user_id,
                 'numberAds'=>0,
                 "includeRequests" => true,
-                "includeUnapproved" => false
+                "includeUnapproved" => $includeUnapproved
             ));
 
 			if(isset($result->ad->type))
@@ -110,7 +118,7 @@ class AdController extends \BaseController {
 					if($ad->approved) {
 						$ad->status = "APPROVED";
 					}
-					if($ad->approval!=null) {
+					else if($ad->approval==null) {
 						$ad->status = "PENDING";
 					}
 					else {
@@ -492,6 +500,20 @@ class AdController extends \BaseController {
         try {
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
             $adService->markAsReceived(array("requestId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
+	 * Request hide
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_hide($id) {
+        try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+            $adService->hideRequest(array("requestId" => $id));
         } catch ( Exception $ex ) {
         }
 	}

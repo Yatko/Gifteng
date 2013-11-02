@@ -335,10 +335,10 @@
 				<div ng-switch-when="favorites">
 					<div class="row">
 						<div class="col-xs-4">
-							<button class="btn btn-block btn-default">X</button>
+							<button class="btn btn-block btn-default" ng-click="unbookmark(ad.id)">X</button>
 						</div>
 						<div class="col-xs-8" ng-show="ad.canRequest">
-							<button class="btn btn-block btn-primary">Request Gift</button>
+							<button class="btn btn-block btn-primary" ng-click="requestGift(ad.id)">Request Gift</button>
 						</div>
 					</div>
 				</div>

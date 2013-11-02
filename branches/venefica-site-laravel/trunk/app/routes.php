@@ -37,6 +37,7 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::post('ad/request/select/{id}', 'AdController@request_select');
 		Route::post('ad/request/send/{id}', 'AdController@request_send');
 		Route::post('ad/request/receive/{id}', 'AdController@request_send');
+		Route::post('ad/request/hide/{id}', 'AdController@request_hide');
 		
 		/* connections */
 		Route::get('user/following/{id}', array('uses' => 'UserController@getFollowing'));
