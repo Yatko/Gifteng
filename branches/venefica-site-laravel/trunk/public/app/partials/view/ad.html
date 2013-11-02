@@ -20,12 +20,12 @@
 				<div ng-switch-when="true">
 					<div class="row">
 						<div class="col-xs-6">
-							<button class="btn btn-large btn-block btn-primary" ng-click="editGift()" ng-show="ad.canEdit && !ad.canRelist">EDIT GIFT</button>
-							<button class="btn btn-large btn-block btn-primary" ng-click="relistGift()" ng-show="ad.canRelist">RELIST</button>
+							<button class="btn btn-large btn-block btn-primary" ng-click="editGift(ad.id)" ng-show="ad.canEdit && !ad.canRelist">EDIT GIFT</button>
+							<button class="btn btn-large btn-block btn-primary" ng-click="relistGift(ad.id)" ng-show="ad.canRelist">RELIST</button>
 							<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="!ad.canEdit && !ad.canRelist">EDIT GIFT</button>
 						</div>
 						<div class="col-xs-6">
-							<button class="btn btn-large btn-block btn-danger" ng-click="deleteGift()" ng-show="ad.canDelete">DELETE GIFT</button>
+							<button class="btn btn-large btn-block btn-danger" ng-click="deleteGift(ad.id)" ng-show="ad.canDelete">DELETE GIFT</button>
 							<button class="btn btn-large btn-block btn-danger btn-disabled" disabled ng-show="!ad.canDelete">DELETE GIFT</button>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 						</div>
 						<div ng-switch-default>
 							<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="ad.sold" ng-hide="ad.canRequest || ad.statistics.numRequests >= 3">GIFTED</button>
-							<button class="btn btn-large btn-block btn-primary" ng-show="ad.canRequest" ng-hide="ad.sold || ad.statistics.numRequests >= 3" ng-click="requestGift()">REQUEST GIFT</button>
+							<button class="btn btn-large btn-block btn-primary" ng-show="ad.canRequest" ng-hide="ad.sold || ad.statistics.numRequests >= 3" ng-click="requestGift(ad.id)">REQUEST GIFT</button>
 							<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="ad.statistics.numRequests >= 3 || (!ad.sold && !ad.canRequest)">REQUESTS PENDING</button>
 						</div>
 					</div>
