@@ -31,6 +31,12 @@ class Landing extends CI_Controller {
         
         redirect('http://gifteng.zendesk.com/home');
     }
+    
+    public function deliveryperson() {
+        $this->init();
+        
+        redirect('http://www.123contactform.com/form-745203/Delivery-Person');
+    }
 
     // internal functions
     

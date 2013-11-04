@@ -45,7 +45,7 @@ $freeShipping = $ad->getFreeShippingForFormElement();
         <div class="ge-details">
             <ul>
                 <li><em>Category: </em><?=$category?></li>
-                <li><em>Current value: $</em><?=$price?></li>
+                <li><em>Gift Value: $</em><?=$price?></li>
             </ul>
             <div class="row-fluid">
                 <div class="span6 mobile-two">

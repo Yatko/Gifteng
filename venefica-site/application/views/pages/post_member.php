@@ -230,7 +230,7 @@ if ( $is_modal ) {
                                 <div class="controls">
                                     <div class="input-prepend span9">
                                         <span class="add-on">$</span>
-                                        <input id="price" name="price" value="<?=$price?>" class="span2" type="text" placeholder="Current value" required="">
+                                        <input id="price" name="price" value="<?=$price?>" class="span2" type="text" placeholder="Gift Value" required="">
                                     </div>
                                 </div>
                             </div>
