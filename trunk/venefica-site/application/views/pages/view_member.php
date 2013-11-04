@@ -281,7 +281,7 @@ if ( !$isAdmin && !$is_owner && !$ad_can_request ) {
                             <div class="ge-details">
                                 <ul>
                                     <li><em>Category: </em><?= $ad_category ?></li>
-                                    <li><em>Current value: </em><?= $ad_price ?></li>
+                                    <li><em>Gift Value: </em><?= $ad_price ?></li>
                                 </ul>
                                 <div class="row-fluid">
                                     <div class="span6 mobile-two">

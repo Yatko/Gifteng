@@ -9,16 +9,20 @@ class Ajax extends CI_Controller {
     }
     
     public function log_error() {
+        $this->init();
+        
         if ( !$_POST ) {
             return;
         }
         
+        $currentUser = $this->usermanagement_service->loadUser();
+        $userId = $currentUser != null ? $currentUser->id : null;
         $msg = $this->input->post('msg');
         $url = $this->input->post('url');
         $line = $this->input->post('line');
         $window = $this->input->post('window');
         
-        log_message(ERROR, 'JS error catched: msg=' . $msg . ', url=' . $url . ', line=' . $line . ', window=' . $window);
+        log_message(ERROR, 'JS error catched: userId=' . $userId . ', msg=' . $msg . ', url=' . $url . ', line=' . $line . ', window=' . $window);
     }
     
     public function getAdGiving($adId = null, $userId = null, $currentUser = null) {

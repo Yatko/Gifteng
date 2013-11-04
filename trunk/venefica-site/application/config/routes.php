@@ -138,9 +138,10 @@ $route['contact'] = 'contact/view';
 
 // promotion landing pages
 
-$route['totegiveaway']  = 'landing/totegiveaway';
-$route['jobs']          = 'landing/jobs';
-$route['help']          = 'landing/help';
+$route['totegiveaway']      = 'landing/totegiveaway';
+$route['jobs']              = 'landing/jobs';
+$route['help']              = 'landing/help';
+$route['deliveryperson']    = 'landing/deliveryperson';
 
 
 $route['(:any)'] = 'index/view';
