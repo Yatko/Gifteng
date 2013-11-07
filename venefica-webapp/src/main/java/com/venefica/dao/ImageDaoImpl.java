@@ -46,7 +46,7 @@ public class ImageDaoImpl extends DaoBase<Image> implements ImageDao {
         
         amazonUpload.upload(files, modelType, image.getImgType());
         
-        if ( imageConfig.isDeleteImages() ) {
+        if ( !amazonUpload.isAsyncUpload() && imageConfig.isDeleteImages() ) {
             imageUtils.delete(imageId, modelType);
         }
         return imageId;

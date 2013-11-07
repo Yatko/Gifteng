@@ -29,6 +29,7 @@ public class FileConfig {
     private String amazonAccessKeyID;
     private String amazonSecretAccessKey;
     private String amazonPassword;
+    private boolean amazonAsyncUpload; //default true
     private boolean amazonEnabled;
     
     @PostConstruct
@@ -41,6 +42,7 @@ public class FileConfig {
         amazonAccessKeyID = environment.getProperty("amazon.accessKeyID");
         amazonSecretAccessKey = environment.getProperty("amazon.secretAccessKey");
         amazonPassword = environment.getProperty("amazon.password");
+        amazonAsyncUpload = environment.getProperty("amazon.asyncUpload", boolean.class, true);
         amazonEnabled = environment.getProperty("amazon.enabled", boolean.class);
     }
 
@@ -74,6 +76,10 @@ public class FileConfig {
 
     public boolean isAmazonEnabled() {
         return amazonEnabled;
+    }
+
+    public boolean isAmazonAsyncUpload() {
+        return amazonAsyncUpload;
     }
     
 }
