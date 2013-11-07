@@ -42,7 +42,7 @@ public class ImageIntegrationTest {
     @Test
     @Ignore(value = "Image resize ignored to speed up unit tests")
     public void testImageResizeAndUpload() throws IOException {
-        Long[] imageIds = new Long[] {893L, 894L, 901L, 903L, 906L, 911L, 912L, 914L, 920L, 922L, 923L, 924L, 925L, 927L, 929L, 930L, 931L, 933L, 934L, 935L};
+        Long[] imageIds = new Long[] {1L};
         ImageModelType modelType = ImageModelType.AD;
         ImageType type = ImageType.JPEG;
         for ( Long imageId : imageIds ) {
