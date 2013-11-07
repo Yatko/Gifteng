@@ -388,6 +388,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     //*********************
     
     @Override
+    @Transactional
     public List<ApprovalDto> getApprovals(Long adId) throws AdNotFoundException, AuthorizationException {
         Ad ad = validateAd(adId);
         User currentUser = getCurrentUser();
@@ -408,6 +409,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
     
     @Override
+    @Transactional
     public ApprovalDto getApproval(Long adId, Integer revision) throws AdNotFoundException, AuthorizationException, ApprovalNotFoundException {
         User currentUser = getCurrentUser();
         Ad ad = validateAd(adId);
@@ -450,13 +452,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<Long> bookmarkedAdIds = bookmarkDao.getBookmarkedAdIds(currentUser);
         FilterType filterType = filter != null && filter.getFilterType() != null ? filter.getFilterType() : FilterType.ACTIVE;
         
-//        boolean includeAccepted = false;
-//        boolean includeInactive = (filter != null && filter.getIncludeInactive() != null) ? filter.getIncludeInactive() : FilterDto.DEFAULT_INCLUDE_INACTIVE;
-//        boolean includeShipped = (filter != null && filter.getIncludeShipped() != null) ? filter.getIncludeShipped() : FilterDto.DEFAULT_INCLUDE_SHIPPED;
-//        boolean includeRequested = (filter != null && filter.getIncludeRequested() != null) ? filter.getIncludeRequested() : FilterDto.DEFAULT_INCLUDE_REQUESTED;
-//        boolean includeCanRequest = (filter != null && filter.getIncludeCanRequest() != null) ? filter.getIncludeCanRequest() : FilterDto.DEFAULT_INCLUDE_CAN_REQUEST;
-//        boolean includeOwned = (filter != null && filter.getIncludeOwned() != null) ? filter.getIncludeOwned() : FilterDto.DEFAULT_INCLUDE_OWNED;
-        
         for (Ad ad : ads) {
             if ( ad.isExpired() || ad.getStatus() == AdStatus.EXPIRED ) {
                 continue;
@@ -487,59 +482,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 continue;
             }
             
-            
-            
-//            boolean isOwner = ad.getCreator().equals(currentUser);
-//            if ( !includeOwned && isOwner ) {
-//                //skipping owned ads
-//                continue;
-//            }
-//            
-//            boolean isInactive = ad.isInactive();
-//            if ( !includeInactive && isInactive ) {
-//                //not including inactive ads
-//                continue;
-//            }
-//            //else if ( includeInactive && !isInactive ) {
-//            //    //not including active ads
-//            //    continue;
-//            //}
-//            
-//            boolean hasAccepted = !ad.getAcceptedRequests().isEmpty();
-//            if ( !includeAccepted && hasAccepted ) {
-//                //not including ads that have accepted requests
-//                continue;
-//            }
-//            //else if ( includeAccepted && !hasAccepted ) {
-//            //    //not including ads that not having accepted requests
-//            //    continue;
-//            //}
-//            
-//            boolean hasShipped = !ad.getShippedRequests().isEmpty();
-//            if ( !includeShipped && hasShipped ) {
-//                //not including ads that have shipped requests
-//                continue;
-//            }
-//            //else if ( includeShipped && !hasShipped ) {
-//            //    //not including ads that not having shipped requests
-//            //    continue;
-//            //}
-//            
-//            boolean canRequest = ad.canRequest();
-//            if ( includeCanRequest && !canRequest ) {
-//                //not including ads that cannot be requested or already requested
-//                continue;
-//            } else if ( !includeCanRequest && canRequest ) {
-//                //not including ads that can be requested
-//                continue;
-//            }
-//            
-//            boolean isRequested = ad.isRequested(currentUser);
-//            if ( !includeRequested && isRequested ) {
-//                //already requested ads cannot be included
-//                continue;
-//            }
-            
             List<Comment> comments = null;
             if ( includeCommentsNumber > 0 ) {
                 comments = commentDao.getAdComments(ad.getId(), -1L, includeCommentsNumber);
@@ -558,19 +500,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
             
             result.add(adDto);
         }
-        
-//        if ( ads.size() > 0 && result.size() < numberAds ) {
-//            long lastAdId_ = ads.get(ads.size() - 1).getId();
-//            int numberAds_ = numberAds - result.size();
-//            
-//            if ( lastAdId_ == lastAdId && numberAds_ == numberAds ) {
-//                //possible infinite loop
-//                return result;
-//            }
-//            
-//            List<AdDto> result_ = getAds(lastAdId_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
-//            result.addAll(result_);
-//        }
         
         if ( ads.size() > 0 && result.size() < numberAds ) {
             int lastIndex_ = lastIndex + numberAds;
@@ -794,6 +723,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     //***************
     
     @Override
+    @Transactional
     public void hideRequest(Long requestId) throws RequestNotFoundException, InvalidRequestException {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
@@ -1121,6 +1051,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
 
     @Override
+    @Transactional
     public void removeBookmark(Long adId) throws BookmarkNotFoundException {
         Long currentUserId = getCurrentUserId();
         Bookmark bookmark = bookmarkDao.get(currentUserId, adId);

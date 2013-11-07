@@ -13,6 +13,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.transfer.TransferManager;
 import com.venefica.config.FileConfig;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
@@ -32,12 +33,13 @@ import org.apache.commons.logging.LogFactory;
 @Named
 public class AmazonUpload {
     
-    private static final Log logger = LogFactory.getLog(EmailSender.class);
+    private static final Log logger = LogFactory.getLog(AmazonUpload.class);
     
     @Inject
     private FileConfig fileConfig;
     
     private AmazonS3 client;
+    private TransferManager transferManager;
     
     @PostConstruct
     public void init() {
@@ -46,6 +48,7 @@ public class AmazonUpload {
         }
         
         client = new AmazonS3Client(new BasicAWSCredentials(fileConfig.getAmazonAccessKeyID(), fileConfig.getAmazonSecretAccessKey()));
+        transferManager = new TransferManager(client);
     }
     
     public void upload(List<File> files, ImageModelType modelType, ImageType type) throws IOException {
@@ -63,7 +66,14 @@ public class AmazonUpload {
                 PutObjectRequest objectRequest = new PutObjectRequest(fileConfig.getAmazonBucket(), key, file);
                 objectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
                 objectRequest.setMetadata(metadata);
-                client.putObject(objectRequest);
+                
+                logger.info("Transferring file to amazon S3 (key: " + key + ")");
+                
+                if ( isAsyncUpload() ) {
+                    transferManager.upload(objectRequest); //async request
+                } else {
+                    client.putObject(objectRequest); //sync request
+                }
             } catch ( Exception ex ) {
                 logger.error("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
                 throw new IOException("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
@@ -135,5 +145,9 @@ public class AmazonUpload {
         sb.append("Files at ").append(thisLevel).append(" ").append(objCount);
         sb.append("\n");
         return sb.toString();
+    }
+    
+    public boolean isAsyncUpload() {
+        return fileConfig.isAmazonAsyncUpload();
     }
 }
