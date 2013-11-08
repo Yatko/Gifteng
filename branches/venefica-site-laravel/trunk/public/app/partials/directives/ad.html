@@ -1,16 +1,21 @@
 <div class="ge-ad">
 	<div class="well">
-		<user-profile name="{{creatorName}}" avatar="{{creatorAvatar}}" self="self" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>
+		<div class="well-main">
+			<user-profile name="{{creatorName}}" avatar="{{creatorAvatar}}" self="self" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>
+		</div>
 		<div class="ge-item-image">
 			<a href="#/view/gift/{{id}}"> <img ng-src="{{img}}" class="img-responsive" ng-class="{inactive: canRequest=='false'}"> </a>
 			<div class="ge-icon-ribbon"></div>
 		</div><!--./ge-item-image-->
-		<div class="ge-action" ng-hide="canRequest=='false'">
+		<div class="ge-action">
 			<div class="row">
 				<div class="col-xs-4">
 					<span ng-switch="inBookmarks">
-						<a ng-switch-when="true" class="btn btn-block btn-primary bookmark"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
-						<a ng-switch-default ng-click="bookmark(id)" class="btn btn-block btn-primary bookmark"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+						<a ng-switch-when="true" class="btn btn-block btn-primary bookmark btn-disabled" disabled> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+						<span ng-switch-default ng-switch="self">
+							<a ng-switch-when="true" class="btn btn-block btn-primary bookmark btn-disabled" disabled> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+							<a ng-switch-default ng-click="bookmark(id)" class="btn btn-block btn-primary bookmark"> <span class="glyphicon glyphicon-star"></span> {{numBookmarks}} </a>
+						</span>
 					</span>
 				</div>
 				<div class="col-xs-4">
@@ -21,17 +26,19 @@
 				</div>
 			</div>
 		</div>
-		<div class="title">
-			<a href="#/view/gift/{{id}}"> {{title}} </a>
-		</div>
-		<div class="comments">
-			<div class="row" ng-repeat="comment in comments.item">
-				<div class="col-xs-3">
-					<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
-				</div>
-				<div class="col-xs-9">
-					<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a> <span>{{comment.createdAt | date:mediumDate}}</span>
-					<p>{{comment.text}}</p>
+		<div class="well-footer">
+			<div class="title">
+				<a href="#/view/gift/{{id}}"> {{title}} </a>
+			</div>
+			<div class="comments">
+				<div class="row" ng-repeat="comment in comments.item">
+					<div class="col-xs-3">
+						<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
+					</div>
+					<div class="col-xs-9">
+						<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a> <span>{{comment.createdAt | date:mediumDate}}</span>
+						<p>{{comment.text}}</p>
+					</div>
 				</div>
 			</div>
 		</div>

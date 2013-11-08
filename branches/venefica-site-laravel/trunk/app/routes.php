@@ -53,6 +53,7 @@ Route::group(array('prefix' => 'api'), function() {
 		/* messages */
 		Route::get('user/message', array('uses' => 'UserController@getMessages'));
 		Route::get('user/message/{id}', array('uses' => 'UserController@getMessage'));
+		Route::get('user/hidemessage/{id}', array('uses' => 'UserController@hideMessage'));
 		Route::post('user/message', array('uses' => 'UserController@sendMessage'));
 		
 		/* user */

@@ -30,8 +30,8 @@ class AdController extends \BaseController {
 				$ads[]=$v;
 			}
 			return array('ads'=>$ads,'creators'=>$creators);
-		} catch ( Exception $ex ) {
-			throw new Exception($ex -> getMessage());
+			} catch ( Exception $ex ) {
+				throw new Exception($ex -> getMessage());
 		}
 	}
 	
@@ -321,7 +321,7 @@ class AdController extends \BaseController {
 			$messageService = new SoapClient(Config::get('wsdl.message'), array());
 			$result = $adService -> getAdById(array("adId" => $id));
 			$ad = new Ad($result->ad);
-			
+
 			if($ad->requested) {
 				$request = $ad->getRequestByUser($session['data']->id);
 				if(isset($request)) {
@@ -517,4 +517,5 @@ class AdController extends \BaseController {
         } catch ( Exception $ex ) {
         }
 	}
+	
 }

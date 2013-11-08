@@ -178,6 +178,19 @@ class UserController extends \BaseController {
 	}
 	
 	/**
+	 * Single Message listing
+	 *
+	 * @return Response
+	 */
+	public function hideMessage($id) {
+		try {
+            $messageService = new SoapClient(Config::get('wsdl.message'),array());
+            $result = $messageService->hideRequestMessages(array("requestId" => $id));
+        } catch ( Exception $ex ) {
+        }
+	}
+	
+	/**
 	 * Send Message
 	 * 
 	 * @return Response
@@ -274,16 +287,19 @@ class UserController extends \BaseController {
 		$geoService = new SoapClient(Config::get('wsdl.utility'), array());
 		$currentUser = $userService->getUserByEmail(array('email'=>$session['data']->email))->user;
 		
-        if ( $currentUser->address == null ) {
+        if ( !$currentUser->address ) {
             $address = new Address;
         } else {
-            $address = $currentUser->address;
+            $address = new Address($currentUser->address);
         }
 		
 		$currentUser->firstName = Input::get('first_name');
 		$currentUser->lastName = Input::get('last_name');
 		$currentUser->about = Input::get('about');
-		$currentUser->address = $geoService -> getAddressByZipcode(array("zipcode" => Input::get('zipCode')));
+		
+		$address=$geoService -> getAddressByZipcode(array("zipcode" => Input::get('zipCode')));
+		
+		$currentUser->address = $address->address;
 		
 		try {
             $userService->updateUser(array('user'=>$currentUser));

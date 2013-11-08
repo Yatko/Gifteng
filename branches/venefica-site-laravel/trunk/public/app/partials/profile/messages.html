@@ -1,12 +1,13 @@
 <div class="row" ng-controller="MessagesController">
 	<div class="col-sm-7">
 		<div class="well">
+			<div class="well-main">
 			<h3>Messages</h3>
-			
+
 			<div ng-repeat="message in messages">
-				<a href="" ng-click="openmsg(message.requestId)">
-					<div class="row">
-						<div class="col-xs-4 col-md-2">
+				<div class="row">
+					<div class="col-xs-4 col-md-2">
+						<div ng-click="openmsg(message.requestId)" class="clickable">
 							<div ng-switch="message.owner">
 								<div ng-switch-when="true">
 									<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.toAvatarUrl" />
@@ -18,7 +19,9 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-8 col-md-10">
+					</div>
+					<div class="col-xs-8 col-md-10">
+						<div ng-click="openmsg(message.requestId)" class="pull-left clickable">
 							<div ng-switch="message.owner">
 								<div ng-switch-when="true">
 									<span>{{message.toFullName}}</span>
@@ -27,20 +30,23 @@
 									<span>{{message.fromFullName}}</span>
 								</div>
 							</div>
-							<span>{{message.createdAt | date:'longDate'}}</span>
-							<h4>{{message.adTitle}}</h4>
+							<h4 ng-class="{unread:!message.read && !message.owner}">{{message.adTitle}}</h4>
 							<p>
-								{{message.text}}
+								<span ng-show="message.fromId==user.data.id">&crarr;</span> {{message.text}}
 							</p>
 						</div>
+						<div class="pull-right">
+							<a href ng-click="hidemsg(message.requestId)"> <span class="glyphicon glyphicon-trash"></span> </a>
+						</div>
 					</div>
-				</a>
+				</div>
 			</div>
+		</div>
 		</div>
 	</div>
 	<div class="col-sm-5" ng-show="showMessage">
 		<message ng-model="current_message" callback="openmsg(reqid)">
-			
+
 		</message>
 	</div>
 </div>

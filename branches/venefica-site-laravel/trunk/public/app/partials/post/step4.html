@@ -1,40 +1,41 @@
 <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 	<div class="well">
-		<img ng-src="{{toPost.image}}" class="img-responsive" />
-		<p>
-			{{toPost.title}}
-		</p>
-		<ul>
-			<li>
-				<b>Description:</b> {{toPost.description}}
-			</li>
-			<li>
-				<b>Category:</b> {{toPost.category}}
-			</li>
-			<li>
-				<b>Current value:</b> {{toPost.price | currency:"$"}}
-			</li>
-		</ul>
+		<div class="well-main">
+			<img ng-src="{{toPost.image}}" class="img-responsive" />
+			<p>
+				{{toPost.title}}
+			</p>
+			<ul>
+				<li>
+					<b>Description:</b> {{toPost.description}}
+				</li>
+				<li>
+					<b>Category:</b> {{toPost.category}}
+				</li>
+				<li>
+					<b>Current value:</b> {{toPost.price | currency:"$"}}
+				</li>
+			</ul>
 
-		<div class="row">
-			<div class="col-xs-6">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" disabled ng-checked="toPost.pickUp">
-						Pick Up </label>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="toPost.pickUp">
+							Pick Up </label>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="toPost.freeShipping">
+							Free shipping </label>
+					</div>
 				</div>
 			</div>
-			<div class="col-xs-6">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" disabled ng-checked="toPost.freeShipping">
-						Free shipping </label>
-				</div>
-			</div>
+
+			<div id="view_map" class="map"></div>
 		</div>
-
-		<div id="view_map" class="map"></div>
-
 		<div class="well-footer">
 			<div class="row">
 				<div class="col-xs-3">

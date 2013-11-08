@@ -16,4 +16,17 @@ class Address {
     public $longitude; //double
     public $latitude; //double
     
+    
+    public function __construct($obj = null) {
+        
+        if ( $obj != null ) {
+        	foreach(get_class_vars(__CLASS__) as $k=>$v) {
+        		if(isset($obj->$k))
+					$this->$k = $obj->$k;
+				elseif(is_array($obj) && isset($obj[$k]))
+					$this->$k = $obj[$k];
+        	}
+        }
+    }
+	
 }

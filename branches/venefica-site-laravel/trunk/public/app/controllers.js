@@ -280,12 +280,15 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * User Ads Controller
 		 */
-		.controller('UserAdsController',function($scope, $routeParams, User, AdUser) {
+		.controller('UserAdsController',function($scope, $routeParams, User, UserEx, AdUser) {
 			$scope.loadAds = function() {
+				
 				if(typeof($routeParams.id)!=='undefined') {
+					$scope.selfview=false;
 					$scope.ads = AdUser.query({id:$routeParams.id});
 				}
 				else {
+					$scope.selfview=true;
 					$scope.$watch(
 						function() {
 							return User.getUser();
@@ -304,15 +307,20 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Requested Ads Controller
 		 */
-		.controller('RequestedAdsController',function($scope, $routeParams, User, AdRequested) {
+		.controller('RequestedAdsController',function($scope, $routeParams, User, UserEx, AdRequested) {
 			$scope.loadAds = function() {
+				var user = UserEx.reinit.query({}, function() {
+					User.setUser(user);
+				});
 				if(typeof($routeParams.id)!=='undefined') {
+					$scope.selfview=false;
 					var ads = AdRequested.query({id:$routeParams.id}, function() {
 						$scope.ads = ads.ads;
 						$scope.creators = ads.creators;
 					});
 				}
 				else {
+					$scope.selfview=true;
 					$scope.$watch(
 						function() {
 							return User.getUser();
@@ -335,15 +343,20 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Bookmarked Ads Controller
 		 */
-		.controller('BookmarkedAdsController',function($scope, $routeParams, User, AdBookmarked) {
+		.controller('BookmarkedAdsController',function($scope, $routeParams, User, UserEx, AdBookmarked) {
 			$scope.loadAds = function() {
+				var user = UserEx.reinit.query({}, function() {
+					User.setUser(user);
+				});
 				if(typeof($routeParams.id)!=='undefined') {
+					$scope.selfview=false;
 					var ads = AdBookmarked.query({id:$routeParams.id}, function() {
 						$scope.ads = ads.ads;
 						$scope.creators = ads.creators;
 					});
 				}
 				else {
+					$scope.selfview=true;
 					$scope.$watch(
 						function() {
 							return User.getUser();
@@ -440,7 +453,8 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		/**
 		 * Messages Controller
 		 */
-		.controller('MessagesController',function($scope, UserEx) {
+		.controller('MessagesController',function($scope, UserEx, User) {
+			$scope.user = User.getUser();
 			$scope.messages = UserEx.message.query({});
 			$scope.showMessage = false;
 			$scope.openmsg = function(id) {
@@ -457,6 +471,17 @@ define(['angular','services','lang'], function(angular,services,lang) {
 						messages: messages,
 						from: from
 					};
+					var user = UserEx.reinit.query({}, function() {
+						User.setUser(user);
+					});
+				});
+			}
+			$scope.hidemsg = function(id) {
+				UserEx.messageHide.query({id:id}, function() {
+					$scope.messages = UserEx.message.query({});
+					var user = UserEx.reinit.query({}, function() {
+						User.setUser(user);
+					});
 				});
 			}
 		})

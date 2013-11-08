@@ -7,6 +7,8 @@
 		
 		<link rel="stylesheet/less" type="text/css" href="assets/less/app.less" />
 		<link href="assets/css/gifteng.css" type="text/css" rel="stylesheet" />
+		<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
 	    <!--[if lte IE 8]>
 	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />

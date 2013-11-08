@@ -18,14 +18,27 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					creatorPoints:'@',
 					id:'@',
 					ad:'=',
-					callback:'&'
+					callback:'&',
+					selfview:'@'
 				},
 				templateUrl: 'app/partials/directives/ad-item-box.html',
 				replace:true,
 				transclude:true,
-				controller: function($scope, UserEx) {
+				controller: function($scope, UserEx, $modal, User) {
 					
 					/* giving modals */
+					$scope.viewReason = function(id) {
+						var ad = $scope.ad;
+						var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/view_reason.html',
+							controller: function($scope, $modalInstance) {
+								$scope.close = function () {
+									$modalInstance.close();
+								};
+								$scope.ad=ad;
+							}
+						})
+					}
 					$scope.deleteGift = function(id) {
 						var callback=$scope.callback;
 					    var modalInstance = $modal.open({
@@ -126,6 +139,9 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 					
 					$scope.unbookmark = function(id) {
 						UserEx.unbookmark.query({id:id}, function() {
+							var user = UserEx.reinit.query({}, function() {
+								User.setUser(user);
+							});
 							$scope.callback();
 						});
 					}
@@ -136,13 +152,12 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				        post: function (scope, iElement, iAttrs) { 
 				        	
 				        	iAttrs.$observe('status', function() {
-								var status = scope.status;
 								var type = iAttrs.type;
 								var action = '';
 								var text = '';
 								
 								if(iAttrs.details=='1' || type=="details") {
-									var userprofile = '<user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" avatar="{{creatorAvatar}}" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile>';
+									var userprofile = '<div class="well-main"><user-profile name="{{creatorName}}" id="{{creatorId}}" location="{{creatorCity}}" img="https://s3.amazonaws.com/ge-dev/user/{{creatorAvatar}}_60" avatar="{{creatorAvatar}}" points="{{creatorPoints}}" since="{{creatorSince}}" following="creatorFollowing" nested="true"></user-profile></div>';
 									$('.well',iElement).prepend($compile(userprofile)(scope));
 								}
 								
@@ -170,14 +185,22 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				},
 				templateUrl: 'app/partials/directives/user-profile.html',
 				replace:true,
-				controller: function( $scope, $element, $attrs, UserEx ) {
+				controller: function( $scope, $element, $attrs, UserEx, User ) {
 					$scope.follow = function() {
-						$scope.data = UserEx.follow.query({id:$scope.id});
+						$scope.data = UserEx.follow.query({id:$scope.id}, function() {
+							var user = UserEx.reinit.query({}, function() {
+								User.setUser(user);
+							});
+						});
 						$attrs.$set('following',true);
 						$scope.following=true;
 					}
 					$scope.unfollow = function() {
-						$scope.data = UserEx.unfollow.query({id:$scope.id});
+						$scope.data = UserEx.unfollow.query({id:$scope.id}, function() {
+							var user = UserEx.reinit.query({}, function() {
+								User.setUser(user);
+							});
+						});
 						$attrs.$set('following',false);
 						$scope.following=false;
 					}
@@ -206,7 +229,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 										}
 										gifts += '</div>';
 									
-										$('.well',iElement).append(gifts);
+										$('.well-main',iElement).append(gifts);
 										
 									}
 								});
@@ -248,9 +271,13 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				templateUrl: 'app/partials/directives/ad.html',
 				replace:true,
 				transclude:true,
-				controller: function($scope, $modal, UserEx) {
+				controller: function($scope, $modal, UserEx, User) {
 					$scope.bookmark = function(id) {
-						UserEx.bookmark.query({id:id});
+						UserEx.bookmark.query({id:id}, function() {
+							var user = UserEx.reinit.query({}, function() {
+								User.setUser(user);
+							});
+						});
 						$scope.numBookmarks++;
 						$scope.inBookmarks=true;
 					}

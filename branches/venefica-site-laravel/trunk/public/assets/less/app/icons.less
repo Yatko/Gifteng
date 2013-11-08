@@ -1,4 +1,4 @@
-/* FONT - no need to review below */
+
 @font-face {
 	font-family: 'gifteng-icons';
 	src:url('../fonts/gifteng-icons.eot');
@@ -12,15 +12,15 @@
 
 /* Use the following CSS code if you want to use data attributes for inserting your icons */
 [data-icon]:before {
-	content: attr(data-icon);
-	position: relative;
-	top: 1px;
-	display: inline-block;
 	font-family: 'gifteng-icons';
-	font-style: normal;
+	content: attr(data-icon);
+	speak: none;
 	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 /* Use the following CSS code if you want to have a class per icon */
@@ -29,20 +29,20 @@ Instead of a list of all class selectors,
 you can use the generic selector below, but it's slower:
 [class*="ge-icon-"] {
 */
-.ge-icon-gifteng, .ge-icon-logo, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-heart, .ge-icon-g-pin, .ge-icon-pin, .ge-icon-star, .ge-icon-bubble, .ge-icon-share, .ge-icon-smiley, .ge-icon-check, .ge-icon-pencil, .ge-icon-businesses, .ge-icon-press, .ge-icon-clover, .ge-icon-list, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest, .ge-icon-user, .ge-icon-help, .ge-icon-bug {
-	position: relative;
-	top: 1px;
-	display: inline-block;
+.ge-icon-gifteng, .ge-icon-logo-gifteng, .ge-icon-giftbox, .ge-icon-ribbon, .ge-icon-pin-gifteng, .ge-icon-pin, .ge-icon-heart, .ge-icon-heart-empty, .ge-icon-star, .ge-icon-star-empty, .ge-icon-comment, .ge-icon-bubble, .ge-icon-bubble-empty, .ge-icon-share, .ge-icon-share-alt, .ge-icon-home, .ge-icon-mail, .ge-icon-user, .ge-icon-search, .ge-icon-eye, .ge-icon-clover, .ge-icon-smiley, .ge-icon-alert, .ge-icon-question, .ge-icon-star-alt, .ge-icon-press, .ge-icon-business, .ge-icon-credit-card, .ge-icon-tag, .ge-icon-book, .ge-icon-lock, .ge-icon-bug, .ge-icon-trash, .ge-icon-image, .ge-icon-photo, .ge-icon-video, .ge-icon-export, .ge-icon-mic, .ge-icon-volume, .ge-icon-time, .ge-icon-calendar, .ge-icon-cloud, .ge-icon-earth, .ge-icon-gear, .ge-icon-exit, .ge-icon-power, .ge-icon-list, .ge-icon-list-bulleted, .ge-icon-list-columned, .ge-icon-list-numbered, .ge-icon-list-thumbnailed, .ge-icon-list-small-thumbnails, .ge-icon-list-large-thumbnails, .ge-icon-left, .ge-icon-right, .ge-icon-up, .ge-icon-down, .ge-icon-triangle-left, .ge-icon-triangle-right, .ge-icon-triangle-up, .ge-icon-triangle-down, .ge-icon-triangle-left-small, .ge-icon-triangle-right-small, .ge-icon-triangle-up-small, .ge-icon-triangle-down-small, .ge-icon-plus, .ge-icon-minus, .ge-icon-cross, .ge-icon-check, .ge-icon-plus-inverted, .ge-icon-minus-inverted, .ge-icon-cross-inverted, .ge-icon-check-inverted, .ge-icon-cross-alt, .ge-icon-checkbox-checked, .ge-icon-checkbox-unchecked, .ge-icon-radio-checked, .ge-icon-radio-unchecked, .ge-icon-folder, .ge-icon-pencil, .ge-icon-pencil-alt, .ge-icon-window, .ge-icon-windows, .ge-icon-upload, .ge-icon-facebook, .ge-icon-twitter, .ge-icon-pinterest, .ge-icon-googleplus {
 	font-family: 'gifteng-icons';
+	speak: none;
 	font-style: normal;
 	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
 	line-height: 1;
 	-webkit-font-smoothing: antialiased;
 }
 .ge-icon-gifteng:before {
 	content: "\e000";
 }
-.ge-icon-logo:before {
+.ge-icon-logo-gifteng:before {
 	content: "\e001";
 }
 .ge-icon-giftbox:before {
@@ -51,62 +51,257 @@ you can use the generic selector below, but it's slower:
 .ge-icon-ribbon:before {
 	content: "\e003";
 }
-.ge-icon-heart:before {
+.ge-icon-pin-gifteng:before {
 	content: "\e004";
 }
-.ge-icon-g-pin:before {
+.ge-icon-pin:before {
 	content: "\e005";
 }
-.ge-icon-pin:before {
+.ge-icon-heart:before {
 	content: "\e006";
 }
-.ge-icon-star:before {
+.ge-icon-heart-empty:before {
 	content: "\e00a";
 }
-.ge-icon-bubble:before {
+.ge-icon-star:before {
 	content: "\e00b";
 }
-.ge-icon-share:before {
+.ge-icon-star-empty:before {
 	content: "\e00c";
 }
-.ge-icon-smiley:before {
+.ge-icon-comment:before {
 	content: "\e00d";
 }
-.ge-icon-check:before {
+.ge-icon-bubble:before {
 	content: "\e042";
 }
-.ge-icon-pencil:before {
+.ge-icon-bubble-empty:before {
 	content: "\e03f";
 }
-.ge-icon-businesses:before {
+.ge-icon-share:before {
 	content: "\e007";
 }
-.ge-icon-press:before {
-	content: "\e008";
-}
-.ge-icon-clover:before {
+.ge-icon-share-alt:before {
 	content: "\e009";
 }
-.ge-icon-list:before {
+.ge-icon-home:before {
 	content: "\e01d";
 }
-.ge-icon-facebook:before {
+.ge-icon-mail:before {
 	content: "\e00e";
 }
-.ge-icon-twitter:before {
+.ge-icon-user:before {
 	content: "\e00f";
 }
-.ge-icon-pinterest:before {
+.ge-icon-search:before {
 	content: "\e010";
 }
-.ge-icon-user:before {
+.ge-icon-eye:before {
 	content: "\e046";
 }
-.ge-icon-help:before {
+.ge-icon-clover:before {
 	content: "\e029";
 }
-.ge-icon-bug:before {
+.ge-icon-smiley:before {
 	content: "\e036";
+}
+.ge-icon-alert:before {
+	content: "\e011";
+}
+.ge-icon-question:before {
+	content: "\e012";
+}
+.ge-icon-star-alt:before {
+	content: "\e013";
+}
+.ge-icon-press:before {
+	content: "\e014";
+}
+.ge-icon-business:before {
+	content: "\e015";
+}
+.ge-icon-credit-card:before {
+	content: "\e016";
+}
+.ge-icon-tag:before {
+	content: "\e017";
+}
+.ge-icon-book:before {
+	content: "\e018";
+}
+.ge-icon-lock:before {
+	content: "\e019";
+}
+.ge-icon-bug:before {
+	content: "\e01a";
+}
+.ge-icon-trash:before {
+	content: "\e02c";
+}
+.ge-icon-image:before {
+	content: "\e02d";
+}
+.ge-icon-photo:before {
+	content: "\e02e";
+}
+.ge-icon-video:before {
+	content: "\e02f";
+}
+.ge-icon-export:before {
+	content: "\e030";
+}
+.ge-icon-mic:before {
+	content: "\e01c";
+}
+.ge-icon-volume:before {
+	content: "\e020";
+}
+.ge-icon-time:before {
+	content: "\e021";
+}
+.ge-icon-calendar:before {
+	content: "\e022";
+}
+.ge-icon-cloud:before {
+	content: "\e024";
+}
+.ge-icon-earth:before {
+	content: "\e025";
+}
+.ge-icon-gear:before {
+	content: "\e026";
+}
+.ge-icon-exit:before {
+	content: "\e027";
+}
+.ge-icon-power:before {
+	content: "\e028";
+}
+.ge-icon-list:before {
+	content: "\e02a";
+}
+.ge-icon-list-bulleted:before {
+	content: "\e02b";
+}
+.ge-icon-list-columned:before {
+	content: "\e031";
+}
+.ge-icon-list-numbered:before {
+	content: "\e032";
+}
+.ge-icon-list-thumbnailed:before {
+	content: "\e033";
+}
+.ge-icon-list-small-thumbnails:before {
+	content: "\e034";
+}
+.ge-icon-list-large-thumbnails:before {
+	content: "\e035";
+}
+.ge-icon-left:before {
+	content: "\e037";
+}
+.ge-icon-right:before {
+	content: "\e038";
+}
+.ge-icon-up:before {
+	content: "\e039";
+}
+.ge-icon-down:before {
+	content: "\e03a";
+}
+.ge-icon-triangle-left:before {
+	content: "\e03b";
+}
+.ge-icon-triangle-right:before {
+	content: "\e03c";
+}
+.ge-icon-triangle-up:before {
+	content: "\e03d";
+}
+.ge-icon-triangle-down:before {
+	content: "\e03e";
+}
+.ge-icon-triangle-left-small:before {
+	content: "\e040";
+}
+.ge-icon-triangle-right-small:before {
+	content: "\e041";
+}
+.ge-icon-triangle-up-small:before {
+	content: "\e043";
+}
+.ge-icon-triangle-down-small:before {
+	content: "\e044";
+}
+.ge-icon-plus:before {
+	content: "\e045";
+}
+.ge-icon-minus:before {
+	content: "\e047";
+}
+.ge-icon-cross:before {
+	content: "\e048";
+}
+.ge-icon-check:before {
+	content: "\e049";
+}
+.ge-icon-plus-inverted:before {
+	content: "\e04a";
+}
+.ge-icon-minus-inverted:before {
+	content: "\e04e";
+}
+.ge-icon-cross-inverted:before {
+	content: "\e053";
+}
+.ge-icon-check-inverted:before {
+	content: "\e055";
+}
+.ge-icon-cross-alt:before {
+	content: "\e065";
+}
+.ge-icon-checkbox-checked:before {
+	content: "\e066";
+}
+.ge-icon-checkbox-unchecked:before {
+	content: "\e067";
+}
+.ge-icon-radio-checked:before {
+	content: "\e068";
+}
+.ge-icon-radio-unchecked:before {
+	content: "\e069";
+}
+.ge-icon-folder:before {
+	content: "\e06a";
+}
+.ge-icon-pencil:before {
+	content: "\e135";
+}
+.ge-icon-pencil-alt:before {
+	content: "\e088";
+}
+.ge-icon-window:before {
+	content: "\e082";
+}
+.ge-icon-windows:before {
+	content: "\e073";
+}
+.ge-icon-upload:before {
+	content: "\e01b";
+}
+.ge-icon-facebook:before {
+	content: "\e01e";
+}
+.ge-icon-twitter:before {
+	content: "\e01f";
+}
+.ge-icon-pinterest:before {
+	content: "\e023";
+}
+.ge-icon-googleplus:before {
+	content: "\e008";
 }
 
 .ge-icon-gifteng-large {

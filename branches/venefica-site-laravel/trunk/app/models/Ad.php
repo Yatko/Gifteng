@@ -65,6 +65,7 @@ class Ad {
 	public $canDelete;
 	public $user_request;
 	public $user_requested;
+    public $approval;
     
     // business ad data
     public $promoCode; //string
@@ -132,7 +133,9 @@ class Ad {
         if ( !$this->hasRequest() ) {
             return null;
         }
-        foreach ( $this->requests as $request ) {
+		if(is_array($this->requests->item)) $requests = $this->requests->item;
+		else $requests = $this->requests;
+        foreach ( $requests as $request ) {
             if ( $request->accepted ) {
                 return $request;
             }
@@ -145,11 +148,13 @@ class Ad {
      * 
      * @return Request_model
      */
-    public function getSentRequest() {
+    public function getSentRequest()	 {
         if ( !$this->hasRequest() ) {
             return null;
         }
-        foreach ( $this->requests as $request ) {
+		if(is_array($this->requests->item)) $requests = $this->requests->item;
+		else $requests = $this->requests;
+        foreach ( $requests as $request ) {
             if ( $request->sent ) {
                 return $request;
             }
@@ -174,13 +179,15 @@ class Ad {
         if ( !$this->hasRequest() ) {
             return false;
         }
-		if(is_array($this->requests->item)) $requests = $this->requests->item;
-		else $requests = $this->requests;
-        foreach ( $requests as $request ) {
-            if ( $request->status != 'CANCELED' && $request->status != 'DECLINED' ) {
-                return true;
-            }
-        }
+		if(isset($this->requests->item)) {
+			if(is_array($this->requests->item)) $requests = $this->requests->item;
+			else $requests = $this->requests;
+	        foreach ( $requests as $request ) {
+	            if ( $request->status != 'CANCELED' && $request->status != 'DECLINED' ) {
+	                return true;
+	            }
+	        }
+		}
         return false;
     }
     

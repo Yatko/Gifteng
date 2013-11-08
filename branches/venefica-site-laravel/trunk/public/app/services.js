@@ -77,6 +77,7 @@ define(['angular'], function (angular) {
 			followers: $resource('api/user/followers/:id',{id:'@id'},{query:{method:'GET',isArray:false}}),
 			notifications: $resource('api/user/notifications',{},{query:{method:'GET',isArray:false}}),
 			message: $resource('api/user/message/:id',{id:'@id'},{query:{method:'GET',isArray:true}}),
+			messageHide: $resource('api/user/hidemessage/:id',{id:'@id'},{query:{method:'GET',isArray:false}}),
 			follow: $resource('api/user/follow/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			unfollow: $resource('api/user/unfollow/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
 			bookmark: $resource('api/ad/bookmark/:id',{id:'@id'},{query:{method:'POST',isArray:false}}),
