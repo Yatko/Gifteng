@@ -46,14 +46,15 @@ if ( !function_exists('getUserAgent') ) {
         $CI->load->library('user_agent');
         
         $userAgent = array(
-            "platform" => $CI->agent->platform(),
-            "browser" => $CI->agent->browser(),
-            "version" => $CI->agent->version(),
-            "mobile" => $CI->agent->mobile(),
-            "robot" => $CI->agent->robot(),
-            "agent" => $CI->agent->agent_string(),
-            "accept_lang" => $CI->agent->accept_lang(),
-            "accept_charset" => $CI->agent->accept_charset(),
+            "platform"          => $CI->agent->platform(),
+            "browser"           => $CI->agent->browser(),
+            "version"           => $CI->agent->version(),
+            "mobile"            => $CI->agent->mobile(),
+            "robot"             => $CI->agent->robot(),
+            "agent"             => $CI->agent->agent_string(),
+            "accept_lang"       => $CI->agent->accept_lang(),
+            "accept_charset"    => $CI->agent->accept_charset(),
+            "ip_address"        => $CI->input->ip_address(),
         );
         return print_r($userAgent, true);
     }
