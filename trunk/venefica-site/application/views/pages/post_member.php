@@ -83,7 +83,7 @@ if ( $is_modal ) {
             
             <?
             $message = isset($this->post_form) ? $this->post_form->error_string() : '';
-            if ( $message == '' ) $message = 'Giving makes you live longer. Seriously, it\'s true.';
+            if ( $message == '' ) $message = 'Congrats on taking the first step to make someone happy!';
             
             $image = $ad->image;
             if ( isset($image) && $image ) {
@@ -93,7 +93,7 @@ if ( $is_modal ) {
             }
             
             if ( $is_new && is_empty($image_link) ) {
-                $image_text = 'Add photo';
+                $image_text = 'Add gift photo';
             } else {
                 $image_text = 'Change photo';
             }
@@ -406,12 +406,12 @@ if ( $is_modal ) {
                     <div class="well ge-well ge-form">
                         <div class="ge-modal_header">
                             <label class="control-label">
-                                <h3>You're Awesome!</h3>
+                                <h3>You're awesome, thanks for posting!</h3>
                             </label>
                         </div>
                         
                         <div class="row-fluid">
-                            Give us few hours to review your gift. (But most likely it will be available for request tomorrow at 12:00 pm ET)
+                            If it’s approved, your gift will be available for request tomorrow at 12:00 pm ET.
                         </div>
                         
                         <div class="ge-modal_footer">
