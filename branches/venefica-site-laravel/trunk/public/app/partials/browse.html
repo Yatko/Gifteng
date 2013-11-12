@@ -33,9 +33,11 @@
 				</select>
 			</div>
 			<div class="col-sm-4">
-				<select class="form-control">
+				<select class="form-control" ng-change="loadAds()" ng-model="order">
 					<option value="newest">Newest</option>
 					<option value="oldest">Oldest</option>
+					<option value="gifted">Gifted</option>
+					<option value="closest">Closest</option>
 				</select>
 			</div>
 		</div>

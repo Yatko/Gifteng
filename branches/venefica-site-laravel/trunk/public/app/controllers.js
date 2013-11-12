@@ -10,12 +10,41 @@ define(['angular','services','lang'], function(angular,services,lang) {
 			
 		})
 		
+		/***
+		 * Invite Controller
+		 */
+		
+		.controller('InviteController', function($scope, Facebook) {
+			$scope.searchInvites = '';
+			$scope.friends=[];
+			$scope.$watch(function() {
+				if(typeof(Facebook.getAuthResponse)==='function') {
+					return Facebook.getAuthResponse();
+				}
+				else {
+					return null;
+				}
+			},function(response){
+				if(typeof(response)!=='undefined' && response!==null) {
+					if(response.accessToken) {
+						Facebook.api('/me/friends', function(r) {
+							$scope.friends = r.data;
+						});
+					}
+					else {
+						Facebook.login();
+					}
+				}
+			},
+			true);
+		})
+		
 		/**
 		 * Top Giftengers Controller
 		 */
 		.controller('TopController', function($scope, Top) {
 			var top = Top.query({},function() {
-				$scope.users = top.users;
+				$scope.users = top;
 			});
 		})
 		
@@ -102,8 +131,10 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		 * Browse Controller
 		 */
 		.controller('BrowseController', function($scope, AdMore, Ad) {
+			$scope.order='newest';
+			var more=0;
 			$scope.loadAds = function () {
-				var ads = Ad.query({}, function() {
+				var ads = Ad.query({order:$scope.order}, function() {
 					$scope.col1 = [];
 					$scope.col2 = [];
 					$scope.col3 = [];
@@ -123,32 +154,37 @@ define(['angular','services','lang'], function(angular,services,lang) {
 							$scope.last=ads['ads'][i].lastIndex;
 						}
 					}
+					
+					loadMore();
 				});
 			}
-			function jsonConcat(o1, o2) {
-			 for (var key in o2) {
-			  o1[key] = o2[key];
-			 }
-			 return o1;
+			
+			var loadMore = function() {
+				for(var i=0;i<more;i++) {
+					
+					var ads = AdMore.query({'last':$scope.last}, function() {
+					
+						for(var i=0;i<ads['ads'].length;i++) {
+							if((i%3)==0) {
+								$scope.col3.push(ads['ads'][i]);
+							}
+							else if((i%2)==0) {
+								$scope.col2.push(ads['ads'][i]);
+							}
+							else {
+								$scope.col1.push(ads['ads'][i]);
+							}
+							if(i==ads['ads'].length-1) {
+								$scope.last=ads['ads'][i].lastIndex;
+							}
+						}
+					});
+				}
 			}
+			
 			$scope.loadMore = function() {
-				var ads = AdMore.query({'last':$scope.last}, function() {
-				
-					for(var i=0;i<ads['ads'].length;i++) {
-						if((i%3)==0) {
-							$scope.col3.push(ads['ads'][i]);
-						}
-						else if((i%2)==0) {
-							$scope.col2.push(ads['ads'][i]);
-						}
-						else {
-							$scope.col1.push(ads['ads'][i]);
-						}
-						if(i==ads['ads'].length-1) {
-							$scope.last=ads['ads'][i].lastIndex;
-						}
-					}
-				});
+				more++;
+				$scope.loadAds();
 			}
 			
 			$scope.loadAds();
@@ -459,6 +495,9 @@ define(['angular','services','lang'], function(angular,services,lang) {
 			$scope.showMessage = false;
 			$scope.openmsg = function(id) {
 				$scope.showMessage = true;
+				var msgs = UserEx.message.query({}, function() {
+					$scope.messages = msgs;
+				});
 				var messages = UserEx.message.query({id:id}, function () {
 					if(messages[0].owner) {
 						var fromId=messages[0].toId;
@@ -478,7 +517,9 @@ define(['angular','services','lang'], function(angular,services,lang) {
 			}
 			$scope.hidemsg = function(id) {
 				UserEx.messageHide.query({id:id}, function() {
-					$scope.messages = UserEx.message.query({});
+					var msgs = UserEx.message.query({}, function() {
+						$scope.messages = msgs;
+					});
 					var user = UserEx.reinit.query({}, function() {
 						User.setUser(user);
 					});

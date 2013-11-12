@@ -1,4 +1,4 @@
-<a href back-button class="btn btn-default">BACK</a>
+<a href back-button class="btn btn-back btn-default btn-lg">BACK</a>
 <div class="row">
 	<div class="col-xs-6">
 		<ad
@@ -30,21 +30,21 @@
 					<div ng-switch-when="true">
 						<div class="row">
 							<div class="col-xs-6">
-								<button class="btn btn-large btn-block btn-primary" ng-click="editGift(ad.id)" ng-show="ad.canEdit && !ad.canRelist">
+								<button class="btn btn-lg btn-block btn-primary" ng-click="editGift(ad.id)" ng-show="ad.canEdit && !ad.canRelist">
 									EDIT GIFT
 								</button>
-								<button class="btn btn-large btn-block btn-primary" ng-click="relistGift(ad.id)" ng-show="ad.canRelist">
+								<button class="btn btn-lg btn-block btn-primary" ng-click="relistGift(ad.id)" ng-show="ad.canRelist">
 									RELIST
 								</button>
-								<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="!ad.canEdit && !ad.canRelist">
+								<button class="btn btn-lg btn-block btn-primary btn-disabled" disabled ng-show="!ad.canEdit && !ad.canRelist">
 									EDIT GIFT
 								</button>
 							</div>
 							<div class="col-xs-6">
-								<button class="btn btn-large btn-block btn-danger" ng-click="deleteGift(ad.id)" ng-show="ad.canDelete">
+								<button class="btn btn-lg btn-block btn-danger" ng-click="deleteGift(ad.id)" ng-show="ad.canDelete">
 									DELETE GIFT
 								</button>
-								<button class="btn btn-large btn-block btn-danger btn-disabled" disabled ng-show="!ad.canDelete">
+								<button class="btn btn-lg btn-block btn-danger btn-disabled" disabled ng-show="!ad.canDelete">
 									DELETE GIFT
 								</button>
 							</div>
@@ -55,27 +55,27 @@
 							<div ng-switch-when="true">
 								<div ng-switch="ad.status">
 									<div ng-switch-when="DECLINED">
-										<button class="btn btn-large btn-block btn-default btn-disabled" disabled>
+										<button class="btn btn-lg btn-block btn-default btn-disabled" disabled>
 											REQUEST DECLINED
 										</button>
 									</div>
 									<div ng-switch-when="UNACCEPTED">
-										<button class="btn btn-large btn-block btn-default btn-disabled" disabled>
+										<button class="btn btn-lg btn-block btn-default btn-disabled" disabled>
 											REQUEST DECLINED
 										</button>
 									</div>
 									<div ng-switch-when="CANCELED">
-										<button class="btn btn-large btn-block btn-default btn-disabled" disabled>
+										<button class="btn btn-lg btn-block btn-default btn-disabled" disabled>
 											REQUEST CANCELED
 										</button>
 									</div>
 									<div ng-switch-when="RECEIVED">
-										<button class="btn btn-large btn-block btn-default btn-disabled" disabled>
+										<button class="btn btn-lg btn-block btn-default btn-disabled" disabled>
 											GIFT RECEIVED
 										</button>
 									</div>
 									<div ng-switch-default>
-										<button class="btn btn-large btn-block btn-default btn-disabled" disabled>
+										<button class="btn btn-lg btn-block btn-default btn-disabled" disabled>
 											REQUEST SENT
 										</button>
 									</div>
@@ -83,13 +83,13 @@
 
 							</div>
 							<div ng-switch-default>
-								<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="ad.sold" ng-hide="ad.canRequest || ad.statistics.numRequests >= 3">
+								<button class="btn btn-lg btn-block btn-primary btn-disabled" disabled ng-show="ad.sold" ng-hide="ad.canRequest || ad.statistics.numRequests >= 3">
 									GIFTED
 								</button>
-								<button class="btn btn-large btn-block btn-primary" ng-show="ad.canRequest" ng-hide="ad.sold || ad.statistics.numRequests >= 3" ng-click="requestGift(ad.id)">
+								<button class="btn btn-lg btn-block btn-primary" ng-show="ad.canRequest" ng-hide="ad.sold || ad.statistics.numRequests >= 3" ng-click="requestGift(ad.id)">
 									REQUEST GIFT
 								</button>
-								<button class="btn btn-large btn-block btn-primary btn-disabled" disabled ng-show="ad.statistics.numRequests >= 3 || (!ad.sold && !ad.canRequest)">
+								<button class="btn btn-lg btn-block btn-primary btn-disabled" disabled ng-show="ad.statistics.numRequests >= 3 || (!ad.sold && !ad.canRequest)">
 									REQUESTS PENDING
 								</button>
 							</div>

@@ -2,6 +2,12 @@
 
 class Filter {
 
+	const TYPE_MEMBER = "MEMBER";
+	const TYPE_BUSINESS = "BUSINESS";
+
+	const FILTER_TYPE_ACTIVE = "ACTIVE";
+	const FILTER_TYPE_GIFTED = "GIFTED";
+
 	public $searchString;
 	public $categories;
 	public $distance;
@@ -17,5 +23,5 @@ class Filter {
 	public $includeOnlyCannotRequest;
 	public $includeInactive;
 	public $includeOnlyInactive;
-	
+
 }

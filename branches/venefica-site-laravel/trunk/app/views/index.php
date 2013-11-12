@@ -20,6 +20,7 @@
 		<script> /* Provisory for dev environment: */ localStorage.clear(); </script>
 	</head>
 	<body>
+  		<fb app-id='285994388213208'></fb>
 		<div ng-include="'app/partials/navbar.html'" ng-controller="NavController"></div>
 		<div class="snap-content snap-slide">
 			<div class="container ge-container">

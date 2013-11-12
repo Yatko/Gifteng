@@ -93,6 +93,12 @@ define(['angular','app','services'], function(angular,app) {
 					templateUrl: 'app/partials/view/ad.html',
 				}
 			).
+			when('/invite',
+				{
+					controller: 'InviteController',
+					templateUrl: 'app/partials/invite.html',
+				}
+			).
 			otherwise({redirectTo: '/'});
 			
 			

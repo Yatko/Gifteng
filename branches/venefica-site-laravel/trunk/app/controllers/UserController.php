@@ -267,8 +267,19 @@ class UserController extends \BaseController {
 	 */
 	public function top() {
         try {
+			$session = Session::get('user');
             $userService = new SoapClient(Config::get('wsdl.user'));
-            $users = $userService->getTopUsers(array("numberUsers" => 11));
+            $result = $userService->getTopUsers(array("numberUsers" => 11));
+			$users=array();
+			foreach($result->users as $user) {
+				if($user->id==$session['data']->id) {
+					$user->self=true;
+				}
+				else {
+					$user->self=false;
+				}
+				$users[]=$user;
+			}
         } catch ( Exception $ex ) {
             $users = array();
         }
