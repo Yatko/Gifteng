@@ -48,18 +48,27 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
     @Override
     public String authenticate(String name, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByName(name);
+        if (user == null) {
+            throw new AuthenticationException("No user for '" + name + "' name!");
+        }
         return authenticate(user, password, userAgent);
     }
     
     @Override
     public String authenticateEmail(String email, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByEmail(email);
+        if (user == null) {
+            throw new AuthenticationException("No user for '" + email + "' email!");
+        }
         return authenticate(user, password, userAgent);
     }
     
     @Override
     public String authenticatePhone(String phone, String password, String userAgent) throws AuthenticationException {
         User user = userDao.findUserByPhoneNumber(phone);
+        if (user == null) {
+            throw new AuthenticationException("No user for '" + phone + "' phone!");
+        }
         return authenticate(user, password, userAgent);
     }
 

@@ -193,6 +193,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         
         Ad ad = validateAd(adId);
         ad.unmarkAsApproved();
+        ad.unmarkAsOnline();
         ad.setStatus(AdStatus.OFFLINE);
         
         Approval approval = new Approval(false);
