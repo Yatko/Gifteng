@@ -182,6 +182,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
 
         ad.incrementRevision();
         ad.unmarkAsApproved();
+        ad.unmarkAsOnline();
         ad.setStatus(AdStatus.OFFLINE);
         ad.getAdData().setCategory(category);
         
@@ -1302,6 +1303,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         adDataDao.save(ad.getAdData());
         
         ad.unmarkAsApproved();
+        ad.unmarkAsOnline();
         ad.setStatus(AdStatus.OFFLINE);
         ad.setCreator(currentUser);
         ad.setExpires(expires);

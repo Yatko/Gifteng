@@ -308,15 +308,13 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
     
     @Override
     public void approveAd(Ad ad) {
-        ad.setApproved(true);
-        ad.setApprovedAt(new Date());
+        ad.markAsApproved();
         updateEntity(ad);
     }
     
     @Override
     public void onlineAd(Ad ad) {
-        ad.setOnline(true);
-        ad.setOnlinedAt(new Date());
+        ad.markAsOnline();
         updateEntity(ad);
     }
 

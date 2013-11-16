@@ -331,6 +331,11 @@ public class Ad {
         online = true;
         onlinedAt = new Date();
     }
+    
+    public void unmarkAsOnline() {
+        online = false;
+        onlinedAt = null;
+    }
 
     public void addImage(Image image) {
         adData.addImage(image);
