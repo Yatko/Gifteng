@@ -120,6 +120,13 @@ class Request_model extends CI_Model {
         return false;
     }
     
+    public function isUnaccepted() {
+        if ( $this->status == Request_model::STATUS_UNACCEPTED ) {
+            return true;
+        }
+        return false;
+    }
+    
     public function isExpired() {
         if (
             $this->status == Request_model::STATUS_UNACCEPTED ||

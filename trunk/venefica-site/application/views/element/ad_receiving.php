@@ -45,12 +45,17 @@ if( $ad->expired || $request->isExpired() ) {
     <? if( $ad->expired || $request->isExpired() ): ?>
 
                         <?
-                        if ( $ad->expired ) {
+                        if ( $ad->sold ) {
+                            $status_text = 'Request expired';
+                        } else if ( $ad->expired ) {
                             $status_text = 'Gift expired';
                         } else if ( $request->isCanceled() ) {
                             $status_text = 'Request canceled';
+                        } else if ( $request->isUnaccepted() ) {
+                            //UNACCEPTED
+                            $status_text = 'Request pending';
                         } else {
-                            //DECLINED or UNACCEPTED
+                            //DECLINED
                             $status_text = 'Request declined';
                         }
                         ?>
