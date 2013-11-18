@@ -189,7 +189,7 @@
 										<div class="row">
 											<div ng-repeat="request in ad.requests.item">
 												<div class="col-xs-4" ng-show="request.status=='PENDING'">
-													<a href ng-click="requestSelect(request.id)"> <img ng-show="request.user.avatar" ng-src="https://s3.amazonaws.com/ge-dev/user/{{request.user.avatar.id}}_60" class="img-rounded img-responsive" /> <img ng-hide="request.user.avatar" src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-rounded img-responsive" /> </a>
+													<a href ng-click="requestView(request.id)"> <img ng-show="request.user.avatar" ng-src="https://s3.amazonaws.com/ge-dev/user/{{request.user.avatar.id}}_60" class="img-rounded img-responsive" /> <img ng-hide="request.user.avatar" src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-rounded img-responsive" /> </a>
 												</div>
 											</div>
 										</div>

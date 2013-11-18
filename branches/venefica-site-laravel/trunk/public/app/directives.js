@@ -27,6 +27,55 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				controller: function($scope, UserEx, $modal, User) {
 					
 					/* giving modals */
+					$scope.requestView = function(id) {
+						var callback=$scope.callback;
+						var modalInstance = $modal.open({
+							templateUrl: 'app/partials/directives/modal/request_view.html',
+							controller: function($scope, UserEx, $modalInstance) {
+								var data = UserEx.requestView.query({id:id}, function() {
+									$scope.data = data;
+								});
+								$scope.send = function() {
+									UserEx.requestSend.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+								$scope.accept = function() {
+									UserEx.requestSelect.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+								$scope.decline = function() {
+									UserEx.requestCancel.query({id:id}, function() {
+										$modalInstance.close();
+										callback();
+									})
+								}
+								
+						    	$scope.sendMsg = function() {
+						    		var message = new UserEx.message();
+						            message.text = $('#text_msg').val();
+						            message.requestId = id;
+						            if($scope.data.messages[0].owner)
+						            message.toId = $scope.data.messages[0].toId;
+						            else
+						            message.toId = $scope.data.messages[0].fromId;
+						            
+						            message.$save(function() {
+										var data = UserEx.requestView({id:id}, function() {
+											$scope.data = data;
+										});
+						            });
+						    	};
+								$scope.close = function () {
+									$modalInstance.close();
+									callback();
+								};
+							}
+						})
+					}
 					$scope.viewReason = function(id) {
 						var ad = $scope.ad;
 						var modalInstance = $modal.open({
@@ -127,7 +176,7 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 									$modalInstance.close();
 								};
 								$scope.submit = function() {
-									UserEx.requestAd.query({id:id}, function() {
+									UserEx.requestAd.query({id:id, text:$('#request_message').val()}, function() {
 										$modalInstance.close();
 										callback();
 									})
@@ -401,16 +450,25 @@ define(['angular','services','jquery'], function(angular,services,jQuery) {
 				
 							},
 							success: function(responseText, statusText, xhr, form) { 
-				
-								var ar = $(el).val().split('\\'), 
-									filename =  ar[ar.length-1];
-
-								$form.removeAttr('action');
-				
-								$scope.$apply(function() {
-									$scope.progress = 0;
-									$scope.giftimage = "api/image/"+filename;
-								});
+								
+								if(typeof(responseText.error)==='undefined') {
+									var ar = $(el).val().split('\\'), 
+										filename =  ar[ar.length-1];
+	
+									$form.removeAttr('action');
+					
+									$scope.$apply(function() {
+										$scope.progress = 0;
+										$scope.giftimage = "api/image/"+filename;
+										$scope.error = "";
+									});
+								}
+								else {
+									$scope.$apply(function() {
+										$scope.progress = 0;
+										$scope.error = responseText.error;
+									});
+								}
 				
 							},
 						});

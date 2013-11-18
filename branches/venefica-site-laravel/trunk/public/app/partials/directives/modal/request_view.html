@@ -1,0 +1,75 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+			<div class="modal-header-content">
+				<user-profile 
+					name="{{data.request.user.firstName}} {{data.request.user.lastName}}" 
+					location="{{data.request.user.address.city}}, {{data.request.user.address.state}}" 
+					img="https://s3.amazonaws.com/ge-dev/user/{{data.request.user.avatar.id}}_112"
+					avatar="{{data.request.user.avatar.id}}" 
+					points="{{data.request.user.score | number:0}}/{{data.request.user.pendingScore | number:0}}" 
+					since="{{data.request.user.joinedAt | date:'MMMM yyyy'}}"
+					following="data.request.user.inFollowings"
+					id="{{data.request.user.id}}"
+					self="data.request.user.self"
+					nested="true"
+				>
+				</user-profile>
+			</div>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-xs-6">
+					<button type="button" ng-click="decline()" class="btn btn-block btn-primary">
+						Decline Request
+					</button>
+				</div>
+				<div class="col-xs-6">
+					<div ng-switch="request.accepted">
+						<div ng-switch-when="true">
+							<button type="button" ng-click="send()"  class="btn btn-block btn-default">
+								Shipped / Handed Over
+							</button>
+						</div>
+						<div ng-switch-default>
+							<button type="button" ng-click="accept()"  class="btn btn-block btn-default">
+								Accept Request
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<h3>{{data.ad.title}}</h3>
+					<div class="row" ng-repeat="message in data.messages">
+						<div class="col-xs-4 col-md-2">
+							<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" ng-show="message.fromAvatarUrl" class="img-rounded img-responsive" />
+							<img ng-src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" ng-hide="message.fromAvatarUrl" class="img-rounded img-responsive" />
+						</div>
+						<div class="col-xs-8 col-md-10">
+							<span>{{message.fromFullName}}</span>
+							<span>{{message.createdAt | date:'longDate'}}</span>
+							<p>
+								{{message.text}}
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-8">
+							<textarea id="text_msg" maxlength="2000" class="form-control"></textarea>
+						</div>
+						<div class="col-xs-4">
+							<button class="btn btn-default btn-lg btn-block" ng-click="sendMsg()">
+								ADD
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

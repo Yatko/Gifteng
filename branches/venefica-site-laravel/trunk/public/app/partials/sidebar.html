@@ -8,8 +8,10 @@
 				<li>
 					<div class="row ge-user">
 						<div class="col-xs-4">
-							<div class="ge-user-image">
-								<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{user.data.avatar.id}}_112" class="img-rounded img-responsive">
+							<div class="ge-user-image ge-detail">
+								<a href="#/profile">
+									<img ng-src="{{user.data.avatar_url}}" class="img-rounded img-responsive">
+								</a>
 							</div>
 						</div>
 						<div class="col-xs-8">

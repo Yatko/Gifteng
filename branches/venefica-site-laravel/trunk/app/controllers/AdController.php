@@ -515,5 +515,38 @@ class AdController extends \BaseController {
 		} catch ( Exception $ex ) {
 		}
 	}
+	
+	/**
+	 * Request view
+	 * 
+	 * @param int $id
+	 * @return Response
+	 */
+	public function request_view($id) {
+		try {
+			$session = Session::get('user');
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$messageService = new SoapClient(Config::get('wsdl.message'), array());
+			
+			$request = $adService -> getRequestById(array("requestId" => $id)) -> request;
+			$ad = $adService -> getAdById(array("adId" => $request->adId)) -> ad;
+        	$messages = $messageService -> getMessagesByAdAndUsers(array(
+                "adId" => $ad->id,
+                "user1Id" => $request->user->id,
+                "user2Id" => $session['data']->id
+			));
+			
+			if(isset($messages->message->type)) {
+				$messages = array($messages->message);
+			}
+			else {
+				$messages = $messages->message;
+			}
+			
+			return Response::json(array('ads' => $ad, 'request' => $request, 'messages' => $messages));
+		} catch ( Exception $ex ) {
+			throw new Exception($ex -> getMessage());
+		}
+	}
 
 }

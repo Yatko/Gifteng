@@ -2,9 +2,10 @@
 	<div class="well">
 		<div class="well-main">
 		<h2>The More You Give, The More You Get. Promise! :)</h2>
-		<form>
+		<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+		<form name="giftForm">
 			<div class="form-group">
-				<input type="text" ng-model="toPost.title" class="form-control input-lg" placeholder="Name your gift" />
+				<input type="text" name="title" ng-model="toPost.title" class="form-control input-lg" placeholder="Name your gift" />
 			</div>
 			<div class="form-group">
 				<textarea ng-model="toPost.description" class="form-control" rows="4" placeholder="Describe it ..."></textarea>

@@ -13,8 +13,13 @@ class ImageController extends \BaseController {
 		$destinationPath = app_path().'/storage/uploads/';
 		$filename = $file->getClientOriginalName();
 		Input::file('uploader')->move($destinationPath, $filename);
-		
-		return $filename;
+		list($width, $height, $type, $attr) = getimagesize($destinationPath.$filename);
+		if($width<500 || $height <500 || filesize($destinationPath.$filename) > 5242880) {
+			return array('error'=>"Picture width and height must be at least 500px. Please select a larger image or limit the photo size to 5MB.");
+		}
+		else {
+			return array();
+		}
 	}
 	
 	public function profile() {

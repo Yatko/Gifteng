@@ -19,7 +19,7 @@
 		status="{{ad.status}}"
 		can-request="{{ad.canRequest}}"
 		in-bookmarks="{{ad.inBookmarks}}"
-		callback="loadAds()"
+		callback="viewGift()"
 		self="ad.self"
 		></ad>
 	</div>
@@ -133,7 +133,8 @@
 				<div class="comments">
 					<div class="row" ng-repeat="comment in comments">
 						<div class="col-xs-3">
-							<img ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
+							<img ng-show="comment.publisherAvatarUrl" ng-src="https://s3.amazonaws.com/ge-dev/user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" class="img-responsive" />
+							<img ng-hide="comment.publisherAvatarUrl" src="http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png" class="img-responsive">
 						</div>
 						<div class="col-xs-9">
 							<a href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a><span>{{1378383886000 | date:mediumDate}}</span>

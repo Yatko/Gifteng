@@ -77,8 +77,26 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					$scope.step="step2";
 				};
 				$scope.step3 = function() {
-					$scope.step="step3";
-					showMap();
+					if(!$scope.toPost.title) {
+						$scope.error = "Please name your gift."
+					}
+					else if(!$scope.toPost.category) {
+						$scope.error = "Please select a category."
+					}
+					else if(!$scope.toPost.price) {
+						$scope.error = "Please enter your gift's Current Value."
+					}
+					else if(!$scope.toPost.zip) {
+						$scope.error = "Please set your Zip code."
+					}
+					else if(!$scope.toPost.freeShipping && !$scope.toPost.pickUp) {
+						$scope.error = "Please select the delivery method.";
+					}
+					else {
+						$scope.error = "";
+						$scope.step="step3";
+						showMap(true);
+					}
 				};
 				$scope.step4 = function() {
 					$scope.step="step4";
@@ -90,6 +108,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 						description: $scope.toPost.description,
 						categoryId: $scope.toPost.category,
 						address: $scope.toPost.address,
+						price: $scope.toPost.price,
 						pickUp: $scope.toPost.pickUp,
 						freeShipping: $scope.toPost.freeShipping,
 						image: {url:$scope.toPost.image}
@@ -102,18 +121,38 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					});
 					
 				}
-				var showMap = function() {
+				var showMap = function(canDrag) {
+					if(typeof(canDrag)!=='undefined') {
+						var canDrag = true;
+						var dragtitle = "Drag me to the exact location";
+					}
+					else {
+						var canDrag = false;
+						var dragTitle = "";
+					}
 	        		var locationIcon = new L.icon({
 		                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
 		                iconSize: [64, 64]
 		            });
 		            
 					var geo = Geo.query({zip: $scope.toPost.zip}, function() {
-						$scope.toPost.address = geo.address;
+						
+						if(!$scope.toPost.address || typeof($scope.toPost.address)==="undefined")
+							$scope.toPost.address = geo.address;
 			            
 			            var locationMarker = new L.marker([$scope.toPost.address.latitude, $scope.toPost.address.longitude], {
-			                icon: locationIcon
+			                icon: locationIcon,
+			                draggable: canDrag,
+			                title: dragTitle
 			            });
+
+			            if ( canDrag ) {
+			                locationMarker.on('dragend', function() {
+			                    var latlng = locationMarker.getLatLng();
+			                    $scope.toPost.address.longitude = latlng.lng;
+			                    $scope.toPost.address.latitude = latlng.lat;
+			                });
+			            }
 			            
 			            var tileLayer = new L.tileLayer.provider('Esri.WorldStreetMap');
 			
@@ -140,30 +179,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 					$scope.col3 = [];
 					$scope.creators = ads['creators'];
 					
-					for(var i=0;i<ads['ads'].length;i++) {
-						if((i%3)==0) {
-							$scope.col3.push(ads['ads'][i]);
-						}
-						else if((i%2)==0) {
-							$scope.col2.push(ads['ads'][i]);
-						}
-						else {
-							$scope.col1.push(ads['ads'][i]);
-						}
-						if(i==ads['ads'].length-1) {
-							$scope.last=ads['ads'][i].lastIndex;
-						}
-					}
-					
-					loadMore();
-				});
-			}
-			
-			var loadMore = function() {
-				for(var i=0;i<more;i++) {
-					
-					var ads = AdMore.query({'last':$scope.last}, function() {
-					
+					if(typeof(ads['ads'])!=='undefined') {
 						for(var i=0;i<ads['ads'].length;i++) {
 							if((i%3)==0) {
 								$scope.col3.push(ads['ads'][i]);
@@ -176,6 +192,33 @@ define(['angular','services','lang'], function(angular,services,lang) {
 							}
 							if(i==ads['ads'].length-1) {
 								$scope.last=ads['ads'][i].lastIndex;
+							}
+						}
+					}
+					
+					loadMore();
+				});
+			}
+			
+			var loadMore = function() {
+				for(var i=0;i<more;i++) {
+					
+					var ads = AdMore.query({'last':$scope.last}, function() {
+					
+						if(typeof(ads['ads'])!=='undefined') {
+							for(var i=0;i<ads['ads'].length;i++) {
+								if((i%3)==0) {
+									$scope.col3.push(ads['ads'][i]);
+								}
+								else if((i%2)==0) {
+									$scope.col2.push(ads['ads'][i]);
+								}
+								else {
+									$scope.col1.push(ads['ads'][i]);
+								}
+								if(i==ads['ads'].length-1) {
+									$scope.last=ads['ads'][i].lastIndex;
+								}
 							}
 						}
 					});
@@ -210,8 +253,12 @@ define(['angular','services','lang'], function(angular,services,lang) {
 							&& $location.$$path!='/verify') {
 							$location.path('/login');
 						}
-						if(typeof(user.data)!=='undefined')
-						$scope.user.data.avatar.url = "https://s3.amazonaws.com/ge-dev/user/"+user.data.avatar.id+"_112";
+						if(typeof(user.data)!=='undefined') {
+							if(typeof(user.data.avatar) !== 'undefined')
+								$scope.user.data.avatar_url = "https://s3.amazonaws.com/ge-dev/user/"+user.data.avatar.id+"_112";
+							else
+								$scope.user.data.avatar_url = "http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-no-profile-picture.png";
+						}
 					}
 				},
 				true
@@ -495,23 +542,23 @@ define(['angular','services','lang'], function(angular,services,lang) {
 			$scope.showMessage = false;
 			$scope.openmsg = function(id) {
 				$scope.showMessage = true;
-				var msgs = UserEx.message.query({}, function() {
-					$scope.messages = msgs;
-				});
-				var messages = UserEx.message.query({id:id}, function () {
-					if(messages[0].owner) {
-						var fromId=messages[0].toId;
+				var message = UserEx.message.query({id:id}, function () {
+					if(message[0].owner) {
+						var fromId=message[0].toId;
 					}
 					else {
-						var fromId=messages[0].fromId;
+						var fromId=message[0].fromId;
 					}
 					var from = UserEx.profile.query({id:fromId});
 					$scope.current_message = {
-						messages: messages,
+						messages: message,
 						from: from
 					};
 					var user = UserEx.reinit.query({}, function() {
 						User.setUser(user);
+					});
+					var msgs = UserEx.message.query({}, function() {
+						$scope.messages = msgs;
 					});
 				});
 			}
@@ -577,29 +624,42 @@ define(['angular','services','lang'], function(angular,services,lang) {
 		 * View Gift Controller
 		 */
 		.controller('ViewGiftController', function($scope, $modal, $routeParams, Ad) {
-			$scope.ad = Ad.get({id:$routeParams.id}, function() {
-				$scope.comments = $scope.ad.comments;
-				$scope.ad = $scope.ad.ad;
-				try {
-	        		var locationIcon = new L.icon({
-		                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
-		                iconSize: [64, 64]
-		            });
-		            
-		            var locationMarker = new L.marker([$scope.ad.address.latitude, $scope.ad.address.longitude], {
-		                icon: locationIcon
-		            });
-		            
-		            var tileLayer = new L.tileLayer.provider('Esri.WorldStreetMap');
-		
-		            var map = new L.map('view_map').setView([$scope.ad.address.latitude, $scope.ad.address.longitude], 16);
-		            tileLayer.addTo(map);
-		            locationMarker.addTo(map);
-				}
-				catch ( ex ) {
-		            console.log(ex);
-		        }
-			});
+			$scope.viewGift = function() {
+				$scope.ad = Ad.get({id:$routeParams.id}, function() {
+					if(typeof($scope.ad.comments)!=='undefined' && typeof($scope.ad.comments.comment)!=='undefined') {
+						if(typeof($scope.ad.comments.comment.id)!=='undefined')
+							$scope.comments = $scope.ad.comments;
+						else
+							$scope.comments = $scope.ad.comments.comment;
+					}
+					else {
+						$scope.comments=[];
+					}
+						
+					$scope.ad = $scope.ad.ad;
+					try {
+		        		var locationIcon = new L.icon({
+			                iconUrl: 'http://veneficalabs.com/gifteng/assets/4/temp-sample/ge-location-pin-teal.png',
+			                iconSize: [64, 64]
+			            });
+			            
+			            var locationMarker = new L.marker([$scope.ad.address.latitude, $scope.ad.address.longitude], {
+			                icon: locationIcon
+			            });
+			            
+			            var tileLayer = new L.tileLayer.provider('Esri.WorldStreetMap');
+			
+			            var map = new L.map('view_map').setView([$scope.ad.address.latitude, $scope.ad.address.longitude], 16);
+			            tileLayer.addTo(map);
+			            locationMarker.addTo(map);
+					}
+					catch ( ex ) {
+			            console.log(ex);
+			        }
+				});
+			};
+			
+			$scope.viewGift();
 			
 			$scope.requestGift = function(id) {
 			    var modalInstance = $modal.open({
@@ -609,7 +669,7 @@ define(['angular','services','lang'], function(angular,services,lang) {
 							$modalInstance.close();
 						};
 						$scope.submit = function() {
-							UserEx.requestAd.query({id:id}, function() {
+							UserEx.requestAd.query({id:id, text:$('#request_message').val()}, function() {
 								$modalInstance.close();
 								$location.path('/profile/gifts/receiving');
 							})

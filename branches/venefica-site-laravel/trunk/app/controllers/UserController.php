@@ -149,8 +149,14 @@ class UserController extends \BaseController {
 		try {
             $messageService = new SoapClient(Config::get('wsdl.message'),array());
             $result = $messageService->getLastMessagePerRequest();
-
-            return Response::json($result->message);
+			if(isset($result->message->type)) {
+				$messages = array($result->message);
+			}
+			else {
+				$messages = $result->message;
+			}
+			
+            return Response::json($messages);
         } catch ( Exception $ex ) {
 			return Response::json(array());
         }

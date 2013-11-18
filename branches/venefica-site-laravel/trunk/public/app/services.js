@@ -197,6 +197,14 @@ define(['angular'], function(angular) {'use strict';
 					method : 'POST',
 					isArray : false
 				}
+			}), 
+			requestView : $resource('api/ad/request/:id', {
+				id : '@id'
+			}, {
+				query : {
+					method : 'GET',
+					isArray : false
+				}
 			}),
 			updateProfile : $resource('api/user', {}, {
 				query : {
