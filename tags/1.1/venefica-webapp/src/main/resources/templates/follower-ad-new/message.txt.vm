@@ -1,0 +1,12 @@
+Hi ${follower.userData.getFirstName()},
+
+${creator.getFullName()} posted a new Gift!
+
+Click on the following link to view the gift:
+${baseUrl}view/${ad.id}
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}profile?notification

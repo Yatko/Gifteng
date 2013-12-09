@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Thank you for signing up!</title>
+  </head>
+  
+  <body style="font-family:sans-serif;text-align:center;text-shadow: 0 1px 0 #fff;background:url('http://gifteng.com/assets/4/temp-sample/ge-background.png') #eeedea;">
+  	<div style="padding-top:36px;width: 160px;margin: auto;">
+		<img src="http://gifteng.com/images/mail/gifteng.png">
+	</div>
+	<hr style="border: 0;height: 1px;margin:36px 0;background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));" />
+	<!-- message-content -->
+	<div id="message-content" style="text-align:center;">
+		<h1 style="font-size: 136%;">Dear Future Giftenger,</h1>
+		<p>
+		We launched <a href="http://www.gifteng.com" style="color:#00bebe;text-decoration: none;">Gifteng</a><sup style="color:#00bebe;"> Beta</sup> in September 2013! Since then we've had the joy of watching our members already posting amazing items to give away.<br />If you are not familiar with Gifteng, we are an online community where you can receive gifts for free from friends and neighbors in your area.<br />Plus, you can use Gifteng to give away your unwanted items as gifts to the person who you select.
+		</p>
+		<p>
+		At the moment, Gifteng is only available in New York, but we are planning to expand into others cities soon.
+		<br /><br /><strong>To help our growth <a href="http://www.facebook.com/gifteng" style="color:#666;text-decoration: none;">like us on Facebook</a>, <a href="http://www.twitter.com/gifteng" style="color:#666;text-decoration: none;">follow us on Twitter</a> and tell your friends about Gifteng.</strong>
+		<br /><br />When enough people from your city/town request an invitation, we will be happy to give you access to the site.
+		<br />(We don’t want to turn you away, we just want to make sure there will be gifts waiting for you when you log in.)<br />
+		We appreciate your patience!<br /><br />
+		</p>
+		Warm regards,<br />
+		The Gifteng Team<br />
+		<a href="http://www.gifteng.com" style="color:#00bebe;text-decoration: none;">www.gifteng.com</a>
+		</p>
+	</div>
+	<!-- message-note -->
+
+	<!-- ./message-note -->
+	<!-- ./message-content -->	
+	<div style="padding:36px 0;text-align:center;">
+		<p style="color: #aaaaaa;font-size: 136%;">
+			Give. Receive. Inspire.
+		</p>
+		<hr style="border: 0;height: 1px;margin-top:6px;background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(203,200,195,0.75), rgba(0,0,0,0));" />
+		<p style="color: #aaaaaa;font-size: 11px;">
+			&copy;2013 Gifteng | All Rights Reserved
+		</p>
+		<p>
+			<div style="width: 120px;margin: auto;">
+				<a title="Gifteng on Facebook" href="http://facebook.com/gifteng"><div style="display: inline-block;margin: 3px;width: 24px;height: 24px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px; background: url('http://gifteng.com/images/mail/ge-facebook2.png') no-repeat center center; background-size:24px 24px;"></div></a>
+				<a title="Follow us on Twitter" href="http://twitter.com/gifteng"><div style="display: inline-block;margin: 3px;width: 24px;height: 24px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px; background: url('http://gifteng.com/images/mail/ge-twitter2.png') no-repeat center center; background-size:24px 24px;"></div></a>
+				<a title="Find us on Pinterest" href="http://pinterest.com/gifteng"><div style="display: inline-block;margin: 3px;width: 24px;height: 24px;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px; background: url('http://gifteng.com/images/mail/ge-pinterest2.png') no-repeat center center; background-size:24px 24px;"></div></a>
+			</div>
+		</p>
+	</div>
+  </body>
+</html>
