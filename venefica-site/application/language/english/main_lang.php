@@ -8,7 +8,7 @@ $lang['validation_is_natural_no_zero'] = 'The %s must be a positive and non zero
 $lang['validation_max_upload_size'] = '<div class=\'error\'>Please limit photo size to 5 MB !</div>';
 
 
-$lang['main_title'] = "Gifteng | Give. Receive. Inspire.";
+$lang['main_title'] = "Gifts | Freebies | Free Stuff - Gifteng";
 $lang['main_slogan'] = "- make the world a giving place -";
 
 $lang['main_menu_about'] = "About";
