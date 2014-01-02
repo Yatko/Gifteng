@@ -23,14 +23,14 @@ $is_logged = isLogged();
     <meta http-equiv="Expires" content="0">
     <meta name="author" content="gifteng.com"> 
     <meta name="copyright" content="(c) 2012, gifteng.com">
-    <meta name="description" content="An invitation-only social community where you can give and receive things you love for free." />
-    
+    <meta name="description" content="On Gifteng you can give and receive Gifts, Freebies and many more. Find what you want by browsing through great free stuff. They are all Gifts." />
+    <meta name="keywords" content="free stuff, free stuff online, freebies, gifts" />
     <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" /> 
     <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" /> 
     <meta name="DC.title" xml:lang="EN" content="Gifteng" />
     <meta name="DC.title" lang="en" content="Gifteng" /> 
     <meta name="DC.creator" content="gifteng.com" /> 
-    <meta name="DC.subject" lang="en" content="Give. Receive. Inspire." /> 
+    <meta name="DC.subject" lang="en" content="Gifts | Freebies | Free Stuff - Gifteng" /> 
     <meta name="DC.description" lang="en" content="An invitation-only social community where you can give and receive things you love for free." /> 
     <meta name="DC.publisher" content="Gifteng" />
     <meta name="DC.format" content="text/html" />  
@@ -41,7 +41,7 @@ $is_logged = isLogged();
     
     <meta property="og:site_name" content="Gifteng"/>
     <meta property="og:url" content="http://www.gifteng.com"/>
-    <meta property="og:title" content="Gifteng ♥"/>
+    <meta property="og:title" content="Gifts | Freebies | Free Stuff - Gifteng"/>
     <meta property="og:description" content="Give. Receive. Inspire."/>
     <meta property="og:image" content="<?=BASE_PATH?>images/logo.png"/>
     <meta property="og:type" content="website"/>
