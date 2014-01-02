@@ -28,7 +28,7 @@
 	                            </div><!--./ge-item-image-->
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Give</p>
+		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Free Stuff</h1>
 		                                <p>On Gifteng you can give away things you no longer need. Pick a friend or a neighbor and put a smile on their face.<br/><br/></p>
 	                            	</div>
 	                            </div>
@@ -43,8 +43,8 @@
 	                            </div><!--./ge-item-image-->
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Receive</p>
-		                                <p>Need a good book? Or a coffeemaker? How about a new pair of shoes? Find what you want by browsing through great gifts. They are free.</p>
+		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Freebies</h1>
+		                                <p>Need a good book? Or a coffeemaker? How about a new pair of shoes? Find what you want by browsing through free stuff. They are all gifts!</p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -103,7 +103,7 @@
 	                            </div>
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
-		                                <p class="ge-title">Inspire</p>
+		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Gifts</h1>
 		                                <p>Giving helps you live longer. Generosity makes our world a better place. Sharing is caring... and it all starts with you.<br/><br/></p>
 	                            	</div>
 	                            </div>
@@ -157,7 +157,7 @@
 	                        <i class="icon ge-icon-giftbox"></i>
 	                    </div>
 	                    <div class="span6">
-	                        <p class="lead">Every item you see on Gifteng is individually posted by a member of Gifteng’s growing community or by a company who loves rewarding their customers with awesome gifts.</p>
+	                        <p class="lead">Freebies you see on Gifteng are individually posted by a member of Gifteng’s growing community or by a company who loves rewarding their customers with awesome gifts.</p>
 	                    </div>
 	                </div>
 	                <div class="row-fluid"><div class="span8 offset2"><hr class="ge-hr-dotted"></div></div>
@@ -166,7 +166,7 @@
 	                        <i class="icon ge-icon-check"></i>
 	                    </div>
 	                    <div class="span6">
-	                        <p class="lead">As a Giftenger you have access to new Gifts - FREE items - on a daily basis, beginning at 12:00pm Eastern Time. (The preciousness of the gift is checked by our team before publishing.)</p>
+	                        <p class="lead">As a Giftenger you have access to new Gifts - FREE stuff - on a daily basis, beginning at 12:00pm Eastern Time. (The preciousness of the gift is checked by our team before publishing.)</p>
 	                    </div>
 	                </div>
 	                <div class="row-fluid"><div class="span8 offset2"><hr class="ge-hr-dotted"></div></div>
@@ -175,7 +175,7 @@
 	                        <i class="icon ge-icon-heart"></i>
 	                    </div>
 	                    <div class="span6">
-	                        <p class="lead">Currently, there is no need for points to request a Gift. But the more you give the higher your Generosity Score becomes. What does this mean? It means that the higher your score is, the more gifts will be waiting for you.</p>
+	                        <p class="lead">Currently, there is no need for points to request a Gift. But the more you give the higher your Generosity Score becomes. What does this mean? It means that the higher your score is, the more free stuff will be waiting for you.</p>
 	                    </div>
 	                </div>
 	                <div class="row-fluid">
@@ -229,7 +229,7 @@
 	                               	</div>
 	                            </div><!--./ge-item-image-->
 	                            <div class="row-fluid">
-	                                <p class="lead">Easily giveaway your new or used furniture 
+	                                <p class="lead">Easily give away your new or used furniture 
 	                                without the hassle of answering emails.</p>
 	                            </div>
 	                        </div>
@@ -289,7 +289,7 @@
 	                            <div class="row-fluid">
 	                                <p class="lead">Make someone happy with the things 
 	                                you got bored of. (And discover some great 
-	                                gifts from others around you.)</p>
+	                                freebies from others around you.)</p>
 	                            </div>
 	                        </div>
 	                    </div><!--./-->	
@@ -338,7 +338,7 @@
 	            <div class="ge-stage" id="welcome_5">
 	                <div class="row-fluid">
 	                	<div class="ge-headline">
-	                    	<small>Our mission is to make the world a giving place. Our biggest inspirations are people who appreciate what they have and are willing to give to others, especially those in need. The ability to provide a place where they can get together is delightful.</small>
+	                    	<small>Our mission is to make the world a giving place. Our biggest inspiration are people who appreciate what they have and are willing to give to others, especially those in need. The ability to provide a place where they can get together is delightful.</small>
 	                	</div><!--./ge-headline-->
 	                </div>
 	            </div>

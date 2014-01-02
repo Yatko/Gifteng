@@ -24,7 +24,7 @@
                             <li><a rel="me nofollow" class="url fui-pinterest" href="http://pinterest.com/gifteng" target="_blank" title="Gifteng on pinterest"></a></li>
                             <li><a rel="me nofollow" class="url fui-facebook" href="http://facebook.com/gifteng" target="_blank" title="Gifteng on facebook"></a></li>
                             <li><a rel="me nofollow" class="url fui-twitter" href="http://twitter.com/gifteng" target="_blank" title="Gifteng on twitter"></a></li>
-                            <li><a rel="me nofollow publisher" class="url" href="//plus.google.com/115653542991612366754?prsrc=3" target="_top" style="text-decoration:none;"><img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+" style="border:0;width:16px;height:16px;"/></a></li>
+                            <li><a rel="me nofollow publisher" class="url" href="//google.com/+Gifteng" target="_top" style="text-decoration:none;"><img src="//ssl.gstatic.com/images/icons/gplus-16.png" alt="Google+" style="border:0;width:16px;height:16px;"/></a></li>
                         </ul>
                     </div>
                 </div>
