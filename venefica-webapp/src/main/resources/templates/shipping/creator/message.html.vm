@@ -1,0 +1,18 @@
+#set($title = "Your shipping label is ready")
+#parse("../../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{creator.userData.getFirstName()},</h1>
+	<p>
+	    Here is the pre-paid, pre-addressed USPS shipping label for <a href="${baseUrl}/#/view/gift/${ad.id}">${ad.adData.title}</a> that was requested on Gifteng! Whoohoo!
+	    Please ship the gift as soon as possible. $!{receiver.userData.getFirstName()} is eagerly waiting to get it.<br /><br />
+	
+	    Not sure where to find something? Check out our super helpful <a href="http://gifteng.zendesk.com/home">FAQ</a> page.
+	</p>
+	<p>
+    	Happy giving & receiving,<br />
+        The Gifteng Team
+	</p>
+</div>
+
+#parse("../../footer.html.vm")
