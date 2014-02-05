@@ -33,6 +33,8 @@ class User_model extends CI_Model {
     // business user data
     var $businessName; //string
     var $contactName; //string
+    var $website; //string
+    var $contactNumber; //string
     var $businessCategoryId; //long
     var $businessCategory; //string
     var $addresses; //array of Address_model
@@ -59,6 +61,8 @@ class User_model extends CI_Model {
             $this->verified = getField($obj, 'verified');
             $this->businessName= getField($obj, 'businessName');
             $this->contactName = getField($obj, 'contactName');
+            $this->website = getField($obj, 'website');
+            $this->contactNumber = getField($obj, 'contactNumber');
             $this->businessCategoryId = getField($obj, 'businessCategoryId');
             $this->businessCategory = getField($obj, 'businessCategory');
             if ( hasField($obj, 'statistics') ) {

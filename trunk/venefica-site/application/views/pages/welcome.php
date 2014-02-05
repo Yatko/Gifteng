@@ -29,7 +29,7 @@
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
 		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Free Stuff</h1>
-		                                <p>On Gifteng you can give away things you no longer need. Pick a friend or a neighbor and put a smile on their face.<br/><br/></p>
+		                                <p>On Gifteng you can give away things you no longer need. Pick a friend or a neighbor and put a smile on their face.</p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -44,7 +44,7 @@
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
 		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Freebies</h1>
-		                                <p>Need a good book? Or a coffeemaker? How about a new pair of shoes? Find what you want by browsing through free stuff. They are all gifts!</p>
+		                                <p>Need a good book? Or a coffeemaker? How about a new pair of shoes? Find what you want by browsing through free stuff.</p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -104,7 +104,7 @@
 	                            <div class="row-fluid">
 	                            	<div class="ge-text">
 		                                <h1 class="ge-title" style="font-size:160%;text-align:center;">Gifts</h1>
-		                                <p>Giving helps you live longer. Generosity makes our world a better place. Sharing is caring... and it all starts with you.<br/><br/></p>
+		                                <p>Giving helps you live longer. Generosity makes our world a better place. Sharing is caring... and it all starts with you.</p>
 	                            	</div>
 	                            </div>
 	                        </div>
@@ -133,6 +133,10 @@
 	                        </div><!--./video embed-->
 	                    </div>
 	                </div>
+	                <div class="row-fluid ge-headline">
+	                    <p>&middot; free stuff online &middot;</p>
+	                    <small>Join our community now and find out why Gifteng is the best place for free stuff online.</small>
+	                </div><!--./ge-headline-->
 	            </div><!--./welcome_1-->
 	
 	        </div>

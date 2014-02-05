@@ -8,6 +8,7 @@
 class Address_model extends CI_Model {
     
     var $id; //long
+    var $deleted; //boolean
     var $name; //string
     var $address1; //string
     var $address2; //string
@@ -26,6 +27,7 @@ class Address_model extends CI_Model {
         
         if ( $obj != null ) {
             $this->id = getField($obj, 'id');
+            $this->deleted = getField($obj, 'deleted');
             $this->name = getField($obj, 'name');
             $this->address1 = getField($obj, 'address1');
             $this->address2 = getField($obj, 'address2');
@@ -59,6 +61,7 @@ class Address_model extends CI_Model {
     public function toString() {
         return "Address ["
             ."id=".$this->id.", "
+            ."deleted=".$this->deleted.", "
             ."name=".$this->name.", "
             ."address1=".$this->address1.", "
             ."address2=".$this->address2.", "

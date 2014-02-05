@@ -47,6 +47,17 @@ class Invitation extends CI_Controller {
             $this->view($extra_data);
         }
     }
+    
+    public function facebook() {
+        $this->init();
+        
+        $data = array();
+	$data['isFb']=true;
+        
+        $this->load->view('templates/'.TEMPLATES.'/header',$data);
+        $this->load->view('pages/invitation_facebook');
+        $this->load->view('templates/'.TEMPLATES.'/footer');
+    }
 
     private function process_invitation_request(&$extra_data) {
         $step = $this->getStepFromUri();
@@ -111,13 +122,21 @@ class Invitation extends CI_Controller {
     
     private function process_invitation_verify(&$extra_data) {
         $step = $this->getStepFromUri();
-        $is_valid = $this->invitation_verify($step);
+        $code = $this->getCodeFromUri();
+        $is_valid = $this->invitation_verify($step, $code);
         if ( $is_valid ) {
             if ( $step == 1 ) {
-                $code = $this->input->post('invitation_code');
+                if ( $code == null || is_empty($code) ) {
+                    $code = $this->input->post('invitation_code');
+                }
                 $this->session->set_flashdata('invitation_code', $code);
                 
                 redirect('/invitation/' . Invitation::ACTION_VERIFY . '/2');
+            } else if ( $step == 2 && $code != null && !is_empty($code) ) {
+                //direct code usage
+                $this->session->set_flashdata('invitation_code', $code);
+                
+                redirect('/registration/user');
             } else {
                 log_message(INFO, "Invalid step ($step)!");
                 redirect('/invitation/' . Invitation::ACTION_VERIFY . '/1');
@@ -225,7 +244,12 @@ class Invitation extends CI_Controller {
         return $is_valid;
     }
     
-    private function invitation_verify($step) {
+    private function invitation_verify($step, $code) {
+        if ( $code != null && !is_empty($code) ) {
+            //direct code usage
+            return true;
+        }
+        
         $this->load->library('form_validation', null, 'verify_invitation_form');
         $this->verify_invitation_form->set_error_delimiters('<div class="error">', '</div>');
         if ( $step == 1 ) {
@@ -308,16 +332,6 @@ class Invitation extends CI_Controller {
         return TRUE;
     }
     
-    public function facebook() {
-        $this->init();
-		
-		$data['isFb']=true;
-            
-        $this->load->view('templates/'.TEMPLATES.'/header',$data);
-        $this->load->view('pages/invitation_facebook');
-        $this->load->view('templates/'.TEMPLATES.'/footer');
-    }
-    
     // internal functions
     
     private function init() {
@@ -341,6 +355,11 @@ class Invitation extends CI_Controller {
     
     private function getStepFromUri() {
         $step = $this->uri->segment(3, null);
+        return $step;
+    }
+    
+    private function getCodeFromUri() {
+        $step = $this->uri->segment(4, null);
         return $step;
     }
 }
