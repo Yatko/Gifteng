@@ -12,7 +12,9 @@
                 http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
     <import resource="common-context.xml" />
-
+    
+    <bean id="userManagementService" class="com.venefica.service.UserManagementServiceImpl" />
+    <bean id="messageService" class="com.venefica.service.MessageServiceImpl" />
     <bean id="adService" class="com.venefica.service.AdServiceImpl" />
     <bean id="adminService" class="com.venefica.service.AdminServiceImpl" />
 

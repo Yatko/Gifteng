@@ -39,9 +39,10 @@
 
     <bean id="tokenAuthorizationInterceptor" class="com.venefica.auth.TokenAuthorizationInterceptor" />
     <bean id="messageSignatureInterceptor" class="com.venefica.auth.MessageSignatureInterceptor" />
+    <bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
     
     <bean id="securityContextHolder" class="com.venefica.auth.ThreadSecurityContextHolder" />
-    <bean id="securityContextCleaner" class="com.venefica.auth.SecurityContextCleaner" />
+    <bean id="tokenUtil" class="com.venefica.auth.TokenUtil" />
 
     <bean id="baseUrl" class="java.lang.String">
         <constructor-arg value="http://localhost:8082/" />
