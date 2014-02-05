@@ -6,9 +6,7 @@ package com.venefica.model;
 
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.UserDto;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +32,7 @@ public class BusinessUserData  extends UserData {
     @Index(name = "idx_contactName")
     private String contactName;
     private Boolean verified;
+    private String contactNumber;
     
     @ManyToOne(optional = false)
     @ForeignKey(name = "business_category_fk")
@@ -56,29 +55,20 @@ public class BusinessUserData  extends UserData {
     public void updateUser(UserDto userDto) {
         businessName = userDto.getBusinessName();
         contactName = userDto.getContactName();
-        
-        if ( userDto.getAddresses() != null && !userDto.getAddresses().isEmpty() ) {
-            addresses = new LinkedHashSet<AddressWrapper>();
-            for ( AddressDto addressDto : userDto.getAddresses() ) {
-                AddressWrapper addressWrapper = addressDto.getAddressWrapper();
-                addresses.add(addressWrapper);
-            }
-        }
+        contactNumber = userDto.getContactNumber();
+        addresses = AddressWrapper.toAddressWrappers(userDto.getAddresses());
     }
 
     @Override
     public void updateUserDto(UserDto userDto) {
         userDto.setBusinessName(businessName);
         userDto.setContactName(contactName);
-        userDto.setBusinessCategoryId(category.getId());
-        userDto.setBusinessCategory(category.getName());
+        userDto.setContactNumber(contactNumber);
+        userDto.setAddresses(AddressDto.toAddressDtos(addresses));
         
-        if ( addresses != null && !addresses.isEmpty() ) {
-            Set<AddressDto> addressesDto = new LinkedHashSet<AddressDto>();
-            for ( AddressWrapper addressWrapper : addresses ) {
-                addressesDto.add(new AddressDto(addressWrapper));
-            }
-            userDto.setAddresses(new ArrayList<AddressDto>(addressesDto));
+        if ( category != null ) {
+            userDto.setBusinessCategoryId(category.getId());
+            userDto.setBusinessCategory(category.getName());
         }
     }
     
@@ -148,6 +138,14 @@ public class BusinessUserData  extends UserData {
 
     public void setCategory(BusinessCategory category) {
         this.category = category;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
     
 }

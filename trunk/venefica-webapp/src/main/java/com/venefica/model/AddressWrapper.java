@@ -4,6 +4,9 @@
  */
 package com.venefica.model;
 
+import com.venefica.service.dto.AddressDto;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embedded;
@@ -27,6 +30,7 @@ public class AddressWrapper {
     private Long id;
     
     private String name;
+    private boolean deleted;
     
     @Embedded
     private Address address;
@@ -36,6 +40,28 @@ public class AddressWrapper {
     
     public AddressWrapper(Address address) {
         this.address = address;
+    }
+    
+    // helper methods
+    
+    public static Set<AddressDto> toAddressDtos(Set<AddressWrapper> addresses) {
+        return AddressDto.toAddressDtos(addresses);
+    }
+    
+    public static Set<AddressWrapper> toAddressWrappers(Set<AddressDto> addressesDto) {
+        if ( addressesDto == null || addressesDto.isEmpty() ) {
+            return null;
+        }
+        
+        Set<AddressWrapper> addresses = new LinkedHashSet<AddressWrapper>();
+        for ( AddressDto addressDto : addressesDto ) {
+            if ( addressDto == null ) {
+                continue;
+            }
+            AddressWrapper addressWrapper = addressDto.toAddressWrapper();
+            addresses.add(addressWrapper);
+        }
+        return addresses;
     }
     
     // getter/setter
@@ -62,6 +88,14 @@ public class AddressWrapper {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
     
 }

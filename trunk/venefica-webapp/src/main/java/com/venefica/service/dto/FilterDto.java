@@ -16,13 +16,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FilterDto {
 
-//    public static final boolean DEFAULT_INCLUDE_CAN_REQUEST = true;
-//    public static final boolean DEFAULT_INCLUDE_REQUESTED = true;
-//    public static final boolean DEFAULT_INCLUDE_SHIPPED = false;
-//    public static final boolean DEFAULT_INCLUDE_INACTIVE = false;
-//    public static final boolean DEFAULT_INCLUDE_OWNED = true;
     public static final boolean DEFAULT_ORDER_ASC = false;
     public static final boolean DEFAULT_ORDER_CLOSEST = false;
+    public static final boolean DEFAULT_CHECK_DATE = false;
     
     private String searchString;
     // all fields are input ones
@@ -36,15 +32,13 @@ public class FilterDto {
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
     private AdType type;
-    //private Boolean includeOwned;
     private Boolean orderAsc; //if true the older ads will be in the first position
     private Boolean orderClosest; //if true the closest ads will be in the first position
+    private Boolean checkDate; //if true fields like availableAt and expiresAt will be verified with the current date
     private FilterType filterType;
-    
-    //private Boolean includeInactive;
-    //private Boolean includeShipped; //has request with SENT or RECEIVED status
-    //private Boolean includeRequested; //include already requested gifts or not
-    //private Boolean includeCanRequest; //quantity > 0; ad active (status != [OFFLINE, FINALIZED, EXPIRED]); sum of active (not deleted and not hidden and status = [PENDING, ACCEPTED, UNACCEPTED, SENT, RECEIVED]) requests < REQUEST_MAX_ALLOWED (3); is requested = false
+    //delivery type
+    private Boolean includePickUp; //local pickup
+    private Boolean includeShipping; //shipping offered
     
     // WARNING: required for JAX-WS
     public FilterDto() {
@@ -184,5 +178,29 @@ public class FilterDto {
 
     public void setFilterType(FilterType filterType) {
         this.filterType = filterType;
+    }
+
+    public Boolean getCheckDate() {
+        return checkDate;
+    }
+
+    public void setCheckDate(Boolean checkDate) {
+        this.checkDate = checkDate;
+    }
+
+    public Boolean getIncludePickUp() {
+        return includePickUp;
+    }
+
+    public void setIncludePickUp(Boolean includePickUp) {
+        this.includePickUp = includePickUp;
+    }
+
+    public Boolean getIncludeShipping() {
+        return includeShipping;
+    }
+
+    public void setIncludeShipping(Boolean includeShipping) {
+        this.includeShipping = includeShipping;
     }
 }

@@ -46,7 +46,7 @@ public interface MessageService {
     Long addCommentToAd(
             @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "comment") @NotNull CommentDto commentDto)
-            throws AdNotFoundException, CommentValidationException;
+            throws UserNotFoundException, AdNotFoundException, CommentValidationException;
 
     /**
      * Updates the comment in the database.
@@ -58,6 +58,18 @@ public interface MessageService {
     @WebMethod(operationName = "UpdateComment")
     void updateComment(@WebParam(name = "comment") @NotNull CommentDto commentDto)
             throws CommentNotFoundException, CommentValidationException;
+    
+    /**
+     * Removes the given comment. Only comment owner can remove its comments.
+     * 
+     * @param commentId
+     * @throws CommentNotFoundException if the comment cannot be identified by ID
+     * @throws AuthorizationException if the comment owner and executor user does
+     * not match
+     */
+    @WebMethod(operationName = "DeleteComment")
+    void deleteComment(@WebParam(name = "commentId") Long commentId)
+            throws UserNotFoundException, CommentNotFoundException, AuthorizationException;
 
     /**
      * Returns a list of comments by the ad.
@@ -74,7 +86,7 @@ public interface MessageService {
     List<CommentDto> getCommentsByAd(
             @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "lastCommentId") Long lastCommentId,
-            @WebParam(name = "numComments") int numComments) throws AdNotFoundException;
+            @WebParam(name = "numComments") int numComments) throws UserNotFoundException, AdNotFoundException;
 
     
     
@@ -89,7 +101,7 @@ public interface MessageService {
      */
     @WebMethod(operationName = "GetLastMessagePerRequest")
     @WebResult(name = "message")
-    List<MessageDto> getLastMessagePerRequest();
+    List<MessageDto> getLastMessagePerRequest() throws UserNotFoundException;
     
 //    /**
 //     * Returns all messages associated with the given ad.
@@ -111,7 +123,8 @@ public interface MessageService {
      */
     @WebMethod(operationName = "GetMessagesByRequest")
     @WebResult(name = "message")
-    List<MessageDto> getMessagesByRequest(@WebParam(name = "requestId") @NotNull Long requestId) throws RequestNotFoundException, AuthorizationException;
+    List<MessageDto> getMessagesByRequest(@WebParam(name = "requestId") @NotNull Long requestId)
+            throws UserNotFoundException, RequestNotFoundException, AuthorizationException;
     
     /**
      * Returns all the messages between the two given users.
@@ -172,7 +185,7 @@ public interface MessageService {
      */
     @WebMethod(operationName = "UpdateMessage")
     void updateMessage(@WebParam(name = "message") @NotNull MessageDto messageDto)
-            throws MessageNotFoundException, AuthorizationException, MessageValidationException;
+            throws UserNotFoundException, MessageNotFoundException, AuthorizationException, MessageValidationException;
 
     /**
      * Get all messages sent to the current user or received by him.
@@ -181,7 +194,7 @@ public interface MessageService {
      */
     @WebMethod(operationName = "GetAllMessages")
     @WebResult(name = "message")
-    List<MessageDto> getAllMessages();
+    List<MessageDto> getAllMessages() throws UserNotFoundException;
     
     /**
      * Not published via WS.
@@ -200,7 +213,8 @@ public interface MessageService {
      * @throws AuthorizationException 
      */
     @WebMethod(operationName = "HideRequestMessages")
-    void hideRequestMessages(@WebParam(name = "requestId") @NotNull Long requestId) throws RequestNotFoundException, AuthorizationException;
+    void hideRequestMessages(@WebParam(name = "requestId") @NotNull Long requestId)
+            throws UserNotFoundException, RequestNotFoundException, AuthorizationException;
     
     /**
      * Marks the message as hidden one.
@@ -212,8 +226,8 @@ public interface MessageService {
      * the message
      */
     @WebMethod(operationName = "HideMessage")
-    void hideMessage(@WebParam(name = "messageId") @NotNull Long messageId) throws MessageNotFoundException,
-            AuthorizationException;
+    void hideMessage(@WebParam(name = "messageId") @NotNull Long messageId)
+            throws UserNotFoundException, MessageNotFoundException, AuthorizationException;
 
     /**
      * Removes the message completely from the database.
@@ -226,19 +240,5 @@ public interface MessageService {
      */
     @WebMethod(operationName = "DeleteMessage")
     void deleteMessage(@WebParam(name = "messageId") @NotNull Long messageId)
-            throws MessageNotFoundException, AuthorizationException;
-    
-    
-    
-    //*********
-    //* share *
-    //*********
-    
-    /**
-     * Places the message on the walls of the connected social networks.
-     *
-     * @param message text of the message
-     */
-    @WebMethod(operationName = "ShareOnSocialNetworks")
-    void shareOnSocialNetworks(@WebParam(name = "message") @NotNull String message);
+            throws UserNotFoundException, MessageNotFoundException, AuthorizationException;
 }

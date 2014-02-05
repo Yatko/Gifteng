@@ -3,9 +3,12 @@ package com.venefica.model;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.Constants;
 import com.vividsolutions.jts.geom.Point;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -125,6 +128,19 @@ public class User {
         this.email = email;
     }
 
+    public static List<User> getValidUsers(Collection<User> users) {
+        List<User> result = new LinkedList<User>();
+        if ( users != null && !users.isEmpty() ) {
+            for ( User user : users ) {
+                if ( user.isDeleted()) {
+                    continue;
+                }
+                result.add(user);
+            }
+        }
+        return result;
+    }
+    
     public boolean isComplete() {
         return name != null && password != null && email != null
                 && userData != null && userData.isComplete();
@@ -150,6 +166,14 @@ public class User {
         this.userData.setAbout(about);
     }
     
+    public String getWebsite() {
+        return userData != null ? userData.getWebsite(): null;
+    }
+
+    public void setWebsite(String website) {
+        this.userData.setWebsite(website);
+    }
+    
     public Address getAddress() {
         return userData != null ? userData.getAddress() : null;
     }
@@ -170,6 +194,10 @@ public class User {
         return userData.isBusinessAccount();
     }
     
+    public List<User> getValidFollowers() {
+        return getValidUsers(followers);
+    }
+    
     public void addFollower(User user) {
         initFollowers();
         followers.add(user);
@@ -183,6 +211,10 @@ public class User {
     public boolean inFollowers(User user) {
         initFollowers();
         return followers.contains(user);
+    }
+    
+    public List<User> getValidFollowings() {
+        return getValidUsers(followings);
     }
     
     public void addFollowing(User user) {

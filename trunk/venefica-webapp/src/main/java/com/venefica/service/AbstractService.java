@@ -8,19 +8,18 @@ import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.RequestDao;
+import com.venefica.dao.ShippingDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserSettingDao;
 import com.venefica.model.Ad;
 import com.venefica.model.MemberUserData;
-import com.venefica.model.NotificationType;
 import com.venefica.model.Request;
 import com.venefica.model.User;
 import com.venefica.model.UserSetting;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
-import java.util.EnumSet;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
 
 /**
  *
@@ -58,13 +54,12 @@ public abstract class AbstractService {
     @Inject
     protected UserSettingDao userSettingDao;
     @Inject
+    protected ShippingDao shippingDao;
+    @Inject
     protected EmailSender emailSender;
     
     @Inject
     protected ThreadSecurityContextHolder securityContextHolder;
-    
-    @Autowired(required = false)
-    protected ConnectionRepository connectionRepository;
     
     // internal helpers
     
@@ -72,14 +67,15 @@ public abstract class AbstractService {
         return securityContextHolder.getContext().getUserId();
     }
     
-    protected User getCurrentUser() {
-        //return securityContextHolder.getContext().getUser(); //using this throws lazy fetch exceptions
-        return userDao.get(getCurrentUserId());
-    }
-    
-    protected <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
-        Connection<T> connection = connectionRepository.findPrimaryConnection(socialNetworkInterface);
-        return connection != null ? connection.getApi() : null;
+    protected User getCurrentUser() throws UserNotFoundException {
+        //User currentUser = securityContextHolder.getContext().getUser(); //using this throws lazy fetch exceptions
+        Long currentUserId = getCurrentUserId();
+        User currentUser = userDao.get(currentUserId);
+        if ( currentUser == null || currentUser.isDeleted() ) {
+            logger.error("Getting user (userId: " + currentUserId + ") failed");
+            throw new UserNotFoundException("User with ID '" + currentUserId + "' not found!");
+        }
+        return currentUser;
     }
     
     /**
@@ -166,15 +162,7 @@ public abstract class AbstractService {
     
     protected UserSetting createUserSetting(MemberUserData userData) {
         UserSetting userSetting = new UserSetting();
-        userSetting.setNotifiableTypes(EnumSet.of(
-                NotificationType.FOLLOWER_ADDED,
-                NotificationType.AD_COMMENTED,
-                NotificationType.AD_REQUESTED,
-                NotificationType.REQUEST_MESSAGED,
-                NotificationType.REQUEST_ACCEPTED,
-                NotificationType.REQUEST_CANCELED,
-                NotificationType.REQUEST_DECLINED
-                ));
+        userSetting.markDefaultNotifiableTypes();
         userSettingDao.save(userSetting);
         
         if ( userData != null ) {

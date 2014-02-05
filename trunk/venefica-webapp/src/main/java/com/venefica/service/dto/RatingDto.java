@@ -19,7 +19,7 @@ public class RatingDto extends DtoBase {
     
     // in, out
     @NotNull
-    private Long adId;
+    private Long requestId;
     // in, out
     private String text;
     // in, out
@@ -37,14 +37,12 @@ public class RatingDto extends DtoBase {
     public RatingDto() {
     }
     
-    public RatingDto(Long adId, Long toUserId, int value) {
-        this.adId = adId;
-        this.toUserId = toUserId;
-        this.value = value;
+    public RatingDto(Long requestId, Long toUserId, int value) {
+        this(requestId, toUserId, value, null);
     }
     
-    public RatingDto(Long adId, Long toUserId, String text, int value) {
-        this.adId = adId;
+    public RatingDto(Long requestId, Long toUserId, int value, String text) {
+        this.requestId = requestId;
         this.toUserId = toUserId;
         this.text = text;
         this.value = value;
@@ -59,17 +57,17 @@ public class RatingDto extends DtoBase {
         value = rating.getValue();
         text = rating.getText();
         ratedAt = rating.getRatedAt();
-        adId = rating.getAd().getId();
+        requestId = rating.getRequest().getId();
         fromUser = new UserDto(rating.getFrom());
         toUser = new UserDto(rating.getTo());
     }
 
-    public Long getAdId() {
-        return adId;
+    public Long getRequestId() {
+        return requestId;
     }
 
-    public void setAdId(Long adId) {
-        this.adId = adId;
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 
     public String getText() {

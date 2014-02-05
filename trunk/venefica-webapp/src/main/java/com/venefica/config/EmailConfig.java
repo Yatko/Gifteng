@@ -34,6 +34,7 @@ public class EmailConfig {
     private String fromEmailAddress;
     private String fromName;
     private String undeliveredEmailAddress;
+    private String issueEmailAddress;
     private String[] imagesBaseUrls;
     private boolean emailEnabled;
     
@@ -54,6 +55,7 @@ public class EmailConfig {
         fromEmailAddress = environment.getProperty("email.fromEmailAddress");
         fromName = environment.getProperty("email.fromName");
         undeliveredEmailAddress = environment.getProperty("email.undeliveredEmailAddress");
+        issueEmailAddress = environment.getProperty("email.issueEmailAddress");
         emailEnabled = environment.getProperty("email.enabled", boolean.class);
         
         if ( environment.containsProperty("email.imagesBaseUrl") ) {
@@ -120,6 +122,10 @@ public class EmailConfig {
 
     public String getUndeliveredEmailAddress() {
         return undeliveredEmailAddress;
+    }
+    
+    public String getIssueEmailAddress() {
+        return issueEmailAddress;
     }
 
     public String[] getImagesBaseUrls() {

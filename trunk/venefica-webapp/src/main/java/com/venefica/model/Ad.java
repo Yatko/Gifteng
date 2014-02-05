@@ -34,11 +34,11 @@ import org.hibernate.annotations.Index;
  *
  */
 @Entity
-@Table(name = "ad")
-@org.hibernate.annotations.Table(appliesTo = "ad", indexes = {
-})
+@Table(name = Ad.TABLE_NAME)
 public class Ad {
 
+    public static final String TABLE_NAME = "ad";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.PROPERTY)
@@ -63,14 +63,14 @@ public class Ad {
     private Integer revision; //the modification number of the ad (at creation 1, after every update increment by 1)
     
     @Temporal(TemporalType.TIMESTAMP)
-    private Date availableAt; //beginning of the offer (available since)
+    private Date availableAt; //beginning of the offer (available since or start date)
     
     private int numExpire; //how many times expired
     @Index(name = "idx_expires")
     private boolean expires; //never expire?
     @Temporal(TemporalType.TIMESTAMP)
     @Index(name = "idx_expiresAt")
-    private Date expiresAt;
+    private Date expiresAt; //end date
     
     @Column(nullable = false)
     @Index(name = "idx_expired")
@@ -102,9 +102,6 @@ public class Ad {
     private Set<Viewer> viewers;
     
     private float rating;
-    @OneToMany(mappedBy = "ad")
-    @OrderBy
-    private Set<Rating> ratings;
     
     private boolean spam;
     @OneToMany(mappedBy = "ad")
@@ -137,13 +134,12 @@ public class Ad {
     }
     
     public Ad(AdType type, int maxAllowedProlongations) {
-        if ( type == AdType.MEMBER ) {
+        if ( type.isMember() ) {
             adData = new MemberAdData();
-        } else if ( type == AdType.BUSINESS ) {
+        } else if ( type.isBusiness() ) {
             adData = new BusinessAdData();
         }
         
-        ratings = new LinkedHashSet<Rating>();
         spamMarks = new LinkedHashSet<SpamMark>();
         comments = new LinkedHashSet<Comment>();
         bookmarks = new LinkedHashSet<Bookmark>();
@@ -153,6 +149,13 @@ public class Ad {
         numViews = 0;
         numExpire = 0;
         numAvailProlongations = maxAllowedProlongations;
+    }
+    
+    public boolean isValid() {
+        if ( creator.isDeleted() ) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -199,8 +202,8 @@ public class Ad {
             //no more available
             return false;
         }
-        if ( getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
-            //active requests limit reched the allowed size
+        if ( isMemberAd() && getActiveRequests().size() >= Constants.REQUEST_MAX_ALLOWED ) {
+            //active requests limit reched the allowed size (only for member ads)
             return false;
         }
         return true;
@@ -213,7 +216,7 @@ public class Ad {
      * @param request 
      */
     public void select(Request request) {
-        adData.select(); //decrement quantity
+        adData.use(true); //decrement quantity
         
         request.markAsAccepted();
         updateStatus();
@@ -233,17 +236,19 @@ public class Ad {
      * Canceling a request made previously by the requestor. This should be
      * possible only if the request is not selected by the ad owner.
      * 
+     * Cancel is made by the requestor.
+     * 
      * @param request 
      */
     public void cancel(Request request) {
         if ( request.isAccepted() ) {
-            //the request is selected, no cancelation possible
-            return;
+            if ( isBusinessAd() ) {
+                //requestor is canceling the automatically selected request
+                adData.use(false);
+            }
         }
         
         request.cancel();
-        //request.markAsDeleted();
-        
         updateStatus();
     }
     
@@ -253,11 +258,13 @@ public class Ad {
      * All the UNACCEPTED requests will be put into PENDING state, so can be selected
      * again.
      * 
+     * Decline is made by the ad creator (owner).
+     * 
      * @param request 
      */
     public void decline(Request request) {
         if ( request.isAccepted() ) {
-            adData.unselect();
+            adData.use(false);
         }
         
         request.decline();
@@ -349,6 +356,35 @@ public class Ad {
         return adData.getType();
     }
     
+    public BigDecimal getValue() {
+        return adData.getValue();
+    }
+    
+    public final boolean isBusinessAd() {
+        return getType().isBusiness();
+    }
+    
+    public final boolean isMemberAd() {
+        return getType().isMember();
+    }
+    
+    /**
+     * Returns all valid requests. Valid request means that the implied user
+     * is not deleted.
+     * @return 
+     */
+    public Set<Request> getValidRequests() {
+        Set<Request> result = new LinkedHashSet<Request>();
+        if ( requests != null && !requests.isEmpty() ) {
+            for ( Request request : requests ) {
+                if ( request.isValid()) {
+                    result.add(request);
+                }
+            }
+        }
+        return result;
+    }
+    
     /**
      * Returns all the non hidden and non deleted requests.
      * 
@@ -356,8 +392,9 @@ public class Ad {
      */
     public Set<Request> getVisibleRequests() {
         Set<Request> result = new LinkedHashSet<Request>();
-        if ( requests != null && !requests.isEmpty() ) {
-            for ( Request request : requests ) {
+        Set<Request> validRequests = getValidRequests();
+        if ( validRequests != null && !validRequests.isEmpty() ) {
+            for ( Request request : validRequests ) {
                 if ( request.isVisible() ) {
                     result.add(request);
                 }
@@ -407,13 +444,13 @@ public class Ad {
      * 
      * @return 
      */
-    public Set<Request> getShippedRequests() {
+    public Set<Request> getShippedRequests(boolean includeSent, boolean includeReceived) {
         Set<Request> result = new LinkedHashSet<Request>();
         for ( Request request : getVisibleRequests() ) {
             boolean isSent = request.isSent() || request.getStatus() == RequestStatus.SENT;
             boolean isReceived = request.isReceived() || request.getStatus() == RequestStatus.RECEIVED;
             
-            if ( isSent || isReceived ) {
+            if ( (includeSent && isSent) || (includeReceived && isReceived) ) {
                 result.add(request);
             }
         }
@@ -469,23 +506,6 @@ public class Ad {
             }
         }
         return false;
-    }
-    
-    /**
-     * Returns the ad value by using a very simple calculation.
-     * The actual math algorithm is 10 % of the ad price.
-     * 
-     * @return 
-     */
-    public BigDecimal getNumber() {
-        BigDecimal price = adData.getPrice();
-        if ( price == null ) {
-            price = BigDecimal.ZERO;
-        }
-        
-        BigDecimal HUNDRED = new BigDecimal(100);
-        BigDecimal number = price.multiply(BigDecimal.TEN).divide(HUNDRED);
-        return number;
     }
     
     public void initRevision() {
@@ -617,14 +637,6 @@ public class Ad {
 
     public void setRating(float rating) {
         this.rating = rating;
-    }
-
-    public Set<Rating> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(Set<Rating> ratings) {
-        this.ratings = ratings;
     }
 
     public Set<SpamMark> getSpamMarks() {

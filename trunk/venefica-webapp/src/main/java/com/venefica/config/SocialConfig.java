@@ -2,11 +2,12 @@ package com.venefica.config;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.connect.ConnectSupport;
-import com.venefica.connect.DummySignUpAdapter;
 import com.venefica.connect.UserSignInAdapter;
 import com.venefica.connect.UserSignUpAdapter;
 import javax.inject.Inject;
 import javax.sql.DataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -34,15 +35,15 @@ import org.springframework.web.context.WebApplicationContext;
  *
  * @author Sviatoslav Grebenchukov
  */
-//@Configuration
+@Configuration
 public class SocialConfig {
 
+    private static final Log logger = LogFactory.getLog(SocialConfig.class);
+    
     @Inject
     private DataSource dataSource;
-    
     @Inject
     private Environment environment;
-    
     @Inject
     private ThreadSecurityContextHolder securityContextHolder;
 
@@ -102,6 +103,7 @@ public class SocialConfig {
         if ( userId != null ) {
             return usersConnectionRepository().createConnectionRepository(userId.toString());
         }
+        logger.warn("Cannot extract userId from the context to create a connection repository.");
         return null;
     }
 
@@ -119,8 +121,8 @@ public class SocialConfig {
      */
     @Bean
     public ConnectionSignUp userSignUpAdapter() {
-        //return new UserSignUpAdapter();
-        return new DummySignUpAdapter();
+        return new UserSignUpAdapter();
+        //return new DummySignUpAdapter();
     }
 
     /**

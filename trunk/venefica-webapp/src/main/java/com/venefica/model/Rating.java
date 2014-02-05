@@ -31,8 +31,8 @@ public class Rating {
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @ForeignKey(name = "rating_ad_fk")
-    private Ad ad;
+    @ForeignKey(name = "rating_request_fk")
+    private Request request;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "rating_from_usr_fk")
@@ -54,8 +54,8 @@ public class Rating {
         value = 0;
     }
 
-    public Rating(Ad ad, User from, User to, String text, int value) {
-        this.ad = ad;
+    public Rating(Request request, User from, User to, String text, int value) {
+        this.request = request;
         this.from = from;
         this.to = to;
         this.text = text;
@@ -71,12 +71,12 @@ public class Rating {
         this.id = id;
     }
 
-    public Ad getAd() {
-        return ad;
+    public Request getRequest() {
+        return request;
     }
 
-    public void setAd(Ad ad) {
-        this.ad = ad;
+    public void setRequest(Request request) {
+        this.request = request;
     }
 
     public User getFrom() {

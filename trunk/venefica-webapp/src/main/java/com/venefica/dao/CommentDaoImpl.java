@@ -30,6 +30,13 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
     }
     
     @Override
+    public void deleteComment(Comment comment) {
+        comment.setDeleted(true);
+        comment.setDeletedAt(new Date());
+        updateEntity(comment);
+    }
+    
+    @Override
     @SuppressWarnings("unchecked")
     public List<Comment> getAdComments(Long adId, Long lastCommentId, int numComments) {
         List<Comment> comments;
@@ -39,6 +46,7 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
         if (lastCommentId < 0) {
             comments = createQuery(""
                     + "from " + getDomainClassName() + " c where "
+                    + "c.deleted = false and "
                     + "c.ad.id = :adId "
                     + "order by c.createdAt desc"
                     + "")
@@ -48,6 +56,7 @@ public class CommentDaoImpl extends DaoBase<Comment> implements CommentDao {
         } else {
             comments = createQuery(""
                     + "from " + getDomainClassName() + " c where "
+                    + "c.deleted = false and "
                     + "c.ad.id = :adId and "
                     + "c.id < :lastId "
                     + "order by c.createdAt desc"

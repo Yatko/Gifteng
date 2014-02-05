@@ -12,6 +12,7 @@ public enum ImageModelType {
     
     USER("user"),
     AD("ad"),
+    SHIPPING("shipping"),
     ANY(null), //means that image model can be of any type (lookup based on image existence)
     ;
     

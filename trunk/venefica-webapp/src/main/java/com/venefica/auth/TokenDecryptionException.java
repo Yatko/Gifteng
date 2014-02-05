@@ -8,6 +8,10 @@ package com.venefica.auth;
 @SuppressWarnings("serial")
 public class TokenDecryptionException extends Exception {
 
+    public TokenDecryptionException(String message) {
+        super(message);
+    }
+    
     public TokenDecryptionException(Throwable e) {
         super(e);
     }

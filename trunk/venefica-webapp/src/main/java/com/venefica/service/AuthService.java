@@ -84,7 +84,7 @@ public interface AuthService {
      */
     @WebMethod(operationName = "ChangePassword")
     public void changePassword(@WebParam(name = "oldPassword") String oldPassword,
-            @WebParam(name = "newPassword") String newPassword) throws AuthorizationException;
+            @WebParam(name = "newPassword") String newPassword) throws UserNotFoundException, AuthorizationException;
     
     /**
      * Change password into the given new one via forgot password request.

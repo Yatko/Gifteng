@@ -6,4 +6,5 @@ public enum AdField {
     IMAGE,
     THUMB_IMAGE,
     BARCODE_IMAGE,
+    DELIVERY,
 }

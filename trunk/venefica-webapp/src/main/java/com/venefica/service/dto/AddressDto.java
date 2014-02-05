@@ -8,6 +8,8 @@ import com.venefica.common.GeoUtils;
 import com.venefica.model.Address;
 import com.venefica.model.AddressWrapper;
 import com.vividsolutions.jts.geom.Point;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -21,6 +23,8 @@ public class AddressDto {
     
     // in, out
     private Long id;
+    // in
+    private Boolean deleted;
     // in, out
     private String name;
     // in, out
@@ -74,11 +78,34 @@ public class AddressDto {
         
         id = addressWrapper.getId();
         name = addressWrapper.getName();
+        deleted = addressWrapper.isDeleted();
     }
     
     // helper methods
     
-    public Point getLocation() {
+    public static Set<AddressDto> toAddressDtos(Set<AddressWrapper> addresses) {
+        if ( addresses == null || addresses.isEmpty() ) {
+            return null;
+        }
+        
+        Set<AddressDto> addressesDto = new LinkedHashSet<AddressDto>();
+        for ( AddressWrapper addressWrapper : addresses ) {
+            if ( addressWrapper == null ) {
+                continue;
+            } else if ( addressWrapper.isDeleted() ) {
+                //skipping deleted addresses
+                continue;
+            }
+            addressesDto.add(new AddressDto(addressWrapper));
+        }
+        return addressesDto;
+    }
+    
+    public static Set<AddressWrapper> toAddressWrapper(Set<AddressDto> addresses) {
+        return AddressWrapper.toAddressWrappers(addresses);
+    }
+    
+    public Point toLocation() {
         if (latitude != null && longitude != null) {
             Point location = GeoUtils.createPoint(latitude, longitude);
             return location;
@@ -86,7 +113,7 @@ public class AddressDto {
         return null;
     }
     
-    public Address getAddress() {
+    public Address toAddress() {
         Address address = new Address();
         address.setAddress1(address1);
         address.setAddress2(address2);
@@ -100,10 +127,11 @@ public class AddressDto {
         return address;
     }
     
-    public AddressWrapper getAddressWrapper() {
-        AddressWrapper addressWrapper = new AddressWrapper(getAddress());
+    public AddressWrapper toAddressWrapper() {
+        AddressWrapper addressWrapper = new AddressWrapper(toAddress());
         addressWrapper.setId(id);
         addressWrapper.setName(name);
+        addressWrapper.setDeleted(deleted != null ? deleted : false);
         return addressWrapper;
     }
     
@@ -235,5 +263,13 @@ public class AddressDto {
 
     public void setStateAbbreviation(String stateAbbreviation) {
         this.stateAbbreviation = stateAbbreviation;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

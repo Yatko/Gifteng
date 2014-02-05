@@ -14,5 +14,13 @@ public enum AdType {
     
     MEMBER,
     BUSINESS,
+    ;
     
+    public boolean isBusiness() {
+        return this == BUSINESS;
+    }
+    
+    public boolean isMember() {
+        return this == MEMBER;
+    }
 }

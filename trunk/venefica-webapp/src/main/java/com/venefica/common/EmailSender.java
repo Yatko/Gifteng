@@ -11,6 +11,7 @@ import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserSetting;
+import java.io.File;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,11 +28,14 @@ import org.apache.commons.mail.DataSourceResolver;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.ImageHtmlEmail;
+import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.resolver.DataSourceCompositeResolver;
 import org.apache.commons.mail.resolver.DataSourceUrlResolver;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.event.EventCartridge;
+import org.apache.velocity.app.event.IncludeEventHandler;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -96,6 +100,18 @@ public class EmailSender {
         dataSourceResolver = new DataSourceCompositeResolver(resolvers.toArray(new DataSourceResolver[0]), true);
     }
     
+    public boolean sendNotification(NotificationType notificationType, User user, Map<String, Object> vars) {
+        return sendNotification(notificationType, null, user, vars, null);
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, User user, Map<String, Object> vars, List<File> attachments) {
+        return sendNotification(notificationType, null, user, vars, attachments);
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, String subtype, User user, Map<String, Object> vars) {
+        return sendNotification(notificationType, subtype, user, vars, null);
+    }
+    
     /**
      * Send notification email to the given user if is configured for the
      * specified notification type.
@@ -103,47 +119,74 @@ public class EmailSender {
      * @param notificationType
      * @param user
      * @param vars 
+     * @return true upon send success
      */
-    public void sendNotification(NotificationType notificationType, User user, Map<String, Object> vars) {
+    public boolean sendNotification(NotificationType notificationType, String subtype, User user, Map<String, Object> vars, List<File> attachments) {
         if ( user.isBusinessAccount() ) {
             logger.info("User (id: " + user.getId() + ") is a business account, no notification mail will be sent.");
-            return;
+            return false;
         }
         
         try {
-            MemberUserData userData = (MemberUserData) user.getUserData();
-            UserSetting userSetting = (userData != null && userData.getUserSetting() != null) ? userSettingDao.get(userData.getUserSetting().getId()) : null;
-            if ( userSetting != null && userSetting.notificationExists(notificationType) ) {
+            if ( canSend(notificationType, user) ) {
                 sendHtmlEmailByTemplates(
-                        notificationType.getSubjectVelocityTemplate(),
-                        notificationType.getHtmlMessageVelocityTemplate(),
-                        notificationType.getPlainMessageVelocityTemplate(),
+                        notificationType.getVelocityTemplatePath(subtype),
                         user.getEmail(),
-                        vars
+                        vars,
+                        attachments
                         );
             }
         } catch ( MailException ex ) {
             logger.error("Could not send notification email (email: " + user.getEmail() + ", type: " + notificationType + ")", ex);
+            return false;
         }
+        return true;
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, String email, Map<String, Object> vars) {
+        return sendNotification(notificationType, null, email, vars, null);
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, String email, Map<String, Object> vars, List<File> attachments) {
+        return sendNotification(notificationType, null, email, vars, attachments);
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, String subtype, String email, Map<String, Object> vars) {
+        return sendNotification(notificationType, subtype, email, vars, null);
+    }
+    
+    public boolean sendNotification(NotificationType notificationType, String subtype, String email, Map<String, Object> vars, List<File> attachments) {
+        try {
+            if ( canSend(notificationType, null) ) {
+                sendHtmlEmailByTemplates(
+                        notificationType.getVelocityTemplatePath(subtype),
+                        email,
+                        vars,
+                        attachments
+                        );
+            }
+        } catch ( MailException ex ) {
+            logger.error("Could not send notification email (email: " + email + ", type: " + notificationType + ")", ex);
+            return false;
+        }
+        return true;
     }
     
     /**
      * Generates the content (subject, html message, plain text message)
      * of the given templates and sends html mail to the provided address.
      * 
-     * @param subjectTemplate velocity template name for mail subject
-     * @param htmlMessageTemplate velocity template name for mail html mail message
-     * @param plainMessageTemplate velocity template name for mail plain text message
+     * @param templatePath velocity template path
      * @param email email address
      * @param vars velocity context variables
      * @throws MailException 
      */
-    public void sendHtmlEmailByTemplates(String subjectTemplate, String htmlMessageTemplate, String plainMessageTemplate, String email, Map<String, Object> vars) throws MailException {
-        String subject = mergeVelocityTemplate(TEMPLATES_FOLDER + subjectTemplate, vars);
-        String htmlMessage = mergeVelocityTemplate(TEMPLATES_FOLDER + htmlMessageTemplate, vars);
-        String plainMessage = mergeVelocityTemplate(TEMPLATES_FOLDER + plainMessageTemplate, vars);
+    private void sendHtmlEmailByTemplates(String templatePath, String email, Map<String, Object> vars, List<File> attachments) throws MailException {
+        String subject = mergeVelocityTemplate(templatePath, "subject.vm", vars);
+        String htmlMessage = mergeVelocityTemplate(templatePath, "message.html.vm", vars);
+        String plainMessage = mergeVelocityTemplate(templatePath, "message.txt.vm", vars);
         
-        sendHtmlEmail(subject, htmlMessage, plainMessage, email);
+        sendHtmlEmail(subject, htmlMessage, plainMessage, email, attachments);
     }
     
     /**
@@ -157,41 +200,34 @@ public class EmailSender {
      * @throws MailException can be thrown in multiple cases: wrong email address,
      * invalid message, error when sending
      */
-    public void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress) throws MailException {
+    protected void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress, List<File> attachments) throws MailException {
         if ( !emailConfig.isEmailEnabled() ) {
             logger.info("Email sending is not enabled!");
             return;
         }
         
-        ImageHtmlEmail email = new ImageHtmlEmail();
-        email.setDataSourceResolver(dataSourceResolver);
-        email.setHostName(emailConfig.getHostName());
-        email.setSmtpPort(emailConfig.getSmtpPort());
-        email.setSslSmtpPort(Integer.toString(emailConfig.getSmtpPortSSL()));
-        email.setAuthenticator(new DefaultAuthenticator(emailConfig.getUsername(), emailConfig.getPassword()));
-        email.setSSLOnConnect(emailConfig.isUseSSL());
-        email.setCharset(emailConfig.getCharset());
-        email.setBounceAddress(emailConfig.getUndeliveredEmailAddress());
-        try {
-            email.setFrom(emailConfig.getFromEmailAddress(), emailConfig.getFromName(), emailConfig.getCharset());
-        } catch ( EmailException ex ) {
-            logger.error("Invalid 'from' (" + emailConfig.getFromEmailAddress() + ") address", ex);
-            throw new MailException(MailException.INVALID_FROM_ADDRESS, ex);
-        }
+        MultiPartEmail email = createEmail(subject, htmlMessage, textMessage);
         try {
             email.addTo(toEmailAddress);
         } catch ( EmailException ex ) {
             logger.error("Invalid 'to' (" + toEmailAddress + ") address", ex);
             throw new MailException(MailException.INVALID_TO_ADDRESS, ex);
         }
-        try {
-            email.setSubject(subject);
-            email.setHtmlMsg(htmlMessage);
-            email.setTextMsg(textMessage);
-        } catch ( EmailException ex ) {
-            logger.error("Erronous email message", ex);
-            throw new MailException(MailException.INVALID_EMAIL_MESSAGE, ex);
+        
+        if ( attachments != null && !attachments.isEmpty() ) {
+            for ( File attachment : attachments ) {
+                if ( attachment == null || !attachment.isFile() || !attachment.exists() || attachment.length() == 0 ) {
+                    logger.debug("Skipping file attachment as is not as expected (attachment: " + attachment + ")");
+                    continue;
+                }
+                try {
+                    email.attach(attachment);
+                } catch ( EmailException ex ) {
+                    logger.error("Cannot attach file (name: " + attachment.getName() + ")", ex);
+                }
+            }
         }
+        
         try {
             email.send();
         } catch ( EmailException ex ) {
@@ -202,13 +238,63 @@ public class EmailSender {
     
     // internal helpers
     
-    private String mergeVelocityTemplate(String templateName, Map<String, Object> vars) {
+    private MultiPartEmail createEmail(String subject, String htmlMessage, String textMessage) throws MailException {
+        try {
+            MultiPartEmail email;
+            if ( htmlMessage != null && !htmlMessage.trim().isEmpty() ) {
+                email = new ImageHtmlEmail();
+                ((ImageHtmlEmail) email).setDataSourceResolver(dataSourceResolver);
+                ((ImageHtmlEmail) email).setHtmlMsg(htmlMessage);
+                if ( textMessage != null && !textMessage.trim().isEmpty() ) {
+                    ((ImageHtmlEmail) email).setTextMsg(textMessage);
+                }
+            } else if ( textMessage != null && !textMessage.trim().isEmpty() ) {
+                email = new MultiPartEmail();
+                email.setMsg(textMessage);
+            } else {
+                throw new MailException("Cannot send empty email");
+            }
+            
+            email.setSubject(subject != null ? subject.trim() : "");
+            email.setHostName(emailConfig.getHostName());
+            email.setSmtpPort(emailConfig.getSmtpPort());
+            email.setSslSmtpPort(Integer.toString(emailConfig.getSmtpPortSSL()));
+            email.setAuthenticator(new DefaultAuthenticator(emailConfig.getUsername(), emailConfig.getPassword()));
+            email.setSSLOnConnect(emailConfig.isUseSSL());
+            email.setCharset(emailConfig.getCharset());
+            email.setBounceAddress(emailConfig.getUndeliveredEmailAddress());
+            try {
+                email.setFrom(emailConfig.getFromEmailAddress(), emailConfig.getFromName(), emailConfig.getCharset());
+            } catch ( EmailException ex ) {
+                logger.error("Invalid 'from' (" + emailConfig.getFromEmailAddress() + ") address", ex);
+                throw new MailException(MailException.INVALID_FROM_ADDRESS, ex);
+            }
+            return email;
+        } catch (EmailException ex) {
+            logger.error("Erronous email message", ex);
+            throw new MailException(MailException.INVALID_EMAIL_MESSAGE, ex);
+        }
+    }
+    
+    private boolean canSend(NotificationType notificationType, User user) {
+        boolean canSend = notificationType.isSystemNotification();
+        if ( !canSend && user != null ) {
+            //system notifications will always generate emails, the rest depends
+            //on user configurations
+            MemberUserData userData = (MemberUserData) user.getUserData();
+            UserSetting userSetting = (userData != null && userData.getUserSetting() != null) ? userSettingDao.get(userData.getUserSetting().getId()) : null;
+            canSend = userSetting != null && userSetting.notificationExists(notificationType);
+        }
+        return canSend;
+    }
+    
+    private String mergeVelocityTemplate(final String templatePath, String templateName, Map<String, Object> vars) {
         if ( velocityEngine == null ) {
             throw new RuntimeException("Velocity engine is not initialized");
         }
         
         try {
-            Template template = velocityEngine.getTemplate(templateName);
+            Template template = velocityEngine.getTemplate(TEMPLATES_FOLDER + templatePath + templateName);
             VelocityContext context = new VelocityContext();
             context.put("baseUrl", emailConfig.getBaseUrl()); //global key available for all templates
             
@@ -219,6 +305,18 @@ public class EmailSender {
                     context.put(key, value);
                 }
             }
+            
+            EventCartridge eventCartridge = new EventCartridge();
+            eventCartridge.addIncludeEventHandler(new IncludeEventHandler() {
+                @Override
+                public String includeEvent(String includeResourcePath, String currentResourcePath, String directiveName) {
+                    if ( velocityEngine.resourceExists(includeResourcePath) ) {
+                        return includeResourcePath;
+                    }
+                    return TEMPLATES_FOLDER + templatePath + includeResourcePath;
+                }
+            });
+            eventCartridge.attachToContext(context);
 
             StringWriter sw = new StringWriter();
             template.merge(context, sw);

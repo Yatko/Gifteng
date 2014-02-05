@@ -1,6 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.User;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -79,10 +80,8 @@ public class UserDaoImpl extends DaoBase<User> implements UserDao {
                 .setParameter("userId", userId)
                 .list();
         
-        //User user = get(userId);
-        //List<User> followers = new ArrayList<User>(user.getFollowers());
-        
-        return followers;
+        List<User> validFollowers = User.getValidUsers(followers);
+        return validFollowers;
     }
 
     @Override

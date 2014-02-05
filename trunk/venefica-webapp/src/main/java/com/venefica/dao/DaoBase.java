@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -55,6 +56,16 @@ public class DaoBase<D> {
      */
     protected Query createQuery(String queryString) {
         return getCurrentSession().createQuery(queryString);
+    }
+    
+    /**
+     * Creates an SQL query.
+     * 
+     * @param sqlQueryString
+     * @return 
+     */
+    protected SQLQuery createSQLQuery(String sqlQueryString) {
+        return getCurrentSession().createSQLQuery(sqlQueryString);
     }
     
     protected Criteria createCriteria() {

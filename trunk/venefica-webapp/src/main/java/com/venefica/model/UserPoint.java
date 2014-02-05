@@ -9,20 +9,14 @@ import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import org.hibernate.annotations.ForeignKey;
 
 /**
  * This entity stores all the user points (pending, insider, exclusive).
- * 
- * TODO: not yet finished.
  * 
  * @author gyuszi
  */
@@ -35,125 +29,147 @@ public class UserPoint {
     @Access(AccessType.PROPERTY)
     private Long id;
     
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    @ForeignKey(name = "userpoint_user_fk")
-    private User user;
-    
     @OneToMany(mappedBy = "userPoint")
     private Set<UserTransaction> transactions;
     
     private int requestLimit;
     private BigDecimal givingNumber;
-    private BigDecimal receivingNumber;
+    private BigDecimal memberReceivingNumber; //receiveing number of member ads
+    private BigDecimal businessReceivingNumber; //receiveing number of business ads
     
     public UserPoint() {
     }
     
-    public UserPoint(int requestLimit, int givingNumber, int receivingNumber) {
+    public UserPoint(int requestLimit, int givingNumber, int memberReceivingNumber) {
         this.requestLimit = requestLimit;
         this.givingNumber = new BigDecimal(givingNumber);
-        this.receivingNumber = new BigDecimal(receivingNumber);
+        this.memberReceivingNumber = new BigDecimal(memberReceivingNumber);
+        this.businessReceivingNumber = BigDecimal.ZERO;
+    }
+    
+    public UserPoint(int businessReceivingNumber) {
+        this.requestLimit = 0;
+        this.givingNumber = BigDecimal.ZERO;
+        this.memberReceivingNumber = BigDecimal.ZERO;
+        this.businessReceivingNumber = new BigDecimal(businessReceivingNumber);
     }
     
     // helper methods
-
-    public void addGivingNumber(BigDecimal n) {
-        n = checkNumber(n);
-        givingNumber = checkNumber(givingNumber);
+    
+    public boolean canRequest(Ad ad) {
+        if ( ad.isMemberAd() ) {
+            // there is no limitation on member ads
+            return true;
+        }
+        
+        BigDecimal value = ad.getValue();
+        businessReceivingNumber = safeNumber(businessReceivingNumber);
+        givingNumber = safeNumber(givingNumber);
+        
+        if ( value.compareTo(BigDecimal.ZERO) == 0 ) {
+            //0 valued ads always can be requested
+            return true;
+        } else if ( value.add(businessReceivingNumber).compareTo(givingNumber) <= 0 ) {
+            //there were enough gives to procced with the business gift request
+            return true;
+        }
+        return false;
+    }
+    
+    public void addPendingGivingNumber(UserTransaction tx) {
+        if ( tx.isFinalized() ) {
+            //transaction is already finalized
+            return;
+        }
+        
+        BigDecimal n = safeNumber(tx.getPendingGivingNumber());
+        givingNumber = safeNumber(givingNumber);
         givingNumber = givingNumber.add(n);
     }
     
-    public void addReceivingNumber(BigDecimal n) {
-        n = checkNumber(n);
-        receivingNumber = checkNumber(receivingNumber);
-        receivingNumber = receivingNumber.add(n);
+    public void addPendingMemberReceivingNumber(UserTransaction tx) {
+        if ( tx.isFinalized() ) {
+            //transaction is already finalized
+            return;
+        }
+        
+        BigDecimal n = safeNumber(tx.getPendingReceivingNumber());
+        memberReceivingNumber = safeNumber(memberReceivingNumber);
+        memberReceivingNumber = memberReceivingNumber.add(n);
     }
     
-    private BigDecimal checkNumber(BigDecimal n) {
+    public void addPendingBusinessReceivingNumber(UserTransaction tx) {
+        if ( tx.isFinalized() ) {
+            //transaction is already finalized
+            return;
+        }
+        
+        BigDecimal n = safeNumber(tx.getPendingReceivingNumber());
+        businessReceivingNumber = safeNumber(businessReceivingNumber);
+        businessReceivingNumber = businessReceivingNumber.add(n);
+    }
+    
+    public BigDecimal getCalculatedPendingGivingNumber() {
+        return calculatePendingNumber(true);
+    }
+    
+    public BigDecimal getCalculatedPendingReceivingNumber() {
+        return calculatePendingNumber(false);
+    }
+    
+    public void incrementRequestLimit() {
+        incrementRequestLimit(1);
+    }
+    
+    public void decrementRequestLimit() {
+        incrementRequestLimit(-1);
+    }
+    
+    public void incrementRequestLimit(int value) {
+        requestLimit = requestLimit + value;
+    }
+    
+    private BigDecimal calculatePendingNumber(boolean isGiving) {
+        if ( transactions == null || transactions.isEmpty() ) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal pendingNumber = BigDecimal.ZERO;
+        for ( UserTransaction tx : transactions ) {
+            if ( tx.isFinalized() ) {
+                //transaction is already finalized, the pending number already added to user final score
+                continue;
+            } else if ( getAd(tx) == null ) {
+                continue;
+            }
+            
+            BigDecimal value = safeNumber(isGiving ? tx.getPendingGivingNumber() : tx.getPendingReceivingNumber());
+            pendingNumber = pendingNumber.add(value);
+        }
+        return pendingNumber;
+    }
+    
+    private BigDecimal safeNumber(BigDecimal n) {
         if ( n == null ) {
             n = BigDecimal.ZERO;
         }
         return n;
     }
     
-    public BigDecimal getPendingGivingNumber() {
-        if ( transactions == null || transactions.isEmpty() ) {
-            return BigDecimal.ZERO;
-        }
-        BigDecimal pendingGivingNumber = BigDecimal.ZERO;
-        for ( UserTransaction transaction : transactions ) {
-            if ( transaction.isFinalized() ) {
-                //transaction is already finalized, the pending number already added to user final scores
-                continue;
-            }
-            
-            Ad ad = getAd(transaction);
-            if ( ad == null ) {
-                continue;
-            } else if ( ad.isExpired() ) {
-                continue;
-            } else if ( !ad.isApproved() ) {
-                continue;
-            }
-            
-            pendingGivingNumber = pendingGivingNumber.add(transaction.getPendingGivingNumber() != null ? transaction.getPendingGivingNumber() : BigDecimal.ZERO);
-        }
-        return pendingGivingNumber;
-    }
-    
-    public BigDecimal getPendingReceivingNumber() {
-        if ( transactions == null || transactions.isEmpty() ) {
-            return BigDecimal.ZERO;
-        }
-        BigDecimal pendingReceivingNumber = BigDecimal.ZERO;
-        for ( UserTransaction transaction : transactions ) {
-            if ( transaction.isFinalized() ) {
-                //transaction is already finalized, the pending number already added to user final scores
-                continue;
-            }
-            
-            Ad ad = getAd(transaction);
-            if ( ad == null ) {
-                continue;
-            } else if ( ad.isExpired() ) {
-                continue;
-            } else if ( !ad.isApproved() ) {
-                continue;
-            }
-            
-            pendingReceivingNumber = pendingReceivingNumber.add(transaction.getPendingReceivingNumber() != null ? transaction.getPendingReceivingNumber() : BigDecimal.ZERO);
-        }
-        return pendingReceivingNumber;
-    }
-    
     private Ad getAd(UserTransaction transaction) {
+        Ad ad = null;
         if ( transaction.getAd() != null ) {
-            return transaction.getAd();
+            ad = transaction.getAd();
         } else if ( transaction.getRequest() != null && transaction.getRequest().getAd() != null ) {
-            return transaction.getRequest().getAd();
+            ad = transaction.getRequest().getAd();
         }
-        return null;
-    }
-    
-    // static helpers
-    
-    public static BigDecimal getGivingNumber(Ad ad) {
-        Integer quantity = ad.getAdData().getQuantity();
-        BigDecimal number = ad.getNumber();
-        
-        if ( quantity == null || quantity <= 0 ) {
-            quantity = 1;
+        if ( ad != null ) {
+            if ( ad.isExpired() ) {
+                return null;
+            } else if ( !ad.isApproved() ) {
+                return null;
+            }
         }
-        
-        number = number.multiply(new BigDecimal(quantity));
-        return number;
-    }
-    
-    public static BigDecimal getReceivingNumber(Request request) {
-        Ad ad = request.getAd();
-        BigDecimal number = ad.getNumber();
-        return number;
+        return ad;
     }
     
     // getters/setters
@@ -165,14 +181,6 @@ public class UserPoint {
     @SuppressWarnings("unused")
     private void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Set<UserTransaction> getTransactions() {
@@ -192,20 +200,28 @@ public class UserPoint {
         this.givingNumber = givingNumber;
     }
 
-    public BigDecimal getReceivingNumber() {
-        return receivingNumber;
+    public BigDecimal getmemberReceivingNumber() {
+        return memberReceivingNumber;
     }
 
     @SuppressWarnings("unused")
-    private void setReceivingNumber(BigDecimal receivingNumber) {
-        this.receivingNumber = receivingNumber;
+    private void setMemberReceivingNumber(BigDecimal memberReceivingNumber) {
+        this.memberReceivingNumber = memberReceivingNumber;
     }
 
     public int getRequestLimit() {
         return requestLimit;
     }
 
-    public void setRequestLimit(int requestLimit) {
+    private void setRequestLimit(int requestLimit) {
         this.requestLimit = requestLimit;
+    }
+
+    public BigDecimal getBusinessReceivingNumber() {
+        return businessReceivingNumber;
+    }
+
+    private void setBusinessReceivingNumber(BigDecimal businessReceivingNumber) {
+        this.businessReceivingNumber = businessReceivingNumber;
     }
 }

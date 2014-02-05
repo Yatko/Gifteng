@@ -5,6 +5,7 @@
 package com.venefica.service;
 
 import com.venefica.service.dto.AddressDto;
+import com.venefica.service.fault.UserNotFoundException;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -24,4 +25,6 @@ public interface UtilityService {
     @WebResult(name = "address")
     AddressDto getAddressByZipcode(@WebParam(name = "zipcode") @NotNull String zipcode);
     
+    @WebMethod(operationName = "SendEmail")
+    void sendEmail(@WebParam(name = "text") @NotNull String text) throws UserNotFoundException;
 }

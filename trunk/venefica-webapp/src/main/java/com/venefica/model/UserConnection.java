@@ -20,7 +20,8 @@ public class UserConnection {
     /**
      * SQL taken from spring-social-core-1.0.3.RELEASE.jar .
      * 
-     * create table UserConnection (userId varchar(255) not null,
+     * create table UserConnection (
+     *      userId varchar(255) not null,
      *      providerId varchar(255) not null,
      *      providerUserId varchar(255),
      *      rank int not null,
@@ -31,7 +32,8 @@ public class UserConnection {
      *      secret varchar(255),
      *      refreshToken varchar(255),
      *      expireTime bigint,
-     *      primary key (userId, providerId, providerUserId));
+     *      primary key (userId, providerId, providerUserId)
+     * );
      * 
      * create unique index UserConnectionRank on UserConnection(userId, providerId, rank);
      */

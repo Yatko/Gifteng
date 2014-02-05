@@ -27,7 +27,6 @@ public class ProductionDataConfig {
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource);
         factoryBuilder.scanPackages(Constants.MODEL_PACKAGE);
-        
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         factoryBuilder.getProperties().put(AvailableSettings.HBM2DDL_AUTO, hibernateHbmToDdlAuto);
         factoryBuilder.getProperties().put(AvailableSettings.SHOW_SQL, hibernateShowSQL);

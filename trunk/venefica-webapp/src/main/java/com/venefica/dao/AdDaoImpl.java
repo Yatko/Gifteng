@@ -50,7 +50,6 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         if (adId == null) {
             throw new NullPointerException("adId");
         }
-
         return getEntity(adId);
     }
     
@@ -69,49 +68,18 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         Query query;
         
         boolean orderAsc = FilterDto.DEFAULT_ORDER_ASC;
-        //boolean orderClosest = FilterDto.DEFAULT_ORDER_CLOSEST; //this should be always false as we do not have user current position data
+        boolean checkDate = FilterDto.DEFAULT_CHECK_DATE;
+        
         lastIndex = lastIndex < 0 ? 0 : lastIndex;
         numberAds = numberAds <= 0 || numberAds > MAX_ADS_TO_RETURN ? MAX_ADS_TO_RETURN : numberAds;
 
-//        if (lastAdId < 0) {
-//            String hql = ""
-//                    + "from " + getDomainClassName() + " a where "
-//                    + "a.deleted = false"
-//                    + " and a.creator.deleted = false"
-//                    + " and a.approved = true"
-//                    + " and a.online = true"
-//                    + " and a.adData.category.hidden = false"
-//                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
-//                    + "";
-//            
-//            query = createQuery(hql);
-//        } else {
-//            Ad lastAd = get(lastAdId);
-//            Date lastApprovedAt = lastAd.getApprovedAt();
-//            
-//            String hql = ""
-//                    + "from " + getDomainClassName() + " a where "
-//                    + "a.deleted = false"
-//                    + " and a.creator.deleted = false"
-//                    + " and a.approved = true"
-//                    + " and a.online = true"
-//                    + " and a.adData.category.hidden = false"
-//                    //+ " and a.id " + (orderAsc ? ">" : "<") + " :lastId"
-//                    + " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt"
-//                    + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
-//                    + "";
-//            
-//            query = createQuery(hql);
-//            //query = query.setParameter("lastId", lastAdId)
-//            query = query.setParameter("lastApprovedAt", lastApprovedAt);
-//        }
-        
         String hql = ""
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
                 + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
+                + (checkDate ? " and a.availableAt <= current_date() and a.expiresAt >= current_date()" : "")
                 + " and a.adData.category.hidden = false"
                 + " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc"
                 + "";
@@ -129,16 +97,8 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             return get(lastIndex, numberAds);
         }
         
-        //NOTE:
-        //as the ordering is based on approvedAt field the lastAdId cannot be used
-        //directly, instead it should be queried it's approvedAt value and used it
-        //in the where clause
-        
-        //Ad lastAd = null;
-        //if ( lastAdId >= 0 ) {
-        //    lastAd = get(lastAdId);
-        //}
-        
+        Boolean includePickup = filter.getIncludePickUp();
+        Boolean includeShipping = filter.getIncludeShipping();
         String searchString = filter.getSearchString();
         List<Long> categories = filter.getCategories();
         Long distance = filter.getDistance();
@@ -149,6 +109,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         Boolean hasPhoto = filter.getHasPhoto();
         AdType type = filter.getType();
         boolean orderAsc = filter.getOrderAsc() == null ? FilterDto.DEFAULT_ORDER_ASC : filter.getOrderAsc();
+        boolean checkDate = filter.getCheckDate() == null ? FilterDto.DEFAULT_CHECK_DATE : filter.getCheckDate();
         boolean orderClosest = filter.getOrderClosest() == null ? FilterDto.DEFAULT_ORDER_CLOSEST : filter.getOrderClosest();
         boolean hasSearchString = (searchString != null && !searchString.trim().isEmpty());
         Point curPositon = (latitude != null && longitude != null) ? GeoUtils.createPoint(latitude, longitude) : null;
@@ -163,19 +124,27 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
+                + (checkDate ? " and a.availableAt <= current_date() and a.expiresAt >= current_date()" : "")
+                + " and a.adData.category.hidden = false"
                 //+ " and a.expired = false"
                 //+ " and a.sold = false"
                 + "";
 
-//        if (lastAd != null) {
-//            if ( orderClosest && curPositon != null ) {
-//                queryStr += " and " + getHarvesineSQL() + " " + (orderAsc ? ">" : "<") + " :lastDistance";
-//            } else {
-//                //queryStr += " and a.id " + (orderAsc ? ">" : "<") + " :lastId";
-//                queryStr += " and a.approvedAt " + (orderAsc ? ">" : "<") + " :lastApprovedAt";
-//            }
-//        }
-
+        if ( includePickup != null ) {
+            if ( includePickup ) {
+                queryStr += " and a.adData.pickUp = true";
+            } else {
+                queryStr += " and (a.adData.pickUp = null or a.adData.pickUp = false)";
+            }
+        }
+        if ( includeShipping != null ) {
+            if ( includeShipping ) {
+                queryStr += " and a.adData.shippingBox != null";
+            } else {
+                queryStr += " and a.adData.shippingBox = null";
+            }
+        }
+        
         if (hasSearchString) {
             queryStr += " and "
                     + "("
@@ -213,26 +182,13 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         if ( orderClosest && curPositon != null ) {
             queryStr += " order by " + GeoUtils.getHarvesineSQL(dbType) + " " + (orderAsc ? "asc" : "desc");
         } else {
-            //queryStr += " order by a.id " + (orderAsc ? "asc" : "desc") + "";
             queryStr += " order by a.approvedAt " + (orderAsc ? "asc" : "desc") + ", a.createdAt desc";
         }
         
         Query query = createQuery(queryStr);
 
         // Bind parameters
-//        if (lastAd != null) {
-//            if ( orderClosest && curPositon != null ) {
-//                double lat1 = lastAd.getAdData().getLocation().getY();
-//                double lon1 = lastAd.getAdData().getLocation().getX();
-//                double lastDistance = getHarvesineDistance(lat1, lon1, latitude, longitude);
-//                query.setParameter("lastDistance", lastDistance);
-//            } else {
-//                //query.setParameter("lastId", lastAdId);
-//                Date lastApprovedAt = lastAd.getApprovedAt();
-//                query.setParameter("lastApprovedAt", lastApprovedAt);
-//            }
-//        }
-
+        
         if (hasSearchString) {
             query.setParameter("searchstr", searchString != null ? searchString.toLowerCase() : "");
         }

@@ -34,16 +34,18 @@ public class AdDto extends DtoBase {
     private Long categoryId;
     // out
     private String category;
-    // in,out
+    // in, out
     @NotNull
     private String title;
-    // in,out
+    // in, out
     private String subtitle;
-    // in,out
+    // in, out
     private String description;
-    // in,out
+    // in, out
     private BigDecimal price;
-    // in,out
+    // in, out
+    private boolean free;
+    // in, out
     @Min(1)
     @NotNull
     private Integer quantity;
@@ -74,11 +76,11 @@ public class AdDto extends DtoBase {
     // in, out
     private Boolean expires; //never expire?
     // in, out
-    private Date availableAt;
+    private Date availableAt; //start date
     // out
     private Date soldAt;
     // in, out
-    private Date expiresAt;
+    private Date expiresAt; //end date
     // out
     private Boolean canRate;
     // out
@@ -86,11 +88,13 @@ public class AdDto extends DtoBase {
     // out
     private Boolean canMarkAsSpam;
     // in, out
-    private Boolean freeShipping;
+    private ShippingBoxDto shippingBox;
     // in, out
-    private Boolean pickUp;
+    private Boolean freeShipping; //delivery type
     // in, out
-    private AdPlace place;
+    private Boolean pickUp; //delivery type
+    // in, out
+    private AdPlace place; //redeem type
     // out
     private AdType type;
     // out
@@ -121,19 +125,28 @@ public class AdDto extends DtoBase {
     // in, out
     private String promoCode;
     // in, out
-    private String website;
+    private boolean generatePromoCodeForRequests;
     // in, out
-    private Boolean needsReservation;
+    private String website; //adPlace in (ONLINE, BOTH)
     // in, out
-    private Date availableFromTime;
+    private Date redemptionEndDate;
     // in, out
-    private Date availableToTime;
+    private boolean allAddresses;
     // in, out
-    private Boolean availableAllDay;
+    private Set<AddressDto> addresses; //adPlace in (LOCATION, BOTH)
+    
     // in, out
-    private Set<WeekDay> availableDays;
+    private Boolean needsReservation; //TODO: probably is not needed
     // in, out
-    private ImageDto imageBarcode;
+    private Date availableFromTime; //TODO: probably is not needed
+    // in, out
+    private Date availableToTime; //TODO: probably is not needed
+    // in, out
+    private Boolean availableAllDay; //TODO: probably is not needed
+    // in, out
+    private Set<WeekDay> availableDays; //TODO: probably is not needed
+    // in, out
+    private ImageDto imageBarcode; //TODO: probably is not needed
     
     // Required for JAX-WS
     public AdDto() {
@@ -148,8 +161,8 @@ public class AdDto extends DtoBase {
         ad.getAdData().setFreeShipping(freeShipping);
         ad.getAdData().setPickUp(pickUp);
         ad.getAdData().setPlace(place);
-        ad.getAdData().setAddress(address != null ? address.getAddress() : null);
-        ad.getAdData().setLocation(address != null ? address.getLocation() : null);
+        ad.getAdData().setAddress(address != null ? address.toAddress() : null);
+        ad.getAdData().setLocation(address != null ? address.toLocation() : null);
         
         ad.getAdData().updateAd(this);
     }
@@ -546,5 +559,53 @@ public class AdDto extends DtoBase {
 
     public void setLastIndex(int lastIndex) {
         this.lastIndex = lastIndex;
+    }
+
+    public boolean isGeneratePromoCodeForRequests() {
+        return generatePromoCodeForRequests;
+    }
+
+    public void setGeneratePromoCodeForRequests(boolean generatePromoCodeForRequests) {
+        this.generatePromoCodeForRequests = generatePromoCodeForRequests;
+    }
+
+    public Date getRedemptionEndDate() {
+        return redemptionEndDate;
+    }
+
+    public void setRedemptionEndDate(Date redemptionEndDate) {
+        this.redemptionEndDate = redemptionEndDate;
+    }
+
+    public Set<AddressDto> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<AddressDto> addresses) {
+        this.addresses = addresses;
+    }
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
+    }
+
+    public boolean isAllAddresses() {
+        return allAddresses;
+    }
+
+    public void setAllAddresses(boolean allAddresses) {
+        this.allAddresses = allAddresses;
+    }
+
+    public ShippingBoxDto getShippingBox() {
+        return shippingBox;
+    }
+
+    public void setShippingBox(ShippingBoxDto shippingBox) {
+        this.shippingBox = shippingBox;
     }
 }

@@ -9,11 +9,11 @@ import com.venefica.model.Image;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
+import com.venefica.model.UserPoint;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,6 +47,8 @@ public class UserDto extends DtoBase {
     // out
     private Date joinedAt;
     // out
+    private Date lastLoginAt;
+    // out
     private boolean inFollowers;
     // out
     private boolean inFollowings;
@@ -61,6 +63,8 @@ public class UserDto extends DtoBase {
     // out
     private BigDecimal pendingScore;
     // out
+    private BigDecimal businessScore;
+    // out
     private UserStatisticsDto statistics;
     // out
     private boolean verified;
@@ -72,11 +76,15 @@ public class UserDto extends DtoBase {
     // in, out
     private String contactName;
     // in, out
+    private String website;
+    // in, out
+    private String contactNumber;
+    // in, out
     private Long businessCategoryId;
     // in, out
     private String businessCategory;
     // in, out
-    private List<AddressDto> addresses;
+    private Set<AddressDto> addresses;
     
     // Required for JAX-WS
     public UserDto() {
@@ -99,7 +107,9 @@ public class UserDto extends DtoBase {
         email = user.getEmail();
         phoneNumber = user.getPhoneNumber();
         about = user.getAbout();
+        website = user.getWebsite();
         joinedAt = user.getJoinedAt();
+        lastLoginAt = user.getLastLoginAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
         address = new AddressDto(user.getAddress(), user.getLocation());
         businessAccount = user.isBusinessAccount();
@@ -107,10 +117,12 @@ public class UserDto extends DtoBase {
         user.getUserData().updateUserDto(this);
         
         if ( includeUserPoints && user.getUserPoint() != null ) {
-            score = user.getUserPoint().getGivingNumber();
-            pendingScore = user.getUserPoint().getPendingGivingNumber();
-//            score = user.getUserPoint().getScore();
-//            pendingScore = user.getUserPoint().getPendingScore();
+            if ( !user.isBusinessAccount() ) {
+                UserPoint userPoint = user.getUserPoint();
+                score = userPoint.getGivingNumber();
+                pendingScore = userPoint.getCalculatedPendingGivingNumber();
+                businessScore = score.subtract(userPoint.getBusinessReceivingNumber());
+            }
         }
     }
 
@@ -124,8 +136,9 @@ public class UserDto extends DtoBase {
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
         user.setAbout(about);
-        user.setAddress(address != null ? address.getAddress() : null);
-        user.setLocation(address != null ? address.getLocation() : null);
+        user.setWebsite(website);
+        user.setAddress(address != null ? address.toAddress() : null);
+        user.setLocation(address != null ? address.toLocation() : null);
         user.getUserData().updateUser(this);
         
         try {
@@ -173,7 +186,7 @@ public class UserDto extends DtoBase {
     
     public void addAddress(AddressDto addressDto) {
         if ( addresses == null ) {
-            addresses = new LinkedList<AddressDto>();
+            addresses = new LinkedHashSet<AddressDto>();
         }
         addresses.add(addressDto);
     }
@@ -324,11 +337,11 @@ public class UserDto extends DtoBase {
         this.businessCategory = businessCategory;
     }
 
-    public List<AddressDto> getAddresses() {
+    public Set<AddressDto> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<AddressDto> addresses) {
+    public void setAddresses(Set<AddressDto> addresses) {
         this.addresses = addresses;
     }
 
@@ -370,5 +383,37 @@ public class UserDto extends DtoBase {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public BigDecimal getBusinessScore() {
+        return businessScore;
+    }
+
+    public void setBusinessScore(BigDecimal businessScore) {
+        this.businessScore = businessScore;
+    }
+
+    public Date getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(Date lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 }

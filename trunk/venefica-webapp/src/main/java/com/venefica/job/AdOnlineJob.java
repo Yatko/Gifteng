@@ -11,9 +11,11 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.venefica.dao.AdDao;
+import com.venefica.dao.AdDataDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.model.Ad;
+import com.venefica.model.MemberAdData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
@@ -32,6 +34,7 @@ public class AdOnlineJob implements Job {
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         AppConfig appConfig = (AppConfig) ctx.getJobDetail().getJobDataMap().get(Constants.APP_CONFIG);
         AdDao adDao = (AdDao) ctx.getJobDetail().getJobDataMap().get(Constants.AD_DAO);
+        AdDataDao adDataDao = (AdDataDao) ctx.getJobDetail().getJobDataMap().get(Constants.AD_DATA_DAO);
         UserDao userDao = (UserDao) ctx.getJobDetail().getJobDataMap().get(Constants.USER_DAO);
         UserPointDao userPointDao = (UserPointDao) ctx.getJobDetail().getJobDataMap().get(Constants.USER_POINT_DAO);
         EmailSender emailSender = (EmailSender) ctx.getJobDetail().getJobDataMap().get(Constants.EMAIL_SENDER);
@@ -45,9 +48,18 @@ public class AdOnlineJob implements Job {
                     adDao.onlineAd(ad);
                     
                     User creator = userDao.getEager(ad.getCreator().getId());
-                    UserPoint userPoint = creator.getUserPoint();
-                    userPoint.setRequestLimit(userPoint.getRequestLimit() + appConfig.getRequestIncrementLimit());
-                    userPointDao.update(userPoint);
+                    if ( !creator.isBusinessAccount() ) {
+                        MemberAdData adData = adDataDao.getMemberAdDataByAd(ad.getId());
+                        if ( !adData.isRequestLimitIncreased() ) {
+                            adData.setRequestLimitIncreased(true);
+                            adDataDao.update(adData);
+                            
+                            //increasing request limit for members - just once
+                            UserPoint userPoint = creator.getUserPoint();
+                            userPoint.incrementRequestLimit(appConfig.getRequestLimitAdNew());
+                            userPointDao.update(userPoint);
+                        }
+                    }
                     
                     notifyFollowers(emailSender, userDao, ad, creator);
                     log.info("Ad (id: " + ad.getId() + ") become online");

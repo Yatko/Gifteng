@@ -10,7 +10,6 @@ import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
-import java.util.Set;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -70,7 +69,7 @@ public interface UserManagementService {
             @WebParam(name = "password") @NotNull String password) throws UserAlreadyExistsException, GeneralException;
     
     /**
-     * Registers new local user not connected to any social network.
+     * Registers new local user.
      *
      * @param userDto the user to register
      * @param password the password (may be a hash of the password in the
@@ -98,7 +97,8 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "UpdateUser")
     @WebResult(name = "complete")
-    public boolean updateUser(@WebParam(name = "user") @NotNull UserDto userDto) throws UserAlreadyExistsException;
+    public boolean updateUser(@WebParam(name = "user") @NotNull UserDto userDto)
+            throws UserNotFoundException, UserAlreadyExistsException;
     
     /**
      * Returns true if all required information is gathered for the current
@@ -106,7 +106,14 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "IsUserComplete")
     @WebResult(name = "complete")
-    public boolean isUserComplete();
+    public boolean isUserComplete() throws UserNotFoundException;
+    
+    /**
+     * Mark the currently logged user as deactivated (deleted). User and it's
+     * gifts will not be show anymore.
+     */
+    @WebMethod(operationName = "DeactivateUser")
+    public void deactivateUser() throws UserNotFoundException;
 
     
     
@@ -132,7 +139,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetTopUsers")
     @WebResult(name = "users")
-    public List<UserDto> getTopUsers(@WebParam(name = "numberUsers") int numberUsers);
+    public List<UserDto> getTopUsers(@WebParam(name = "numberUsers") int numberUsers) throws UserNotFoundException;
     
     /**
      * Retrieves information about the current (logged) user.
@@ -255,7 +262,7 @@ public interface UserManagementService {
      */
     @WebMethod(operationName = "GetUserSetting")
     @WebResult(name = "setting")
-    public UserSettingDto getUserSetting() throws GeneralException;
+    public UserSettingDto getUserSetting() throws UserNotFoundException, GeneralException;
     
     /**
      * Saves/updates the given settings for the given and current user.
@@ -265,28 +272,5 @@ public interface UserManagementService {
      * user is not the same as the updating one
      */
     @WebMethod(operationName = "SaveUserSetting")
-    public void saveUserSetting(@WebParam(name = "setting") @NotNull UserSettingDto userSettingDto) throws GeneralException;
-    
-    
-    
-    //******************
-    //* social network *
-    //******************
-    
-    /**
-     * Returns a list of social network names connected to the current user
-     * account.
-     */
-    @WebMethod(operationName = "GetConnectedSocialNetworks")
-    @WebResult(name = "network")
-    public Set<String> getConnectedSocialNetworks();
-
-    /**
-     * Removes a connection between the current user account and an account of
-     * the specified social network.
-     *
-     * @param networkName the name of the social network
-     */
-    @WebMethod(operationName = "DisconnectFromNetwork")
-    public void disconnectFromNetwork(@WebParam(name = "networkName") String networkName);
+    public void saveUserSetting(@WebParam(name = "setting") @NotNull UserSettingDto userSettingDto) throws UserNotFoundException, GeneralException;
 }

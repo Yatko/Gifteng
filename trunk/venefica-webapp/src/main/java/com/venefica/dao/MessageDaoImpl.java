@@ -1,7 +1,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.Message;
-import com.venefica.model.Request;
+import com.venefica.model.RequestStatus;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +41,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
         List<Message> messages = createQuery(""
                 + "from " + getDomainClassName() + " m "
                 + "where "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "m.request.ad.id = :adId and "
                 + "m.deleted = false "
                 + "order by m.createdAt asc "
@@ -55,6 +57,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
         List<Message> messages = createQuery(""
                 + "from " + getDomainClassName() + " m "
                 + "where "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "m.request.id = :requestId and "
                 + "m.deleted = false "
                 + "order by m.createdAt asc "
@@ -63,6 +67,25 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 .list();
         return messages;
     }
+    
+    @Override
+    public int getNumUnreadMessagesByRequestAndUser(Long requestId, Long userId) {
+        return ((Long) createQuery(""
+                + "select count(m) "
+                + "from " + getDomainClassName() + " m "
+                + "where "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
+                + "m.request.id = :requestId and "
+                + "m.to.id = :userId and "
+                + "m.deleted = false and "
+                + "m.read = false "
+                + "order by m.createdAt asc "
+                + "")
+                .setParameter("requestId", requestId)
+                .setParameter("userId", userId)
+                .uniqueResult()).intValue();
+    }
 
     @Override
     public List<Message> getByUsers(Long user1, Long user2) {
@@ -70,6 +93,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "from " + getDomainClassName() + " m "
                 + "where "
                 + "m.deleted = false and "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "("
                 + "(m.to.id = :user1Id and m.from.id = :user2Id) or "
                 + "(m.to.id = :user2Id and m.from.id = :user1Id)"
@@ -89,6 +114,8 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "where "
                 + "m.deleted = false and "
                 + "m.request.ad.id = :adId and "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "("
                 + "(m.to.id = :user1Id and m.from.id = :user2Id) or "
                 + "(m.to.id = :user2Id and m.from.id = :user1Id)"
@@ -112,8 +139,11 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "m.deleted = false and "
                 + "m.request.hidden = false and "
                 + "m.request.deleted = false and "
+                + "m.request.status in (:acceptedStatus) and " //including only "accepted" requests
                 + "m.request.ad.deleted = false and "
                 + "m.request.ad.creator.deleted = false and "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "("
                 + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
                 + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
@@ -122,13 +152,16 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "order by max(m.createdAt) desc"
                 + "")
                 .setParameter("userId", userId)
+                .setParameterList("acceptedStatus", RequestStatus.ACCEPTED_STATUSES)
                 .list();
         for ( Long requestId : requestIds ) {
             List<Message> lastMessage = createQuery(""
                     + "from " + getDomainClassName() + " m "
                     + "where "
                     + "m.request.id = :requestId and "
-                    + "m.deleted = false "
+                    + "m.deleted = false and "
+                    + "m.to.deleted = false and "
+                    + "m.from.deleted = false "
                     + "order by m.createdAt desc, m.id desc "
                     + "")
                     .setParameter("requestId", requestId)
@@ -152,8 +185,11 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "m.to.id = :userId and "
                 + "m.request.hidden = false and "
                 + "m.request.deleted = false and "
+                + "m.request.status in (:acceptedStatus) and " //including only "accepted" requests
                 + "m.request.ad.deleted = false and "
                 + "m.request.ad.creator.deleted = false and "
+                + "m.to.deleted = false and "
+                + "m.from.deleted = false and "
                 + "("
                 + "(m.request.ad.creator.id = :userId and m.request.messagesHiddenByCreator = false) or "
                 + "(m.request.user.id = :userId and m.request.messagesHiddenByRequestor = false)"
@@ -161,6 +197,7 @@ public class MessageDaoImpl extends DaoBase<Message> implements MessageDao {
                 + "order by m.createdAt desc, m.id desc "
                 + "")
                 .setParameter("userId", userId)
+                .setParameterList("acceptedStatus", RequestStatus.ACCEPTED_STATUSES)
                 .list();
         return messages;
     }

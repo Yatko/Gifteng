@@ -42,33 +42,35 @@ public class ImageUtils {
         List<File> files = new ArrayList<File>(0);
         files.add(originalFile);
         
-        BufferedImage originalBufferedImage = ImageIO.read(new ByteArrayInputStream(originalData));
-        if ( originalBufferedImage != null && originalBufferedImage.getWidth() > 0 && originalBufferedImage.getHeight() > 0 ) {
-            for ( Integer size : imageConfig.getSizes(modelType) ) {
-                String suffix = size.toString();
-                byte[] resized;
+        if ( type.isImage() && !imageConfig.getSizes(modelType).isEmpty() ) {
+            BufferedImage originalBufferedImage = ImageIO.read(new ByteArrayInputStream(originalData));
+            if ( originalBufferedImage != null && originalBufferedImage.getWidth() > 0 && originalBufferedImage.getHeight() > 0 ) {
+                for ( Integer size : imageConfig.getSizes(modelType) ) {
+                    String suffix = size.toString();
+                    byte[] resized;
 
-                try {
-                    resized = resizeImage(originalBufferedImage, size, type);
-                } catch ( IOException ex ) {
-                    logger.error("Exception thrown when trying to generate resized image (imgId: " + imageId + ", suffix: " + suffix + ")", ex);
-                    continue;
-                }
+                    try {
+                        resized = resizeImage(originalBufferedImage, size, type);
+                    } catch ( IOException ex ) {
+                        logger.error("Exception thrown when trying to generate resized image (imgId: " + imageId + ", suffix: " + suffix + ")", ex);
+                        continue;
+                    }
 
-                if ( resized.length == 0 ) {
-                    logger.warn("The generated resized image size is 0 (imgId: " + imageId + ", suffix: " + suffix + ")");
-                    continue;
-                }
+                    if ( resized.length == 0 ) {
+                        logger.warn("The generated resized image size is 0 (imgId: " + imageId + ", suffix: " + suffix + ")");
+                        continue;
+                    }
 
-                try {
-                    File file = fileUpload.save(imageId, modelType, suffix, resized);
-                    files.add(file);
-                } catch ( IOException ex ) {
-                    logger.error("Could not save resized image (imgId: " + imageId + ", suffix: " + suffix + ")", ex);
+                    try {
+                        File file = fileUpload.save(imageId, modelType, suffix, resized);
+                        files.add(file);
+                    } catch ( IOException ex ) {
+                        logger.error("Could not save resized image (imgId: " + imageId + ", suffix: " + suffix + ")", ex);
+                    }
                 }
+            } else {
+                logger.error("Could not determine image size (imgId: " + imageId + ")");
             }
-        } else {
-            logger.error("Could not determine image size (imgId: " + imageId + ")");
         }
         
         return files;

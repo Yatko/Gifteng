@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Index;
 
 /**
  * Comment for an ad. Comments are publicly available for every user.
@@ -51,6 +52,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @ForeignKey(name = "comment_reply_fk")
     private Comment reply;
+    
+    @Index(name = "idx_deleted")
+    private boolean deleted;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedAt;
 
     public Comment() {
     }
@@ -116,5 +122,21 @@ public class Comment {
 
     public void setReply(Comment reply) {
         this.reply = reply;
+    }
+    
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

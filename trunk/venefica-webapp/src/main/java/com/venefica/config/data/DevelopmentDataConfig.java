@@ -35,7 +35,6 @@ public class DevelopmentDataConfig {
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder factoryBuilder = new LocalSessionFactoryBuilder(dataSource());
         factoryBuilder.scanPackages(Constants.MODEL_PACKAGE);
-
         // Support PostGIS functions
         factoryBuilder.getProperties().put(AvailableSettings.DIALECT, hibernateDialect);
         // Automatically generate DDL
