@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    	<title>${title}</title>
+    </head>
+    <body style="background-color:#ece8e0;font-family:sans-serif;color:#222;">
+        <div id="mail-heading" style="margin:15px 15px;padding:0;">
+            <a href="http://gifteng.com" style="float:right;text-align:right;padding:10px 0;color:#999;font-size:90%;text-decoration:none;">
+                Give. Receive. Inspire.
+            </a>
+            <div style="width:120px;padding:0;">
+                <a href="http://gifteng.com" style="text-decoration:none;color:#00bebe;"><img src="http://gifteng.com/images/mail/gifteng-mail-logo.png" alt="Gifteng" title="Gifteng" border="0"></a>
+            </div>
+        </div>
