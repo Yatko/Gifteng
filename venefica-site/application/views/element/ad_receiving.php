@@ -36,7 +36,7 @@ if( $ad->expired || $request->isExpired() ) {
 <? endif; ?>
 
                 <div class="ge-item">	
-                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE)); ?>
+                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE, 'show_num_comments' => true)); ?>
 
 <? if( $is_owner ): ?>
                     

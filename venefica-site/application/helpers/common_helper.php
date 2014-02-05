@@ -147,7 +147,7 @@ if ( !function_exists('clear_cache') ) {
 //}
 
 if ( ! function_exists('safe_content')) {
-    function safe_content($str) {
+    function safe_content($str, $convertLine = true) {
         if ( $str == null ) {
             return "";
         }
@@ -161,7 +161,9 @@ if ( ! function_exists('safe_content')) {
         $str = preg_replace("/[\n\r]+/", "\n\r", $str);
         //$str = str_replace("\n", "<br />", $str);
         /**/
-        $str = nl2br($str);
+        if ( $convertLine ) {
+            $str = nl2br($str);
+        }
         return $str;
     }
 }

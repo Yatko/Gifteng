@@ -18,6 +18,7 @@ class Request_model extends CI_Model {
     var $user; //User_model
     var $requestedAt; //long - timestamp
     var $status; //enum: PENDING, ACCEPTED, UNACCEPTED, CANCELED, DECLINED, SENT, RECEIVED
+    var $promoCode; //string
     var $adStatus; //enum: ACTIVE, IN_PROGRESS, FINALIZED, EXPIRED (see Ad_model)
     var $adExpiresAt; //long - timestamp
     var $type; //enum: MEMBER, BUSINESS (see Ad_model)
@@ -35,6 +36,7 @@ class Request_model extends CI_Model {
             $this->adId = getField($obj, 'adId');
             $this->requestedAt = getField($obj, 'requestedAt');
             $this->status = getField($obj, 'status');
+            $this->promoCode = getField($obj, 'promoCode');
             $this->adStatus = getField($obj, 'adStatus');
             $this->adExpiresAt = getField($obj, 'adExpiresAt');
             $this->accepted = getField($obj, 'accepted');

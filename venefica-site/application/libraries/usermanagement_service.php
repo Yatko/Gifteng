@@ -139,6 +139,22 @@ class Usermanagement_service {
         }
     }
     
+    /**
+     * Put the currently logged user into deactivated state.
+     * 
+     * @throws Exception
+     */
+    public function deactivateUser() {
+        try {
+            $userService = $this->getService();
+            $userService->deactivateUser();
+        } catch ( Exception $ex ) {
+            log_message(ERROR, $ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+
+
     //*****************
     //* user statistics *
     //*****************

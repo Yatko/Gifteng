@@ -8,12 +8,14 @@
  * canComment: boolean (default: false)
  * canShare: boolean (default: false)
  * size: int (default: LIST_AD_IMAGE_SIZE)
+ * show_num_comments: boolean (default: false)
  */
 
 if ( !isset($canBookmark) ) $canBookmark = false;
 if ( !isset($canComment) ) $canComment = false;
 if ( !isset($canShare) ) $canShare = false;
 if ( !isset($size) ) $size = LIST_AD_IMAGE_SIZE;
+if ( !isset($show_num_comments) ) $show_num_comments = false;
 
 $is_bookmarked = $ad->inBookmarks;
 $is_owner = $ad->owner;
@@ -31,6 +33,11 @@ if ( $ad->statistics != null ) {
     $num_comments = 0;
     $num_shares = 0;
 }
+
+if ( $num_bookmarks == 0 ) $num_bookmarks = '';
+if ( $num_comments == 0 ) $num_comments = '';
+if ( $num_shares == 0 ) $num_shares = '';
+
 ?>
 
 <div class="row-fluid ge-item-image">
@@ -41,6 +48,21 @@ if ( $ad->statistics != null ) {
     </div>
     
     <? if( !$canBookmark && !$canComment && !$canShare ): ?>
+        
+        <? if( $show_num_comments && $num_comments != '' ): ?>
+            <div class="row-fluid">
+                <div class="span12 ge-action">
+                    <div class="row-fluid">
+                        <div class="span4 mobile-one">
+                            <button type="button" class="btn btn-small btn-block btn-ge disabled">
+                                <i class="fui-bubble"></i>
+                                <span class="ad_comment_<?= $id ?>"><?= $num_comments ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <? endif; ?>
         
     <? else: ?>
         <div class="row-fluid">

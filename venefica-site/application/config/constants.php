@@ -1,9 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-define('SERVER_URL',                'http://veneficalabs.com:8080/venefica'); //dev server
+//define('SERVER_URL',                'http://veneficalabs.com:8080/venefica'); //dev server
 //define('SERVER_URL',                'http://veneficalabs.com:8080/gifteng'); //live server (old)
 //define('SERVER_URL',                'http://gifteng-ws.jelastic.servint.net/gifteng'); //another live server
-//define('SERVER_URL',                'http://localhost:8080/venefica'); //local server
+define('SERVER_URL',                'http://localhost:8080/venefica'); //local server
 //define('SERVER_URL',                'http://gifteng.elasticbeanstalk.com'); //another live server
 
 //define('IMAGE_SERVER_URL',          SERVER_URL); //live server

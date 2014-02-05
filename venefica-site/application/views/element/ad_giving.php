@@ -48,7 +48,7 @@ if ( $is_owner ) {
             <div class="span12">
                 <div class="ge-item">
 
-                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE)); ?>
+                    <? $this->load->view('element/ad_item', array('ad' => $ad, 'size' => LIST_AD_IMAGE_SIZE, 'show_num_comments' => true)); ?>
 
 <? if( $is_owner ): ?>
 

@@ -9,6 +9,7 @@ class Ad_model extends CI_Model {
     
     const PLACE_ONLINE = 'ONLINE';
     const PLACE_LOCATION = 'LOCATION';
+    const PLACE_BOTH = 'BOTH';
     
     const ADTYPE_MEMBER = 'MEMBER';
     const ADTYPE_BUSINESS = 'BUSINESS';
@@ -37,6 +38,7 @@ class Ad_model extends CI_Model {
     var $subtitle; //string
     var $description; //string
     var $price; //float
+    var $free; //boolean
     var $quantity; //int
     var $image; //Image_model
     var $imageThumbnail; //Image_model
@@ -58,7 +60,7 @@ class Ad_model extends CI_Model {
     var $canMarkAsSpam; //boolean
     var $freeShipping; //boolean
     var $pickUp; //boolean
-    var $place; //enum: ONLINE, LOCATION
+    var $place; //enum: ONLINE, LOCATION, BOTH
     var $type; //enum: MEMBER, BUSINESS
     var $comments; //array of Comment_model
     var $address; //Address_model
@@ -72,7 +74,11 @@ class Ad_model extends CI_Model {
     
     // business ad data
     var $promoCode; //string
+    var $generatePromoCodeForRequests; //boolean
     var $website; //string
+    var $redemptionEndDate; //long - time
+    var $addresses; //array of Address_model
+    
     var $needsReservation; //boolean
     var $availableFromTime; //long - time
     var $availableToTime; //long - time
@@ -93,6 +99,7 @@ class Ad_model extends CI_Model {
             $this->subtitle = getField($obj, 'subtitle');
             $this->description = getField($obj, 'description');
             $this->price = getField($obj, 'price');
+            $this->free = getField($obj, 'free');
             $this->quantity = getField($obj, 'quantity');
             $this->createdAt = getField($obj, 'createdAt');
             $this->owner = getField($obj, 'owner');
@@ -119,7 +126,10 @@ class Ad_model extends CI_Model {
             
             //business ad data
             $this->promoCode = getField($obj, 'promoCode');
+            $this->generatePromoCodeForRequests = getField($obj, 'generatePromoCodeForRequests');
             $this->website = getField($obj, 'website');
+            $this->redemptionEndDate = getField($obj, 'redemptionEndDate');
+            
             $this->needsReservation = getField($obj, 'needsReservation');
             $this->availableFromTime = getField($obj, 'availableFromTime');
             $this->availableToTime = getField($obj, 'availableToTime');
@@ -155,6 +165,9 @@ class Ad_model extends CI_Model {
             }
             if ( hasField($obj, 'approval') ) {
                 $this->approval = Approval_model::convertApproval($obj->approval);
+            }
+            if ( hasField($obj, 'addresses') ) {
+                $this->addresses = Address_model::convertAddresses($obj->addresses);
             }
         }
     }

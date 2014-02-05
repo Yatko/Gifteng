@@ -199,43 +199,27 @@ class Browse extends CI_Controller {
         }
         
         $filter = new Filter_model();
-        //$filter->includeOwned = true;
         $filter->searchString = $query;
+        $filter->checkDate = false;
         $filter->categories = ($category != null ? array($category) : null);
         if ( $type == Browse::TYPE_NEWEST ) {
             $filter->orderAsc = false;
             $filter->orderClosest = false;
             $filter->filterType = Filter_model::FILTER_TYPE_ACTIVE;
-            //$filter->includeInactive = false;
-            //$filter->includeShipped = false;
-            //$filter->includeRequested = true;
-            //$filter->includeCanRequest = true;
         } else if ( $type == Browse::TYPE_OLDEST ) {
             $filter->orderAsc = true;
             $filter->orderClosest = false;
             $filter->filterType = Filter_model::FILTER_TYPE_ACTIVE;
-            //$filter->includeInactive = false;
-            //$filter->includeShipped = false;
-            //$filter->includeRequested = true;
-            //$filter->includeCanRequest = true;
         } else if ( $type == Browse::TYPE_CLOSEST ) {
             $filter->orderAsc = true;
             $filter->orderClosest = true;
             $filter->filterType = Filter_model::FILTER_TYPE_ACTIVE;
-            //$filter->includeInactive = false;
-            //$filter->includeShipped = false;
-            //$filter->includeRequested = true;
-            //$filter->includeCanRequest = true;
             $filter->latitude = ($currentUser != null && $currentUser->address != null) ? $currentUser->address->latitude : null;
             $filter->longitude = ($currentUser != null && $currentUser->address != null) ? $currentUser->address->longitude : null;
         } else if ( $type == Browse::TYPE_GIFTED ) {
             $filter->orderAsc = false;
             $filter->orderClosest = false;
             $filter->filterType = Filter_model::FILTER_TYPE_GIFTED;
-            //$filter->includeInactive = true;
-            //$filter->includeShipped = true;
-            //$filter->includeRequested = true;
-            //$filter->includeCanRequest = false;
         }
         return $filter;
     }

@@ -47,7 +47,7 @@ class Ajax extends CI_Controller {
         
         try {
             $ad = $this->ad_service->getAdById($adId, true);
-            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId), true);
+            $result = $this->load->view('element/ad_giving', array('ad' => $ad, 'user_id' => $userId, 'show_num_comments' => true), true);
             
             respond_ajax(AJAX_STATUS_RESULT, array(
                 AD_GIVING_HTML => $result
@@ -258,7 +258,7 @@ class Ajax extends CI_Controller {
             $text = $this->input->post('commentText');
             
             $comment = new Comment_model();
-            $comment->text = $text;
+            $comment->text = safe_content($text, false);
             
             $this->message_service->addCommentToAd($adId, $comment);
             $ad_statistics = $this->ad_service->getStatistics($adId);
@@ -286,7 +286,7 @@ class Ajax extends CI_Controller {
             $text = $this->input->post('messageText');
             
             $message = new Message_model();
-            $message->text = $text;
+            $message->text = safe_content($text, false);
             $message->requestId = $requestId;
             $message->toId = $toId;
             

@@ -55,6 +55,21 @@ class Message_service {
     
     /**
      * 
+     * @param type $commentId
+     * @throws Exception
+     */
+    public function deleteComment($commentId) {
+        try {
+            $messageService = $this->getService();
+            $messageService->deleteComment(array("commentId" => $commentId));
+        } catch ( Exception $ex ) {
+            log_message(ERROR, 'Delete comment (commentId: ' . $commentId . ') failed! '.$ex->faultstring);
+            throw new Exception($ex->faultstring);
+        }
+    }
+    
+    /**
+     * 
      * @param long $adId
      * @param long $lastCommentId
      * @param int $numComments
