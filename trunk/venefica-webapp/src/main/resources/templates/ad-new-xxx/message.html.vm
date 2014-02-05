@@ -1,0 +1,21 @@
+#set($title = "[Gifteng ADMIN] ${ad.creator.getFullName()} posted a new gift!")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Dear admin,</h1>
+	<p>
+	    ${ad.creator.getFullName()} posted a new Gift!<br /><br />
+	</p>
+	<p>
+	    The newly created gift ID is: ${ad.id}<br /><br />
+	</p>
+	<p>
+	    <a href="${baseUrl}/#/admin" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Click here to view and approve (or reject) the gift!</a><br /><br />
+	</p>
+	<p>
+    	Happy giving & receiving,<br />
+        Gifteng
+	</p>
+</div>
+
+#parse("../footer.html.vm")

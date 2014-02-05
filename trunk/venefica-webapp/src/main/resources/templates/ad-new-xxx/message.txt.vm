@@ -1,0 +1,8 @@
+Dear admin,
+
+${ad.creator.getFullName()} posted a new Gift!
+
+The newly created gift ID is: ${ad.id}
+
+Access the following link to view and approve (or reject) the gift:
+${baseUrl}/#/admin

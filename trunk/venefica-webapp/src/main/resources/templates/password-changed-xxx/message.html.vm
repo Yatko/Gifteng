@@ -1,0 +1,19 @@
+#set($title = "Gifteng Password Changed")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{user.userData.getFirstName()},</h1>
+	<p>
+	    Your Gifteng password has been successfully changed. If you did not request this, please contact us at <a href="help@gifteng.com">help@gifteng.com</a>.<br /><br />
+	</p>
+	<p>
+    	Warm regards,<br />
+        The Gifteng Team
+	</p>
+	<p style="color: #37495d;font-size:0.9em;">
+		To change your general email notifications click here:
+		${baseUrl}/#/profile/account/notifications
+	</p>
+</div>
+
+#parse("../footer.html.vm")
