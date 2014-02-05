@@ -77,7 +77,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void addCommentToAdTest() throws AdNotFoundException, CommentValidationException {
+    public void addCommentToAdTest() throws UserNotFoundException, AdNotFoundException, CommentValidationException {
         CommentDto comment = new CommentDto("This is a test comment");
 
         authenticateClientAsSecondUser();
@@ -86,7 +86,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void addCommentToUnexistingAdTest() throws AdNotFoundException,
+    public void addCommentToUnexistingAdTest() throws UserNotFoundException, AdNotFoundException,
             CommentValidationException {
         CommentDto comment = new CommentDto("Test comment");
         authenticateClientAsFirstUser();
@@ -94,7 +94,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = CommentValidationException.class)
-    public void addInvalidCommentTest() throws AdNotFoundException, CommentValidationException {
+    public void addInvalidCommentTest() throws UserNotFoundException, AdNotFoundException, CommentValidationException {
         CommentDto comment = new CommentDto();
         comment.setText(null);
 
@@ -103,7 +103,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void updateCommentTest() throws AdNotFoundException, CommentValidationException,
+    public void updateCommentTest() throws UserNotFoundException, AdNotFoundException, CommentValidationException,
             CommentNotFoundException {
         CommentDto comment = new CommentDto("New comment");
 
@@ -132,7 +132,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = CommentValidationException.class)
-    public void updateInvalidCommentTest() throws AdNotFoundException, CommentValidationException,
+    public void updateInvalidCommentTest() throws UserNotFoundException, AdNotFoundException, CommentValidationException,
             CommentNotFoundException {
         CommentDto comment = new CommentDto("Some comment");
         authenticateClientAsFirstUser();
@@ -145,7 +145,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void getCommentsByAdTest() throws AdNotFoundException {
+    public void getCommentsByAdTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         List<CommentDto> comments = client.getCommentsByAd(ad.getId(), new Long(-1), 10);
         assertNotNull("List of comments must be returned!", comments);
@@ -200,7 +200,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = MessageNotFoundException.class)
-    public void updateUnexistingMessageTest() throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+    public void updateUnexistingMessageTest() throws UserNotFoundException, MessageNotFoundException, AuthorizationException, MessageValidationException {
         authenticateClientAsFirstUser();
         MessageDto messageDto = new MessageDto();
         messageDto.setId(new Long(-1));
@@ -271,7 +271,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test
-    public void getAllMessagesCalledByThirdUserTest() {
+    public void getAllMessagesCalledByThirdUserTest() throws UserNotFoundException {
         authenticateClientAsThirdUser();
         List<MessageDto> messages = client.getAllMessages();
 
@@ -303,7 +303,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = MessageNotFoundException.class)
-    public void hideUnexistingMessageTest() throws MessageNotFoundException, AuthorizationException {
+    public void hideUnexistingMessageTest() throws UserNotFoundException, MessageNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.hideMessage(new Long(-1));
     }
@@ -349,7 +349,7 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
     }
 
     @Test(expected = MessageNotFoundException.class)
-    public void deleteUnexistingMessageTest() throws MessageNotFoundException,
+    public void deleteUnexistingMessageTest() throws UserNotFoundException, MessageNotFoundException,
             AuthorizationException {
         authenticateClientAsFirstUser();
         client.deleteMessage(new Long(-1));
@@ -397,10 +397,11 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         List<MessageDto> messages;
         
         AdDto adDto = new AdDto();
+        adDto.setPickUp(true);
         adDto.setTitle("Test ad title");
         adDto.setDescription("Test ad description");
         adDto.setCategoryId(1L);
-        adDto.setQuantity(1);
+        adDto.setQuantity(10);
         adDto.setPrice(BigDecimal.TEN);
         adDto.setType(AdType.MEMBER);
         
@@ -420,6 +421,11 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         
         Long requestId_2 = adService.requestAd(adId, "Please choose me (third user).");
         assertNotNull("The third user request should succeed", requestId_2);
+        
+        authenticateClientWithToken(adService, firstUserAuthToken);
+        
+        adService.selectRequest(requestId_1);
+        adService.selectRequest(requestId_2);
         
         authenticateClientAsFirstUser();
         

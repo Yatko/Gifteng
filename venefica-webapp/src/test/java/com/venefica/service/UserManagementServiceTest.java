@@ -15,12 +15,13 @@ import com.venefica.service.fault.InvalidInvitationException;
 import com.venefica.service.fault.InvitationNotFoundException;
 import com.venefica.service.fault.UserAlreadyExistsException;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -116,9 +117,9 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         
         UserDto businessUserDto = client.getUserByName(TEST_BUSINESS_NAME);
         
-        List<AddressDto> addresses = businessUserDto.getAddresses();
+        Set<AddressDto> addresses = businessUserDto.getAddresses();
         
-        AddressDto address = addresses.get(0);
+        AddressDto address = new ArrayList<AddressDto>(addresses).get(0);
         address.setAddress1("address 1 updated");
         
         AddressDto newAddress = new AddressDto();
@@ -129,6 +130,16 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         
         UserDto updatedBusinessUserDto = client.getUserByName(TEST_BUSINESS_NAME);
         assertEquals(updatedBusinessUserDto.getAddresses().size(), addresses.size());
+        
+        //marking the first created address as deleted
+        addresses = updatedBusinessUserDto.getAddresses();
+        AddressDto firstAddress = new ArrayList<AddressDto>(addresses).get(0);
+        firstAddress.setDeleted(true);
+        
+        client.updateUser(updatedBusinessUserDto);
+        
+        updatedBusinessUserDto = client.getUserByName(TEST_BUSINESS_NAME);
+        assertEquals(updatedBusinessUserDto.getAddresses().size(), addresses.size() - 1);
     }
     
     @Test
@@ -170,7 +181,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     // update
     
     @Test(expected = UserAlreadyExistsException.class)
-    public void updateUserWithTheSameNameTest() throws UserAlreadyExistsException {
+    public void updateUserWithTheSameNameTest() throws UserNotFoundException, UserAlreadyExistsException {
         UserDto userWithRegisteredName = new UserDto(testUser, false);
         userWithRegisteredName.setName(getFirstUser().getName());
         authenticateClientWithToken(testUserAuthToken);
@@ -178,7 +189,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     }
 
     @Test(expected = UserAlreadyExistsException.class)
-    public void updateUserWithTheSameEmailTest() throws UserAlreadyExistsException {
+    public void updateUserWithTheSameEmailTest() throws UserNotFoundException, UserAlreadyExistsException {
         UserDto userWithRegisteredEmail = new UserDto(testUser, false);
         userWithRegisteredEmail.setEmail(getFirstUser().getEmail());
         authenticateClientWithToken(testUserAuthToken);
@@ -186,7 +197,7 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     }
 
     @Test
-    public void updateUserTest() throws UserAlreadyExistsException {
+    public void updateUserTest() throws UserNotFoundException, UserAlreadyExistsException {
         UserDto userDto = new UserDto(testUser, false);
         userDto.setPhoneNumber("47093");
         authenticateClientWithToken(testUserAuthToken);
