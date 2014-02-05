@@ -1,0 +1,22 @@
+#set($title = "${creator.getFullName()} posted a new gift!")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{follower.userData.getFirstName()},</h1>
+	<p>
+		${creator.getFullName()} posted a new Gift!<br /><br />
+	</p>
+	<p>
+	    <a href="${baseUrl}/#/view/gift/${ad.id}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Click here to view the gift!</a><br /><br />
+	</p>
+	<p>
+    	Happy giving & receiving,<br />
+        The Gifteng Team
+	</p>
+	<p style="color: #37495d;font-size:0.9em;">
+		You can also copy and paste this link into your browser:
+		${baseUrl}/#/view/gift/${ad.id}
+	</p>
+</div>
+
+#parse("../footer.html.vm")
