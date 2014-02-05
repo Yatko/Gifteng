@@ -183,7 +183,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
-        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
+//        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         invitation.use();
         invitationDao.update(invitation);
@@ -200,24 +200,29 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setUserPoint(userPoint);
         Long userId = userDao.save(user);
         
+        UserVerification userVerification = new UserVerification();
+        userVerification.setCode(getUserVerificationCode());
+        userVerification.setUser(user);
+        userVerificationDao.save(userVerification);
+        
         Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("code", userVerification.getCode());
         vars.put("user", user);
         
         emailSender.sendNotification(NotificationType.USER_WELCOME, user, vars);
         
-        
-        if ( !user.isVerified() ) {
-            UserVerification userVerification = new UserVerification();
-            userVerification.setCode(getUserVerificationCode());
-            userVerification.setUser(user);
-            userVerificationDao.save(userVerification);
-            
-            Map<String, Object> vars_ = new HashMap<String, Object>(0);
-            vars_.put("code", userVerification.getCode());
-            vars_.put("user", userVerification.getUser());
-            
-            emailSender.sendNotification(NotificationType.USER_VERIFICATION, userVerification.getUser(), vars_);
-        }
+//        if ( !user.isVerified() ) {
+//            UserVerification userVerification = new UserVerification();
+//            userVerification.setCode(getUserVerificationCode());
+//            userVerification.setUser(user);
+//            userVerificationDao.save(userVerification);
+//            
+//            Map<String, Object> vars_ = new HashMap<String, Object>(0);
+//            vars_.put("code", userVerification.getCode());
+//            vars_.put("user", userVerification.getUser());
+//            
+//            emailSender.sendNotification(NotificationType.USER_VERIFICATION, userVerification.getUser(), vars_);
+//        }
         
         return userId;
     }

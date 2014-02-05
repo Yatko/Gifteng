@@ -7,7 +7,7 @@
 	    Thank you for using Gifteng!<br /><br />
 	</p>
 	<p>
-	    <a href="${baseUrl}/#/?verify=${code}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Click here to confirm your email address</a><br /><br />
+	    <a href="${baseUrl}/#/authentication/verify/${code}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Click here to confirm your email address</a><br /><br />
 	</p>
 	<p>
 	    Not sure where to find something? Check out our super helpful <a href="http://gifteng.zendesk.com/home">FAQ</a> page.
