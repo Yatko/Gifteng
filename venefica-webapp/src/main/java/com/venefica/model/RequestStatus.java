@@ -4,6 +4,9 @@
  */
 package com.venefica.model;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * The 'lifecycle' of an ad request.
  * 
@@ -22,6 +25,8 @@ public enum RequestStatus {
     //WAITING_FOR_PAYMENT, //used at shipping - not yet implemented
     //PAYMENT_RECEIVED, //used at shipping - not yet implemented
     ;
+    
+    public static final Set<RequestStatus> ACCEPTED_STATUSES = EnumSet.<RequestStatus>of(ACCEPTED, SENT, RECEIVED);
     
     /**
      * If the request is having CANCELED or DECLINED status is considered

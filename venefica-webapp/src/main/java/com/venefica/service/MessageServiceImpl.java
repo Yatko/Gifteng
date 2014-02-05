@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.jws.WebService;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.twitter.api.Twitter;
-//import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +52,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public Long addCommentToAd(Long adId, CommentDto commentDto) throws AdNotFoundException, CommentValidationException {
+    public Long addCommentToAd(Long adId, CommentDto commentDto) throws UserNotFoundException, AdNotFoundException, CommentValidationException {
         validateCommentDto(commentDto);
         Ad ad = validateAd(adId);
         User creator = ad.getCreator();
@@ -89,10 +86,23 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         commentDto.update(comment);
         comment.setUpdatedAt(new Date());
     }
+    
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId) throws UserNotFoundException, CommentNotFoundException, AuthorizationException {
+        Comment comment = validateComment(commentId);
+        User currentUser = getCurrentUser();
+
+        if ( !comment.getPublisher().equals(currentUser) ) {
+            throw new AuthorizationException("Only owner can delete its comment (commentId: " + commentId + ")!");
+        }
+
+        commentDao.deleteComment(comment);
+    }
 
     @Override
     @Transactional
-    public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments) throws AdNotFoundException {
+    public List<CommentDto> getCommentsByAd(Long adId, Long lastCommentId, int numComments) throws UserNotFoundException, AdNotFoundException {
         Ad ad = validateAd(adId);
         List<CommentDto> result = new LinkedList<CommentDto>();
 
@@ -114,9 +124,10 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public List<MessageDto> getLastMessagePerRequest() {
-        List<Message> messages = messageDao.getLastMessagePerRequestByUser(getCurrentUserId());
-        return buildMessages(messages, getCurrentUser(), false);
+    public List<MessageDto> getLastMessagePerRequest() throws UserNotFoundException {
+        User currentUser = getCurrentUser();
+        List<Message> messages = messageDao.getLastMessagePerRequestByUser(currentUser.getId());
+        return buildMessages(messages, currentUser, false);
     }
     
 //    @Override
@@ -128,7 +139,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public List<MessageDto> getMessagesByRequest(Long requestId) throws RequestNotFoundException, AuthorizationException {
+    public List<MessageDto> getMessagesByRequest(Long requestId) throws UserNotFoundException, RequestNotFoundException, AuthorizationException {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
         
@@ -209,6 +220,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         vars.put("to", to);
         vars.put("from", currentUser);
         vars.put("request", request);
+        vars.put("message", message);
 
         emailSender.sendNotification(NotificationType.REQUEST_MESSAGED, to, vars);
         
@@ -217,7 +229,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public void updateMessage(MessageDto messageDto) throws MessageNotFoundException, AuthorizationException, MessageValidationException {
+    public void updateMessage(MessageDto messageDto) throws UserNotFoundException, MessageNotFoundException, AuthorizationException, MessageValidationException {
         validateMessageDto(messageDto);
         Message message = validateMessage(messageDto.getId());
         User currentUser = getCurrentUser();
@@ -237,7 +249,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public List<MessageDto> getAllMessages() {
+    public List<MessageDto> getAllMessages() throws UserNotFoundException {
         User currentUser = getCurrentUser();
         List<MessageDto> result = new LinkedList<MessageDto>();
 
@@ -279,7 +291,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public void hideRequestMessages(Long requestId) throws RequestNotFoundException, AuthorizationException {
+    public void hideRequestMessages(Long requestId) throws UserNotFoundException, RequestNotFoundException, AuthorizationException {
         Request request = validateRequest(requestId);
         Ad ad = request.getAd();
         User currentUser = getCurrentUser();
@@ -295,7 +307,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public void hideMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
+    public void hideMessage(Long messageId) throws UserNotFoundException, MessageNotFoundException, AuthorizationException {
         Message message = validateMessage(messageId);
         User currentUser = getCurrentUser();
 
@@ -310,7 +322,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public void deleteMessage(Long messageId) throws MessageNotFoundException, AuthorizationException {
+    public void deleteMessage(Long messageId) throws UserNotFoundException, MessageNotFoundException, AuthorizationException {
         Message message = validateMessage(messageId);
         User currentUser = getCurrentUser();
 
@@ -322,31 +334,6 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
     
     
-    
-    //*********
-    //* share *
-    //*********
-
-    @Override
-    public void shareOnSocialNetworks(String message) {
-        // Facebook
-        Facebook facebook = getSocialNetworkApi(Facebook.class);
-        if (facebook != null) {
-            facebook.feedOperations().updateStatus(message);
-        }
-
-        // Twitter
-        Twitter twitter = getSocialNetworkApi(Twitter.class);
-        if (twitter != null) {
-            twitter.timelineOperations().updateStatus(message);
-        }
-
-//        // VKontakte
-//        VKontakte vkontakte = getSocialNetworkApi(VKontakte.class);
-//        if (vkontakte != null) {
-//            vkontakte.wallOperations().post(message);
-//        }
-    }
     
     // internal helpers
     

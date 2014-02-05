@@ -1,5 +1,6 @@
 package com.venefica.connect;
 
+import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.config.AppConfig;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.UserDao;
@@ -42,6 +43,10 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     
     @Inject
     private AppConfig appConfig;
+    
+    @Inject
+    private ThreadSecurityContextHolder securityContextHolder;
+    
     @Inject
     private UserDao userDao;
     @Inject
@@ -56,18 +61,22 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     private boolean generateUserName = false;
     
     @Override
-    public String execute(Connection connection) {
+    public String execute(Connection<?> connection) {
         UserProfile userProfile = connection.fetchUserProfile();
-        User user = null;
         String email = userProfile.getEmail();
-
-        if (email != null) {
-            user = userDao.findUserByEmail(email);
+        
+        Long userId = securityContextHolder.getContext() != null ? securityContextHolder.getContext().getUserId() : null;
+        if ( userId == null ) {
+            //if there is no logged user
+            if ( email != null ) {
+                User user = userDao.findUserByEmail(email);
+                userId = user != null ? user.getId() : null;
+            }
         }
 
-        if ( user != null ) {
+        if ( userId != null ) {
             //user already signed up, returning its userId
-            return user.getId().toString();
+            return userId.toString();
         }
         
         String userName = userProfile.getUsername();
@@ -77,19 +86,20 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         }
         
         UserSetting userSetting = new UserSetting();
+        userSetting.markDefaultNotifiableTypes();
         userSettingDao.save(userSetting);
         
         MemberUserData userData = new MemberUserData(userProfile.getFirstName(), userProfile.getLastName());
         userData.setUserSetting(userSetting);
         userDataDao.save(userData);
         
-        UserPoint userPoint = new UserPoint(appConfig.getRequestStartupLimit(), 0, 0);
-        userPoint.setUser(user);
+        UserPoint userPoint = new UserPoint(appConfig.getRequestLimitUserRegister(), 0, 0);
         userPointDao.save(userPoint);
         
-        user = new User(userName, email);
+        User user = new User(userName, email);
         user.setUserData(userData);
         user.setUserPoint(userPoint);
+        //user.setPassword("xxx");
 
         try {
             String avatarUrlStr = connection.getImageUrl();
@@ -113,7 +123,7 @@ public class UserSignUpAdapter implements ConnectionSignUp {
             log.error("", e);
         }
 
-        Long userId = userDao.save(user);
+        userId = userDao.save(user);
         return userId.toString();
     }
 

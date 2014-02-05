@@ -1,5 +1,6 @@
 package com.venefica.model;
 
+import java.io.File;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
@@ -34,6 +35,8 @@ public class Image {
 //    @org.hibernate.annotations.Type(type = "org.hibernate.type.PrimitiveByteArrayBlobType")
     @Transient
     private byte[] data;
+    @Transient
+    private File file;
 
     public Image() {
     }
@@ -66,5 +69,13 @@ public class Image {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

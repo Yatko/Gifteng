@@ -51,7 +51,7 @@ public class Message {
     
     @Column(name = "readd")
     @Index(name = "idx_read")
-    private boolean read;
+    private boolean read; // read by the "to" user?
     
     @Basic(optional = false)
     @Temporal(TemporalType.TIMESTAMP)

@@ -3,7 +3,6 @@ package com.venefica.service.dto.builder;
 import com.venefica.model.Ad;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
-import com.venefica.model.Rating;
 import com.venefica.model.Request;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
@@ -13,6 +12,7 @@ import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
 import com.venefica.service.dto.RequestDto;
+import com.venefica.service.dto.ShippingBoxDto;
 import com.venefica.service.dto.UserDto;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private boolean includeCanRateFlag;
     private boolean includeCanRequestFlag;
     private boolean includeRequestsFlag;
-    private boolean includeStatisticsFlag = true;
+    private boolean includeAdStatisticsFlag = true;
 
     public AdDtoBuilder(Ad model) {
         super(model);
@@ -97,8 +97,8 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         return this;
     }
     
-    public AdDtoBuilder includeStatistics(boolean include) {
-        includeStatisticsFlag = include;
+    public AdDtoBuilder includeAdStatistics(boolean include) {
+        includeAdStatisticsFlag = include;
         return this;
     }
     
@@ -125,6 +125,10 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setStatus(model.getStatus());
         adDto.setAddress(new AddressDto(model.getAdData().getAddress(), model.getAdData().getLocation()));
 
+        if ( model.getAdData().getShippingBox() != null ) {
+            adDto.setShippingBox(new ShippingBoxDto(model.getAdData().getShippingBox()));
+        }
+        
         if (model.getAdData().getMainImage() != null) {
             adDto.setImage(new ImageDto(model.getAdData().getMainImage()));
         }
@@ -240,29 +244,26 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
 
         if (includeCanRateFlag) {
-            boolean canRate = true;
-
-            if ( canRate ) {
-                //cannot rate already rated ad (by the same user)
-                for (Rating rating : model.getRatings()) {
-                    if (rating.getFrom().equals(currentUser)) {
-                        canRate = false;
-                        break;
-                    }
-                }
-            }
-            if ( canRate ) {
-                canRate = false;
-                //cannot rate by not selected requestor
-                for (Request request : model.getVisibleRequests()) {
-                    if (
-                        request.getUser().equals(currentUser) &&
-                        request.isAccepted() &&
-                        (request.isSent() || request.isReceived())
-                    ) {
-                        canRate = true;
-                        break;
-                    }
+            boolean canRate = false;
+            //cannot rate by not selected requestor neither already rated requests
+            for (Request request : model.getVisibleRequests()) {
+//                if ( !request.getUser().equals(currentUser) && !model.getCreator().equals(currentUser) ) {
+//                    //the current user is not the owner and not the requestor
+//                    continue;
+//                } else if ( request.isAlreadyRated(currentUser) ) {
+//                    continue;
+//                } else if ( request.isAccepted() && (request.isSent() || request.isReceived()) ) {
+//                    canRate = true;
+//                    break;
+//                }
+                
+                if (
+                    request.isAccepted() && (request.isSent() || request.isReceived()) &&
+                    (request.getUser().equals(currentUser) || model.getCreator().equals(currentUser)) &&
+                    !request.isAlreadyRated(currentUser)
+                ) {
+                    canRate = true;
+                    break;
                 }
             }
 
@@ -296,11 +297,17 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                     canRequest = false;
                 }
             }
+            if ( canRequest ) {
+                if ( !currentUser.getUserPoint().canRequest(model) ) {
+                    //not enough user points
+                    canRequest = false;
+                }
+            }
             
             adDto.setCanRequest(canRequest);
         }
         
-        if (includeStatisticsFlag) {
+        if (includeAdStatisticsFlag) {
             adDto.setStatistics(AdStatisticsDto.build(model));
         }
 

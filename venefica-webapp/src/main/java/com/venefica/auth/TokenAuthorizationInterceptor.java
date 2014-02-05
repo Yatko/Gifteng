@@ -1,8 +1,6 @@
 package com.venefica.auth;
 
 import com.venefica.config.Constants;
-import com.venefica.dao.UserDao;
-import com.venefica.model.User;
 import com.venefica.service.fault.AuthenticationException;
 //import java.io.IOException;
 //import java.io.OutputStream;
@@ -30,14 +28,10 @@ import org.apache.cxf.message.Message;
  */
 public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
 
-    private final Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
+    private final static Log log = LogFactory.getLog(TokenAuthorizationInterceptor.class);
     
     @Inject
-    private ThreadSecurityContextHolder securityContextHolder;
-    @Inject
-    private UserDao userDao;
-    @Inject
-    private TokenEncryptor tokenEncryptor;
+    private TokenUtil tokenUtil;
 
     /**
      * Authenticates incoming messages or sends back error responses.
@@ -54,40 +48,20 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
         
         try {
             Map<String, ?> headers = (Map<String, ?>) msg.get(Message.PROTOCOL_HEADERS);
-
             if (headers == null || !headers.containsKey(Constants.AUTH_TOKEN)) {
                 throw new AuthenticationException("Unauthorized request arrived (no token provided)!");
             }
 
             List<String> authTokenHeader = (List<String>) headers.get(Constants.AUTH_TOKEN);
-            Token token = decryptToken(authTokenHeader);
-
-            if (token.isExpired()) {
-                throw new AuthenticationException("Auth token is expired!");
+            if (authTokenHeader.isEmpty()) {
+                throw new AuthenticationException("Empty auth token is provided!");
             }
-
-            Long userId = token.getUserId();
-            User user = userDao.get(userId);
-
-            if (user == null) {
-                throw new AuthenticationException("Invalid auth token (user not found)!");
-            }
-
-            SecurityContext securityContext = new SecurityContext(user);
-            securityContextHolder.setContext(securityContext);
+            
+            tokenUtil.decryptAndStoreToken(authTokenHeader.get(0));
         } catch (Exception e) {
             // TODO: include fault details!!!
             throw new Fault(e);
         }
-    }
-
-    private Token decryptToken(List<String> authTokenHeader) throws TokenDecryptionException,
-            AuthenticationException {
-        if (authTokenHeader.isEmpty()) {
-            throw new AuthenticationException("Empty auth token is provided!");
-        }
-
-        return tokenEncryptor.decrypt(authTokenHeader.get(0));
     }
 
 //    private void sendErrorResponse(Message msg, int responseCode) {

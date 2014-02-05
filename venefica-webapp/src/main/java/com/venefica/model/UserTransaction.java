@@ -67,7 +67,7 @@ public class UserTransaction {
 
     public UserTransaction(Ad ad) {
         this.ad = ad;
-        this.pendingGivingNumber = UserPoint.getGivingNumber(ad);
+        this.pendingGivingNumber = getGivingNumber(ad);
         this.pendingReceivingNumber = BigDecimal.ZERO;
         this.status = TransactionStatus.NONE;
     }
@@ -75,7 +75,7 @@ public class UserTransaction {
     public UserTransaction(Request request) {
         this.request = request;
         this.pendingGivingNumber = BigDecimal.ZERO;
-        this.pendingReceivingNumber = UserPoint.getReceivingNumber(request);
+        this.pendingReceivingNumber = getReceivingNumber(request);
         this.status = TransactionStatus.NONE;
     }
     
@@ -89,6 +89,26 @@ public class UserTransaction {
         finalized = false;
         finalizedAt = null;
         this.status = TransactionStatus.NONE;
+    }
+    
+    // static helpers
+    
+    public static BigDecimal getGivingNumber(Ad ad) {
+        Integer quantity = ad.getAdData().getQuantity();
+        BigDecimal value = ad.getValue();
+        
+        if ( quantity == null || quantity <= 0 ) {
+            quantity = 1;
+        }
+        
+        value = value.multiply(new BigDecimal(quantity));
+        return value;
+    }
+    
+    public static BigDecimal getReceivingNumber(Request request) {
+        Ad ad = request.getAd();
+        BigDecimal value = ad.getValue();
+        return value;
     }
     
     // getters/setters

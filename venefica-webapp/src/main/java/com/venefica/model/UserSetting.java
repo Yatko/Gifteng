@@ -61,6 +61,10 @@ public class UserSetting {
         return notifiableTypes.contains(notificationType);
     }
     
+    public void markDefaultNotifiableTypes() {
+        notifiableTypes = NotificationType.defaultMarkedNotifications;
+    }
+    
     // getters/setters
     
     public boolean isEmailsAllowed() {

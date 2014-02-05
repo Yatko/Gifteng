@@ -1,6 +1,5 @@
 package com.venefica.service;
 
-import com.venefica.common.MailException;
 import com.venefica.common.RandomGenerator;
 import com.venefica.config.AppConfig;
 import com.venefica.config.Constants;
@@ -20,6 +19,7 @@ import com.venefica.model.UserPoint;
 import com.venefica.model.UserSetting;
 import com.venefica.model.UserVerification;
 import com.venefica.service.dto.BusinessCategoryDto;
+import com.venefica.service.dto.RatingDto;
 import com.venefica.service.dto.UserDto;
 import com.venefica.service.dto.UserSettingDto;
 import com.venefica.service.dto.UserStatisticsDto;
@@ -31,17 +31,13 @@ import com.venefica.service.fault.UserField;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
-import org.springframework.social.connect.Connection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 
 @Service("userManagementService")
 @WebService(endpointInterface = "com.venefica.service.UserManagementService")
@@ -95,7 +91,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public void resendVerification() throws UserNotFoundException, GeneralException {
-        UserVerification userVerification = userVerificationDao.findByUser(getCurrentUserId());
+        User currentUser = getCurrentUser();
+        UserVerification userVerification = userVerificationDao.findByUser(currentUser.getId());
         if ( userVerification == null ) {
             throw new GeneralException("User verification was not found.");
         }
@@ -105,7 +102,11 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             return;
         }
         
-        sendNotification(userVerification);
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("code", userVerification.getCode());
+        vars.put("user", userVerification.getUser());
+
+        emailSender.sendNotification(NotificationType.USER_VERIFICATION, userVerification.getUser(), vars);
     }
     
     
@@ -136,9 +137,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Override
     @Transactional
     public Long registerBusinessUser(UserDto userDto, String password) throws UserAlreadyExistsException, GeneralException {
+        BusinessCategory category = validateBusinessCategory(userDto.getBusinessCategoryId());
         String email = userDto.getEmail();
         String businessName = userDto.getBusinessName();
-        Long categoryId = userDto.getBusinessCategoryId();
         
         if (userDataDao.findByBusinessName(businessName) != null) {
             throw new UserAlreadyExistsException(UserField.NAME, "User with the specified business name already exists!");
@@ -146,14 +147,19 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
         }
         
-        BusinessCategory category = validateBusinessCategory(categoryId);
-        
         User user = userDto.toBusinessUser(imageDao, addressWrapperDao);
         user.setPassword(password);
-        ((BusinessUserData) user.getUserData()).setCategory(category);
         
-        userDataDao.save(user.getUserData());
-        return userDao.save(user);
+        BusinessUserData userData = ((BusinessUserData) user.getUserData());
+        userData.setCategory(category);
+        userDataDao.save(userData);
+        
+        UserPoint userPoint = new UserPoint(0);
+        userPointDao.save(userPoint);
+        
+        user.setUserPoint(userPoint);
+        Long userId = userDao.save(user);
+        return userId;
     }
     
     @Override
@@ -188,12 +194,17 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         userData.setUserSetting(userSetting);
         userDataDao.save(userData);
         
-        UserPoint userPoint = new UserPoint(appConfig.getRequestStartupLimit(), 0, 0);
-        userPoint.setUser(user);
+        UserPoint userPoint = new UserPoint(appConfig.getRequestLimitUserRegister(), 0, 0);
         userPointDao.save(userPoint);
         
         user.setUserPoint(userPoint);
         Long userId = userDao.save(user);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", user);
+        
+        emailSender.sendNotification(NotificationType.USER_WELCOME, user, vars);
+        
         
         if ( !user.isVerified() ) {
             UserVerification userVerification = new UserVerification();
@@ -201,21 +212,25 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             userVerification.setUser(user);
             userVerificationDao.save(userVerification);
             
-            sendNotification(userVerification);
+            Map<String, Object> vars_ = new HashMap<String, Object>(0);
+            vars_.put("code", userVerification.getCode());
+            vars_.put("user", userVerification.getUser());
+            
+            emailSender.sendNotification(NotificationType.USER_VERIFICATION, userVerification.getUser(), vars_);
         }
         
         return userId;
     }
     
     @Override
-    public boolean isUserComplete() {
+    public boolean isUserComplete() throws UserNotFoundException{
         User user = getCurrentUser();
         return user.isComplete();
     }
 
     @Override
     @Transactional
-    public boolean updateUser(UserDto userDto) throws UserAlreadyExistsException {
+    public boolean updateUser(UserDto userDto) throws UserNotFoundException, UserAlreadyExistsException {
         User user = getCurrentUser();
         User userWithTheSameName = userDao.findUserByName(userDto.getName());
 
@@ -235,6 +250,15 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         return user.isComplete();
     }
     
+    @Override
+    @Transactional
+    public void deactivateUser() throws UserNotFoundException {
+        User user = getCurrentUser();
+        user.markAsDeleted();
+        userDao.update(user);
+        
+        logger.warn("User (" + user.getEmail() + ") deactivated !");
+    }
     
     
     //*******************
@@ -256,7 +280,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public List<UserDto> getTopUsers(int numberUsers) {
+    public List<UserDto> getTopUsers(int numberUsers) throws UserNotFoundException {
         User currentUser = getCurrentUser();
         List<UserDto> result = new LinkedList<UserDto>();
         List<User> users = userDao.getTopUsers(numberUsers);
@@ -274,13 +298,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public UserDto getUser() throws UserNotFoundException {
         User user = getCurrentUser();
-        
-        if ( user == null ) {
-            Long userId = getCurrentUserId();
-            logger.error("Getting user (userId: " + userId + ") failed");
-            throw new UserNotFoundException("User with ID '" + userId + "' not found!");
-        }
-        
         return new UserDto(user);
     }
 
@@ -395,8 +412,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User user = validateUser(userId);
         User currentUser = getCurrentUser();
         
-        if ( user.getFollowers() != null ) {
-            for ( User follower : user.getFollowers() ) {
+        List<User> validFollowers = user.getValidFollowers();
+        if ( validFollowers != null ) {
+            for ( User follower : validFollowers ) {
                 UserDto userDto = new UserDto(follower);
                 populateRelations(userDto, currentUser, follower);
                 
@@ -414,8 +432,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User user = validateUser(userId);
         User currentUser = getCurrentUser();
         
-        if ( user.getFollowings() != null ) {
-            for ( User following : user.getFollowings()) {
+        List<User> validFollowings = user.getValidFollowings();
+        if ( validFollowings != null ) {
+            for ( User following : validFollowings ) {
                 UserDto userDto = new UserDto(following);
                 populateRelations(userDto, currentUser, following);
                 
@@ -434,7 +453,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public UserSettingDto getUserSetting() throws GeneralException {
+    public UserSettingDto getUserSetting() throws UserNotFoundException, GeneralException {
         User currentUser = getCurrentUser();
         
         if ( currentUser.isBusinessAccount() ) {
@@ -454,7 +473,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public void saveUserSetting(UserSettingDto userSettingDto) throws GeneralException {
+    public void saveUserSetting(UserSettingDto userSettingDto) throws UserNotFoundException, GeneralException {
         User currentUser = getCurrentUser();
         
         if ( currentUser.isBusinessAccount() ) {
@@ -474,29 +493,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     }
     
     
-    
-    //******************
-    //* social network *
-    //******************
-    
-    @Override
-    public Set<String> getConnectedSocialNetworks() {
-        MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
-        Set<String> result = new HashSet<String>();
-
-        for (String network : allConnections.keySet()) {
-            List<Connection<?>> connections = allConnections.get(network);
-            if (!connections.isEmpty()) {
-                result.add(network);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public void disconnectFromNetwork(String networkName) {
-        connectionRepository.removeConnections(networkName);
-    }
     
     // internal helpers
     
@@ -521,23 +517,38 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     }
 
     private int getFollowersSize(User user) throws UserNotFoundException {
-        return user.getFollowers() != null ? user.getFollowers().size() : 0;
+        return user.getValidFollowers().size();
     }
     
     private int getFollowingsSize(User user) throws UserNotFoundException {
-        return user.getFollowings() != null ? user.getFollowings().size() : 0;
+        return user.getValidFollowings().size();
     }
     
     private UserStatisticsDto buildStatistics(User user) throws UserNotFoundException {
         Long userId = user.getId();
         int numReceivings = adService.getUserRequestedAdsSize(userId);
         int numGivings = adService.getUserAdsSize(userId);
-        int numRatings = adService.getReceivedRatingsSize(userId);
+        int numReceivedRatings = adService.getAllReceivedRatingsSize(userId);
+        int numSentRatings = adService.getAllSentRatingsSize(userId);
         int numBookmarks = adService.getBookmarkedAdsSize(userId);
         int numFollowers = this.getFollowersSize(user);
         int numFollowings = this.getFollowingsSize(user);
         int numUnreadMessages = messageService.getUnreadMessagesSize(userId);
         int requestLimit = user.getUserPoint() != null ? user.getUserPoint().getRequestLimit() : 0;
+        
+        int numPositiveReceivedRatings = 0;
+        int numNegativeReceivedRatings = 0;
+        for ( RatingDto rating : adService.getReceivedRatings(userId) ) {
+            numPositiveReceivedRatings += (rating.getValue() > 0 ? 1 : 0);
+            numNegativeReceivedRatings += (rating.getValue() < 0 ? 1 : 0);
+        }
+        
+        int numPositiveSentRatings = 0;
+        int numNegativeSentRatings = 0;
+        for ( RatingDto rating : adService.getSentRatings(userId) ) {
+            numPositiveSentRatings += (rating.getValue() > 0 ? 1 : 0);
+            numNegativeSentRatings += (rating.getValue() < 0 ? 1 : 0);
+        }
         
         UserStatisticsDto statistics = new UserStatisticsDto();
         statistics.setNumReceivings(numReceivings);
@@ -545,7 +556,12 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         statistics.setNumBookmarks(numBookmarks);
         statistics.setNumFollowers(numFollowers);
         statistics.setNumFollowings(numFollowings);
-        statistics.setNumRatings(numRatings);
+        statistics.setNumReceivedRatings(numReceivedRatings);
+        statistics.setNumSentRatings(numSentRatings);
+        statistics.setNumPositiveReceivedRatings(numPositiveReceivedRatings);
+        statistics.setNumNegativeReceivedRatings(numNegativeReceivedRatings);
+        statistics.setNumPositiveSentRatings(numPositiveSentRatings);
+        statistics.setNumNegativeSentRatings(numNegativeSentRatings);
         statistics.setNumUnreadMessages(numUnreadMessages);
         statistics.setRequestLimit(requestLimit);
         return statistics;
@@ -565,25 +581,5 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             }
         }
         return code;
-    }
-
-    private void sendNotification(UserVerification userVerification) {
-        String code = userVerification.getCode();
-        String email = userVerification.getUser().getEmail();
-        
-        try {
-            Map<String, Object> vars = new HashMap<String, Object>(0);
-            vars.put("code", userVerification.getCode());
-            vars.put("user", userVerification.getUser());
-
-            emailSender.sendHtmlEmailByTemplates(
-                    Constants.USER_VERIFICATION_REMINDER_SUBJECT_TEMPLATE,
-                    Constants.USER_VERIFICATION_REMINDER_HTML_MESSAGE_TEMPLATE,
-                    Constants.USER_VERIFICATION_REMINDER_PLAIN_MESSAGE_TEMPLATE,
-                    email,
-                    vars);
-        } catch ( MailException ex ) {
-            logger.error("Email exception when sending user verification reminder (email: " + email + ", code: " + code + ")", ex);
-        }
     }
 }

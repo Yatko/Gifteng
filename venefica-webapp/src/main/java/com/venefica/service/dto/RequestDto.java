@@ -6,6 +6,7 @@ package com.venefica.service.dto;
 
 import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
+import com.venefica.model.BusinessAdData;
 import com.venefica.model.Request;
 import com.venefica.model.RequestStatus;
 import java.util.Date;
@@ -29,6 +30,8 @@ public class RequestDto extends DtoBase {
     private Date requestedAt;
     // out
     private RequestStatus status;
+    // out
+    private String promoCode;
     
     // out
     private AdStatus adStatus;
@@ -47,6 +50,9 @@ public class RequestDto extends DtoBase {
     private boolean sent;
     // out
     private boolean received;
+    
+    // out
+    private Integer numUnreadMessages;
 
     public RequestDto() {
     }
@@ -63,6 +69,17 @@ public class RequestDto extends DtoBase {
         this.accepted = request.isAccepted();
         this.sent = request.isSent();
         this.received = request.isReceived();
+        
+        if ( request.getAd().isBusinessAd() ) {
+            BusinessAdData adData = (BusinessAdData) request.getAd().getAdData();
+            if ( adData.isGeneratePromoCodeForRequests() ) {
+                //using the code generated for every request
+                this.promoCode = request.getPromoCode();
+            } else {
+                //using the code set globally in the ad
+                this.promoCode = adData.getPromoCode();
+            }
+        }
         
         //if (request.getAd().getAdData().getMainImage() != null) {
         //    this.image = new ImageDto(request.getAd().getAdData().getMainImage());
@@ -174,5 +191,21 @@ public class RequestDto extends DtoBase {
 
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
+    }
+
+    public Integer getNumUnreadMessages() {
+        return numUnreadMessages;
+    }
+
+    public void setNumUnreadMessages(Integer numUnreadMessages) {
+        this.numUnreadMessages = numUnreadMessages;
     }
 }

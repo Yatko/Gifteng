@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private final Log log = LogFactory.getLog(ProfileController.class);
+    private static final Log log = LogFactory.getLog(ProfileController.class);
     
     @Inject
     private UserDao userDao;
@@ -26,22 +26,25 @@ public class ProfileController {
     private TokenEncryptor tokenEncryptor;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void profile(
-            @RequestParam("token") String encryptedToken,
-            Model model) {
+    public void profile(@RequestParam("token") String encryptedToken, Model model) {
         try {
             Token token = tokenEncryptor.decrypt(encryptedToken);
-            if (token != null) {
-                User user = userDao.get(token.getUserId());
-
-                if (user != null) {
-                    model.addAttribute("token", encryptedToken);
-                    model.addAttribute("fullName", user.getFullName());
-                    model.addAttribute("email", user.getEmail());
-                }
+            if ( token == null ) {
+                log.warn("The decrypted token is null (encryptedToken: " + encryptedToken + ").");
+                return;
+            }
+            
+            Long userId = token.getUserId();
+            User user = userDao.get(userId);
+            if (user != null) {
+                model.addAttribute("token", encryptedToken);
+                model.addAttribute("fullName", user.getFullName());
+                model.addAttribute("email", user.getEmail());
+            } else {
+                log.warn("Cannot find user (userId: " + userId + ")");
             }
         } catch (TokenDecryptionException e) {
-            log.warn("Exception thrown when trying to decrypt token", e);
+            log.warn("Exception thrown when trying to decrypt token (encryptedToken: " + encryptedToken + ")", e);
         }
     }
 }

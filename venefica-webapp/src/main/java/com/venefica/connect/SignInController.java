@@ -27,29 +27,23 @@ import org.springframework.web.servlet.view.RedirectView;
  *
  * @author Sviatoslav Grebenchukov
  */
-//@Controller
+@Controller
 @RequestMapping("/signin")
 public class SignInController {
 
     private static final String ERROR_CODE = "error";
-    private static final String ERROR_REASON_PROVIDER = "provider";
-    private static final String ERROR_REASON_REJECT = "reject";
-    private static final String ERROR_REASON_MULTIPLE_USERS = "multiple_users";
     
     //Sets URL of application's sign-in error page.
-    private final static String SIGN_IN_ERROR_URL = "/signin/error";
+    private final static String SIGN_IN_ERROR_URL = "/signin/" + ERROR_CODE;
     
     private static final Log logger = LogFactory.getLog(SignInController.class);
     
     @Inject
     private ConnectionFactoryLocator connectionFactoryLocator;
-    
     @Inject
     private UsersConnectionRepository usersConnectionRepository;
-    
     @Inject
     private SignInAdapter signInAdapter;
-    
     @Inject
     private ConnectSupport connectSupport;
 
@@ -67,10 +61,10 @@ public class SignInController {
             NativeWebRequest request) {
         try {
             ConnectionFactory connectionFactory = connectionFactoryLocator.getConnectionFactory(providerId);
-            return new RedirectView(connectSupport.buildOAuthUrl(connectionFactory, request));
+            return new RedirectView(connectSupport.buildOAuthUrl(connectionFactory, request, null));
         } catch (Exception e) {
             logger.error("", e);
-            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
+            return redirectToSignInError(ConnectSupport.ERROR_REASON_PROVIDER);
         }
     }
 
@@ -81,7 +75,7 @@ public class SignInController {
      * @param request
      * @return 
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "oauth_token")
+    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = ConnectSupport.PARAM_TOKEN)
     public RedirectView oauth1Callback(
             @PathVariable("providerId") String providerId,
             NativeWebRequest request) {
@@ -91,7 +85,7 @@ public class SignInController {
             return handleSignIn(connection, request);
         } catch (Exception e) {
             logger.warn("Exception while handling OAuth1 callback (" + e.getMessage() + "). Redirecting to " + SIGN_IN_ERROR_URL, e);
-            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
+            return redirectToSignInError(ConnectSupport.ERROR_REASON_PROVIDER);
         }
     }
     
@@ -106,18 +100,18 @@ public class SignInController {
      * @param request
      * @return 
      */
-    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = "code")
+    @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET, params = ConnectSupport.PARAM_CODE)
     public RedirectView oath2Callback(
             @PathVariable("providerId") String providerId,
             @RequestParam("code") String code,
             NativeWebRequest request) {
         try {
             OAuth2ConnectionFactory connectionFactory = (OAuth2ConnectionFactory) connectionFactoryLocator.getConnectionFactory(providerId);
-            Connection connection = connectSupport.completeConnection(connectionFactory, request);
+            Connection connection = connectSupport.completeConnection(connectionFactory, request, null);
             return handleSignIn(connection, request);
         } catch (Exception e) {
             logger.warn("Exception while handling OAut2 callback (" + e.getMessage() + "). Redirecting to " + SIGN_IN_ERROR_URL, e);
-            return new RedirectView(buildErrorURL(ERROR_REASON_PROVIDER), true);
+            return redirectToSignInError(ConnectSupport.ERROR_REASON_PROVIDER);
         }
     }
 
@@ -131,19 +125,21 @@ public class SignInController {
      */
     @RequestMapping(value = "/{providerId}/" + ConnectSupport.CALLBACK_PATH, method = RequestMethod.GET)
     public RedirectView cancelAuthorizationCallback(@PathVariable("providerId") String providerId) {
-        return new RedirectView(buildErrorURL(ERROR_REASON_REJECT), true);
+        return redirectToSignInError(ConnectSupport.ERROR_REASON_REJECT);
     }
 
     /**
      * Handles sign-in errors
      */
-    @RequestMapping("/error")
-    public void error() {
+    @RequestMapping(value = "/" + ERROR_CODE, method = RequestMethod.GET, params = "reason")
+    public void error(@RequestParam("reason") String reason) {
+        logger.warn("Error with reason: " + reason);
     }
-
+    
+    // internal helpers
+    
     private RedirectView handleSignIn(Connection connection, NativeWebRequest request) {
         List<String> userIds = usersConnectionRepository.findUserIdsWithConnection(connection);
-
         if (userIds.size() == 1) {
             String userId = userIds.get(0);
             usersConnectionRepository.createConnectionRepository(userId).updateConnection(connection);
@@ -151,11 +147,11 @@ public class SignInController {
             String redirectUrl = signInAdapter.signIn(userId, connection, request);
             return new RedirectView(redirectUrl, true);
         } else {
-            return new RedirectView(buildErrorURL(ERROR_REASON_MULTIPLE_USERS), true);
+            return redirectToSignInError(ConnectSupport.ERROR_REASON_MULTIPLE);
         }
     }
     
-    private String buildErrorURL(String reason) {
-        return URIBuilder.fromUri(SIGN_IN_ERROR_URL).queryParam(ERROR_CODE, reason).build().toString();
+    private RedirectView redirectToSignInError(String reason) {
+        return new RedirectView(URIBuilder.fromUri(SIGN_IN_ERROR_URL).queryParam("reason", reason).build().toString(), true);
     }
 }

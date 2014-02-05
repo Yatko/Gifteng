@@ -32,6 +32,18 @@ public class InvitationConfig {
         zipCodes = StringUtils.commaDelimitedListToSet(invitationRequestZipcodes);
     }
     
+    public boolean contains(String zipcode) {
+        boolean containsZipcode = false;
+        if ( zipCodes != null && zipcode != null ) {
+            if ( zipCodes.contains(zipcode) ) {
+                containsZipcode = true;
+            } else if ( zipCodes.contains(org.apache.commons.lang.StringUtils.stripStart(zipcode, "0")) ) {
+                containsZipcode = true;
+            }
+        }
+        return containsZipcode;
+    }
+    
     public Set<String> getZipCodes() {
         return zipCodes;
     }

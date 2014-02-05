@@ -9,6 +9,7 @@ import com.venefica.config.Constants;
 import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.model.ForgotPassword;
 import com.venefica.model.MemberUserData;
+import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserSetting;
 import com.venefica.service.fault.AuthenticationException;
@@ -28,16 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @WebService(endpointInterface = "com.venefica.service.AuthService")
 public class AuthServiceImpl extends AbstractService implements AuthService {
 
-    private static final String FORGOT_PASSWORD_TEMPLATE = "forgot-password/";
-    private static final String FORGOT_PASSWORD_SUBJECT_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "subject.vm";
-    private static final String FORGOT_PASSWORD_HTML_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.html.vm";
-    private static final String FORGOT_PASSWORD_PLAIN_MESSAGE_TEMPLATE = FORGOT_PASSWORD_TEMPLATE + "message.txt.vm";
-    
-    private static final String PASSWORD_CHANGED_TEMPLATE = "password-changed/";
-    private static final String PASSWORD_CHANGED_SUBJECT_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "subject.vm";
-    private static final String PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.html.vm";
-    private static final String PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE = PASSWORD_CHANGED_TEMPLATE + "message.txt.vm";
-    
     private static final boolean AUTO_CREATE_USER_SETTING = false;
     
     @Inject
@@ -74,7 +65,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 
     @Override
     @Transactional
-    public void changePassword(String oldPassword, String newPassword) throws AuthorizationException {
+    public void changePassword(String oldPassword, String newPassword) throws UserNotFoundException, AuthorizationException {
         User user = getCurrentUser();
         changePasswordForUser(oldPassword, newPassword, user);
     }
@@ -153,15 +144,11 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             vars.put("code", forgotPassword.getCode());
             vars.put("user", user);
 
-            emailSender.sendHtmlEmailByTemplates(
-                    FORGOT_PASSWORD_SUBJECT_TEMPLATE,
-                    FORGOT_PASSWORD_HTML_MESSAGE_TEMPLATE,
-                    FORGOT_PASSWORD_PLAIN_MESSAGE_TEMPLATE,
-                    email,
-                    vars);
-        } catch ( MailException ex ) {
-            logger.error("Email exception", ex);
-            throw new GeneralException(ex.getErrorCode(), "Could not send forgot password mail!");
+            boolean success = emailSender.sendNotification(NotificationType.FORGOT_PASSWORD, email, vars);
+            if ( !success ) {
+                logger.error("Email send exception at forgot password");
+                throw new GeneralException(MailException.EMAIL_SEND_ERROR, "Could not send forgot password mail!");
+            }
         } catch ( Exception ex ) {
             logger.error("Runtime exception", ex);
             throw new GeneralException(GeneralException.GENERAL_ERROR, ex.getMessage());
@@ -219,20 +206,9 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
             throw new AuthorizationException("Old passwod is wrong!");
         }
         
-        try {
-            Map<String, Object> vars = new HashMap<String, Object>(0);
-            vars.put("user", user);
-            
-            emailSender.sendHtmlEmailByTemplates(
-                    PASSWORD_CHANGED_SUBJECT_TEMPLATE,
-                    PASSWORD_CHANGED_HTML_MESSAGE_TEMPLATE,
-                    PASSWORD_CHANGED_PLAIN_MESSAGE_TEMPLATE,
-                    user.getEmail(),
-                    vars);
-        } catch ( MailException ex ) {
-            logger.error("Email exception", ex);
-        } catch ( Exception ex ) {
-            logger.error("Runtime exception", ex);
-        }
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("user", user);
+        
+        emailSender.sendNotification(NotificationType.PASSWORD_CHANGED, user, vars);
     }
 }

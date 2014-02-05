@@ -84,6 +84,8 @@ public class TokenEncryptor {
     public Token decrypt(String encryptedToken) throws TokenDecryptionException {
         if (encryptedToken == null) {
             throw new NullPointerException("encryptedToken is null!");
+        } else if ( encryptedToken.isEmpty() ) {
+            throw new TokenDecryptionException("Cannot decrypt emnpty token");
         }
 
         byte[] encryptedTokenBytes = Base64.decodeBase64(encryptedToken);
@@ -103,7 +105,7 @@ public class TokenEncryptor {
 
             return token;
         } catch (Exception e) {
-            log.error("Unable to decrypt token!", e);
+            log.error("Unable to decrypt token (" + encryptedToken + ")!", e);
             throw new TokenDecryptionException(e);
         }
     }

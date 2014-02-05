@@ -5,10 +5,10 @@
 package com.venefica.job;
 
 import com.venefica.common.EmailSender;
-import com.venefica.common.MailException;
 import com.venefica.config.Constants;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserVerificationDao;
+import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserVerification;
 import java.util.HashMap;
@@ -43,25 +43,15 @@ public class UserVerificationReminderJob implements Job {
         List<UserVerification> verifications = userVerificationDao.getAllUnverified();
         if ( verifications != null && !verifications.isEmpty() ) {
             for ( UserVerification userVerification : verifications ) {
-                User user = userDao.get(userVerification.getUser().getId());
+                User user = userDao.getEager(userVerification.getUser().getId());
                 String code = userVerification.getCode();
-                String email = user.getEmail();
                 
                 if ( useEmailSender ) {
-                    try {
-                        Map<String, Object> vars = new HashMap<String, Object>(0);
-                        vars.put("code", code);
-                        vars.put("user", user);
+                    Map<String, Object> vars = new HashMap<String, Object>(0);
+                    vars.put("code", code);
+                    vars.put("user", user);
 
-                        emailSender.sendHtmlEmailByTemplates(
-                                Constants.USER_VERIFICATION_REMINDER_SUBJECT_TEMPLATE,
-                                Constants.USER_VERIFICATION_REMINDER_HTML_MESSAGE_TEMPLATE,
-                                Constants.USER_VERIFICATION_REMINDER_PLAIN_MESSAGE_TEMPLATE,
-                                email,
-                                vars);
-                    } catch ( MailException ex ) {
-                        log.error("Email exception when sending user verification reminder (email: " + email + ", code: " + code + ")", ex);
-                    }
+                    emailSender.sendNotification(NotificationType.USER_VERIFICATION, user, vars);
                 }
             }
         } else {

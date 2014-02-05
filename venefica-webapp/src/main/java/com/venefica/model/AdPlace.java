@@ -5,7 +5,7 @@
 package com.venefica.model;
 
 /**
- * The ad place.
+ * The ad place where it can be redeemed.
  * 
  * @author gyuszi
  */
@@ -13,5 +13,7 @@ public enum AdPlace {
     
     ONLINE,
     LOCATION,
+    BOTH,
+    ;
     
 }

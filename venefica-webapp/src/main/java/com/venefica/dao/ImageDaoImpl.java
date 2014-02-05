@@ -65,7 +65,9 @@ public class ImageDaoImpl extends DaoBase<Image> implements ImageDao {
             amazonUpload.download(file, modelType);
             
             byte[] data = fileUpload.getData(image.getId(), modelType, suffix);
+            
             image.setData(data);
+            image.setFile(file);
         }
         return image;
     }

@@ -35,11 +35,11 @@ import org.hibernate.annotations.Type;
  * @author gyuszi
  */
 @Entity
-@Table(name = "addata")
+@Table(name = AdData.TABLE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
-@org.hibernate.annotations.Table(appliesTo = "addata", indexes = {
-})
 public abstract class AdData {
+    
+    public static final String TABLE_NAME = "addata";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,6 +85,9 @@ public abstract class AdData {
     @Embedded
     private Address address;
     
+    @ManyToOne
+    @ForeignKey(name = "ad_shipping_box_fk")
+    private ShippingBox shippingBox;
     private Boolean freeShipping;
     private Boolean pickUp;
     
@@ -107,12 +110,24 @@ public abstract class AdData {
     
     public abstract void updateAdDto(AdDto adDto);
     
-    public void select() {
-        quantity--;
-    }
+    public abstract BigDecimal getValue();
     
-    public void unselect() {
-        quantity++;
+    /**
+     * Using a piece (1 quantity) of item. The flag indicates the direction
+     * of usage: used or unused.
+     * 
+     * If isSelected:
+     * - true:  decrement (--)
+     * - false: increment (++)
+     * 
+     * @param isSelected 
+     */
+    public void use(boolean isSelected) {
+        if ( isSelected ) {
+            quantity--;
+        } else {
+            quantity++;
+        }
     }
     
     public void addImage(Image image) {
@@ -127,6 +142,13 @@ public abstract class AdData {
             images = new LinkedHashSet<Image>();
         }
         images.remove(image);
+    }
+    
+    public boolean isOnlyPickUp() {
+        if ( pickUp != null && pickUp == true && shippingBox == null ) {
+            return true;
+        }
+        return false;
     }
     
     // getters/setters
@@ -258,5 +280,13 @@ public abstract class AdData {
 
     public void setPlace(AdPlace place) {
         this.place = place;
+    }
+    
+    public ShippingBox getShippingBox() {
+        return shippingBox;
+    }
+
+    public void setShippingBox(ShippingBox shippingBox) {
+        this.shippingBox = shippingBox;
     }
 }

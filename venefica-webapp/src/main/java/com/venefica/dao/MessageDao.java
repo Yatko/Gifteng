@@ -50,6 +50,16 @@ public interface MessageDao {
     List<Message> getByRequest(Long requestId);
     
     /**
+     * Get the size of unread messages that are linked with the given request
+     * and user. The user means the one that received the message.
+     * 
+     * @param requestId
+     * @param userId 
+     * @return 
+     */
+    int getNumUnreadMessagesByRequestAndUser(Long requestId, Long userId);
+    
+    /**
      * Returns all conversations between the given users.
      * 
      * @param user1
@@ -73,6 +83,8 @@ public interface MessageDao {
      * Returns the last message for every request conversations. The given
      * user can be on requestor or creator side.
      * 
+     * The list does not contains only accepted requests (having status ACCEPTED, SENT, RECEIVED).
+     * 
      * @param userId
      * @return 
      */
@@ -80,6 +92,8 @@ public interface MessageDao {
     
     /**
      * Returns all the unread messages for the given user.
+     * 
+     * The list does not contains only accepted requests (having status ACCEPTED, SENT, RECEIVED).
      * 
      * @param userId
      * @return 

@@ -20,9 +20,14 @@ public class UserStatisticsDto {
     private int numBookmarks;
     private int numFollowers;
     private int numFollowings;
-    private int numRatings;
     private int numUnreadMessages;
     private int requestLimit;
+    private int numReceivedRatings;
+    private int numSentRatings;
+    private int numPositiveReceivedRatings;
+    private int numNegativeReceivedRatings;
+    private int numPositiveSentRatings;
+    private int numNegativeSentRatings;
 
     // WARNING: required for JAX-WS
     public UserStatisticsDto() {
@@ -68,12 +73,12 @@ public class UserStatisticsDto {
         this.numFollowings = numFollowings;
     }
 
-    public int getNumRatings() {
-        return numRatings;
+    public int getNumReceivedRatings() {
+        return numReceivedRatings;
     }
 
-    public void setNumRatings(int numRatings) {
-        this.numRatings = numRatings;
+    public void setNumReceivedRatings(int numReceivedRatings) {
+        this.numReceivedRatings = numReceivedRatings;
     }
 
     public int getNumUnreadMessages() {
@@ -90,6 +95,46 @@ public class UserStatisticsDto {
 
     public void setRequestLimit(int requestLimit) {
         this.requestLimit = requestLimit;
+    }
+
+    public int getNumSentRatings() {
+        return numSentRatings;
+    }
+
+    public void setNumSentRatings(int numSentRatings) {
+        this.numSentRatings = numSentRatings;
+    }
+
+    public int getNumPositiveReceivedRatings() {
+        return numPositiveReceivedRatings;
+    }
+
+    public void setNumPositiveReceivedRatings(int numPositiveReceivedRatings) {
+        this.numPositiveReceivedRatings = numPositiveReceivedRatings;
+    }
+
+    public int getNumNegativeReceivedRatings() {
+        return numNegativeReceivedRatings;
+    }
+
+    public void setNumNegativeReceivedRatings(int numNegativeReceivedRatings) {
+        this.numNegativeReceivedRatings = numNegativeReceivedRatings;
+    }
+
+    public int getNumPositiveSentRatings() {
+        return numPositiveSentRatings;
+    }
+
+    public void setNumPositiveSentRatings(int numPositiveSentRatings) {
+        this.numPositiveSentRatings = numPositiveSentRatings;
+    }
+
+    public int getNumNegativeSentRatings() {
+        return numNegativeSentRatings;
+    }
+
+    public void setNumNegativeSentRatings(int numNegativeSentRatings) {
+        this.numNegativeSentRatings = numNegativeSentRatings;
     }
     
 }

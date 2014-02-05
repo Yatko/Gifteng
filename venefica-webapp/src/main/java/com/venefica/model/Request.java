@@ -5,6 +5,7 @@
 package com.venefica.model;
 
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,6 +40,8 @@ public class Request {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "request_ad_fk")
     private Ad ad;
+    
+    private String promoCode; //for business gifts
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ForeignKey(name = "request_usr_fk")
@@ -74,11 +78,11 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date hideAt;
     
-//    @OneToOne(mappedBy = "request")
-//    private Review review;
-    
     private boolean messagesHiddenByRequestor; //default is false
     private boolean messagesHiddenByCreator; //default is false
+    
+    @OneToMany(mappedBy = "request")
+    private Set<Rating> ratings;
     
     public Request() {
     }
@@ -91,6 +95,13 @@ public class Request {
 
         Request other = (Request) obj;
         return id != null && id.equals(other.getId()); //the getter usage is a must as proxies needs to be activated
+    }
+    
+    public boolean isValid() {
+        if ( user.isDeleted() ) {
+            return false;
+        }
+        return true;
     }
     
     public boolean isPending() {
@@ -110,7 +121,7 @@ public class Request {
     }
     
     public boolean isVisible() {
-        return !isHidden() && !isDeleted();
+        return isValid() && !isHidden() && !isDeleted();
     }
     
     /**
@@ -167,6 +178,18 @@ public class Request {
     public void decline() {
         unmarkAsAccepted();
         status = RequestStatus.DECLINED;
+    }
+    
+    public boolean isAlreadyRated(User from) {
+        if ( ratings == null || ratings.isEmpty() ) {
+            return false;
+        }
+        for (Rating r : ratings) {
+            if (r.getFrom().equals(from)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private void unmarkAsAccepted() {
@@ -232,14 +255,6 @@ public class Request {
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
     }
-
-//    public Review getReview() {
-//        return review;
-//    }
-//
-//    public void setReview(Review review) {
-//        this.review = review;
-//    }
     
     public boolean isSent() {
         return sent;
@@ -319,5 +334,21 @@ public class Request {
 
     public void setMessagesHiddenByCreator(boolean messagesHiddenByCreator) {
         this.messagesHiddenByCreator = messagesHiddenByCreator;
+    }
+
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
+    }
+    
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
     }
 }

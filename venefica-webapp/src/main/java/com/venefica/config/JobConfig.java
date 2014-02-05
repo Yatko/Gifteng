@@ -6,8 +6,10 @@ package com.venefica.config;
 
 import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
+import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ForgotPasswordDao;
 import com.venefica.dao.InvitationDao;
+import com.venefica.dao.IssueDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserPointDao;
@@ -18,6 +20,7 @@ import com.venefica.job.AdOnlineJob;
 import com.venefica.job.ForgotPasswordExpirationJob;
 import com.venefica.job.InvitationExpirationJob;
 import com.venefica.job.InvitationReminderJob;
+import com.venefica.job.IssueUnsentJob;
 import com.venefica.job.UserVerificationReminderJob;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -61,6 +64,9 @@ public class JobConfig {
     private static final String USER_VERIFICATION_JOB_KEY = "userVerificationReminderJob";
     private static final String USER_VERIFICATION_TRIGGER_KEY = "userVerificationReminderTrigger";
     
+    private static final String ISSUE_UNSENT_JOB_KEY = "issueUnsentJob";
+    private static final String ISSUE_UNSENT_TRIGGER_KEY = "issueUnsentTrigger";
+    
     private static final String JOB_GROUP = "common";
     
     @Inject
@@ -71,7 +77,13 @@ public class JobConfig {
     @Inject
     private AppConfig appConfig;
     @Inject
+    private EmailConfig emailConfig;
+    @Inject
+    private InvitationConfig invitationConfig;
+    @Inject
     private AdDao adDao;
+    @Inject
+    private AdDataDao adDataDao;
     @Inject
     private RequestDao requestDao;
     @Inject
@@ -87,6 +99,8 @@ public class JobConfig {
     @Inject
     private UserVerificationDao userVerificationDao;
     @Inject
+    private IssueDao issueDao;
+    @Inject
     private EmailSender emailSender;
     
     private int adExpirationIntervalCheckSecond;
@@ -95,6 +109,7 @@ public class JobConfig {
     private int invitationExpirationReminderCheckSecond;
     private int forgotPasswordExpirationIntervalCheckSecond;
     private int userVerificationReminderIntervalCheckSecond;
+    private int issueUnsentIntervalCheckSecond;
     
     @PostConstruct
     public void init() {
@@ -104,6 +119,7 @@ public class JobConfig {
         invitationExpirationReminderCheckSecond = environment.getProperty("job.invitation.expirationReminderCheckSecond", int.class);
         forgotPasswordExpirationIntervalCheckSecond = environment.getProperty("job.forgotPassword.expirationIntervalCheckSecond", int.class);
         userVerificationReminderIntervalCheckSecond = environment.getProperty("job.user.verificationReminderIntervalCheckSecond", int.class);
+        issueUnsentIntervalCheckSecond = environment.getProperty("job.issue.unsentIntervalCheckSecond", int.class);
     }
     
     @Bean(initMethod = "start", destroyMethod = "stop")
@@ -114,6 +130,7 @@ public class JobConfig {
         JobDetail invitationReminderJobDetail = invitationReminderJobDetail();
         JobDetail forgotPasswordExpirationJobDetail = forgotPasswordExpirationJobDetail();
         JobDetail userVerificationReminderJobDetail = userVerificationReminderJobDetail();
+        JobDetail issueUnsentJobDetail = issueUnsentJobDetail();
         
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setTransactionManager(transactionManager); //TODO: no effect unfortunatelly
@@ -124,6 +141,7 @@ public class JobConfig {
             invitationReminderJobDetail,
             forgotPasswordExpirationJobDetail,
             userVerificationReminderJobDetail,
+            issueUnsentJobDetail,
         });
         schedulerFactory.setTriggers(new Trigger[] {
             createRepeatTrigger(AD_EXPIRATION_TRIGGER_KEY, adExpirationIntervalCheckSecond, adExpirationJobDetail),
@@ -132,6 +150,7 @@ public class JobConfig {
             createRepeatTrigger(INVITATION_REMINDER_TRIGGER_KEY, invitationExpirationReminderCheckSecond, invitationReminderJobDetail),
             createRepeatTrigger(FORGOT_PASSWORD_TRIGGER_KEY, forgotPasswordExpirationIntervalCheckSecond, forgotPasswordExpirationJobDetail),
             createRepeatTrigger(USER_VERIFICATION_TRIGGER_KEY, userVerificationReminderIntervalCheckSecond, userVerificationReminderJobDetail),
+            createRepeatTrigger(ISSUE_UNSENT_TRIGGER_KEY, issueUnsentIntervalCheckSecond, issueUnsentJobDetail),
         });
         return schedulerFactory;
     }
@@ -150,6 +169,7 @@ public class JobConfig {
         JobDetail job = createJobDetail(AdOnlineJob.class, AD_ONLINE_JOB_KEY);
         job.getJobDataMap().put(Constants.APP_CONFIG, appConfig);
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
+        job.getJobDataMap().put(Constants.AD_DATA_DAO, adDataDao);
         job.getJobDataMap().put(Constants.USER_DAO, userDao);
         job.getJobDataMap().put(Constants.USER_POINT_DAO, userPointDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
@@ -166,6 +186,7 @@ public class JobConfig {
         JobDetail job = createJobDetail(InvitationReminderJob.class, INVITATION_REMINDER_JOB_KEY);
         job.getJobDataMap().put(Constants.INVITATION_DAO, invitationDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
+        job.getJobDataMap().put(Constants.INVITATION_CONFIG, invitationConfig);
         return job;
     }
     
@@ -180,6 +201,17 @@ public class JobConfig {
         job.getJobDataMap().put(Constants.USER_VERIFICATION_DAO, userVerificationDao);
         job.getJobDataMap().put(Constants.USER_DAO, userDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
+        return job;
+    }
+    
+    private JobDetail issueUnsentJobDetail() {
+        JobDetail job = createJobDetail(IssueUnsentJob.class, ISSUE_UNSENT_JOB_KEY);
+        job.getJobDataMap().put(Constants.ISSUE_DAO, issueDao);
+        job.getJobDataMap().put(Constants.USER_DAO, userDao);
+        job.getJobDataMap().put(Constants.REQUEST_DAO, requestDao);
+        job.getJobDataMap().put(Constants.AD_DAO, adDao);
+        job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
+        job.getJobDataMap().put(Constants.EMAIL_CONFIG, emailConfig);
         return job;
     }
     

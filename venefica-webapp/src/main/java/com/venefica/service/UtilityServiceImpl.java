@@ -4,9 +4,15 @@
  */
 package com.venefica.service;
 
+import com.venefica.config.EmailConfig;
 import com.venefica.dao.LocationDao;
 import com.venefica.model.Location;
+import com.venefica.model.NotificationType;
+import com.venefica.model.User;
 import com.venefica.service.dto.AddressDto;
+import com.venefica.service.fault.UserNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import org.springframework.stereotype.Service;
@@ -18,6 +24,9 @@ import org.springframework.stereotype.Service;
 @Service("utilityService")
 @WebService(endpointInterface = "com.venefica.service.UtilityService")
 public class UtilityServiceImpl extends AbstractService implements UtilityService {
+    
+    @Inject
+    private EmailConfig emailConfig;
     
     @Inject
     private LocationDao locationDao;
@@ -37,6 +46,17 @@ public class UtilityServiceImpl extends AbstractService implements UtilityServic
         address.setLatitude(location.getLatitude());
         address.setLongitude(location.getLongitude());
         return address;
+    }
+
+    @Override
+    public void sendEmail(String text) throws UserNotFoundException {
+        User currentUser = getCurrentUser();
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("from", currentUser);
+        vars.put("text", text == null ? "-" : text.trim());
+        
+        emailSender.sendNotification(NotificationType.EMAIL_NEW, emailConfig.getIssueEmailAddress(), vars);
     }
     
 }

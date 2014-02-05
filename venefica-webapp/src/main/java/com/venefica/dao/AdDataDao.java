@@ -5,6 +5,8 @@
 package com.venefica.dao;
 
 import com.venefica.model.AdData;
+import com.venefica.model.BusinessAdData;
+import com.venefica.model.MemberAdData;
 
 /**
  * Data access interface for {@link AdData} entity.
@@ -29,10 +31,18 @@ public interface AdDataDao {
     public void update(AdData adData);
     
     /**
-     * Returns the corresponding ad data for the given ad.
+     * Returns the corresponding member ad data for the given ad.
      * 
      * @param adId
      * @return 
      */
-    public AdData getByAd(Long adId);
+    public MemberAdData getMemberAdDataByAd(Long adId);
+    
+    /**
+     * Returns the corresponding business ad data for the given ad.
+     * 
+     * @param adId
+     * @return 
+     */
+    public BusinessAdData getBusinessAdDataByAd(Long adId);
 }

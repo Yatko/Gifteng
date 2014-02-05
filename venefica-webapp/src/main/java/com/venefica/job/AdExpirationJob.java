@@ -68,12 +68,16 @@ public class AdExpirationJob implements Job {
                         requestDao.update(request);
                         
                         UserTransaction requestTransaction = userTransactionDao.getByRequest(request.getId());
-                        if ( requestTransaction != null ) {
-                            requestTransaction.markAsFinalized(TransactionStatus.EXPIRED);
-                            userTransactionDao.update(requestTransaction);
-                        } else {
+                        if ( requestTransaction == null ) {
                             log.error("There is no user transaction for the request (requestId: " + request.getId() + ")");
+                            continue;
+                        } else if ( requestTransaction.isFinalized() ) {
+                            //transaction is already finalized
+                            continue;
                         }
+                        
+                        requestTransaction.markAsFinalized(TransactionStatus.EXPIRED);
+                        userTransactionDao.update(requestTransaction);
                     }
                     
                     numRows++;

@@ -24,45 +24,108 @@ public class RatingDaoImpl extends DaoBase<Rating> implements RatingDao {
     }
 
     @Override
-    public void delete(Rating rating) {
-        deleteEntity(rating);
-    }
-    
-    @Override
-    public Rating get(Long fromUserId, Long adId) {
-        // @formatter:off
+    public Rating get(Long fromUserId, Long requestId) {
         return (Rating) createQuery(""
                 + "from " + getDomainClassName() + " r where "
-                + "r.from.id = :fromUserId and "
-                + "r.ad.id = :adId"
+                + "r.from.id = :userId and "
+                + "r.request.id = :requestId"
                 + "")
-                .setParameter("fromUserId", fromUserId)
-                .setParameter("adId", adId)
+                .setParameter("userId", fromUserId)
+                .setParameter("requestId", requestId)
                 .uniqueResult();
-        // @formatter:off
     }
     
     @Override
     public List<Rating> getReceivedForUser(Long userId) {
-        // @formatter:off
         return createQuery(""
                 + "from " + getDomainClassName() + " r where "
-                + "r.to.id = :userId"
+                + "r.to.id = :userId "
+                + "order by ratedAt desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();
-        // @formatter:off
     }
     
     @Override
     public List<Rating> getSentByUser(Long userId) {
-        // @formatter:off
         return createQuery(""
                 + "from " + getDomainClassName() + " r where "
-                + "r.from.id = :userId"
+                + "r.from.id = :userId "
+                + "order by ratedAt desc"
                 + "")
                 .setParameter("userId", userId)
                 .list();
-        // @formatter:off
+    }
+    
+    @Override
+    public List<Rating> getReceivedRatingsAsOwner(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.request.ad.creator.id = r.to.id and "
+                + "r.to.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Rating> getReceivedRatingsAsReceiver(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.request.user.id = r.to.id and "
+                + "r.to.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Rating> getAllReceivedRatings(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "(r.request.ad.creator.id = r.to.id or r.request.user.id = r.to.id ) and "
+                + "r.to.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Rating> getSentRatingsAsOwner(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.request.ad.creator.id = r.from.id and "
+                + "r.from.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Rating> getSentRatingsAsReceiver(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "r.request.user.id = r.from.id and "
+                + "r.from.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
+    }
+    
+    @Override
+    public List<Rating> getAllSentRatings(Long userId) {
+        return createQuery(""
+                + "from " + getDomainClassName() + " r where "
+                + "(r.request.ad.creator.id = r.from.id or r.request.user.id = r.from.id ) and "
+                + "r.from.id = :userId "
+                + "order by ratedAt desc"
+                + "")
+                .setParameter("userId", userId)
+                .list();
     }
 }

@@ -5,10 +5,11 @@
 package com.venefica.job;
 
 import com.venefica.common.EmailSender;
-import com.venefica.common.MailException;
 import com.venefica.config.Constants;
+import com.venefica.config.InvitationConfig;
 import com.venefica.dao.InvitationDao;
 import com.venefica.model.Invitation;
+import com.venefica.model.NotificationType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,39 +32,28 @@ public class InvitationReminderJob implements Job {
 
     private static final Log log = LogFactory.getLog(InvitationReminderJob.class);
     
-    private static final String INVITATION_REMINDER_TEMPLATE = "invitation-reminder/";
-    private static final String INVITATION_REMINDER_SUBJECT_TEMPLATE = INVITATION_REMINDER_TEMPLATE + "subject.vm";
-    private static final String INVITATION_REMINDER_HTML_MESSAGE_TEMPLATE = INVITATION_REMINDER_TEMPLATE + "message.html.vm";
-    private static final String INVITATION_REMINDER_PLAIN_MESSAGE_TEMPLATE = INVITATION_REMINDER_TEMPLATE + "message.txt.vm";
-    
     private final boolean useEmailSender = false;
     
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         InvitationDao invitationDao = (InvitationDao) context.getJobDetail().getJobDataMap().get(Constants.INVITATION_DAO);
         EmailSender emailSender = (EmailSender) context.getJobDetail().getJobDataMap().get(Constants.EMAIL_SENDER);
+        InvitationConfig invitationConfig = (InvitationConfig) context.getJobDetail().getJobDataMap().get(Constants.INVITATION_CONFIG);
         
         List<Invitation> invitations = invitationDao.getByRemainingDay(Constants.INVITATION_EXPIRATION_REMINDER_DAYS);
         if ( invitations != null && !invitations.isEmpty() ) {
             for ( Invitation invitation : invitations ) {
                 String code = invitation.getCode();
                 String email = invitation.getEmail();
+                String zipcode = invitation.getZipCode();
+                boolean containsZipcode = invitationConfig.contains(zipcode);
                 
-                if ( useEmailSender ) {
-                    try {
-                        Map<String, Object> vars = new HashMap<String, Object>(0);
-                        vars.put("invitationCode", code);
-                        vars.put("invitation", invitation);
-
-                        emailSender.sendHtmlEmailByTemplates(
-                                INVITATION_REMINDER_SUBJECT_TEMPLATE,
-                                INVITATION_REMINDER_HTML_MESSAGE_TEMPLATE,
-                                INVITATION_REMINDER_PLAIN_MESSAGE_TEMPLATE,
-                                email,
-                                vars);
-                    } catch ( MailException ex ) {
-                        log.error("Email exception when sending reminder (email: " + email + ", code: " + code + ")", ex);
-                    }
+                if ( useEmailSender && containsZipcode ) {
+                    Map<String, Object> vars = new HashMap<String, Object>(0);
+                    vars.put("invitationCode", code);
+                    vars.put("invitation", invitation);
+                    
+                    emailSender.sendNotification(NotificationType.INVITATION_REMINDER, email, vars);
                 }
             }
         } else {

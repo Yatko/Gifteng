@@ -27,6 +27,14 @@ public interface CommentDao {
     Comment get(Long id);
     
     /**
+     * 'Removes' the comment from the database. The removal means that will be
+     * hidden upon various searches, as only its 'deleted' flag will be changed.
+     *
+     * @param comment comment to delete
+     */
+    void deleteComment(Comment comment);
+    
+    /**
      * Returns a list of comments for the specified ad with comment id less
      * than specified one.
      * 

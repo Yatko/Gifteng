@@ -28,6 +28,8 @@ public class AdStatisticsDto {
     // out
     private int numRequests;
     // out
+    private int numReceivedRequests;
+    // out
     private float rating;
 
     // WARNING: required for JAX-WS
@@ -43,7 +45,8 @@ public class AdStatisticsDto {
         statistics.setRating(ad.getRating());
         statistics.setNumBookmarks(ad.getBookmarks() != null ? ad.getBookmarks().size() : 0);
         statistics.setNumComments(ad.getComments() != null ? ad.getComments().size() : 0);
-        statistics.setNumRequests(ad.getRequests() != null ? ad.getRequests().size() : 0);
+        statistics.setNumRequests(ad.getValidRequests() != null ? ad.getValidRequests().size() : 0);
+        statistics.setNumReceivedRequests(ad.getShippedRequests(false, true).size());
         statistics.setNumShares(0); //TODO
         return statistics;
     }
@@ -104,6 +107,14 @@ public class AdStatisticsDto {
 
     public void setNumRequests(int numRequests) {
         this.numRequests = numRequests;
+    }
+
+    public int getNumReceivedRequests() {
+        return numReceivedRequests;
+    }
+
+    public void setNumReceivedRequests(int numReceivedRequests) {
+        this.numReceivedRequests = numReceivedRequests;
     }
     
 }
