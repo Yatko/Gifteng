@@ -1,0 +1,12 @@
+Hi $!{user.userData.getFirstName()},
+
+Congratulations, your request was accepted!
+
+Click on the following link to arrange an exchange:
+${baseUrl}/#/profile/gifts/giving?req=${request.id}
+
+Happy receiving!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}/#/profile/account/notifications
