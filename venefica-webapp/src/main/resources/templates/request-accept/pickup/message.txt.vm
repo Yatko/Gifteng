@@ -1,0 +1,13 @@
+Hi $!{user.userData.getFirstName()},
+ 
+Congrats! Your request was accepted for the '${ad.adData.title}' on Gifteng.
+ 
+To arrange a pickup, simply use our private messaging tool.
+
+Happy receiving!
+The Gifteng Team
+ 
+p.s. Once you receive the gift, don’t forget to confirm it under your Receiving menu on Gifteng!
+
+
+Gift link: ${baseUrl}/#/view/gift/${ad.id}

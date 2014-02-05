@@ -1,0 +1,17 @@
+#set($title = "Congrats, your Gift request was accepted!")
+#parse("../../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{user.userData.getFirstName()},</h1>
+	<p>
+	    Congrats! Your request was accepted for the <a href="${baseUrl}/#/view/gift/${ad.id}">${ad.adData.title}</a> on Gifteng. 
+	    To arrange a pickup, simply use our private messaging tool.<br />
+	    Once you receive the gift, don't forget to confirm it under your Receiving menu on Gifteng!<br /><br />
+	</p>
+	<p>
+    	Happy giving & receiving,<br />
+        The Gifteng Team
+	</p>
+</div>
+
+#parse("../../footer.html.vm")

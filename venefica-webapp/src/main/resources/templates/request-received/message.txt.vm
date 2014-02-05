@@ -1,4 +1,4 @@
-Hi ${ad.creator.userData.getFirstName()},
+Hi $!{ad.creator.userData.getFirstName()},
 
 We just want to let you know that ${user.getFullName()} received your gift.
 
@@ -6,4 +6,4 @@ Happy giving!
 The Gifteng Team
 
 To change your general email notifications click here:
-${baseUrl}profile?notification
+${baseUrl}/#/profile/account/notifications
