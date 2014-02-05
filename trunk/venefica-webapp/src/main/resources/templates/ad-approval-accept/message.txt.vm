@@ -1,4 +1,4 @@
-Hi ${ad.creator.userData.getFirstName()},
+Hi $!{ad.creator.userData.getFirstName()},
 
 We just want to let you know that your gift was approved and it will be available tomorrow at 12:00pm ET on Gifteng.com.
 Please visit us then to share it with your friends and most importantly to request new Gifts posted by other members!
@@ -6,4 +6,3 @@ Please visit us then to share it with your friends and most importantly to reque
 Happy giving (and receiving), 
 The Gifteng Team
 www.gifteng.com
-

@@ -1,10 +1,10 @@
-Hi ${ad.creator.userData.getFirstName()},
+Hi $!{ad.creator.userData.getFirstName()},
 
 Unfortunately your gift can’t be posted because:
 ${text}
 
 Click on the following link to edit it:
-${baseUrl}view/${ad.id}
+${baseUrl}/#/view/gift/${ad.id}
 
 Thanks, 
 The Gifteng Team
