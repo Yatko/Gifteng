@@ -2,6 +2,7 @@ package com.venefica.service;
 
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
+import com.venefica.service.fault.UserNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -72,18 +73,18 @@ public class AuthServiceTest extends ServiceTestBase<AuthService> {
     }
 
     @Test(expected = SOAPFaultException.class)
-    public void unauthorizedChangePasswordTest() throws AuthorizationException {
+    public void unauthorizedChangePasswordTest() throws UserNotFoundException, AuthorizationException {
         client.changePassword(RIGHT_PASSWORD, "new password");
     }
 
     @Test(expected = AuthorizationException.class)
-    public void wrongChangePasswordTest() throws AuthorizationException {
+    public void wrongChangePasswordTest() throws UserNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.changePassword(WRONG_PASSWORD, "new password");
     }
 
     @Test
-    public void changePasswordTest() throws AuthorizationException {
+    public void changePasswordTest() throws UserNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.changePassword(RIGHT_PASSWORD, "new password");
     }

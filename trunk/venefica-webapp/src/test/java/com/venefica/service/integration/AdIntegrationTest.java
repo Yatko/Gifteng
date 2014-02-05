@@ -12,6 +12,7 @@ import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.FilterDto;
 import com.venefica.service.dto.FilterType;
 import com.venefica.service.fault.AuthenticationException;
+import com.venefica.service.fault.UserNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.Resource;
@@ -54,7 +55,7 @@ public class AdIntegrationTest {
     
     @Test
     @Ignore
-    public void getAdsExLocationTest() throws AuthenticationException {
+    public void getAdsExLocationTest() throws UserNotFoundException, AuthenticationException {
         String token = authService.authenticateEmail("a@a.com", "Gift2020", null);
         ServiceTestBase.authenticateClientWithToken(adService, token);
         

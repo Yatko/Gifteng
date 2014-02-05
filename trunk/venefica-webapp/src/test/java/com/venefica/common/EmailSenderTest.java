@@ -30,6 +30,6 @@ public class EmailSenderTest {
     @Test
     @Ignore
     public void sendHtmlEmailTest() throws MailException {
-        emailSender.sendHtmlEmail("Mail subject", "HTML message", "PLAIN message", "figyuszi@gmail.com");
+        emailSender.sendHtmlEmail("Mail subject", "HTML message", "PLAIN message", "figyuszi@gmail.com", null);
     }
 }

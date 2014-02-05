@@ -72,6 +72,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class AdServiceTest extends ServiceTestBase<AdService> {
 
     private static final Long FIRST_AD_ID = 1L;
+    private static final Long FIRST_REQUEST_ID = 1L;
     
     private static final float EPSILON = 0.0001f;
     
@@ -142,7 +143,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************************
     
     @Test
-    public void placeAdTest() throws CategoryNotFoundException, AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
+    public void placeAdTest() throws UserNotFoundException, CategoryNotFoundException, AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
         AdminService adminService = buildAdminService();
         
         authenticateClientAsFirstUser();
@@ -150,6 +151,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         CategoryDto category = client.getSubCategories(null).get(0);
 
         AdDto adDto = new AdDto();
+        adDto.setPickUp(true);
         adDto.setCategoryId(category.getId());
         adDto.setTitle("Test");
         adDto.setDescription("Test description");
@@ -171,9 +173,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void placeInvalidAdTest() {
+    public void placeInvalidAdTest() throws UserNotFoundException {
         authenticateClientAsFirstUser();
         AdDto adDto = new AdDto();
+        adDto.setPickUp(true);
 
         try {
             client.placeAd(adDto);
@@ -198,7 +201,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //*************************
 
     @Test
-    public void getAdsTest() {
+    public void getAdsTest() throws UserNotFoundException {
         authenticateClientAsFirstUser();
         
         FilterDto filter;
@@ -232,9 +235,9 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void getAdByIdTest() throws AdNotFoundException, AuthorizationException {
+    public void getAdByIdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
-        client.getAdById(new Long(-1), null);
+        client.getAdById(new Long(-1), null, false);
     }
     
     //***********************************
@@ -305,28 +308,28 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void deleteImageFromUnexistingAdTest() throws AdNotFoundException,
+    public void deleteImageFromUnexistingAdTest() throws UserNotFoundException, AdNotFoundException,
             AuthorizationException, ImageNotFoundException {
         authenticateClientAsFirstUser();
         client.deleteImageFromAd(new Long(-1), new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteImageWithDifferentUserTest() throws AdNotFoundException,
+    public void deleteImageWithDifferentUserTest() throws UserNotFoundException, AdNotFoundException,
             AuthorizationException, ImageNotFoundException {
         authenticateClientAsSecondUser();
         client.deleteImageFromAd(FIRST_AD_ID, new Long(-1));
     }
 
     @Test(expected = ImageNotFoundException.class)
-    public void deleteUnexistingImageTest() throws AdNotFoundException, AuthorizationException,
+    public void deleteUnexistingImageTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException,
             ImageNotFoundException {
         authenticateClientAsFirstUser();
         client.deleteImageFromAd(FIRST_AD_ID, new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteImageNotBelongingToAdTest() throws AdValidationException,
+    public void deleteImageNotBelongingToAdTest() throws UserNotFoundException, AdValidationException,
             AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException {
         authenticateClientAsFirstUser();
 
@@ -334,6 +337,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         CategoryDto categoryDto = client.getSubCategories(null).get(0);
 
         AdDto adDto = new AdDto();
+        adDto.setPickUp(true);
         adDto.setCategoryId(categoryDto.getId());
         adDto.setTitle("New ad with extra image");
         adDto.setDescription("Some descr");
@@ -347,7 +351,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test
-    public void deleteImageFromAdTest() throws AdNotFoundException, ImageValidationException,
+    public void deleteImageFromAdTest() throws UserNotFoundException, AdNotFoundException, ImageValidationException,
             AuthorizationException, ImageNotFoundException, IOException {
         authenticateClientAsFirstUser();
         Long imageId = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[]{0x01,
@@ -359,7 +363,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test
-    public void deleteImagesFromAdTest() throws AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException, IOException {
+    public void deleteImagesFromAdTest() throws UserNotFoundException, AdNotFoundException, ImageValidationException, AuthorizationException, ImageNotFoundException, IOException {
         authenticateClientAsFirstUser();
         
         Long imageId_1 = client.addImageToAd(FIRST_AD_ID, new ImageDto(ImageType.JPEG, new byte[] {0x01, 0x02, 0x03}));
@@ -375,7 +379,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void updateUnexistingAdTest() throws AdNotFoundException, AdValidationException,
+    public void updateUnexistingAdTest() throws UserNotFoundException, AdNotFoundException, AdValidationException,
             AuthorizationException {
         AdDto adDto = new AdDto();
         adDto.setId(new Long(-1));
@@ -384,7 +388,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void updateInvalidAdTest() throws AdNotFoundException, AuthorizationException {
+    public void updateInvalidAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
         AdDto adDto = createAdDto(getFirstUser());
@@ -418,7 +422,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AuthorizationException.class)
-    public void unauthorizedUpdateAdTest() throws AdNotFoundException, AdValidationException, AuthorizationException {
+    public void unauthorizedUpdateAdTest() throws UserNotFoundException, AdNotFoundException, AdValidationException, AuthorizationException {
         authenticateClientAsSecondUser();
         //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
         AdDto adDto = createAdDto(getFirstUser());
@@ -427,11 +431,12 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void updateAdTest() throws AdNotFoundException, AdValidationException, AuthorizationException {
+    public void updateAdTest() throws UserNotFoundException, AdNotFoundException, AdValidationException, AuthorizationException {
         authenticateClientAsFirstUser();
 
         //AdDto adDto = new AdDtoBuilder(ad).setCurrentUser(getFirstUser()).build();
         AdDto adDto = createAdDto(getFirstUser());
+        adDto.setPickUp(true);
         adDto.setTitle("New Title");
         adDto.setDescription("New Description");
         client.updateAd(adDto);
@@ -446,7 +451,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***************
 
     @Test
-    public void bookmarkAdTest() throws AdNotFoundException, GeneralException {
+    public void bookmarkAdTest() throws UserNotFoundException, AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         Long bookmarkId = client.bookmarkAd(ad.getId());
         assertNotNull("Bookmark id must be returned!", bookmarkId);
@@ -455,25 +460,25 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
     
     @Test(expected = GeneralException.class)
-    public void bookmarkOwnedAdTest() throws AdNotFoundException, GeneralException {
+    public void bookmarkOwnedAdTest() throws UserNotFoundException, AdNotFoundException, GeneralException {
         authenticateClientAsFirstUser();
         client.bookmarkAd(ad.getId());
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void bookmarkUnexistingAdTest() throws AdNotFoundException, GeneralException {
+    public void bookmarkUnexistingAdTest() throws UserNotFoundException, AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         client.bookmarkAd(new Long(-1));
     }
 
     @Test(expected = BookmarkNotFoundException.class)
-    public void removeUnexistingBookmarkTest() throws BookmarkNotFoundException {
+    public void removeUnexistingBookmarkTest() throws UserNotFoundException, BookmarkNotFoundException {
         authenticateClientAsSecondUser();
         client.removeBookmark(new Long(-1));
     }
 
     @Test
-    public void removeBookmarkTest() throws BookmarkNotFoundException, AdNotFoundException, GeneralException {
+    public void removeBookmarkTest() throws UserNotFoundException, BookmarkNotFoundException, AdNotFoundException, GeneralException {
         authenticateClientAsSecondUser();
         Long bookmarkId = client.bookmarkAd(ad.getId());
         client.removeBookmark(ad.getId());
@@ -484,7 +489,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     @Test
     public void getBookmarkedAdsTest() {
         authenticateClientAsThirdUser();
-        List<AdDto> bookmarkedAds = client.getBookmarkedAds();
+        List<AdDto> bookmarkedAds = client.getBookmarkedAds(false);
         assertNotNull("List of ads must be returned!", bookmarkedAds);
         assertTrue("There must be at least one ad in the list!", !bookmarkedAds.isEmpty());
     }
@@ -494,7 +499,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //*************************
     
     @Test
-    public void getAdsExTest() {
+    public void getAdsExTest() throws UserNotFoundException {
         authenticateClientAsFirstUser();
 
         LinkedList<Long> categories = new LinkedList<Long>();
@@ -516,12 +521,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void getAdsExLocationTest() throws AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
+    public void getAdsExLocationTest() throws UserNotFoundException, AdValidationException, PermissionDeniedException, AdNotFoundException, GeneralException {
         AdminService adminService = buildAdminService();
         
         authenticateClientAsFirstUser();
         
         AdDto adDto = new AdDto();
+        adDto.setPickUp(true);
         adDto.setCategoryId(new Long(1));
         adDto.setTitle("Location test");
         adDto.setDescription("Location test description");
@@ -560,14 +566,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     
     @Test
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void markAsSpamTest() throws AdNotFoundException, AuthorizationException {
+    public void markAsSpamTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException {
         authenticateClientAsFirstUser();
         client.markAsSpam(ad.getId());
 
         Ad updatedAd = adDao.get(ad.getId());
         assertTrue("Spam mark not added!", !updatedAd.getSpamMarks().isEmpty());
 
-        AdDto adDto = client.getAdById(ad.getId(), null);
+        AdDto adDto = client.getAdById(ad.getId(), null, false);
         assertTrue("canMarkAsSpam must be false!", !adDto.getCanMarkAsSpam());
 
         // try to mark it twice
@@ -579,14 +585,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void markAsSpamWithInvalidAdIdTest() throws AdNotFoundException {
+    public void markAsSpamWithInvalidAdIdTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         client.markAsSpam(new Long(-1));
     }
 
     @Test
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void unmarkAsSpamTest() throws AdNotFoundException {
+    public void unmarkAsSpamTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         client.unmarkAsSpam(ad.getId());
 
@@ -595,13 +601,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void unmarkAsSpamWithInvalidAdIdTest() throws AdNotFoundException {
+    public void unmarkAsSpamWithInvalidAdIdTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         client.unmarkAsSpam(new Long(-1));
     }
 
     @Test
-    public void markAsSpamAndDeleteTest() throws AdNotFoundException {
+    public void markAsSpamAndDeleteTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         client.markAsSpam(ad.getId());
 
@@ -617,7 +623,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test
-    public void unmarkAsSpamAndRestoreTest() throws AdNotFoundException {
+    public void unmarkAsSpamAndRestoreTest() throws UserNotFoundException, AdNotFoundException {
         authenticateClientAsFirstUser();
         client.unmarkAsSpam(ad.getId());
 
@@ -631,19 +637,19 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************
     
     @Test(expected = AdNotFoundException.class)
-    public void endUnexistingAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void endUnexistingAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.endAd(new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void endAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void endAdWithDifferentUserTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsSecondUser();
         client.endAd(ad.getId());
     }
 
     @Test
-    public void endAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void endAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.endAd(ad.getId());
 
@@ -673,7 +679,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setPickUp(true);
         
         Long adId = client.placeAd(adDto);
-        assertNotNull("The ad should exist", client.getAdById(adId, null));
+        assertNotNull("The ad should exist", client.getAdById(adId, null, false));
         
         authenticateClientWithToken(adminService, firstUserAuthToken);
         adminService.approveAd(adId);
@@ -712,7 +718,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             //it's OK
         }
         
-        adDto = client.getAdById(adId, null);
+        adDto = client.getAdById(adId, null, false);
         assertTrue("After first request the ad status should be IN_PROGRESS", adDto.getStatus() == AdStatus.IN_PROGRESS);
         
         authenticateClientAsThirdUser();
@@ -739,22 +745,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
             //it's OK
         }
         
-        authenticateClientAsSecondUser();
-        
-        try {
-            client.cancelRequest(secondUserRequestId);
-            fail("Request cancelation should fail as it's already accepted by the owner");
-        } catch ( InvalidRequestException ex ) {
-            //it's OK
-        }
-        
         authenticateClientAsFirstUser();
         client.markAsSent(secondUserRequestId);
         
         authenticateClientAsSecondUser();
         client.markAsReceived(secondUserRequestId);
         
-        adDto = client.getAdById(adId, null);
+        adDto = client.getAdById(adId, null, false);
         assertTrue("Ad should be in FINALIZED state", adDto.getStatus() == AdStatus.FINALIZED);
     }
     
@@ -763,19 +760,19 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************************
     
     @Test(expected = AdNotFoundException.class)
-    public void deleteUnexistingAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void deleteUnexistingAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void deleteAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void deleteAdWithDifferentUserTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsSecondUser();
         client.deleteAd(ad.getId());
     }
 
     @Test
-    public void deleteAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void deleteAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(ad.getId());
 
@@ -790,13 +787,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //***********************
     
     @Test(expected = AdNotFoundException.class)
-    public void relistUnexistingAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void relistUnexistingAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.relistAd(new Long(-1));
     }
 
     @Test(expected = AuthorizationException.class)
-    public void relistAdWithDifferentUserTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void relistAdWithDifferentUserTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         makeAdActive();
         
         authenticateClientAsSecondUser();
@@ -804,7 +801,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = InvalidAdStateException.class)
-    public void relistActiveAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void relistActiveAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         makeAdActive();
 
         authenticateClientAsFirstUser();
@@ -817,14 +814,14 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     }
 
     @Test(expected = AdNotFoundException.class)
-    public void relistDeletedAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void relistDeletedAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.deleteAd(ad.getId());
         client.relistAd(ad.getId());
     }
 
     @Test
-    public void relistAdTest() throws AdNotFoundException, AuthorizationException, InvalidAdStateException {
+    public void relistAdTest() throws UserNotFoundException, AdNotFoundException, AuthorizationException, InvalidAdStateException {
         makeAdExpired();
 
         authenticateClientAsFirstUser();
@@ -855,16 +852,16 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     //* ad rating *
     //*************
 
-    @Test(expected = AdNotFoundException.class)
-    public void rateUnexistingAd() throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
+    @Test(expected = RequestNotFoundException.class)
+    public void rateUnexistingRequest() throws RequestNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
         authenticateClientAsFirstUser();
         client.rateAd(new RatingDto(new Long(-1), SECOND_USER_ID, 0));
     }
 
     @Test(expected = InvalidRateOperationException.class)
-    public void rateAdWithInvalidValueTest() throws AdNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
+    public void rateRequestWithInvalidValueTest() throws RequestNotFoundException, InvalidRateOperationException, AlreadyRatedException, UserNotFoundException, InvalidAdStateException {
         authenticateClientAsSecondUser();
-        client.rateAd(new RatingDto(ad.getId(), SECOND_USER_ID, -10));
+        client.rateAd(new RatingDto(FIRST_REQUEST_ID, SECOND_USER_ID, -10));
     }
     
     @Test
@@ -881,7 +878,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         adDto.setPickUp(true);
         
         Long adId = client.placeAd(adDto);
-        assertNotNull("The ad should exist", client.getAdById(adId, null));
+        assertNotNull("The ad should exist", client.getAdById(adId, null, false));
         
         authenticateClientWithToken(adminService, firstUserAuthToken);
         adminService.approveAd(adId);
@@ -912,7 +909,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         authenticateClientAsSecondUser();
         RatingDto ratingDto_1 = new RatingDto();
-        ratingDto_1.setAdId(adId);
+        ratingDto_1.setRequestId(requestId);
         ratingDto_1.setToUserId(FIRST_USER_ID);
         ratingDto_1.setValue(1); //positive
         ratingDto_1.setText("Delivery on time");
@@ -921,7 +918,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         Ad updatedAd = adDao.get(adId);
         assertTrue("Rating value might have changed!", Math.abs(ad_.getRating() - updatedAd.getRating()) > EPSILON);
         
-        adDto = client.getAdById(adId, null);
+        adDto = client.getAdById(adId, null, false);
         assertTrue("Multiple ratings not allowed!", !adDto.getCanRate());
         
         
@@ -931,10 +928,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<RatingDto> receivedRatings_2 = client.getReceivedRatings(SECOND_USER_ID);
         List<RequestDto> unratedRequestsAfter = client.getRequestsForUserWithoutRating(FIRST_USER_ID);
         
-        sentRatings_1 = getRatingsByAd(sentRatings_1, adId);
-        receivedRatings_1 = getRatingsByAd(receivedRatings_1, adId);
-        sentRatings_2 = getRatingsByAd(sentRatings_2, adId);
-        receivedRatings_2 = getRatingsByAd(receivedRatings_2, adId);
+        sentRatings_1 = getRatingsByRequest(sentRatings_1, requestId);
+        receivedRatings_1 = getRatingsByRequest(receivedRatings_1, requestId);
+        sentRatings_2 = getRatingsByRequest(sentRatings_2, requestId);
+        receivedRatings_2 = getRatingsByRequest(receivedRatings_2, requestId);
         unratedRequestsAfter = getRequestsByAd(unratedRequestsAfter, adId);
         
         assertTrue(unratedRequestsAfter == null || unratedRequestsAfter.isEmpty());
@@ -947,7 +944,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         authenticateClientAsFirstUser();
         RatingDto ratingDto_2 = new RatingDto();
-        ratingDto_2.setAdId(adId);
+        ratingDto_2.setRequestId(requestId);
         ratingDto_2.setToUserId(SECOND_USER_ID);
         ratingDto_2.setValue(1); //positive
         ratingDto_2.setText("Pickup on time");
@@ -958,10 +955,10 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         List<RatingDto> sentRatings_2_ = client.getSentRatings(SECOND_USER_ID);
         List<RatingDto> receivedRatings_2_ = client.getReceivedRatings(SECOND_USER_ID);
         
-        sentRatings_1_ = getRatingsByAd(sentRatings_1_, adId);
-        receivedRatings_1_ = getRatingsByAd(receivedRatings_1_, adId);
-        sentRatings_2_ = getRatingsByAd(sentRatings_2_, adId);
-        receivedRatings_2_ = getRatingsByAd(receivedRatings_2_, adId);
+        sentRatings_1_ = getRatingsByRequest(sentRatings_1_, requestId);
+        receivedRatings_1_ = getRatingsByRequest(receivedRatings_1_, requestId);
+        sentRatings_2_ = getRatingsByRequest(sentRatings_2_, requestId);
+        receivedRatings_2_ = getRatingsByRequest(receivedRatings_2_, requestId);
         
         assertEquals(1, sentRatings_1_.size());
         assertEquals(1, receivedRatings_1_.size());
@@ -970,7 +967,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         
         
         try {
-            client.rateAd(new RatingDto(adId, SECOND_USER_ID, -1));
+            client.rateAd(new RatingDto(requestId, SECOND_USER_ID, -1));
             fail("Multiple ratings by the same user are not allowed!");
         } catch (AlreadyRatedException e) {
             // OK
@@ -982,7 +979,7 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
     private AdDto createAdDto(User currentUser) {
         AdDto adDto = new AdDtoBuilder(ad)
                 .setCurrentUser(currentUser)
-                .includeStatistics(false)
+                .includeAdStatistics(false)
                 .build();
         return adDto;
     }
@@ -1055,13 +1052,13 @@ public class AdServiceTest extends ServiceTestBase<AdService> {
         return result;
     }
     
-    private List<RatingDto> getRatingsByAd(List<RatingDto> ratings, Long adId) {
+    private List<RatingDto> getRatingsByRequest(List<RatingDto> ratings, Long requestId) {
         if ( ratings == null ) {
             return null;
         }
         List<RatingDto> result = new LinkedList<RatingDto>();
         for ( RatingDto rating : ratings ) {
-            if ( rating.getAdId().equals(adId) ) {
+            if ( rating.getRequestId().equals(requestId) ) {
                 result.add(rating);
             }
         }
