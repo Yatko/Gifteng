@@ -1,0 +1,7 @@
+Dear admin,
+
+${from.getFullName()} sent a new email with the following details:
+
+Reporter user ID: ${from.id}
+Reporter user email: ${from.email}
+Text: ${text}
