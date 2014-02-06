@@ -8,7 +8,7 @@
 	    If you didn't make this request, simply ignore this email.<br /><br />
 	</p>
 	<p>
-	    <a href="${baseUrl}/#/authentication/reset/${code}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">To reset password click here</a><br /><br />
+	    <a href="${baseUrl}/#/?reset=${code}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">To reset password click here</a><br /><br />
 	</p>
 	<p>
 		Please do this within 24 hours, otherwise the link will expire! 
@@ -22,7 +22,7 @@
 	</p>
 	<p style="color: #37495d;font-size:0.9em;">
 		You can also copy and paste this link into your browser:
-		${baseUrl}/#/authentication/reset/${code}
+		${baseUrl}/#/?reset=${code}
 	</p>
 </div>
 
