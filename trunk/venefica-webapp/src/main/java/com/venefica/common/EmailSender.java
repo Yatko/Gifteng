@@ -97,7 +97,7 @@ public class EmailSender {
             }
         }
         
-        dataSourceResolver = new DataSourceCompositeResolver(resolvers.toArray(new DataSourceResolver[0]), true);
+        dataSourceResolver = new DataSourceCompositeResolver(resolvers.toArray(new DataSourceResolver[resolvers.size()]), true);
     }
     
     public boolean sendNotification(NotificationType notificationType, User user, Map<String, Object> vars) {
