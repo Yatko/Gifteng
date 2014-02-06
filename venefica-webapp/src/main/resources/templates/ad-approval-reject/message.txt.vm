@@ -4,7 +4,7 @@ Unfortunately your gift can’t be posted because:
 ${text}
 
 Click on the following link to edit it:
-${baseUrl}/#/view/gift/${ad.id}
+${baseUrl}/#/browse?view=${ad.id}
 
 Thanks, 
 The Gifteng Team
