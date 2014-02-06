@@ -3,7 +3,7 @@ Hi $!{user.userData.getFirstName()},
 Thank you for using Gifteng!
 
 Click on the following link to confirm your email address:
-${baseUrl}/#/authentication/verify/${code}
+${baseUrl}/#/?confirm=${code}
 
 Happy gifting! 
 The Gifteng Team
