@@ -351,12 +351,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         Ad ad = request.getAd();
         User creator = ad.getCreator();
         User receiver = request.getUser();
-        List<File> attachments = new ArrayList<File>(0);
         String subtype = NotificationType.SUBTYPE_SHIPPING_RECEIVER;
-        
-        if ( !loadImageIntoAttachments(shipping, attachments) ) {
-            return false;
-        }
         
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("ad", ad);
@@ -364,7 +359,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         vars.put("receiver", receiver);
         vars.put("shipping", shipping);
         
-        boolean success = emailSender.sendNotification(NotificationType.SHIPPING, subtype, receiver, vars, attachments);
+        boolean success = emailSender.sendNotification(NotificationType.SHIPPING, subtype, receiver, vars);
         if ( success ) {
             shipping.setEmailReceiverSent(success);
             shipping.setEmailReceiverSentAt(new Date());
