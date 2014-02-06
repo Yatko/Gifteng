@@ -10,4 +10,4 @@ Best,
 The Gifteng Team
 
 
-Gift link: ${baseUrl}/#/view/gift/${ad.id}
+Gift link: ${baseUrl}/#/browse?view=${ad.id}
