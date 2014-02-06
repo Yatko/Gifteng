@@ -4,6 +4,8 @@
  */
 package com.venefica.service;
 
+import com.venefica.service.dto.UserConnectionDto;
+import java.util.List;
 import java.util.Set;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -41,6 +43,17 @@ public interface SocialService {
     @WebMethod(operationName = "DisconnectFromNetwork")
     public void disconnectFromNetwork(@WebParam(name = "networkName") String networkName);
     
+    /**
+     * Returns the user connection on the given network for the current user.
+     * 
+     * @param networkName the name of the social network
+     * @return null if the user is not connected with the given social network,
+     * otherwise the user connection
+     */
+    @WebMethod(operationName = "GetUserConnection")
+    @WebResult(name = "userConnection")
+    public UserConnectionDto getUserConnection(@WebParam(name = "networkName") String networkName);
+    
     
     
     //*********
@@ -54,4 +67,17 @@ public interface SocialService {
      */
     @WebMethod(operationName = "ShareOnSocialNetworks")
     void shareOnSocialNetworks(@WebParam(name = "message") @NotNull String message);
+    
+    
+    
+    //***********
+    //* friends *
+    //***********
+    
+    @WebMethod(operationName = "GetFriendList")
+    @WebResult(name = "friend")
+    List<UserConnectionDto> getFriendList(
+            @WebParam(name = "networkName") String networkName,
+            @WebParam(name = "offset") int offset,
+            @WebParam(name = "limit") int limit);
 }

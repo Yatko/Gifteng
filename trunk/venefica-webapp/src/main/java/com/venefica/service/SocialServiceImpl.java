@@ -4,6 +4,11 @@
  */
 package com.venefica.service;
 
+import com.venefica.dao.UserConnectionDao;
+import com.venefica.model.Provider;
+import com.venefica.model.UserConnection;
+import com.venefica.service.dto.UserConnectionDto;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +17,7 @@ import javax.jws.WebService;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.twitter.api.Twitter;
 //import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.stereotype.Service;
@@ -27,7 +33,9 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
     
     //@Autowired(required = false)
     @Inject
-    protected ConnectionRepository connectionRepository;
+    private ConnectionRepository connectionRepository;
+    @Inject
+    private UserConnectionDao userConnectionDao;
     
     //******************
     //* social network *
@@ -52,6 +60,33 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
         connectionRepository.removeConnections(networkName);
     }
     
+    @Override
+    public UserConnectionDto getUserConnection(String networkName) {
+        Long userId = getCurrentUserId();
+        Provider provider = Provider.valueOf(networkName);
+        
+        UserConnection userConnection = userConnectionDao.getByUserId(provider, userId);
+        if ( userConnection == null ) {
+            return null;
+        }
+        
+        UserConnectionDto userConnectionDto = new UserConnectionDto(userConnection);
+        
+        switch ( provider ) {
+            case FACEBOOK:
+                Facebook facebook = getSocialNetworkApi(Facebook.class);
+                FacebookProfile userProfile = facebook.userOperations().getUserProfile();
+                userConnectionDto.update(userProfile);
+                break;
+            case TWITTER:
+                // TODO: needs to be implemented
+                break;
+        }
+        
+        return userConnectionDto;
+    }
+    
+    
     //*********
     //* share *
     //*********
@@ -75,6 +110,38 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
 //        if (vkontakte != null) {
 //            vkontakte.wallOperations().post(message);
 //        }
+    }
+    
+    
+    
+    //***********
+    //* friends *
+    //***********
+    
+    @Override
+    public List<UserConnectionDto> getFriendList(String networkName, int offset, int limit) {
+        Long userId = getCurrentUserId();
+        Provider provider = Provider.valueOf(networkName);
+        UserConnection userConnection = userConnectionDao.getByUserId(provider, userId);
+        
+        if ( userConnection == null ) {
+            return null;
+        }
+        
+        List<UserConnectionDto> result = new ArrayList<UserConnectionDto>(0);
+        switch ( provider ) {
+            case FACEBOOK:
+                Facebook facebook = getSocialNetworkApi(Facebook.class);
+                for ( FacebookProfile friendProfile : facebook.friendOperations().getFriendProfiles(offset, limit) ) {
+                    UserConnectionDto userConnectionDto = new UserConnectionDto(Provider.FACEBOOK);
+                    userConnectionDto.update(friendProfile);
+                }
+                break;
+            case TWITTER:
+                // TODO: needs to be implemented
+                break;
+        }
+        return result;
     }
     
     // internal helpers
