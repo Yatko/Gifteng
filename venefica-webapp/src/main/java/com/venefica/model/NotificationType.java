@@ -40,7 +40,8 @@ public enum NotificationType {
     AD_NEW("ad-new", true, true),
     ISSUE_NEW("issue-new", true, true),
     SHIPPING("shipping", true, false),
-    EMAIL_NEW("email-new", true, true),
+    EMAIL_NEW("email-new", true, true), //TODO: needs to be renamed
+    INVITATION_EMAIL_NEW("invitation-email-new", true, false), //TODO: needs to be renamed
     ;
     
     public static final String SUBTYPE_REQUEST_ACCEPTED_PICKUP = "pickup"; //the giver accepted your gift request - only pickup is possible

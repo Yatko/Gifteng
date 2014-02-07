@@ -259,7 +259,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                 
                 if (
                     request.isAccepted() && (request.isSent() || request.isReceived()) &&
-                    (request.getUser().equals(currentUser) || model.getCreator().equals(currentUser)) &&
+                    currentUser.matches(request.getUser(), model.getCreator()) &&
                     !request.isAlreadyRated(currentUser)
                 ) {
                     canRate = true;

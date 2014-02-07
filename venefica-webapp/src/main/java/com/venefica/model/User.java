@@ -141,6 +141,24 @@ public class User {
         return result;
     }
     
+    /**
+     * Check if the current user does match with any of the given list,
+     * 
+     * @param users
+     * @return 
+     */
+    public boolean matches(User ... users) {
+        if ( users == null || users.length == 0 ) {
+            return false;
+        }
+        for ( User user : users ) {
+            if ( user.equals(this) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean isComplete() {
         return name != null && password != null && email != null
                 && userData != null && userData.isComplete();

@@ -6,6 +6,7 @@ package com.venefica.service;
 
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.fault.UserNotFoundException;
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -27,4 +28,9 @@ public interface UtilityService {
     
     @WebMethod(operationName = "SendEmail")
     void sendEmail(@WebParam(name = "text") @NotNull String text) throws UserNotFoundException;
+    
+    @WebMethod(operationName = "SendInvitationEmail")
+    void sendInvitationEmail(
+            @WebParam(name = "text") @NotNull String text,
+            @WebParam(name = "emails") @NotNull List<String> emails) throws UserNotFoundException;
 }
