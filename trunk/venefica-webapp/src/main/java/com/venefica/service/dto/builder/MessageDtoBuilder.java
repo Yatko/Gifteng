@@ -22,7 +22,7 @@ public class MessageDtoBuilder extends DtoBuilderBase<Message, MessageDto> {
 
     @Override
     public MessageDto build() {
-        boolean owner = currentUser != null ? currentUser.equals(model.getFrom()) : false;
+        boolean owner = (currentUser != null ? currentUser.matches(model.getFrom()) : false);
         Image toAvatar = model.getTo().getAvatar();
         Image fromAvatar = model.getFrom().getAvatar();
         Ad ad = model.getRequest() != null ? model.getRequest().getAd() : null;
