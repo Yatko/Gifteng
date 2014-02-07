@@ -6,10 +6,10 @@
     </head>
     <body style="background-color:#ece8e0;font-family:sans-serif;color:#222;">
         <div id="mail-heading" style="margin:15px 15px;padding:0;">
-            <a href="http://gifteng.com" style="float:right;text-align:right;padding:10px 0;color:#999;font-size:110%;text-decoration:none;">
-                Give. Receive. Inspire.
-            </a>
-            <div style="width:120px;padding:0;">
-                <a href="http://gifteng.com" style="text-decoration:none;color:#00bebe;"><img alt="" src="http://gifteng.com/images/mail/gifteng-mail-logo.png" style="max-width: 80px;padding-bottom: 0;display: inline !important;vertical-align: bottom;border: 0;line-height: 100%;outline: none;text-decoration: none;height: auto !important;" class="mcnImage" align="middle" width="80"></a>
-            </div>
+            <table border="0" width="100%">
+                <tr>
+                    <td><a href="http://gifteng.com" style="color:#00bebe;font-weight:bold;text-decoration:none;">Gifteng</a></td>
+                    <td style="text-align:right;"><a href="http://gifteng.com" style="color:#999;text-decoration:none;">Give. Receive. Inspire.</a></td>
+                </tr>
+            </table>
         </div>
