@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.ForeignKey;
 
 /**
  *
@@ -33,8 +34,10 @@ public class Issue {
     @Column(length = 1000)
     private String text;
     @ManyToOne
+    @ForeignKey(name = "issue_from_fk")
     private User from;
     @ManyToOne
+    @ForeignKey(name = "issue_request_fk")
     private Request request;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

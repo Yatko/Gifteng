@@ -39,6 +39,7 @@ public class Shipping {
     private Date createdAt;
     
     @OneToOne
+    @ForeignKey(name = "shipping_request_fk")
     private Request request;
     @ManyToOne
     @ForeignKey(name = "shipping_barcodeimg_fk")
