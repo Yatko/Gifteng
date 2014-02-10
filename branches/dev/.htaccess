@@ -1,8 +1,0 @@
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !index.php
-
-RewriteRule (.*)\.php$ index.php/$1
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [QSA,L]
