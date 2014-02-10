@@ -1,0 +1,47 @@
+<div class="user-profile">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="ge-user-image pull-left">
+				<a href="#/view/profile/{{id}}" ng-click="callback()"> <img ng-src="{{img}}" class="up-avatar img-rounded img-responsive"> </a>
+			</div>
+			<div class="ge-user-detail">
+				<a href="#/view/profile/{{id}}" ng-click="callback()" class="up-name">{{name}}</a>
+				<div class="up-details">
+					<div class="ge-location" ng-show="location && location.length>3">
+						{{location}}
+					</div>
+				</div>
+				<div class="ge-points" ng-hide="self || fullscore">
+					<span class="label label-default label-ge">G {{points}}</span>
+					<a href> <span ng-switch on="following"> <span ng-switch-when="true" ng-click="unfollow()" class="label label-default">Unfollow</span> <span ng-switch-default ng-click="follow()" class="label label-default label-ge">Follow</span> </span> </a>
+				</div>
+				<div class="ge-points" ng-show="self || fullscore">
+					<span class="label label-default label-ge">Generosity Score {{points}}</span>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="panel-footer" ng-if="stats">
+			<div class="row">
+				<div class="col-xs-4">
+					<div ng-if="stats.numReceivedRatings">
+						<a ng-href="#/profile/connections/reviews" ng-click="callback()" ng-if="self"> {{(stats.numPositiveReceivedRatings/stats.numReceivedRatings)*100 | number:0}}% Positive </a>
+						<a ng-href="#/view/profile/{{id}}/connections/reviews" ng-click="callback()" ng-if="!self"> {{(stats.numPositiveReceivedRatings/stats.numReceivedRatings)*100 | number:0}}% Positive </a>
+					</div>
+					<div ng-if="!stats.numReceivedRatings">
+						<a ng-href="#/profile/connections/reviews" ng-click="callback()" ng-if="self"> 0 Ratings </a>
+						<a ng-href="#/view/profile/{{id}}/connections/reviews" ng-click="callback()" ng-if="!self"> 0 Ratings </a>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<a ng-href="#/profile/connections/followers" ng-click="callback()" ng-if="self"> {{stats.numFollowers}} Followers </a>
+					<a ng-href="#/view/profile/{{id}}/connections/followers" ng-click="callback()" ng-if="!self"> {{stats.numFollowers}} Followers </a>
+				</div>
+				<div class="col-xs-4">
+					<a ng-href="#/profile/connections/following" ng-click="callback()" ng-if="self"> {{stats.numFollowings}} Following </a>
+					<a ng-href="#/view/profile/{{id}}/connections/following" ng-click="callback()" ng-if="!self"> {{stats.numFollowings}} Following </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

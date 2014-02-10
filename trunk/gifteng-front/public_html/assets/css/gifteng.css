@@ -1,0 +1,563 @@
+/*global*/
+html, body{font-family:'Lato', sans-serif;}
+h1.initialism {font-size: 136%;}
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{font-family:"Lato","Helvetica Neue",Helvetica,Arial,sans-serif;}
+a {text-decoration: none !important;color: #00bebe;}
+a:hover {text-decoration: none !important;color: #00d8d8;}
+
+/*ge-*/
+.ge-block{color: #00bebe;display: block;}
+.glyphicon-ge-gifteng-large {color: #00bebe;font-size: 6.6em;line-height: 0.3em;}
+.glyphicon-ge-gifteng-welcome {color: #FFF;font-size: 4em;line-height: 0.3em;}
+.glyphicon-large {font-size: 4em;}
+.ge-remember {margin-bottom: 0;font-weight: normal;}
+a.ge-report {color:#999999;}
+.ge-alert {color: #e8564b; -webkit-text-stroke-width: 1px;-webkit-text-stroke-color: #999999;}
+.ge-positive {color:#00bebe;}
+.ge-negative {color:#eb6b62;}
+.ge-neutral {color:#bdc3c7;}
+.ge-solid {opacity: 1 !important;filter: alpha(opacity=100);}
+.progress-bar-ge-positive{background-color:#00bebe}
+.progress-bar-ge-negative{background-color:#eb6b62}
+.progress-bar-ge-neutral{background-color:#bdc3c7}
+
+/* bootstrap 3 override */
+.well {-webkit-box-shadow: none !important; box-shadow: none !important;}
+.panel {-webkit-box-shadow: none !important; box-shadow: none !important;}
+.panel-heading {border-bottom:none !important;}
+.panel-footer {border-top:none !important;}
+
+/*.btn {border:none ;}TODO add to some buttons*/
+.video {max-width:720px ;margin: auto;box-sizing: border-box;border: 16px solid #fff;}
+
+/* navbar */
+
+.welcome sup {color:#fff;font-size:0.4em;top:-1.5em;}
+.navbar .ptitle {color: #fff;font-size: 24px;padding: 15px 15px;line-height: 20px;}
+.navbar a.ptitle span {padding-top: 10px;}
+.navbar-main {border: none !important;}
+.navbar-main .btn-ge-primary {border-top-right-radius: 0;border-bottom-right-radius: 0;padding-right:30px;}
+.navbar-default {} /* TODO review navbar and browse/my-gifts bars*/
+.navbar-main .navbar-brand, .navbar-main .navbar-nav>li a {color: #ffffff;}
+.navbar-main .navbar-brand:hover, .navbar-main .navbar-nav>li a:hover {color: #fafafa;}
+.navbar-default .divider-vertical {height: 50px;margin: 0 9px;border-left: 1px solid #e7e7e7;}
+.navbar-bottom {background-color: #37495d !important;margin-bottom:-60px;}
+.navbar-secondary .navbar-nav>li a .badge {background-color: #00bebe;}
+
+/*menu*/
+.btn-group-nav {position:absolute;bottom:20px;right: 0 !important;z-index: 99;}
+.btn-group-nav .btn {min-height: 52px !important;}
+.ng-scope .btn-group-nav .btn-ge-default, .ng-scope .btn-group-nav .btn-ge-primary, .ng-scope .btn-group-nav .btn-primary {opacity: 0.8;filter: alpha(opacity=80);border-top-right-radius: 0!important;border-bottom-right-radius: 0!important;}
+@media screen and (min-width: 48em) {.btn-group-nav {top:130px !important;}}
+
+/* .snap-drawer ul li a, .snap-drawer ul li a:hover {padding: 11px 15px !important;} */
+.snap-drawer ul li input {margin: 15px !important;width: 82% !important;color: #ffffff !important;}
+.snap-drawer ul li input:hover, .snap-drawer ul li input:focus {border-color: #00bebe !important;}
+.snap-drawer ul li .ge-user {padding: 9px !important;} /* TODO check bug with width being 120% by default - probably box-sizing */
+.snap-drawer ul li .ge-user .ge-detail .ge-age, .snap-drawer ul li .ge-user .ge-detail .ge-name {font-size: 70%;font-weight: 300;color: #bdc3c7 !important;margin-top: -2px !important;}
+.snap-drawer ul li .ge-user .ge-detail .ge-points {padding-top: 6px !important;}
+.snap-drawer ul li .ge-user .ge-detail .ge-points {padding-top: 6px !important;}
+.snap-drawer ul li span.label {border-radius: 1.25em;}
+.snap-drawer ul li .btn-toolbar {padding: 12px 14px;}
+.snap-drawer ul li .btn-toolbar .btn-group .btn {background-color: #37495d !important;border: 1px solid #37495d !important;color: #bdc3c7 !important;}
+.snap-drawer ul li .visible-inline-xs {display: none !important;}
+@media screen and (max-width: 767px) {.snap-drawer ul li .visible-inline-xs {display: inline !important;}}
+
+/*states*/
+.inactive { opacity: 0.4; filter: alpha(opacity=40);}
+.clickable { cursor:pointer; }
+.active, .unread {color:#00bebe;}
+.loading {width: 64px;height: 64px;position: absolute;left: 50%;margin-left: -32px;top: 50%;margin-top:-32px;z-index: 999999999;}
+
+/*modal*/
+.modal {display:block;}
+.login .modal-content, .login {max-width:420px;}
+.modal .panel {margin-bottom: 0px !important;}
+
+
+/*welcome*/
+.row.welcome {padding-bottom: 140px;margin-top: -10px;}
+@media screen and (max-width: 767px) {.row.welcome {padding-bottom: 20px;}}
+.box-social{position:fixed;width:50px;top:240px;left:0px;}
+#box-social-items li{list-style:none;height:40px;width:40px;padding:2px;}
+#box-social-items a{display:block;position:relative;color: #ffffff;font-size: 160%;opacity:0.5;filter:alpha(opacity=50);text-decoration: none;}
+#box-social-items a:hover{opacity:1;filter:alpha(opacity=100);}
+div.animate {width: 50px;height:50px;position:fixed;color: #ffffff;}
+/* welcome page */
+#welcome.container  {width: 100%;padding-left: 0;padding-right: 0;}
+.welcome-jumbotron {color: white;background: #00bebe url('../img/giftbox.png') no-repeat bottom left;margin-bottom:0px;padding-bottom: 200px;border-radius: 0px !important;}
+.welcome-jumbotron h1 {margin-bottom: 60px !important;}
+.welcome-details {background-color: #ece8e0;padding: 60px 0;text-align: center;}
+.welcome-details.bg2 {background-color: #f6f2ec;}
+.welcome-details h2 {color: #00bebe;}
+.welcome-details p.lead {color: #686d72;padding-top: 0px;}
+.welcome-details dt {padding: 10px;}
+.welcome-details .icon {font-size: 56px;color: #00bebe;}
+.welcome-details dd {color: #686d72;padding:10px;font-size: 120%;}
+.welcome-details.bg2 .dl-horizontal dt {padding: 28px 0 10px 10px !important;}
+.welcome-details.bg2 dt i {color: #00bebe;font-size: 250%;}
+.welcome-details .dl-horizontal dd {text-align: center;}
+@media screen and (min-width: 768px) {.welcome-details .dl-horizontal dd {text-align: left;padding-right: 0 !important;}}
+/* @media screen and (min-width: 48em){.welcome-details dd{text-align: left;}} */
+
+.welcome-details img.img-rounded {border-radius: 170px;width: 210px;height: 210px;background-size: 210px 210px;border: 6px solid #fff;}
+
+/*user*/
+.ge-user-image {margin-right: 8px;}
+blockquote.pull-right {border: none !important;} /*TODO add to ge-user-profile only*/
+
+
+/*item*/
+.ge-item-image .ge-location {text-align: right;background: transparent;position: relative;margin-top: -20px;font-weight:200;}
+.ge-item-image .ge-location .txt {padding: 0 6px;background:rgba(255,255,255,0.4);border-radius: 6px 0 0 0;padding: 2px 9px;display: inline-block;font-size: 0.8em;}
+.btn.btn-ge-action_alt {font-size: 112%; text-transform:uppercase;line-height:1em;color: #00bebe;}
+
+/*follow*/
+.label-ge {background-color: #00bebe !important;font-weight: normal !important;color:#fff;}
+.label-ge:hover {background-color: #00d8d8 !important;color:#fff;}
+
+/*messages*/
+/*.messages .panel-body, .messages .panel-heading {padding:0;}*/
+.messages h4 {margin:0;padding:9px;}
+.message {border-top:1px solid #e5e5e5;font-size:12px;padding:9px;border-right:3px solid #fff;}
+.message .from {margin-right:9px;}
+.message .at {color:#999;}
+.message .msg-title {font-weight:bold;display:block;}
+.message p {margin-bottom:0;}
+.message:hover, .message.active {background:#F9F9F9;border-right:3px solid #fafafa;}
+.message.active {border-right:3px solid #00bebe;}
+.message img {max-width:47px;max-height:47px;}
+
+/*notifications*/
+#notifications .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {border-top: none;}
+
+/*buttons*/
+.btn-ge-default {
+  color: #ffffff;
+  background-color: #bdc3c7;
+  border-color: #bdc3c7;
+}
+
+.btn-ge-default:hover,
+.btn-ge-default:focus,
+.btn-ge-default:active,
+.btn-ge-default.active,
+.open .dropdown-toggle.btn-ge-default {
+  color: #ffffff;
+  background-color: #cbd0d3;
+  border-color: #cbd0d3;
+}
+
+.btn-ge-default:active,
+.btn-ge-default.active,
+.open .dropdown-toggle.btn-ge-default {
+  background-image: none;
+}
+
+.btn-ge-default.disabled,
+.btn-ge-default[disabled],
+fieldset[disabled] .btn-ge-default,
+.btn-ge-default.disabled:hover,
+.btn-ge-default[disabled]:hover,
+fieldset[disabled] .btn-ge-default:hover,
+.btn-ge-default.disabled:focus,
+.btn-ge-default[disabled]:focus,
+fieldset[disabled] .btn-ge-default:focus,
+.btn-ge-default.disabled:active,
+.btn-ge-default[disabled]:active,
+fieldset[disabled] .btn-ge-default:active,
+.btn-ge-default.disabled.active,
+.btn-ge-default[disabled].active,
+fieldset[disabled] .btn-ge-default.active {
+  background-color: #bdc3c7;
+  border-color: #bdc3c7;
+}
+
+.btn-ge-default .badge {
+  color: #ffffff;
+  background-color: #fff;
+}
+
+.btn-ge-primary {
+  color: #ffffff;
+  background-color: #00bebe;
+  border-color: #00bebe;
+}
+
+.btn-ge-primary:hover,
+.btn-ge-primary:focus,
+.btn-ge-primary:active,
+.btn-ge-primary.active,
+.open .dropdown-toggle.btn-ge-primary {
+  color: #ffffff;
+  background-color: #00d8d8;
+  border-color: #00d8d8;
+}
+
+.btn-ge-primary:active,
+.btn-ge-primary.active,
+.open .dropdown-toggle.btn-ge-primary {
+  background-image: none;
+}
+
+.btn-ge-primary.disabled,
+.btn-ge-primary[disabled],
+fieldset[disabled] .btn-ge-primary,
+.btn-ge-primary.disabled:hover,
+.btn-ge-primary[disabled]:hover,
+fieldset[disabled] .btn-ge-primary:hover,
+.btn-ge-primary.disabled:focus,
+.btn-ge-primary[disabled]:focus,
+fieldset[disabled] .btn-ge-primary:focus,
+.btn-ge-primary.disabled:active,
+.btn-ge-primary[disabled]:active,
+fieldset[disabled] .btn-ge-primary:active,
+.btn-ge-primary.disabled.active,
+.btn-ge-primary[disabled].active,
+fieldset[disabled] .btn-ge-primary.active {
+  background-color: #00bebe;
+  border-color: #00bebe;
+}
+
+.btn-ge-primary .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+
+.btn-ge-danger {
+  color: #ffffff;
+  background-color: #eb6b62;
+  border-color: #eb6b62;
+}
+
+.btn-ge-danger:hover,
+.btn-ge-danger:focus,
+.btn-ge-danger:active,
+.btn-ge-danger.active,
+.open .dropdown-toggle.btn-ge-danger {
+  color: #ffffff;
+  background-color: #ee8079;
+  border-color: #ee8079;
+}
+
+.btn-ge-danger:active,
+.btn-ge-danger.active,
+.open .dropdown-toggle.btn-ge-danger {
+  background-image: none;
+}
+
+.btn-ge-danger.disabled,
+.btn-ge-danger[disabled],
+fieldset[disabled] .btn-ge-danger,
+.btn-ge-danger.disabled:hover,
+.btn-ge-danger[disabled]:hover,
+fieldset[disabled] .btn-ge-danger:hover,
+.btn-ge-danger.disabled:focus,
+.btn-ge-danger[disabled]:focus,
+fieldset[disabled] .btn-ge-danger:focus,
+.btn-ge-danger.disabled:active,
+.btn-ge-danger[disabled]:active,
+fieldset[disabled] .btn-ge-danger:active,
+.btn-ge-danger.disabled.active,
+.btn-ge-danger[disabled].active,
+fieldset[disabled] .btn-ge-danger.active {
+  background-color: #eb6b62;
+  border-color: #eb6b62;
+}
+
+.btn-ge-danger .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+
+.btn-ge-transparent {
+  color: #ffffff;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-ge-transparent:hover,
+.btn-ge-transparent:focus,
+.btn-ge-transparent:active,
+.btn-ge-transparent.active,
+.open .dropdown-toggle.btn-ge-transparent {
+  color: #ffffff;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-ge-transparent:active,
+.btn-ge-transparent.active,
+.open .dropdown-toggle.btn-ge-transparent {
+  background-image: none;
+}
+
+.btn-ge-transparent.disabled,
+.btn-ge-transparent[disabled],
+fieldset[disabled] .btn-ge-transparent,
+.btn-ge-transparent.disabled:hover,
+.btn-ge-transparent[disabled]:hover,
+fieldset[disabled] .btn-ge-transparent:hover,
+.btn-ge-transparent.disabled:focus,
+.btn-ge-transparent[disabled]:focus,
+fieldset[disabled] .btn-ge-transparent:focus,
+.btn-ge-transparent.disabled:active,
+.btn-ge-transparent[disabled]:active,
+fieldset[disabled] .btn-ge-transparent:active,
+.btn-ge-transparent.disabled.active,
+.btn-ge-transparent[disabled].active,
+fieldset[disabled] .btn-ge-transparent.active {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-ge-transparent .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+
+.btn-social-twitter {color: #ffffff; background-color: #00bdef;}
+.btn-social-facebook {color: #ffffff; background-color: #2f4b93;}
+.btn-social-pinterest {color: #ffffff; background-color: #cb2028;}
+
+
+
+
+/* img uplad */
+.upimg {
+	cursor:pointer;
+}
+.accepted {
+	display:block;
+	border:2px solid #00bebe;
+	border-radius: 6px;
+}
+.filter-active .ge-ad-item-box.gifted {
+	display:none;
+}
+.filter-gifted .ge-ad-item-box.active {
+	display:none;
+}
+.modal-dialog {
+	margin:10px auto !important;
+}
+.close-msg {
+	padding:10px 15px;
+}
+
+/* DELETED */
+/*
+
+
+.navbar-default {background-color:transparent !important;}
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li a {color: #00bebe !important;padding-top:15px;padding-bottom:15px;display:block;}
+.navbar .menuop, .navbar .menuop:hover, .navbar .menuop:active  {background:none !important;}
+
+
+*/
+
+
+
+/*
+ .title {
+ 	line-height: 1.5em;
+ 	padding: 9px 9px 0 9px;
+ }
+ 
+ .title a {
+ 	color: #00bebe;
+ 	font-size: 100%;
+ 	font-weight: 600;
+ }
+
+
+.well .well-body .ge-location a {
+	color: #aaaaaa;
+}
+
+.well .well-footer {
+	background-color: transparent !important;
+	padding: 0 0 3px 0 !important;
+	margin: 3px 0 0 0 !important;
+}
+
+.well .well-footer .comments .row {
+	padding: 9px;
+	min-height: 60px;
+	background-color: #fafafa;
+	border-top: 1px solid #e4e4e4;
+	font-size: 90%;
+	color: #333333;
+}
+
+.well .well-footer .img-responsive {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.well .well-header {
+	padding:9px;
+}
+.ge-ad-item-box .well .well-header {
+	padding:0;
+}
+.user-profile .well-header {
+	padding:9px 9px 0 !important;
+}
+.well .well-footer .comments {
+	margin-bottom: 9px;
+}
+
+.well .well-footer .comments .ge-text {
+	line-height: 1.2em !important;
+}
+.well .well-footer .comments .row a.ge-name {
+	color: #37495d;
+	font-weight: 600;
+	font-size: 90%;
+	vertical-align: top;
+}
+.well .well-footer .comments .row .ge-date {
+	padding-left: 9px;
+	color: #999999;
+	font-weight: 400;
+	font-size: 90%;
+	vertical-align: top;
+}
+
+.well .well-footer .comments .row p {
+	margin: 0px !important;
+}
+
+.well .well-footer .comments .ge-user-image {
+	float: left;
+	margin-right: 8px;
+}
+
+.well .well-heading .ge-action {
+	padding: 16px;
+}
+.invite {
+	color:#00bebe;
+}
+h2.invite, h3.invite {
+	padding:19px 0;
+}
+
+.request-title {
+	margin: 0;
+	padding: 10px 28px;
+	border-top: 1px solid #E5E5E5;
+	border-bottom: 1px solid #E5E5E5;
+}
+
+
+
+.btn-report, .btn-filter {
+	position:fixed;
+	right:0;
+	top:50%;
+	z-index:99;
+	transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	-webkit-transform:rotate(90deg);
+	width:43px;
+	margin-top:-76px;
+	-webkit-transition: 0.5s;
+	-moz-transition: 0.5s;
+	transition: 0.5s;
+}
+.btn-filter {
+	top:35%;
+}
+.btn-filter .btn {
+	border-radius:0 0 6px 6px;
+	background-color: #00bebe !important;
+}
+.btn-report .btn {
+	border-radius:0 0 6px 6px;
+	background-color: #eb6b62 !important;
+}
+
+@media screen and (max-width: 600px) {
+	.modal-dialog {
+		margin-top: 22%;
+	}
+	.btn-report, .btn-filter {
+		top:auto;
+		bottom:2% !important;
+		transform:none;
+		-ms-transform:none;
+		-webkit-transform:none;
+		width:170px;
+		margin-top:76px;
+		transform: translate3d(135px,0,0);
+		-webkit-transform: translate3d(135px,0,0);
+	}
+	.btn-filter {
+		bottom:14% !important;
+	}
+	.btn-report span, .btn-filter span {
+		margin-left:10px;
+	}
+	.btn-report.showfull, .btn-filter.showfull {
+		margin-right:-25px;
+		transform: translate3d(0,0,0);
+		-webkit-transform: translate3d(0,0,0);
+	}
+	.btn-report .btn, .btn-filter .btn  {
+		border-radius:6px 0 0 6px;
+	}
+	
+	.btn-report .btn i.glyphicon-ge-bug, .btn-filter .btn i.glyphicon-search {
+		display: inline !important;
+		visibility: visible !important;
+	}
+	.navbar sup {
+		float:right;
+		margin-top:-25px;
+		font-size:14px;
+	}
+	.navbar .nav>li>a {
+		padding:10px 0 !important;
+	}
+}
+
+
+
+.panel-header .close {
+	margin:10px 16px;
+}
+.ptitle {
+	margin:4px 20px;
+	float:none;
+}
+.well-simple .well-header,
+.well-simple .well-footer,
+.well-simple .well-body .title,
+.well-simple .well-body .ge-location {
+	display:none;
+}
+.thankbox {
+	padding:60px 0;
+}
+.close-msg {
+	font-size:48px;
+	margin-right:10px;
+}
+.well-lg .ge-user-image {
+	margin-right:14px;
+}
+.center-block {
+	margin:0 auto;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	select:focus, textarea:focus, input:focus {
+		font-size: 16px;
+	}
+}
+
+
+
+
+*/

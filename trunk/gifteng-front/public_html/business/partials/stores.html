@@ -1,0 +1,43 @@
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>
+				Store Name (hidden from public)
+			</th>
+			<th>
+				Street 1
+			</th>
+			<th>
+				Street 2
+			</th>
+			<th>
+				City
+			</th>
+			<th>
+				State
+			</th>
+			<th>
+				Zip Code
+			</th>
+			<th>
+				&nbsp;
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="store in user.data.addresses">
+			<td>{{store.name}}</td>
+			<td>{{store.address1}}</td>
+			<td>{{store.address2}}</td>
+			<td>{{store.city}}</td>
+			<td>{{store.state}}</td>
+			<td>{{store.zipCode}}</td>
+			<td>
+				<a href class="btn btn-ge-default" ng-click="editStore(store)">Edit</a>
+				<a href class="btn btn-danger" ng-click="deleteStore(store)">Delete</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<a href ng-click="addStore()" class="btn btn-ge-primary">ADD NEW STORE</a>

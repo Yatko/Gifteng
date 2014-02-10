@@ -1,0 +1,248 @@
+<div class="ge-ad-item-box">
+	<div ng-if="details">
+		<div class="gifted-ribbon" ng-if="ad.status=='SENT' || ad.status=='SOLD' || ad.reqStat=='RECEIVED'">
+			<div class="ribbon-text">
+				<span class="glyphicon-ge-giftbox"></span> Gifted
+			</div>
+		</div>
+		<div class="gifted-ribbon" ng-if="ad.reqStat=='RECEIVED'">
+			<div class="ribbon-text">
+				Received
+			</div>
+		</div>
+		<div class="gifted-ribbon gray" ng-if="ad.reqStat=='ACCEPTED' || ad.reqStat=='PENDING' || ad.reqStat=='DECLINED' || ad.requested">
+			<div class="ribbon-text">
+				Requested
+			</div>
+		</div>
+	</div>
+	<div class="well" ng-if="(action && ad.status!='SOLD' && ad.status!='SENT' && !ad.sold) || !action">
+		<div class="well-heading">
+			<div ng-if="user && image">
+				<ad-item-box
+				img="{{ad.image.id}}"
+				img-size="640"
+				id="{{ad.id}}"
+				nested="1"
+				type="details"
+				details="1"
+				status="{{ad.status}}"
+				creator-firstname="{{ad.creator.firstName}}"
+				creator-lastname="{{ad.creator.lastName}}"
+				creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
+				creator-following="ad.creator.inFollowings"
+				creator-city="{{ad.creator.address.city}}, {{ad.creator.address.stateAbbreviation}}"
+				creator-avatar="{{ad.creator.avatar.id}}"
+				creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
+				creator-id="{{ad.creator.id}}"
+				ad="ad"
+				callback="doSearch()"
+				selfview="{{ad.owner}}"
+				in-bookmarks="{{ad.inBookmarks}}"
+				distance="{{ad.distance}}"
+				></ad-item-box>
+			</div>
+			<div ng-if="image && !user">
+				<ad-item-box
+				img="{{ad.image.id}}"
+				img-size="640"
+				id="{{ad.id}}"
+				nested="1"
+				type="details"
+				status="{{ad.status}}"
+				ad="ad"
+				callback="doSearch()"
+				selfview="{{ad.owner}}"
+				in-bookmarks="{{ad.inBookmarks}}"
+				distance="{{ad.distance}}"
+				></ad-item-box>
+			</div>
+			<div ng-if="!image && user">
+				<user-profile 
+					name="{{ad.creator.firstName}} {{ad.creator.lastName}}" 
+					id="{{ad.creator.id}}" 
+					location="{{ad.creator.address.city}}, {{ad.creator.address.stateAbbreviation}}" 
+					img="{{ad.creator.avatar.id}}" 
+					points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}" 
+					since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}" 
+					following="ad.creator.inFollowings" 
+					nested="true"
+					stats="ad.creator.statistics"
+				></user-profile>
+			</div>
+			
+			<div class="ge-action" ng-if="action && ad.status!='SOLD' && ad.status!='SENT' && !ad.sold">
+				<div ng-switch="ad.owner">
+					<div ng-switch-when="true">
+						<div class="row">
+							<div class="col-xs-6">
+								<button class="btn btn-lg btn-block btn-ge-primary" ng-click="editGift(ad.id, close)" ng-show="ad.canEdit && !ad.canRelist">
+									EDIT GIFT
+								</button>
+								<button class="btn btn-lg btn-block btn-ge-primary" ng-click="relistGift(ad.id, close)" ng-show="ad.canRelist">
+									RELIST
+								</button>
+								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="!ad.canEdit && !ad.canRelist">
+									EDIT GIFT
+								</button>
+							</div>
+							<div class="col-xs-6">
+								<button class="btn btn-lg btn-block btn-danger" ng-click="deleteGift(ad.id, close)" ng-show="ad.canDelete">
+									DELETE GIFT
+								</button>
+								<button class="btn btn-lg btn-block btn-danger btn-disabled" disabled ng-show="!ad.canDelete">
+									DELETE GIFT
+								</button>
+							</div>
+						</div>
+					</div>
+					<div ng-switch-default>
+						<div ng-switch="ad.user_requested">
+							<div ng-switch-when="true">
+								<div ng-switch="ad.status">
+									<div ng-switch-when="DECLINED">
+										<button class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
+											REQUEST DECLINED
+										</button>
+									</div>
+									<div ng-switch-when="UNACCEPTED">
+										<button class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
+											REQUEST DECLINED
+										</button>
+									</div>
+									<div ng-switch-when="CANCELED">
+										<button class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
+											REQUEST CANCELED
+										</button>
+									</div>
+									<div ng-switch-when="RECEIVED">
+										<button class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
+											GIFT RECEIVED
+										</button>
+									</div>
+									<div ng-switch-default>
+										<button ng-hide="ad.sold" class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
+											REQUEST SENT
+										</button>
+									</div>
+								</div>
+
+							</div>
+							<div ng-switch-default>
+								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.sold">
+									GIFTED
+								</button>
+								<button class="btn btn-lg btn-block btn-ge-primary" ng-show="ad.canRequest && !ad.sold && ad.statistics.numRequests < 3" ng-click="requestGift(ad.id, close)">
+									REQUEST GIFT
+								</button>
+								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.statistics.numRequests >= 3 || (!ad.sold && !ad.canRequest)">
+									REQUESTS PENDING
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="well-body" ng-if="details">
+			<p ng-show="ad.type=='BUSINESS'">
+				<span class="btn btn-ge-default" ng-hide="ad.free">{{ad.price | number:0}} GP</span>
+				<span class="btn btn-ge-default" ng-show="ad.free">FREE</span>
+
+				<span class="leftgp" ng-show="(ad.price-user.data.score)>0">{{(ad.price - user.data.score) | number:0}} GP Left</span>
+			</p>
+			<p>
+				<ul>
+					<li>
+						<b>Category:</b> {{ad.category}}
+					</li>
+					<li>
+						<b>Gift value:</b> {{ad.price | currency:"$"}}
+					</li>
+				</ul>
+			</p>
+			<div class="row" ng-show="ad.type=='MEMBER'">
+				<div class="col-xs-5">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="ad.pickUp">
+							Pick Up </label>
+					</div>
+				</div>
+				<div class="col-xs-7" ng-show="ad.owner">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="ad.freeShipping">
+							Shipping offered </label>
+					</div>					
+				</div>
+				<div class="col-xs-7" ng-show="!ad.owner">
+					<div class="checkbox">
+						<label ng-show="!ad.freeShipping" ng-hide="ad.freeShipping">
+							<input type="checkbox" disabled ng-checked="ad.freeShipping">
+							Shipping offered </label>	
+						<label  ng-show="ad.freeShipping" ng-hide="!ad.freeShipping">
+							<input type="checkbox" disabled ng-checked="ad.freeShipping">
+ 							         Shipping & Fee: ${{ad.shippingBox.price}}	 </label>	
+					</div>
+					
+				</div>
+				
+			</div>
+			<div ng-show="ad.type=='BUSINESS'">
+				<h4>Redeemable:</h4>
+				<div class="form-group" ng-show="ad.allAddresses">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked="checked" disabled>
+							All Brand Stores </label>
+					</div>
+				</div>
+				<div class="form-group" ng-show="!ad.allAddresses">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked="checked" disabled>
+							Only at selected Stores </label>
+					</div>
+				</div>
+				<div class="form-group" ng-show="ad.website">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked="checked" disabled>
+							Online </label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" ng-if="map">
+			<div id="view_map" class="map" ng-if="ad.type=='MEMBER' && ad.pickUp"></div>
+		</div>
+		<div class="well-footer">
+			<div class="comments messages" ng-if="comments">
+				<div ng-repeat="comment in cmn" class="message">
+					<div class="ge-user-image pull-left">
+						<img ng-src="{{amazonUrl}}user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" ng-if="comment.publisherAvatarUrl" class="img-rounded img-responsive" />
+						<img ng-src="assets/img/ge-no-profile-picture.png" ng-if="!comment.publisherAvatarUrl" class="img-rounded img-responsive" />
+					</div>
+					<a class="form" href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a>
+					<span class="at">{{comment.createdAt | date:'M/d h:mm a'}}</span>
+					<p>
+						{{comment.text}}
+					</p>
+				</div>
+			</div>
+			<div ng-if="addcomment">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<textarea id="comment_text" rows="2" maxlength="2000" class="form-control" ng-auto-expand></textarea>
+						</div>
+						<button class="btn btn-ge-default btn-lg btn-block" ng-click="addComment()">
+							ADD COMMENT
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

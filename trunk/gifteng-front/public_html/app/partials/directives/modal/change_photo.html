@@ -1,0 +1,49 @@
+<div class="modal-content">
+	<!-- <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" ng-click="close()" aria-hidden="true">&times;</button>
+		<h4 class="modal-title">Choose your profile picture</h4>
+	</div> -->
+	<div class="modal-body">
+		<div class="alert alert-danger" ng-bind="error" ng-show="error" id="error-msg"></div>
+		<div>
+			<form enctype="multipart/form-data">
+				<div class="uploader">
+
+					<!-- the real input[type=file] is hidden -->
+					<input type="file" name="uploader" id="uploader" style="display:none;"
+					onchange="angular.element(this).scope().sendFile(this);"/>
+
+					<!-- input field, used to open the real input[type=file]  -->
+					<div class="fake-uploader">
+						<!-- <a href="" class="btn btn-block btn-ge-default btn-lg">Upload Photo</a> -->
+						<input type="text" id="profileimage" readonly="readonly" ng-model="profileimage" ng-hide="1" />
+					</div>
+
+					<!-- progress bar -->
+					<div class="progress" ng-show="progress!=0">
+						<div class="progress-bar" style="width:{{progress}}%;"></div>
+					</div>
+
+				</div>
+			</form>
+			<script>
+				$(function() {
+					$('.fake-uploader').click(function() {
+						$('#uploader').click();
+					});
+				})
+			</script>
+		</div>
+		<img-jcrop src='{{profileimage}}'  selected='selected(cords)' ng-model="cordsv"></img-jcrop>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-4">
+				<button type="button" class="btn btn-ge-default btn-block" data-dismiss="modal" ng-click="close()">Close</button>
+			</div>
+			<div class="col-xs-8">
+				<button type="button" class="btn btn-ge-primary btn-block" ng-click="crop()">Crop</button>
+			</div>
+		</div>
+	</div>
+</div><!-- /.modal-content -->

@@ -1,0 +1,20 @@
+<div class="container ge-container">
+	<h2 class="text-center header">Top Giftengers</h2>
+	<div class="row">
+		<div class="col-sm-4" ng-repeat="user in users">
+			<user-profile
+			name="{{user.firstName}} {{user.lastName}}"
+			location="{{user.address.city}}, {{user.address.stateAbbreviation}}"
+			img="{{user.avatar.id}}"
+			img-size="112"
+			avatar="{{user.avatar.id}}"
+			points="{{user.score | number:0}}"
+			since="{{user.joinedAt | date:'MMMM yyyy'}}"
+			following="user.inFollowings"
+			id="{{user.id}}"
+			self="user.self"
+			fullscore="true"
+			></user-profile>
+		</div>
+	</div>
+</div>

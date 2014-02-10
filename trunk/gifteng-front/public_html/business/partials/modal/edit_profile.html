@@ -1,0 +1,130 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="control-group">
+						<label class="control-label" for="businessName">Business Name *</label>
+						<div class="controls">
+							<input id="businessName" name="businessName" type="text" ng-model="userData.businessName" placeholder="Business Name" class="form-control" required="">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="control-group">
+						<label class="control-label" for="about">About</label>
+						<div class="controls">
+							<textarea id="about" name="about" class="form-control" rows="2" maxlength="220" placeholder="..." ng-model="userData.about"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="control-group">
+						<label class="control-label" for="zipCode">Zip Code</label>
+						<div class="controls">
+							<input id="zipCode" name="zipCode" type="text" ng-model="userData.zipCode" maxlength="5" placeholder="10001" class="form-control" required="">
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="control-group">
+						<label class="control-label" for="website">Website</label>
+						<div class="controls">
+							<input id="website" name="website" type="text" ng-model="userData.website" placeholder="" class="form-control" required="">
+						</div>
+					</div>
+				</div>
+			</div>
+			<a href ng-click="showmore=true" ng-hide="showmore">Show Private</a>
+			<a href ng-click="showmore=false" ng-show="showmore">Hide Private</a>
+			<!-- more -->
+			<div class="more_info" ng-show="showmore">
+				
+				
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="control-group">
+							<label class="control-label" for="contactName">Contact Name</label>
+							<div class="controls">
+								<input id="contactName" name="contactName" type="text" ng-model="userData.contactName" placeholder="Contact Name" class="form-control" required="">
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="control-group">
+							<label class="control-label" for="contactNumber">Contact Number</label>
+							<div class="controls">
+								<input id="contactNumber" name="contactNumber" type="text" ng-model="userData.contactNumber" placeholder="Contact Number" class="form-control" required="">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="control-group">
+							<label class="control-label" for="email">Contact Email</label>
+							<div class="controls">
+								<input id="email" name="email" type="text" ng-model="userData.email" placeholder="Email" class="form-control" required="" readonly="readonly">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="controls">
+							<label for="old_pass">Old Password</label>
+							<input id="old_pass" name="old_pass" type="password" placeholder="Old Password" class="form-control">
+						</div>
+					</div>
+					<div class="col-xs-8">
+						<div class="control-group">
+							<label class="control-label" for="new_password">New Password <span id="password_change_notification" class="text-danger" style="display: none;">- please confirm by email.</span></label>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="controls">
+										<input id="new_password" name="new_password_1" type="password" placeholder="Password" class="form-control">
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="controls">
+										<input name="new_password_2" type="password" placeholder="Confirm New Password" class="form-control">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-6 col-md-3">
+					<button type="button" ng-click="close()" class="btn btn-block btn-ge-primary">
+						Cancel
+					</button>
+				</div>
+				<div class="col-xs-6 col-md-9">
+					<button type="button" ng-click="submit()"  class="btn btn-block btn-ge-default">
+						Save Profile
+					</button>
+				</div>
+			</div><!--./submit-->
+		</div>
+	</div>
+</div>

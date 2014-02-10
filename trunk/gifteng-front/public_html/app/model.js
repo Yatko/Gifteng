@@ -1,0 +1,1 @@
+define(["angular"],function(angular){angular.module("gifteng.model",[]).value("GeModel",{})});
