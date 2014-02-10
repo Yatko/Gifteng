@@ -1,9 +1,0 @@
-Hi $!{user.userData.getFirstName()},
-
-We’re very sorry, but someone else received the gift you wanted. Don’t give up, there are other gifts waiting for you. Tip: increase your Generosity Score by giving a gift. This will increase your chances of having most of your request accepted.
-
-Happy receiving!
-The Gifteng Team
-
-To change your general email notifications click here:
-${baseUrl}/#/profile/account/notifications

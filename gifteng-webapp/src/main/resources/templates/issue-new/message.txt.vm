@@ -1,9 +1,0 @@
-Dear admin,
-
-${from.getFullName()} created a new issue with the following details:
-
-Request ID: ${request.id}
-Gift ID: ${ad.id}
-Reporter user ID: ${from.id}
-Reporter user email: ${from.email}
-Issue text: ${issue.text}
