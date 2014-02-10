@@ -1,0 +1,59 @@
+<div class="container ge-container">
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Invite Your Friends
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<button ng-click="sendMsg()" class="btn btn-lg btn-block btn-social-facebook"><i class="glyphicon glyphicon-ge-facebook"></i> Facebook </button>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<button ng-click="sendTwitterMessage()" class="btn btn-lg btn-block btn-social-twitter"><i class="glyphicon glyphicon-ge-twitter"></i> Twitter </button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-xs-12 ">
+							<p class="text-muted">Send e-mail: </p>
+						</div>
+					</div>
+					
+						<form role="form">
+							<div class="row">
+								<div class="col-xs-12 ">
+									<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+									<div class="form-group">
+										<input type="text" id="mailTo" ng-model="mailTo" class="form-control input-sm" name="E-mail" placeholder="E-mail (separate by commas)"/>
+									</div>
+								</div>
+							</div>
+							<div class="row ">
+								<div class="col-xs-12">
+									<div class="form-group">
+										<textarea id="mailTxt" class="form-control invite" rows="5" ng-model="mailTxt"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="alert alert-social alert-success" ng-bind="success" ng-show="success"></div>
+									<div class="form-group">
+										<button class="btn btn-lg btn-block btn-ge-primary" ng-click="sendMail()">Send Email</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>

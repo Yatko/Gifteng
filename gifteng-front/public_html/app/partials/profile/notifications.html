@@ -1,0 +1,35 @@
+<div class="row" ng-controller="NotificationsController">
+	<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+		<div class="panel panel-default ge-form">
+			<div class="panel-heading">
+				Notify me when..
+			</div>
+			<div class="panel-body" id="notifications">
+				<form ng-submit="submit()" id="notificationsForm">
+					<table class="table">
+						<tbody>
+							<tr ng-repeat="(key, value) in notifications">
+								<td>{{value.text}}</td>
+								<td><checkbox ng-model="value.checked" value="{{key}}"></checkbox></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-xs-4 col-sm-offset-6 col-sm-2">
+						<div class="form-group">
+							<a href="#/profile" class="btn btn-block btn-ge-default btn-lg visible-xs" >Close</a>
+						</div>
+					</div>
+					<div class="col-xs-8 col-sm-4">
+						<div class="form-group">
+							<a type="button" ng-click="submit()" ng-disabled="!changed" ng-class="{'btn-ge-primary':changed,'btn-ge-default':!changed}" class="btn btn-block btn-lg">Save</a>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>

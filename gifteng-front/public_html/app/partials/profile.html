@@ -1,0 +1,175 @@
+<div class="container ge-container" ng-controller="ProfileBoxController">
+	<div class="row" ng-if="profile.id && tab_page!='messages'" ng-class="{'visible-xs': section=='gifts' && self}">
+		<div class="col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<a href ng-click="changePhoto()" class="ge-user-image pull-left" ng-if="self"> <img ng-if="profile.avatar" ng-src="{{amazonUrl}}user/{{profile.avatar.id}}_112" class="up-avatar img-rounded img-responsive"> <img ng-if="!profile.avatar" src="assets/img/ge-no-profile-picture.png" class="up-avatar img-rounded img-responsive"> <span class="ribbon glyphicon-ge-photo"></span> </a>
+							<div class="ge-user-image pull-left" ng-if="!self">
+								<img ng-if="profile.avatar" ng-src="{{amazonUrl}}user/{{profile.avatar.id}}_112" class="up-avatar img-rounded img-responsive">
+								<img ng-if="!profile.avatar" src="assets/img/ge-no-profile-picture.png" class="up-avatar img-rounded img-responsive">
+							</div>
+							<div class="ge-detail">
+								<div class="ge-name">
+									<a href="" ng-if="self">{{profile.firstName}} {{profile.lastName}}</a>
+									<a ng-href="#/view/profile/{{profile.id}}" ng-if="!self">{{profile.firstName}} {{profile.lastName}}</a>
+								</div>
+								<div class="ge-age">
+									Giftenger since {{profile.joinedAt | date:'MMMM yyyy'}}
+								</div>
+								<div class="ge-age" ng-show="profile.address.zipCode">
+									{{profile.address.city}}, {{profile.address.stateAbbreviation}}
+								</div>
+								<div class="ge-points">
+									<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank"> <span class="label label-default label-ge"> Generosity Score {{profile.score | number:0}}/{{profile.pendingScore | number:0}} </span> </a>
+								</div>
+							</div>
+						</div>
+						<div class="hidden-xs col-sm-6">
+							<blockquote class="blockquote blockquote-reverse pull-right">
+							      <p>{{profile.about}}</p>
+							      <footer class="pull-right sr-only">Giftenger since <cite title="Giftenger since">{{profile.joinedAt | date:'MMMM yyyy'}}</cite></footer>
+							</blockquote>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-sm-2 col-xs-4">
+							<div ng-if="profile.statistics.numReceivedRatings">
+								<a ng-href="#/profile/connections/reviews" ng-if="self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
+								<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
+							</div>
+							<div ng-if="!profile.statistics.numReceivedRatings">
+								<a ng-href="#/profile/connections/reviews" ng-if="self"> 0 Ratings </a>
+								<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> 0 Ratings </a>
+							</div>
+						</div>
+						<div class="col-sm-2 col-xs-4">
+							<a ng-href="#/profile/connections/followers" ng-if="self"> {{profile.statistics.numFollowers}} Followers </a>
+							<a ng-href="#/view/profile/{{profile.id}}/connections/followers" ng-if="!self"> {{profile.statistics.numFollowers}} Followers </a>
+						</div>
+						<div class="col-sm-2 col-xs-4">
+							<a ng-href="#/profile/connections/following" ng-if="self"> {{profile.statistics.numFollowings}} Following </a>
+							<a ng-href="#/view/profile/{{profile.id}}/connections/following" ng-if="!self"> {{profile.statistics.numFollowings}} Following </a>
+						</div>
+						<div class="col-sm-offset-2 col-sm-2 hidden-xs" ng-if="self">
+							<a href="#/profile/account/notifications"><span class="badge user_notifications glyphicon glyphicon-ge-gear"> Notifications</span></a>
+						</div>
+						<div class="col-sm-2 hidden-xs" ng-if="self">
+							<a href="#/profile/account/settings"><span class="badge user_settings glyphicon glyphicon-ge-gear"> Settings</span> </a>
+						</div>
+						<div class="col-sm-offset-2 col-sm-2 hidden-xs" ng-if="(section=='gifts' && self) || !self">
+							<a ng-href="#/view/profile/{{profile.id}}/gifts/giving">Giving <span class="badge user_giving"> {{profile.statistics.numGivings}}</span></a>
+						</div>
+						<div class="col-sm-2 hidden-xs" ng-if="(section=='gifts' && self) || !self">
+							<a ng-href="#/view/profile/{{profile.id}}/gifts/receiving">Receiving <span class="badge user_receiving"> {{profile.statistics.numReceivings}}</span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row visible-xs" ng-if="profile.id">
+		<div class="col-sm-12" ng-class="{'visible-xs':isin}" ng-if="(section=='gifts' && self) || (!self && section!='connections')">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<ul class="nav nav-pills nav-stacked" ng-if="self">
+						<li>
+							<a ng-href="#/profile/gifts/giving"> Giving <span class="badge pull-right user_giving">{{profile.statistics.numGivings}}</span></a>
+						</li>
+						<li>
+							<a ng-href="#/profile/gifts/receiving"> Receiving <span class="badge pull-right user_receiving">{{profile.statistics.numReceivings}}</span></a>
+						</li>
+						<li>
+							<a ng-href="#/profile/gifts/favorites"> Favorites <span class="badge pull-right user_bookmark">{{profile.statistics.numBookmarks}}</span> </a>
+						</li>
+					</ul>
+					<ul class="nav nav-pills nav-stacked" ng-if="!self">
+						<li>
+							<a ng-href="#/view/profile/{{profile.id}}/gifts/giving"> Giving <span class="badge pull-right user_giving">{{profile.statistics.numGivings}}</span></a>
+						</li>
+						<li>
+							<a ng-href="#/view/profile/{{profile.id}}/gifts/receiving"> Receiving <span class="badge pull-right user_receiving">{{profile.statistics.numReceivings}}</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4" ng-class="{'hidden-xs':isin}" ng-if="section!='gifts' && self">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<ul class="nav nav-pills nav-stacked">
+						<li>
+							<a href="#/profile/account/notifications"> Notifications <span class="glyphicon glyphicon-ge-gear pull-right"></span> </a>
+						</li>
+						<li>
+							<a href="#/profile/account/settings"> Settings <span class="glyphicon glyphicon-ge-gear pull-right"></span> </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--My Gifts-->
+	<div class="row hidden-xs" ng-class="{'visible-xs':isin}" ng-if="section=='gifts' && self">
+		<div class="col-sm-12">
+			<nav class="navbar navbar-default navbar-secondary" role="navigation">
+			  <div class="navbar-header">
+			    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#my-gifts-collapse">
+			      <span class="sr-only">Toggle navigation</span>
+			      <span class="icon-bar"></span>
+			      <span class="icon-bar"></span>
+			      <span class="icon-bar"></span>
+			    </button>
+			    <a class="navbar-brand">My Gifts</a>
+			  </div>
+			
+			  <div class="collapse navbar-collapse" id="my-gifts-collapse">
+			    <ul class="nav navbar-nav" ng-if="!self">
+			      <li ng-class="{active: tab_page=='giving'}">
+			      	<a ng-href="#/view/profile/{{profile.id}}/gifts/giving"> Giving <span class="badge user_giving"> {{profile.statistics.numGivings}}</span></a>
+			      </li>
+			      <li ng-class="{active: tab_page=='receiving'}">
+			      	<a ng-href="#/view/profile/{{profile.id}}/gifts/receiving"> Receiving <span class="badge user_receiving"> {{profile.statistics.numReceivings}}</span></a>
+			      </li>
+			      <li ng-class="{active: tab_page=='favorites'}">
+			      	<a ng-href="#/view/profile/{{profile.id}}/gifts/favorites"> Favorites <span class="badge user_bookmark"> {{profile.statistics.numBookmarks}}</span> </a>
+			      </li>
+			    </ul>
+			    
+			    <ul class="nav navbar-nav" ng-if="self">
+			      <li ng-class="{active: tab_page=='giving'}">
+			      	<a ng-href="#/profile/gifts/giving"> Giving <span class="badge user_giving"> {{profile.statistics.numGivings}}</span></a>
+			      </li>
+			      <li ng-class="{active: tab_page=='receiving'}">
+			      	<a ng-href="#/profile/gifts/receiving"> Receiving <span class="badge user_receiving"> {{profile.statistics.numReceivings}}</span></a>
+			      </li>
+			      <li ng-class="{active: tab_page=='favorites'}">
+			      	<a ng-href="#/profile/gifts/favorites"> Favorites <span class="badge user_bookmark"> {{profile.statistics.numBookmarks}}</span> </a>
+			      </li>
+			    </ul>
+			    <ul class="nav navbar-nav navbar-right">
+				  <li class="divider-vertical"></li>
+				  <li class="dropdown">
+			        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Show <b class="caret"></b></a>
+			        <ul class="dropdown-menu">
+			          <li><a href ng-click="setMyGifts('all')">All</a></li>
+			          <li><a href ng-click="setMyGifts('active')">Active</a></li>
+			          <li>
+			          	<a href ng-click="setMyGifts('gifted')">
+			          		<span ng-if="tab_page=='giving'">Gifted</span>
+			          		<span ng-if="tab_page=='receiving'">Received</span>
+			          	</a>
+			          </li>
+			        </ul>
+			      </li>
+			    </ul>
+			  </div><!-- /.navbar-collapse -->
+			</nav>
+		</div>
+	</div>
+	<div ng-if="tab_page" ng-include="'app/partials/profile/'+tab_page+'.html'" ng-class="{'hidden-xs':!isin}"></div>
+
+</div>

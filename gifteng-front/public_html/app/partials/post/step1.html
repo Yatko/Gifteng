@@ -1,0 +1,26 @@
+<div ng-class="{'modal-content post': isModal, 'col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2': !isModal}">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<h4>Giving makes you live longer...</h4>
+	  	<div class="alert alert-danger" ng-bind="error" ng-show="error" id="error-msg"></div>
+	  </div>
+	  <div class="panel-body">
+	    <form enctype="multipart/form-data">
+	    	<giftimg action="api/image" def="image" ng-model="toPost.image"></giftimg>
+	    </form>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-6">
+	  			<a ng-click="close()" class="btn btn-lg btn-block btn-ge-default"> CLOSE </a>
+	  		</div>
+	  		<div class="col-xs-6">
+	  			<a href ng-click="step2();" class="btn btn-lg btn-block btn-ge-primary"> NEXT <span class="glyphicon glyphicon-ge-right"></span> </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</div>

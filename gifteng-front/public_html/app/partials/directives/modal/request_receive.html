@@ -1,0 +1,38 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+		<div class="modal-header-content">
+			<h3>If you received the gift, click on CONFIRM.</h3>
+		</div>
+	</div>
+	
+	<div class="modal-body">
+		<div class="row" ng-show="accepted">
+			<div class="col-xs-12">
+				Please confirm that you have shipped or handed over your gift.<br />
+				<a href ng-click="reportAd()" class="ge-report"><i class="glyphicon glyphicon-ge-rescue"></i> Click here if something went wrong.</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="form-group">
+					<button type="button" ng-click="close()" class="btn btn-block btn-ge-default">
+						NO
+					</button>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="form-group">
+					<button type="button" ng-click="submit()" class="btn btn-block btn-ge-primary">
+						CONFIRM
+					</button>
+				</div>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>

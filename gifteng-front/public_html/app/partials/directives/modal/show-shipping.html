@@ -1,0 +1,18 @@
+<!-- /modal/show-shipping.html -->
+<div class="modal-content messages">
+	<div class="modal-body">		
+		<div class="row">
+			<div class="col-sm-12">
+				<h4>{{description}}</h4><!-- TODO please review, if we need description here, it wasn't here I inserted it -->
+				<small>show-shipping.html</small><!-- TODO pls remove this line -->
+			</div>											
+		</div>
+	</div>
+	<div class="modal-footer" ng-show="showContactLater">
+		<button type="button" class="btn btn-ge-default" data-dismiss="modal" ng-click="later()">Later</button><!-- TODO please review, soemtimes it is ng-click="contact()", sometimes ng-click="later()" which one is the right one -->
+		<button type="button" class="btn btn-ge-primary" ng-click="showMessage()">Contact &nbsp;{{requestFirstname}}</button>
+	</div>
+	<div class="modal-footer" ng-show="showOk"><!-- TODO please review, what is this line for with the OK -->
+		<button type="button" class="btn btn-ge-default" data-dismiss="modal" ng-click="later()">OK</button>
+	</div>
+</div>

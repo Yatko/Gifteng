@@ -1,0 +1,52 @@
+<div>
+			<div class="col-xs-1">
+						<a href="#/view/gift/{{ad.adId}}" target="_blank">{{ad.adId}}</a>
+					</div>
+					<div class="col-xs-1">
+						<h6>{{ad.creatorFullName}}</h6>
+					</div>
+					<div class="col-xs-1">
+						<h6>{{ad.acceptedAt | date:'MM/dd/yyyy h:mma'}}</h6>
+					</div>
+					<div class="col-xs-1">
+						<h6>{{ad.receiverFullName}}</h6>
+					</div>
+					<div class="col-xs-1">
+						<input type="text" ng-model="ad.receivedAmount" id="receivedAmount" 
+							class="form-control input-sm" placeholder="Amount" >
+					</div>
+					<div class="col-xs-2">
+						<form enctype="multipart/form-data">
+							<div class="uploader">
+								<!-- the real input[type=file] is hidden -->
+								<input type="file" name="uploader"
+								onchange="angular.element(this).scope().sendFile(this);"/>							
+							</div>	
+							<a target="_self" ng-href="{{ad.fileUrl}}" ng-hide="fileName" download="img" >Download</a>
+							<a target="_self" ng-href="{{fileUrl}}" ng-show="fileName" download="{{fileName}}" >Download</a>
+						</form>
+					</div>
+					<div class="col-xs-1">
+						<input type="text" ng-model="ad.trackingNumber" id="trackingNumber" 
+							class="form-control input-sm" placeholder="Paste" >
+					</div>
+					<div class="col-xs-1">
+						<button type="button" class="btn btn-mini btn-block btn-success" ng-click="updateShipping(ad)"
+							  ng-show="!ad.trackingNumber && !ad.receivedAmount && !ad.barcodeImage">upload</button>						
+						<button type="button" class="btn btn-mini btn-block btn-warning" ng-click="updateShipping(ad)"
+							ng-show="ad.trackingNumber || ad.receivedAmount || ad.barcodeImage" >change</button>
+					</div>
+					<div class="col-xs-2">
+						<button type="button" class="btn btn-mini btn-block btn-info" ng-show="!ad.emailCreatorSent" ng-click="sendEmailToSendor(ad.id)">To giver</button>
+						<button type="button" class="btn btn-mini btn-block btn-info" ng-show="!ad.emailReceiverSent" ng-click="sendEmailToReceiver(ad.id)">To receiver</button>
+						<button type="button" class="btn btn-mini btn-block btn-info" ng-show="ad.emailCreatorSent" ng-click="sendAgainEmailToSendor(ad.id)" >Resend to giver</button>
+						<button type="button" class="btn btn-mini btn-block btn-info" ng-show="ad.emailReceiverSent" ng-click="sendAgainEmailToReceiver(ad.id)" >Resend to receiver</button>
+					
+					</div>
+					<div class="col-xs-1">
+						<p ng-show="ad.requestStatus != 'RECEIVED'">No</p>
+						<p ng-show="ad.requestStatus == 'RECEIVED'">Yes</p>
+						<button type="button" class="btn btn-mini btn-block btn-inverse" 
+						ng-show="ad.requestStatus == 'RECEIVED'" ng-click="deleteShipping(ad.id)" >Hide</button>
+					</div>
+</div>       	

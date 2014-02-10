@@ -1,0 +1,42 @@
+<div class="panel messages">
+	<div class="panel-heading">
+		<user-profile
+		name="{{ngModel.from.firstName}} {{ngModel.from.lastName}}"
+		location="{{ngModel.from.address.city}}, {{ngModel.from.address.stateAbbreviation}}"
+		img="{{ngModel.from.avatar.id}}"
+		img-size="112"
+		avatar="{{ngModel.from.avatar.id}}"
+		points="{{ngModel.from.score | number:0}}/{{ngModel.from.pendingScore | number:0}}"
+		since="{{ngModel.from.joinedAt | date:'MMMM yyyy'}}"
+		following="ngModel.from.inFollowings"
+		id="{{ngModel.from.id}}"
+		nested="true"
+		></user-profile>
+	</div>
+	<div class="panel-body">
+		<h4><!-- <a ng-href="#/view/gift/{{ngModel.messages[0].adId}}"> --> {{ngModel.messages[0].adTitle}} <!-- </a> --></h4>
+		<div class="message" ng-repeat="message in ngModel.messages">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="ge-user-image pull-left">
+						<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" ng-show="message.fromAvatarUrl" class="img-rounded img-responsive" />
+						<img ng-src="assets/img/ge-no-profile-picture.png" ng-hide="message.fromAvatarUrl" class="img-rounded img-responsive" />
+					</div>
+					<span class="from">{{message.fromFullName}}</span>
+					<span class="at">{{message.createdAt | date:'M/d h:mm a'}}</span>
+					<p>
+						{{message.text}}
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel-footer">
+		<div class="form-group">
+			<textarea id="text_msg" maxlength="2000" rows="2" class="form-control" ng-auto-expand></textarea>
+		</div>
+		<button class="btn btn-ge-default btn-lg btn-block" ng-click="sendMsg()">
+			SEND MESSAGE
+		</button>
+	</div>
+</div>

@@ -1,0 +1,60 @@
+<div ng-controller="ReviewsController">
+	<div class="row" ng-if="ratings">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="well">
+				<div class="well-header">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<div class="progress">
+								  <div class="progress-bar progress-bar-ge-positive" style="width: {{percent.positive}}%">
+								    <span ng-bind="stats.all.positive" ng-if="type=='all'"></span>
+								    <span ng-bind="stats.giver.positive" ng-if="type=='giver'"></span>
+								    <span ng-bind="stats.receiver.positive" ng-if="type=='receiver'"></span>
+								    <span> Positive </span>
+								    <span class="sr-only">{{percent.positive}}%</span>
+								  </div>
+								  <div class="progress-bar progress-bar-ge-neutral" style="width: {{percent.neutral}}%">
+								    <span ng-bind="stats.all.neutral" ng-if="type=='all'"></span>
+								    <span ng-bind="stats.giver.neutral" ng-if="type=='giver'"></span>
+								    <span ng-bind="stats.receiver.neutral" ng-if="type=='receiver'"></span>
+								    <span> Neutral </span>
+								    <span class="sr-only">{{percent.neutral}}%</span>
+								  </div>
+								  <div class="progress-bar progress-bar-ge-negative" style="width: {{percent.negative}}%">
+								    <span ng-bind="stats.all.negative" ng-if="type=='all'"></span>
+								    <span ng-bind="stats.giver.negative" ng-if="type=='giver'"></span>
+								    <span ng-bind="stats.receiver.negative" ng-if="type=='receiver'"></span>
+								    <span> Negative </span>
+								    <span class="sr-only">{{percent.negative}}%</span>
+								  </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="well-body">
+					<div class="message" ng-repeat="rating in ratings" ng-hide="(rating.owner && type=='receiver') || (!rating.owner && type=='giver')">
+						<div class="ge-user-image pull-left">
+							<img ng-src="{{amazonUrl}}user/{{rating.fromUser.avatar.url | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="rating.fromUser.avatar" />
+							<img src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="rating.fromUser.avatar" />
+						</div>
+						<div class="pull-left">
+							<span class="from"> <span>{{rating.fromUser.firstName}} {{rating.fromUser.lastName}}</span> </span>
+							<span class="at">{{rating.ratedAt | date:'short'}}</span>
+							<p>
+								{{rating.text}}
+							</p>
+						</div>
+						<div class="pull-right">
+							<a href class="ge-positive" ng-if="rating.value==1"> <span class="glyphicon glyphicon-ge-happy"></span> </a>
+							<a href class="ge-neutral" ng-if="rating.value==0"> <span class="glyphicon glyphicon-ge-neutral"></span> </a>
+							<a href class="ge-negative" ng-if="rating.value==-1"> <span class="glyphicon glyphicon-ge-sad"></span> </a>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

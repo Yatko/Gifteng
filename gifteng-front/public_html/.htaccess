@@ -1,0 +1,45 @@
+<IfModule mod_rewrite.c>
+    Options -MultiViews
+    RewriteEngine On
+    # Redirect to under maintenance page excluding the provided IP
+    #RewriteCond %{REMOTE_ADDR} !=80.86.106.233
+    #RewriteCond %{REMOTE_ADDR} !=67.191.55.60
+    #RewriteCond %{REMOTE_ADDR} !=5.53.139.153
+    #RewriteCond %{REMOTE_ADDR} !=85.186.221.128
+    #RewriteCond %{REMOTE_ADDR} !=71.196.34.120
+    #RewriteCond %{REQUEST_URI} !^.*/under-construction\.html$
+    #RewriteCond %{REQUEST_URI} !^.*\.(jpg|gif|png|ico)$
+    #RewriteRule ^(.*)$ /maintenance.html [R=307,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+## Caching                                                                                                                                      
+# Turn on Expires and set default to 1 week                                                                                                     
+#ExpiresActive On                                                                                                                                
+#ExpiresDefault "access plus 1 hour"                                                                                                         
+
+#<IfModule mod_headers.c>
+#<FilesMatch "\.(js|css|xml|gz)$">
+#Header append Vary Accept-Encoding
+#</FilesMatch>
+#</IfModule>
+
+# 1 DAY
+#<FilesMatch "\.(ico|pdf|flv|ttf|woff)$">
+#Header set Cache-Control "max-age=43200, public"
+#</FilesMatch>
+# 1 DAY
+#<FilesMatch "\.(jpg|jpeg|png|gif|swf)$">
+#Header set Cache-Control "max-age=43200, public"
+#</FilesMatch>
+# 5 MINUTES
+#<FilesMatch "\.(js|css|txt|xml)$">
+#Header set Cache-Control "max-age=300, public"
+#</FilesMatch>
+# 1 MINUTE
+#<FilesMatch "\.(html|htm|php|cgi|pl)$">
+#Header set Cache-Control "max-age=60, proxy-revalidate"
+#</FilesMatch>

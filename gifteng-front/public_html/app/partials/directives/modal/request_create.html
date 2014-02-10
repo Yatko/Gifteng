@@ -1,0 +1,74 @@
+<div class="modal-content" ng-controller="RequestGiftController">
+
+	<div ng-switch="user.data.statistics.requestLimit">
+		
+		<div ng-switch-when="0">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="close()">
+					×
+				</button>
+				<div class="modal-header-content">
+					<h4>To send a request for this free gift...</h4>
+				</div>
+			</div>
+			
+            <div class="modal-body">
+                <p>
+			You need to post one of you own and you’ll get four requests towards other gifts: One, when the gift goes live and becomes available at 12pm EST. You’ll receive three more requests when the gift is delivered and the receiver confirms it. If you’d like to request tons of free gifts, remember to keep giving plenty of your own.
+		    	</p>
+            </div>
+            <div class="modal-footer">
+				<div class="row">
+					<div class="col-xs-4">
+						<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+							Later
+						</button>
+					</div>
+					<div class="col-xs-8">
+						<a href ng-click="close();doPost()" class="btn btn-block btn-ge-primary hidden-xs">
+							Post A Gift
+						</a>
+						<a href="#/post" ng-click="close();" class="btn btn-block btn-ge-primary visible-xs">
+							Post A Gift
+						</a>
+					</div>
+				</div>
+            </div>
+			
+		</div>
+		
+		<div ng-switch-default>
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="close()">
+					×
+				</button>
+				<div class="modal-header-content">
+					<h3>Type your message below</h3>
+				</div>
+			</div>
+			
+			<div class="modal-body">
+				<textarea name="requestText" id="request_message" class="form-control" placeholder="Your message ...">I would love to have your gift! Please accept my request!</textarea>
+			</div>
+		
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-xs-4">
+						<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+							Cancel
+						</button>
+					</div>
+					<div class="col-xs-8">
+						<button type="button" ng-click="submit()" class="btn btn-block btn-ge-primary">
+							Send Request
+						</button>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+</div>

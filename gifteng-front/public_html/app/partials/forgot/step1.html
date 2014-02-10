@@ -1,0 +1,42 @@
+<div class="modal-content">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<button type="button" class="close pull-right" ng-click="close()">
+			×
+			</button>
+			<div class="row hidden-xs">
+				<div class="ge-logo text-center">
+					<i class="glyphicon glyphicon-ge-gifteng glyphicon-ge-gifteng-large"></i>
+				</div>
+			</div><!--./logo-->
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1">
+					<p class="text-center">
+						Please enter your email address so we can look up your account:
+					</p>
+					<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+					<form role="form">
+						<div class="form-group">
+							<input type="text" ng-model="email" id="email" class="form-control input-lg" placeholder="Email address">
+						</div>
+						<div class="form-group">
+							<button type="submit" ng-click="forgot();" class="btn btn-ge-primary btn-lg btn-block" >
+								Reset Password
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer text-center" ng-hide="inner">
+			<div class="row">
+				<div  class="col-xs-4">
+					<a href ng-click="oLogin()">Sign In</a>
+				</div>
+				<div  class="col-xs-8">
+					<a href ng-click="oRequest()">Request an Invitation</a> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

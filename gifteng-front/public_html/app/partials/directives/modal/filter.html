@@ -1,0 +1,13 @@
+<div class="modal-content">
+	<div class="modal-body">
+		<div class="btn-group btn-group-justified">
+			<a class="btn btn-ge-default inactive" style="cursor: default;" >Show</a>
+			<a href class="btn btn-ge-primary" ng-click="setMyGifts('active')" > <span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='active'"></span> Active</a>
+			<a href class="btn btn-ge-primary" ng-click="setMyGifts('gifted')" > <span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='gifted'"></span> 
+				<span ng-if="parsedurl[3]=='giving'">Gifted</span>
+				<span ng-if="parsedurl[3]=='receiving'">Received</span>
+			</a>
+			<a href class="btn btn-ge-primary" ng-click="setMyGifts('all')" > <span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='all'"></span> All</a>
+		</div>
+	</div>
+</div><!-- /.modal-content -->
