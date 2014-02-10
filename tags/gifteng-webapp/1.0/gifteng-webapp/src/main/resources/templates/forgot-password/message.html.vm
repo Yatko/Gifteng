@@ -1,0 +1,29 @@
+#set($title = "Your password reset request")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{user.userData.getFirstName()},</h1>
+	<p>
+	    We received a request to reset your password.<br />
+	    If you didn't make this request, simply ignore this email.<br /><br />
+	</p>
+	<p>
+	    <a href="${baseUrl}/#/?reset=${code}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">To reset password click here</a><br /><br />
+	</p>
+	<p>
+		Please do this within 24 hours, otherwise the link will expire! 
+	</p>
+	<p>
+	    Not sure where to find something? Check out our super helpful <a href="http://gifteng.zendesk.com/home">FAQ</a> page.
+	</p>
+	<p>
+    	Happy gifting!<br />
+        The Gifteng Team
+	</p>
+	<p style="color: #37495d;font-size:0.9em;">
+		You can also copy and paste this link into your browser:
+		${baseUrl}/#/?reset=${code}
+	</p>
+</div>
+
+#parse("../footer.html.vm")

@@ -1,0 +1,9 @@
+Hi $!{user.userData.getFirstName()},
+
+We just want to let you know that the request you received was canceled. Share your gift to receive other requests. 
+
+Happy giving!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}/#/profile/account/notifications

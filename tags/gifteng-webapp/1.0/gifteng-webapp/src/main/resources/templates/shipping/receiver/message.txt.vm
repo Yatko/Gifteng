@@ -1,0 +1,14 @@
+Hi $!{receiver.userData.getFirstName()},
+
+We've sent $!{creator.userData.getFirstName()} a shipping label for the '${ad.adData.title}', and it should be on its way to you shortly!
+ 
+Here is the USPS tracking number: ${shipping.trackingNumber} for your gift. Tracking may take up to 48 hours to update once the item has been accepted at the post office.
+ 
+Best,
+The Gifteng Team
+ 
+p.s. Once you receive the gift, don't forget to confirm it under your Receiving menu on Gifteng!
+
+
+Gift link: ${baseUrl}/#/browse?view=${ad.id}
+USPS link: https://tools.usps.com/go/TrackConfirmAction.action?tLabels=${shipping.trackingNumber}

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-env=local - skip tests</actionName>
+        <displayName>env=local - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>local</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=local-tomcat-dev-db - skip tests</actionName>
+        <displayName>env=local-tomcat-dev-db - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>local-tomcat-dev-db</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=venefica-live - skip tests</actionName>
+        <displayName>env=venefica-live - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>venefica-live</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=venefica-dev - skip tests</actionName>
+        <displayName>env=venefica-dev - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>venefica-dev</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=jelastic - skip tests</actionName>
+        <displayName>env=jelastic - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>jelastic</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-env=amazon - skip tests</actionName>
+        <displayName>env=amazon - skip tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+        </goals>
+        <properties>
+            <env>amazon</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    
+    <!--
+    <action>
+        <actionName>CUSTOM-env=venefica-dev - skip tests, gae deploy</actionName>
+        <displayName>env=venefica-dev - skip tests, gae deploy</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>gae:deploy</goal>
+        </goals>
+        <properties>
+            <env>venefica-dev</env>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    -->
+    
+    <action>
+        <actionName>CUSTOM-only integration tests</actionName>
+        <displayName>only integration tests</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>integration-test</goal>
+        </goals>
+        <properties>
+            <test>xxx</test>
+            <failIfNoTests>false</failIfNoTests>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>integration</activatedProfile>
+        </activatedProfiles>
+    </action>
+    
+    <!--
+    <action>
+        <actionName>CUSTOM-deploy into local tomcat with local-dev env</actionName>
+        <displayName>deploy into local tomcat with local-dev env</displayName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <netbeans.deploy>true</netbeans.deploy>
+            <skipTests>true</skipTests>
+            <env>local-dev</env>
+        </properties>
+    </action>
+    -->
+</actions>

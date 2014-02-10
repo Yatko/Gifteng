@@ -1,0 +1,12 @@
+Hi $!{ad.creator.userData.getFirstName()},
+
+${comment.publisher.getFullName()} commented your Gift!
+
+Click on the following link to view the comment:
+${baseUrl}/#/browse?view=${ad.id}
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}/#/profile/account/notifications

@@ -1,0 +1,13 @@
+Hi $!{to.userData.getFirstName()},
+
+You received a new message from ${from.getFullName()}:
+"${message.text}"
+
+Click on the following link to  respond:
+${baseUrl}/#/profile/account/messages?msg=${request.id}
+
+Happy gifting!
+The Gifteng Team
+
+To change your general email notifications click here:
+${baseUrl}/#/profile/account/notifications

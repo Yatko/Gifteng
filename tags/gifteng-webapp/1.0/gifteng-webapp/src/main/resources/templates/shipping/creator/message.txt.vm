@@ -1,0 +1,13 @@
+Hi $!{creator.userData.getFirstName()},
+ 
+Here is the pre-paid, pre-addressed USPS shipping label for '${ad.adData.title}' that was requested on Gifteng! Whoohoo!
+
+Please ship the gift as soon as possible. $!{receiver.userData.getFirstName()} is eagerly waiting to get it. 
+
+If you have any questions, please contact us at support@gifteng.com. We're here to help!
+ 
+Best,
+The Gifteng Team
+
+
+Gift link: ${baseUrl}/#/browse?view=${ad.id}

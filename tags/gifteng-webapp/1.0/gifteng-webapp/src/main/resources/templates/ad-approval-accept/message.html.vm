@@ -1,0 +1,20 @@
+#set($title = "Congratulations! Your Gift was approved.")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Hi $!{ad.creator.userData.getFirstName()},</h1>
+	<p>
+	    We just want to let you know that your gift was approved and it will be available tomorrow at 12:00pm ET on Gifteng.com.<br />
+	    Please visit us then to share it with your friends and most importantly to request new Gifts posted by other members!<br /><br />
+	</p>
+	<p>
+    	Happy giving & receiving,<br />
+        The Gifteng Team
+	</p>
+	<p style="color: #37495d;font-size:0.9em;">
+		To change your general email notifications click here:
+		${baseUrl}/#/profile/account/notifications
+	</p>
+</div>
+
+#parse("../footer.html.vm")

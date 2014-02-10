@@ -1,0 +1,16 @@
+#set($title = "[Gifteng ADMIN] ${from.getFullName()} sent a new email!")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Dear admin,</h1>
+	<p>
+		${from.getFullName()} sent a new email with the following details:<br /><br />
+	</p>
+	<p>
+	    Reporter user ID: ${from.id}<br />
+	    Reporter user email: ${from.email}<br />
+	    Text: ${text}<br />
+	</p>
+</div>
+
+#parse("../footer.html.vm")

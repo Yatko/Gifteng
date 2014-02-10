@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints version="2.0" xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+  <endpoint implementation="com.venefica.service.UserManagementServiceImpl" name="UserManagementServiceImplService" url-pattern="/UserManagementServiceImplService"/>
+  <endpoint implementation="com.venefica.service.AdServiceImpl" name="AdServiceImplService" url-pattern="/AdServiceImplService"/>
+  <endpoint implementation="com.venefica.service.MessageServiceImpl" name="MessageServiceImplService" url-pattern="/MessageServiceImplService"/>
+  <endpoint implementation="com.venefica.service.AuthServiceImpl" name="AuthServiceImplService" url-pattern="/AuthServiceImplService"/>
+  <endpoint implementation="com.venefica.service.InvitationServiceImpl" name="InvitationServiceImplService" url-pattern="/InvitationServiceImplService"/>
+  <endpoint implementation="com.venefica.service.UtilityServiceImpl" name="UtilityServiceImplService" url-pattern="/UtilityServiceImplService"/>
+  <endpoint implementation="com.venefica.service.AdminServiceImpl" name="AdminServiceImplService" url-pattern="/AdminServiceImplService"/>
+</endpoints>

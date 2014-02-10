@@ -1,0 +1,10 @@
+#set($title = "${from.getFullName()} invited you to join...")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<p>
+	    ${text}<br />
+	</p>
+</div>
+
+#parse("../footer.html.vm")
