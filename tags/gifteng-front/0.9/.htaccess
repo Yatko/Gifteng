@@ -1,0 +1,28 @@
+RewriteEngine on
+
+# Redirect to under maintenance page
+#RewriteCond %{REMOTE_ADDR} !=80.86.106.233
+#RewriteCond %{REQUEST_URI} !^.*/under-construction\.html$
+#RewriteCond %{REQUEST_URI} !^.*\.(jpg|gif|png|ico)$
+#RewriteRule ^(.*)$ /venefica-site/under-construction.html [R=307,L]
+
+## Add www
+#RewriteBase /
+#RewriteCond %{HTTP_HOST} !^www\. [NC]
+#RewriteCond %{HTTP_HOST} ^([^.]+\.[a-z]{2,6})$ [NC]
+#RewriteRule ^(.*)$ http://www.%1/$1 [R=301,L]
+
+#RewriteBase /venefica-site/
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule facebook/signin/ http://localhost:8080/venefica/signin/facebook?scope=email,user_status [P,L]
+
+#RewriteBase /venefica-site/
+#RewriteRule /venefica-site/facebook/signin/ http://localhost:8080/venefica/signin/facebook?scope=email,user_status [P,L]
+#RewriteRule /venefica-site/facebook/connect/ http://localhost:8080/venefica/connect/facebook?scope=email,user_status&AuthToken=eneGKi4Soqsw+1gvL7DjNIYuW02B867KmXGwE51Ubd+jurflJqquNQjciZvEf01raCD3au231wmQaoIlSXtIY5GL7aHAF6ue2bYrrgLOIZYYOprbOTcP6mPgptJtCoiqKurReT1m6zlu22D/1LY8dIxk9+Nlqfvvd2kaDnTz8Y3qZc707R68kOuvAjQEIi0sNYgnxfO0ISXSNoMReqgWuArIl96wZD2QJ30B7S29bg9FxiHXYYUYuVeVqwhQVLnwUEQztOS3PSTECg6/Bf9lFHu6kJP6+TIgZlRm8VfKB9w= [P,L]
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.php|assets|cache|robots\.txt)
+RewriteRule ^(.*)$ /venefica-site/index.php/$1 [PT,L]
