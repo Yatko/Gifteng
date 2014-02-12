@@ -127,7 +127,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     public List<MessageDto> getLastMessagePerRequest() throws UserNotFoundException {
         User currentUser = getCurrentUser();
         List<Message> messages = messageDao.getLastMessagePerRequestByUser(currentUser.getId());
-        return buildMessages(messages, currentUser, false);
+        return buildMessages(messages, currentUser, false, true);
     }
     
 //    @Override
@@ -154,7 +154,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         }
         
         List<Message> messages = messageDao.getByRequest(requestId);
-        return buildMessages(messages, currentUser, true);
+        return buildMessages(messages, currentUser, true, false);
     }
     
     @Override
@@ -163,7 +163,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
         List<Message> messages = messageDao.getByUsers(user1Id, user2Id);
-        return buildMessages(messages, getCurrentUser(), true);
+        return buildMessages(messages, getCurrentUser(), true, false);
     }
     
     @Override
@@ -173,7 +173,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
         List<Message> messages = messageDao.getByAdAndUsers(adId, user1Id, user2Id);
-        return buildMessages(messages, getCurrentUser(), true);
+        return buildMessages(messages, getCurrentUser(), true, false);
     }
     
     @Override
@@ -379,10 +379,12 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     
     
-    private List<MessageDto> buildMessages(List<Message> messages, User currentUser, boolean markAsRead) {
+    private List<MessageDto> buildMessages(List<Message> messages, User currentUser, boolean markAsRead, boolean useHiddenFlags) {
         List<MessageDto> result = new LinkedList<MessageDto>();
         for (Message message : messages) {
-            if ( message.isDeleted() || message.isHiddenByRecipient() || message.isHiddenBySender() ) {
+            if ( message.isDeleted() ) {
+                continue;
+            } else if ( useHiddenFlags && (message.isHiddenByRecipient() || message.isHiddenBySender()) ) {
                 continue;
             }
             
