@@ -680,7 +680,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             setNumUnreadMessages(adDto, currentUser.getId());
         }
         if ( includeCreatorStatistics ) {
-            adDto.getCreator().setStatistics(userManagementService.getStatistics(currentUser.getId()));
+            adDto.getCreator().setStatistics(userManagementService.getStatistics(ad.getCreator().getId()));
         }
         
         return adDto;
