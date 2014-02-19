@@ -463,8 +463,19 @@
                 <version>2.4</version>
                 <configuration>
                     <warName>venefica</warName>
-                    <!--
+                    <filters>
+                        <filter>assembly/config-${env}.properties</filter>
+                    </filters>
                     <webResources>
+                        <resource>
+                            <directory>src/main/webapp/WEB-INF/views</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>**/*.jsp</include> 
+                            </includes>
+                            <targetPath>WEB-INF/views</targetPath>
+                        </resource>
+                        <!--
                         <resource>
                             <directory>src/main/webapp</directory>
                             <filtering>true</filtering>
@@ -472,8 +483,8 @@
                                 <include>**/appengine-web.xml</include>
                             </includes>
                         </resource>
+                        -->
                     </webResources>
-                    -->
                 </configuration>
             </plugin>
             

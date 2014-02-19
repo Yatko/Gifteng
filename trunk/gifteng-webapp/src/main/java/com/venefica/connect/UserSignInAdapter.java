@@ -2,6 +2,9 @@ package com.venefica.connect;
 
 import com.venefica.auth.Token;
 import com.venefica.auth.TokenEncryptor;
+import com.venefica.dao.UserDao;
+import com.venefica.model.User;
+import java.util.Date;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,13 +28,21 @@ public class UserSignInAdapter implements SignInAdapter {
     
     @Inject
     private TokenEncryptor tokenEncryptor;
+    
+    @Inject
+    private UserDao userDao;
 
     @Override
     public String signIn(String userId, Connection connection, NativeWebRequest request) {
         try {
             Token token = new Token(Long.parseLong(userId));
             String encryptedToken = tokenEncryptor.encrypt(token);
-
+            
+            User user = userDao.get(token.getUserId());
+            user.setPreviousLoginAt(user.getLastLoginAt());
+            user.setLastLoginAt(new Date());
+            userDao.update(user);
+            
             return URIBuilder.fromUri(PROFILE_URL).queryParam(PARAM_TOKEN, encryptedToken).build().toString();
         } catch (Exception e) {
             log.error("Exception thrown", e);

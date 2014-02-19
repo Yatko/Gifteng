@@ -242,10 +242,7 @@ public class Ad {
      */
     public void cancel(Request request) {
         if ( request.isAccepted() ) {
-            if ( isBusinessAd() ) {
-                //requestor is canceling the automatically selected request
-                adData.use(false);
-            }
+            adData.use(false);
         }
         
         request.cancel();

@@ -5,7 +5,7 @@
 package com.venefica.service;
 
 import com.venefica.dao.UserConnectionDao;
-import com.venefica.model.Provider;
+import com.venefica.service.dto.Provider;
 import com.venefica.model.UserConnection;
 import com.venefica.service.dto.UserConnectionDto;
 import java.util.ArrayList;

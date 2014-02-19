@@ -64,6 +64,7 @@
     <bean class="com.venefica.common.MailChimpSender" />
     <bean class="com.venefica.common.FileUpload" />
     <bean class="com.venefica.common.AmazonUpload" />
+    <bean class="com.venefica.common.UserVerificationUtil" />
     
     
     

@@ -4,7 +4,7 @@
  */
 package com.venefica.dao;
 
-import com.venefica.model.Provider;
+import com.venefica.service.dto.Provider;
 import com.venefica.model.UserConnection;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -23,10 +23,10 @@ public class UserConnectionDaoImpl extends DaoBase<UserConnection> implements Us
     public UserConnection getByUserId(Provider provider, Long userId) {
         List<UserConnection> userConnections = createQuery(""
                 + "from " + getDomainClassName() + " uc where "
-                + "uc.providerId = :provider and "
-                + "uc.userId = :userId"
+                + "uc.id.providerId = :provider and "
+                + "uc.id.userId = :userId"
                 + "")
-                .setParameter("provider", provider)
+                .setParameter("provider", provider.getName())
                 .setParameter("userId", userId.toString())
                 .list();
         return userConnections.isEmpty() ? null : userConnections.get(0);

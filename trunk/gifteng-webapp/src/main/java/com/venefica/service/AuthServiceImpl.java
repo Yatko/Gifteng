@@ -177,6 +177,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
                     }
                 }
                 
+                user.setPreviousLoginAt(user.getLastLoginAt());
                 user.setLastLoginAt(new Date());
                 user.setLastUserAgent(userAgent);
                 userDao.update(user);

@@ -124,10 +124,14 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     @Override
     @Transactional
-    public List<MessageDto> getLastMessagePerRequest() throws UserNotFoundException {
+    public List<MessageDto> getLastMessagePerRequest(Boolean useHiddenFlags) throws UserNotFoundException {
         User currentUser = getCurrentUser();
+        if ( useHiddenFlags == null ) {
+            useHiddenFlags = true;
+        }
+        
         List<Message> messages = messageDao.getLastMessagePerRequestByUser(currentUser.getId());
-        return buildMessages(messages, currentUser, false, true);
+        return buildMessages(messages, currentUser, false, useHiddenFlags);
     }
     
 //    @Override
@@ -139,41 +143,54 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     
     @Override
     @Transactional
-    public List<MessageDto> getMessagesByRequest(Long requestId) throws UserNotFoundException, RequestNotFoundException, AuthorizationException {
+    public List<MessageDto> getMessagesByRequest(Long requestId, Boolean useHiddenFlags) throws UserNotFoundException, RequestNotFoundException, AuthorizationException {
         Request request = validateRequest(requestId);
         User currentUser = getCurrentUser();
+        if ( useHiddenFlags == null ) {
+            useHiddenFlags = false;
+        }
         
         if ( !request.getUser().equals(currentUser) && !request.getAd().getCreator().equals(currentUser) ) {
             throw new AuthorizationException("You can access only implied ads/requests");
         }
         
-        if (request.getUser().equals(currentUser) && request.isMessagesHiddenByRequestor()) {
-            return Collections.<MessageDto>emptyList();
-        } else if (request.getAd().getCreator().equals(currentUser) && request.isMessagesHiddenByCreator()) {
-            return Collections.<MessageDto>emptyList();
+        if ( useHiddenFlags ) {
+            if (request.getUser().equals(currentUser) && request.isMessagesHiddenByRequestor()) {
+                return Collections.<MessageDto>emptyList();
+            } else if (request.getAd().getCreator().equals(currentUser) && request.isMessagesHiddenByCreator()) {
+                return Collections.<MessageDto>emptyList();
+            }
         }
         
         List<Message> messages = messageDao.getByRequest(requestId);
-        return buildMessages(messages, currentUser, true, false);
+        return buildMessages(messages, currentUser, true, useHiddenFlags);
     }
     
     @Override
     @Transactional
-    public List<MessageDto> getMessagesByUsers(Long user1Id, Long user2Id) throws UserNotFoundException {
+    public List<MessageDto> getMessagesByUsers(Long user1Id, Long user2Id, Boolean useHiddenFlags) throws UserNotFoundException {
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
+        if ( useHiddenFlags == null ) {
+            useHiddenFlags = false;
+        }
+        
         List<Message> messages = messageDao.getByUsers(user1Id, user2Id);
-        return buildMessages(messages, getCurrentUser(), true, false);
+        return buildMessages(messages, getCurrentUser(), true, useHiddenFlags);
     }
     
     @Override
     @Transactional
-    public List<MessageDto> getMessagesByAdAndUsers(Long adId, Long user1Id, Long user2Id) throws AdNotFoundException, UserNotFoundException {
+    public List<MessageDto> getMessagesByAdAndUsers(Long adId, Long user1Id, Long user2Id, Boolean useHiddenFlags) throws AdNotFoundException, UserNotFoundException {
         Ad ad = validateAd(adId);
         User user1 = validateUser(user1Id);
         User user2 = validateUser(user2Id);
+        if ( useHiddenFlags == null ) {
+            useHiddenFlags = false;
+        }
+        
         List<Message> messages = messageDao.getByAdAndUsers(adId, user1Id, user2Id);
-        return buildMessages(messages, getCurrentUser(), true, false);
+        return buildMessages(messages, getCurrentUser(), true, useHiddenFlags);
     }
     
     @Override

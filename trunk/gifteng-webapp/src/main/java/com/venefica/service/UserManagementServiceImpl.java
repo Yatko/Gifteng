@@ -1,8 +1,7 @@
 package com.venefica.service;
 
-import com.venefica.common.RandomGenerator;
+import com.venefica.common.UserVerificationUtil;
 import com.venefica.config.AppConfig;
-import com.venefica.config.Constants;
 import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
@@ -50,6 +49,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Inject
     private AppConfig appConfig;
+    @Inject
+    private UserVerificationUtil userVerificationUtil;
     @Inject
     private ImageDao imageDao;
     @Inject
@@ -170,23 +171,25 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
         } else if (userDao.findUserByEmail(userDto.getEmail()) != null) {
             throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
-        } else if ( invitationCode == null ) {
-            throw new InvalidInvitationException("Invitation code cannot be empty!");
         }
         
-        Invitation invitation = invitationDao.findByCode(invitationCode);
-        if (invitation == null) {
-            throw new InvitationNotFoundException("Invitation with code '" + invitationCode + "' not found!");
-        } else if ( !invitation.isValid() ) {
-            throw new InvalidInvitationException("Invitation with code '" + invitationCode + "' is invalid!");
+        Invitation invitation = null;
+        
+        if ( invitationCode != null ) {
+            invitation = invitationDao.findByCode(invitationCode);
+            if (invitation == null) {
+                throw new InvitationNotFoundException("Invitation with code '" + invitationCode + "' not found!");
+            } else if ( !invitation.isValid() ) {
+                throw new InvalidInvitationException("Invitation with code '" + invitationCode + "' is invalid!");
+            }
+            
+            invitation.use();
+            invitationDao.update(invitation);
         }
         
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
 //        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
-        
-        invitation.use();
-        invitationDao.update(invitation);
         
         UserSetting userSetting = createUserSetting(null);
         MemberUserData userData = ((MemberUserData) user.getUserData());
@@ -200,29 +203,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setUserPoint(userPoint);
         Long userId = userDao.save(user);
         
-        UserVerification userVerification = new UserVerification();
-        userVerification.setCode(getUserVerificationCode());
-        userVerification.setUser(user);
-        userVerificationDao.save(userVerification);
-        
-        Map<String, Object> vars = new HashMap<String, Object>(0);
-        vars.put("code", userVerification.getCode());
-        vars.put("user", user);
-        
-        emailSender.sendNotification(NotificationType.USER_WELCOME, user, vars);
-        
-//        if ( !user.isVerified() ) {
-//            UserVerification userVerification = new UserVerification();
-//            userVerification.setCode(getUserVerificationCode());
-//            userVerification.setUser(user);
-//            userVerificationDao.save(userVerification);
-//            
-//            Map<String, Object> vars_ = new HashMap<String, Object>(0);
-//            vars_.put("code", userVerification.getCode());
-//            vars_.put("user", userVerification.getUser());
-//            
-//            emailSender.sendNotification(NotificationType.USER_VERIFICATION, userVerification.getUser(), vars_);
-//        }
+        userVerificationUtil.createAndSendUserWelcome(user);
         
         return userId;
     }
@@ -303,6 +284,9 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     @Transactional
     public UserDto getUser() throws UserNotFoundException {
         User user = getCurrentUser();
+        user.setLastLoginAt(new Date());
+        userDao.update(user);
+        
         return new UserDto(user);
     }
 
@@ -570,21 +554,5 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         statistics.setNumUnreadMessages(numUnreadMessages);
         statistics.setRequestLimit(requestLimit);
         return statistics;
-    }
-    
-    private String getUserVerificationCode() throws GeneralException {
-        String code;
-        int generationTried = 0;
-        while ( true ) {
-            code = RandomGenerator.generateAlphanumeric(Constants.USER_VERIFICATION_DEFAULT_CODE_LENGTH);
-            generationTried++;
-            if ( userVerificationDao.findByCode(code) == null ) {
-                //the generated code does not exists, found an unused (free) one
-                break;
-            } else if ( generationTried >= 10 ) {
-                throw new GeneralException("Cannot generate valid user verification code!");
-            }
-        }
-        return code;
     }
 }

@@ -97,11 +97,12 @@ public interface MessageService {
     /**
      * Returns the last message for every request.
      * 
+     * @param useHiddenFlags 
      * @return 
      */
     @WebMethod(operationName = "GetLastMessagePerRequest")
     @WebResult(name = "message")
-    List<MessageDto> getLastMessagePerRequest() throws UserNotFoundException;
+    List<MessageDto> getLastMessagePerRequest(@WebParam(name = "useHiddenFlags") Boolean useHiddenFlags) throws UserNotFoundException;
     
 //    /**
 //     * Returns all messages associated with the given ad.
@@ -118,12 +119,15 @@ public interface MessageService {
      * Returns all messages associated with the given request.
      * 
      * @param requestId
+     * @param useHiddenFlags 
      * @return
      * @throws RequestNotFoundException 
      */
     @WebMethod(operationName = "GetMessagesByRequest")
     @WebResult(name = "message")
-    List<MessageDto> getMessagesByRequest(@WebParam(name = "requestId") @NotNull Long requestId)
+    List<MessageDto> getMessagesByRequest(
+            @WebParam(name = "requestId") @NotNull Long requestId,
+            @WebParam(name = "useHiddenFlags") Boolean useHiddenFlags)
             throws UserNotFoundException, RequestNotFoundException, AuthorizationException;
     
     /**
@@ -131,6 +135,7 @@ public interface MessageService {
      * 
      * @param user1Id
      * @param user2Id
+     * @param useHiddenFlags 
      * @return
      * @throws UserNotFoundException if one of the users does not exists
      */
@@ -138,7 +143,8 @@ public interface MessageService {
     @WebResult(name = "message")
     List<MessageDto> getMessagesByUsers(
             @WebParam(name = "user1Id") @NotNull Long user1Id,
-            @WebParam(name = "user2Id") @NotNull Long user2Id)
+            @WebParam(name = "user2Id") @NotNull Long user2Id,
+            @WebParam(name = "useHiddenFlags") Boolean useHiddenFlags)
             throws UserNotFoundException;
     
     /**
@@ -147,6 +153,7 @@ public interface MessageService {
      * @param adId
      * @param user1Id
      * @param user2Id
+     * @param useHiddenFlags 
      * @return
      * @throws AdNotFoundException if the given ad does not exists
      * @throws UserNotFoundException if one of the users does not exists
@@ -156,7 +163,8 @@ public interface MessageService {
     List<MessageDto> getMessagesByAdAndUsers(
             @WebParam(name = "adId") @NotNull Long adId,
             @WebParam(name = "user1Id") @NotNull Long user1Id,
-            @WebParam(name = "user2Id") @NotNull Long user2Id)
+            @WebParam(name = "user2Id") @NotNull Long user2Id,
+            @WebParam(name = "useHiddenFlags") Boolean useHiddenFlags)
             throws AdNotFoundException, UserNotFoundException;
     
     /**

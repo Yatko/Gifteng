@@ -4,7 +4,7 @@
  */
 package com.venefica.dao;
 
-import com.venefica.model.Provider;
+import com.venefica.service.dto.Provider;
 import com.venefica.model.UserConnection;
 
 /**
