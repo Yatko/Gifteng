@@ -4,7 +4,6 @@
  */
 package com.venefica.service.dto;
 
-import com.venefica.model.Provider;
 import com.venefica.model.UserConnection;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -50,7 +49,7 @@ public class UserConnectionDto extends DtoBase {
     
     public UserConnectionDto(UserConnection userConnection) {
         userId = Long.valueOf(userConnection.getId().getUserId());
-        provider = userConnection.getId().getProviderId();
+        provider = Provider.findByName(userConnection.getId().getProviderId());
         providerUserId = userConnection.getId().getProviderUserId();
         displayName = userConnection.getDisplayName();
         profileUrl = userConnection.getProfileUrl();

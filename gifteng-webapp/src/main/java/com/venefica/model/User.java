@@ -61,6 +61,8 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date joinedAt;
     @Temporal(TemporalType.TIMESTAMP)
+    private Date previousLoginAt;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginAt;
     @Column(length = 3000)
     private String lastUserAgent;
@@ -461,5 +463,13 @@ public class User {
 
     public void setLastUserAgent(String lastUserAgent) {
         this.lastUserAgent = lastUserAgent;
+    }
+
+    public Date getPreviousLoginAt() {
+        return previousLoginAt;
+    }
+
+    public void setPreviousLoginAt(Date previousLoginAt) {
+        this.previousLoginAt = previousLoginAt;
     }
 }

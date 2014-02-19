@@ -3,8 +3,6 @@ package com.venefica.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 /**
  * Composite primary key for {@link UserConnection} entity.
@@ -19,8 +17,7 @@ public class UserConnectionPk implements Serializable {
     private String userId;
     
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Provider providerId;
+    private String providerId;
     
     @Column(nullable = false)
     private String providerUserId;
@@ -28,7 +25,7 @@ public class UserConnectionPk implements Serializable {
     public UserConnectionPk() {
     }
 
-    public UserConnectionPk(String userId, Provider providerId, String providerUserId) {
+    public UserConnectionPk(String userId, String providerId, String providerUserId) {
         this.userId = userId;
         this.providerId = providerId;
         this.providerUserId = providerUserId;
@@ -42,7 +39,7 @@ public class UserConnectionPk implements Serializable {
 
         UserConnectionPk other = (UserConnectionPk) obj;
         return userId.equals(other.getUserId())
-                && providerId == other.getProviderId()
+                && providerId.equals(other.getProviderId())
                 && providerUserId.equals(other.getProviderUserId()); //the getter usage is a must as proxies needs to be activated
     }
 
@@ -55,7 +52,7 @@ public class UserConnectionPk implements Serializable {
         return userId;
     }
 
-    public Provider getProviderId() {
+    public String getProviderId() {
         return providerId;
     }
 

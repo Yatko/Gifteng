@@ -49,6 +49,8 @@ public class UserDto extends DtoBase {
     // out
     private Date lastLoginAt;
     // out
+    private Date previousLoginAt;
+    // out
     private boolean inFollowers;
     // out
     private boolean inFollowings;
@@ -110,6 +112,7 @@ public class UserDto extends DtoBase {
         website = user.getWebsite();
         joinedAt = user.getJoinedAt();
         lastLoginAt = user.getLastLoginAt();
+        previousLoginAt = user.getPreviousLoginAt();
         avatar = user.getAvatar() != null ? new ImageDto(user.getAvatar()) : null;
         address = new AddressDto(user.getAddress(), user.getLocation());
         businessAccount = user.isBusinessAccount();
@@ -415,5 +418,13 @@ public class UserDto extends DtoBase {
 
     public void setLastLoginAt(Date lastLoginAt) {
         this.lastLoginAt = lastLoginAt;
+    }
+
+    public Date getPreviousLoginAt() {
+        return previousLoginAt;
+    }
+
+    public void setPreviousLoginAt(Date previousLoginAt) {
+        this.previousLoginAt = previousLoginAt;
     }
 }

@@ -470,19 +470,19 @@ public class MessageServiceTest extends ServiceTestBase<MessageService> {
         
         authenticateClientAsFirstUser();
         
-        messages = client.getLastMessagePerRequest();
+        messages = client.getLastMessagePerRequest(true);
         System.out.println("messages: " + messages);
         assertEquals("The size should be 2", 2, messages.size());
         
         authenticateClientAsSecondUser();
         
-        messages = client.getLastMessagePerRequest();
+        messages = client.getLastMessagePerRequest(true);
         System.out.println("messages: " + messages);
         assertEquals("The size should be 1", 1, messages.size());
         
         authenticateClientAsThirdUser();
         
-        messages = client.getLastMessagePerRequest();
+        messages = client.getLastMessagePerRequest(true);
         System.out.println("messages: " + messages);
         assertEquals("The size should be 1", 1, messages.size());
     }

@@ -1,6 +1,8 @@
 package com.venefica.connect;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
+import com.venefica.common.EmailSender;
+import com.venefica.common.UserVerificationUtil;
 import com.venefica.config.AppConfig;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.UserDao;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +49,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     
     @Inject
     private ThreadSecurityContextHolder securityContextHolder;
+    @Inject
+    private UserVerificationUtil userVerificationUtil;
     
     @Inject
     private UserDao userDao;
@@ -100,6 +105,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         user.setUserData(userData);
         user.setUserPoint(userPoint);
         //user.setPassword("xxx");
+        user.setPreviousLoginAt(user.getLastLoginAt());
+        user.setLastLoginAt(new Date());
 
         try {
             String avatarUrlStr = connection.getImageUrl();
@@ -124,6 +131,9 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         }
 
         userId = userDao.save(user);
+        
+        userVerificationUtil.createAndSendUserWelcome(user);
+        
         return userId.toString();
     }
 
