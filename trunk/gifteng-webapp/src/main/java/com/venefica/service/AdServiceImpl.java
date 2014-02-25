@@ -286,10 +286,18 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidAdStateException("There is no transaction associated with this ad (adId: " + adId + ")");
         }
         
+        UserPoint userPoint = currentUser.getUserPoint();
+        if ( userPoint == null ) {
+            throw new InvalidAdStateException("There is no valid user point for current user (userId: " + currentUser.getId() + ")");
+        }
+        
         ad.markAsDeleted();
         
         adTransaction.markAsFinalized(TransactionStatus.DELETED);
         userTransactionDao.update(adTransaction);
+        
+        userPoint.incrementRequestLimit(appConfig.getRequestLimitAdDeleted());
+        userPointDao.update(userPoint);
         
         Set<Request> validRequests = ad.getValidRequests();
         if ( validRequests != null && !validRequests.isEmpty() ) {
