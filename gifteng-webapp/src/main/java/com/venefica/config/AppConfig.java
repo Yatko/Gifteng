@@ -26,6 +26,7 @@ public class AppConfig {
     private int adMaxAllowedProlongations; //number of allowed relisting
     private int requestLimitUserRegister;
     private int requestLimitAdNew; //owner
+    private int requestLimitAdDeleted; //owner
     private int requestLimitRequestNew; //owner
     private int requestLimitRequestReceived; //owner
     private int requestLimitRequestCanceled; //receiver
@@ -41,6 +42,7 @@ public class AppConfig {
         //request limit configs
         requestLimitUserRegister = environment.getProperty("config.request.limit.userRegister", int.class);
         requestLimitAdNew = environment.getProperty("config.request.limit.adNew", int.class);
+        requestLimitAdDeleted = environment.getProperty("config.request.limit.adDeleted", int.class);
         requestLimitRequestNew = environment.getProperty("config.request.limit.requestNew", int.class);
         requestLimitRequestReceived = environment.getProperty("config.request.limit.requestReceived", int.class);
         requestLimitRequestCanceled = environment.getProperty("config.request.limit.requestCanceled", int.class);
@@ -62,6 +64,10 @@ public class AppConfig {
 
     public int getRequestLimitAdNew() {
         return requestLimitAdNew;
+    }
+    
+    public int getRequestLimitAdDeleted() {
+        return requestLimitAdDeleted;
     }
     
     public int getRequestLimitRequestNew() {

@@ -24,6 +24,7 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    <!--
     <action>
         <actionName>CUSTOM-env=venefica-live - skip tests</actionName>
         <displayName>env=venefica-live - skip tests</displayName>
@@ -36,6 +37,7 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    -->
     <action>
         <actionName>CUSTOM-env=venefica-dev - skip tests</actionName>
         <displayName>env=venefica-dev - skip tests</displayName>
@@ -60,6 +62,7 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    <!--
     <action>
         <actionName>CUSTOM-env=amazon - skip tests</actionName>
         <displayName>env=amazon - skip tests</displayName>
@@ -72,6 +75,7 @@
             <skipTests>true</skipTests>
         </properties>
     </action>
+    -->
     
     <!--
     <action>
