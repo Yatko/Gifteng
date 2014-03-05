@@ -93,6 +93,10 @@ public class User {
     @ForeignKey(name = "local_user_follower_fk")
     private Set<User> followings;
     
+    @ManyToOne
+    @ForeignKey(name = "local_user_referrer_fk")
+    private User referrer;
+    
     @OneToMany(mappedBy = "from")
     @OrderBy
     private Set<Message> sentMessages;
@@ -471,5 +475,13 @@ public class User {
 
     public void setPreviousLoginAt(Date previousLoginAt) {
         this.previousLoginAt = previousLoginAt;
+    }
+
+    public User getReferrer() {
+        return referrer;
+    }
+
+    public void setReferrer(User referrer) {
+        this.referrer = referrer;
     }
 }

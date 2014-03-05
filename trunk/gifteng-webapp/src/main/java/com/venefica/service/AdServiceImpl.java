@@ -908,6 +908,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Only owned requests can be cancelled");
         }
         
+        boolean isDecline = false;
+        if ( ad.getCreator().equals(currentUser) ) {
+            isDecline = true;
+        }
+        
         if ( ad.isMemberAd() ) {
             if ( request.isAccepted() && !adData.isOnlyPickUp() ) {
                 //member typed ads (that are not only pickup) accepted request cannot be cancelled
@@ -918,11 +923,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
         UserTransaction requestTransaction = userTransactionDao.getByRequest(requestId);
         if ( requestTransaction == null ) {
             throw new InvalidRequestException("No associated transaction for the request (requestId: " + requestId + ")");
-        }
-        
-        boolean isDecline = false;
-        if ( ad.getCreator().equals(currentUser) ) {
-            isDecline = true;
         }
         
         if ( isDecline ) {

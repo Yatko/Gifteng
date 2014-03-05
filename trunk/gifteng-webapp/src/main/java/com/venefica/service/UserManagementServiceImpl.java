@@ -165,7 +165,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public Long registerUser(UserDto userDto, String password, String invitationCode) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
+    public Long registerUser(UserDto userDto, String password, String invitationCode, Long referrerId) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         // Check for existing users
         if (userDao.findUserByName(userDto.getName()) != null) {
             throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
@@ -187,8 +187,15 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             invitationDao.update(invitation);
         }
         
+        User referrer = null;
+        if ( referrerId != null ) {
+            referrer = userDao.get(referrerId);
+            logger.debug("Referrer user: " + (referrer != null ? referrer.getId() : null));
+        }
+        
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
         user.setPassword(password);
+        user.setReferrer(referrer);
 //        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         UserSetting userSetting = createUserSetting(null);
