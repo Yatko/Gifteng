@@ -78,7 +78,7 @@ public class BusinessAdData extends AdData {
         promoCode = adDto.getPromoCode();
         generatePromoCodeForRequests = adDto.isGeneratePromoCodeForRequests();
         website = adDto.getWebsite();
-        fixedValue = adDto.isFree() ? BigDecimal.ZERO : null;
+        fixedValue = adDto.isFree() ? BigDecimal.ZERO : null; //currently is a boolean simulator
         redemptionEndDate = adDto.getRedemptionEndDate();
         allAddresses = adDto.isAllAddresses();
         addresses = AddressWrapper.toAddressWrappers(adDto.getAddresses());
@@ -120,7 +120,7 @@ public class BusinessAdData extends AdData {
     @Override
     public BigDecimal getValue() {
         if ( isFree() ) {
-            return fixedValue;
+            return BigDecimal.ZERO;
         }
         
         BigDecimal price = getPrice();
@@ -146,7 +146,7 @@ public class BusinessAdData extends AdData {
     }
     
     private boolean isFree() {
-        return fixedValue == null;
+        return fixedValue == BigDecimal.ZERO;
     }
     
     // getters/setters

@@ -72,9 +72,9 @@ public interface UserManagementService {
      * Registers new local user.
      *
      * @param userDto the user to register
-     * @param password the password (may be a hash of the password in the
-     * future)
+     * @param password the password (may be a hash of the password in the future)
      * @param invitationCode the invitation code
+     * @param referrerId the referrer user id
      * @throws UserAlreadyExistsException is thrown when a user with the same
      * name and email already exists
      * @throws InvitationNotFoundException thrown when the provided invitation code
@@ -86,7 +86,8 @@ public interface UserManagementService {
     public Long registerUser(
             @WebParam(name = "user") @NotNull UserDto userDto,
             @WebParam(name = "password") @NotNull String password,
-            @WebParam(name = "invitationCode")  @NotNull String invitationCode)
+            @WebParam(name = "invitationCode")  @NotNull String invitationCode,
+            @WebParam(name = "referrerId")  Long referrerId)
             throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException;
     
     /**
