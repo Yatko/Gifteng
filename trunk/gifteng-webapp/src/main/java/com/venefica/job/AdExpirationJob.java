@@ -16,7 +16,6 @@ import com.venefica.model.AdStatus;
 import com.venefica.model.Request;
 import com.venefica.model.TransactionStatus;
 import com.venefica.model.UserTransaction;
-import java.util.Date;
 import java.util.List;
 import org.quartz.ExecuteInJTATransaction;
 
@@ -63,8 +62,7 @@ public class AdExpirationJob implements Job {
                     }
                     
                     for ( Request request : requests ) {
-                        request.setDeleted(true);
-                        request.setDeletedAt(new Date());
+                        request.markAsDeleted();
                         requestDao.update(request);
                         
                         UserTransaction requestTransaction = userTransactionDao.getByRequest(request.getId());

@@ -4,6 +4,7 @@
  */
 package com.venefica.service.dto;
 
+import com.venefica.model.AdData;
 import com.venefica.model.AdStatus;
 import com.venefica.model.AdType;
 import com.venefica.model.BusinessAdData;
@@ -50,6 +51,8 @@ public class RequestDto extends DtoBase {
     private boolean sent;
     // out
     private boolean received;
+    // out
+    private boolean redeemed;
     
     // out
     private Integer numUnreadMessages;
@@ -57,7 +60,7 @@ public class RequestDto extends DtoBase {
     public RequestDto() {
     }
     
-    public RequestDto(Request request) {
+    public RequestDto(Request request, AdData adData) {
         this.id = request.getId();
         this.adId = request.getAd().getId();
         this.user = new UserDto(request.getUser());
@@ -69,15 +72,16 @@ public class RequestDto extends DtoBase {
         this.accepted = request.isAccepted();
         this.sent = request.isSent();
         this.received = request.isReceived();
+        this.redeemed = request.isRedeemed();
         
         if ( request.getAd().isBusinessAd() ) {
-            BusinessAdData adData = (BusinessAdData) request.getAd().getAdData();
-            if ( adData.isGeneratePromoCodeForRequests() ) {
+            BusinessAdData businessAdData = (BusinessAdData) adData;
+            if ( businessAdData.isGeneratePromoCodeForRequests() ) {
                 //using the code generated for every request
                 this.promoCode = request.getPromoCode();
             } else {
                 //using the code set globally in the ad
-                this.promoCode = adData.getPromoCode();
+                this.promoCode = businessAdData.getPromoCode();
             }
         }
         
@@ -207,5 +211,13 @@ public class RequestDto extends DtoBase {
 
     public void setNumUnreadMessages(Integer numUnreadMessages) {
         this.numUnreadMessages = numUnreadMessages;
+    }
+
+    public boolean isRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(boolean redeemed) {
+        this.redeemed = redeemed;
     }
 }

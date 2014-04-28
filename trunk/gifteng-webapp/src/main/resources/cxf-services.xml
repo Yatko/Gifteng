@@ -56,5 +56,6 @@
     <jaxws:endpoint id="utilityEndpoint" implementor="#utilityService" address="/UtilityService" />
     <jaxws:endpoint id="adminEndpoint" implementor="#adminService" address="/AdminService" />
     <jaxws:endpoint id="socialEndpoint" implementor="#socialService" address="/SocialService" />
+    <jaxws:endpoint id="promoCodeEndpoint" implementor="#promoCodeService" address="/PromoCodeService" />
 
 </beans>

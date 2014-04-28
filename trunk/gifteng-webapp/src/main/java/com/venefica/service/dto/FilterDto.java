@@ -31,7 +31,7 @@ public class FilterDto {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private Boolean hasPhoto;
-    private AdType type;
+    private List<AdType> types;
     private Boolean orderAsc; //if true the older ads will be in the first position
     private Boolean orderClosest; //if true the closest ads will be in the first position
     private Boolean checkDate; //if true fields like availableAt and expiresAt will be verified with the current date
@@ -116,12 +116,12 @@ public class FilterDto {
 //        this.includeOwned = includeOwned;
 //    }
 
-    public AdType getType() {
-        return type;
+    public List<AdType> getTypes() {
+        return types;
     }
 
-    public void setType(AdType type) {
-        this.type = type;
+    public void setType(List<AdType> types) {
+        this.types = types;
     }
 
     public Boolean getOrderAsc() {

@@ -200,7 +200,7 @@ public class UserPoint {
         this.givingNumber = givingNumber;
     }
 
-    public BigDecimal getmemberReceivingNumber() {
+    public BigDecimal getMemberReceivingNumber() {
         return memberReceivingNumber;
     }
 

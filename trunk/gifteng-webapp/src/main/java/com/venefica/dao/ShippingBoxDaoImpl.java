@@ -28,7 +28,7 @@ public class ShippingBoxDaoImpl extends DaoBase<ShippingBox> implements Shipping
         List<ShippingBox> issues = createQuery(""
                 + "from " + getDomainClassName() + " sb "
                 + "where sb.deleted = false "
-                + "order by sortOrder asc"
+                + "order by sb.sortOrder asc"
                 + "")
                 .list();
         return issues;

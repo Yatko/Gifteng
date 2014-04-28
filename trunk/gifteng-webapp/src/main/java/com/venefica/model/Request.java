@@ -78,6 +78,11 @@ public class Request {
     @Temporal(TemporalType.TIMESTAMP)
     private Date hideAt;
     
+    @Index(name = "idx_redeemed")
+    private boolean redeemed;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date redeemedAt;
+    
     private boolean messagesHiddenByRequestor; //default is false
     private boolean messagesHiddenByCreator; //default is false
     
@@ -168,6 +173,11 @@ public class Request {
     public void markAsUnaccepted() {
         unmarkAsAccepted();
         status = RequestStatus.UNACCEPTED;
+    }
+    
+    public void markAsRedeemed() {
+        redeemed = true;
+        redeemedAt = new Date();
     }
     
     public void cancel() {
@@ -350,5 +360,21 @@ public class Request {
 
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public boolean isRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(boolean redeemed) {
+        this.redeemed = redeemed;
+    }
+
+    public Date getRedeemedAt() {
+        return redeemedAt;
+    }
+
+    public void setRedeemedAt(Date redeemedAt) {
+        this.redeemedAt = redeemedAt;
     }
 }

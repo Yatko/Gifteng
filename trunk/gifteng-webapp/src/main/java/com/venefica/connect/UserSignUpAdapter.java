@@ -1,7 +1,6 @@
 package com.venefica.connect;
 
 import com.venefica.auth.ThreadSecurityContextHolder;
-import com.venefica.common.EmailSender;
 import com.venefica.common.UserVerificationUtil;
 import com.venefica.config.AppConfig;
 import com.venefica.dao.ImageDao;
@@ -9,6 +8,7 @@ import com.venefica.dao.UserDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserSettingDao;
+import com.venefica.dao.UserSocialPointDao;
 import com.venefica.model.Image;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.ImageType;
@@ -16,6 +16,7 @@ import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.model.UserSetting;
+import com.venefica.model.UserSocialPoint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -27,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UserProfile;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.UserOperations;
 
 /**
  * Creates partially completed user account and stores him in the database.
@@ -62,6 +65,8 @@ public class UserSignUpAdapter implements ConnectionSignUp {
     private UserSettingDao userSettingDao;
     @Inject
     private UserPointDao userPointDao;
+    @Inject
+    private UserSocialPointDao userSocialPointDao;
 
     private boolean generateUserName = false;
     
@@ -94,8 +99,12 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         userSetting.markDefaultNotifiableTypes();
         userSettingDao.save(userSetting);
         
+        UserSocialPoint socialPoint = new UserSocialPoint();
+        userSocialPointDao.save(socialPoint);
+        
         MemberUserData userData = new MemberUserData(userProfile.getFirstName(), userProfile.getLastName());
         userData.setUserSetting(userSetting);
+        userData.setUserSocialPoint(socialPoint);
         userDataDao.save(userData);
         
         UserPoint userPoint = new UserPoint(appConfig.getRequestLimitUserRegister(), 0, 0);
@@ -108,6 +117,33 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         user.setPreviousLoginAt(user.getLastLoginAt());
         user.setLastLoginAt(new Date());
 
+        extractProfileImage(connection, user);
+        
+        userId = userDao.save(user);
+        
+        userVerificationUtil.createAndSendUserWelcome(user);
+        
+        return userId.toString();
+    }
+
+    // internal helpers
+    
+    private void extractProfileImage(Connection<?> connection, User user) {
+        try {
+            UserOperations userOperations = ((Facebook) connection.getApi()).userOperations();
+            byte[] data = userOperations.getUserProfileImage();
+
+            Image avatar = new Image(ImageType.JPEG, data);
+            imageDao.save(avatar, ImageModelType.USER);
+
+            user.setAvatar(avatar);
+        } catch ( IOException e ) {
+            log.error("", e);
+        } catch ( Exception e ) {
+            log.error("", e);
+        }
+        
+        /**
         try {
             String avatarUrlStr = connection.getImageUrl();
             if (avatarUrlStr != null & !avatarUrlStr.isEmpty()) {
@@ -129,16 +165,10 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         } catch (IOException e) {
             log.error("", e);
         }
-
-        userId = userDao.save(user);
-        
-        userVerificationUtil.createAndSendUserWelcome(user);
-        
-        return userId.toString();
+        /**/
     }
-
-    // internal helpers
     
+    /**
     private static byte[] readToEndOfStream(InputStream in) throws IOException {
         byte[] data = new byte[0];
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -152,4 +182,5 @@ public class UserSignUpAdapter implements ConnectionSignUp {
         }
         return data;
     }
+    /**/
 }

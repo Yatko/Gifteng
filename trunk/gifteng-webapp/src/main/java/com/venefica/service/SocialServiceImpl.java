@@ -4,10 +4,17 @@
  */
 package com.venefica.service;
 
+import com.venefica.config.AppConfig;
 import com.venefica.dao.UserConnectionDao;
+import com.venefica.model.MemberUserData;
+import com.venefica.model.User;
 import com.venefica.service.dto.Provider;
 import com.venefica.model.UserConnection;
+import com.venefica.model.UserSocialActivity;
+import com.venefica.model.SocialActivityType;
+import com.venefica.model.UserSocialPoint;
 import com.venefica.service.dto.UserConnectionDto;
+import com.venefica.service.fault.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,9 +25,11 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
+import org.springframework.social.facebook.api.Page;
 import org.springframework.social.twitter.api.Twitter;
 //import org.springframework.social.vkontakte.api.VKontakte;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 /**
@@ -34,6 +43,8 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
     //@Autowired(required = false)
     @Inject
     private ConnectionRepository connectionRepository;
+    @Inject
+    private AppConfig appConfig;
     @Inject
     private UserConnectionDao userConnectionDao;
     
@@ -84,6 +95,49 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
         }
         
         return userConnectionDto;
+    }
+    
+    @Override
+    @Transactional
+    public int calculateSocialPoints() throws UserNotFoundException {
+        Long userId = getCurrentUserId();
+        User currentUser = getCurrentUser();
+        if ( currentUser.isBusinessAccount() ) {
+            logger.debug("Current user (userId: " + userId + ") is not a member type.");
+            return 0;
+        }
+        
+        Set<String> networks = getConnectedSocialNetworks();
+        if ( networks == null || networks.isEmpty() ) {
+            logger.debug("Current user (userId: " + userId + ") has no any social connection.");
+            return 0;
+        }
+        
+        MemberUserData userData = (MemberUserData) currentUser.getUserData();
+        UserSocialPoint socialPoint = userData.getUserSocialPoint();
+        if ( socialPoint == null ) {
+            socialPoint = createUserSocialPoint(userData);
+        }
+        
+        for ( String network : networks ) {
+            Provider provider = Provider.valueOf(network);
+            UserConnection userConnection = userConnectionDao.getByUserId(provider, userId);
+            if ( userConnection == null ) {
+                logger.warn("The <" + network + "> network appears as connected, but there is no valid user connection (userId: " + userId + ")");
+                continue;
+            }
+            
+            if ( provider == Provider.FACEBOOK ) {
+                UserSocialActivity activity = userSocialActivityDao.getBySocialPointAndActivityType(socialPoint.getId(), SocialActivityType.GIFTENG_PAGE_LIKED_ON_FACEBOOK);
+                if ( activity == null && isGiftengPageLikedOnFacebook() ) {
+                    createSocialActivity(currentUser, SocialActivityType.GIFTENG_PAGE_LIKED_ON_FACEBOOK, null, appConfig.getSocialPointGiftengPageLikedOnFacebook());
+                }
+            } else if ( provider == Provider.TWITTER ) {
+                // TODO: needs to be implemented
+            }
+        }
+        
+        return socialPoint.getSocialPoint();
     }
     
     
@@ -149,5 +203,15 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
     private <T> T getSocialNetworkApi(Class<T> socialNetworkInterface) {
         Connection<T> connection = connectionRepository.findPrimaryConnection(socialNetworkInterface);
         return connection != null ? connection.getApi() : null;
+    }
+    
+    private boolean isGiftengPageLikedOnFacebook() {
+        Facebook facebook = getSocialNetworkApi(Facebook.class);
+        for ( Page page : facebook.likeOperations().getPagesLiked() ) {
+            if ( page.getName().equals(Provider.GIFTENG_FACEBOOK_PAGE_NAME) ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

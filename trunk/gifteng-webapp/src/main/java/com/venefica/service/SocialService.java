@@ -5,6 +5,7 @@
 package com.venefica.service;
 
 import com.venefica.service.dto.UserConnectionDto;
+import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
 import java.util.Set;
 import javax.jws.WebMethod;
@@ -53,6 +54,14 @@ public interface SocialService {
     @WebMethod(operationName = "GetUserConnection")
     @WebResult(name = "userConnection")
     public UserConnectionDto getUserConnection(@WebParam(name = "networkName") String networkName);
+    
+    /**
+     * 
+     * @return 
+     */
+    @WebMethod(operationName = "CalculateSocialPoints")
+    @WebResult(name = "socialPoints")
+    public int calculateSocialPoints() throws UserNotFoundException;
     
     
     

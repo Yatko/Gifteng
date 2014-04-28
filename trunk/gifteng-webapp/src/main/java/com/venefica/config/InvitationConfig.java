@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
  * @author gyuszi
  */
 @Configuration
-@PropertySource("/application.properties")
+@PropertySource("/" + Constants.APPLICATION_PROPERTIES)
 public class InvitationConfig {
     
     @Inject

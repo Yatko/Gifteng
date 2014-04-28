@@ -16,6 +16,9 @@ import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.model.UserSetting;
+import com.venefica.model.UserSocialActivity;
+import com.venefica.model.SocialActivityType;
+import com.venefica.model.UserSocialPoint;
 import com.venefica.model.UserVerification;
 import com.venefica.service.dto.BusinessCategoryDto;
 import com.venefica.service.dto.RatingDto;
@@ -199,9 +202,12 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
 //        user.setVerified(userDto.getEmail().trim().equals(invitation.getEmail().trim()));
         
         UserSetting userSetting = createUserSetting(null);
+        UserSocialPoint socialPoint = createUserSocialPoint(null);
+        
         MemberUserData userData = ((MemberUserData) user.getUserData());
         userData.setInvitation(invitation);
         userData.setUserSetting(userSetting);
+        userData.setUserSocialPoint(socialPoint);
         userDataDao.save(userData);
         
         UserPoint userPoint = new UserPoint(appConfig.getRequestLimitUserRegister(), 0, 0);
@@ -211,6 +217,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         Long userId = userDao.save(user);
         
         userVerificationUtil.createAndSendUserWelcome(user);
+        
+        createSocialActivity(referrer, SocialActivityType.REFERRER_SIGNUP, String.valueOf(userId), appConfig.getSocialPointReferrerSignup());
         
         return userId;
     }

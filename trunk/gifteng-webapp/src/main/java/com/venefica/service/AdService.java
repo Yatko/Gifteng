@@ -462,6 +462,19 @@ public interface AdService {
             throws UserNotFoundException, RequestNotFoundException, InvalidRequestException, InvalidAdStateException;
     
     /**
+     * Mark the request as redeemed.
+     * 
+     * @param requestId
+     * @throws UserNotFoundException
+     * @throws RequestNotFoundException
+     * @throws InvalidRequestException
+     * @throws InvalidAdStateException 
+     */
+    @WebMethod(operationName = "RedeemRequest")
+    void redeemRequest(@WebParam(name = "requestId") Long requestId)
+            throws UserNotFoundException, RequestNotFoundException, InvalidRequestException, InvalidAdStateException;
+    
+    /**
      * 
      * @param requestId
      * @return

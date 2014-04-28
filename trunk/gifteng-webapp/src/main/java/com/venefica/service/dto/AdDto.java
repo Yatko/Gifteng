@@ -127,6 +127,8 @@ public class AdDto extends DtoBase {
     // in, out
     private boolean generatePromoCodeForRequests;
     // in, out
+    private PromoCodeProviderDto promoCodeProvider;
+    // in, out
     private String website; //adPlace in (ONLINE, BOTH)
     // in, out
     private Date redemptionEndDate;
@@ -607,5 +609,13 @@ public class AdDto extends DtoBase {
 
     public void setShippingBox(ShippingBoxDto shippingBox) {
         this.shippingBox = shippingBox;
+    }
+
+    public PromoCodeProviderDto getPromoCodeProvider() {
+        return promoCodeProvider;
+    }
+
+    public void setPromoCodeProvider(PromoCodeProviderDto promoCodeProvider) {
+        this.promoCodeProvider = promoCodeProvider;
     }
 }

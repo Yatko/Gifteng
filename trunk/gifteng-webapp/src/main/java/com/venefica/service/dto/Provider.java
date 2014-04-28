@@ -17,6 +17,8 @@ public enum Provider {
     //... more to come
     ;
     
+    public static final String GIFTENG_FACEBOOK_PAGE_NAME = "gifteng";
+    
     private final String name;
 
     private Provider(String name) {

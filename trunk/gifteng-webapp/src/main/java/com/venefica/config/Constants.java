@@ -42,6 +42,7 @@ public interface Constants {
     
     public static final int REQUEST_PROMO_CODE_DEFAULT_CODE_LENGTH = 15;
     
+    public static final String APPLICATION_PROPERTIES = "application.properties";
     public static final String MODEL_PACKAGE = "com.venefica.model";
     public static final String DEFAULT_CHARSET = "UTF-8";
     
@@ -79,12 +80,19 @@ public interface Constants {
             "ForgotPasswordEmail",
             "ChangeForgottenPassword",
             
+            //AdService
+            "GetAllCategories",
+            
             //InvitationService: invitation related
             "RequestInvitation",
             "IsInvitationValid",
             
             //UtilityService
-            "GetAddressByZipcode"
+            "GetAddressByZipcode",
+            
+            //PromoCodeService
+            //"GetProviders",
+            "UpdateZenclusivePromoCode"
     ));
     
 }
