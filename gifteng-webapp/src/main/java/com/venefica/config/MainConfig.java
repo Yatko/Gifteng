@@ -22,7 +22,7 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @ComponentScan(basePackages = "com.venefica", excludeFilters = {@Filter(Configuration.class)})
-@PropertySource("/application.properties")
+@PropertySource("/" + Constants.APPLICATION_PROPERTIES)
 @ImportResource("classpath:main.xml")
 public class MainConfig {
 

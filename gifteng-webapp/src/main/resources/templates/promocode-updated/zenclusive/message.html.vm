@@ -1,0 +1,28 @@
+#set($title = "Your reward has arrived")
+#parse("../../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+    <h1 style="font-size:130%;">Hello $!{user.userData.getFirstName()},</h1>
+    
+    <p>Your ${incentiveName} gift card code, is here.</p>
+    <p>Gift Code: ${promoCode}</p>
+    <p>Expiration Date: ${expirationDate}</p>
+    <p>
+        Redeem your ${incentiveName} gift card code in three easy steps:
+        <ol>
+            <li>Visit ${incentiveUrl}, select your products, and proceed to checkout.</li>
+            <li>During the checkout process, please enter the full coupon / voucher code into the box titled 'Promo Code'. The amount of the voucher will be deducted from the total value of the merchandise.</li>
+            <li>Review and confirm your order. Enjoy!</li>
+        </ol>
+    </p>
+    <p>If you have questions or issues with your gift code, please contact ${incentiveName} customer service at ${supportPhone} or <a href="${supportUrl}">click here</a>.<br /><br /></p>
+    <p>
+        Happy giving & receiving,<br />
+        The Gifteng Team
+    </p>
+    <p style="color: #37495d;font-size:0.9em;">
+        *Restrictions: cannot be combined with any other coupon codes, promotions, discounts or offers.
+    </p>
+</div>
+
+#parse("../../footer.html.vm")

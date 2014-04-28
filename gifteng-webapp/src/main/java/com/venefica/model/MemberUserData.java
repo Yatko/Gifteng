@@ -45,6 +45,10 @@ public class MemberUserData extends UserData {
     @ForeignKey(name = "usersetting_fk")
     private UserSetting userSetting;
     
+    @OneToOne(fetch = FetchType.LAZY)
+    @ForeignKey(name = "usersocialpoint_fk")
+    private UserSocialPoint userSocialPoint;
+    
     public MemberUserData() {
         super();
     }
@@ -153,5 +157,13 @@ public class MemberUserData extends UserData {
 
     public void setUserSetting(UserSetting userSetting) {
         this.userSetting = userSetting;
+    }
+
+    public UserSocialPoint getUserSocialPoint() {
+        return userSocialPoint;
+    }
+
+    public void setUserSocialPoint(UserSocialPoint userSocialPoint) {
+        this.userSocialPoint = userSocialPoint;
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.venefica.auth;
 
+import com.venefica.config.Constants;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
@@ -48,7 +49,7 @@ public class TokenEncryptorTest {
     @Test
     public void testUrlEncryptToken() throws UnsupportedEncodingException {
         String encryptedToken = "eneGKi4Soqsw+1gvL7DjNIYuW02B867KmXGwE51Ubd+jurflJqquNQjciZvEf01raCD3au231wmQaoIlSXtIY5GL7aHAF6ue2bYrrgLOIZYYOprbOTcP6mPgptJtCoiqKurReT1m6zlu22D/1LY8dIxk9+Nlqfvvd2kaDnTz8Y2QMKP7QkADXLrjRwhgAWYESsX8UQ7XSjMKBfjkk/Ct4lIIK+/vY8kJ8Jgf6JnTmtE5PK3bk/d919Z5oUUuVokCBk6Hpvm4vCcaIx+aAUgbE7AUOo175wUEeSDKPuVzWic=";
-        String urlEncoded = URLEncoder.encode(encryptedToken, "UTF-8");
+        String urlEncoded = URLEncoder.encode(encryptedToken, Constants.DEFAULT_CHARSET);
         System.out.println("encoded=" + urlEncoded);
     }
 }

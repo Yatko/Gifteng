@@ -107,7 +107,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         BigDecimal minPrice = filter.getMinPrice();
         BigDecimal maxPrice = filter.getMaxPrice();
         Boolean hasPhoto = filter.getHasPhoto();
-        AdType type = filter.getType();
+        List<AdType> types = filter.getTypes();
         boolean orderAsc = filter.getOrderAsc() == null ? FilterDto.DEFAULT_ORDER_ASC : filter.getOrderAsc();
         boolean checkDate = filter.getCheckDate() == null ? FilterDto.DEFAULT_CHECK_DATE : filter.getCheckDate();
         boolean orderClosest = filter.getOrderClosest() == null ? FilterDto.DEFAULT_ORDER_CLOSEST : filter.getOrderClosest();
@@ -175,8 +175,13 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             queryStr += " and a.adData.mainImage is not null";
         }
 
-        if (type != null) {
-            queryStr += " and a.adData.type = :type";
+        if (types != null && !types.isEmpty()) {
+            queryStr += " and (";
+            for ( int i = 0; i < types.size(); i++ ) {
+                if ( i > 0 ) queryStr += " or";
+                queryStr += " a.adData.type = :type" + i;
+            }
+            queryStr += ")";
         }
 
         if ( orderClosest && curPositon != null ) {
@@ -214,8 +219,10 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
             query.setParameter("maxPrice", maxPrice);
         }
 
-        if (type != null) {
-            query.setParameter("type", type);
+        if (types != null && !types.isEmpty()) {
+            for ( int i = 0; i < types.size(); i++ ) {
+                query.setParameter("type" + i, types.get(i));
+            }
         }
 
         query.setFirstResult(lastIndex);

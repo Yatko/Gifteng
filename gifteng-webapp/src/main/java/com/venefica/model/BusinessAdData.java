@@ -40,6 +40,9 @@ public class BusinessAdData extends AdData {
     
     private String promoCode; //static code available for every request
     private boolean generatePromoCodeForRequests; //new unique code for all the requests
+    @ManyToOne
+    @ForeignKey(name = "businessaddata_promocode_fk")
+    private PromoCodeProvider promoCodeProvider;
     private String website; //place in (ONLINE, BOTH)
     private BigDecimal fixedValue;
     
@@ -253,5 +256,13 @@ public class BusinessAdData extends AdData {
 
     public void setAllAddresses(boolean allAddresses) {
         this.allAddresses = allAddresses;
+    }
+
+    public PromoCodeProvider getPromoCodeProvider() {
+        return promoCodeProvider;
+    }
+
+    public void setPromoCodeProvider(PromoCodeProvider promoCodeProvider) {
+        this.promoCodeProvider = promoCodeProvider;
     }
 }

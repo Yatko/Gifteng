@@ -17,12 +17,16 @@
     <bean id="messageService" class="com.venefica.service.MessageServiceImpl" />
     <bean id="adService" class="com.venefica.service.AdServiceImpl" />
     <bean id="adminService" class="com.venefica.service.AdminServiceImpl" />
+    <bean id="promoCodeService" class="com.venefica.service.PromoCodeServiceImpl" />
 
     <bean id="publishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'AdService'}" />
     </bean>
     <bean id="adminPublishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'AdminService'}" />
+    </bean>
+    <bean id="promoCodePublishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'PromoCodeService'}" />
     </bean>
 
     <jaxws:endpoint id="adServiceEndpoint" implementor="#adService" address="#publishedUrl">
@@ -40,6 +44,12 @@
     </jaxws:endpoint>
     
     <jaxws:endpoint id="adminServiceEndpoint" implementor="#adminService" address="#adminPublishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="promoCodeServiceEndpoint" implementor="#promoCodeService" address="#promoCodePublishedUrl">
         <jaxws:inInterceptors>
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>

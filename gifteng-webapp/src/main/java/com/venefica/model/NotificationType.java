@@ -42,6 +42,7 @@ public enum NotificationType {
     SHIPPING("shipping", true, false),
     EMAIL_NEW("email-new", true, true), //TODO: needs to be renamed
     INVITATION_EMAIL_NEW("invitation-email-new", true, false), //TODO: needs to be renamed
+    PROMOCODE_UPDATED("promocode-updated", true, false),
     ;
     
     public static final String SUBTYPE_REQUEST_ACCEPTED_PICKUP = "pickup"; //the giver accepted your gift request - only pickup is possible

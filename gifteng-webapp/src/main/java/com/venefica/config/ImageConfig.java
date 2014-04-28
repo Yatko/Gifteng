@@ -19,7 +19,7 @@ import org.springframework.core.env.Environment;
  * @author gyuszi
  */
 @Configuration
-@PropertySource("/application.properties")
+@PropertySource("/" + Constants.APPLICATION_PROPERTIES)
 public class ImageConfig {
     
     @Inject

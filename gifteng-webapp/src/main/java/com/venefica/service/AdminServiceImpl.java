@@ -6,7 +6,6 @@ package com.venefica.service;
 
 import com.venefica.common.MailException;
 import com.venefica.config.AppConfig;
-import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ApprovalDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.UserPointDao;
@@ -61,8 +60,6 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
     private UserPointDao userPointDao;
     @Inject
     private ApprovalDao approvalDao;
-    @Inject
-    private AdDataDao adDataDao;
     @Inject
     private ImageDao imageDao;
 
@@ -223,7 +220,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         
         User creator = userDao.getEager(ad.getCreator().getId());
         if ( !creator.isBusinessAccount() ) {
-            MemberAdData adData = adDataDao.getMemberAdDataByAd(ad.getId());
+            MemberAdData adData = (MemberAdData) getAdData(ad);
             if ( !adData.isRequestLimitIncreased() ) {
                 adData.setRequestLimitIncreased(true);
                 adDataDao.update(adData);

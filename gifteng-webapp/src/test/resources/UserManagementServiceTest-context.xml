@@ -16,6 +16,7 @@
     <bean id="userManagementService" class="com.venefica.service.UserManagementServiceImpl" />
     <bean id="adService" class="com.venefica.service.AdServiceImpl" />
     <bean id="messageService" class="com.venefica.service.MessageServiceImpl" />
+    <bean id="promoCodeService" class="com.venefica.service.PromoCodeServiceImpl" />
 
     <bean id="publishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'UserManagementService'}" />
@@ -25,6 +26,9 @@
     </bean>
     <bean id="messagePublishedUrl" class="java.lang.String">
         <constructor-arg value="#{baseUrl + 'MessageService'}" />
+    </bean>
+    <bean id="promoCodePublishedUrl" class="java.lang.String">
+        <constructor-arg value="#{baseUrl + 'PromoCodeService'}" />
     </bean>
 
     <jaxws:endpoint id="userManagementServiceEndpoint" implementor="#userManagementService" address="#publishedUrl">
@@ -38,7 +42,14 @@
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>
     </jaxws:endpoint>
+    
     <jaxws:endpoint id="messageServiceEndpoint" implementor="#messageService" address="#messagePublishedUrl">
+        <jaxws:inInterceptors>
+            <ref bean="tokenAuthorizationInterceptor" />
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+    
+    <jaxws:endpoint id="promoCodeServiceEndpoint" implementor="#promoCodeService" address="#promoCodePublishedUrl">
         <jaxws:inInterceptors>
             <ref bean="tokenAuthorizationInterceptor" />
         </jaxws:inInterceptors>

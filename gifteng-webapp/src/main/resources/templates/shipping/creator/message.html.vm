@@ -7,7 +7,9 @@
 	    Here is the pre-paid, pre-addressed USPS shipping label for <a href="${baseUrl}/#/browse?view=${ad.id}">${ad.adData.title}</a> that was requested on Gifteng! Whoohoo!
 	    Please ship the gift as soon as possible. $!{receiver.userData.getFirstName()} is eagerly waiting to get it.<br /><br />
 	
-	    Not sure where to find something? Check out our super helpful <a href="http://gifteng.zendesk.com/home">FAQ</a> page.
+	    <!--Not sure where to find something? Check out our super helpful <a href="http://gifteng.zendesk.com/home">FAQ</a> page.-->
+            
+            Note: Use any plain envelope or box, but please do not use Priority Mail packaging because they won’t work with your prepaid label.
 	</p>
 	<p>
     	Happy giving & receiving,<br />

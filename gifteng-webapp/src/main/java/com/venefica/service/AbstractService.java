@@ -7,16 +7,24 @@ package com.venefica.service;
 import com.venefica.auth.ThreadSecurityContextHolder;
 import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
+import com.venefica.dao.AdDataDao;
+import com.venefica.dao.PromoCodeProviderDao;
 import com.venefica.dao.RequestDao;
 import com.venefica.dao.ShippingDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserDataDao;
 import com.venefica.dao.UserSettingDao;
+import com.venefica.dao.UserSocialActivityDao;
+import com.venefica.dao.UserSocialPointDao;
 import com.venefica.model.Ad;
+import com.venefica.model.AdData;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.Request;
 import com.venefica.model.User;
 import com.venefica.model.UserSetting;
+import com.venefica.model.UserSocialActivity;
+import com.venefica.model.SocialActivityType;
+import com.venefica.model.UserSocialPoint;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.RequestNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
@@ -31,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
+import org.hibernate.Hibernate;
 
 /**
  *
@@ -46,6 +55,8 @@ public abstract class AbstractService {
     @Inject
     protected AdDao adDao;
     @Inject
+    protected AdDataDao adDataDao;
+    @Inject
     protected RequestDao requestDao;
     @Inject
     protected UserDao userDao;
@@ -54,7 +65,13 @@ public abstract class AbstractService {
     @Inject
     protected UserSettingDao userSettingDao;
     @Inject
+    protected UserSocialPointDao userSocialPointDao;
+    @Inject
+    protected UserSocialActivityDao userSocialActivityDao;
+    @Inject
     protected ShippingDao shippingDao;
+    @Inject
+    protected PromoCodeProviderDao promoCodeProviderDao;
     @Inject
     protected EmailSender emailSender;
     
@@ -160,6 +177,17 @@ public abstract class AbstractService {
         return request;
     }
     
+    protected AdData getAdData(Ad ad) {
+        AdData adData;
+        if ( ad.isBusinessAd() ) {
+            adData = adDataDao.getBusinessAdDataByAd(ad.getId());
+        } else {
+            adData = adDataDao.getMemberAdDataByAd(ad.getId());
+        }
+        ad.setAdData(adData);
+        return adData;
+    }
+    
     protected UserSetting createUserSetting(MemberUserData userData) {
         UserSetting userSetting = new UserSetting();
         userSetting.markDefaultNotifiableTypes();
@@ -171,5 +199,46 @@ public abstract class AbstractService {
         }
         
         return userSetting;
+    }
+    
+    protected UserSocialPoint createUserSocialPoint(MemberUserData userData) {
+        UserSocialPoint socialPoint = new UserSocialPoint();
+        userSocialPointDao.save(socialPoint);
+        
+        if ( userData != null ) {
+            userData.setUserSocialPoint(socialPoint);
+            userDataDao.update(userData);
+        }
+        
+        return socialPoint;
+    }
+    
+    protected void createSocialActivity(User user, SocialActivityType activityType) {
+        createSocialActivity(user, activityType, null);
+    }
+    
+    protected void createSocialActivity(User user, SocialActivityType activityType, String externalRef) {
+        createSocialActivity(user, activityType, externalRef, 0);
+    }
+    
+    protected void createSocialActivity(User user, SocialActivityType activityType, String externalRef, int incrementSocialPoint) {
+        if ( user != null && !user.isBusinessAccount() ) {
+            MemberUserData userData = (MemberUserData) user.getUserData();
+            UserSocialPoint socialPoint = userData.getUserSocialPoint();
+            if ( socialPoint == null ) {
+                socialPoint = createUserSocialPoint(userData);
+            }
+            
+            UserSocialActivity socialActivity = new UserSocialActivity();
+            socialActivity.setActivityType(activityType);
+            socialActivity.setExternalRef(externalRef);
+            socialActivity.setUserSocialPoint(socialPoint);
+            userSocialActivityDao.save(socialActivity);
+            
+            if ( incrementSocialPoint != 0 ) {
+                socialPoint.incrementSocialPoint(incrementSocialPoint);
+                userSocialPointDao.update(socialPoint);
+            }
+        }
     }
 }

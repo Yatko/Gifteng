@@ -12,6 +12,7 @@ import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
 import com.venefica.model.UserSetting;
+import com.venefica.model.UserSocialPoint;
 import com.venefica.service.fault.AuthenticationException;
 import com.venefica.service.fault.AuthorizationException;
 import com.venefica.service.fault.GeneralException;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl extends AbstractService implements AuthService {
 
     private static final boolean AUTO_CREATE_USER_SETTING = false;
+    private static final boolean AUTO_CREATE_USER_SOCIAL_POINT = true;
     
     @Inject
     private TokenEncryptor tokenEncryptor;
@@ -174,6 +176,15 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
                     UserSetting userSetting = userData.getUserSetting();
                     if ( userSetting == null ) {
                         createUserSetting(userData);
+                    }
+                }
+                
+                if ( !user.isBusinessAccount() && AUTO_CREATE_USER_SOCIAL_POINT ) {
+                    //automatically creating user social point if not present
+                    MemberUserData userData = (MemberUserData) user.getUserData();
+                    UserSocialPoint socialPoint = userData.getUserSocialPoint();
+                    if ( socialPoint == null ) {
+                        createUserSocialPoint(userData);
                     }
                 }
                 

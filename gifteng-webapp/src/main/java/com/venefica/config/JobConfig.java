@@ -43,7 +43,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @author gyuszi
  */
 @Configuration
-@PropertySource("/application.properties")
+@PropertySource("/" + Constants.APPLICATION_PROPERTIES)
 public class JobConfig {
     
     private static final String AD_EXPIRATION_JOB_KEY = "adExpirationJob";

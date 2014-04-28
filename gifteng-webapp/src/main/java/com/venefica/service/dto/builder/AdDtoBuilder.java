@@ -1,8 +1,11 @@
 package com.venefica.service.dto.builder;
 
 import com.venefica.model.Ad;
+import com.venefica.model.AdData;
+import com.venefica.model.BusinessAdData;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
+import com.venefica.model.PromoCodeProvider;
 import com.venefica.model.Request;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
@@ -11,6 +14,7 @@ import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.AddressDto;
 import com.venefica.service.dto.CommentDto;
 import com.venefica.service.dto.ImageDto;
+import com.venefica.service.dto.PromoCodeProviderDto;
 import com.venefica.service.dto.RequestDto;
 import com.venefica.service.dto.ShippingBoxDto;
 import com.venefica.service.dto.UserDto;
@@ -26,6 +30,8 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     private User currentUser;
     private List<Comment> filteredComments;
+    private AdData adData;
+    
     private boolean includeCreatorFlag;
     private boolean includeFollowerFlag = true;
     private boolean includeImagesFlag;
@@ -38,6 +44,11 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
 
     public AdDtoBuilder(Ad model) {
         super(model);
+    }
+    
+    public AdDtoBuilder(Ad model, AdData adData) {
+        this(model);
+        this.adData = adData;
     }
 
     public AdDtoBuilder setCurrentUser(User user) {
@@ -129,6 +140,14 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             adDto.setShippingBox(new ShippingBoxDto(model.getAdData().getShippingBox()));
         }
         
+        if ( adData != null && model.isBusinessAd() ) {
+            BusinessAdData businessAdData = (BusinessAdData) adData;
+            PromoCodeProvider promoCodeProvider = businessAdData.getPromoCodeProvider();
+            if ( promoCodeProvider != null ) {
+                adDto.setPromoCodeProvider(new PromoCodeProviderDto(promoCodeProvider));
+            }
+        }
+        
         if (model.getAdData().getMainImage() != null) {
             adDto.setImage(new ImageDto(model.getAdData().getMainImage()));
         }
@@ -164,7 +183,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
             LinkedList<RequestDto> requests = new LinkedList<RequestDto>();
             
             for (Request request : model.getVisibleRequests()) {
-                RequestDto requestDto = new RequestDto(request);
+                RequestDto requestDto = new RequestDto(request, adData);
                 requests.add(requestDto);
             }
             

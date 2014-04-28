@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
  * @author gyuszi
  */
 @Configuration
-@PropertySource("/application.properties")
+@PropertySource("/" + Constants.APPLICATION_PROPERTIES)
 public class AppConfig {
     
     @Inject
@@ -24,6 +24,7 @@ public class AppConfig {
     private int adProlongationPeriodMinutes; //with how many minutes will be incremented the expiration date at relist
     private int adExpirationPeriodMinutes; //the default expiration in minutes at ad creation
     private int adMaxAllowedProlongations; //number of allowed relisting
+    
     private int requestLimitUserRegister;
     private int requestLimitAdNew; //owner
     private int requestLimitAdDeleted; //owner
@@ -32,6 +33,9 @@ public class AppConfig {
     private int requestLimitRequestCanceled; //receiver
     private int requestLimitRequestDeclined; //receiver
     private int requestLimitRequestAccepted; //receiver
+    
+    private int socialPointGiftengPageLikedOnFacebook;
+    private int socialPointReferrerSignup;
     
     @PostConstruct
     public void init() {
@@ -48,6 +52,9 @@ public class AppConfig {
         requestLimitRequestCanceled = environment.getProperty("config.request.limit.requestCanceled", int.class);
         requestLimitRequestDeclined = environment.getProperty("config.request.limit.requestDeclined", int.class);
         requestLimitRequestAccepted = environment.getProperty("config.request.limit.requestAccepted", int.class);
+        //social point configs
+        socialPointGiftengPageLikedOnFacebook = environment.getProperty("config.social.point.giftengPageLinkedOnFacebook", int.class);
+        socialPointReferrerSignup = environment.getProperty("config.social.point.referrerSignup", int.class);
     }
     
     public int getAdProlongationPeriodMinutes() {
@@ -92,5 +99,13 @@ public class AppConfig {
 
     public int getRequestLimitUserRegister() {
         return requestLimitUserRegister;
+    }
+
+    public int getSocialPointGiftengPageLikedOnFacebook() {
+        return socialPointGiftengPageLikedOnFacebook;
+    }
+    
+    public int getSocialPointReferrerSignup() {
+        return socialPointReferrerSignup;
     }
 }
