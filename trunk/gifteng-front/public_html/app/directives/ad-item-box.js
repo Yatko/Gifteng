@@ -294,6 +294,7 @@ define(['directives'], function(directives) {
 					var modalInstance = $modal.open({
 						templateUrl: 'app/partials/directives/modal/redeem.html',
 						controller: function($scope, $modalInstance) {
+							$scope.ad = ad;
 							$scope.close = function() {
 								$modalInstance.close();
 							};
@@ -486,7 +487,10 @@ define(['directives'], function(directives) {
 					} else {
 						UserEx.requestAd.query({id:id, text:''}, function() {
 							var ad = Ad.get({id:$scope.id}, function() {
-								$scope.redeem(ad.user_request.id);
+								if(typeof(ad.ad)!=='undefined') {
+									$scope.ad = ad.ad;
+									$scope.redeem(ad.ad.user_request.id);
+								}
 							});
 						});
 					}

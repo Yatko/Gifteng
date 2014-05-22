@@ -1,16 +1,50 @@
 <IfModule mod_rewrite.c>
     Options -MultiViews
     RewriteEngine On
+    #RewriteBase /
+    #RewriteCond %{HTTP_HOST} !^www\.               [NC]
+    #RewriteCond %{HTTP_HOST} ^([^.]+\.[a-z]{2,6})$ [NC]
+    #RewriteRule ^(.*)$       http://www.%1/$1      [R=301,L]
+    #RewriteCond %{HTTP_HOST} !^www\.
+    #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+    RewriteCond %{HTTP_HOST} ^gifteng.com[NC]
+    RewriteRule ^(.*)$ http://www.gifteng.com/$1 [R=301,L]
+
     # Redirect to under maintenance page excluding the provided IP
     #RewriteCond %{REMOTE_ADDR} !=80.86.106.233
     #RewriteCond %{REMOTE_ADDR} !=67.191.55.60
     #RewriteCond %{REMOTE_ADDR} !=5.53.139.153
     #RewriteCond %{REMOTE_ADDR} !=85.186.221.128
     #RewriteCond %{REMOTE_ADDR} !=71.196.34.120
-    #RewriteCond %{REQUEST_URI} !^.*/under-construction\.html$
+    #RewriteCond %{REMOTE_ADDR} !=74.71.118.110
+    #RewriteCond %{REMOTE_ADDR} !=5.53.139.153
+    #RewriteCond %{REMOTE_ADDR} !=98.113.159.43
+    #RewriteCond %{REMOTE_ADDR} !=91.191.219.187
+    #RewriteCond %{REQUEST_URI} !^.*/maintenance\.html$
     #RewriteCond %{REQUEST_URI} !^.*\.(jpg|gif|png|ico)$
     #RewriteRule ^(.*)$ /maintenance.html [R=307,L]
-
+    
+    #redirects for zendesk
+    Redirect 301 /terms http://gifteng.zendesk.com/entries/25064082-Terms-of-Use
+    Redirect 301 /privacy http://gifteng.zendesk.com/entries/25072043-Privacy-Policy
+    Redirect 301 /contact http://gifteng.zendesk.com/anonymous_requests/new
+    Redirect 301 /contact-us http://gifteng.zendesk.com/anonymous_requests/new
+    
+    #redirects from gifteng 0.9
+    Redirect 301 /invitation/request http://www.gifteng.com/#/?request
+    Redirect 301 /invitation/verify http://www.gifteng.com/#/?verify
+    Redirect 301 /registration http://www.gifteng.com/business
+    Redirect 301 /authentication/login http://www.gifteng.com/#/?login
+    Redirect 301 /authentication/forgot http://www.gifteng.com/#/?forgot
+    Redirect 301 /view/309 http://www.gifteng.com/#/media
+    Redirect 301 /view/1129 http://www.gifteng.com/#/give-receive-inspire
+    
+    #redirect for treehugger
+    RewriteCond %{REQUEST_URI} ^/index$
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)$ / [R=301,L]
+	
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
