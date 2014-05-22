@@ -1,0 +1,5 @@
+<div ng-class="{'modal-body': isModal, 'container ge-container': !isModal}">
+	<div ng-controller="PostController" ng-class="{row:!isModal}">
+		<div ng-include="'app/partials/post/'+step+'.html'"></div>
+	</div>
+</div>

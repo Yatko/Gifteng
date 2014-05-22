@@ -1,0 +1,60 @@
+<div ng-controller="MessagesController" ng-show="loaded">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2 class="text-center header">Messages</h2>
+		</div>
+	</div>
+	<div class="row" ng-if="hasMsg">
+		<div class="col-sm-7" ng-class="{'hidden-xs':msg}">
+			<div class="panel messages">
+				<div class="panel-body">
+					<div ng-repeat="message in messages" class="message" ng-class="{active: msg==message.requestId}">
+						<div class="row">
+							<div class="col-xs-11">
+								<div class="clickable" ng-click="openmsg(message.requestId)">
+									<div class="ge-user-image pull-left">
+										<div ng-switch="message.owner">
+											<div ng-switch-when="true">
+												<img ng-src="{{amazonUrl}}user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.toAvatarUrl" />
+												<img src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.toAvatarUrl" />
+											</div>
+											<div ng-switch-when="false">
+												<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.fromAvatarUrl" />
+												<img src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.fromAvatarUrl" />
+											</div>
+										</div>
+									</div>
+									<span ng-switch="message.owner" class="from"> <span ng-switch-when="true"> <span>{{message.toFullName}}</span> </span> <span ng-switch-when="false"> <span>{{message.fromFullName}}</span> </span> </span>
+									<span class="at">{{message.createdAt | date:'short'}}</span>
+									<span class="msg-title" ng-class="{unread:!message.read && !message.owner}">{{message.adTitle}}</span>
+									<p class="pull-left">
+										<span ng-show="message.fromId==user.data.id">&crarr;</span> {{message.text}}
+									</p>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-xs-1">
+								<a href class="pull-right" ng-click="hidemsg(message.requestId)"> <span class="glyphicon glyphicon-ge-trash"></span> </a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-5" ng-show="showMessage">
+			<a ng-click="closemsg()" class="close close-msg visible-xs">
+				×
+			</a>
+			<message ng-model="current_message" callback="openmsg(reqid)">
+	
+			</message>
+		</div>
+	</div>
+	<div class="row" ng-if="!hasMsg">
+		<div class="col-sm-12">
+			<p class="lead text-center">
+				You have no messages.
+			</p>
+		</div>
+	</div>
+</div>

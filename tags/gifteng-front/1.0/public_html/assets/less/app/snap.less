@@ -1,0 +1,133 @@
+.snap-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  z-index: 2;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+	width:100%;
+	background:#eeedea;
+  padding-bottom: 60px;
+}
+.btn-snap {
+  background: #2e3e4f;
+border-bottom-left-radius: 4px;
+border-top-right-radius: 0  !important;
+border-top-left-radius: 0;
+border-bottom-right-radius: 0 !important;
+color:#fff !important;
+}
+.snap-content > .navbar {
+	position:relative !important;
+}
+.snap-slide {
+  -webkit-transition: all 1s ease;
+     -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+       -o-transition: all 1s ease;
+          transition: all 1s ease;
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+      -ms-transform: translate3d(0, 0, 0);
+       -o-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+          
+	&.active {
+
+	  -webkit-transform: translate3d(-250px, 0, 0);
+	     -moz-transform: translate3d(-250px, 0, 0);
+	      -ms-transform: translate3d(-250px, 0, 0);
+	       -o-transform: translate3d(-250px, 0, 0);
+	          transform: translate3d(-250px, 0, 0);
+	}
+}
+
+.snap-drawers {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  background: #2c3e50;
+}
+
+.snap-drawer {
+  position: absolute;
+  color: #FFF;
+  top: 0;
+  right: auto;
+  bottom: 0;
+  right: auto;
+  width: 265px;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transition: width 0.3s ease;
+     -moz-transition: width 0.3s ease;
+      -ms-transition: width 0.3s ease;
+       -o-transition: width 0.3s ease;
+          transition: width 0.3s ease;
+  background:#2c3e50;
+  padding-left:15px;
+          
+	ul {
+		display:block;
+		list-style-type:none;
+		margin:0;
+		padding:0;
+		li {
+			display:block;
+			list-style-type:none;
+			margin:0;
+			border-bottom:1px solid #34495e;
+			text-shadow: none;
+			a {
+				display:block;
+				padding:15px;
+				color:#bdc3c7 !important;
+				text-shadow:none;
+				&:hover {
+					color:#FFFFFF !important;
+					background:#34495e;
+				}
+			}
+			input {
+				background:#34495e;
+				border:1px solid #bdc3c7;
+				display:block;
+				margin:15px auto;
+				color:#ffffff;
+			}
+		}
+	}
+}
+.snap-drawer ul li.active > a, .snap-drawer ul li.active > a:hover {
+	background:#34495e;
+}
+
+.snap-drawer-left {
+  left: 0;
+  z-index: 1;
+}
+
+.snap-drawer-right {
+  right: 0;
+  z-index: 1;
+}
+
+.snapjs-left .snap-drawer-right,
+.snapjs-right .snap-drawer-left {
+  display: none;
+}
+
+.snapjs-expand-left .snap-drawer-left,
+.snapjs-expand-right .snap-drawer-right {
+  width: 100%;
+}

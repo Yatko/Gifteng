@@ -1,0 +1,119 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+			<div class="modal-header-content">
+				<h2>Step 2</h2>
+			</div>
+		</div>
+		<div class="modal-body">
+			<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+			<form name="giftForm">
+				<div class="form-group">
+					<input type="text" name="title" ng-model="toPost.title" class="form-control input-lg" placeholder="Gift Title" />
+				</div>
+				<div class="form-group">
+					<textarea ng-model="toPost.description" class="form-control" rows="4" placeholder="Details: (Terms & Conditions)"></textarea>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon">$</span>
+								<input type="text" ng-model="toPost.price" ng-disabled="toPost.free" class="form-control input-lg" placeholder="Gift value" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" ng-model="toPost.free">
+								Make gift available for everyone </label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<select ng-model="toPost.categoryId" class="form-control">
+						<option disabled selected value="">Select category</option>
+						<option value="11">Accessories &amp; Bags</option>
+						<option value="12">Art &amp; Photography</option>
+						<option value="13">Books</option>
+						<option value="10">Collectibles &amp; Craft</option>
+						<option value="14">Electronics</option>
+						<option value="15">Food &amp; Wine</option>
+						<option value="20">Health &amp; Beauty</option>
+						<option value="21">Home</option>
+						<option value="9">Jewelry &amp; Watches</option>
+						<option value="16">Kids</option>
+						<option value="17">Men's Clothing</option>
+						<option value="22">Movie, Music, Games</option>
+						<option value="18">Pets</option>
+						<option value="24">Tickets &amp; Gift Cards</option>
+						<option value="19">Women's Clothing</option>
+						<option value="8">Women's Shoes</option>
+					</select>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<input type="text" ng-model="toPost.promoCode" ng-disabled="toPost.generatePromoCodeForRequests" class="form-control input-lg" placeholder="Promo code" />
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" ng-model="toPost.generatePromoCodeForRequests">
+								Generate Unique Code </label>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<input type="text" class="form-control input-lg" ng-model="toPost.quantity" placeholder="# of Gifts available" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Start Date:</label>
+							<date-picker ng-model="toPost.availableFromTime"></date-picker>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>End Date:</label>
+							<date-picker ng-model="toPost.availableToTime"></date-picker>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Redemption:</label>
+							<date-picker ng-model="toPost.redemptionEndDate"></date-picker>
+						</div>
+					</div>
+				</div>
+				<div class="form-inline">
+					Redeemable:
+					<div class="form-group">
+						<input type="checkbox" id="online" ng-model="toParse.online">
+						<label for="online">Online</label>
+						<input type="checkbox" id="instore" ng-model="toParse.instore">
+						<label for="instore">In Store</label>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-3">
+					<a ng-click="next(1)" class="btn btn-lg btn-block btn-ge-default"> <span class="glyphicon glyphicon-chevron-left"></span> BACK </a>
+				</div>
+				<div class="col-xs-9">
+					<a ng-click="next(3)" class="btn btn-lg btn-block btn-ge-primary"> NEXT <span class="glyphicon glyphicon-chevron-right"></span> </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

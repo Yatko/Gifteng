@@ -1,0 +1,40 @@
+<div class="modal-content">
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<h4>Report an Issue</h4>
+				</div>
+			</div>
+		</div>
+		<div ng-show="error">
+			<div class="alert alert-danger">
+				Please enter your message
+			</div>
+		</div>
+		<div class="form-group">
+			<textarea id="iDesc" class="form-control" ng-model="issue.description" rows="3" placeholder="Please type the issue or your idea here"></textarea>
+		</div>
+		<div class="form-group">
+			<select ng-model="issue.type" class="form-control" id="iType">
+				<option value="" disabled>Please select one</option>
+				<option value="error">Error/Bug</option>
+				<option value="feature">Feature Request</option>
+				<option value="idea">Idea</option>
+				<option value="other">Other</option>
+			</select>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 col-sm-offset-6 col-sm-2">
+				<div class="form-group">
+					<a href ng-click="close()" class="btn btn-large btn-ge-default"> Cancel </a>
+				</div>
+			</div>
+			<div class="col-xs-8 col-sm-4">
+				<div class="form-group">
+					<a href ng-click="send()" class="btn btn-large btn-ge-primary btn-block"> Send to Developers </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

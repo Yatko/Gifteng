@@ -1,0 +1,25 @@
+<div ng-class="{'modal-content post': isModal, 'col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2': !isModal}">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<h2>You're Awesome!</h2>
+	  </div>
+	  <div class="panel-body">
+	    <p>You're Awesome!
+Give us few hours to review your gift. It will most likely be available tomorrow at 12:00 pm EST.</p>
+	    <p>Remember: your Generosity Score increases with every gift you give!</p>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-5">
+	  			<a ng-click="close()" class="btn btn-lg btn-block btn-ge-default"> CLOSE </a>
+	  		</div>
+	  		<div class="col-xs-7">
+	  			<a ng-click="newPost()" class="btn btn-lg btn-block btn-ge-default"> NEW GIFT </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</div>

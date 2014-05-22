@@ -1,0 +1,46 @@
+<div class="container ge-container" ng-class="{'well-simple':wellSimple}" ng-if="hasAds && loaded">
+    <p class="lead text-center">New Gifts are available daily at 12pm ET. Make someone happy tomorrow with yours!</p>
+	<div class="row">
+		<div ng-repeat="col in cols">
+			<div class="{{colsClass}}">
+				<div ng-repeat="ad in col">
+					<ad-item-box
+					img="{{ad.image.id}}"
+					id="{{ad.id}}"
+					type="browse"
+					details="1"
+					status="{{ad.status}}"
+					creator-firstname="{{creators[ad.creator.id].firstName}}"
+					creator-lastname="{{creators[ad.creator.id].lastName}}"
+					creator-since="{{creators[ad.creator.id].joinedAt | date:'MMMM yyyy'}}"
+					creator-city="{{creators[ad.creator.id].address.city}}, {{creators[ad.creator.id].address.stateAbbreviation}}"
+					creator-avatar="{{creators[ad.creator.id].avatar.id}}"
+					creator-points="{{creators[ad.creator.id].score | number:0}}/{{creators[ad.creator.id].pendingScore | number:0}}"
+					creator-id="{{creators[ad.creator.id].id}}"
+					creator="creators[ad.creator.id]"
+					ad="ad"
+					callback="doSearch()"
+					selfview="{{ad.owner}}"
+					in-bookmarks="{{ad.inBookmarks}}"
+					distance="{{ad.distance}}"
+					></ad-item-box>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<a ng-click="loadMore()" class="btn btn-block btn-ge-default">VIEW MORE</a>
+		</div>
+	</div>
+</div>
+<div ng-if="!hasAds && loaded">
+	<div class="container ge-container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<h4 class="text-center">No results found.</h4>
+				<a href class="btn btn-ge-primary" ng-click="openSearch()">NEW FILTER</a>
+			</div>
+		</div>
+	</div>
+</div>
