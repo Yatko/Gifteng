@@ -37,14 +37,14 @@
 		<tr ng-repeat="ad in ads">
 			<td ng-bind="ad.status"></td>
 			<td ng-bind="ad.title"></td>
-			<td><a ng-href="http://veneficalabs.com/subdomain/dev/gifteng-1.0/public/#/view/gift/{{ad.id}}" target="_blank" class="btn btn-sm btn-ge-default">VIEW GIFT</a></td>
+			<td><a ng-click="viewGift(ad.id)" target="_blank" class="btn btn-sm btn-ge-default">VIEW GIFT</a></td>
 			<td ng-bind="ad.expiresAt | date:'mediumDate'"></td>
 			<td ng-bind="ad.availableAt | date:'mediumDate'"></td>
 			<td ng-bind="ad.quantity"></td>
 			<td ng-bind="ad.statistics.numRequests"></td>
 			<td ng-bind="ad.statistics.numReceivedRequests"></td>
 			<td></td>
-			<td><a href class="btn btn-danger btn-sm"><em class="glyphicon glyphicon-trash"></em></a></td>
+			<td><a href class="btn btn-danger btn-sm">DELETE</a></td>
 		</tr>
 	</tbody>
 </table>

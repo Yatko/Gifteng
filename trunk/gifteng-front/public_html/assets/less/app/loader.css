@@ -1,5 +1,5 @@
 .loader-back {
-	position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;background-color:gray;background-color:rgba(70,70,70,0.2);
+	position:absolute;top:0;left:0;right:0;bottom:0;z-index:10000;background-color:gray;background-color:rgba(70,70,70,0.2);
 }
 
 .loader {
@@ -25,7 +25,7 @@
     padding: 8% 8% -webkit-calc(32% - 4px) 8%;
     padding: 8% 8% -moz-calc(32% - 4px) 8%;
     padding: 8% 8% calc(32% - 4px) 8%;
-    margin: 200px auto;
+    margin: 200px auto 0;
     border: 2px solid #00bebe;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;

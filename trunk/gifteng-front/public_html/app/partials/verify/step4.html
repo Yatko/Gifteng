@@ -4,14 +4,14 @@
     			<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
 	    		<form class="form" role="form">
 	    			<div class="row">
-	    				<div class="col-xs-4 text-center">
+	    				<div class="col-sm-10 col-sm-offset-1 text-center">
 	    					<div class="form-group">
-	    						<img ng-src="{{user.data.avatar_url}}" class="img-rounded img-responsive">
+	    						<img ng-src="{{user.data.avatar_url}}" class="img-rounded">
 	    					</div>
 	    				</div>
-	    				<div class="col-xs-8 text-center">
+	    				<div class="col-sm-10 col-sm-offset-1 text-center">
 	    					<div class="form-group">
-	    					<a href ng-click="changePhoto()" class="btn btn-ge-default btn-sm btn-block"><i class="glyphicon glyphicon-ge-photo"></i> Upload Profile Photo </a>
+	    						<a href ng-click="changePhoto()" class="btn btn-ge-default btn-sm"><i class="glyphicon glyphicon-ge-photo"></i> Upload Profile Photo </a>
 	    					</div>
 	    				</div>
 	    			</div>
@@ -39,10 +39,17 @@
 	    			<div class="row">
 	    				<div class="col-sm-10 col-sm-offset-1">
 	    					<div class="form-group">
-	    					<button type="submit" ng-click="saveProfile()" class="btn btn-ge-primary btn-lg btn-block">
-	    						Join Gifteng
-	    					</button>
+		    					<button type="submit" ng-click="saveProfile()" class="btn btn-ge-primary btn-lg btn-block">
+		    						Join Gifteng
+		    					</button>
 	    					</div>
+	    				</div>
+	    			</div>
+	    			<div class="row">
+	    				<div class="col-xs-12">
+	    					<p class="text-center">
+	    						By creating an account, I agree to Gifteng's<br /><a href="http://gifteng.com/privacy" target="_blank">Privacy Policy</a> and <a href="http://gifteng.com/terms" target="_blank">Terms of Use</a>.
+	    					</p>
 	    				</div>
 	    			</div>
 	    		</form>

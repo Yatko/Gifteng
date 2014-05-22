@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {'use strict';
+define(['angular', "geoip"], function(angular) {'use strict';
 
 	angular.module('gifteng.services', []).factory('Ad', function($resource) {
 		return $resource('api/ad/:id', {
@@ -281,6 +281,12 @@ define(['angular'], function(angular) {'use strict';
 					method : 'POST',
 					isArray : false
 				}
+			}),
+			redeem : $resource('api/ad/redeem/:id', {id:'@id'}, {
+				query : {
+					method : 'POST',
+					isArray : false
+				}
 			})
 		}
 	}).factory('Top', function($resource) {
@@ -420,6 +426,12 @@ define(['angular'], function(angular) {'use strict';
 										var description = 'Check out this and other free gifts on http://www.gifteng.com ♥ Gifteng #free #gifts';
 										var safeDescription = encodeURIComponent(description.replace(/&amp;/g, "&"));
 										WindowService.open_window_clear('//pinterest.com/pin/create/button/?url=' + safeItemUrl + '&media=' + safeImgUrl + '&description=' + safeDescription, '', width, height);
+									} ,
+					shareOnGooglePlus:function (title, itemUrl, imgUrl) {
+										var width = 575;
+										var height = 450;
+										var safeItemUrl = encodeURIComponent(itemUrl.replace(/&amp;/g, "&"));
+										WindowService.open_window_clear('//plus.google.com/share?url=' + safeItemUrl, width, height);
 									}
 								
 				 
@@ -503,19 +515,20 @@ define(['angular'], function(angular) {'use strict';
 				
 			}
 		})
-		.factory('IpService', function($http,$q) {
-		  var ip = ''
+		.factory('IpService', function($q) {
+			var country=null;
 			return{
-				get: function () {
+				call: function () {
 					var deferred = $q.defer();
-					$http({ method: "jsonp", url: "http://smart-ip.net/geoip-json?callback=JSON_CALLBACK" })
-						.success(function (data, status, headers, config) {
-							deferred.resolve(data);
-						}).error(function (data, status, headers, config) {
-							deferred.reject(data);
-						});
+					geoip2.country(deferred.resolve, deferred.reject);
 					return deferred.promise;
-				}			
+				},
+				set: function(c) {
+					country=c;
+				},
+				get: function() {
+					return country;
+				}
 		  };
 		})	
 		.factory('TestEmailService', function($resource) {
@@ -613,5 +626,49 @@ define(['angular'], function(angular) {'use strict';
 		})
 		.factory('Amazon', function($rootScope) {
 			return $rootScope.amazonUrl;
+		})
+		.factory('Categories', function($resource, $q) {
+			var categories=null;
+			return {
+				set: function() {
+					var deferred = $q.defer();
+					var cat = $resource('api/categories', {}).query({}, function() {
+						categories = cat;
+						deferred.resolve();
+						return deferred.promise;
+					});
+				},
+				get: function() {
+					return categories;
+				}
+			}
+		})
+		.factory('SocialService', function($resource) {
+			return {
+				fbLogin  : $resource('api/auth/user/store', {}, {
+					query : {
+						method : 'POST',
+						isArray : false
+					}
+				}),
+				getNetworks  : $resource('api/social/networks', {}, {
+					query : {
+						method : 'GET',
+						isArray : false
+					}
+				})
+				
+			};
+		})
+		.factory('SocialNetwork', function($rootScope) {
+			return $rootScope.networkUrl;
+		})
+		.factory('JsonObject', function($rootScope) {
+			return {
+				isEmpty: function(obj){
+					return Object.keys(obj).length === 0;
+				}
+			};
 		});
+
 });

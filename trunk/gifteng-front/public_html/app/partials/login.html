@@ -41,7 +41,8 @@
 			  </div>
 			</div>
 			<div class="panel-footer text-center">
-				<a href ng-click="oRequest()">New to Gifteng? Request an Invitation!</a>
+				<a href ng-click="oRequest()" ng-if="country!='US'">New to Gifteng? Request an Invitation!</a>
+				<a href ng-click="oSign()" ng-if="country=='US'">New to Gifteng? Sign up now!</a>
 			</div>
 		</div>
 	</div>

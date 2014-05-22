@@ -16,7 +16,7 @@ Route::get('/', function()
 	return View::make('index');
 });
 
-Route::get('/biz', function()
+Route::get('/gifteng-business', function()
 {
 	return View::make('business');
 });
@@ -31,19 +31,20 @@ Route::group(array('prefix' => 'api'), function() {
 	Route::post('invite/verifyInvitation','InviteController@isInvitationValid');
 	Route::post('invite/register','InviteController@registerUser');
 	Route::post('user/resetPassword','AuthController@changeForgottenPassword');
+	Route::post('auth/user/store','AuthController@storeUser');
+	
+	Route::resource('image','ImageController', array('only'=>array('show','store')));	
+	Route::get('categories', 'AdController@categories');
 	
 	Route::group(array('before'=>'auth'), function() {
 		
 		/* ads */
 		Route::resource('ad','AdController');
-		Route::resource('image','ImageController', array('only'=>array('show','store')));
-		//Route::resource('image/storeFile','ImageController', array('only'=>array('showFile','storeFile')));
 		
 		Route::post('image/profile','ImageController@profile');
 		Route::get('image/wipscaled/{id}','ImageController@wipscaled');
 		Route::post('image/storeInWIP','ImageController@storeInWIP');
-		Route::put('image/profile/cropnsave/{id}','ImageController@cropnsave');
-	//	Route::post('image/storeFile','ImageController@storeFile');
+		Route::put('image/profile/cropnsave/{id}','ImageController@cropnsave');	
 		
 		Route::put('ad/{id}','AdController@update');
 		Route::get('ad/more/{last}', 'AdController@loadMore');
@@ -63,7 +64,7 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::post('ad/request/issue/{id}', 'AdController@request_issue');
 		Route::post('ad/rate/{id}', 'AdController@rateAd');
 		Route::get('ad/request/{id}', 'AdController@request_view');
-		Route::get('ad/shippingBox', 'AdController@getShippingBoxes');
+		Route::post('ad/redeem/{id}', 'AdController@redeem');
 		
 		/* connections */
 		Route::get('user/following/{id}', array('uses' => 'UserController@getFollowing'));
@@ -93,6 +94,7 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::post('user/resendVerification','UserController@resendVerification'); 
 		Route::post('user/changePassword', 'UserController@changePassword');		
 		
+		
 		/* Admin  */
 		
 		Route::get('admin/unApproved', 'AdminController@getUnapprovedAds');
@@ -104,6 +106,8 @@ Route::group(array('prefix' => 'api'), function() {
 		Route::post('admin/sendEmail', 'AdminController@sendEmail');
 		Route::post('admin/deleteShipping', 'AdminController@deleteShipping');
 		Route::post('admin/updateShipping', array('uses' => 'AdminController@updateShipping'));
+		
+		Route::get('social/networks', 'SocialController@getConnectedNetworks');
 		
 		
 		Route::post('biz/update', 'BizController@updateProfile');

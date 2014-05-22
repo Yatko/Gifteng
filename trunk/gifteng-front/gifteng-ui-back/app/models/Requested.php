@@ -27,6 +27,7 @@ class Requested {
     public $isPending;
     public $isExpired;
 	public $numUnreadMessages; // integer
+    public $redeemed;
     
     public function __construct($obj = null) {
         if ( $obj != null ) {

@@ -2,21 +2,62 @@
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<div class="ge-user-image pull-left">
-				<a href="#/view/profile/{{id}}" ng-click="callback()"> <img ng-src="{{img}}" class="up-avatar img-rounded img-responsive"> </a>
+				<a href="#/view/profile/{{user.id}}" ng-click="callback()" ng-if="!user.businessAccount"> <img ng-src="{{img}}" class="up-avatar img-circle img-responsive"> </a>
+				<a href ng-if="user.businessAccount"> <img ng-src="{{img}}" class="up-avatar img-circle img-responsive"> </a>
 			</div>
-			<div class="ge-user-detail">
-				<a href="#/view/profile/{{id}}" ng-click="callback()" class="up-name">{{name}}</a>
+			<div class="ge-user-detail animate-rd">
+				<a href="#/view/profile/{{user.id}}" ng-click="callback()" class="up-name" ng-if="!user.businessAccount">
+					{{user.firstName}} {{user.lastName}}
+				</a>
+				<a href ng-click="callback()" ng-if="user.businessAccount" class="up-name">
+					{{user.businessName}}
+				</a>
 				<div class="up-details">
-					<div class="ge-location" ng-show="location && location.length>3">
-						{{location}}
+					<div class="ge-location" ng-if="user.address.city && user.address.stateAbbreviation">
+						{{user.address.city}}, {{user.address.stateAbbreviation}}
 					</div>
 				</div>
-				<div class="ge-points" ng-hide="self || fullscore">
-					<span class="label label-default label-ge">G {{points}}</span>
-					<a href> <span ng-switch on="following"> <span ng-switch-when="true" ng-click="unfollow()" class="label label-default">Unfollow</span> <span ng-switch-default ng-click="follow()" class="label label-default label-ge">Follow</span> </span> </a>
-				</div>
-				<div class="ge-points" ng-show="self || fullscore">
-					<span class="label label-default label-ge">Generosity Score {{points}}</span>
+				<div class="ge-points">
+					<!--generosity score-->
+					<span ng-if="!user.businessAccount">
+						<span ng-if="user.score>0">
+							<button class="btn btn-xs btn-rd ge-bg-1" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false"> G <span ng-show="show">{{user.score | number:0}}</span></button>
+							<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank" title="Generosity Score" ng-if="self || fullscore">Generosity Score <span>{{user.score | number:0}}</span></a>
+						</span>
+						<span ng-if="user.score==0">
+							<button class="btn btn-xs btn-rd ge-bg-neutral" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false"> G <span ng-show="show">{{user.score | number:0}}</span></button>
+							<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank" title="Generosity Score" ng-if="self || fullscore">Generosity Score <span>{{user.score | number:0}}</span></a>
+						</span>
+					</span>
+					<!--rating-->
+					<span ng-if="!user.businessAccount">
+						<span ng-if="user.statistics.numReceivedRatings && user.statistics.numPositiveReceivedRatings>=user.statistics.numNegativeReceivedRatings">
+							<button class="btn btn-xs btn-rd ge-bg-positive" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false"><span class="glyphicon glyphicon-ge-happy-alt"></span> <span ng-show="show">{{(user.statistics.numPositiveReceivedRatings/user.statistics.numReceivedRatings)*100 | number:0}} %</span></button>
+						</span>
+						<span ng-if="!user.statistics.numReceivedRatings">
+							<button class="btn btn-xs btn-rd ge-bg-neutral" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false"><span class="glyphicon glyphicon-ge-neutral-alt"></span> <span ng-show="show">No rating</span></button>
+						</span>
+						<span ng-if="user.statistics.numReceivedRatings && user.statistics.numPositiveReceivedRatings<user.statistics.numNegativeReceivedRatings">
+							<button class="btn btn-xs btn-rd ge-bg-negative" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false"><span class="glyphicon glyphicon-ge-sad-alt"></span> <span ng-show="show">{{(user.statistics.numNegativeReceivedRatings/user.statistics.numReceivedRatings)*100 | number:0}} %</span></button>
+						</span>
+					</span>
+					<!--follow-->
+					<span ng-switch on="following">
+						<span ng-switch-when="true" ng-click="unfollow()">
+							<button class="btn btn-xs btn-rd ge-bg-1 opaque" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false">
+								<i class="glyphicon glyphicon-ge-eye-closed"></i> <span ng-show="show">Unfollow</span>
+							</button>
+						</span> 
+						<span ng-switch-default ng-click="follow()">
+							<button class="btn btn-xs btn-rd ge-bg-1" ng-if="!self && !fullscore" ng-mouseenter="show=true" ng-mouseleave="show=false">	
+								<i class="glyphicon glyphicon-ge-eye"></i> <span ng-show="show">Follow</span>
+							</button>
+						</span>
+					</span>
+					
+					
+					
+
 				</div>
 			</div>
 			<div class="clearfix"></div>

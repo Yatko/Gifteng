@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- gifteng.com -->
+<url>
+	<loc>http://www.gifteng.com/#/?request</loc>
+	<priority>.5</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/#/?verify</loc>
+	<priority>.5</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/#/?login</loc>
+	<priority>.5</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/#/?forgot</loc>
+	<priority>.1</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/#/media</loc>
+	<priority>.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/#/give-receive-inspire</loc>
+	<priority>.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+<url>
+	<loc>http://www.gifteng.com/business</loc>
+	<priority>.6</priority>
+	<changefreq>monthly</changefreq>
+</url>
+</urlset>

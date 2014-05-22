@@ -18,7 +18,7 @@
 |
 */
 
-require __DIR__.'/../gifteng_app/bootstrap/autoload.php';
+require __DIR__.'/../gifteng-ui-back/bootstrap/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ require __DIR__.'/../gifteng_app/bootstrap/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../gifteng_app/bootstrap/start.php';
+$app = require_once __DIR__.'/../gifteng-ui-back/bootstrap/start.php';
 
 /*
 |--------------------------------------------------------------------------

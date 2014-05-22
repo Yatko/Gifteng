@@ -28,10 +28,15 @@
 	            <tbody>
 	              <tr id="ad_{{ad.id}}" ng-repeat="ad in ads">
 	              	<td>{{ad.id}}</td>
-	              	<td><a href="#/view/profile/{{ad.creator.id}}" target="_blank">{{ad.creator.firstName}} &nbsp; {{ad.creator.lastName}} </a></td>
+	              	<td>
+	              		<a ng-href="#/view/profile/{{ad.creator.id}}" target="_blank">
+	              			<span ng-if="ad.type=='MEMBER'">{{ad.creator.firstName}} {{ad.creator.lastName}}</span>
+							<span ng-if="ad.type=='BUSINESS'">{{ad.creator.businessName}}</span>
+	              		</a>
+	              	</td>
 	              	<td>{{ad.createdAt | date:'MM/DD/yy h:mma'}} </td>
 	              	<td>{{ad.revision}}</td>
-	              	<td><a href="#/browse?view={{ad.id}}" target="_blank">Gift link</a></td>
+	              	<td><a ng-href="#/browse?view={{ad.id}}" target="_blank">Gift link</a></td>
 	              	<td><button type="button" id="approve_btn_{{ad.id}}" ng-click="approve_ad(ad.id);" class="btn btn-mini btn-block btn-success">OK</button></td>
 	              	<td>
 	              		<div class="row">
@@ -78,7 +83,7 @@
 	          </thead>
 	          <tbody>
 	            <tr  ng-repeat="ad in ads | orderBy: '-acceptedAt'">
-	              <td><a href="#/browse?view={{ad.adId}}" target="_blank">{{ad.adId}}</a></td>
+	              <td><a ng-href="#/browse?view={{ad.adId}}" target="_blank">{{ad.adId}}</a></td>
 	              <td><small>{{ad.creatorFullName}}</small></td>
 	              <td><small>{{ad.acceptedAt | date:'M/dd/yy h:mma'}}</small></td>
 	              <td><small>{{ad.receiverFullName}}</small></td>
@@ -86,11 +91,10 @@
 	              <td>
 						<form enctype="multipart/form-data">
 							<div class="uploader">
-								<!-- the real input[type=file] is hidden -->
 								<input accept="application/pdf" type="file" name="uploader" id="file-{{ad.id}}"
 								onchange="angular.element(this).scope().sendFile(this);" class="btn-xs"/>		
 							</div>	    
-							<a target="_self" ng-href="{{ad.fileUrl}}"  download="{{ad.fileName}}" class="btn-xs">Download</a>						
+							<a target="_self" ng-if="ad.fileUrl" ng-href="{{ad.fileUrl}}" download="{{ad.fileName}}" class="btn-xs btn-ge-primary">Download</a>
 						</form>
 				  </td>
 	              <td>
@@ -114,6 +118,7 @@
 						<button type="button" class="btn btn-xs btn-danger btn-block" ng-show="ad.requestStatus != 'RECEIVED'">No</button>
 						<button type="button" class="btn btn-xs btn-success btn-block" ng-show="ad.requestStatus == 'RECEIVED'">Yes</button>
 						<button type="button" class="btn btn-xs btn-default btn-block" ng-show="ad.requestStatus == 'RECEIVED'" ng-click="deleteShipping(ad.id)" >Hide</button>
+						<button type="button" class="btn btn-xs btn-default btn-block" ng-show="ad.requestStatus == 'DECLINED' || ad.requestStatus == 'CANCELLED'" ng-click="deleteShipping(ad.id)" ><span class="glyphicon glyphicon-ge-trash"></span></button>
 				  </td>	  
 	            </tr>
 	          </tbody>

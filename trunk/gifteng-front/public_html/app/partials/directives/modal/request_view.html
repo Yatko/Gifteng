@@ -1,19 +1,14 @@
-<div class="modal-content">
+<div class="modal-content" ng-if="loaded">
 	<div class="modal-header">
 		<button type="button" class="close" ng-click="close()">
 			×
 		</button>
 		<div class="modal-header-content" ng-hide="accepted">
 			<user-profile
-			name="{{data.request.user.firstName}} {{data.request.user.lastName}}"
-			location="{{data.request.user.address.city}}, {{data.request.user.address.stateAbbreviation}}"
+			user="data.request.user"
 			img="{{data.request.user.avatar.id}}"
 			img-size="112"
-			avatar="{{data.request.user.avatar.id}}"
-			points="{{data.request.user.score | number:0}}/{{data.request.user.pendingScore | number:0}}"
-			since="{{data.request.user.joinedAt | date:'MMMM yyyy'}}"
 			following="data.request.user.inFollowings"
-			id="{{data.request.user.id}}"
 			self="data.request.user.self"
 			nested="true"
 			callback="close()"
@@ -30,9 +25,7 @@
 		<div class="row" ng-hide="accepted">
 			<div class="col-xs-12">
 				<span>{{data.messages[0].createdAt | date:'longDate'}}</span>
-				<p>
-					{{data.messages[0].text}}
-				</p>
+				<div ng-bind-html="data.messages[0].text | htmlLinky"></div>
 			</div>
 		</div>
 		<div class="row" ng-show="accepted">

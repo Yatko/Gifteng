@@ -15,13 +15,13 @@ class BizController extends \BaseController {
         $user->phoneNumber = Input::get('phoneNumber');
         $user->email = Input::get('email');
         $user->address = $address;
-        $user->businessCategoryId = Input::get('businessCategory');
+        $user->businessCategoryId = 1;
 		
         try {
 			$userService = new SoapClient(Config::get('wsdl.user'));
             $result = $userService->registerBusinessUser(array(
                 "user" => $user,
-                "password" => $password
+                "password" => ''
             ));
 			return Response::json($result);
         } catch ( Exception $ex ) {

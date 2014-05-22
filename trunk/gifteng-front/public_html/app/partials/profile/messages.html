@@ -15,21 +15,21 @@
 									<div class="ge-user-image pull-left">
 										<div ng-switch="message.owner">
 											<div ng-switch-when="true">
-												<img ng-src="{{amazonUrl}}user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.toAvatarUrl" />
-												<img src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.toAvatarUrl" />
+												<img ng-src="{{amazonUrl}}user/{{message.toAvatarUrl | replace:{'/images/img':''} }}_42" class="img-circle img-responsive" ng-show="message.toAvatarUrl" />
+												<img src="assets/img/ge-no-profile-picture.png" class="img-circle img-responsive" ng-hide="message.toAvatarUrl" />
 											</div>
 											<div ng-switch-when="false">
-												<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" class="img-rounded img-responsive" ng-show="message.fromAvatarUrl" />
-												<img src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" ng-hide="message.fromAvatarUrl" />
+												<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" class="img-circle img-responsive" ng-show="message.fromAvatarUrl" />
+												<img src="assets/img/ge-no-profile-picture.png" class="img-circle img-responsive" ng-hide="message.fromAvatarUrl" />
 											</div>
 										</div>
 									</div>
 									<span ng-switch="message.owner" class="from"> <span ng-switch-when="true"> <span>{{message.toFullName}}</span> </span> <span ng-switch-when="false"> <span>{{message.fromFullName}}</span> </span> </span>
 									<span class="at">{{message.createdAt | date:'short'}}</span>
 									<span class="msg-title" ng-class="{unread:!message.read && !message.owner}">{{message.adTitle}}</span>
-									<p class="pull-left">
-										<span ng-show="message.fromId==user.data.id">&crarr;</span> {{message.text}}
-									</p>
+									<div class="pull-left">
+										<span ng-show="message.fromId==user.data.id">&crarr;</span> <div ng-bind-html="message.text | htmlLinky"></div>
+									</div>
 									<div class="clearfix"></div>
 								</div>
 							</div>

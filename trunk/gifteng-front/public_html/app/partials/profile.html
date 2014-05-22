@@ -1,5 +1,5 @@
-<div class="container ge-container" ng-controller="ProfileBoxController">
-	<div class="row" ng-if="profile.id && tab_page!='messages'" ng-class="{'visible-xs': section=='gifts' && self}">
+<div class="container ge-container profile" ng-controller="ProfileBoxController">
+	<div class="row" ng-if="profile.id && tab_page!='messages' && (section!='gifts' || !self)">
 		<div class="col-sm-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
@@ -12,19 +12,38 @@
 							</div>
 							<div class="ge-detail">
 								<div class="ge-name">
-									<a href="" ng-if="self">{{profile.firstName}} {{profile.lastName}}</a>
-									<a ng-href="#/view/profile/{{profile.id}}" ng-if="!self">{{profile.firstName}} {{profile.lastName}}</a>
-								</div>
+									<a href="" ng-if="self">{{profile.firstName}} {{profile.lastName}}
+									<span class="glyphicon glyphicon-ge-check-inverted" ng-show="profile.fbVerified"></span></a>
+									<a ng-href="#/view/profile/{{profile.id}}" ng-if="!self">{{profile.firstName}} {{profile.lastName}}
+									<span class="glyphicon glyphicon-ge-check-inverted" ng-show="profile.fbVerified"></span></a>
+								</div>								
 								<div class="ge-age">
 									Giftenger since {{profile.joinedAt | date:'MMMM yyyy'}}
-								</div>
+								</div>								
 								<div class="ge-age" ng-show="profile.address.zipCode">
 									{{profile.address.city}}, {{profile.address.stateAbbreviation}}
 								</div>
-								<div class="ge-points">
-									<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank"> <span class="label label-default label-ge"> Generosity Score {{profile.score | number:0}}/{{profile.pendingScore | number:0}} </span> </a>
+								<div class="ge-points" ng-if="self">
+									<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
+										<span class="label label-default label-ge">G {{profile.score | number:0}}/{{profile.pendingScore | number:0}}</span>
+										<span class="label label-default label-ge label-ge-danger">GP {{profile.businessScore | number: 0}}</span>
+									</a>
+								</div>
+								<div class="ge-points" ng-if="!self">
+									<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
+										<span class="label label-default label-ge">
+											G {{profile.score | number:0}}/{{profile.pendingScore | number:0}}
+										</span>
+									</a>
+                                    <a href>
+                                        <span ng-switch on="following">
+                                            <span ng-switch-when="true" ng-click="unfollow()" class="label label-default label-follow">Unfollow</span>
+                                            <span ng-switch-default ng-click="follow()" class="label label-default label-ge label-follow">Follow</span>
+                                        </span>
+                                    </a>
 								</div>
 							</div>
+							
 						</div>
 						<div class="hidden-xs col-sm-6">
 							<blockquote class="blockquote blockquote-reverse pull-right">
@@ -36,37 +55,48 @@
 				</div>
 				<div class="panel-footer">
 					<div class="row">
-						<div class="col-sm-2 col-xs-4">
-							<div ng-if="profile.statistics.numReceivedRatings">
-								<a ng-href="#/profile/connections/reviews" ng-if="self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
-								<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-xs-4" ng-class="{active: tab_page=='reviews'}">
+									<div ng-if="profile.statistics.numReceivedRatings">
+										<a ng-href="#/profile/connections/reviews" ng-if="self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
+										<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> {{(profile.statistics.numPositiveReceivedRatings/profile.statistics.numReceivedRatings)*100 | number:0}}% Positive </a>
+									</div>
+									<div ng-if="!profile.statistics.numReceivedRatings">
+										<a ng-href="#/profile/connections/reviews" ng-if="self"> 0 Ratings </a>
+										<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> 0 Ratings </a>
+									</div>
+								</div>
+								<div class="col-xs-4" ng-class="{active: tab_page=='followers'}">
+									<a ng-href="#/profile/connections/followers" ng-if="self"> {{profile.statistics.numFollowers}} Followers </a>
+									<a ng-href="#/view/profile/{{profile.id}}/connections/followers" ng-if="!self"> {{profile.statistics.numFollowers}} Followers </a>
+								</div>
+								<div class="col-xs-4" ng-class="{active: tab_page=='following'}">
+									<a ng-href="#/profile/connections/following" ng-if="self"> {{profile.statistics.numFollowings}} Following </a>
+									<a ng-href="#/view/profile/{{profile.id}}/connections/following" ng-if="!self"> {{profile.statistics.numFollowings}} Following </a>
+								</div>
 							</div>
-							<div ng-if="!profile.statistics.numReceivedRatings">
-								<a ng-href="#/profile/connections/reviews" ng-if="self"> 0 Ratings </a>
-								<a ng-href="#/view/profile/{{profile.id}}/connections/reviews" ng-if="!self"> 0 Ratings </a>
+						</div>
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-6 hidden-xs" ng-if="self">
+									<a href="#/top-giftengers" style="color:#f0ad4e;"><i class="glyphicon-ge-star-empty"></i> Top Giftengers</a>
+								</div>
+								<div class="col-sm-3 hidden-xs" ng-if="self">
+									<a href="#/profile/account/settings"> <span class="badge user_settings" ng-class="{'badge-active': tab_page=='settings'}"> My Account </span> </a>
+								</div>
+								<div class="col-sm-3 hidden-xs" ng-if="self">
+									<a href="#/" ng-click="logout()"> <span class="badge user_logout sr-only"> Sign Out </span> </a>
+								</div>
+								<div class="col-sm-4 hidden-xs" ng-class="{active: tab_page=='giving'}" ng-if="(section=='gifts' && self) || !self">
+									<a ng-href="#/view/profile/{{profile.id}}/gifts/giving">Giving <span class="badge user_giving"> {{profile.statistics.numGivings}}</span></a>
+								</div>
+								<div class="col-sm-4 hidden-xs" ng-class="{active: tab_page=='receiving'}" ng-if="(section=='gifts' && self) || !self">
+									<a ng-href="#/view/profile/{{profile.id}}/gifts/receiving">Receiving <span class="badge user_receiving"> {{profile.statistics.numReceivings}}</span></a>
+								</div>
 							</div>
 						</div>
-						<div class="col-sm-2 col-xs-4">
-							<a ng-href="#/profile/connections/followers" ng-if="self"> {{profile.statistics.numFollowers}} Followers </a>
-							<a ng-href="#/view/profile/{{profile.id}}/connections/followers" ng-if="!self"> {{profile.statistics.numFollowers}} Followers </a>
-						</div>
-						<div class="col-sm-2 col-xs-4">
-							<a ng-href="#/profile/connections/following" ng-if="self"> {{profile.statistics.numFollowings}} Following </a>
-							<a ng-href="#/view/profile/{{profile.id}}/connections/following" ng-if="!self"> {{profile.statistics.numFollowings}} Following </a>
-						</div>
-						<div class="col-sm-offset-2 col-sm-2 hidden-xs" ng-if="self">
-							<a href="#/profile/account/notifications"><span class="badge user_notifications glyphicon glyphicon-ge-gear"> Notifications</span></a>
-						</div>
-						<div class="col-sm-2 hidden-xs" ng-if="self">
-							<a href="#/profile/account/settings"><span class="badge user_settings glyphicon glyphicon-ge-gear"> Settings</span> </a>
-						</div>
-						<div class="col-sm-offset-2 col-sm-2 hidden-xs" ng-if="(section=='gifts' && self) || !self">
-							<a ng-href="#/view/profile/{{profile.id}}/gifts/giving">Giving <span class="badge user_giving"> {{profile.statistics.numGivings}}</span></a>
-						</div>
-						<div class="col-sm-2 hidden-xs" ng-if="(section=='gifts' && self) || !self">
-							<a ng-href="#/view/profile/{{profile.id}}/gifts/receiving">Receiving <span class="badge user_receiving"> {{profile.statistics.numReceivings}}</span></a>
-						</div>
-					</div>
+					</div>		
 				</div>
 			</div>
 		</div>
@@ -101,11 +131,14 @@
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<ul class="nav nav-pills nav-stacked">
-						<li>
+						<li class="sr-only">
 							<a href="#/profile/account/notifications"> Notifications <span class="glyphicon glyphicon-ge-gear pull-right"></span> </a>
 						</li>
 						<li>
-							<a href="#/profile/account/settings"> Settings <span class="glyphicon glyphicon-ge-gear pull-right"></span> </a>
+							<a href="#/profile/account/settings"> Edit Profile <span class="glyphicon glyphicon-ge-gear pull-right"></span> </a>
+						</li>
+						<li>
+							<a href="#/" ng-click="logout()"> Sign Out <span class="glyphicon glyphicon-ge-exit pull-right"></span> </a>
 						</li>
 					</ul>
 				</div>
@@ -171,5 +204,15 @@
 		</div>
 	</div>
 	<div ng-if="tab_page" ng-include="'app/partials/profile/'+tab_page+'.html'" ng-class="{'hidden-xs':!isin}"></div>
+
+	<div class="row hidden-xs" ng-if="!tab_page && !section">
+		<div class="col-sm-12 col-md-10 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<img src="assets/img/ge-how-does-it-work.jpg" class="img-responsive" style="margin:0 auto" alt="How does it work?" />
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>

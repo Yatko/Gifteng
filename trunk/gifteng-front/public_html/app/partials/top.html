@@ -3,15 +3,10 @@
 	<div class="row">
 		<div class="col-sm-4" ng-repeat="user in users">
 			<user-profile
-			name="{{user.firstName}} {{user.lastName}}"
-			location="{{user.address.city}}, {{user.address.stateAbbreviation}}"
+			user="user"
 			img="{{user.avatar.id}}"
 			img-size="112"
-			avatar="{{user.avatar.id}}"
-			points="{{user.score | number:0}}"
-			since="{{user.joinedAt | date:'MMMM yyyy'}}"
 			following="user.inFollowings"
-			id="{{user.id}}"
 			self="user.self"
 			fullscore="true"
 			></user-profile>

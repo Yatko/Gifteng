@@ -14,13 +14,13 @@
 					<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
 					<form role="form">						
 						<div class="form-group">
-							<input type="email" ng-model="email" id="email" class="form-control input" placeholder="Email address" >
+							<input type="email" ng-model="reg.email" id="email" class="form-control input" placeholder="Email address" >
 						</div>
 						<div class="form-group">
-							<input type="password" ng-model="password" id="password" class="form-control input" placeholder="Password" >
+							<input type="password" ng-model="reg.password" id="password" class="form-control input" placeholder="Password" >
 						</div>
 						<div class="form-group">
-							<input type="password" ng-model="confirmPassword" id="confirmPassword" class="form-control input" placeholder="Confirm Password" >
+							<input type="password" ng-model="reg.confirmPassword" id="confirmPassword" class="form-control input" placeholder="Confirm Password" >
 						</div>
 						<div class="form-group">
 							<button type="submit" ng-click="registerUser()" class="btn btn-ge-primary btn-lg btn-block">
@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<div class="panel-footer text-center">
-			<a href ng-click="oRequest()">Already have an account? Sign In.</a>
+			<a href ng-click="oLogin()">Already have an account? Sign In.</a>
 		</div>
 	</div>
 </div>

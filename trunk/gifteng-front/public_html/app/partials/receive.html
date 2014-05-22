@@ -1,0 +1,132 @@
+<div class="container ge-container">
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="panel panel-default">
+				<div class="panel-body text-center">
+					<div ng-hide="start">
+						<h2>Receive up to $45 in gift cards!</h2>
+						<div class="row">
+							<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+								<div class="form-group top-buffer-3">
+									<button type="button" class="btn btn-danger btn-lg btn-block" ng-click="start=!start; details=!details">Click here to see how!</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-show="details">
+						<div  ng-hide="step1">
+							<h2>Here is your $15 free Gift Card</h2>
+							<p class="text-muted">Your friend, <strong>Rachel</strong> sent you this gift card. All you have to do is filling out your information and it's yours.</p>
+							<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+								<div class="form-group top-buffer-3">
+									<button type="button" class="btn btn-ge-primary btn-lg btn-block" ng-click="step1=!step1; step2=!step2">Get your Gift Card now!</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-offset-2 col-sm-8">
+									<img ng-click="send=!send" src="assets/img/promo/giftcard/giftcard-proflowers15.jpg" alt="Gift Card" class="img img-responsive"/>
+								</div>
+							</div>
+						</div>
+						<div  ng-hide="!step2">
+							<h2 class="ge-color-1">Where should we send the card?</h2>
+							<form role="form" class="top-buffer-3">
+								<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+								<div class="row ">
+									<div class="col-sm-6">
+										<p class="text-right text-muted hidden-xs">Simply enter your name and e-mail addresses and location to the right &rarr;</p>
+										<img ng-click="send=!send" src="assets/img/promo/giftcard/giftcard-proflowers15.jpg" alt="Gift Card" class="img img-responsive"/>
+									</div>
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-xs-6" style="padding-right:5px !important;">
+												<div class="form-group">
+												<label class="sr-only" for="firstName">First Name</label>
+												<input type="text" ng-model="firstName" id="firstName" class="form-control input" placeholder="First Name" >
+												</div>
+											</div>
+											<div class="col-xs-6" style="padding-left:5px !important;">
+												<div class="form-group">
+												<label class="sr-only" for="lastName">Last Name</label>
+												<input type="text" ng-model="lastName" id="lastName" class="form-control input" placeholder="Last Name" >
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<input type="email" ng-model="reg.email" id="email" class="form-control input" placeholder="Email address" >
+										</div>
+										<div class="form-group">
+											<input type="email" ng-model="reg.confirmEmail" id="confirmEmail" class="form-control input" placeholder="Confirm Email" >
+										</div>
+										<div class="form-group">
+										<input id="zipCode" name="zipCode" type="text" ng-model="zipCode" placeholder="Your Zip Code" maxlength="5" ng-only-digits class="form-control input" required>
+										</div>
+										<div class="form-group">
+											<button class="btn btn-lg btn-block btn-ge-primary" ng-click="step2=!step2; step3=!step3">Next</button>
+										</div>	
+									</div>	
+								</div>
+								<div class="alert alert-social alert-success" ng-bind="success" ng-show="success"></div>
+							</form>		
+						</div>
+						
+						<div  ng-hide="!step3">
+							<h2 class="ge-color-1">Want More Gift Cards?</h2>
+							<form role="form" class="top-buffer-3">
+								<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+								<div class="row ">
+									<div class="col-sm-6">
+										<p class="text-right text-muted hidden-xs">By signing in to Gifteng, you gain free access to a variety of Gift Cards and much more! All you need is a password: &rarr;</p>
+										<img ng-click="send=!send" src="assets/img/promo/giftcard/giftcard-proflowers15.jpg" alt="Gift Card" class="img img-responsive"/>
+									</div>
+									<div class="col-sm-6">
+										<p class="text-left text-muted visible-xs">Simply enter three e-mail addresses of friends you would like to send this card to:</p>
+										<div class="form-group">
+											<input type="password" ng-model="reg.password" id="password" class="form-control input input-lg" placeholder="Password" >
+										</div>
+										<div class="form-group">
+											<!-- <button ng-click="sendMail();"> TODO -->
+											<button class="btn btn-lg btn-block btn-ge-primary" ng-click="step3=!step3; step4=!step4">Sign me up</button>
+										</div>
+									</div>	
+								</div>
+								<div class="alert alert-social alert-success" ng-bind="success" ng-show="success"></div>
+							</form>
+						</div>
+						
+						<div ng-hide="!step4">
+							<h2 class="ge-color-1">Want More Gift Cards?</h2>
+							<form role="form" class="top-buffer-3">
+								<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+								<div class="row">
+									<div class="col-sm-offset-1 col-sm-10">
+										<p class="text-muted">Congratulations! Your gifts have been sent and you can redeem yours as soon as your friends signed up. If you're ready to collect more Gift Cards, now is the chance:</p>
+										<div class="form-group top-buffer-2 bottom-buffer-2">
+											<div class="btn-group btn-group-lg">
+												<button type="button" class="btn btn-primary">
+													<i class="glyphicon glyphicon-ge-facebook"></i>
+												</button>
+												<button type="button" class="btn btn-primary" ng-click="sendMsg()">
+													Share on Facebook
+												</button>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-sm-offset-2 col-sm-8">
+												<img ng-click="send=!send" src="assets/img/promo/giftcard/giftcard-proflowers15.jpg" alt="Gift Card" class="img img-responsive"/>
+											</div>
+										</div>
+										<p class="text-muted bottom-buffer-3">Each time, one of your friends is signed up, you will receive points to use towards gift cards. Points never expire. &hearts;
+										</p>
+									</div>	
+								</div>
+								<div class="alert alert-social alert-success" ng-bind="success" ng-show="success"></div>
+							</form>
+						</div>
+					</div>	
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>

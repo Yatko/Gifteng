@@ -14,28 +14,23 @@
 		<div class="row" ng-if="loaded">
 			<div class="detailView col-sm-10 col-sm-offset-1 ad">
 				<div class="row" ng-show="ad.id">
-					<div class="col-sm-6">
+					<div class="col-sm-5 col-md-4">
 
 						<user-profile
-						name="{{ad.creator.firstName}} {{ad.creator.lastName}}"
-						id="{{ad.creator.id}}"
-						location="{{ad.creator.address.city}}, {{ad.creator.address.stateAbbreviation}}"
+						user="ad.creator"
 						img="{{ad.creator.avatar.id}}"
-						points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
-						since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
 						following="ad.creator.inFollowings"
-						stats="ad.creator.statistics"
-						callback="callback"
+						callback="callback()"
 						></user-profile>
 
 						<ad
 						ad="ad"
 						self="self"
 						action="1"
-						callback="callback"
+						callback="callback()"
 						></ad>
 
-						<div ng-if="ad.requests.item" class="hidden-xs">
+						<div ng-if="ad.activeReq && ad.type!='BUSINESS'" class="hidden-xs">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<div ng-if="ad.status!='SOLD' && ad.status!='SENT' && ad.reqStat!='RECEIVED'">
@@ -48,8 +43,8 @@
 								<div class="panel-body">
 									<div class="row">
 										<div ng-repeat="request in ad.requests.item">
-											<div class="col-xs-4 col-sm-3">
-												<a ng-href="#/view/profile/{{request.user.id}}" ng-click="close()" ng-class="{'accepted':request.status=='ACCEPTED'}">
+											<div class="col-xs-4 col-sm-3" ng-if="request.status!='CANCELED' && request.status!='UNACCEPTED' && request.status!='DECLINED'">
+												<a ng-href="#/view/profile/{{request.user.id}}" ng-click="close()" ng-class="{'accepted':request.status=='RECEIVED'}">
 													<img ng-show="request.user.avatar" ng-src="{{amazonUrl}}user/{{request.user.avatar.id}}_112" class="img-rounded img-responsive" />
 													<img ng-hide="request.user.avatar" src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" />
 												</a>
@@ -60,7 +55,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-7 col-md-8">
 						<ad
 						ad="ad"
 						cmn="comments"
@@ -70,10 +65,10 @@
 						map='1'
 						comments='1'
 						addcomment='1'
-						callback="callback"
+						callback="callback()"
 						></ad>
 
-						<div ng-if="ad.requests.item" class="visible-xs">
+						<div ng-if="ad.activeReq" class="visible-xs">
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<div ng-if="ad.status!='SOLD' && ad.status!='SENT' && ad.reqStat!='RECEIVED'">
@@ -86,7 +81,7 @@
 								<div class="panel-body">
 									<div class="row">
 										<div ng-repeat="request in ad.requests.item">
-											<div class="col-xs-4 col-sm-3">
+											<div class="col-xs-4 col-sm-3" ng-if="request.status!='CANCELED' && request.status!='UNACCEPTED' && request.status!='DECLINED'">
 												<a ng-href="#/view/profile/{{request.user.id}}" ng-click="close()" ng-class="{'accepted':request.status=='ACCEPTED'}">
 													<img ng-show="request.user.avatar" ng-src="{{amazonUrl}}user/{{request.user.avatar.id}}_112" class="img-rounded img-responsive" />
 													<img ng-hide="request.user.avatar" src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" />

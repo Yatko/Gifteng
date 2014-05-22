@@ -1,0 +1,125 @@
+<div class="row">
+	<div class="col-lg-offset-1 col-lg-10 col-md-12">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+			<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+				×
+			</button>
+		  	<h4>Quickly post things you no longer need...</h4>
+		  </div>
+		  <div class="panel-body">
+		  	<div class="row">
+		  		<div class="col-sm-5 hidden-xs">
+			  			<br />
+			  			<ul>
+			  				<li>List your new or gently used items–such as clothing, accessories, games, toys, etc.– to earn requests toward other gifts.<br /><br /></li>
+			  				<li>Browse through all of the available gifts on the site and request the ones you want. Everything is free!<br /><br /></li>
+			  				<li>Earn Generosity Points for giving and use them towards gifts from companies.<br /><br /></li>
+			  			</ul>
+			  			<ul>
+			  				<img src="assets/img/pages/give_image.png" alt="Give" class="img img-responsive">
+			  			</ul>
+			  			<!-- <ul class="list-inline text-center" style="color: #00bebe;font-size: 2.1em;">
+			  				<li><i class="glyphicon glyphicon-ge-giftbox" style="color: purple;"></i></li>
+			  				<li><i class="glyphicon glyphicon-ge-giftbox" style="color: orange;"></i></li>
+			  				<li><i class="glyphicon glyphicon-ge-giftbox" style="color: turquoise;"></i></li>
+			  				<li><i class="glyphicon glyphicon-ge-giftbox" style="color: DeepPink ;"></i></li>
+			  			</ul> -->
+		  		</div>
+		  		<div class="col-sm-7">
+		  			<blockquote>
+		  			<form enctype="multipart/form-data">
+		  				<div class="row">
+		  					<div class="col-sm-4">
+		  						<giftimg action="api/image" def="image" ng-model="toPost.image"></giftimg>
+		  					</div>
+		  					<div class="col-sm-8">
+		  						<div class="alert alert-danger" ng-if="error" ng-bind="error"></div>
+		  						<div class="form-group">
+		  							<input type="text" name="title" ng-model="toPost.title" class="form-control" placeholder="Title: Xbox First Generation" maxlength="55" />
+		  						</div>
+		  						<div class="form-group">
+		  							<textarea ng-model="toPost.description" class="form-control" rows="3" placeholder="Description: size, color, condition, etc." maxlength="600"></textarea>
+		  						</div>
+		  					</div>
+		  				</div>
+		  				<div class="row">
+		  					<div class="col-sm-12">
+		  						<div class="form-group">
+		  							<select ng-model="toPost.category" class="form-control">
+		  								<option value=''>Select category</option>
+		  								<option ng-repeat="c in categories" value="{{c.id}}">{{c.name}}</option>
+		  							</select>
+		  						</div>
+		  						<div class="row">
+		  							<div class="col-xs-6">
+		  								<div class="form-group">
+		  									<!-- <div class="input-group">
+		  										<span class="input-group-addon">$</span> -->
+		  										<input type="text" ng-model="toPost.price" class="form-control"  ng-only-digits placeholder="Gift value" maxlength="6" />
+		  									<!-- </div> -->
+		  								</div>
+		  							</div>
+		  							<div class="col-xs-6">
+		  								<div class="form-group">
+		  									<input ng-only-digits type="text" ng-model="toPost.address.zipCode" class="form-control" placeholder="Zip code" maxlength="5" />
+		  								</div>
+		  							</div>
+		  						</div>
+		  						<div class="row">
+		  							<div class="col-xs-6">
+		  								<div class="form-group">
+		  									<label>
+		  										<input type="checkbox" ng-model="toPost.pickUp"  > Local Pickup	
+		  									</label>
+		  								</div>
+		  							</div>
+		  							<div class="col-xs-6">
+		  								<div class="form-group">	
+		  									<label>						
+		  										<input type="checkbox" ng-model="toPost.freeShipping"  > Offer Shipping <small class="ge-block">Receiver pays shipping</small>
+		  									</label>
+		  								</div>
+		  							</div>
+		  						</div>
+		  						<div class="row" ng-show="toPost.freeShipping">
+		  							<div class="col-sm-12 text-center">
+		  								<hr/>
+		  								Select shipping size
+		  							</div>
+		  						</div>
+		  						<div class="row" ng-show="toPost.freeShipping">
+		  							<div class="col-sm-4 col-xs-4">
+		  								<img src="assets/img/shipping/1envelope.jpg" class="img-responsive" ng-click="toPost.selectedBox1 = true;toPost.selectedBox2 = false;  toPost.selectedBox3 = false;" ng-show="!toPost.selectedBox1" />
+		  								<img src="assets/img/shipping/1envelope_a.jpg" class="img-responsive" ng-show="toPost.selectedBox1" />
+		  							</div>
+		  							<div class="col-sm-4  col-xs-4">
+		  								<img src="assets/img/shipping/2smallBox.jpg" class="img-responsive" ng-click="toPost.selectedBox2 = true;toPost.selectedBox1 = false;  toPost.selectedBox3 = false;" ng-show="!toPost.selectedBox2" />
+		  								<img src="assets/img/shipping/2smallBox_a.jpg" class="img-responsive" ng-show="toPost.selectedBox2" />
+		  							</div>
+		  							<div class="col-sm-4  col-xs-4">
+		  								<img src="assets/img/shipping/3mediumBox.jpg" class="img-responsive" ng-click="toPost.selectedBox3 = true;toPost.selectedBox2 = false;  toPost.selectedBox1 = false;" ng-show="!toPost.selectedBox3" />
+		  								<img src="assets/img/shipping/3mediumBox_a.jpg" class="img-responsive" ng-show="toPost.selectedBox3" />
+		  							</div>
+		  						</div>
+		  					</div>
+		  				</div>	
+		  			</form>
+		  			</blockquote>
+		  		</div>
+		  	</div>
+		    
+		  </div>
+		  <div class="panel-footer">
+		  	<div class="row">
+		  		<div class="col-xs-5">
+		  			<a href="http://gifteng.zendesk.com/forums" target="_blank" class="btn btn-lg btn-block btn-ge-default"> FAQs </a>
+		  		</div>
+		  		<div class="col-xs-7">
+		  			<a href ng-click="preview();" class="btn btn-lg btn-block btn-ge-primary"> Preview <span class="glyphicon glyphicon-ge-right"></span> </a>
+		  		</div>
+		  	</div>
+		  </div>
+		</div>
+	</div>
+</div>

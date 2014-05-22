@@ -1,0 +1,32 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+		<div class="modal-header-content">
+			<h3>You are about to redeem this Gift. This gift may be redeemed once!</h3>
+		</div>
+	</div>
+	<div class="modal-body">
+		<div ng-if="ad.free">
+			Would you like to redeem this gift now?
+		</div>
+		<div ng-if="!ad.free">
+			Press "OK" if you want to redeem it or press "LATER" and open this gift again when you're ready.
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-6"></div>
+			<div class="col-xs-6">
+				<a href ng-click="close()" class="btn btn-ge-default">
+					LATER
+				</a>
+				<a href ng-click="submit()"  class="btn btn-ge-primary">
+					<span ng-if="ad.free">YES</span>
+					<span ng-if="!ad.free">OK</span>
+				</a>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>

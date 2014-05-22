@@ -69,6 +69,7 @@ class Ad {
     public $request;
 	public $distance;
 	public $reqStat;
+	public $activeReq;
     
     // business ad data
     public $promoCode; //string
@@ -84,6 +85,7 @@ class Ad {
 	public $free; //boolean
 	public $allAddresses;
 	public $shippingBox;
+    public $promoCodeProvider;
 
 	
 

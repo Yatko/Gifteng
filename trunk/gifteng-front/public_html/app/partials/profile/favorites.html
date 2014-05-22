@@ -9,17 +9,10 @@
 					type="favorites"
 					details="1"
 					status="{{ad.status}}"
-					creator-firstname="{{creators[ad.creator].firstName}}"
-					creator-lastname="{{creators[ad.creator].lastName}}"
-					creator-since="{{creators[ad.creator].joinedAt | date:'MMMM yyyy'}}"
-					creator-city="{{creators[ad.creator].address.city}}, {{creators[ad.creator].address.stateAbbreviation}}"
-					creator-avatar="{{creators[ad.creator].avatar.id}}"
-					creator-points="{{creators[ad.creator].score | number:0}}/{{creators[ad.creator].pendingScore | number:0}}"
-					creator-id="{{creators[ad.creator].id}}"
 					creator="creators[ad.creator]"
 					ad="ad"
 					callback="cqllbqck()"
-					selfview="{{selfview}}"
+					selfview="selfview"
 					></ad-item-box>
 				</div>
 			</div>
