@@ -37,7 +37,10 @@
 		<div class="form-group">
 			Use Gift Code:
 			<h2 class="ge-negative" ng-if="!ad.generatePromoCodeForRequests">{{ad.promoCode}}</h2>
-			<h2 class="ge-negative" ng-if="ad.generatePromoCodeForRequests">{{ad.user_request.promoCode}}</h2>
+			<h2 class="ge-negative" ng-if="ad.generatePromoCodeForRequests">
+				<span ng-if="ad.user_request.promoCode">{{ad.user_request.promoCode}}</span>
+				<span ng-if="ad.request.promoCode && !ad.user_request.promoCode">{{ad.request.promoCode}}</span>
+			</h2>
 		</div>
 	</div>
 	<div class="modal-footer">

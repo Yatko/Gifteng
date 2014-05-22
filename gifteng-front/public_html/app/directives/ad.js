@@ -98,6 +98,7 @@ define(['directives'], function(directives) {
 							UserEx.requestAd.query({id:id, text:''}, function() {
 								var ad = Ad.get({id:$scope.ad.id}, function() {
 									if(typeof(ad.ad)!=='undefined') {
+										$scope.ad = ad.ad;
 										$scope.redeem(ad.ad.user_request.id);
 									}
 								});

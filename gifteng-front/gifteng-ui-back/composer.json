@@ -5,8 +5,7 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.0.*",
-		"intervention/image": "dev-master",
-        "mews/useragent": "dev-master"
+		"intervention/image": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

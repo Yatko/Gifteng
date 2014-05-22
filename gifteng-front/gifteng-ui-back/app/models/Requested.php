@@ -28,6 +28,7 @@ class Requested {
     public $isExpired;
 	public $numUnreadMessages; // integer
     public $redeemed;
+    public $promoCode;
     
     public function __construct($obj = null) {
         if ( $obj != null ) {
