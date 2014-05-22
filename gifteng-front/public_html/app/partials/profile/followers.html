@@ -1,15 +1,12 @@
 <div class="row" ng-controller="FollowersController">
-	<div ng-repeat="conn in data.follower">
+	<div ng-repeat="conn in data">
 		<div class="col-sm-3">
 			<user-profile 
-				id="{{conn.id}}"
-				name="{{conn.firstName}} {{conn.lastName}}" 
-				location="{{conn.address.city}}, {{conn.address.stateAbbreviation}}" 
+				user="conn"
 				img="{{conn.avatar.id}}"
-				points="{{conn.score | number:0}}/{{conn.pendingScore | number:0}}" 
-				since="{{conn.joinedAt | date:'MMMM yyyy'}}"
 				following="conn.inFollowings"
-				avatar="{{conn.avatar.id}}">
+				self="conn.self"
+			>
 			</user-profile>
 		</div>
 	</div>

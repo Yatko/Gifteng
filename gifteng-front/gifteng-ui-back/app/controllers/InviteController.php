@@ -56,8 +56,11 @@ class InviteController extends \BaseController {
 			$userService = new SoapClient(Config::get('wsdl.user'));
 
 			$user = new UserModel(Input::all());
-
-			$result = $userService -> registerUser(array("user" => $user, "password" => Input::get('password'), "invitationCode" => Input::get('code')));
+			$array = array("user" => $user, "password" => Input::get('password'), "invitationCode" => Input::get('code'));
+			if(Input::get('ref')) {
+				$array['referrerId'] = Input::get('ref');
+			}
+			$result = $userService -> registerUser($array);
 
 			$authService = new SoapClient(Config::get('wsdl.auth'));
 			$token = $authService -> authenticateEmail(array("email" => Input::get('email'), "password" => Input::get('password'), "userAgent" => NULL));

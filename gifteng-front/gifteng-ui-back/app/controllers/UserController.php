@@ -210,10 +210,13 @@ class UserController extends \BaseController {
             $messageService = new SoapClient(Config::get('wsdl.message'),array());
             $result = $messageService->getMessagesByRequest(array("requestId" => $id));
 
-			if(isset($result->message->type))
-				$return = array($result->message);
-			else
-				$return = $result->message;
+			$return=$result;
+			if(isset($result->message)) {
+				if(isset($result->message->type))
+					$return = array($result->message);
+				else
+					$return = $result->message;
+			}
 			
 			return Response::json($return);
         } catch ( Exception $ex ) {
@@ -242,7 +245,7 @@ class UserController extends \BaseController {
 	public function sendMessage() {
 		try {
 			$message = new Message();
-			$message->text = Input::get('text');
+			$message->text = nl2br(Input::get('text'));
 			$message->requestId = Input::get('requestId');
 			$message->toId = Input::get('toId');
             $messageService = new SoapClient(Config::get('wsdl.message'),array());
@@ -346,7 +349,7 @@ class UserController extends \BaseController {
 		$userService = new SoapClient(Config::get('wsdl.user'),array());
 		$geoService = new SoapClient(Config::get('wsdl.utility'), array());
 		$currentUser = $userService->getUserByEmail(array('email'=>$session['data']->email))->user;
-		
+
         if ( !$currentUser->address ) {
             $address = new Address;
         } else {
@@ -361,6 +364,8 @@ class UserController extends \BaseController {
 			$address=$geoService -> getAddressByZipcode(array("zipcode" => Input::get('zipCode')));
 			
 			$currentUser->address = $address->address;
+		} else if(Input::get('zipCode')=="") {
+			$currentUser->address = new Address();
 		}
 		
 		try {
@@ -428,8 +433,9 @@ class UserController extends \BaseController {
     public function verifyUser() {
         try {
             $userService = new SoapClient(Config::get('wsdl.user'));
-            $userService->verifyUser(Input::get('code'));
+            $userService->verifyUser(array('code'=>Input::get('code')));
         } catch ( Exception $ex ) {
+			return Response::json(array($ex->faultstring));
         }
     }
 	

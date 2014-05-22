@@ -1,0 +1,52 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+		<div class="modal-header-content">
+			<user-profile
+			user="ad.creator"
+			img="{{ad.creator.avatar.id}}"
+			img-size="112"
+			following="ad.creator.inFollowings"
+			id="{{ad.creator.id}}"
+			nested="true"
+			></user-profile>
+		</div>
+	</div>
+	<div class="modal-body text-center">
+		<h3>{{ad.title}}</h3>
+		<div class="form-group">
+			<div ng-if="ad.place!='ONLINE' || ad.place=='BOTH'">
+				<div class="form-group" ng-if="ad.allAddresses">
+					Redeemable at all brand stores
+				</div>
+				<div class="form-group" ng-if="!ad.allAddresses">
+					Redeemable only at selected stores
+					<ul>
+						<li ng-repeat="address ad.addresses">
+							{{address.city}} {{address.stateAbbreviation}}
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="form-group" ng-if="ad.place=='ONLINE'">
+				Redeemable online at <a href="http://{{ad.website}}" target="_blank">{{ad.website}}</a>
+			</div>
+		</div>
+		<div class="form-group">
+			Use Gift Code:
+			<h2 class="ge-negative" ng-if="!ad.generatePromoCodeForRequests">{{ad.promoCode}}</h2>
+			<h2 class="ge-negative" ng-if="ad.generatePromoCodeForRequests">{{ad.user_request.promoCode}}</h2>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<a href ng-click="submit()"  class="btn btn-ge-primary">
+					DONE
+				</a>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>

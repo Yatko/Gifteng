@@ -11,6 +11,11 @@
 |
 */
 
+App::missing(function($exception)
+{
+    return Response::view('404', array(), 404);
+});
+
 App::before(function($request)
 {
 	//
@@ -41,7 +46,7 @@ Route::filter('auth', function()
 		ini_set('user_agent', "PHP-SOAP/".PHP_VERSION."\r\n"."AuthToken: ".$token->AuthToken);
 	}
 	else {
-		return array('error'=>'not_logged_in');
+		return array('error'=>'Please log in.');
 	}
 });
 

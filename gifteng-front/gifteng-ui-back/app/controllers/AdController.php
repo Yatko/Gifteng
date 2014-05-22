@@ -25,6 +25,7 @@ class AdController extends \BaseController {
 			$filter -> includePickUp = null;
 			$filter -> includeShipping = null;
 			$type = Input::get('order');
+			$adtype = Input::get('types');
         	$filter->searchString = Input::get('keywords');
 			if(Input::get('category')) {
 				 $category = array(Input::get('category'));
@@ -36,9 +37,9 @@ class AdController extends \BaseController {
 			if($delivery = Input::get('delivery')) {
 				if($delivery=="pickup") {
 					$filter -> includePickUp = 1;
-					$filter -> includeShipping = 0;
+					$filter -> includeShipping = null;
 				} else if($delivery=="shipping") {
-					$filter -> includePickUp = 0;
+					$filter -> includePickUp = null;
 					$filter -> includeShipping = 1;
 				}
 			}
@@ -59,16 +60,18 @@ class AdController extends \BaseController {
 				$filter -> orderAsc = true;
 				$filter -> orderClosest = true;
 				$filter -> filterType = Filter::FILTER_TYPE_ACTIVE;
-				$filter -> latitude = ($currentUser != null && $currentUser -> address != null) ? $currentUser -> address -> latitude : null;
-				$filter -> longitude = ($currentUser != null && $currentUser -> address != null) ? $currentUser -> address -> longitude : null;
+				$filter -> latitude = ($currentUser != null && $currentUser -> address != null && isset($currentUser -> address -> latitude)) ? $currentUser -> address -> latitude : null;
+				$filter -> longitude = ($currentUser != null && $currentUser -> address != null && isset($currentUser -> address -> longitude)) ? $currentUser -> address -> longitude : null;
 			} else if ($type == AdController::TYPE_GIFTED) {
 				$filter -> orderAsc = false;
 				$filter -> orderClosest = false;
 				$filter -> filterType = Filter::FILTER_TYPE_GIFTED;
 			}
+			if($adtype)
+				$filter -> types = $adtype;
 
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
-			$result = $adService -> getAdsExDetail(array("lastIndex" => -1, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2));
+			$result = $adService -> getAdsExDetail(array("lastIndex" => -1, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2, "includeCreatorStatistics" => true));
 
 			$creators = array();
 			
@@ -117,6 +120,12 @@ class AdController extends \BaseController {
 						if ($v -> user -> id == $user_id) {
 							$ad -> request = $v;
 						}
+					}
+				}
+				
+				if(isset($ad -> comments) && isset($ad -> comments -> item)) {
+					if (!is_array($ad -> comments -> item)) {
+						$ad -> comments -> item = array($ad->comments->item);
 					}
 				}
 
@@ -224,6 +233,7 @@ class AdController extends \BaseController {
 			$filter -> includePickUp = null;
 			$filter -> includeShipping = null;
 			$type = Input::get('order');
+			$adtype = Input::get('types');
         	$filter->searchString = Input::get('keywords');
 			if(Input::get('category')) {
 				 $category = array(Input::get('category'));
@@ -265,10 +275,12 @@ class AdController extends \BaseController {
 				$filter -> orderClosest = false;
 				$filter -> filterType = Filter::FILTER_TYPE_GIFTED;
 			}
+			if($adtype)
+				$filter -> types = $adtype;
 			
 			
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
-			$result = $adService -> getAdsExDetail(array("lastIndex" => $last, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2));
+			$result = $adService -> getAdsExDetail(array("lastIndex" => $last, "numberAds" => 15, "filter" => $filter, "includeImages" => true, "includeCreator" => true, "includeCommentsNumber" => 2, "includeCreatorStatistics" => true));
 
 			$creators = array();
 			
@@ -317,6 +329,12 @@ class AdController extends \BaseController {
 						if ($v -> user -> id == $user_id) {
 							$ad -> request = $v;
 						}
+					}
+				}
+
+				if(isset($ad -> comments) && isset($ad -> comments -> item)) {
+					if (!is_array($ad -> comments -> item)) {
+						$ad -> comments -> item = array($ad->comments->item);
 					}
 				}
 
@@ -574,6 +592,8 @@ class AdController extends \BaseController {
 					$row -> reqStat = "RECEIVED";
 				} else if ($request -> isPending) {
 					$row -> reqStat = "PENDING";
+				} else if ($request -> accepted && $request -> sent) {
+					$row -> reqStat = "SENT";
 				} else if ($request -> accepted) {
 					$row -> reqStat = "ACCEPTED";
 				}
@@ -664,6 +684,7 @@ class AdController extends \BaseController {
 			$session = Session::get('user');
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
 			$ad = new Ad(Input::get('ad'));
+			$ad->description = nl2br($ad->description);
 			
 			$times = array('availableFromTime','availableToTime','redemptionEndDate');
 			foreach($times as $time) {
@@ -685,6 +706,7 @@ class AdController extends \BaseController {
 			else {
 				$ad -> image = ImageModel::createImageModel(str_replace('api/image/', '', $ad -> image['url']));
 				$result = $adService -> placeAd(array("ad" => $ad));
+				return array('id'=>$result->adId);
 			}
 		} catch ( Exception $ex ) {
 			throw new Exception($ex -> getMessage());
@@ -719,7 +741,16 @@ class AdController extends \BaseController {
 			
 			if (isset($ad -> requests -> item) && !is_array($ad -> requests -> item)) {
 				$ad -> requests -> item = array($ad -> requests -> item);
-			} 
+			}
+			
+			$ad -> activeReq = 0;
+			if(isset($ad->requests->item)) {
+				foreach($ad -> requests -> item as $k=>$request) {
+					if($request -> status != 'CANCELED' && $request -> status != 'DECLINED' && $request -> status != 'UNACCEPTED') {
+						$ad -> activeReq++;
+					}
+				}
+			}
 
 			if (!$ad -> online) {
 				if ($ad -> approved) {
@@ -873,7 +904,7 @@ class AdController extends \BaseController {
 		try {
 			$messageService = new SoapClient(Config::get('wsdl.message'), array());
 			$comment = new Comment;
-			$comment -> text = Input::get('text');
+			$comment -> text = nl2br(Input::get('text'));
 
 			$result = $messageService -> addCommentToAd(array("adId" => $id, "comment" => $comment));
 		} catch ( Exception $ex ) {
@@ -905,6 +936,7 @@ class AdController extends \BaseController {
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
 			$adService -> requestAd(array("adId" => $id, "text" => Input::get('text')));
 		} catch ( Exception $ex ) {
+			return Response::json(array($ex->faultstring));
 		}
 	}
 
@@ -1029,6 +1061,32 @@ class AdController extends \BaseController {
 		try {
 			$adService = new SoapClient(Config::get('wsdl.ad'), array());
 			$adService -> rateAd(array("rating" => $rating));
+		} catch ( Exception $ex ) {
+			return Response::json(array($ex->faultstring));
+		}
+	}
+	
+	public function categories() {
+		try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$categories = $adService -> getAllCategories();
+			
+			return Response::json($categories->category);
+		} catch ( Exception $ex ) {
+			return Response::json(array($ex->faultstring));
+		}
+	}
+
+	/**
+	 * Redeem request
+	 *
+	 * @param int $id
+	 * @return Response
+	 */
+	public function redeem($id) {
+		try {
+			$adService = new SoapClient(Config::get('wsdl.ad'), array());
+			$adService -> RedeemRequest(array("requestId" => $id));
 		} catch ( Exception $ex ) {
 		}
 	}

@@ -77,9 +77,29 @@ class ImageController extends \BaseController {
 	public function storeInWIP() {
 		// store the profile images a temp location using unique file id, get it cropped from client and save to profile later
         $file = Input::file('uploader');
+		
+		
         $destinationPath = app_path().'/storage/uploads/';
         $filename = uniqid().'_'.$file->getClientOriginalName();
-        Input::file('uploader')->move($destinationPath, $filename);
+		
+        $file->move($destinationPath, $filename);
+		
+		if(exif_imagetype($destinationPath.$filename)==2) {
+			$layer = PHPImageWorkshop\ImageWorkshop::initFromPath($destinationPath.$filename);
+			
+		    $exif = exif_read_data($destinationPath.$filename);
+		 
+		    if(isset($exif['Orientation'])&& $exif['Orientation'] == '6'){
+		    	$layer->rotate(90);
+		    }
+		 
+		    if(isset($exif['Orientation'])&& $exif['Orientation'] == '3'){
+		    	$layer->rotate(180);
+		    }
+			
+	        $layer->save($destinationPath, $filename, false, null, 95);
+		}
+		
         list($width, $height, $type, $attr) = getimagesize($destinationPath.$filename);
        // return Response::json(array('filename' => $filename, 'width' => $width, 'height' => $height, 'type' => $type, 'attr' => $attr));
 		if($width<500 || $height <500 || filesize($destinationPath.$filename) > 5242880) {
@@ -94,8 +114,28 @@ class ImageController extends \BaseController {
 		$file = Input::file('uploader');
 		$destinationPath = app_path().'/storage/uploads/';
 		$filename = $file->getClientOriginalName();
-		Input::file('uploader')->move($destinationPath, $filename);
-		Log::error("file name =".$filename);
+		
+        $destinationPath = app_path().'/storage/uploads/';
+        $filename = $file->getClientOriginalName();
+		
+        $file->move($destinationPath, $filename);
+
+		if(exif_imagetype($destinationPath.$filename)==2) {
+			$layer = PHPImageWorkshop\ImageWorkshop::initFromPath($destinationPath.$filename);
+			
+				$exif = exif_read_data($destinationPath.$filename);
+		 
+		    if(isset($exif['Orientation'])&& $exif['Orientation'] == '6'){
+		    	$layer->rotate(90);
+		    }
+		 
+		    if(isset($exif['Orientation'])&& $exif['Orientation'] == '3'){
+		    	$layer->rotate(180);
+		    }
+			
+	        $layer->save($destinationPath, $filename, false, null, 95);
+		}
+		
 		if( ImageModel::getImgTypeByExtension($filename) == ImageModel::IMGTYPE_PDF){
 			return array();
 		}

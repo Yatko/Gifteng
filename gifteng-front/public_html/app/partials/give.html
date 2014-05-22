@@ -1,0 +1,32 @@
+<div class="ge-navigator">
+	<div class="col-xs-4">
+		<a class="ptitle" ng-show="ptitle" ng-click="close()"> <span class="glyphicon glyphicon-ge-logo-gifteng"></span> </a>
+		<a class="ptitle" ng-show="ptitle" ng-click="close()"> <span>{{ptitle}}</span> </a>
+		<a class="ptitle" ng-hide="ptitle" ng-click="close()"> <span class="glyphicon glyphicon-ge-gifteng glyphicon-ge-gifteng-welcome"></span><sup>Beta</sup> </a>
+	</div>
+	<div class="col-xs-8 text-right" ng-controller="NavController">
+		<div ng-if="!user.logged">
+			<button type="button" class="btn btn-sm btn-ge-primary" ng-click="oLogin()">
+				Sign In
+			</button>
+			<div class="btn-group btn-group-sm">
+				<button type="button" class="btn btn-primary">
+					<i class="glyphicon glyphicon-ge-facebook"></i>
+				</button>
+				<button type="button" class="btn btn-primary" ng-click="oFacebookLogin()">
+					Connect
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="container ge-container">
+	<div class="row">
+		<div class="col-sm-12">
+			<div ng-controller="GiveController">
+				<div ng-include="'app/partials/give/'+step+'.html'"></div>
+			</div>
+		</div>
+	</div>
+</div>

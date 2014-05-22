@@ -5,12 +5,9 @@
 </div>
 
 <div class="btn-group-vertical btn-group-nav btn-group-lg pull-right hidden-xs snap-slide" ng-show="user.logged">
-	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"> <span class="glyphicon-ge-search"></span> </a>
-	<!-- <a href ng-click="closeLeft();openFilter()" class="btn btn-ge-primary" ng-if="parsedurl[2]=='gifts'"> <span class="glyphicon-ge-search"></span> </a> -->
-	<a href="#/browse/" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-eye"></span> </a>
-	<!-- TODO review necessity of this line <li ng-hide="parsedurl[1]=='post'"> -->
 	<a href ng-click="closeLeft();doPost()" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon-ge-giftbox"></span> </a>
-	<!-- </li> -->
+	<a href="#/browse/" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary" ng-if="parsedurl[1]!=='browse'"> <span class="glyphicon glyphicon-ge-eye"></span> </a>
+	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"> <span class="glyphicon-ge-search"></span> </a>
 	<a href="#/profile/gifts/giving" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-heart"></span> </a>
 	<a href="#/profile/account/messages" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-mail" ng-class="{'ge-alert': user.data.statistics.numUnreadMessages==1}"></span> </a>
 	<a href="#/invite" ng-show="user.logged" ng-click="closeLeft();" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-user"></span> </a>
@@ -19,39 +16,6 @@
 </div>
 
 <div class="btn-group-vertical btn-group-nav btn-group-lg pull-right visible-xs snap-slide" ng-show="user.logged">
-	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"><span class="glyphicon-ge-search"></span> </a>
-	<!-- <a href ng-click="closeLeft();openFilter()" class="btn btn-ge-primary" ng-if="parsedurl[2]=='gifts'"> <span class="glyphicon-ge-search"></span> </a> -->
-	<!-- TODO review necessity of this line <li ng-hide="parsedurl[1]=='post'"> -->
-	<!-- <a href="#/post" ng-click="closeLeft()" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon-ge-giftbox"></span> </a> -->
-	<!-- </li> -->   
+	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"><span class="glyphicon-ge-search"></span> </a>  
     <a id="open-left" ng-click="openLeft();isopen=!isopen" class="btn menuop open-left" ng-class="{'btn-snap':isopen, 'btn-primary':!isopen}" href ng-show="user.logged"> <span class="glyphicon-ge-list"></span> </a>
 </div>
-<!--
-<div class="btn-filter" ng-show="user.logged" ng-class="{'showfull':fullfilter}" ng-swipe-left="fullfilter=true" ng-swipe-right="fullfilter=false">
-	<div class="hidden-xs">
-		<a href ng-click="openSearch()" class="btn btn-ge-primary btn-lg" ng-if="parsedurl[1]=='browse'"><i class="glyphicon glyphicon-search hidden"></i> Filter </a>
-		<a href ng-click="openFilter()" class="btn btn-ge-primary btn-lg" ng-if="parsedurl[2]=='gifts'"><i class="glyphicon glyphicon-search hidden"></i> Filter </a>
-	</div>
-	<div class="visible-xs">
-		<a href ng-click="openSearch()" class="btn btn-ge-primary" ng-if="parsedurl[1]=='browse'">
-			<i class="glyphicon glyphicon-search hidden"></i>
-			<span>Filter</span>
-		</a>
-		<a href ng-click="openFilter()" class="btn btn-ge-primary" ng-if="parsedurl[2]=='gifts'">
-			<i class="glyphicon glyphicon-search hidden"></i>
-			<span>Filter</span>
-		</a>
-	</div>
-</div>
-<div class="btn-report" ng-show="user.logged" ng-class="{'showfull':showfull}" ng-swipe-left="showfull=true" ng-swipe-right="showfull=false">
-	<div class="hidden-xs">
-		<a href ng-click="oReport()" class="btn btn-ge-primary btn-lg"><i class="glyphicon-ge-bug hidden"></i> Report an Issue </a>
-	</div>
-	<div class="visible-xs">
-		<a href ng-click="oReport()" class="btn btn-ge-primary">
-			<i class="glyphicon-ge-bug hidden"></i>
-			<span>Report an Issue</span>
-		</a>
-	</div>
-</div>
--->

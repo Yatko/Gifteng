@@ -1,0 +1,297 @@
+<div ng-controller="IndexController">
+	<!-- social navigator -->
+	<div class="box-social hidden-xs">
+
+		<ul id="box-social-items">
+			<li>
+				<a class="glyphicon glyphicon-ge-pinterest" href="http://pinterest.com/gifteng" target="_blank"></a>
+			</li>
+			<li>
+				<a class="glyphicon glyphicon-ge-facebook" href="http://facebook.com/gifteng" target="_blank"></a>
+			</li>
+			<li>
+				<a class="glyphicon glyphicon-ge-twitter" href="http://twitter.com/gifteng" target="_blank"></a>
+			</li>
+			<li>
+				<a class="glyphicon glyphicon-ge-heart" href="http://google.com/+gifteng" target="_blank"></a>
+			</li>
+			<li id="top">
+				<a href ng-click="scrollDown()"><i class="glyphicon glyphicon-ge-down"></i></a>
+			</li>
+
+		</ul>
+
+	</div><!--/. social navigator -->
+
+	<!-- welcome -->
+	<div id="welcome">
+
+		<div class="jumbotron welcome-jumbotron">
+			<div class="container">
+				<div class="row welcome">
+					<div class="col-xs-6">
+						<a class="ptitle" ng-show="ptitle" ng-click="close()"> <span class="glyphicon glyphicon-ge-logo-gifteng"></span> </a>
+						<a class="ptitle" ng-show="ptitle" ng-click="close()"> <span>{{ptitle}}</span> </a>
+						<a class="ptitle" ng-hide="ptitle" ng-click="close()"> <span class="glyphicon glyphicon-ge-gifteng glyphicon-ge-gifteng-welcome"></span><sup>Beta</sup> </a>
+					</div>
+					<div class="col-xs-6 text-right" ng-controller="NavController">
+						<div ng-if="!user.logged">
+							<button type="button" class="btn btn-sm btn-default" ng-click="oLogin()">
+								Sign In
+							</button>
+							<div class="btn-group btn-group-sm">
+								<button type="button" class="btn btn-primary">
+									<i class="glyphicon glyphicon-ge-facebook"></i>
+								</button>
+								<button type="button" class="btn btn-primary" ng-click="oFacebookLogin()">
+									Connect
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center">
+					<h1>Free Stuff. Gift Cards. Gifts.</h1>
+					<h2>from great Brands and like-minded People</h2>
+					<p class="lead">
+						<div class="form-group " ng-hide="user.logged" ng-if="country=='US'">
+							<div class="btn-group btn-group-lg">
+								<a href="#/give/" class="btn btn-ge-action">
+									<i class="glyphicon glyphicon-ge-giftbox"></i>
+								</a>
+								<a href="#/give/" class="btn btn-ge-action">
+									Post your first Gift
+								</a>
+							</div>
+							<br />
+							<a href ng-click="oVerify()" class="btn btn-ge-transparent">Sign up with your Email</a> | <a href ng-click="oLogin()" class="btn btn-ge-transparent">Sign in</a>
+						</div>
+						<div class="form-group" ng-hide="user.logged" ng-if="country!='US'">
+							<a href ng-click="oRequest()" class="btn btn-primary btn-lg">Request an Invitation</a>
+							<br />
+							<a href ng-click="oVerify()" class="btn btn-ge-transparent">I have an invitation</a>
+						</div>
+					</p>
+				</div>
+			</div>
+		</div><!-- /.jumbotron index-jumbotron -->
+
+		<div class="welcome-details welcome-block-1">
+			<div class="row">
+				<div class="col-sm-4">
+					<blockquote>
+					<h2><i class="glyphicon glyphicon-ge-giftbox"></i> Give</h2>
+					<p class="lead">Get rewarded for donating 
+					things you no longer need.</p>
+					</blockquote>
+				</div>
+				<div class="col-sm-4">
+					<blockquote>
+					<h2><i class="glyphicon glyphicon-ge-check"></i> Receive</h2>
+					<p class="lead">Browse through great 
+					free stuff and find the
+					things you want.</p>
+					</blockquote>
+				</div>
+				<div class="col-sm-4">
+					<blockquote>
+					<h2><i class="glyphicon glyphicon-ge-heart"></i> Inspire</h2>
+					<p class="lead">Sharing is caring... 
+					and it all starts with you. 
+					Join for free now.</p>
+					</blockquote>
+				</div>
+			</div>
+		</div><!-- /.welcome-block-1 -->
+		<div class="welcome-details welcome-block-2" ng-if="country=='US'">
+			<div class="row text-center">
+			  <div class="btn-group btn-group-lg">
+			  	<a href="https://www.facebook.com/sharer/sharer.php?u=http://youtu.be/zqnnw6XfRFs" target="_blank" class="btn btn-ge-transparent" tooltip="Share on Facebook" tooltip-placement="bottom"><i class="glyphicon glyphicon-ge-facebook"></i></a>
+			  	<a href="https://twitter.com/home?status=http://youtu.be/zqnnw6XfRFs%20Give.%20Receive.%20Inspire."  target="_blank" class="btn btn-ge-transparent" tooltip-placement="bottom" tooltip="Share on Twitter"><i class="glyphicon glyphicon-ge-twitter"></i></a>
+			  	<a href="https://plus.google.com/share?url=http://youtu.be/zqnnw6XfRFs" target="_blank" class="btn btn-ge-transparent" tooltip-placement="bottom" tooltip="Share on Google+"><i class="glyphicon glyphicon-ge-googleplus"></i></a>
+			  	<a href="http://www.pinterest.com/pin/find/?url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dzqnnw6XfRFs%26feature%3Dc4-overview%26list%3DUUQFrB32aqZPWZCJGWC13Ypw&description=Give.%20Receive.%20Inspire." target="_blank" class="btn btn-ge-transparent" tooltip-placement="bottom" tooltip="Share on Pinterest"><i class="glyphicon glyphicon-ge-pinterest"></i></a>
+			  	<a href="https://www.linkedin.com/shareArticle?mini=true&url=http://youtu.be/zqnnw6XfRFs&title=Give.%20Receive.%20Inspire.&summary=&source=" target="_blank" class="btn btn-ge-transparent sr-only" tooltip-placement="bottom" tooltip="Share on Linkedin"><i class="glyphicon glyphicon-ge-linkedin sr-only"></i></a>
+			  </div>
+			</div>
+			<div class="video">
+				<div>
+					<div id="wistia_mqg1xki1su" class="wistia_embed" style="width:580px;height:326px;" data-video-width="580" data-video-height="326">
+						&nbsp;
+					</div>
+				</div>
+			</div>
+			<p class="lead">
+				make the world a giving place - watch our video to learn more
+			</p>
+		</div><!-- /.welcome-block-2 -->
+		<div class="welcome-details welcome-block-3 sr-only">
+			<div class="container">
+				<h2>How does it work?</h2>
+				<p class="lead hidden">
+					quick start
+				</p>
+				<div class="row">
+					<div class="col-sm-7 col-sm-offset-2">
+						<dl class="dl-horizontal">
+							<dt>
+								<i class="glyphicon glyphicon-ge-giftbox"></i>
+							</dt>
+							<dd>
+								Every item you see on Gifteng is individually posted by a member of Gifteng’s growing community or by a company who loves rewarding their customers with awesome gifts.
+							</dd>
+							<dt>
+								<i class="glyphicon glyphicon-ge-check"></i>
+							</dt>
+							<dd>
+								As a Giftenger you have access to new Gifts - FREE items - on a daily basis, beginning at 12:00pm Eastern Time. (The preciousness of the gift is checked by our team before publishing.)
+							</dd>
+							<dt>
+								<i class="glyphicon glyphicon-ge-heart"></i>
+							</dt>
+							<dd>
+								Currently, there is no need for points to request a Gift. But the more you give the higher your Generosity Score becomes. What does this mean? It means that the higher your score is, the more gifts will be waiting for you.
+							</dd>
+						</dl>
+					</div>
+				</div>
+				<div class="row">
+					<p class="lead">
+						<button type="button" ng-click="oRequest()" class="btn btn-ge-primary btn-lg btn-ge" ng-if="country!='US'">
+							Request an Invitation
+						</button>
+					</p>
+				</div>
+			</div>
+		</div><!-- /.welcome-block-3 -->
+		<div class="welcome-details welcome-block-4">
+			<div class="container">
+				<h2 class="sr-only">Give. Receive. Inspire.</h2>
+				<h2>
+					Gifts you can give (and receive)
+				</h2>
+				<p class="lead">
+					Give something that has value that someone might need.
+				</p>
+
+				<div class="row">
+					<div class="col-sm-12 ">
+
+						<div class="row">
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_1.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										Put a smile on someone's face with a good novel that's collecting dust on your shelf.
+									</dd>
+								</dl>
+							</div>
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_2.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										Easily giveaway your new or used furniture without the hassle of answering emails.
+									</dd>
+								</dl>
+							</div>
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_3.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										Celebrate the arrival of your new phone, camera, laptop, or television by gifting your old one to someone in need.
+									</dd>
+								</dl>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_4.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										They say a girl can never have enough shoes. It's time to get rid of the ones you don’t use. Let's find some new ones!
+									</dd>
+								</dl>
+							</div>
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_5.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										Instead of selling your clothing, why not give it away and request something you need in return?
+									</dd>
+								</dl>
+							</div>
+							<div class="col-md-4">
+								<dl>
+									<dt><img src="assets/images/ge-img_6.jpg" class="img img-rounded">
+									</dt>
+									<dd>
+										Make someone happy with the things you got bored of. (And discover some great gifts from others around you.)
+									</dd>
+								</dl>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div><!-- /.welcome-block-4 -->
+		<div class="welcome-details welcome-block-5">
+			<div class="container">
+				<div class="row text-center top-buffer-3 bottom-buffer-3">
+					<div class="col-sm-offset-1 col-sm-10">
+						<h2>Welcome Businesses</h2>
+						<p class="lead">
+							A beautifully simple way to reach a customer's heart is with a Gift.
+						</p>
+						<p class="lead">
+							<a href="gifteng-business#/" type="button" class="btn btn-ge-primary btn-lg btn-ge">
+								Create Your Free Business Account
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.welcome-block-5 -->
+		<div class="welcome-details welcome-block-6">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<p class="lead">
+							<small>Our mission is to make the world a giving place. Our biggest inspiration are people who appreciate what they have and are willing to give to others, especially those in need. The ability to provide a place where they can get together is delightful.</small>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<span id="bottom"> <a href ng-click="scrollUp()"><i class="glyphicon glyphicon-ge-up"></i></a> </span>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.welcome-block-6 -->
+
+		<!--vcard-->
+		<div class="vcard sr-only">
+			<img style="float:left; margin-right:4px" src="http://www.gifteng.com/assets/images/apple-icon-144x144.png" alt="photo of " class="photo sr-only"/>
+			<a class="url fn n" href="http://www.gifteng.com/">
+			<div class="org">
+				Gifteng
+			</div>
+			<div class="adr">
+				<span class="locality">New York</span>, <span class="region">NY</span>, <span class="postal-code">10282</span>
+				<span class="country-name">US</span>
+			</div>
+		</div>
+
+		<div ng-include="'app/partials/footer.html'"></div>
+
+	</div><!-- /.container #welcome-->
+
+	<!-- <div class='animate'>
+	<i class="glyphicon glyphicon-ge-giftbox" style="font-size: 400%;opacity:0.2;filter:alpha(opacity=20);"></i>
+	</div> -->
+</div>

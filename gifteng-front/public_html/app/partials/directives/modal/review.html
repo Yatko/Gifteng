@@ -4,10 +4,20 @@
 			×
 		</button>
 		<div class="modal-header-content">
-			<h3 ng-if="review!=1 && review!=0 && review!=-1">Your feedback</h3>
+			<h3 ng-if="review!=1 && review!=0 && review!=-1">Please provide your feedback for {{user.firstName}} {{user.lastName}}:</h3>
 			<h3 class="ge-positive" ng-if="review==1">Positive <span class="glyphicon glyphicon-ge-happy"></span></h3>
 			<h3 class="ge-neutral" ng-if="review==0">Neutal <span class="glyphicon glyphicon-ge-neutral"></span></h3>
 			<h3 class="ge-negative" ng-if="review==-1">Negative <span class="glyphicon glyphicon-ge-sad"></span></h3>
+			<div>
+				<user-profile
+					user="user"
+					img="{{user.avatar.id}}"
+					img-size="112"
+					following="user.inFollowings"
+					nested="true"
+					id="{{user.id}}"
+				></user-profile>
+			</div>
 		</div>
 	</div>
 	<div class="modal-body text-center">

@@ -1,8 +1,9 @@
 <div class="row" ng-controller="SettingsController">
-	<div class="col-sm-12" >
+	<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				Edit Profile
+				<a href="#/profile/account/notifications" class="pull-right"><span class="glyphicon glyphicon-ge-gear" ng-class="{'badge-active': tab_page=='notifications'}"> Notifications</span></a>
 			</div>
 			<div class="panel-body" >				
 				<form role="form">
@@ -36,7 +37,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-3">
+						<div class="col-sm-6">
 							<div class="form-group">
 								<div class="input-group">
 								  <span class="input-group-addon">Zip Code</span>
@@ -45,29 +46,45 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-5">
+					</div>
+					<div class="row">
+						<div class="col-sm-8">
 							<div class="form-group">
 								<div class="input-group">
 									<span class="input-group-addon">E-mail </span>
 									<input type="text" ng-change="changed=true" class="form-control" ng-model="user.data.email">
 									<span class="input-group-btn">
-										<button class="btn btn-ge-default" type="button" ng-click="resend_verification();" ng-show="user.data.verified == false">Verify</button>
-										<!-- <button class="btn btn-ge-default" type="button" ng-show="user.data.verified == true">Verified</button> -->
+										<button class="btn btn-ge-primary" type="button" ng-click="resend_verification();" ng-if="!user.data.verified">Verify</button>
+										<button class="btn btn-ge-default btn-disabled" disabled ng-if="user.data.verified">Verified</button>
 									</span>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2" ng-show="showLink">
+						<div class="col-sm-4" ng-show="showLink">
 							<div class="form-group">
 								<span> Please check your e-mail </span>
 							</div>
 						</div>
-						<div class="col-sm-2">
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
 							<div class="form-group">
-								<button type="button" ng-click="changePassword();" class="btn btn-block btn-ge-default">Password</button>
+								<button type="button" ng-click="changePassword();" class="btn btn-ge-default">Change Password</button>
 							</div>
 						</div>
-					</div>		
+					</div>	
+					<div class="row">
+						<div class="col-sm-8">
+							<label class="control-label">Connect my Gifteng account with Facebook:</label>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button class="btn btn-ge-primary btn-block" type="button" ng-click="verifyFacebookAccount()" 
+									  ng-if="editData.fbVerified == false" >CONNECT NOW</button>
+								<span class="btn btn-ge-default btn-block btn-disabled" ng-if="editData.fbVerified == true" >CONNECTED</span> 
+							</div>
+						</div>						
+					</div>						
 				</form>		
 			</div>
 			<div class="panel-footer">

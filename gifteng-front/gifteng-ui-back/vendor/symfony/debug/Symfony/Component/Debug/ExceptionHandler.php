@@ -126,7 +126,7 @@ class ExceptionHandler
     {
         switch ($exception->getStatusCode()) {
             case 404:
-                $title = 'Sorry, the page you are looking for could not be found.';
+                $title = 'Welcome to Gifteng, <a href="http://www.gifteng.com/">click here for free gifts</a>.';
                 break;
             default:
                 $title = 'Whoops, looks like something went wrong.';

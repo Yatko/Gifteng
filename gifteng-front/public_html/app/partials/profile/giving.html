@@ -10,7 +10,7 @@
 					details="0"
 					img="{{ad.image.id}}"
 					type="giving"
-					selfview="{{selfview}}"
+					selfview="selfview"
 					status="{{ad.status}}"
 					></ad-item-box>
 				</div>
@@ -20,7 +20,10 @@
 			<div class="col-xs-12">
 				<div class="well">
 					<div class="well-body">
-						<a href ng-click="doPost()">
+						<a href ng-click="doPost()" class="hidden-xs">
+							<img src="assets/images/ge-nothing_here_giving.jpg" class="img-responsive" style="margin:0 auto" alt="Post your first gift" />
+						</a>
+						<a ng-href="#/post" class="visible-xs">
 							<img src="assets/images/ge-nothing_here_giving.jpg" class="img-responsive" style="margin:0 auto" alt="Post your first gift" />
 						</a>
 					</div>

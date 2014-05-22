@@ -6,13 +6,9 @@
 		</button>
 		<div class="modal-header-content">
 			<user-profile
-			name="{{from.firstName}} {{from.lastName}}"
-			location="{{from.address.city}}, {{from.address.stateAbbreviation}}"
+			user="from"
 			img="{{from.avatar.id}}"
 			img-size="112"
-			avatar="{{from.avatar.id}}"
-			points="{{from.score | number:0}}/{{from.pendingScore | number:0}}"
-			since="{{from.joinedAt | date:'MMMM yyyy'}}"
 			following="from.inFollowings"
 			id="{{from.id}}"
 			nested="true"
@@ -24,15 +20,13 @@
 		<div class="message" ng-repeat="message in messages">
 			<div class="row">
 				<div class="col-xs-2">
-					<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" ng-show="message.fromAvatarUrl" class="img-rounded img-responsive" />
-					<img ng-src="assets/img/ge-no-profile-picture.png" ng-hide="message.fromAvatarUrl" class="img-rounded img-responsive" />
+					<img ng-src="{{amazonUrl}}user/{{message.fromAvatarUrl | replace:{'/images/img':''} }}_42" ng-show="message.fromAvatarUrl" class="img-circle img-responsive" />
+					<img ng-src="assets/img/ge-no-profile-picture.png" ng-hide="message.fromAvatarUrl" class="img-circle img-responsive" />
 				</div>
 				<div class="col-xs-10">
 					<span class="from">{{message.fromFullName}}</span>
 					<span class="at">{{message.createdAt | date:'M/d h:mm a'}}</span>
-					<p>
-						{{message.text}}
-					</p>
+					<div ng-bind-html="message.text | htmlLinky"></div>
 				</div>
 			</div>
 		</div>

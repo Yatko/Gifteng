@@ -23,7 +23,8 @@
 					<a href ng-click="oLogin()">Sign In</a>
 				</div>
 				<div  class="col-xs-8">
-					<a href ng-click="oRequest()">Request an Invitation</a> 
+					<a href ng-click="oRequest()" ng-if="country!='US'">Request an Invitation</a>
+					<a href ng-click="oSign()" ng-if="country=='US'">Sign Up</a>
 				</div>
 			</div>
 		</div>

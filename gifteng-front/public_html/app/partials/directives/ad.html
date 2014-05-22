@@ -1,22 +1,27 @@
 <div class="ge-ad-item-box">
 	<div ng-if="details">
-		<div class="gifted-ribbon" ng-if="ad.status=='SENT' || ad.status=='SOLD' || ad.reqStat=='RECEIVED'">
+		<div class="gifted-ribbon sponsored" ng-if="ad.type=='BUSINESS' && ad.reqStat!='RECEIVED'">
+			<div class="ribbon-text">
+				Sponsored
+			</div>
+		</div>
+		<div class="gifted-ribbon" ng-if="(ad.status=='SENT' || ad.status=='SOLD') && !ad.reqStat=='RECEIVED' && !ad.promoCodeProvider">
 			<div class="ribbon-text">
 				<span class="glyphicon-ge-giftbox"></span> Gifted
 			</div>
 		</div>
-		<div class="gifted-ribbon" ng-if="ad.reqStat=='RECEIVED'">
+		<div class="gifted-ribbon" ng-if="ad.reqStat=='RECEIVED' || (ad.promoCodeProvider && ad.requested) || ad.user_request.redeemed">
 			<div class="ribbon-text">
 				Received
 			</div>
 		</div>
-		<div class="gifted-ribbon gray" ng-if="ad.reqStat=='ACCEPTED' || ad.reqStat=='PENDING' || ad.reqStat=='DECLINED' || ad.requested">
+		<div class="gifted-ribbon gray" ng-if="ad.reqStat=='ACCEPTED' || ad.reqStat=='PENDING' || ad.reqStat=='DECLINED' || ad.requested  && !ad.promoCodeProvider && !ad.user_request.redeemed">
 			<div class="ribbon-text">
 				Requested
 			</div>
 		</div>
 	</div>
-	<div class="well" ng-if="(action && ad.status!='SOLD' && ad.status!='SENT' && !ad.sold) || !action">
+	<div class="well">
 		<div class="well-heading">
 			<div ng-if="user && image">
 				<ad-item-box
@@ -27,17 +32,10 @@
 				type="details"
 				details="1"
 				status="{{ad.status}}"
-				creator-firstname="{{ad.creator.firstName}}"
-				creator-lastname="{{ad.creator.lastName}}"
-				creator-since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}"
-				creator-following="ad.creator.inFollowings"
-				creator-city="{{ad.creator.address.city}}, {{ad.creator.address.stateAbbreviation}}"
-				creator-avatar="{{ad.creator.avatar.id}}"
-				creator-points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}"
-				creator-id="{{ad.creator.id}}"
+				creator="ad.creator"
 				ad="ad"
-				callback="doSearch()"
-				selfview="{{ad.owner}}"
+				callback="callback()"
+				selfview="ad.owner"
 				in-bookmarks="{{ad.inBookmarks}}"
 				distance="{{ad.distance}}"
 				></ad-item-box>
@@ -51,55 +49,38 @@
 				type="details"
 				status="{{ad.status}}"
 				ad="ad"
-				callback="doSearch()"
-				selfview="{{ad.owner}}"
+				callback="callback()"
+				selfview="ad.owner"
 				in-bookmarks="{{ad.inBookmarks}}"
 				distance="{{ad.distance}}"
 				></ad-item-box>
 			</div>
 			<div ng-if="!image && user">
 				<user-profile 
-					name="{{ad.creator.firstName}} {{ad.creator.lastName}}" 
-					id="{{ad.creator.id}}" 
-					location="{{ad.creator.address.city}}, {{ad.creator.address.stateAbbreviation}}" 
+					user="ad.creator" 
 					img="{{ad.creator.avatar.id}}" 
-					points="{{ad.creator.score | number:0}}/{{ad.creator.pendingScore | number:0}}" 
-					since="{{ad.creator.joinedAt | date:'MMMM yyyy'}}" 
 					following="ad.creator.inFollowings" 
 					nested="true"
 					stats="ad.creator.statistics"
+					self="ad.owner"
 				></user-profile>
 			</div>
 			
-			<div class="ge-action" ng-if="action && ad.status!='SOLD' && ad.status!='SENT' && !ad.sold">
+			<div class="ge-action" ng-if="action">
 				<div ng-switch="ad.owner">
 					<div ng-switch-when="true">
-						<div class="row">
-							<div class="col-xs-6">
-								<button class="btn btn-lg btn-block btn-ge-primary" ng-click="editGift(ad.id, close)" ng-show="ad.canEdit && !ad.canRelist">
-									EDIT GIFT
-								</button>
-								<button class="btn btn-lg btn-block btn-ge-primary" ng-click="relistGift(ad.id, close)" ng-show="ad.canRelist">
-									RELIST
-								</button>
-								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="!ad.canEdit && !ad.canRelist">
-									EDIT GIFT
-								</button>
-							</div>
-							<div class="col-xs-6">
-								<button class="btn btn-lg btn-block btn-danger" ng-click="deleteGift(ad.id, close)" ng-show="ad.canDelete">
-									DELETE GIFT
-								</button>
-								<button class="btn btn-lg btn-block btn-danger btn-disabled" disabled ng-show="!ad.canDelete">
-									DELETE GIFT
-								</button>
-							</div>
-						</div>
+						<ul class="list-unstyled">
+						  <li ng-show="ad.canEdit && !ad.canRelist"><a href ng-click="editGift(ad.id, close)">Edit Gift</a></li>
+						  <li ng-show="ad.canRelist"><a href ng-click="relistGift(ad.id, close)">Relist</a></li>
+						  <li ng-show="!ad.canEdit && !ad.canRelist"><a href class="text-muted">Unable to edit</a></li>
+						  <li ng-show="ad.canDelete"><a href ng-click="deleteGift(ad.id, close)">Delete Gift</a></li>
+						  <li ng-show="!ad.canDelete"><a href class="text-muted">Unable to delete</a></li>
+						</ul>
 					</div>
 					<div ng-switch-default>
 						<div ng-switch="ad.user_requested">
 							<div ng-switch-when="true">
-								<div ng-switch="ad.status">
+								<div ng-switch="ad.status" ng-if="!ad.promoCodeProvider && ad.type!=='BUSINESS'">
 									<div ng-switch-when="DECLINED">
 										<button class="btn btn-lg btn-block btn-ge-default btn-disabled" disabled>
 											REQUEST DECLINED
@@ -127,17 +108,66 @@
 									</div>
 								</div>
 
+								<div ng-if="!ad.promoCodeProvider && ad.type=='BUSINESS'">
+									<button ng-click="redeem(ad.user_request.id)" class="btn btn-lg btn-block btn-ge-danger" ng-if="!ad.user_request.redeemed">
+										REDEEM GIFT
+									</button>
+									<button disabled class="btn btn-lg btn-block btn-ge-default btn-disabled" ng-if="ad.user_request.redeemed">
+										REDEEMED
+									</button>
+								</div>
+
+								<div ng-if="ad.promoCodeProvider">
+									<p class="text-center">
+										The Gift Code was emailed to you.
+									</p>
+								</div>
+
 							</div>
 							<div ng-switch-default>
-								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.sold">
-									GIFTED
-								</button>
-								<button class="btn btn-lg btn-block btn-ge-primary" ng-show="ad.canRequest && !ad.sold && ad.statistics.numRequests < 3" ng-click="requestGift(ad.id, close)">
-									REQUEST GIFT
-								</button>
-								<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.statistics.numRequests >= 3 || (!ad.sold && !ad.canRequest)">
-									REQUESTS PENDING
-								</button>
+								<div ng-switch="ad.type">
+									<div ng-switch-when="BUSINESS">
+										<div ng-if="ad.quantity">
+											<div ng-if="ad.free">
+												<button class="btn btn-lg btn-block btn-ge-danger" ng-click="requestGift(ad.id, close)">
+													REDEEM GIFT
+												</button>
+												<p class="text-center leftgp">
+													{{ad.quantity-ad.requests.length}} left
+												</p>
+											</div>
+											<div ng-if="!ad.free">
+												<button class="btn btn-lg btn-block btn-ge-primary" ng-click="requestGift(ad.id, close)">
+													REQUEST GIFT
+												</button>
+												<p class="text-center leftgp" ng-if="ad.price">
+													This gift is {{ad.price*0.625 | number: 0}} GP - {{ad.quantity-ad.requests.length}} left
+												</p>
+											</div>
+										</div>
+										<div ng-if="!ad.quantity">
+											<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled>
+												REQUESTS PENDING
+											</button>
+										</div>
+									</div>
+									<div ng-switch-default>
+										<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.sold">
+											GIFTED
+										</button>
+										<div  ng-show="ad.canRequest && !ad.sold && ad.activeReq < 3">
+											<button class="btn btn-lg btn-block btn-ge-primary" ng-click="requestGift(ad.id, close)">
+												REQUEST GIFT
+											</button>
+											<p class="text-center" ng-if="ad.price && !ad.free && ad.type=='BUSINESS'">
+												Request for {{ad.price*0.625 | number: 0}}
+											</p>
+										</div>
+										<button class="btn btn-lg btn-block btn-ge-primary btn-disabled" disabled ng-show="ad.activeReq >= 3 || (!ad.sold && !ad.canRequest)">
+											REQUESTS PENDING
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -145,12 +175,6 @@
 			</div>
 		</div>
 		<div class="well-body" ng-if="details">
-			<p ng-show="ad.type=='BUSINESS'">
-				<span class="btn btn-ge-default" ng-hide="ad.free">{{ad.price | number:0}} GP</span>
-				<span class="btn btn-ge-default" ng-show="ad.free">FREE</span>
-
-				<span class="leftgp" ng-show="(ad.price-user.data.score)>0">{{(ad.price - user.data.score) | number:0}} GP Left</span>
-			</p>
 			<p>
 				<ul>
 					<li>
@@ -183,7 +207,7 @@
 							Shipping offered </label>	
 						<label  ng-show="ad.freeShipping" ng-hide="!ad.freeShipping">
 							<input type="checkbox" disabled ng-checked="ad.freeShipping">
- 							         Shipping & Fee: ${{ad.shippingBox.price}}	 </label>	
+ 							         Shipping &amp; Fee: ${{ad.shippingBox.price}}	 </label>	
 					</div>
 					
 				</div>
@@ -191,21 +215,23 @@
 			</div>
 			<div ng-show="ad.type=='BUSINESS'">
 				<h4>Redeemable:</h4>
-				<div class="form-group" ng-show="ad.allAddresses">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" checked="checked" disabled>
-							All Brand Stores </label>
+				<div ng-if="ad.place!='ONLINE'">
+					<div class="form-group" ng-if="ad.allAddresses">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" checked="checked" disabled>
+								All Brand Stores </label>
+						</div>
+					</div>
+					<div class="form-group" ng-if="!ad.allAddresses">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" checked="checked" disabled>
+								Only at selected Stores </label>
+						</div>
 					</div>
 				</div>
-				<div class="form-group" ng-show="!ad.allAddresses">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" checked="checked" disabled>
-							Only at selected Stores </label>
-					</div>
-				</div>
-				<div class="form-group" ng-show="ad.website">
+				<div class="form-group" ng-if="ad.place=='ONLINE'">
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" checked="checked" disabled>
@@ -220,15 +246,17 @@
 		<div class="well-footer">
 			<div class="comments messages" ng-if="comments">
 				<div ng-repeat="comment in cmn" class="message">
-					<div class="ge-user-image pull-left">
-						<img ng-src="{{amazonUrl}}user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" ng-if="comment.publisherAvatarUrl" class="img-rounded img-responsive" />
-						<img ng-src="assets/img/ge-no-profile-picture.png" ng-if="!comment.publisherAvatarUrl" class="img-rounded img-responsive" />
+					<div class="row">
+						<div class="col-xs-2">
+							<img ng-src="{{amazonUrl}}user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" ng-if="comment.publisherAvatarUrl" class="img-circle img-responsive" />
+							<img ng-src="assets/img/ge-no-profile-picture.png" ng-if="!comment.publisherAvatarUrl" class="img-circle img-responsive" />
+						</div>
+						<div class="col-xs-10">
+							<a class="form" href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a>
+							<span class="at">{{comment.createdAt | date:'M/d h:mm a'}}</span>
+							<div ng-bind-html="comment.text | htmlLinky"></div>
+						</div>
 					</div>
-					<a class="form" href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a>
-					<span class="at">{{comment.createdAt | date:'M/d h:mm a'}}</span>
-					<p>
-						{{comment.text}}
-					</p>
 				</div>
 			</div>
 			<div ng-if="addcomment">
