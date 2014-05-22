@@ -1,0 +1,71 @@
+<div class="well">
+	<div class="well-header">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<h2>GIFTENG FOR YOUR BUSINESS</h2>
+				<h3>Beautifully simple way to reach your customer’s heart</h3>
+			</div>
+		</div>
+	</div>
+	<div class="well-body">
+		<div class="row">
+			<div class="col-md-6">
+
+			</div>
+			<div class="col-md-5">
+				<label class="control-label" for="fieldset">Create your FREE account now and discover how Gifteng can help your business grow:</label>
+
+				<div class="form-group">
+					<input name="businessName" value="" type="text" ng-model="userData.businessName" placeholder="Business name" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="phoneNumber" value="" type="text" ng-model="userData.phoneNumber" placeholder="Phone number" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="email" value="" type="text" ng-model="userData.email" placeholder="Email address" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="password" value="" type="password" ng-model="userData.password" placeholder="Password" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="password2" value="" type="password" ng-model="userData.password2" placeholder="Confirm Password" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="contactName" value="" type="text" ng-model="userData.contactName" placeholder="Contact name" class="form-control" required="">
+				</div>
+
+				<div class="form-group">
+					<input name="website" value="" type="text" ng-model="userData.website" placeholder="Website" class="form-control" required="">
+				</div>
+
+				<div class="from-group">
+					<select name="businessCategory" ng-model="userData.businessCategory" class="form-control">
+						<option disabled selected>Select category</option>
+						<option value="1" >Beauty</option>
+						<option value="5" >Entertainment</option>
+						<option value="3" >Health</option>
+						<option value="4" >Hospitality</option>
+						<option value="7" >Other</option>
+						<option value="2" >Shopping</option>
+						<option value="6" >Technology</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<input name="zipCode" value="" ng-model="userData.zipCode" type="text" maxlength="5" placeholder="Zip code" class="form-control" required="">
+				</div>
+
+				<div class="from-group">
+					<button ng-click="register()" class="btn btn-lg btn-ge-primary btn-block">
+						REGISTER
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

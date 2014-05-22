@@ -1,0 +1,24 @@
+<div class="modal-content">
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<h4>Let us know what happened</h4>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<textarea id="iDesc" class="form-control" ng-model="description" rows="3">
+			</textarea>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<a href ng-click="decline()" ng-if="!confirm && showcancel" class="btn btn-lg btn-block btn-ge-default"> Decline Request </a>
+				<a href ng-click="submit()" ng-if="confirm && showcancel" class="btn btn-lg btn-block btn-ge-default"> Cancel Request </a>
+			</div>
+			<div class="col-xs-6">
+				<a href ng-click="send()" class="btn btn-lg btn-block btn-ge-primary btn-block"> Send Message </a>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,54 @@
+<div class="modal-content">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row hidden-xs">
+				<div class="ge-logo text-center">
+					<i class="glyphicon glyphicon-ge-gifteng glyphicon-ge-gifteng-large"></i>
+				</div>
+			</div><!--./logo-->
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1">
+					<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+					<form role="form">
+						<div class="form-group">
+							<select ng-model="country" id="country" class="form-control">
+								<option selected disabled value="">Select a country</option>
+								<option ng-repeat="c in countries" value="{{c.code}}">
+									{{c.name}}
+								</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<select ng-model="selectedItem" ng-change="changeValue(selectedItem)" id="source" class="form-control">
+								<option selected disabled value="">
+									How did you hear about us?
+								</option>
+								<option ng-repeat="item in source" value="{{item}}">
+									{{item}}
+								</option>
+							</select>
+						</div>
+						<div class="form-group" ng-show="showOther">
+							<input type="text" ng-model="otherSource" id="otherSource" class="form-control input-lg" placeholder="Please specify">
+						</div>
+						<div class="form-group">
+							<button type="submit" ng-click="confirmRequest()" class="btn btn-ge-primary btn-lg btn-block" >
+								Confirm Request
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer text-center">
+			<div class="row">
+				<div  class="col-xs-7">
+					<a href ng-click="oVerify()">I have an invitation</a>
+				</div>
+				<div  class="col-xs-5">
+					<a href ng-click="oLogin()">Sign In</a> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

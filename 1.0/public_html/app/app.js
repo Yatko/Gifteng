@@ -1,0 +1,1 @@
+define(["angular","filters","services","controllers","directives","model"],function(angular,filters,services,controllers,directives,model){return angular.module("gifteng",["gifteng.controllers","gifteng.filters","gifteng.services","gifteng.directives","gifteng.model","ngResource","ngCookies","ngRoute","ngTouch","ui.bootstrap.modal"])});

@@ -1,0 +1,25 @@
+<nav class="navbar navbar-default navbar-fixed-top snap-slide" role="navigation">
+	<div class="container">
+		<div class="col-12-lg col-12-md">
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					<span class="glyphicon-ge-gifteng"></span>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse navbar-ex5-collapse">
+				<ul class="nav navbar-nav nav-buttons pull-right">
+					<li>
+						<a href ng-click="login()" ng-hide="user.logged">
+							Log In
+						</a>
+					</li>
+					<li>
+						<a href ng-click="logout()" ng-show="user.logged">
+							Log out
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>

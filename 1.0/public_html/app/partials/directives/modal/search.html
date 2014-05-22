@@ -1,0 +1,56 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			&times;
+		</button>
+		<h4 class="modal-title" id="myModalLabel">Narrow search results</h4>
+	</div>
+	<div class="modal-body" ng-controller="SearchController">
+		<div class="form-group">
+			<input type="text" ng-model="search.keywords" placeholder="Find Friends & Search Gifts" class="form-control" />
+		</div>
+		<div class="form-group">
+			<select class="form-control" id="category"  ng-model="search.category">
+				<option value="">All Categories</option>
+				<option value="11">Accessories &amp; Bags</option>
+				<option value="12">Art &amp; Photography</option>
+				<option value="13">Books</option>
+				<option value="10">Collectibles &amp; Craft</option>
+				<option value="14">Electronics</option>
+				<option value="15">Food</option>
+				<option value="20">Health &amp; Beauty</option>
+				<option value="21">Home</option>
+				<option value="9">Jewelry &amp; Watches</option>
+				<option value="16">Kids</option>
+				<option value="17">Men's Clothing</option>
+				<option value="22">Movie, Music, Games</option>
+				<option value="18">Pets</option>
+				<option value="24">Tickets &amp; Gift Cards</option>
+				<option value="19">Women's Clothing</option>
+				<option value="8">Women's Shoes</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<select class="form-control" id="order" ng-model="search.order">
+				<option value="newest">Newest</option>
+				<option value="oldest">Oldest</option>
+				<option value="gifted">Gifted</option>
+				<option value="closest">Closest</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="pickup">
+				Local </label>
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="shipping">
+				Shipped </label>
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="">
+				Both </label>
+		</div>
+		<div class="form-group">
+			<a href ng-click="submit()" class="btn btn-lg btn-block btn-ge-primary" style="margin-top:10px;">Search Gifts</a>
+		</div>
+	</div>
+</div><!-- /.modal-content -->

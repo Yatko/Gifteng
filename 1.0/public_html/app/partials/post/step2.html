@@ -1,0 +1,100 @@
+<div ng-class="{'modal-content post': isModal, 'col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2': !isModal}">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<h4 class="hidden-xs">The more you give, the more you get...</h4>
+	  	<h5 class="visible-xs">The more you give, the more you get...</h5>
+	  	<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+	  </div>
+	  <div class="panel-body">
+	    <form name="giftForm">
+	    	<div class="form-group">
+	    		<input type="text" name="title" ng-model="toPost.title" class="form-control" placeholder="Name your gift" maxlength="55" />
+	    	</div>
+	    	<div class="form-group">
+	    		<textarea ng-model="toPost.description" class="form-control" rows="4" placeholder="Describe it ..." maxlength="600"></textarea>
+	    	</div>
+	    	<div class="form-group">
+	    		<select ng-model="toPost.category" class="form-control">
+	    			<option value=''>Select category</option>
+	    			<option value="11">Accessories &amp; Bags</option>                   
+	    			<option value="12">Art &amp; Photography</option>
+	    			<option value="13">Books</option>
+	    			<option value="10">Collectibles &amp; Craft</option>
+	    			<option value="14">Electronics</option>
+	    			<option value="15">Food &amp; Wine</option>
+	    			<option value="20">Health &amp; Beauty</option>
+	    			<option value="21">Home</option>
+	    			<option value="9">Jewelry &amp; Watches</option>
+	    			<option value="16">Kids</option>
+	    			<option value="17">Men's Clothing</option>
+	    			<option value="22">Movie, Music, Games</option>
+	    			<option value="18">Pets</option>
+	    			<option value="24">Tickets &amp; Gift Cards</option>
+	    			<option value="19">Women's Clothing</option>
+	    			<option value="8">Women's Shoes</option>
+	    		</select>
+	    	</div>
+	    	<div class="row">
+	    		<div class="col-xs-6">
+	    			<div class="form-group">
+	    				<!-- <div class="input-group">
+	    					<span class="input-group-addon">$</span> -->
+	    					<input type="text" ng-model="toPost.price" class="form-control"  ng-only-digits placeholder="Gift value" maxlength="6" />
+	    				<!-- </div> -->
+	    			</div>
+	    		</div>
+	    		<div class="col-xs-6">
+	    			<div class="form-group">
+	    				<input ng-only-digits type="text" ng-model="toPost.address.zipCode" class="form-control" placeholder="Your Zip code" maxlength="5" />
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+							<input type="checkbox" ng-model="toPost.pickUp"  > Local Pick up							
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">							
+							<input type="checkbox" ng-model="toPost.freeShipping"  > Offer Shipping <small class="ge-block">Receiver pays sh.</small>
+					</div>
+				</div>
+	    	</div>
+			<div class="row" ng-show="toPost.freeShipping">
+				<div class="col-sm-12 text-center">
+					<hr/>
+					Select shipping size
+				</div>
+			</div>
+			<div class="row" ng-show="toPost.freeShipping">
+				<div class="col-sm-4 col-xs-4">
+					<img src="assets/img/shipping/1envelope.jpg" class="img-responsive" ng-click="toPost.selectedBox1 = true;toPost.selectedBox2 = false;  toPost.selectedBox3 = false;" ng-show="!toPost.selectedBox1" />
+					<img src="assets/img/shipping/1envelope_a.jpg" class="img-responsive" ng-show="toPost.selectedBox1" />
+				</div>
+				<div class="col-sm-4  col-xs-4">
+					<img src="assets/img/shipping/2smallBox.jpg" class="img-responsive" ng-click="toPost.selectedBox2 = true;toPost.selectedBox1 = false;  toPost.selectedBox3 = false;" ng-show="!toPost.selectedBox2" />
+					<img src="assets/img/shipping/2smallBox_a.jpg" class="img-responsive" ng-show="toPost.selectedBox2" />
+				</div>
+				<div class="col-sm-4  col-xs-4">
+					<img src="assets/img/shipping/3mediumBox.jpg" class="img-responsive" ng-click="toPost.selectedBox3 = true;toPost.selectedBox2 = false;  toPost.selectedBox1 = false;" ng-show="!toPost.selectedBox3" />
+					<img src="assets/img/shipping/3mediumBox_a.jpg" class="img-responsive" ng-show="toPost.selectedBox3" />
+				</div>
+			</div>
+	    </form>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-5">
+	  			<a ng-click="step1()" class="btn btn-lg btn-block btn-ge-default"> BACK </a>
+	  		</div>
+	  		<div class="col-xs-7">
+	  			<a ng-click="step3()" class="btn btn-lg btn-block btn-ge-primary"> NEXT <span class="glyphicon glyphicon-ge-right"></span> </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</div>

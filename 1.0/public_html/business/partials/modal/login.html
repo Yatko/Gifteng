@@ -1,0 +1,44 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1">
+					<div class="ge-logo text-center">
+						<i class="glyphicon glyphicon-ge-gifteng glyphicon-ge-gifteng-large"></i>
+						<p>
+							&nbsp;
+						</p>
+					</div>
+					<form role="form">
+						<div class="form-group">
+							<input type="email" id="email" class="form-control input-lg" placeholder="Email address">
+						</div>
+						<div class="form-group">
+							<input type="password" id="password" class="form-control input-lg" placeholder="Password">
+						</div>
+						<button type="submit" ng-click="doLogin()" class="btn btn-ge-primary btn-lg btn-block">
+							Sign In
+						</button>
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox">
+										Remember me </label>
+								</div>
+							</div>
+							<div class="col-xs-6 text-right">
+								<a href="#/forgot">Forgot password</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
