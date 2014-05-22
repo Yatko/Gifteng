@@ -1,0 +1,67 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+		<div class="modal-header-content">
+			<h3 ng-if="review!=1 && review!=0 && review!=-1">Please provide your feedback for {{user.firstName}} {{user.lastName}}:</h3>
+			<h3 class="ge-positive" ng-if="review==1">Positive <span class="glyphicon glyphicon-ge-happy"></span></h3>
+			<h3 class="ge-neutral" ng-if="review==0">Neutal <span class="glyphicon glyphicon-ge-neutral"></span></h3>
+			<h3 class="ge-negative" ng-if="review==-1">Negative <span class="glyphicon glyphicon-ge-sad"></span></h3>
+			<div>
+				<user-profile
+					user="user"
+					img="{{user.avatar.id}}"
+					img-size="112"
+					following="user.inFollowings"
+					nested="true"
+					id="{{user.id}}"
+				></user-profile>
+			</div>
+		</div>
+	</div>
+	<div class="modal-body text-center">
+		<div class="row">
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label class="radio-inline" ng-class="{'ge-positive': review==1, 'ge-neutral': review==0 || review==-1}">
+					  <input type="radio" name="review" ng-click="review=1" onclick="$('#reviewValue').val(1)"> Positive
+					</label>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label class="radio-inline" ng-class="{'ge-neutral': review==0 || review==-1 || review==1}">
+					  <input type="radio" name="review" ng-click="review=0" onclick="$('#reviewValue').val(0)"> Neutral
+					</label>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label class="radio-inline" ng-class="{'ge-negative': review==-1, 'ge-neutral': review==0 || review==1}">
+					  <input type="radio" name="review" ng-click="review=-1" onclick="$('#reviewValue').val(-1)"> Negative
+					</label>
+				</div>
+			</div>
+			<input type="hidden" id="reviewValue" />
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<textarea class="form-control" id="reviewText" ng-model="text" ng-show="review==0 || review==1 || review==-1" placeholder="Write your review here..."></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6 hidden-xs"></div>
+			<div class="col-sm-6 col-xs-12">
+				<a href ng-click="close()" class="btn btn-ge-default">
+					CANCEL
+				</a>
+				<a href ng-click="submit()"  class="btn btn-ge-primary">
+					SUBMIT
+				</a>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>

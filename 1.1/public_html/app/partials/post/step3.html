@@ -1,0 +1,24 @@
+<div ng-class="{'modal-content post': isModal, 'col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2': !isModal}">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<h4 class="hidden-xs">Doesn't need to be perfect, just close enough.</h4>
+	  	<h5 class="visible-xs">Doesn't need to be perfect, just close enough.</h5>
+	  </div>
+	  <div class="panel-body">
+	    <div ng-show="toPost.pickUp" id="view_map" class="map"></div>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-5">
+	  			<a ng-click="step2()" class="btn btn-lg btn-block btn-ge-default"> BACK </a>
+	  		</div>
+	  		<div class="col-xs-7">
+	  			<a ng-click="step4()" class="btn btn-lg btn-block btn-ge-primary"> PREVIEW </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</div>

@@ -1,0 +1,133 @@
+<div class="container ge-container">
+	<div class="form-group">
+		 <div class="btn-group">
+		   <button type="button" class="btn btn-ge-default" ng-click="giftDashboard()">Gift Dashboard</button>
+		   <button type="button" class="btn btn-ge-default" ng-click="shippingDashboard()">Shipping Dashboard</button>
+		 </div>
+	</div>
+	
+	<!--Gift Dashboard  --->
+	<div ng-show="showGiftDashboard">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h4><span class="glyphicon glyphicon-barcode"></span> Gifts </h4></div>
+	  		<div class="panel-body"></div>
+	  		<!-- Table -->
+	  		<table class="table table-hover table-bordered">
+	            <thead>
+	              <tr>
+	                <th>#</th>
+	                <th>Owner</th>
+	                <th>Date</th>
+	                <th>Revision</th>
+	                <th>Gift</th>
+	                <th>Accept</th>
+	                <th>Decline &amp; Reason</th>
+	                <th>Online</th>
+	              </tr>
+	            </thead>
+	            <tbody>
+	              <tr id="ad_{{ad.id}}" ng-repeat="ad in ads">
+	              	<td>{{ad.id}}</td>
+	              	<td>
+	              		<a ng-href="#/view/profile/{{ad.creator.id}}" target="_blank">
+	              			<span ng-if="ad.type=='MEMBER'">{{ad.creator.firstName}} {{ad.creator.lastName}}</span>
+							<span ng-if="ad.type=='BUSINESS'">{{ad.creator.businessName}}</span>
+	              		</a>
+	              	</td>
+	              	<td>{{ad.createdAt | date:'MM/DD/yy h:mma'}} </td>
+	              	<td>{{ad.revision}}</td>
+	              	<td><a ng-href="#/browse?view={{ad.id}}" target="_blank">Gift link</a></td>
+	              	<td><button type="button" id="approve_btn_{{ad.id}}" ng-click="approve_ad(ad.id);" class="btn btn-mini btn-block btn-success">OK</button></td>
+	              	<td>
+	              		<div class="row">
+	              			<div class="col-xs-8 controls">                                
+	              				<div class="controls">
+	              					<textarea id="reason_{{ad.id}}" placeholder="Reason"  class="form-control input-lg" rows="2"></textarea>
+	              				</div>			
+	              			</div>
+	              			<div class="col-xs-2">
+	              				<button type="button" id="unapprove_btn_{{ad.id}}" ng-click="unapprove_ad(ad.id);" class="btn btn-mini btn-block btn-danger">NO</button>
+	              			</div>
+	              		</div>
+	              	</td>
+	              	<td><button type="button" id="online_btn_{{ad.id}}" ng-click="online_ad(ad.id);"  class="btn btn-mini btn-block btn-success disabled" style="cursor: pointer;
+	              			pointer-events: auto;">YES</button></td>
+	              </tr>
+	            </tbody>
+	          </table>
+	  		<div class="panel-footer"></div>
+		</div>	          
+	</div>  
+	  
+	<!-- Shipping Dashboard  --->
+	<div ng-show="showShippingDashboard" >	
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h4><span class="glyphicon glyphicon-barcode"></span> Shipping </h4></div>
+			<div class="panel-body"></div>
+			<!-- Table -->
+	        <table class="table">
+	          <thead>
+	            <tr>
+	              <th>#</th>
+	              <th>Giver</th>
+	              <th>Time</th>
+	              <th>Receiver</th>
+	              <th>Payment</th>
+	              <th>Shipping Label</th>
+	              <th>Tracking_Nr</th>
+	              <th>Save</th>
+	              <th>Send Email</th>
+	              <th>Gift Received</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <tr  ng-repeat="ad in ads | orderBy: '-acceptedAt'">
+	              <td><a ng-href="#/browse?view={{ad.adId}}" target="_blank">{{ad.adId}}</a></td>
+	              <td><small>{{ad.creatorFullName}}</small></td>
+	              <td><small>{{ad.acceptedAt | date:'M/dd/yy h:mma'}}</small></td>
+	              <td><small>{{ad.receiverFullName}}</small></td>
+	              <td> <input type="text" ng-model="ad.receivedAmount" id="receivedAmount" class="form-control input-sm" placeholder="$" size="4" maxlength="5"> </td>
+	              <td>
+						<form enctype="multipart/form-data">
+							<div class="uploader">
+								<input accept="application/pdf" type="file" name="uploader" id="file-{{ad.id}}"
+								onchange="angular.element(this).scope().sendFile(this);" class="btn-xs"/>		
+							</div>	    
+							<a target="_self" ng-if="ad.fileUrl" ng-href="{{ad.fileUrl}}" download="{{ad.fileName}}" class="btn-xs btn-ge-primary">Download</a>
+						</form>
+				  </td>
+	              <td>
+	              	<input type="text" ng-model="ad.trackingNumber" id="trackingNumber" class="form-control" placeholder="Paste"/>
+	              </td>
+	              <td>
+	              	<div class="form-group">
+	              	  <button type="button" class="btn btn-success btn-block" ng-click="updateShipping(ad)"
+	              	  	ng-show="ad.showUpdate"><i class="glyphicon glyphicon-ge-save"></i></button>						
+	              	  <button type="button" class="btn btn-warning btn-block" ng-click="updateShipping(ad)"
+	              	  	ng-show="!ad.showUpdate" ><i class="glyphicon glyphicon-ge-save"></i></button>
+	              	</div>
+	              </td>
+	              <td>
+						<button type="button" class="btn btn-xs btn-block btn-info" ng-show="!ad.emailCreatorSent" ng-click="sendEmailToSendor(ad.id)">To giver</button>
+						<button type="button" class="btn btn-xs btn-block btn-info" ng-show="!ad.emailReceiverSent" ng-click="sendEmailToReceiver(ad.id)">To rcvr</button>
+						<button type="button" class="btn btn-xs btn-block btn-info" ng-show="ad.emailCreatorSent" ng-click="sendAgainEmailToSendor(ad.id)" >Resend to giver</button>
+						<button type="button" class="btn btn-xs btn-block btn-info" ng-show="ad.emailReceiverSent" ng-click="sendAgainEmailToReceiver(ad.id)" >Resend to rcvr</button>
+				  </td>
+	              <td>
+						<button type="button" class="btn btn-xs btn-danger btn-block" ng-show="ad.requestStatus != 'RECEIVED'">No</button>
+						<button type="button" class="btn btn-xs btn-success btn-block" ng-show="ad.requestStatus == 'RECEIVED'">Yes</button>
+						<button type="button" class="btn btn-xs btn-default btn-block" ng-show="ad.requestStatus == 'RECEIVED'" ng-click="deleteShipping(ad.id)" >Hide</button>
+						<button type="button" class="btn btn-xs btn-default btn-block" ng-show="ad.requestStatus == 'DECLINED' || ad.requestStatus == 'CANCELLED'" ng-click="deleteShipping(ad.id)" ><span class="glyphicon glyphicon-ge-trash"></span></button>
+				  </td>	  
+	            </tr>
+	          </tbody>
+	        </table>
+	        <div class="panel-footer"></div>
+		</div>
+	
+	</div>	
+</div>
+	
+
+	

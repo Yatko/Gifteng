@@ -1,0 +1,56 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+			<div class="modal-header-content">
+				<h2>Step 3</h2>
+			</div>
+		</div>
+		<div class="modal-body">
+			<div ng-show="toParse.online">
+				<div class="form-group">
+					<label>Redeemable at</label>
+					<input type="text" ng-model="toPost.website" class="form-control" />
+				</div>
+			</div>
+			<div ng-show="toParse.instore">
+				<div class="row">
+					<div class="col-xs-5">
+						<label>
+							<input type="radio" ng-model="toPost.allAddresses" value="1" name="all" />
+							All Brand stores </label>
+					</div>
+					<div class="col-xs-2">
+						or
+					</div>
+					<div class="col-xs-5">
+						<label>
+							<input type="radio" ng-model="toPost.allAddresses" selected value="0" name="all" />
+							Only at selected stores </label>
+					</div>
+				</div>
+				<div class="row" ng-hide="toPost.allAddresses">
+					<div class="col-xs-10">
+						<select class="form-control multiselect" multiple="multiple" ng-model="toPost.addresses" ng-options="store.name for store in stores">
+						</select>
+					</div>
+					<div class="col-xs-2">
+						<a href class="btn btn-ge-primary btn-block btn-lg" ng-click="addStore()">+</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-3">
+					<a ng-click="next(2)" class="btn btn-lg btn-block btn-ge-default"> <span class="glyphicon glyphicon-chevron-left"></span> BACK </a>
+				</div>
+				<div class="col-xs-9">
+					<a ng-click="next(4)" class="btn btn-lg btn-block btn-ge-primary"> NEXT <span class="glyphicon glyphicon-chevron-right"></span> </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

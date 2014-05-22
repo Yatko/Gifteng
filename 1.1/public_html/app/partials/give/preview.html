@@ -1,0 +1,59 @@
+<div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8">
+	<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<h4>Make sure everything is correct!</h4>
+	  </div>
+	  <div class="panel-body">
+	  	
+	    <img ng-src="{{imgPreview}}"  class="img-responsive" />
+			<p>
+				{{toPost.title}}
+			</p>
+			<ul>
+				<li>
+					<b>Description:</b> {{toPost.description}}
+				</li>
+				<li>
+					<b>Category:</b> {{category}}
+				</li>
+				<li>
+					<b>Gift value:</b> {{toPost.price | currency:"$"}}
+				</li>
+			</ul>
+
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="toPost.pickUp">
+							Pick Up </label>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" disabled ng-checked="toPost.freeShipping">
+							Offer shipping </label>
+					</div>
+				</div>
+			</div>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-5">
+	  			<a ng-click="details()" class="btn btn-lg btn-block btn-ge-default"> Edit </a>
+	  		</div>
+	  		<div class="col-xs-7">
+	  			<a href ng-click="register()" class="btn btn-lg btn-block btn-ge-primary"> Post my Gift <span class="glyphicon glyphicon-ge-right"></span> </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+	</div>
+</div>
+</div>

@@ -1,0 +1,28 @@
+.checkbox  {
+	.icons {
+		color: #bdc3c7;
+		display: block;
+		height: 20px;
+		width: 20px;
+		text-align: center;
+		line-height: 20px;
+		font-size: 20px;
+		-webkit-transition: color 0.25s linear;
+		-moz-transition: color 0.25s linear;
+		-o-transition: color 0.25s linear;
+		transition: color 0.25s linear;
+		-webkit-backface-visibility: hidden;
+		cursor:pointer;
+		&.checked {
+			color: #00bebe !important;
+		}
+		&:hover {
+			.first-icon {
+				display:none !important;
+			}
+			.second-icon {
+				display:block !important;
+			}
+		}
+	}
+}

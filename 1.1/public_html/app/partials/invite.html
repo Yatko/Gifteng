@@ -1,0 +1,67 @@
+<div class="container ge-container">
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Invite Your Friends
+				</div>
+				<div class="panel-body">
+					<div ng-include="'app/partials/invite-headline.html'"></div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button ng-click="sendMsg()" class="btn  btn-block btn-social-facebook"><i class="glyphicon glyphicon-ge-facebook lead"></i><br />Share on<br />Facebook</button>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button ng-click="sendTwitterMessage()" class="btn  btn-block btn-social-twitter"><i class="glyphicon glyphicon-ge-twitter lead"></i><br />Share on<br />Twitter</button>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<a target="_blank" ng-href="mailto:?subject=Have you heard about Gifteng?&body=It's a new community where you can discover amazing gifts and give away things you no longer need. Get your first free $15 gift card by simply joining me on Gifteng. http://gifteng.com/#/?ref={{user.data.id}}" class="btn btn-block btn-ge-primary"><i class="glyphicon glyphicon-ge-mail lead"></i><br />Share via<br />E-Mail </a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-xs-12">
+							<p>
+								<a class="text-muted" href ng-click="hide=!hide">You may also use the form below (click here)</a>
+							</p>
+						</div>
+					</div>
+					
+						<form role="form" ng-show="hide">
+							<div class="row">
+								<div class="col-xs-12 ">
+									<div class="alert alert-danger" ng-bind="error" ng-show="error"></div>
+									<div class="form-group">
+										<input type="text" id="mailTo" ng-model="mailTo" class="form-control input-sm" name="E-mail" placeholder="E-mail (separate by commas)"/>
+									</div>
+								</div>
+							</div>
+							<div class="row ">
+								<div class="col-xs-12">
+									<div class="form-group">
+										<textarea id="mailTxt" class="form-control invite" rows="5" ng-model="mailTxt"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="alert alert-social alert-success" ng-bind="success" ng-show="success"></div>
+									<div class="form-group">
+										<button class="btn btn-lg btn-block btn-ge-primary" ng-click="sendMail()">Send Email</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>

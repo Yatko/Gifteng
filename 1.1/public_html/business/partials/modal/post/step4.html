@@ -1,0 +1,39 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+			<div class="modal-header-content">
+				<h2>Preview</h2>
+			</div>
+		</div>
+		<div class="modal-body">
+			<img ng-src="{{toPost.image}}" class="img-responsive" />
+			<p>
+				{{toPost.title}}
+			</p>
+			<ul>
+				<li>
+					<b>Description:</b> {{toPost.description}}
+				</li>
+				<li>
+					<b>Category:</b> {{toPost.category}}
+				</li>
+				<li>
+					<b>Current value:</b> {{toPost.price | currency:"$"}}
+				</li>
+			</ul>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-3">
+					<a ng-click="step3()" class="btn btn-lg btn-block btn-ge-default"> <span class="glyphicon glyphicon-chevron-left"></span> BACK </a>
+				</div>
+				<div class="col-xs-9">
+					<a href ng-click="post()" class="btn btn-lg btn-block btn-ge-primary"> POST GIFT <span class="glyphicon glyphicon-chevron-right"></span> </a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

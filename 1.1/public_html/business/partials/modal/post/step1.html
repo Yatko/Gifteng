@@ -1,0 +1,21 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="close()">
+				×
+			</button>
+			<div class="modal-header-content">
+				<h2>Step 1</h2>
+			</div>
+		</div>
+		<div class="modal-body">
+			<p ng-bind="error"></p>
+			<form enctype="multipart/form-data">
+	    		<giftimg action="api/image" def="image" ng-model="toPost.image"></giftimg>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<a href ng-click="next(2)" class="btn btn-lg btn-block btn-ge-primary"> NEXT <span class="glyphicon glyphicon-chevron-right"></span> </a>
+		</div>
+	</div>
+</div>

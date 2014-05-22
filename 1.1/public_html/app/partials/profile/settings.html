@@ -1,0 +1,106 @@
+<div class="row" ng-controller="SettingsController">
+	<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Edit Profile
+				<a href="#/profile/account/notifications" class="pull-right"><span class="glyphicon glyphicon-ge-gear" ng-class="{'badge-active': tab_page=='notifications'}"> Notifications</span></a>
+			</div>
+			<div class="panel-body" >				
+				<form role="form">
+					<div class="row">
+						<div class="col-xs-6">							  
+							<div class="form-group">
+								<label  for="firstName">First Name</label>
+								<div class="controls">
+									<input id="firstName" ng-change="changed=true" name="firstName" ng-only-alphabets type="text" ng-model="editData.firstName" placeholder="First Name" class="form-control" required="">
+								</div>
+							  </div>							
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label  for="lastName">Last Name</label>
+								<div class="controls">
+									<input id="lastName" ng-change="changed=true" name="lastName" ng-only-alphabets type="text" ng-model="editData.lastName" placeholder="Last Name" class="form-control" required="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label for="about">About</label>
+								<div class="controls">
+									<textarea id="about" ng-change="changed=true" name="about" class="form-control" rows="2"
+									maxlength="80" placeholder="Few words about you" ng-model="editData.about"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<div class="input-group">
+								  <span class="input-group-addon">Zip Code</span>
+								  <input id="zipCode" ng-change="changed=true" name="zipCode" type="text" ng-model="editData.zipCode"
+								  maxlength="5" ng-only-digits class="form-control" required="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-8">
+							<div class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon">E-mail </span>
+									<input type="text" ng-change="changed=true" class="form-control" ng-model="user.data.email">
+									<span class="input-group-btn">
+										<button class="btn btn-ge-primary" type="button" ng-click="resend_verification();" ng-if="!user.data.verified">Verify</button>
+										<button class="btn btn-ge-default btn-disabled" disabled ng-if="user.data.verified">Verified</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4" ng-show="showLink">
+							<div class="form-group">
+								<span> Please check your e-mail </span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<button type="button" ng-click="changePassword();" class="btn btn-ge-default">Change Password</button>
+							</div>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-sm-8">
+							<label class="control-label">Connect my Gifteng account with Facebook:</label>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button class="btn btn-ge-primary btn-block" type="button" ng-click="verifyFacebookAccount()" 
+									  ng-if="editData.fbVerified == false" >CONNECT NOW</button>
+								<span class="btn btn-ge-default btn-block btn-disabled" ng-if="editData.fbVerified == true" >CONNECTED</span> 
+							</div>
+						</div>						
+					</div>						
+				</form>		
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-xs-4 col-sm-offset-6 col-sm-2">
+						<div class="form-group">
+							<a href="#/profile" class="btn btn-block btn-ge-default btn-lg visible-xs">Close</a>
+						</div>
+					</div>
+					<div class="col-xs-8 col-sm-4">
+						<div class="form-group">
+							<a type="button" ng-click="submit()" ng-disabled="!changed" ng-class="{'btn-ge-primary':changed,'btn-ge-default':!changed}" class="btn btn-block btn-lg">Save</a>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>	
+	</div>
+	

@@ -1,0 +1,15 @@
+<div class="container ge-container">
+	<h2 class="text-center header">Top Giftengers</h2>
+	<div class="row">
+		<div class="col-sm-4" ng-repeat="user in users">
+			<user-profile
+			user="user"
+			img="{{user.avatar.id}}"
+			img-size="112"
+			following="user.inFollowings"
+			self="user.self"
+			fullscore="true"
+			></user-profile>
+		</div>
+	</div>
+</div>

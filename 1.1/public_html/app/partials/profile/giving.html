@@ -1,0 +1,34 @@
+<div class="row" ng-controller="UserAdsController">
+	<div ng-show="loaded" class="{{mygifts}}">
+		<div ng-repeat="col in cols">
+			<div class="{{colsClass}}">
+				<div ng-repeat="ad in col">
+					<ad-item-box
+					id="{{ad.id}}"
+					callback="loadAds()"
+					ad="ad"
+					details="0"
+					img="{{ad.image.id}}"
+					type="giving"
+					selfview="selfview"
+					status="{{ad.status}}"
+					></ad-item-box>
+				</div>
+			</div>
+		</div>
+		<div ng-hide="hasAds || !selfview">
+			<div class="col-xs-12">
+				<div class="well">
+					<div class="well-body">
+						<a href ng-click="doPost()" class="hidden-xs">
+							<img src="assets/images/ge-nothing_here_giving.jpg" class="img-responsive" style="margin:0 auto" alt="Post your first gift" />
+						</a>
+						<a ng-href="#/post" class="visible-xs">
+							<img src="assets/images/ge-nothing_here_giving.jpg" class="img-responsive" style="margin:0 auto" alt="Post your first gift" />
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

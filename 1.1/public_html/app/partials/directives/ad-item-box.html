@@ -1,0 +1,387 @@
+<div class="ge-ad-item-box" ng-class="{'gifted':ad.status=='SENT' || ad.status=='SOLD' || ad.reqStat=='RECEIVED' , 'active':ad.status!='SENT' && ad.status!='SOLD' && ad.reqStat!='RECEIVED'}">
+	
+	<div ng-if="type=='giving' || type=='receiving' || type=='favorites' || type=='browse'">
+		<div class="gifted-ribbon sponsored" ng-if="ad.type=='BUSINESS' && !ad.requested">
+			<div class="ribbon-text">
+				Sponsored
+			</div>
+		</div>
+		<div class="gifted-ribbon" ng-if="ad.status=='SENT' || ad.status=='SOLD' || ad.sold && !ad.promoCodeProvider">
+			<div class="ribbon-text">
+				<span class="glyphicon-ge-giftbox"></span> Gifted
+			</div>
+		</div>
+		<div class="gifted-ribbon" ng-if="ad.reqStat=='RECEIVED' || (ad.requested && ad.promoCodeProvider) || ad.request.redeemed">
+			<div class="ribbon-text">
+				Received
+			</div>
+		</div>
+		<div class="gifted-ribbon gray" ng-if="ad.reqStat!='RECEIVED' && ad.status!='SENT' && ad.status!='SOLD' && !ad.sold && (ad.reqStat=='ACCEPTED' || ad.reqStat=='PENDING' || ad.reqStat=='DECLINED' || ad.requested) && !ad.promoCodeProvider && !ad.request.redeemed">
+			<div class="ribbon-text">
+				Requested
+			</div>
+		</div>
+	</div>
+	
+	<div class="well">
+		<div class="well-heading">
+			<div ng-if="type=='receiving' || type=='browse' || type=='favorites'">
+				<user-profile
+					self="selfview"
+					user="creator"
+					img="{{creator.avatar.id}}"
+					following="creator.inFollowings"
+					nested="true"
+				></user-profile>
+			</div>
+		</div>
+		<div class="well-body">
+			<div class="ge-item-image">
+				<a href> <img ng-click="viewInModal(id)" ng-src="{{img}}" class="img-responsive"> </a>
+				<div class="quick_comment" ng-if="ad.statistics.numComments && selfview && (type=='giving' || type=='receiving' || type=='favorites')"><a href ng-click="doComment(id)" class="btn btn-sm btn-rd btn-ge-primary"> <span class="glyphicon glyphicon-ge-comment"></span> </a></div>
+				<div class="ge-location" ng-if="ad.distance">
+					<div class="txt">
+						<span class="glyphicon glyphicon-ge-pin"></span> {{ad.distance}}mi
+					</div>
+				</div>
+				<div ng-switch="selfview">
+					<div ng-switch-when="true">
+						<div ng-switch="type">
+							<div ng-switch-when="giving">
+								<div ng-switch="status">
+									<div ng-switch-when="APPROVED" class="status">
+										<i class="glyphicon-ge-alert"></i> Approved
+									</div>
+									<div ng-switch-when="PENDING" class="status">
+										<i class="glyphicon-ge-alert"></i> Pending
+									</div>
+									<div ng-switch-when="DECLINED" class="status">
+										<i class="glyphicon-ge-alert"></i> Gift declined
+									</div>
+									<div ng-switch-when="SOLD" class="status">
+										<i class="glyphicon-ge-giftbox"></i> Points Received
+									</div>
+									<div ng-switch-when="EXPIRED" class="status">
+										<i class="glyphicon-ge-alert"></i> Expired
+									</div>
+									<div ng-switch-when="NO_REQUESTS" class="status">
+										Share to receive requests
+									</div>
+									<div ng-switch-when="SENT" class="status">
+										<i class="glyphicon-ge-giftbox"></i> Waiting for points
+									</div>
+									<div ng-switch-when="SELECTED" class="status">
+										Recipient Selected
+									</div>
+									<div ng-switch-when="ACTIVE" class="status">
+										<i class="glyphicon glyphicon-ge-down"></i> Select one recipient
+									</div>
+								</div>
+							</div>
+							<div ng-switch-when="receiving">
+								<div ng-switch="ad.reqStat" ng-if="ad.type=='MEMBER'">
+									<div ng-switch-when="EXPIRED" class="status">
+										<i class="glyphicon-ge-alert"></i> Expired
+									</div>
+									<div ng-switch-when="CANCELED" class="status">
+										<i class="glyphicon-ge-alert"></i> Request canceled
+									</div>
+									<div ng-switch-when="DECLINED" class="status">
+										<i class="glyphicon-ge-alert"></i> Request declined
+									</div>
+									<div ng-switch-when="PENDING" class="status">
+										<i class="glyphicon-ge-alert"></i> Request pending
+									</div>
+									<div ng-switch-when="SENT" class="status">
+										<i class="glyphicon-ge-alert"></i> Received Gift?
+									</div>
+									<div ng-switch-when="ACCEPTED" class="status">
+										<i class="glyphicon-ge-alert"></i> Request accepted
+									</div>
+								</div>
+								<div ng-if="ad.type=='BUSINESS'">
+									<div class="status" ng-if="ad.promoCodeProvider">
+										The gift was emailed to you
+									</div>
+									<div class="status" ng-if="!ad.promoCodeProvider">
+										<div ng-if="!ad.request.redeemed">
+											<span ng-if="!expired">Expires: {{ad.redemptionEndDate*1000 | date:'mediumDate'}}</span>
+											<span ng-if="expired">Expired</span>
+										</div>
+										<div ng-if="ad.request.redeemed">
+											The gift was redeemed
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-switch-when="favorites">
+								<div ng-if="ad.requested" class="status">
+									REQUESTED
+								</div>
+								<div ng-if="ad.status=='EXPIRED'" class="status">
+									<i class="glyphicon-ge-alert"></i> Expired
+								</div>
+							</div>
+						</div>
+					</div>
+					<div ng-switch-default>
+						<div ng-switch="type">
+							<div ng-switch-when="details" class="status buttons">
+								<div class="row" ng-if="!(ad.promoCodeProvider && ad.requested)">
+									<div class="col-xs-4">
+										<span ng-switch="selfview"> <a ng-switch-when="true" class="btn btn-sm btn-rd btn-ge-default btn-block"> <span class="glyphicon glyphicon-ge-heart"></span> Favorite </a> <span ng-switch-default> <span ng-switch="inBookmarks"> <a ng-switch-when="true" class="btn btn-sm btn-rd btn-ge-primary btn-block"> <span class="glyphicon glyphicon-ge-heart"></span> Favorite </a> <a ng-switch-default class="btn btn-sm btn-rd btn-ge-default btn-block" ng-click="bookmark(id)"> <span class="glyphicon glyphicon-ge-heart-empty"></span> Favorite </a> </span> </span> </span>
+									</div>
+									<div class="col-xs-4"></div>
+									<div class="col-xs-4">
+										<a href ng-click="doShare(id)" class="btn btn-sm btn-block btn-rd btn-ge-default"> Share </a>
+									</div>
+								</div>
+
+								<div ng-if="ad.promoCodeProvider && ad.requested">
+									<p class="text-center">
+										The Gift Code was emailed to you.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="well-footer">
+			<div class="row">
+				<div class="col-xs-12">
+					<div ng-if="type=='browse'">
+						<p class="ge-title" ng-if="ad.title.length>35" tooltip="{{ad.title}}" tooltip-placement="top">
+							{{ad.title | limitTo: 32}}...
+						</p>
+						<p class="ge-title" ng-if="ad.title.length<=35">
+							{{ad.title}}
+						</p>
+						<div ng-if="ad.description.length>52">
+							<p class="ge-subtitle ge-description"><span ng-bind-html="ad.description | limitTo: 49 | removebr"></span><span>...</span></p>
+						</div>
+						<p class="ge-subtitle ge-description" ng-if="ad.description.length<=52" ng-bind-html="ad.description"></p>
+					</div>
+					<div ng-if="type=='details'">
+						<p class="ge-title">
+							{{ad.title}}
+						</p>
+						<p class="ge-subtitle ge-description" ng-bind-html="ad.description | htmlLinky">
+						</p>
+					</div>
+					<p class="ge-subtitle" ng-if="selfview && (type=='giving' || type=='receiving' || type=='favorites')">&nbsp;</p>
+					<div ng-switch="type">
+						<div ng-switch-when="giving" class="ge-action" ng-if="selfview">
+							<div ng-switch="status">
+								<div ng-switch-when="SOLD" ng-if="ad.canRate">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="review(ad.request.id, ad.request.user.id)">
+												<i class="glyphicon-ge-heart"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{requestFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="SENT" ng-if="ad.canRate">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="review(ad.request.id, ad.request.user.id)">
+												<i class="glyphicon-ge-heart"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{requestFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="DECLINED">
+									<div class="row">
+										<div class="col-xs-12 text-right">
+											<a ng-click="viewReason(ad.id)" class="btn btn-rd btn-ge-primary"> View Decline Reason</a>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="EXPIRED">
+									<div class="row">
+										<div class="col-xs-6">
+											<button ng-click="relistGift(id)" class="btn btn-rd btn-ge-primary btn-block" ng-if="ad.canRelist">
+												RELIST
+											</button>
+										</div>
+										<div class="col-xs-6">
+											<button ng-click="deleteGift(id)" class="btn btn-rd btn-ge-default btn-block" >
+												DELETE
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="NO_REQUESTS">
+									<div class="row">
+										<div class="col-xs-4">
+											<button class="btn btn-rd btn-sm btn-block btn-social-facebook glyphicon glyphicon-ge-facebook" ng-click="share_on_facebook_modal();"></button>
+										</div>
+										<div class="col-xs-4">
+											<button class="btn btn-rd btn-sm btn-block btn-social-twitter glyphicon glyphicon-ge-twitter" ng-click="share_on_twitter_modal();"></button>
+										</div>
+										<div class="col-xs-4">
+											<button class="btn btn-rd btn-sm btn-block btn-social-pinterest glyphicon glyphicon-ge-pinterest" ng-click="share_on_pinterest_modal();"></button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="SELECTED">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="requestView(itemId, ad.request.user.id)">
+												<i class="glyphicon-ge-giftbox"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{requestFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="ACTIVE">
+									<div class="row">
+										<div ng-repeat="request in ad.requests.item">
+											<div class="col-xs-4" ng-if="request.status=='PENDING'">
+												<a href ng-click="showRequest(request.id)"> <img ng-if="request.user.avatar" ng-src="{{amazonUrl}}user/{{request.user.avatar.id}}_60" class="img-rounded img-responsive" /> <img ng-hide="request.user.avatar" src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" /> </a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div ng-switch-when="receiving" class="ge-action" ng-if="selfview">
+							<div ng-switch="ad.reqStat" ng-if="ad.type=='MEMBER'">
+								<div ng-switch-when="EXPIRED">
+									<button ng-click="requestHide(ad.request.id)" class="btn btn-rd btn-ge-default btn-block">
+										Delete Gift
+									</button>
+								</div>
+								<div ng-switch-when="CANCELED">
+									<button ng-click="requestHide(ad.request.id)" class="btn btn-rd btn-ge-default btn-block">
+										Delete Gift
+									</button>
+								</div>
+								<div ng-switch-when="DECLINED">
+									<button ng-click="requestHide(ad.request.id)" class="btn btn-rd btn-ge-default btn-block">
+										Delete Gift
+									</button>
+								</div>
+								<div ng-switch-when="PENDING">
+									<button ng-click="requestCancel(ad.request.id)" class="btn btn-rd btn-ge-default btn-block">
+										Cancel Request
+									</button>
+								</div>
+								<div ng-switch-when="ACCEPTED">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="requestReceive(ad.request.id, creator.id)">
+												<i class="glyphicon-ge-giftbox"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{creatorFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="SENT">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="requestReceive(ad.request.id, creator.id)">
+												<i class="glyphicon-ge-giftbox"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{creatorFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+								<div ng-switch-when="RECEIVED" ng-if="ad.canRate">
+									<div class="row">
+										<div class="col-xs-4">
+											<button  class="btn btn-rd btn-ge-default btn-block" ng-click="review(ad.request.id, creator.id)">
+												<i class="glyphicon-ge-heart"></i>
+											</button>
+										</div>
+										<div class="col-xs-8">
+											<button ng-click="showMessage()" class="btn btn-rd btn-ge-default btn-block" ng-class="{'btn-ge-primary': ad.request.numUnreadMessages > 0}" tooltip="Contact {{creatorFirstname}}" tooltip-placement="top">
+												Send Message
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div ng-if="ad.type=='BUSINESS' && !ad.promoCodeProvider">
+								<div ng-if="!ad.request.redeemed && !ad.expired">
+									<button class="btn btn-block btn-rd btn-ge-primary" ng-click="redeem(ad.request.id)">
+										Redeem Gift
+									</button>
+								</div>
+								<div ng-if="ad.expired">
+									<button ng-click="requestHide(ad.request.id)" class="btn btn-rd btn-ge-default btn-block">
+										Delete Gift
+									</button>
+								</div>
+							</div>
+						</div>
+						<div ng-switch-when="favorites" class="ge-action" ng-if="selfview">
+							<div class="row">
+								<div class="col-xs-4">
+									<button class="btn btn-block btn-rd btn-ge-default" ng-click="unbookmark(ad.id)">
+										X
+									</button>
+								</div>
+								<div class="col-xs-8" ng-if="ad.canRequest && !ad.requested">
+									<button class="btn btn-block btn-rd btn-ge-primary" ng-click="requestGift(ad.id)">
+										Request Gift
+									</button>
+								</div>
+							</div>
+						</div>
+						<div ng-switch-when="browse" class="ge-action animate-rd">
+							<div class="row">
+								<div class="col-xs-12 text-center">
+									<span ng-switch="selfview"> <a ng-switch-when="true" class="btn btn-sm btn-rd btn-ge-primary"> <span class="glyphicon glyphicon-ge-heart"></span></a> <span ng-switch-default> <span ng-switch="inBookmarks"> <a ng-switch-when="true" class="btn btn-sm btn-rd btn-ge-primary"> <span class="glyphicon glyphicon-ge-heart"></span></a> <a ng-switch-default class="btn btn-sm btn-rd btn-ge-default" ng-click="bookmark(id)"> <span class="glyphicon glyphicon-ge-heart-empty"></span>favorite </a> </span> </span> </span>
+										<a href ng-click="doShare(id)" class="btn btn-sm btn-rd btn-ge-default"><span class="glyphicon glyphicon-ge-share"></span>share</a>
+									<a href ng-click="doComment(id)" class="btn btn-sm btn-rd btn-ge-default" data-toggle="tooltip" data-placement="top" title="Comment"><span class="glyphicon glyphicon-ge-comment"></span>comment</a>
+								
+								</div>
+							</div>
+							<div class="comments messages" ng-if="ad.comments.item">
+								<div ng-repeat="comment in ad.comments.item" class="message">
+									<div class="row">
+										<!-- <div class="col-xs-3">
+											<img ng-src="{{amazonUrl}}user/{{comment.publisherAvatarUrl | replace:{'/images/img':''} }}_42" ng-if="comment.publisherAvatarUrl" class="img-circle img-responsive" />
+											<img ng-src="assets/img/ge-no-profile-picture.png" ng-if="!comment.publisherAvatarUrl" class="img-circle img-responsive" />
+										</div> -->
+										<div class="col-xs-12">
+											<a class="form" href="#/view/profile/{{comment.publisherId}}">{{comment.publisherFullName}}</a>
+											<span ng-bind-html="comment.text | htmlLinky"></span>
+											<p class="at"> {{comment.createdAt | date:'M/d h:mm a'}} </p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

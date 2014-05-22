@@ -1,0 +1,30 @@
+<div class="row" ng-controller="BookmarkedAdsController">
+	<div ng-show="loaded" class="{{mygifts}}">
+		<div ng-repeat="col in cols">
+			<div class="{{colsClass}}">
+				<div ng-repeat="ad in col">
+					<ad-item-box
+					img="{{ad.image.id}}"
+					id="{{ad.id}}"
+					type="favorites"
+					details="1"
+					status="{{ad.status}}"
+					creator="creators[ad.creator]"
+					ad="ad"
+					callback="cqllbqck()"
+					selfview="selfview"
+					></ad-item-box>
+				</div>
+			</div>
+		</div>
+		<div ng-hide="hasAds || !selfview">
+			<div class="col-xs-12">
+				<div class="well">
+					<div class="well-body">
+						<img src="assets/images/ge-nothing_here_favorites.jpg" class="img-responsive" style="margin:0 auto" alt="Post your first gift" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

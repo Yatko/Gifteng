@@ -1,0 +1,23 @@
+{
+    "name": "mews/useragent",
+    "description": "Useragent Package for Laravel 4",
+    "keywords": ["L4", "Laravel 4", "Laravel", "Useragent", "Agent"],
+    "homepage": "http://github.com/mewebstudio/Useragent",
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "Muharrem ERIN",
+            "email": "me@mewebstudio.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mews\\Useragent": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}

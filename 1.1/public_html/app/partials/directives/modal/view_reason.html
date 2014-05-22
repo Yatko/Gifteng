@@ -1,0 +1,25 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+		<div class="modal-header-content">
+			<h3>Unfortunately your gift can’t be posted because...</h3>
+		</div>
+	</div>
+	<div class="modal-body">
+		<p>
+			{{ad.approval.text}}
+		</p>
+	</div>
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-6 col-xs-12">
+				<button type="button" ng-click="close()" class="btn btn-large btn-ge-default">
+					OK <em class="glyphicon-ge-cross"></em>
+				</button>
+				<a href="#/edit/gift/{{ad.id}}/true" ng-click="close()"  class="btn btn-large btn-ge-primary"> EDIT GIFT </a>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>
