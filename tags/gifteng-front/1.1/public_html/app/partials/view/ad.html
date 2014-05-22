@@ -1,0 +1,100 @@
+<div class="addetailview">
+	<div class="container ge-container">
+		<div class="row">
+			<div class="col-sm-offset-4 col-sm-4">
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<a href class="btn btn-ge-default" ng-click="move(prev)"> <i class="glyphicon glyphicon-ge-left"></i> </a>
+						<a href class="btn btn-ge-default" ng-click="close()"> Close </a>
+						<a href class="btn btn-ge-default" ng-click="move(next)"> <i class="glyphicon glyphicon-ge-right"></i> </a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" ng-if="loaded">
+			<div class="detailView col-sm-10 col-sm-offset-1 ad">
+				<div class="row" ng-show="ad.id">
+					<div class="col-sm-5 col-md-4">
+
+						<user-profile
+						user="ad.creator"
+						img="{{ad.creator.avatar.id}}"
+						following="ad.creator.inFollowings"
+						callback="callback()"
+						></user-profile>
+
+						<ad
+						ad="ad"
+						self="self"
+						action="1"
+						callback="callback()"
+						></ad>
+
+						<div ng-if="ad.activeReq && ad.type!='BUSINESS'" class="hidden-xs">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<div ng-if="ad.status!='SOLD' && ad.status!='SENT' && ad.reqStat!='RECEIVED'">
+										Requested by:
+									</div>
+									<div ng-if="ad.status=='SENT' || ad.status=='SOLD' || ad.reqStat=='RECEIVED'">
+										Gifted to:
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<div ng-repeat="request in ad.requests.item">
+											<div class="col-xs-4 col-sm-3" ng-if="request.status!='CANCELED' && request.status!='UNACCEPTED' && request.status!='DECLINED'">
+												<a ng-href="#/view/profile/{{request.user.id}}" ng-click="close()" ng-class="{'accepted':request.status=='RECEIVED'}">
+													<img ng-show="request.user.avatar" ng-src="{{amazonUrl}}user/{{request.user.avatar.id}}_112" class="img-rounded img-responsive" />
+													<img ng-hide="request.user.avatar" src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" />
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-7 col-md-8">
+						<ad
+						ad="ad"
+						cmn="comments"
+						self="self"
+						image='1'
+						details='1'
+						map='1'
+						comments='1'
+						addcomment='1'
+						callback="callback()"
+						></ad>
+
+						<div ng-if="ad.activeReq" class="visible-xs">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<div ng-if="ad.status!='SOLD' && ad.status!='SENT' && ad.reqStat!='RECEIVED'">
+										Requested by:
+									</div>
+									<div ng-if="ad.status=='SENT' || ad.status=='SOLD' || ad.reqStat=='RECEIVED'">
+										Gifted to:
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<div ng-repeat="request in ad.requests.item">
+											<div class="col-xs-4 col-sm-3" ng-if="request.status!='CANCELED' && request.status!='UNACCEPTED' && request.status!='DECLINED'">
+												<a ng-href="#/view/profile/{{request.user.id}}" ng-click="close()" ng-class="{'accepted':request.status=='ACCEPTED'}">
+													<img ng-show="request.user.avatar" ng-src="{{amazonUrl}}user/{{request.user.avatar.id}}_112" class="img-rounded img-responsive" />
+													<img ng-hide="request.user.avatar" src="assets/img/ge-no-profile-picture.png" class="img-rounded img-responsive" />
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

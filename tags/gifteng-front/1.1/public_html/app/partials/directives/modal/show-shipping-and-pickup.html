@@ -1,0 +1,31 @@
+<!-- /modal/show-shipping-and-pickup.html -->
+<div class="modal-content messages">
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-xs-9">
+				<h4>{{description}}</h4>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="row" ng-if="!showOk">
+			<div class="col-xs-2">
+				<button class="btn btn-ge-default btn-lg btn-block" ng-click="later()">
+					Later
+				</button>
+			</div>
+			<div class="col-xs-4">
+				<button class="btn btn-ge-primary btn-lg btn-block" ng-click="showMessage()">
+					Contact &nbsp;{{requestFirstname}}
+				</button>
+			</div>
+		</div>
+		<div class="row" ng-if="showOk">
+			<div class="col-xs-2">
+				<button class="btn btn-ge-default btn-lg btn-block" ng-click="later()">
+					OK
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

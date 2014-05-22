@@ -1,0 +1,108 @@
+<div class="snap-drawers">
+	<div class="snap-drawer snap-drawer-right">
+		<ul>
+			<li class="text-center hide">
+				<input type="text" id="sliedbar_search_text" ng-blur="search()" name="q" class="form-control" placeholder="Find friends and gifts" value="">
+			</li>
+			<li>
+				<div class="ge-user">
+					<div class="ge-user-image pull-left ge-points">
+						<a href="#/profile" ng-click="openLeft()"> <img ng-src="{{user.data.avatar_url}}" class="img-rounded img-responsive"> </a> 
+					</div>
+					<div class="ge-detail">
+						<div>
+							<a href="#/profile" ng-click="openLeft()">My Profile</a>
+						</div>
+						<div>
+							<div class="ge-name">
+								<a href="#/profile" ng-click="openLeft()">{{user.data.firstName}} {{user.data.lastName}}</a>
+							</div>
+							<div class="ge-points">
+								<a href="http://gifteng.zendesk.com/entries/25071768-What-is-the-Generosity-Score-G-" target="_blank">
+									<span class="label label-default label-ge"> G {{user.data.score | number:0}}/{{user.data.pendingScore | number:0}} </span>
+									<span class="label label-default label-ge label-ge-danger">GP {{user.data.businessScore | number: 0}}</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<!-- when My gifts-->
+			<li ng-if="parsedurl[2]=='gifts' && parsedurl[3]!='favorites'" class="visible-xs">
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group btn-group-sm">
+						<button type="button" class="btn btn-ge-default">
+							<i class="glyphicon-ge-giftbox"></i>
+						</button>
+					</div>
+					<div class="btn-group btn-group-sm">
+						<button type="button" ng-click="setMyGifts('active')" class="btn btn-ge-primary">
+							<span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='active'"></span>
+							Active
+						</button>
+						<button type="button" ng-click="setMyGifts('gifted')" class="btn btn-ge-primary">
+							<span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='gifted'"></span>
+							<span ng-if="parsedurl[3]=='giving'">Gifted</span>
+							<span ng-if="parsedurl[3]=='receiving'">Received</span>
+						</button>
+						<button type="button" ng-click="setMyGifts('all')" class="btn btn-ge-primary">
+							<span class="glyphicon glyphicon-ge-check-inverted" ng-show="filter=='all'"></span>
+							All
+						</button>
+					</div>
+				</div>
+			</li>
+			<li ng-class="{active: parsedurl[1]=='post'}" class="visible-xs">
+				<a href="#/post" ng-click="openLeft()"><i class="glyphicon-ge-giftbox visible-inline-xs"></i> Post a Gift </a>
+			</li>
+			<li ng-class="{active: parsedurl[1]=='post'}" class="hidden-xs">
+				<a href ng-click="doPost();openLeft()"><i class="glyphicon-ge-giftbox visible-inline-xs"></i> Post a Gift </a>
+			</li>
+			<li ng-class="{active: parsedurl[1]=='browse'}" ng-if="parsedurl[1]!=='browse'">
+				<a href="#/browse/" ng-click="openLeft()"><i class="glyphicon-ge-eye visible-inline-xs"></i> Browse </a>
+			</li>
+			<!-- when Browse -->
+			<li ng-if="parsedurl[1]=='browse'">
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group btn-group-sm" ng-class="{active: parsedurl[1]=='browse'}">
+						<a href="#/browse/" ng-click="openLeft()" class="btn btn-ge-default"><i class="glyphicon-ge-eye visible-inline-xs"></i> Browse </a>
+					</div>
+					<div class="btn-group btn-group-sm">
+						<button type="button" ng-click="setColumns(2)" class="btn btn-ge-primary hidden-xs hidden-md hidden-lg">
+							2
+						</button>
+						<button type="button" ng-click="setColumns(3)" class="btn btn-ge-primary hidden-xs">
+							3
+						</button>
+						<button type="button" ng-click="setColumns(4)" class="btn btn-ge-primary hidden-xs hidden-sm">
+							4
+						</button>
+					</div>
+					<div class="btn-group btn-group-sm">
+						<button type="button" ng-click="toggleWells()" class="btn btn-ge-default">
+							<i class="glyphicon glyphicon-ge-list-small-thumbnails"></i>
+						</button>
+					</div>
+				</div>
+			</li>
+			<li ng-class="{active: parsedurl[2]=='gifts'}">
+				<a href="#/profile/gifts/giving" ng-click="openLeft()"><i class="glyphicon-ge-heart visible-inline-xs"></i> My Gifts </a>
+			</li>
+			<li ng-class="{active: parsedurl[2]=='messages'}">
+				<a href="#/profile/account/messages" ng-click="openLeft()"><i class="glyphicon-ge-mail visible-inline-xs"></i> Messages <sup><span class="label label-danger" ng-show="user.data.statistics.numUnreadMessages">{{user.data.statistics.numUnreadMessages}}</span></sup></a>
+			</li>
+			<li class="hidden-sm" ng-class="{active: parsedurl[1]=='invite'}">
+				<a href="#/invite" ng-click="openLeft()"><i class="glyphicon-ge-user visible-inline-xs" style="color: #00bebe;"></i> Invite Friends </a>
+			</li>
+			<li>
+				<a ng-click="oReport();openLeft();"><i class="glyphicon-ge-bug visible-inline-xs"></i> Report an Issue </a>
+			</li>
+			<li>
+				<a href="http://gifteng.zendesk.com/home/" target="_blank" ng-click="openLeft()"><i class="glyphicon-ge-question visible-inline-xs"></i> FAQ / Help </a>
+			</li>
+			<li>
+				<a href="#/" ng-click="logout()"><i class="glyphicon-ge-power visible-inline-xs"></i> Logout </a>
+			</li>
+		</ul>
+	</div>
+</div>

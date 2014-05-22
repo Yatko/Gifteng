@@ -1,0 +1,21 @@
+<div ng-switch on="user.logged">
+	<div ng-switch-when="true">
+		<div ng-include="'app/partials/sidebar.html'"></div>
+	</div>
+</div>
+
+<div class="btn-group-vertical btn-group-nav btn-group-lg pull-right hidden-xs snap-slide" ng-show="user.logged">
+	<a href ng-click="closeLeft();doPost()" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon-ge-giftbox"></span> </a>
+	<a href="#/browse/" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary" ng-if="parsedurl[1]!=='browse'"> <span class="glyphicon glyphicon-ge-eye"></span> </a>
+	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"> <span class="glyphicon-ge-search"></span> </a>
+	<a href="#/profile/gifts/giving" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-heart"></span> </a>
+	<a href="#/profile/account/messages" ng-click="closeLeft();" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-mail" ng-class="{'ge-alert': user.data.statistics.numUnreadMessages==1}"></span> </a>
+	<a href="#/invite" ng-show="user.logged" ng-click="closeLeft();" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-user"></span> </a>
+	<a href ng-click="closeLeft();oReport()" ng-show="user.logged" class="btn btn-ge-primary"> <span class="glyphicon glyphicon-ge-bug"></span> </a>   
+    <a id="open-left" ng-click="openLeft();isopen=!isopen" class="btn menuop open-left" ng-class="{'btn-snap':isopen, 'btn-primary':!isopen}" href ng-show="user.logged"> <span class="glyphicon-ge-list"></span> </a>
+</div>
+
+<div class="btn-group-vertical btn-group-nav btn-group-lg pull-right visible-xs snap-slide" ng-show="user.logged">
+	<a href ng-click="closeLeft();openSearch()" class="btn btn-ge-default" ng-if="parsedurl[1]=='browse'"><span class="glyphicon-ge-search"></span> </a>  
+    <a id="open-left" ng-click="openLeft();isopen=!isopen" class="btn menuop open-left" ng-class="{'btn-snap':isopen, 'btn-primary':!isopen}" href ng-show="user.logged"> <span class="glyphicon-ge-list"></span> </a>
+</div>

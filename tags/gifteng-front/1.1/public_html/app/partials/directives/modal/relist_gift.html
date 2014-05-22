@@ -1,0 +1,71 @@
+<div class="modal-content post">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			×
+		</button>
+	</div>
+	<div class="panel-body">
+		<img ng-src="{{amazonUrl}}ad/{{ad.image.id}}_640" class="img-responsive" />
+		
+		<p>
+			{{ad.title}}
+		</p>
+		<ul>
+			<li>
+				<b>Description:</b> {{ad.description}}
+			</li>
+			<li>
+				<b>Category:</b> {{ad.category}}
+			</li>
+			<li>
+				<b>Gift value:</b> {{ad.price | currency:"$"}}
+			</li>
+		</ul>
+
+		<div class="row">
+			<div class="col-xs-5">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" disabled ng-checked="ad.pickUp">
+						Pick Up </label>
+				</div>
+			</div>
+			<div class="col-xs-7" ng-show="ad.owner">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" disabled ng-checked="ad.freeShipping">
+						Shipping offered </label>
+				</div>					
+			</div>
+			<div class="col-xs-7" ng-show="!ad.owner">
+				<div class="checkbox">
+					<label ng-show="!ad.freeShipping" ng-hide="ad.freeShipping">
+						<input type="checkbox" disabled ng-checked="ad.freeShipping">
+						Shipping offered </label>	
+					<label  ng-show="ad.freeShipping" ng-hide="!ad.freeShipping">
+						<input type="checkbox" disabled ng-checked="ad.freeShipping">
+						         Shipping &amp; Fee: ${{ad.shippingBox.price}}	 </label>	
+				</div>
+				
+			</div>
+			
+		</div>
+
+		<!--<div id="view_map" class="map"></div> -->
+	</div>
+
+	<div class="modal-footer">
+		<div class="row">
+			<div class="col-xs-6">
+				<button type="button" ng-click="submit()" class="btn btn-block btn-ge-primary">
+					RELIST
+				</button>
+			</div>
+			<div class="col-xs-6">
+				<button type="button" ng-click="edit()"  class="btn btn-block btn-ge-default">
+					EDIT
+				</button>
+			</div>
+		</div><!--./submit-->
+	</div>
+</div>

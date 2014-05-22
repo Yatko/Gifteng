@@ -1,0 +1,138 @@
+<div class="modal-content" ng-controller="RequestGiftController">
+
+	<div ng-switch="ad.type">
+		<div ng-switch-when="BUSINESS">
+			<div ng-if="user.data.businessScore<(ad.price*0.625)">
+				<div class="modal-header">
+					<button type="button" class="close" ng-click="close()">
+						×
+					</button>
+					<div class="modal-header-content">
+						<h4>Whoopsie, you don't have enough GP... </h4>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<p>
+						Start giving away things you no longer use and get Generosity Points (GP).
+					</p>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-xs-4">
+							<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+								Later
+							</button>
+						</div>
+						<div class="col-xs-8">
+							<a href ng-click="close();doPost()" class="btn btn-block btn-ge-primary hidden-xs"> Post A Gift </a>
+							<a href="#/post" ng-click="close();" class="btn btn-block btn-ge-primary visible-xs"> Post A Gift </a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-if="user.data.businessScore>=(ad.price*0.625)">
+				
+				<div class="modal-header">
+					<button type="button" class="close" ng-click="close()">
+						×
+					</button>
+					<div class="modal-header-content">
+						<h3>Yippee, you are almost there! </h3>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<p>
+						Just a heads up: your Generosity Points
+						will decrease by {{ad.price*0.625 | number: 0}}
+					</p>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-xs-4">
+							<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+								Cancel
+							</button>
+						</div>
+						<div class="col-xs-8">
+							<button type="button" ng-click="submit()" class="btn btn-block btn-ge-primary">
+								Confirm Request
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-switch-default>
+			<div ng-switch="user.data.statistics.requestLimit">
+
+				<div ng-switch-when="0">
+
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="close()">
+							×
+						</button>
+						<div class="modal-header-content">
+							<h4>Our community is about giving...</h4>
+						</div>
+					</div>
+
+					<div class="modal-body">
+						<p>
+							To send a request for this free gift, you need to post one of your own. Look around, find something and post it in less than one minute. It’s easier (and more rewarding ) than you think!
+						</p>
+					</div>
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-xs-4">
+								<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+									Later
+								</button>
+							</div>
+							<div class="col-xs-8">
+								<a href ng-click="close();doPost()" class="btn btn-block btn-ge-primary hidden-xs"> Post A Gift </a>
+								<a href="#/post" ng-click="close();" class="btn btn-block btn-ge-primary visible-xs"> Post A Gift </a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div ng-switch-default>
+
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="close()">
+							×
+						</button>
+						<div class="modal-header-content">
+							<h3>Type your message below</h3>
+						</div>
+					</div>
+
+					<div class="modal-body">
+						<textarea name="requestText" id="request_message" class="form-control" placeholder="Your message ...">I would love to have your gift! Please accept my request!</textarea>
+					</div>
+
+					<div class="modal-footer">
+						<div class="row">
+							<div class="col-xs-4">
+								<button type="button" class="btn btn-block btn-ge-default" ng-click="close()">
+									Cancel
+								</button>
+							</div>
+							<div class="col-xs-8">
+								<button type="button" ng-click="submit()" class="btn btn-block btn-ge-primary">
+									Send Request
+								</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

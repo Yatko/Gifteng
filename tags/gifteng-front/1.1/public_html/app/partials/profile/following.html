@@ -1,0 +1,13 @@
+<div class="row" ng-controller="FollowingController">
+	<div ng-repeat="conn in data">
+		<div class="col-sm-3">
+			<user-profile 
+				user="conn"
+				img="{{conn.avatar.id}}"
+				following="conn.inFollowings"
+				self="conn.self"
+			>
+			</user-profile>
+		</div>
+	</div>
+</div>

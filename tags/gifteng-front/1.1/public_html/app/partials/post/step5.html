@@ -1,0 +1,32 @@
+<div ng-class="{'modal-content post': isModal, 'col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2': !isModal}">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+		<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+			×
+		</button>
+	  	<p>&nbsp;</p>
+	  </div>
+	  <div class="panel-body text-center">
+	  	<p class="lead">Share your gift with your friends:</p>
+	  	<p class="lead">
+	  		<ul class="list-inline">
+	  			<li><a class="glyphicon glyphicon-ge-facebook facebook" href title="Gifteng on facebook" ng-click="share_on_facebook_modal();"></a></li>
+	  			<li><a class="glyphicon glyphicon-ge-twitter twitter" href title="Gifteng on twitter" ng-click="share_on_twitter_modal();"></a></li>
+	  			<li><a class="glyphicon glyphicon-ge-googleplus googleplus" href title="Gifteng on google+" ng-click="share_on_googleplus_modal();"></a></li>
+	  			<li><a class="glyphicon glyphicon-ge-pinterest pinterest" href title="Gifteng on pinterest" ng-click="share_on_pinterest_modal();"></a></li>
+	  		</ul>
+	  	</p>
+	    <p class="lr-buffer-3 top-buffer-3 bottom-buffer-2">Give us few hours to review your gift. It will most likely be available tomorrow at 12:00 pm EST. Your Generosity Score increases with every gift you give!</p>
+	  </div>
+	  <div class="panel-footer">
+	  	<div class="row">
+	  		<div class="col-xs-5">
+	  			<a ng-click="close()" class="btn btn-lg btn-block btn-ge-default"> CLOSE </a>
+	  		</div>
+	  		<div class="col-xs-7">
+	  			<a ng-click="newPost()" class="btn btn-lg btn-block btn-ge-default"> NEW GIFT </a>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</div>

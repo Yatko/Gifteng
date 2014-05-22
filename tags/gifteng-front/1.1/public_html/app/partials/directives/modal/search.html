@@ -1,0 +1,41 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close()">
+			&times;
+		</button>
+		<h4 class="modal-title" id="myModalLabel">Narrow search results</h4>
+	</div>
+	<div class="modal-body" ng-controller="SearchController">
+		<div class="form-group">
+			<input type="text" ng-model="search.keywords" placeholder="Find Friends & Search Gifts" class="form-control" />
+		</div>
+		<div class="form-group">
+			<select class="form-control" id="category"  ng-model="search.category">
+				<option value="">All Categories</option>
+				<option ng-repeat="c in categories" value="{{c.id}}">{{c.name}}</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<select class="form-control" id="order" ng-model="search.order">
+				<option value="newest">Newest</option>
+				<option value="oldest">Oldest</option>
+				<option value="gifted">Gifted</option>
+				<option value="closest">Closest</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="pickup">
+				Pickup </label>
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="shipping">
+				Shipping </label>
+			<label class="checkbox-inline">
+				<input type="radio" ng-model="search.delivery" value="">
+				Both </label>
+		</div>
+		<div class="form-group">
+			<a href ng-click="submit()" class="btn btn-lg btn-block btn-ge-primary" style="margin-top:10px;">Search Gifts</a>
+		</div>
+	</div>
+</div><!-- /.modal-content -->

@@ -1,0 +1,259 @@
+.loader-back {
+	position:absolute;top:0;left:0;right:0;bottom:0;z-index:10000;background-color:gray;background-color:rgba(70,70,70,0.2);
+}
+
+.loader {
+    display: table;
+    width: 30%;
+    height: 30%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.loader-center {
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+    padding: 10%;
+    vertical-align: middle;
+}
+
+.placescore {
+    width: 40%;
+    height: 0;
+    padding: 8% 8% 32% 8%;
+    padding: 8% 8% -webkit-calc(32% - 4px) 8%;
+    padding: 8% 8% -moz-calc(32% - 4px) 8%;
+    padding: 8% 8% calc(32% - 4px) 8%;
+    margin: 200px auto 0;
+    border: 2px solid #00bebe;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+@media (min-width: 400px) {
+    .placescore {
+        padding: 8% 8% -webkit-calc(32% - 6px) 8%;
+        padding: 8% 8% -moz-calc(32% - 6px) 8%;
+        padding: 8% 8% calc(32% - 6px) 8%;
+        border: 3px solid #00bebe;
+    }
+}
+
+@media (min-width: 600px) {
+    .placescore {
+        padding: 8% 8% -webkit-calc(32% - 8px) 8%;
+        padding: 8% 8% -moz-calc(32% - 8px) 8%;
+        padding: 8% 8% calc(32% - 8px) 8%;
+        border: 4px solid #00bebe;
+    }
+}
+
+.placescore > div {
+    position: relative;
+    width: 66%;
+    height: 0;
+    padding-bottom: 100%;
+    margin: 0 auto;
+}
+
+.placescore-dot {
+    position: absolute;
+    width: 50%;
+    height: 0;
+    padding: 3% 3% 47% 3%;
+}
+
+.placescore-dot > div {
+    width: 100%;
+    padding-bottom: 100%;
+    background: #00bebe;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+/*
+I used left & top because of a rendering bug
+with translated on resize
+*/
+
+/*
+IE is buggy with '0' instead of '0%'
+*/
+
+@-webkit-keyframes dot-1 {
+    85%, 0% {left: 0%; top: 66%;}
+    2.5%, 12.5% {left: 50%; top: 66%;}
+    15%, 30% {left: 50%; top: 33%;}
+    32.5%, 47.5% {left: 50%; top: 0%;}
+    50%, 65% {left: 0%; top: 0%;}
+    67.5%, 82.5% {left: 0%; top: 33%;}
+}
+
+@-moz-keyframes dot-1 {
+    85%, 0% {left: 0%; top: 66%;}
+    2.5%, 12.5% {left: 50%; top: 66%;}
+    15%, 30% {left: 50%; top: 33%;}
+    32.5%, 47.5% {left: 50%; top: 0%;}
+    50%, 65% {left: 0%; top: 0%;}
+    67.5%, 82.5% {left: 0%; top: 33%;}
+}
+
+@keyframes dot-1 {
+    85%, 0% {left: 0%; top: 66%;}
+    2.5%, 12.5% {left: 50%; top: 66%;}
+    15%, 30% {left: 50%; top: 33%;}
+    32.5%, 47.5% {left: 50%; top: 0%;}
+    50%, 65% {left: 0%; top: 0%;}
+    67.5%, 82.5% {left: 0%; top: 33%;}
+}
+
+@-webkit-keyframes dot-2 {
+    87.5%, 2.5% {left: 0%; top: 33%;}
+    5%, 20% {left: 0%; top: 66%;}
+    22.5%, 32.5% {left: 50%; top: 66%;}
+    35%, 50% {left: 50%; top: 33%;}
+    52.5%, 67.5% {left: 50%; top: 0%;}
+    70%, 85% {left: 0%; top: 0%;}
+}
+
+@-moz-keyframes dot-2 {
+    87.5%, 2.5% {left: 0%; top: 33%;}
+    5%, 20% {left: 0%; top: 66%;}
+    22.5%, 32.5% {left: 50%; top: 66%;}
+    35%, 50% {left: 50%; top: 33%;}
+    52.5%, 67.5% {left: 50%; top: 0%;}
+    70%, 85% {left: 0%; top: 0%;}
+}
+
+@keyframes dot-2 {
+    87.5%, 2.5% {left: 0%; top: 33%;}
+    5%, 20% {left: 0%; top: 66%;}
+    22.5%, 32.5% {left: 50%; top: 66%;}
+    35%, 50% {left: 50%; top: 33%;}
+    52.5%, 67.5% {left: 50%; top: 0%;}
+    70%, 85% {left: 0%; top: 0%;}
+}
+
+@-webkit-keyframes dot-3 {
+    90%, 5% {left: 0%; top: 0%;}
+    7.5%, 22.5% {left: 0%; top: 33%;}
+    25%, 40% {left: 0%; top: 66%;}
+    42.5%, 52.5% {left: 50%; top: 66%;}
+    55%, 70% {left: 50%; top: 33%;}
+    72.5%, 87.5% {left: 50%; top: 0%;}
+}
+
+@-moz-keyframes dot-3 {
+    90%, 5% {left: 0%; top: 0%;}
+    7.5%, 22.5% {left: 0%; top: 33%;}
+    25%, 40% {left: 0%; top: 66%;}
+    42.5%, 52.5% {left: 50%; top: 66%;}
+    55%, 70% {left: 50%; top: 33%;}
+    72.5%, 87.5% {left: 50%; top: 0%;}
+}
+
+@keyframes dot-3 {
+    90%, 5% {left: 0%; top: 0%;}
+    7.5%, 22.5% {left: 0%; top: 33%;}
+    25%, 40% {left: 0%; top: 66%;}
+    42.5%, 52.5% {left: 50%; top: 66%;}
+    55%, 70% {left: 50%; top: 33%;}
+    72.5%, 87.5% {left: 50%; top: 0%;}
+}
+
+@-webkit-keyframes dot-4 {
+    92.5%, 7.5% {left: 50%; top: 0%;}
+    10%, 25% {left: 0%; top: 0%;}
+    27.5%, 42.5% {left: 0%; top: 33%;}
+    45%, 60% {left: 0%; top: 66%;}
+    62.5%, 72.5% {left: 50%; top: 66%;}
+    75%, 90% {left: 50%; top: 33%;}
+}
+
+@-moz-keyframes dot-4 {
+    92.5%, 7.5% {left: 50%; top: 0%;}
+    10%, 25% {left: 0%; top: 0%;}
+    27.5%, 42.5% {left: 0%; top: 33%;}
+    45%, 60% {left: 0%; top: 66%;}
+    62.5%, 72.5% {left: 50%; top: 66%;}
+    75%, 90% {left: 50%; top: 33%;}
+}
+
+@keyframes dot-4 {
+    92.5%, 7.5% {left: 50%; top: 0%;}
+    10%, 25% {left: 0%; top: 0%;}
+    27.5%, 42.5% {left: 0%; top: 33%;}
+    45%, 60% {left: 0%; top: 66%;}
+    62.5%, 72.5% {left: 50%; top: 66%;}
+    75%, 90% {left: 50%; top: 33%;}
+}
+
+@-webkit-keyframes dot-5 {
+    95%, 10% {left: 50%; top: 33%;}
+    12.5%, 27.5% {left: 50%; top: 0%;}
+    30%, 45% {left: 0%; top: 0%;}
+    47.5%, 62.5% {left: 0%; top: 33%;}
+    65%, 80% {left: 0%; top: 66%;}
+    82.5%, 92.5% {left: 50%; top: 66%;}
+}
+
+@-moz-keyframes dot-5 {
+    95%, 10% {left: 50%; top: 33%;}
+    12.5%, 27.5% {left: 50%; top: 0%;}
+    30%, 45% {left: 0%; top: 0%;}
+    47.5%, 62.5% {left: 0%; top: 33%;}
+    65%, 80% {left: 0%; top: 66%;}
+    82.5%, 92.5% {left: 50%; top: 66%;}
+}
+
+@keyframes dot-5 {
+    95%, 10% {left: 50%; top: 33%;}
+    12.5%, 27.5% {left: 50%; top: 0%;}
+    30%, 45% {left: 0%; top: 0%;}
+    47.5%, 62.5% {left: 0%; top: 33%;}
+    65%, 80% {left: 0%; top: 66%;}
+    82.5%, 92.5% {left: 50%; top: 66%;}
+}
+
+.placescore-dot-1 {
+    left: 0;
+    top: 66%;
+    -webkit-animation: dot-1 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    -moz-animation: dot-1 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    animation: dot-1 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+}
+
+.placescore-dot-2 {
+    left: 0;
+    top: 33%;
+    -webkit-animation: dot-2 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    -moz-animation: dot-2 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    animation: dot-2 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+}
+
+.placescore-dot-3 {
+    left: 0;
+    top: 0;
+    -webkit-animation: dot-3 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    -moz-animation: dot-3 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    animation: dot-3 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+}
+
+.placescore-dot-4 {
+    left: 50%;
+    top: 0;
+    -webkit-animation: dot-4 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    -moz-animation: dot-4 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    animation: dot-4 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+}
+
+.placescore-dot-5 {
+    left: 50%;
+    top: 33%;
+    -webkit-animation: dot-5 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    -moz-animation: dot-5 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+    animation: dot-5 8.5s 1s infinite cubic-bezier(.5,1.5,.55,1);
+}

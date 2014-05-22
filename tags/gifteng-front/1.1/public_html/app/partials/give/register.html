@@ -1,0 +1,91 @@
+<div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8">
+	<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<button type="button" class="close pull-right" ng-click="close()" ng-show="isModal">
+					×
+				</button>
+				<h4>Now, save your information…</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-sm-5">
+						<p class="lead text-right">
+							… so you can get in touch with those who request your gift, and have access to gifts posted by others.
+						</p>
+						<p class="text-right" ng-if="!hasAcc">
+							Already registered? <a href ng-click="toggleAcc()">Sign In.</a>
+						</p>
+						<p class="text-right" ng-if="hasAcc">
+							New to Gifteng? <a href ng-click="toggleAcc()">Sign up now!</a>
+						</p>
+					</div>
+					<div class="col-sm-7">
+		  				<div class="alert alert-danger" ng-if="error" ng-bind="error"></div>
+						<blockquote ng-if="!hasAcc">
+							<form enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-sm-12">
+										<div ng-if="regstep==1">
+											<div class="form-group">
+												<input type="email" ng-model="reg.email" class="form-control input" placeholder="Your Email" >
+											</div>
+											<div class="form-group">
+												<input type="email" ng-model="reg.confirmEmail" class="form-control input" placeholder="Confirm Email" >
+											</div>
+											<div class="form-group">
+												<input type="password" ng-model="reg.password" class="form-control input" placeholder="Password" >
+											</div>
+											<div class="form-group">
+												<button type="submit" ng-click="registerUser()" class="btn btn-ge-primary btn-lg btn-block">
+													Save
+												</button>
+											</div>
+										</div>
+										<div ng-if="regstep==2">
+											<div class="form-group">
+												<input type="text" ng-model="reg.firstName" class="form-control input" placeholder="First Name" >
+											</div>
+											<div class="form-group">
+												<input type="text" ng-model="reg.lastName" class="form-control input" placeholder="Last Name" >
+											</div>
+											<div class="form-group">
+												<input type="text" maxlength="5" ng-only-digits ng-model="reg.zipCode" class="form-control input" placeholder="Your Zip Code" >
+											</div>
+											<div class="form-group">
+												<button type="submit" ng-click="saveProfile()" class="btn btn-ge-primary btn-lg btn-block">
+													Save
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</blockquote>
+
+						<blockquote ng-if="hasAcc">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<input type="email" ng-model="lgn.email" class="form-control input" placeholder="Your Email" >
+									</div>
+									<div class="form-group">
+										<input type="password" ng-model="lgn.password" class="form-control input" placeholder="Password" >
+									</div>
+									<div class="form-group">
+										<button type="submit" ng-click="login()" class="btn btn-ge-primary btn-lg btn-block">
+											Sign In
+										</button>
+									</div>
+								</div>
+							</div>
+						</blockquote>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
