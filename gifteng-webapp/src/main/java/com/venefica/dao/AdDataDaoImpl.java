@@ -32,6 +32,18 @@ public class AdDataDaoImpl extends DaoBase<AdData> implements AdDataDao {
     }
     
     @Override
+    public AdData getAdDataByAd(Long adId) {
+        Object result = createQuery(""
+                + "select ad.adData "
+                + "from " + Ad.TABLE_NAME + " ad "
+                + "where a.id = :adId"
+                + "")
+                .setParameter("adId", adId)
+                .uniqueResult();
+        return (AdData) result;
+    }
+    
+    @Override
     public MemberAdData getMemberAdDataByAd(Long adId) {
         Object result = createSQLQuery(""
                 + "select mad.*, addt.* "

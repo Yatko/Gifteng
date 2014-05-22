@@ -4,10 +4,12 @@
  */
 package com.venefica.config;
 
+import com.venefica.common.AmazonUpload;
 import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ForgotPasswordDao;
+import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.IssueDao;
 import com.venefica.dao.RequestDao;
@@ -16,6 +18,7 @@ import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserTransactionDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.job.AdExpirationJob;
+import com.venefica.job.AdExportJob;
 import com.venefica.job.AdOnlineJob;
 import com.venefica.job.ForgotPasswordExpirationJob;
 import com.venefica.job.InvitationExpirationJob;
@@ -67,6 +70,9 @@ public class JobConfig {
     private static final String ISSUE_UNSENT_JOB_KEY = "issueUnsentJob";
     private static final String ISSUE_UNSENT_TRIGGER_KEY = "issueUnsentTrigger";
     
+    private static final String AD_EXPORT_JOB_KEY = "adExportJob";
+    private static final String AD_EXPORT_TRIGGER_KEY = "adExportTrigger";
+    
     private static final String JOB_GROUP = "common";
     
     @Inject
@@ -91,6 +97,8 @@ public class JobConfig {
     @Inject
     private UserDao userDao;
     @Inject
+    private ImageDao imageDao;
+    @Inject
     private UserPointDao userPointDao;
     @Inject
     private InvitationDao invitationDao;
@@ -102,9 +110,12 @@ public class JobConfig {
     private IssueDao issueDao;
     @Inject
     private EmailSender emailSender;
+    @Inject
+    private AmazonUpload amazonUpload;
     
     private int adExpirationIntervalCheckSecond;
     private int adOnlineStartingCheckHour;
+    private int adExportIntervalCheckSecond;
     private int invitationExpirationIntervalCheckSecond;
     private int invitationExpirationReminderCheckSecond;
     private int forgotPasswordExpirationIntervalCheckSecond;
@@ -115,6 +126,7 @@ public class JobConfig {
     public void init() {
         adExpirationIntervalCheckSecond = environment.getProperty("job.ad.expirationIntervalCheckSecond", int.class);
         adOnlineStartingCheckHour = environment.getProperty("job.ad.onlineStartingCheckHour", int.class);
+        adExportIntervalCheckSecond = environment.getProperty("job.ad.exportIntervalCheckSecond", int.class);
         invitationExpirationIntervalCheckSecond = environment.getProperty("job.invitation.expirationIntervalCheckSecond", int.class);
         invitationExpirationReminderCheckSecond = environment.getProperty("job.invitation.expirationReminderCheckSecond", int.class);
         forgotPasswordExpirationIntervalCheckSecond = environment.getProperty("job.forgotPassword.expirationIntervalCheckSecond", int.class);
@@ -131,6 +143,7 @@ public class JobConfig {
         JobDetail forgotPasswordExpirationJobDetail = forgotPasswordExpirationJobDetail();
         JobDetail userVerificationReminderJobDetail = userVerificationReminderJobDetail();
         JobDetail issueUnsentJobDetail = issueUnsentJobDetail();
+        JobDetail adExportJobDetail = adExportJobDetail();
         
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setTransactionManager(transactionManager); //TODO: no effect unfortunatelly
@@ -142,6 +155,7 @@ public class JobConfig {
             forgotPasswordExpirationJobDetail,
             userVerificationReminderJobDetail,
             issueUnsentJobDetail,
+            adExportJobDetail,
         });
         schedulerFactory.setTriggers(new Trigger[] {
             createRepeatTrigger(AD_EXPIRATION_TRIGGER_KEY, adExpirationIntervalCheckSecond, adExpirationJobDetail),
@@ -151,6 +165,7 @@ public class JobConfig {
             createRepeatTrigger(FORGOT_PASSWORD_TRIGGER_KEY, forgotPasswordExpirationIntervalCheckSecond, forgotPasswordExpirationJobDetail),
             createRepeatTrigger(USER_VERIFICATION_TRIGGER_KEY, userVerificationReminderIntervalCheckSecond, userVerificationReminderJobDetail),
             createRepeatTrigger(ISSUE_UNSENT_TRIGGER_KEY, issueUnsentIntervalCheckSecond, issueUnsentJobDetail),
+            createRepeatTrigger(AD_EXPORT_TRIGGER_KEY, adExportIntervalCheckSecond, adExportJobDetail),
         });
         return schedulerFactory;
     }
@@ -212,6 +227,15 @@ public class JobConfig {
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
         job.getJobDataMap().put(Constants.EMAIL_SENDER, emailSender);
         job.getJobDataMap().put(Constants.EMAIL_CONFIG, emailConfig);
+        return job;
+    }
+    
+    private JobDetail adExportJobDetail() {
+        JobDetail job = createJobDetail(AdExportJob.class, AD_EXPORT_JOB_KEY);
+        job.getJobDataMap().put(Constants.AD_DAO, adDao);
+        job.getJobDataMap().put(Constants.AD_DATA_DAO, adDataDao);
+        job.getJobDataMap().put(Constants.IMAGE_DAO, imageDao);
+        job.getJobDataMap().put(Constants.AMAZON_UPLOAD, amazonUpload);
         return job;
     }
     

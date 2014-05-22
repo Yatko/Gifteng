@@ -38,6 +38,7 @@ public class PromoCodeProvider {
     private String description;
     
     private int sortOrder;
+    private boolean autoReceiveRequest;
     
     @Index(name = "idx_deleted")
     private boolean deleted;
@@ -141,5 +142,13 @@ public class PromoCodeProvider {
 
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public boolean isAutoReceiveRequest() {
+        return autoReceiveRequest;
+    }
+
+    public void setAutoReceiveRequest(boolean autoReceiveRequest) {
+        this.autoReceiveRequest = autoReceiveRequest;
     }
 }

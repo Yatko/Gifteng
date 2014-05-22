@@ -4,10 +4,12 @@
  */
 package com.venefica.config;
 
+import com.venefica.common.AmazonUpload;
 import com.venefica.common.EmailSender;
 import com.venefica.dao.AdDao;
 import com.venefica.dao.AdDataDao;
 import com.venefica.dao.ForgotPasswordDao;
+import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.IssueDao;
 import com.venefica.dao.RequestDao;
@@ -56,10 +58,13 @@ public interface Constants {
     public static final String USER_TRANSACTION_DAO = UserTransactionDao.class.getSimpleName();
     public static final String USER_DAO = UserDao.class.getSimpleName();
     public static final String USER_POINT_DAO = UserPointDao.class.getSimpleName();
+    public static final String IMAGE_DAO = ImageDao.class.getSimpleName();
     public static final String INVITATION_DAO = InvitationDao.class.getSimpleName();
     public static final String FORGOT_PASSWORD_DAO = ForgotPasswordDao.class.getSimpleName();
     public static final String USER_VERIFICATION_DAO = UserVerificationDao.class.getSimpleName();
     public static final String ISSUE_DAO = IssueDao.class.getSimpleName();
+    
+    public static final String AMAZON_UPLOAD = AmazonUpload.class.getSimpleName();
     public static final String EMAIL_SENDER = EmailSender.class.getSimpleName();
     
     public static final int TOKEN_EXPIRES_IN_DAYS = 365;

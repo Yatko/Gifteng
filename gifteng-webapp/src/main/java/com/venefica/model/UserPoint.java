@@ -56,6 +56,11 @@ public class UserPoint {
     
     // helper methods
     
+    public static boolean canUpdateRequestLimit(Ad ad) {
+        // do not change request limit for the business ads
+        return !ad.isBusinessAd();
+    }
+    
     public boolean canRequest(Ad ad) {
         if ( ad.isMemberAd() ) {
             // there is no limitation on member ads

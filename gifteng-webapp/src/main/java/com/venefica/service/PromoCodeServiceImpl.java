@@ -5,11 +5,12 @@
 package com.venefica.service;
 
 import com.venefica.common.ZenclusiveImpl;
-import com.venefica.config.ZenclusiveConfig;
+import com.venefica.dao.StaticListPromoCodeDao;
 import com.venefica.model.Ad;
 import com.venefica.model.NotificationType;
 import com.venefica.model.PromoCodeProvider;
 import com.venefica.model.Request;
+import com.venefica.model.StaticListPromoCode;
 import com.venefica.model.User;
 import com.venefica.service.dto.PromoCodeProviderDto;
 import com.venefica.service.fault.RequestNotFoundException;
@@ -33,7 +34,7 @@ public class PromoCodeServiceImpl extends AbstractService implements PromoCodeSe
     @Inject
     private ZenclusiveImpl zenclusive;
     @Inject
-    private ZenclusiveConfig zenclusiveConfig;
+    private StaticListPromoCodeDao staticListPromoCodeDao;
 
     @Override
     @Transactional
@@ -101,19 +102,27 @@ public class PromoCodeServiceImpl extends AbstractService implements PromoCodeSe
         Ad ad = request.getAd();
         switch ( promoCodeProvider.getProviderType() ) {
             case ZENCLUSIVE:
-                String email = buildZenclusiveEmail(request);
+                String email = zenclusive.buildZenclusiveEmail(request.getId());
                 ZenclusiveImpl.Incentive incentive = zenclusive.getIncentiveByParams(promoCodeProvider.getParam1(), promoCodeProvider.getParam2());
                 boolean result = zenclusive.sendReward(email, incentive);
                 logger.debug("Zenclusive reward (email: " + email + ", incentive: " + incentive + ") sending succeeded: " + result);
                 break;
+            case STATIC_LIST:
+                String promoCode = "";
+                StaticListPromoCode staticListPromoCode = staticListPromoCodeDao.getOneByAd(ad.getId());
+                if ( staticListPromoCode == null ) {
+                    logger.warn("There is no unused static promo code for ad (adId: " + ad.getId() + ")");
+                } else {
+                    promoCode = staticListPromoCode.getPromoCode();
+                    staticListPromoCodeDao.update(staticListPromoCode);
+                }
+                
+                request.setPromoCode(promoCode);
+                requestDao.update(request);
+                logger.debug("Using static promo code (" + promoCode + ") for ad (" + ad.getId() + ")");
+                break;
             default:
                 logger.warn("Unknown promo code provider (" + promoCodeProvider.getProviderType() + ") when requesting ad (adId: " + ad.getId() + ")");
         }
-    }
-    
-    private String buildZenclusiveEmail(Request request) {
-        String email = zenclusiveConfig.getEmailPrefix() + "_" + request.getId();
-        email += "@" + zenclusiveConfig.getEmailDomain();
-        return email;
     }
 }
