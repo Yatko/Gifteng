@@ -69,7 +69,7 @@ public class AdIntegrationTest {
         filter.setSearchString("");
         //filter.setIncludeOwned(false);
         filter.setFilterType(FilterType.ACTIVE);
-        List<AdDto> ads = adService.getAds(0, 11, filter, false, true, 0);
+        List<AdDto> ads = adService.getAds(0, 11, filter, false, true, 0, false);
         
         System.out.println("ads: " + ads);
     }

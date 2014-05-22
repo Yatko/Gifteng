@@ -149,7 +149,7 @@ public class BusinessAdData extends AdData {
     }
     
     private boolean isFree() {
-        return fixedValue == BigDecimal.ZERO;
+        return fixedValue != null && fixedValue.compareTo(BigDecimal.ZERO) == 0;
     }
     
     // getters/setters

@@ -10,8 +10,9 @@ package com.venefica.model;
  */
 public enum PromoCodeProviderType {
     
-    ZENCLUSIVE,
+    ZENCLUSIVE, // zenclusive and gifteng integration
     //possibly more to come
+    STATIC_LIST, // using a static list of promo codes for every ad having this type
     ;
     
 }

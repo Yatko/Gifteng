@@ -273,7 +273,8 @@ public interface AdService {
             @WebParam(name = "filter") FilterDto filter,
             @WebParam(name = "includeImages") Boolean includeImages,
             @WebParam(name = "includeCreator") Boolean includeCreator,
-            @WebParam(name = "includeCommentsNumber") int includeCommentsNumber)
+            @WebParam(name = "includeCommentsNumber") int includeCommentsNumber,
+            @WebParam(name = "includeCreatorStatistics") Boolean includeCreatorStatistics)
             throws UserNotFoundException;
     
     /**

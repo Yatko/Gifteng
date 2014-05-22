@@ -302,8 +302,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         adTransaction.markAsFinalized(TransactionStatus.DELETED);
         userTransactionDao.update(adTransaction);
         
-        userPoint.incrementRequestLimit(appConfig.getRequestLimitAdDeleted());
-        userPointDao.update(userPoint);
+        if ( UserPoint.canUpdateRequestLimit(ad) ) {
+            userPoint.incrementRequestLimit(appConfig.getRequestLimitAdDeleted());
+            userPointDao.update(userPoint);
+        }
         
         Set<Request> validRequests = ad.getValidRequests();
         if ( validRequests != null && !validRequests.isEmpty() ) {
@@ -478,76 +480,14 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Override
     @Transactional
     public List<AdDto> getAds(int lastIndex, int numberAds, FilterDto filter) throws UserNotFoundException {
-        return getAds(lastIndex, numberAds, filter, false, false, 0);
+        return getAds(lastIndex, numberAds, filter, false, false, 0, false);
     }
     
     @Override
     @Transactional
-    public List<AdDto> getAds(int lastIndex, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber) throws UserNotFoundException {
+    public List<AdDto> getAds(int lastIndex, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber, Boolean includeCreatorStatistics) throws UserNotFoundException {
         List<AdDto> result = new LinkedList<AdDto>();
-        User currentUser = getCurrentUser();
-        List<Ad> ads = adDao.get(lastIndex, numberAds, filter);
-        List<Long> bookmarkedAdIds = bookmarkDao.getBookmarkedAdIds(currentUser);
-        FilterType filterType = filter != null && filter.getFilterType() != null ? filter.getFilterType() : FilterType.ACTIVE;
-        
-        for (Ad ad : ads) {
-            if ( ad.isExpired() || ad.getStatus() == AdStatus.EXPIRED ) {
-                continue;
-            }
-            
-            boolean include = false;
-            if ( filterType == FilterType.ACTIVE ) {
-                boolean isOwner = ad.getCreator().equals(currentUser);
-                boolean canRequest = ad.canRequest();
-                boolean isRequested = ad.isRequested(currentUser);
-                boolean hasAccepted = !ad.getAcceptedRequests().isEmpty();
-                
-                if ( canRequest || (!canRequest && isRequested && !hasAccepted) ) {
-                    include = true;
-                } else if ( isOwner && canRequest ) {
-                    include = true;
-                }
-            } else if ( filterType == FilterType.GIFTED ) {
-                boolean isSold = ad.isSold();
-                boolean hasShipped = !ad.getShippedRequests(true, true).isEmpty();
-                
-                if ( isSold || hasShipped ) {
-                    include = true;
-                }
-            }
-            
-            if ( !include ) {
-                continue;
-            }
-            
-            List<Comment> comments = null;
-            if ( includeCommentsNumber > 0 ) {
-                comments = commentDao.getAdComments(ad.getId(), -1L, includeCommentsNumber);
-            }
-            
-            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad))
-                    .setCurrentUser(currentUser)
-                    .setFilteredComments(comments)
-                    .includeImages(includeImages != null ? includeImages : false)
-                    .includeCreator(includeCreator != null ? includeCreator : false)
-                    .includeCanRequest()
-                    .includeCanRate()
-                    .build();
-            adDto.setInBookmarks(bookmarkedAdIds.contains(ad.getId()));
-            adDto.setRequested(ad.isRequested(currentUser));
-            adDto.setLastIndex(lastIndex + numberAds);
-            
-            result.add(adDto);
-        }
-        
-        if ( ads.size() > 0 && result.size() < numberAds ) {
-            int lastIndex_ = lastIndex + numberAds;
-            int numberAds_ = numberAds - result.size();
-            
-            List<AdDto> result_ = getAds(lastIndex_, numberAds_, filter, includeImages, includeCreator, includeCommentsNumber);
-            result.addAll(result_);
-        }
-        
+        getAds(result, getCurrentUser(), lastIndex, numberAds, filter, includeImages, includeCreator, includeCommentsNumber, includeCreatorStatistics);
         return new LinkedList<AdDto>(new LinkedHashSet<AdDto>(result)); //eliminating duplicates (if any)
     }
 
@@ -811,8 +751,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new AlreadyRequestedException("Ad (id: " + adId + ") already requested by the user (id: " + currentUserId + ")");
         }
         
-        if ( !currentUser.canRequest() ) {
-            throw new InvalidRequestException("Request limit reached.");
+        if ( UserPoint.canUpdateRequestLimit(ad) && !currentUser.canRequest() ) {
+            //only member typed ads needs request limit verification
+            throw new InvalidRequestException("Request limit reached - user cannot request.");
         }
         if ( currentUser.isBusinessAccount() ) {
             throw new InvalidRequestException("Business users cannot request ads.");
@@ -834,8 +775,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Insufficient user points to request ad (adId: " + adId + ")");
         }
         
-        userPoint.incrementRequestLimit(appConfig.getRequestLimitRequestNew());
-        userPointDao.update(userPoint);
+        if ( UserPoint.canUpdateRequestLimit(ad) ) {
+            userPoint.incrementRequestLimit(appConfig.getRequestLimitRequestNew());
+            userPointDao.update(userPoint);
+        }
         
         String promoCode = null;
         if ( ad.isBusinessAd() ) {
@@ -892,7 +835,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
             //auto sending ad by creator
             markAsSent(creator, request, false);
             
-            if ( provider != null ) {
+            if ( provider == null || provider.isAutoReceiveRequest() ) {
                 //auto receiving request
                 markAsReceived(currentUser, request);
             }
@@ -964,9 +907,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         requestTransaction.markAsFinalized(TransactionStatus.CANCELED);
         userTransactionDao.update(requestTransaction);
         
-        UserPoint userPoint = request.getUser().getUserPoint();
-        userPoint.incrementRequestLimit(isDecline ? appConfig.getRequestLimitRequestDeclined() : appConfig.getRequestLimitRequestCanceled());
-        userPointDao.update(userPoint);
+        if ( UserPoint.canUpdateRequestLimit(ad) ) {
+            UserPoint userPoint = request.getUser().getUserPoint();
+            userPoint.incrementRequestLimit(isDecline ? appConfig.getRequestLimitRequestDeclined() : appConfig.getRequestLimitRequestCanceled());
+            userPointDao.update(userPoint);
+        }
         
         if ( isDecline ) {
             Map<String, Object> vars = new HashMap<String, Object>(0);
@@ -1496,6 +1441,115 @@ public class AdServiceImpl extends AbstractService implements AdService {
     }
     
     
+    
+    private void getAds(List<AdDto> result, User currentUser, int lastIndex, int numberAds, FilterDto filter, Boolean includeImages, Boolean includeCreator, int includeCommentsNumber, Boolean includeCreatorStatistics) {
+        List<Ad> ads = adDao.get(lastIndex, numberAds, filter);
+        List<Long> bookmarkedAdIds = bookmarkDao.getBookmarkedAdIds(currentUser);
+        FilterType filterType = filter != null && filter.getFilterType() != null ? filter.getFilterType() : FilterType.ACTIVE;
+        
+        if ( includeImages == null ) {
+            includeImages = false;
+        }
+        if ( includeCreator == null ) {
+            includeCreator = false;
+        }
+        if ( includeCreatorStatistics == null ) {
+            includeCreatorStatistics = false;
+        }
+        
+        for (Ad ad : ads) {
+            if ( ad.isExpired() || ad.getStatus() == AdStatus.EXPIRED ) {
+                continue;
+            }
+            
+            boolean include = false;
+            if ( filterType == FilterType.ACTIVE ) {
+                boolean isOwner = ad.getCreator().equals(currentUser);
+                boolean canRequest = ad.canRequest();
+                boolean isRequested = ad.isRequested(currentUser);
+                boolean hasAccepted = !ad.getAcceptedRequests().isEmpty();
+                
+                if ( canRequest || (!canRequest && isRequested && !hasAccepted) ) {
+                    include = true;
+                } else if ( isOwner && canRequest ) {
+                    include = true;
+                }
+            } else if ( filterType == FilterType.GIFTED ) {
+                boolean isSold = ad.isSold();
+                boolean hasShipped = !ad.getShippedRequests(true, true).isEmpty();
+                
+                if ( isSold || hasShipped ) {
+                    include = true;
+                }
+            }
+            
+            if ( !include ) {
+                continue;
+            }
+            
+            List<Comment> comments = null;
+            if ( includeCommentsNumber > 0 ) {
+                comments = commentDao.getAdComments(ad.getId(), -1L, includeCommentsNumber);
+            }
+            
+            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad))
+                    .setCurrentUser(currentUser)
+                    .setFilteredComments(comments)
+                    .includeImages(includeImages)
+                    .includeCreator(includeCreator)
+                    .includeCanRequest()
+                    .includeCanRate()
+                    .build();
+            adDto.setInBookmarks(bookmarkedAdIds.contains(ad.getId()));
+            adDto.setRequested(ad.isRequested(currentUser));
+            adDto.setLastIndex(lastIndex + numberAds);
+            
+            if ( includeCreator && includeCreatorStatistics ) {
+                //trying to use the already loaded user statistics
+                for ( AdDto adDto_ : result ) {
+                    if ( adDto_.getCreator() == null ) {
+                        continue;
+                    } else if ( adDto_.getCreator().getStatistics() == null ) {
+                        continue;
+                    } else if ( !adDto_.getCreator().getId().equals(adDto.getCreator().getId()) ) {
+                        continue;
+                    }
+                    adDto.getCreator().setStatistics(adDto_.getCreator().getStatistics());
+                    break;
+                }
+                
+                if ( adDto.getCreator().getStatistics() == null ) {
+                    try {
+                        adDto.getCreator().setStatistics(userManagementService.getStatistics(ad.getCreator().getId()));
+                    } catch ( UserNotFoundException ex ) {
+                        logger.error("User (userId: " + ad.getCreator().getId() + ") not found when trying to build its statistics");
+                    }
+                }
+            }
+            
+            result.add(adDto);
+        }
+        
+        if ( ads.size() > 0 && result.size() < numberAds ) {
+            int lastIndex_ = lastIndex + numberAds;
+            int numberAds_ = numberAds - result.size();
+            
+            getAds(
+                    result,
+                    currentUser,
+                    lastIndex_,
+                    numberAds_,
+                    filter,
+                    includeImages,
+                    includeCreator,
+                    includeCommentsNumber,
+                    includeCreatorStatistics
+                    );
+        }
+    }
+    
+    
+    
     private Image validateImage(Long imageId) throws ImageNotFoundException {
         Image image = null;
         try {
@@ -1737,6 +1791,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Ad ad = request.getAd();
         AdData adData = ad.getAdData();
         User creator = ad.getCreator();
+        User receiver = request.getUser();
         
         if ( ad.getStatus() == AdStatus.IN_PROGRESS ) {
             //continue
@@ -1782,10 +1837,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         
-        User receiver = request.getUser();
-        UserPoint userPoint = receiver.getUserPoint();
-        userPoint.incrementRequestLimit(appConfig.getRequestLimitRequestAccepted());
-        userPointDao.update(userPoint);
+        if ( UserPoint.canUpdateRequestLimit(ad) ) {
+            UserPoint userPoint = receiver.getUserPoint();
+            userPoint.incrementRequestLimit(appConfig.getRequestLimitRequestAccepted());
+            userPointDao.update(userPoint);
+        }
         
         
         if ( ad.isMemberAd() ) {
@@ -1867,7 +1923,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         requestTransaction.markAsFinalized(TransactionStatus.RECEIVED);
         userTransactionDao.update(requestTransaction);
         
-        if ( !owner.isBusinessAccount() ) {
+        if ( !owner.isBusinessAccount() && UserPoint.canUpdateRequestLimit(ad) ) {
             UserPoint ownerUserPoint = owner.getUserPoint();
             ownerUserPoint.incrementRequestLimit(appConfig.getRequestLimitRequestReceived());
             userPointDao.update(ownerUserPoint);

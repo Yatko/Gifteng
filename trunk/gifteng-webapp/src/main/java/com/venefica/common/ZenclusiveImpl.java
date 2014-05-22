@@ -195,6 +195,12 @@ public class ZenclusiveImpl {
         return false;
     }
     
+    public String buildZenclusiveEmail(Long requestId) {
+        String email = zenclusiveConfig.getEmailPrefix() + "_" + requestId;
+        email += "@" + zenclusiveConfig.getEmailDomain();
+        return email;
+    }
+    
     private void logRequest(HttpRequestBase request) {
         logger.debug("Executing request: " + request.getRequestLine());
     }

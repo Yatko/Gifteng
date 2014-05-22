@@ -219,7 +219,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         ad.markAsOnline();
         
         User creator = userDao.getEager(ad.getCreator().getId());
-        if ( !creator.isBusinessAccount() ) {
+        if ( !creator.isBusinessAccount() && UserPoint.canUpdateRequestLimit(ad) ) {
             MemberAdData adData = (MemberAdData) getAdData(ad);
             if ( !adData.isRequestLimitIncreased() ) {
                 adData.setRequestLimitIncreased(true);
@@ -416,7 +416,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
             throw new NullPointerException("Shipping is null");
         } else if ( shipping.getTrackingNumber() == null || shipping.getTrackingNumber().trim().isEmpty() ) {
             throw new IllegalArgumentException("Shipping (shippingId: " + shipping.getId() + ") tracking number is empty/null.");
-        } else if ( shipping.getReceivedAmount() == null || shipping.getReceivedAmount() == BigDecimal.ZERO ) {
+        } else if ( shipping.getReceivedAmount() == null || shipping.getReceivedAmount().compareTo(BigDecimal.ZERO) == 0 ) {
             throw new IllegalArgumentException("Shipping (shippingId: " + shipping.getId() + ") amount is zero/null.");
         } else if ( shipping.getBarcodeImage() == null ) {
             throw new IllegalArgumentException("Shipping (shippingId: " + shipping.getId() + ") barcode image is null.");

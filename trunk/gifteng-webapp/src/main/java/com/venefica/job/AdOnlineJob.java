@@ -48,7 +48,7 @@ public class AdOnlineJob implements Job {
                     adDao.onlineAd(ad);
                     
                     User creator = userDao.getEager(ad.getCreator().getId());
-                    if ( !creator.isBusinessAccount() ) {
+                    if ( !creator.isBusinessAccount() && UserPoint.canUpdateRequestLimit(ad) ) {
                         MemberAdData adData = adDataDao.getMemberAdDataByAd(ad.getId());
                         if ( !adData.isRequestLimitIncreased() ) {
                             adData.setRequestLimitIncreased(true);
