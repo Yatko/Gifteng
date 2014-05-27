@@ -4,6 +4,9 @@
  */
 package com.venefica.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author gyuszi
@@ -24,5 +27,23 @@ public enum ImageModelType {
     
     public String getFolderName() {
         return folderName;
+    }
+    
+    public boolean isValidType() {
+        return !isInvalidType();
+    }
+    
+    public boolean isInvalidType() {
+        return (this == ANY);
+    }
+    
+    public static List<ImageModelType> getValidTypes() {
+        List<ImageModelType> result = new ArrayList<ImageModelType>(0);
+        for ( ImageModelType type : ImageModelType.values() ) {
+            if ( type.isValidType() ) {
+                result.add(type);
+            }
+        }
+        return result;
     }
 }

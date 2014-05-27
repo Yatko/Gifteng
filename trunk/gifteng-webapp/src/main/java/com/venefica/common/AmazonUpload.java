@@ -59,25 +59,29 @@ public class AmazonUpload {
         }
         
         for ( File file : files ) {
-            String key = modelType.getFolderName() + "/" + file.getName();
-            try {
-                ObjectMetadata metadata = new ObjectMetadata();
-                metadata.setContentType(type.getMimeType());
-                PutObjectRequest objectRequest = new PutObjectRequest(fileConfig.getAmazonBucket(), key, file);
-                objectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
-                objectRequest.setMetadata(metadata);
-                
-                logger.info("Transferring file to amazon S3 (key: " + key + ")");
-                
-                if ( isAsyncUpload() ) {
-                    transferManager.upload(objectRequest); //async request
-                } else {
-                    client.putObject(objectRequest); //sync request
-                }
-            } catch ( Exception ex ) {
-                logger.error("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
-                throw new IOException("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
+            upload(file, modelType.getFolderName(), file.getName(), type.getMimeType());
+        }
+    }
+    
+    public void upload(File file, String folderName, String fileName, String mimeType) throws IOException {
+        String key = folderName + "/" + fileName;
+        try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(mimeType);
+            PutObjectRequest objectRequest = new PutObjectRequest(fileConfig.getAmazonBucket(), key, file);
+            objectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
+            objectRequest.setMetadata(metadata);
+
+            logger.info("Transferring file to amazon S3 (key: " + key + ")");
+
+            if ( isAsyncUpload() ) {
+                transferManager.upload(objectRequest); //async request
+            } else {
+                client.putObject(objectRequest); //sync request
             }
+        } catch ( Exception ex ) {
+            logger.error("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
+            throw new IOException("Exception thrown when trying to transfer files to amazon S3 (key: " + key + ")", ex);
         }
     }
     

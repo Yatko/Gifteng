@@ -51,6 +51,7 @@ public interface Constants {
     public static final String APP_CONFIG = AppConfig.class.getSimpleName();
     public static final String EMAIL_CONFIG = EmailConfig.class.getSimpleName();
     public static final String INVITATION_CONFIG = InvitationConfig.class.getSimpleName();
+    public static final String FILE_CONFIG = FileConfig.class.getSimpleName();
     
     public static final String AD_DAO = AdDao.class.getSimpleName();
     public static final String AD_DATA_DAO = AdDataDao.class.getSimpleName();

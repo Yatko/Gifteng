@@ -87,6 +87,8 @@ public class JobConfig {
     @Inject
     private InvitationConfig invitationConfig;
     @Inject
+    private FileConfig fileConfig;
+    @Inject
     private AdDao adDao;
     @Inject
     private AdDataDao adDataDao;
@@ -235,6 +237,7 @@ public class JobConfig {
         job.getJobDataMap().put(Constants.AD_DAO, adDao);
         job.getJobDataMap().put(Constants.AD_DATA_DAO, adDataDao);
         job.getJobDataMap().put(Constants.IMAGE_DAO, imageDao);
+        job.getJobDataMap().put(Constants.FILE_CONFIG, fileConfig);
         job.getJobDataMap().put(Constants.AMAZON_UPLOAD, amazonUpload);
         return job;
     }
