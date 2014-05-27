@@ -33,10 +33,7 @@ public class FileUpload {
     
     @PostConstruct
     public void init() {
-        for ( ImageModelType type : ImageModelType.values() ) {
-            if ( type == ImageModelType.ANY ) {
-                continue;
-            }
+        for ( ImageModelType type : ImageModelType.getValidTypes() ) {
             String folderName = buildFolderName(type);
             new File(folderName).mkdirs();
         }
@@ -113,12 +110,8 @@ public class FileUpload {
 //    }
     
     private String buildFileName(Long imgId, ImageModelType modelType, String suffix) {
-        if ( modelType == ImageModelType.ANY ) {
-            for ( ImageModelType type : ImageModelType.values() ) {
-                if ( type == ImageModelType.ANY ) {
-                    continue;
-                }
-                
+        if ( modelType.isInvalidType() ) {
+            for ( ImageModelType type : ImageModelType.getValidTypes() ) {
                 String fileName = buildFileName(imgId, type, suffix);
                 if ( new File(fileName).exists() ) {
                     return fileName;
