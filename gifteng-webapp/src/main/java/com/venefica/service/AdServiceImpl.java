@@ -640,6 +640,25 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return adDto;
     }
     
+    @Override
+    @Transactional
+    public List<AdDto> getHiddenForSearchAds() {
+        List<Ad> ads = adDao.getHiddenForSearchAds();
+        List<AdDto> result = new LinkedList<AdDto>();
+        
+        for ( Ad ad : ads ) {
+            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad))
+                    .includeCreator(false)
+                    .includeFollower(false)
+                    .includeRelist(false)
+                    .includeRequests(false)
+                    .includeAdStatistics(false)
+                    .build();
+            result.add(adDto);
+        }
+        return result;
+    }
+    
     
     
     //*****************

@@ -88,6 +88,7 @@ public interface Constants {
             
             //AdService
             "GetAllCategories",
+            "GetHiddenForSearchAds",
             
             //InvitationService: invitation related
             "RequestInvitation",
@@ -95,6 +96,10 @@ public interface Constants {
             
             //UtilityService
             "GetAddressByZipcode",
+            
+            //SocialService
+            "GetShare",
+            "CreateShare",
             
             //PromoCodeService
             //"GetProviders",

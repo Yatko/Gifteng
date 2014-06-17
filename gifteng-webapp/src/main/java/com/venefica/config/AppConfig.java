@@ -36,6 +36,7 @@ public class AppConfig {
     
     private int socialPointGiftengPageLikedOnFacebook;
     private int socialPointReferrerSignup;
+    private int socialPointShareSignup;
     
     @PostConstruct
     public void init() {
@@ -55,6 +56,7 @@ public class AppConfig {
         //social point configs
         socialPointGiftengPageLikedOnFacebook = environment.getProperty("config.social.point.giftengPageLinkedOnFacebook", int.class);
         socialPointReferrerSignup = environment.getProperty("config.social.point.referrerSignup", int.class);
+        socialPointShareSignup = environment.getProperty("config.social.point.shareSignup", int.class);
     }
     
     public int getAdProlongationPeriodMinutes() {
@@ -107,5 +109,9 @@ public class AppConfig {
     
     public int getSocialPointReferrerSignup() {
         return socialPointReferrerSignup;
+    }
+    
+    public int getSocialPointShareSignup() {
+        return socialPointShareSignup;
     }
 }

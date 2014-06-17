@@ -145,21 +145,21 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
     @Test
     public void registerUserTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto testUserDto = createUserDto(TEST_USER_NAME);
-        client.registerUser(testUserDto, TEST_PASSWORD, TEST_INVITATION_CODE, null);
+        client.registerUser(testUserDto, TEST_PASSWORD, TEST_INVITATION_CODE, null, null);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     public void registerUserWithTheSameNameTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto userWithRegisteredName = createUserDto("otherUser");
         userWithRegisteredName.setName(getFirstUser().getName());
-        client.registerUser(userWithRegisteredName, TEST_PASSWORD, TEST_INVITATION_CODE, null);
+        client.registerUser(userWithRegisteredName, TEST_PASSWORD, TEST_INVITATION_CODE, null, null);
     }
 
     @Test(expected = UserAlreadyExistsException.class)
     public void registerUserWithTheSameEmailTest() throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         UserDto userWithRegisteredEmail = createUserDto("otherUser");
         userWithRegisteredEmail.setEmail(getFirstUser().getEmail());
-        client.registerUser(userWithRegisteredEmail, "pass$$word", TEST_INVITATION_CODE, null);
+        client.registerUser(userWithRegisteredEmail, "pass$$word", TEST_INVITATION_CODE, null, null);
     }
     
     @Test(expected = InvalidInvitationException.class)
@@ -167,15 +167,15 @@ public class UserManagementServiceTest extends ServiceTestBase<UserManagementSer
         String invitationCode = "11111";
         
         UserDto testUserDto_1 = createUserDto("test_1");
-        Long testUserId_1 = client.registerUser(testUserDto_1, TEST_PASSWORD, invitationCode, null);
+        Long testUserId_1 = client.registerUser(testUserDto_1, TEST_PASSWORD, invitationCode, null, null);
         assertNotNull("Test user might been created", testUserId_1);
         
         UserDto testUserDto_2 = createUserDto("test_2");
-        Long testUserId_2 = client.registerUser(testUserDto_2, TEST_PASSWORD, invitationCode, null);
+        Long testUserId_2 = client.registerUser(testUserDto_2, TEST_PASSWORD, invitationCode, null, null);
         assertNotNull("Test user might been created", testUserId_2);
         
         UserDto testUserDto_3 = createUserDto("test_3");
-        client.registerUser(testUserDto_3, TEST_PASSWORD, invitationCode, null);
+        client.registerUser(testUserDto_3, TEST_PASSWORD, invitationCode, null, null);
     }
     
     // update

@@ -50,7 +50,6 @@ public class MemberAdData extends AdData {
         }
         
         BigDecimal percent = BigDecimal.TEN;
-        BigDecimal HUNDRED = new BigDecimal(100);
         BigDecimal value = price.multiply(percent).divide(HUNDRED);
         return value;
     }

@@ -353,7 +353,15 @@ public interface AdService {
             @WebParam(name = "includeRequests") Boolean includeRequests,
             @WebParam(name = "includeCreatorStatistics") Boolean includeCreatorStatistics)
             throws UserNotFoundException, AdNotFoundException, AuthorizationException;
-
+    
+    /**
+     * 
+     * @return
+     */
+    @WebMethod(operationName = "GetHiddenForSearchAds")
+    @WebResult(name = "ad")
+    List<AdDto> getHiddenForSearchAds();
+    
     
     
     //*****************

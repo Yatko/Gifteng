@@ -39,6 +39,7 @@ public class FilterDto {
     //delivery type
     private Boolean includePickUp; //local pickup
     private Boolean includeShipping; //shipping offered
+    private Boolean includeHiddenForSearch; //use the hiddenForSearch flag on the ad or not
     
     // WARNING: required for JAX-WS
     public FilterDto() {
@@ -202,5 +203,13 @@ public class FilterDto {
 
     public void setIncludeShipping(Boolean includeShipping) {
         this.includeShipping = includeShipping;
+    }
+
+    public Boolean getIncludeHiddenForSearch() {
+        return includeHiddenForSearch;
+    }
+
+    public void setIncludeHiddenForSearch(Boolean includeHiddenForSearch) {
+        this.includeHiddenForSearch = includeHiddenForSearch;
     }
 }

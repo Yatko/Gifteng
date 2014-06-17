@@ -7,6 +7,7 @@ package com.venefica.common;
 import com.venefica.config.Constants;
 import com.venefica.config.EmailConfig;
 import com.venefica.dao.UserSettingDao;
+import com.venefica.model.ImageType;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.User;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -104,7 +106,7 @@ public class EmailSender {
         return sendNotification(notificationType, null, user, vars, null);
     }
     
-    public boolean sendNotification(NotificationType notificationType, User user, Map<String, Object> vars, List<File> attachments) {
+    public boolean sendNotification(NotificationType notificationType, User user, Map<String, Object> vars, Map<File, ImageType> attachments) {
         return sendNotification(notificationType, null, user, vars, attachments);
     }
     
@@ -121,7 +123,7 @@ public class EmailSender {
      * @param vars 
      * @return true upon send success
      */
-    public boolean sendNotification(NotificationType notificationType, String subtype, User user, Map<String, Object> vars, List<File> attachments) {
+    public boolean sendNotification(NotificationType notificationType, String subtype, User user, Map<String, Object> vars, Map<File, ImageType> attachments) {
         if ( user.isBusinessAccount() ) {
             logger.info("User (id: " + user.getId() + ") is a business account, no notification mail will be sent.");
             return false;
@@ -147,7 +149,7 @@ public class EmailSender {
         return sendNotification(notificationType, null, email, vars, null);
     }
     
-    public boolean sendNotification(NotificationType notificationType, String email, Map<String, Object> vars, List<File> attachments) {
+    public boolean sendNotification(NotificationType notificationType, String email, Map<String, Object> vars, Map<File, ImageType> attachments) {
         return sendNotification(notificationType, null, email, vars, attachments);
     }
     
@@ -155,7 +157,7 @@ public class EmailSender {
         return sendNotification(notificationType, subtype, email, vars, null);
     }
     
-    public boolean sendNotification(NotificationType notificationType, String subtype, String email, Map<String, Object> vars, List<File> attachments) {
+    public boolean sendNotification(NotificationType notificationType, String subtype, String email, Map<String, Object> vars, Map<File, ImageType> attachments) {
         try {
             if ( canSend(notificationType, null) ) {
                 sendHtmlEmailByTemplates(
@@ -181,7 +183,7 @@ public class EmailSender {
      * @param vars velocity context variables
      * @throws MailException 
      */
-    private void sendHtmlEmailByTemplates(String templatePath, String email, Map<String, Object> vars, List<File> attachments) throws MailException {
+    private void sendHtmlEmailByTemplates(String templatePath, String email, Map<String, Object> vars, Map<File, ImageType> attachments) throws MailException {
         String subject = mergeVelocityTemplate(templatePath, "subject.vm", vars);
         String htmlMessage = mergeVelocityTemplate(templatePath, "message.html.vm", vars);
         String plainMessage = mergeVelocityTemplate(templatePath, "message.txt.vm", vars);
@@ -200,7 +202,7 @@ public class EmailSender {
      * @throws MailException can be thrown in multiple cases: wrong email address,
      * invalid message, error when sending
      */
-    protected void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress, List<File> attachments) throws MailException {
+    protected void sendHtmlEmail(String subject, String htmlMessage, String textMessage, String toEmailAddress, Map<File, ImageType> attachments) throws MailException {
         if ( !emailConfig.isEmailEnabled() ) {
             logger.info("Email sending is not enabled!");
             return;
@@ -215,13 +217,18 @@ public class EmailSender {
         }
         
         if ( attachments != null && !attachments.isEmpty() ) {
-            for ( File attachment : attachments ) {
+            for ( Map.Entry<File, ImageType> entry : attachments.entrySet() ) {
+                File attachment = entry.getKey();
+                ImageType imageType = entry.getValue();
+                
                 if ( attachment == null || !attachment.isFile() || !attachment.exists() || attachment.length() == 0 ) {
                     logger.debug("Skipping file attachment as is not as expected (attachment: " + attachment + ")");
                     continue;
                 }
+                
                 try {
-                    email.attach(attachment);
+                    String name = attachment.getName() + (imageType != null ? "." + imageType.getFormatName() : "");
+                    email.attach(new FileDataSource(attachment), name, null);
                 } catch ( EmailException ex ) {
                     logger.error("Cannot attach file (name: " + attachment.getName() + ")", ex);
                 }

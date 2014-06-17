@@ -5,19 +5,30 @@
 package com.venefica.service;
 
 import com.venefica.config.AppConfig;
+import com.venefica.dao.ShareDao;
 import com.venefica.dao.UserConnectionDao;
+import com.venefica.model.Ad;
 import com.venefica.model.MemberUserData;
+import com.venefica.model.NotificationType;
+import com.venefica.model.Share;
 import com.venefica.model.User;
 import com.venefica.service.dto.Provider;
 import com.venefica.model.UserConnection;
 import com.venefica.model.UserSocialActivity;
 import com.venefica.model.SocialActivityType;
 import com.venefica.model.UserSocialPoint;
+import com.venefica.service.dto.AdDto;
+import com.venefica.service.dto.ShareDto;
 import com.venefica.service.dto.UserConnectionDto;
+import com.venefica.service.dto.builder.AdDtoBuilder;
+import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.ShareNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.jws.WebService;
@@ -47,6 +58,8 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
     private AppConfig appConfig;
     @Inject
     private UserConnectionDao userConnectionDao;
+    @Inject
+    private ShareDao shareDao;
     
     //******************
     //* social network *
@@ -141,6 +154,7 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
     }
     
     
+    
     //*********
     //* share *
     //*********
@@ -164,6 +178,71 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
 //        if (vkontakte != null) {
 //            vkontakte.wallOperations().post(message);
 //        }
+    }
+    
+    @Override
+    @Transactional
+    public ShareDto getShare(Long shareId) throws ShareNotFoundException {
+        Share share = shareDao.get(shareId);
+        if ( share == null ) {
+            throw new ShareNotFoundException(shareId);
+        }
+        
+        AdDto adDto = new AdDtoBuilder(share.getAd(), getAdData(share.getAd()))
+                .includeCreator(false)
+                .includeFollower(false)
+                .includeRelist(false)
+                .includeRequests(false)
+                .includeAdStatistics(false)
+                .build();
+        
+        ShareDto shareDto = new ShareDto(share);
+        shareDto.setAdDto(adDto);
+        return shareDto;
+    }
+    
+    @Override
+    public Long createShare(ShareDto shareDto) throws AdNotFoundException, UserNotFoundException {
+        Ad ad = adDao.get(shareDto.getAdId());
+        User creator = null;
+        
+        if ( ad == null ) {
+            throw new AdNotFoundException(shareDto.getAdId());
+        }
+        if ( getCurrentUserId() != null ) {
+            creator = getCurrentUser();
+        }
+        
+        String email1 = shareDto.getEmail1();
+        String email2 = shareDto.getEmail2();
+        String email3 = shareDto.getEmail3();
+        
+        Share share = new Share();
+        share.setAd(ad);
+        share.setCreator(creator);
+        share.setEmail1(email1);
+        share.setEmail2(email2);
+        share.setEmail3(email3);
+        share.setMessage(shareDto.getMessage());
+        share.setFromName(shareDto.getFromName());
+        share.setFromEmail(shareDto.getFromEmail());
+        Long shareId = shareDao.save(share);
+        
+        Map<String, Object> vars = new HashMap<String, Object>(0);
+        vars.put("fromName", shareDto.getFromName());
+        vars.put("message", shareDto.getMessage() != null ? shareDto.getMessage() : "");
+        vars.put("shareId", shareId);
+
+        Set<String> emails = new HashSet<String>(0);
+        if ( email1 != null && !email1.trim().isEmpty() ) { emails.add(email1.trim()); }
+        if ( email2 != null && !email2.trim().isEmpty() ) { emails.add(email2.trim()); }
+        if ( email3 != null && !email3.trim().isEmpty() ) { emails.add(email3.trim()); }
+        
+        for ( String email : emails ) {
+            emailSender.sendNotification(NotificationType.SHARE, email, vars);
+        }
+        
+        return shareId;
     }
     
     

@@ -4,7 +4,10 @@
  */
 package com.venefica.service;
 
+import com.venefica.service.dto.ShareDto;
 import com.venefica.service.dto.UserConnectionDto;
+import com.venefica.service.fault.AdNotFoundException;
+import com.venefica.service.fault.ShareNotFoundException;
 import com.venefica.service.fault.UserNotFoundException;
 import java.util.List;
 import java.util.Set;
@@ -76,6 +79,14 @@ public interface SocialService {
      */
     @WebMethod(operationName = "ShareOnSocialNetworks")
     void shareOnSocialNetworks(@WebParam(name = "message") @NotNull String message);
+    
+    @WebMethod(operationName = "GetShare")
+    @WebResult(name = "share")
+    ShareDto getShare(@WebParam(name = "shareId") @NotNull Long shareId) throws ShareNotFoundException;
+    
+    @WebMethod(operationName = "CreateShare")
+    @WebResult(name = "shareId")
+    Long createShare(@WebParam(name = "share") @NotNull ShareDto shareDto) throws AdNotFoundException, UserNotFoundException;
     
     
     

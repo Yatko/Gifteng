@@ -40,6 +40,7 @@ import org.hibernate.annotations.Type;
 public abstract class AdData {
     
     public static final String TABLE_NAME = "addata";
+    protected static final BigDecimal HUNDRED = new BigDecimal(100);
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

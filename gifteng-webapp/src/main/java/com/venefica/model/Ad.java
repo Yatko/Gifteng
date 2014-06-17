@@ -130,6 +130,8 @@ public class Ad {
     @Index(name = "idx_status")
     private AdStatus status;
     
+    private boolean hiddenForSearch; //cannot be searched but it's an existing ad and can be referenced
+    
     protected Ad() {
     }
     
@@ -383,7 +385,7 @@ public class Ad {
     }
     
     /**
-     * Returns all the non hidden and non deleted requests.
+     * Returns all the visible and non deleted requests.
      * 
      * @return 
      */
@@ -403,7 +405,7 @@ public class Ad {
     /**
      * Returns all the visible and active requests.
      * 
-     * Visible means that not hidden and not deleted.
+     * Visible means that is not deleted.
      * Active means that is not DECLINED or CANCELED.
      * 
      * @return 
@@ -419,7 +421,7 @@ public class Ad {
     }
     
     /**
-     * Returns all the accepted and visible (not hidden and not deleted) requests.
+     * Returns all the accepted and visible (not deleted) requests.
      * In case of member ads only one request should exist.
      * 
      * @return 
@@ -457,7 +459,7 @@ public class Ad {
     /**
      * Verifies if a visible request is available for the given user.
      * 
-     * Visible means that not hidden and not deleted.
+     * Visible means that is not deleted.
      * 
      * @param user
      * @return 
@@ -489,7 +491,7 @@ public class Ad {
     /**
      * Verifies if a visible and active request is available for the given user.
      * 
-     * Visible means that not hidden and not deleted.
+     * Visible means that is not deleted.
      * Active means that is not DECLINED or CANCELED.
      * 
      * @param user
@@ -802,5 +804,13 @@ public class Ad {
 
     public void setClonedFrom(Ad clonedFrom) {
         this.clonedFrom = clonedFrom;
+    }
+    
+    public boolean isHiddenForSearch() {
+        return hiddenForSearch;
+    }
+
+    public void setHiddenForSearch(boolean hiddenForSearch) {
+        this.hiddenForSearch = hiddenForSearch;
     }
 }

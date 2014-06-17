@@ -106,4 +106,10 @@ public interface AdDao {
      * @return a list of un-approved ads
      */
     List<Ad> getOfflineAds();
+    
+    /**
+     * 
+     * @return 
+     */
+    List<Ad> getHiddenForSearchAds();
 }

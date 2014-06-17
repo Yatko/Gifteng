@@ -14,6 +14,7 @@ import com.venefica.model.AdStatus;
 import com.venefica.model.Approval;
 import com.venefica.model.Image;
 import com.venefica.model.ImageModelType;
+import com.venefica.model.ImageType;
 import com.venefica.model.MemberAdData;
 import com.venefica.model.NotificationType;
 import com.venefica.model.Request;
@@ -314,7 +315,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         Ad ad = request.getAd();
         User creator = ad.getCreator();
         User receiver = request.getUser();
-        List<File> attachments = new ArrayList<File>(0);
+        Map<File, ImageType> attachments = new HashMap<File, ImageType>(0);
         String subtype = NotificationType.SUBTYPE_SHIPPING_CREATOR;
         
         if ( !loadImageIntoAttachments(shipping, attachments) ) {
@@ -398,11 +399,11 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         return shipping;
     }
     
-    private boolean loadImageIntoAttachments(Shipping shipping, List<File> attachments) {
+    private boolean loadImageIntoAttachments(Shipping shipping, Map<File, ImageType> attachments) {
         try {
             Image image = shipping.getBarcodeImage() != null ? imageDao.get(shipping.getBarcodeImage().getId(), ImageModelType.SHIPPING) : null;
             if ( image != null && image.getFile() != null ) {
-                attachments.add(image.getFile());
+                attachments.put(image.getFile(), ImageType.PDF);
             }
             return true;
         } catch ( IOException ex ) {

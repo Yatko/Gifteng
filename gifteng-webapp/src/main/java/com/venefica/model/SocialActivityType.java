@@ -12,8 +12,8 @@ public enum SocialActivityType {
     
     GIFTENG_PAGE_LIKED_ON_FACEBOOK,
     REFERRER_SIGNUP,
+    SHARE_SIGNUP,
     
-    SHARE,
     INVITE,
     ;
 }

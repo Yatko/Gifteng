@@ -46,7 +46,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         super(model);
     }
     
-    public AdDtoBuilder(Ad model, AdData adData) {
+    public <AD extends AdData> AdDtoBuilder(Ad model, AD adData) {
         this(model);
         this.adData = adData;
     }
@@ -134,6 +134,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setPlace(model.getAdData().getPlace());
         adDto.setType(model.getAdData().getType());
         adDto.setStatus(model.getStatus());
+        adDto.setHiddenForSearch(model.isHiddenForSearch());
         adDto.setAddress(new AddressDto(model.getAdData().getAddress(), model.getAdData().getLocation()));
 
         if ( model.getAdData().getShippingBox() != null ) {
@@ -200,6 +201,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setOwner(currentUser != null && model.getCreator().equals(currentUser));
         adDto.setSold(model.isSold());
         adDto.setSoldAt(model.getSoldAt());
+        adDto.setNeededScoreToRequest(model.getValue());
         
         model.getAdData().updateAdDto(adDto);
         

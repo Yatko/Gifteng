@@ -6,6 +6,7 @@ import com.venefica.dao.AddressWrapperDao;
 import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
+import com.venefica.dao.ShareDao;
 import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.model.BusinessCategory;
@@ -13,10 +14,10 @@ import com.venefica.model.BusinessUserData;
 import com.venefica.model.Invitation;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.NotificationType;
+import com.venefica.model.Share;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
 import com.venefica.model.UserSetting;
-import com.venefica.model.UserSocialActivity;
 import com.venefica.model.SocialActivityType;
 import com.venefica.model.UserSocialPoint;
 import com.venefica.model.UserVerification;
@@ -66,6 +67,8 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private UserPointDao userPointDao;
     @Inject
     private UserVerificationDao userVerificationDao;
+    @Inject
+    private ShareDao shareDao;
     
     //*****************************
     //* user verification related *
@@ -168,7 +171,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     
     @Override
     @Transactional
-    public Long registerUser(UserDto userDto, String password, String invitationCode, Long referrerId) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
+    public Long registerUser(UserDto userDto, String password, String invitationCode, Long referrerId, Long shareId) throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException {
         // Check for existing users
         if (userDao.findUserByName(userDto.getName()) != null) {
             throw new UserAlreadyExistsException(UserField.NAME, "User with the same name already exists!");
@@ -177,7 +180,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
         
         Invitation invitation = null;
-        
         if ( invitationCode != null ) {
             invitation = invitationDao.findByCode(invitationCode);
             if (invitation == null) {
@@ -191,9 +193,17 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         }
         
         User referrer = null;
+        
         if ( referrerId != null ) {
             referrer = userDao.get(referrerId);
             logger.debug("Referrer user: " + (referrer != null ? referrer.getId() : null));
+        } else if ( shareId != null ) {
+            Share share = shareDao.get(shareId);
+            logger.debug("Share: " + (share != null ? share.getId() : null));
+            
+            if ( share != null ) {
+                referrer = share.getCreator();
+            }
         }
         
         User user = userDto.toMemberUser(imageDao, addressWrapperDao);
@@ -218,7 +228,11 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         userVerificationUtil.createAndSendUserWelcome(user);
         
-        createSocialActivity(referrer, SocialActivityType.REFERRER_SIGNUP, String.valueOf(userId), appConfig.getSocialPointReferrerSignup());
+        if ( referrerId != null ) {
+            createSocialActivity(referrer, SocialActivityType.REFERRER_SIGNUP, String.valueOf(userId), appConfig.getSocialPointReferrerSignup());
+        } else if ( shareId != null ) {
+            createSocialActivity(referrer, SocialActivityType.SHARE_SIGNUP, String.valueOf(userId), appConfig.getSocialPointShareSignup());
+        }
         
         return userId;
     }

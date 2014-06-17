@@ -76,6 +76,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         String hql = ""
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
+                + " and a.hiddenForSearch = false"
                 + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
@@ -99,6 +100,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         
         Boolean includePickup = filter.getIncludePickUp();
         Boolean includeShipping = filter.getIncludeShipping();
+        boolean includeHiddenForSearch = filter.getIncludeHiddenForSearch() != null ? filter.getIncludeHiddenForSearch() : false;
         String searchString = filter.getSearchString();
         List<Long> categories = filter.getCategories();
         Long distance = filter.getDistance();
@@ -121,6 +123,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "select a "
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
+                + (includeHiddenForSearch ? "" : " and a.hiddenForSearch = false")
                 + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
@@ -322,6 +325,21 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.creator.deleted = false and "
                 + "a.expired = false and "
                 + "a.online = false and "
+                + "a.approved = true "
+                + "order by a.id desc"
+                + "")
+                .list();
+    }
+    
+    @Override
+    public List<Ad> getHiddenForSearchAds() {
+        return createQuery(""
+                + "from " + getDomainClassName() + " a "
+                + "where "
+                + "a.deleted = false and "
+                + "a.hiddenForSearch = true and "
+                + "a.creator.deleted = false and "
+                + "a.online = true and "
                 + "a.approved = true "
                 + "order by a.id desc"
                 + "")
