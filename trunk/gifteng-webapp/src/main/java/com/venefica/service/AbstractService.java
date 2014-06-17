@@ -81,7 +81,7 @@ public abstract class AbstractService {
     // internal helpers
     
     protected Long getCurrentUserId() {
-        return securityContextHolder.getContext().getUserId();
+        return securityContextHolder.getContext() != null ? securityContextHolder.getContext().getUserId() : null;
     }
     
     protected User getCurrentUser() throws UserNotFoundException {

@@ -1,0 +1,20 @@
+#set($title = "${fromName} sent you a gift card")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;"></h1>
+	<p>
+	    ${message}
+	</p>
+	<p>
+            To get the gift card ${fromName} sent you, click here: 
+            <a href="${baseUrl}/#/receive/${shareId}">${baseUrl}/#/receive/${shareId}</a> <br/><br/>
+	</p>
+	<p>
+    	Warm regards, <br />
+        The Gifteng Team <br />
+        www.gifteng.com
+	</p>
+</div>
+
+#parse("../footer.html.vm")

@@ -39,28 +39,37 @@ public class TokenAuthorizationInterceptor extends SoapHeaderInterceptor {
     @Override
     @SuppressWarnings("unchecked")
     public void handleMessage(Message msg) throws Fault {
+        boolean throwException = true;
         String operation = msg.getExchange().getBindingOperationInfo().getName().getLocalPart();
-
-        // Skip "register" and "authenticate" operations
         if ( Constants.OPERATIONS_FOR_SKIP_TOKEN_AUTHORIZATION.contains(operation) ) {
-            return;
+            throwException = false;
         }
         
         try {
             Map<String, ?> headers = (Map<String, ?>) msg.get(Message.PROTOCOL_HEADERS);
             if (headers == null || !headers.containsKey(Constants.AUTH_TOKEN)) {
-                throw new AuthenticationException("Unauthorized request arrived (no token provided)!");
+                if ( throwException ) {
+                    throw new AuthenticationException("Unauthorized request arrived (no token provided)!");
+                } else {
+                    return;
+                }
             }
 
             List<String> authTokenHeader = (List<String>) headers.get(Constants.AUTH_TOKEN);
             if (authTokenHeader.isEmpty()) {
-                throw new AuthenticationException("Empty auth token is provided!");
+                if ( throwException ) {
+                    throw new AuthenticationException("Empty auth token is provided!");
+                } else {
+                    return;
+                }
             }
             
             tokenUtil.decryptAndStoreToken(authTokenHeader.get(0));
         } catch (Exception e) {
-            // TODO: include fault details!!!
-            throw new Fault(e);
+            log.error("", e);
+            if ( throwException ) {
+                throw new Fault(e);
+            }
         }
     }
 

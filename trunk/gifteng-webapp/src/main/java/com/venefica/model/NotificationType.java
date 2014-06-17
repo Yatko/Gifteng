@@ -35,6 +35,7 @@ public enum NotificationType {
     AD_UNAPPROVED("ad-approval-reject", true, false),
     AD_ONLINE("ad-online", true, false),
     FORGOT_PASSWORD("forgot-password", true, false),
+    UNKNOWN_USER_INVITATION("unknown-user-invitation", true, false),
     PASSWORD_CHANGED("password-changed", true, false),
     INVITATION_REQUEST("invitation-request", true, false),
     AD_NEW("ad-new", true, true),
@@ -43,6 +44,7 @@ public enum NotificationType {
     EMAIL_NEW("email-new", true, true), //TODO: needs to be renamed
     INVITATION_EMAIL_NEW("invitation-email-new", true, false), //TODO: needs to be renamed
     PROMOCODE_UPDATED("promocode-updated", true, false),
+    SHARE("share", true, false),
     ;
     
     public static final String SUBTYPE_REQUEST_ACCEPTED_PICKUP = "pickup"; //the giver accepted your gift request - only pickup is possible

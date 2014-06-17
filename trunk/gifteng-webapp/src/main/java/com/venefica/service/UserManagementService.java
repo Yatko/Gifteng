@@ -75,6 +75,7 @@ public interface UserManagementService {
      * @param password the password (may be a hash of the password in the future)
      * @param invitationCode the invitation code
      * @param referrerId the referrer user id
+     * @param shareId the share id
      * @throws UserAlreadyExistsException is thrown when a user with the same
      * name and email already exists
      * @throws InvitationNotFoundException thrown when the provided invitation code
@@ -87,7 +88,8 @@ public interface UserManagementService {
             @WebParam(name = "user") @NotNull UserDto userDto,
             @WebParam(name = "password") @NotNull String password,
             @WebParam(name = "invitationCode")  @NotNull String invitationCode,
-            @WebParam(name = "referrerId")  Long referrerId)
+            @WebParam(name = "referrerId")  Long referrerId,
+            @WebParam(name = "shareId")  Long shareId)
             throws UserAlreadyExistsException, InvitationNotFoundException, InvalidInvitationException, GeneralException;
     
     /**

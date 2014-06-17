@@ -1,0 +1,22 @@
+#set($title = "New to Gifteng ?")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Oh, hello!</h1>
+	<p>
+	    We realized there is no account on file with this email address. It could be that you have an account under a different email address, or you might need to create a brand new account by clicking the button below: <br /><br />
+	</p>
+	<p>
+	    <a href="${baseUrl}/#/?verify" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Sign up</a><br /><br />
+	</p>
+	<p>
+	    If you need any help setting up your account, please feel free to contact us at help@gifteng.com. 
+	</p>
+	<p>
+    	Thank you, <br />
+        Gifteng Support <br />
+        www.gifteng.com
+	</p>
+</div>
+
+#parse("../footer.html.vm")

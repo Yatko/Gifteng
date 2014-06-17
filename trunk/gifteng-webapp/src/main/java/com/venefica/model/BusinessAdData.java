@@ -117,6 +117,7 @@ public class BusinessAdData extends AdData {
     /**
      * Returns the ad value by using a simple calculation.
      * The actual math algorithm is 62.5 % of the ad price if the fixed number is not set.
+     * The values is now changed to 100 %.
      * 
      * @return 
      */
@@ -131,8 +132,8 @@ public class BusinessAdData extends AdData {
             price = BigDecimal.ZERO;
         }
         
-        BigDecimal percent = new BigDecimal("62.5");
-        BigDecimal HUNDRED = new BigDecimal(100);
+        //BigDecimal percent = new BigDecimal("62.5");
+        BigDecimal percent = HUNDRED;
         BigDecimal value = price.multiply(percent).divide(HUNDRED);
         return value;
     }

@@ -106,11 +106,15 @@ public class AdDto extends DtoBase {
     // out
     private AdStatus status;
     // out
+    private boolean hiddenForSearch;
+    // out
     @XmlElementWrapper(name = "requests")
     @XmlElement(name = "item")
     private List<RequestDto> requests;
     // out
     private Boolean canRequest;
+    // out
+    private BigDecimal neededScoreToRequest;
     // out
     private Boolean canRelist;
     // out
@@ -490,6 +494,14 @@ public class AdDto extends DtoBase {
     public void setCanRequest(Boolean canRequest) {
         this.canRequest = canRequest;
     }
+    
+    public BigDecimal getNeededScoreToRequest() {
+        return neededScoreToRequest;
+    }
+    
+    public void setNeededScoreToRequest(BigDecimal neededScoreToRequest) {
+        this.neededScoreToRequest = neededScoreToRequest;
+    }
 
     public boolean isSold() {
         return sold;
@@ -617,5 +629,13 @@ public class AdDto extends DtoBase {
 
     public void setPromoCodeProvider(PromoCodeProviderDto promoCodeProvider) {
         this.promoCodeProvider = promoCodeProvider;
+    }
+
+    public boolean isHiddenForSearch() {
+        return hiddenForSearch;
+    }
+
+    public void setHiddenForSearch(boolean hiddenForSearch) {
+        this.hiddenForSearch = hiddenForSearch;
     }
 }

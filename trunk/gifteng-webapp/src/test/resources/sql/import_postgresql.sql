@@ -66,7 +66,7 @@ insert into memberaddata (id, requestLimitIncreased) values (1, 'f');
 
 -- Ads
 delete from ad;
-insert into ad (id, adData_id, creator_id, createdAt, expired, deleted, sold, numviews, reviewed, spam, numavailprolongations, rating, numexpire, status, expires, approved, online) values (nextval('ad_id_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't', 't', 't');
+insert into ad (id, adData_id, creator_id, createdAt, expired, deleted, sold, numviews, reviewed, spam, numavailprolongations, rating, numexpire, status, expires, approved, online, hiddenForSearch) values (nextval('ad_id_seq'), 1, 1, now(), 'f', 'f', 'f', 0, 'f', 'f', 1, 0.0, 0, 'ACTIVE', 't', 't', 't', 'f');
 
 delete from request;
 insert into request (id, ad_id, user_id, status, deleted, selected, hidden, sent, received, messagesHiddenByCreator, messagesHiddenByRequestor, redeemed) values (nextval('request_id_seq'), 1, 4, 'PENDING', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f');

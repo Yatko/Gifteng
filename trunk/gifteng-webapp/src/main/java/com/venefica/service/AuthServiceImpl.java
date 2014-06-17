@@ -110,6 +110,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
         User user = userDao.findUserByEmail(email);
         if ( user == null ) {
             logger.debug("User not found by email address (" + email + ")");
+            emailSender.sendNotification(NotificationType.UNKNOWN_USER_INVITATION, email, null);
             throw new UserNotFoundException("The email address (" + email + ") does not exists");
         }
         
