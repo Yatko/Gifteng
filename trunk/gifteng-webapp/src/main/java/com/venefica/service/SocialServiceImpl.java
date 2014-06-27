@@ -188,7 +188,7 @@ public class SocialServiceImpl extends AbstractService implements SocialService 
             throw new ShareNotFoundException(shareId);
         }
         
-        AdDto adDto = new AdDtoBuilder(share.getAd(), getAdData(share.getAd()))
+        AdDto adDto = new AdDtoBuilder(share.getAd(), getAdData(share.getAd()), null)
                 .includeCreator(false)
                 .includeFollower(false)
                 .includeRelist(false)

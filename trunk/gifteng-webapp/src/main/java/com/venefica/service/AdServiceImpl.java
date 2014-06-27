@@ -14,7 +14,6 @@ import com.venefica.dao.MessageDao;
 import com.venefica.dao.RatingDao;
 import com.venefica.dao.ShippingBoxDao;
 import com.venefica.dao.SpamMarkDao;
-import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserTransactionDao;
 import com.venefica.dao.ViewerDao;
 import com.venefica.model.Ad;
@@ -29,6 +28,7 @@ import com.venefica.model.Comment;
 import com.venefica.model.Image;
 import com.venefica.model.ImageModelType;
 import com.venefica.model.Issue;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.Message;
 import com.venefica.model.NotificationType;
 import com.venefica.model.PromoCodeProvider;
@@ -120,8 +120,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
     private MessageDao messageDao;
     @Inject
     private ViewerDao viewerDao;
-    @Inject
-    private UserPointDao userPointDao;
     @Inject
     private UserTransactionDao userTransactionDao;
     @Inject
@@ -523,7 +521,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<AdDto> result = new LinkedList<AdDto>();
         
         for (Ad ad : ads) {
-            AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null)
+            AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null, getUserData(currentUser))
                     .setCurrentUser(currentUser)
                     .includeRequests(includeRequests)
                     .includeCanRequest()
@@ -562,7 +560,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         }
         
         for ( Ad ad : ads ) {
-            AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null)
+            getUserData(ad.getCreator()); //this sets the correct user data
+            
+            AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null, getUserData(currentUser))
                     .setCurrentUser(currentUser)
                     .includeCreator()
                     .includeRequests(includeRequests)
@@ -615,8 +615,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         Viewer viewer = new Viewer(ad, currentUser);
         viewerDao.save(viewer);
 
-        // @formatter:off
-        AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null)
+        getUserData(ad.getCreator()); //this sets the correct user data
+        
+        AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null, getUserData(currentUser))
                 .setCurrentUser(currentUser)
                 .includeImages()
                 .includeCreator()
@@ -625,7 +626,6 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 .includeCanRate()
                 .includeCanRequest()
                 .build();
-        // @formatter:on
 
         adDto.setInBookmarks(inBookmarks(currentUser, ad));
         adDto.setRequested(ad.isRequested(currentUser));
@@ -647,7 +647,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<AdDto> result = new LinkedList<AdDto>();
         
         for ( Ad ad : ads ) {
-            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad))
+            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad), null)
                     .includeCreator(false)
                     .includeFollower(false)
                     .includeRelist(false)
@@ -787,10 +787,12 @@ public class AdServiceImpl extends AbstractService implements AdService {
             throw new InvalidRequestException("Max request limit reached.");
         }
         
+        MemberUserData memberUserData = userDataDao.getMemberUserDataByUser(currentUser.getId());
         UserPoint userPoint = currentUser.getUserPoint();
+        
         if ( userPoint == null ) {
             throw new InvalidRequestException("There is no valid user point for current user (userId: " + currentUserId + ")");
-        } else if ( !userPoint.canRequest(ad) ) {
+        } else if ( !userPoint.canRequest(ad, memberUserData.getUserSocialPoint()) ) {
             throw new InvalidRequestException("Insufficient user points to request ad (adId: " + adId + ")");
         }
         
@@ -970,6 +972,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
     @Transactional
     public RequestDto getRequestById(Long requestId) throws RequestNotFoundException {
         Request request = validateRequest(requestId);
+        getUserData(request.getUser()); //this sets the correct user data
+        
         return new RequestDto(request, getAdData(request.getAd()));
     }
     
@@ -983,6 +987,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if ( requests != null && !requests.isEmpty() ) {
             for ( Request request : requests ) {
+                getUserData(request.getUser()); //this sets the correct user data
+                
                 result.add(new RequestDto(request, adData));
             }
         }
@@ -998,6 +1004,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         for ( Request request : requests ) {
             AdData adData = getAdData(request.getAd());
+            getUserData(request.getUser()); //this sets the correct user data
+            
             result.add(new RequestDto(request, adData));
         }
         
@@ -1021,6 +1029,8 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 Rating rating = ratingDao.get(fromUserId, request.getId());
                 if ( rating == null ) {
                     AdData adData = getAdData(request.getAd());
+                    getUserData(request.getUser()); //this sets the correct user data
+                    
                     result.add(new RequestDto(request, adData));
                 }
             }
@@ -1188,7 +1198,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         
         if ( bookmarkedAds != null && !bookmarkedAds.isEmpty() ) {
             for (Ad ad : bookmarkedAds) {
-                AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null)
+                getUserData(ad.getCreator()); //this sets the correct user data
+                
+                AdDto adDto = new AdDtoBuilder(ad, includeRequests ? getAdData(ad) : null, getUserData(currentUser))
                         .setCurrentUser(currentUser)
                         .includeCreator(true) //TODO: maybe this is not needed
                         .includeRequests(includeRequests)
@@ -1511,7 +1523,11 @@ public class AdServiceImpl extends AbstractService implements AdService {
                 comments = commentDao.getAdComments(ad.getId(), -1L, includeCommentsNumber);
             }
             
-            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad))
+            if ( includeCreator ) {
+                getUserData(ad.getCreator()); //this sets the correct user data
+            }
+            
+            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad), getUserData(currentUser))
                     .setCurrentUser(currentUser)
                     .setFilteredComments(comments)
                     .includeImages(includeImages)
@@ -1693,6 +1709,9 @@ public class AdServiceImpl extends AbstractService implements AdService {
         List<RatingDto> result = new LinkedList<RatingDto>();
         if ( ratings != null && !ratings.isEmpty() ) {
             for ( Rating rating : ratings ) {
+                getUserData(rating.getFrom()); //this sets the correct user data
+                getUserData(rating.getTo()); //this sets the correct user data
+                
                 result.add(new RatingDto(rating));
             }
         }

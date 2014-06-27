@@ -8,7 +8,6 @@ import com.venefica.common.MailException;
 import com.venefica.config.AppConfig;
 import com.venefica.dao.ApprovalDao;
 import com.venefica.dao.ImageDao;
-import com.venefica.dao.UserPointDao;
 import com.venefica.model.Ad;
 import com.venefica.model.AdStatus;
 import com.venefica.model.Approval;
@@ -58,8 +57,6 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
     @Inject
     private AppConfig appConfig;
     @Inject
-    private UserPointDao userPointDao;
-    @Inject
     private ApprovalDao approvalDao;
     @Inject
     private ImageDao imageDao;
@@ -83,6 +80,8 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
                 //an approval already exists for the actual ad revision
                 continue;
             }
+            
+            getUserData(ad.getCreator()); //this sets the correct user data
             
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
@@ -108,6 +107,8 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         List<Ad> ads = adDao.getOfflineAds();
         
         for (Ad ad : ads) {
+            getUserData(ad.getCreator()); //this sets the correct user data
+            
             AdDto adDto = new AdDtoBuilder(ad)
                     .setCurrentUser(currentUser)
                     .includeCreator()
@@ -247,6 +248,7 @@ public class AdminServiceImpl extends AbstractService implements AdminService {
         List<UserDto> result = new ArrayList<UserDto>(0);
         List<User> users = userDao.getAll();
         for ( User user : users ) {
+            getUserData(user); //this sets the correct user data
             UserDto userDto = new UserDto(user);
             result.add(userDto);
         }

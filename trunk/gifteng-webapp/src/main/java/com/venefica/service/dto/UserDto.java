@@ -10,6 +10,7 @@ import com.venefica.model.ImageModelType;
 import com.venefica.model.MemberUserData;
 import com.venefica.model.User;
 import com.venefica.model.UserPoint;
+import com.venefica.model.UserSocialPoint;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -122,9 +123,14 @@ public class UserDto extends DtoBase {
         if ( includeUserPoints && user.getUserPoint() != null ) {
             if ( !user.isBusinessAccount() ) {
                 UserPoint userPoint = user.getUserPoint();
+                MemberUserData memberUserData = (MemberUserData) user.getUserData();
+                UserSocialPoint socialPoint = memberUserData.getUserSocialPoint();
+                
                 score = userPoint.getGivingNumber();
                 pendingScore = userPoint.getCalculatedPendingGivingNumber();
-                businessScore = score.subtract(userPoint.getBusinessReceivingNumber());
+                businessScore = score
+                        .subtract(userPoint.getBusinessReceivingNumber())
+                        .add(socialPoint != null ? new BigDecimal(socialPoint.getSocialPoint()) : BigDecimal.ZERO);
             }
         }
     }

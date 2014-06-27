@@ -61,7 +61,7 @@ public class UserPoint {
         return !ad.isBusinessAd();
     }
     
-    public boolean canRequest(Ad ad) {
+    public boolean canRequest(Ad ad, UserSocialPoint socialPoint) {
         if ( ad.isMemberAd() ) {
             // there is no limitation on member ads
             return true;
@@ -74,12 +74,22 @@ public class UserPoint {
         if ( value.compareTo(BigDecimal.ZERO) == 0 ) {
             //0 valued ads always can be requested
             return true;
-        } else if ( value.add(businessReceivingNumber).compareTo(givingNumber) <= 0 ) {
+        } else if (
+                value
+                .add(businessReceivingNumber)
+                .subtract(new BigDecimal(socialPoint.getSocialPoint()))
+                .compareTo(givingNumber) <= 0
+        ) {
             //there were enough gives to procced with the business gift request
             return true;
         }
         return false;
     }
+    
+//    public void addGivingNumber(int number) {
+//        givingNumber = safeNumber(givingNumber);
+//        givingNumber = givingNumber.add(new BigDecimal(number));
+//    }
     
     public void addPendingGivingNumber(UserTransaction tx) {
         if ( tx.isFinalized() ) {
@@ -153,14 +163,7 @@ public class UserPoint {
         return pendingNumber;
     }
     
-    private BigDecimal safeNumber(BigDecimal n) {
-        if ( n == null ) {
-            n = BigDecimal.ZERO;
-        }
-        return n;
-    }
-    
-    private Ad getAd(UserTransaction transaction) {
+    private static Ad getAd(UserTransaction transaction) {
         Ad ad = null;
         if ( transaction.getAd() != null ) {
             ad = transaction.getAd();
@@ -175,6 +178,13 @@ public class UserPoint {
             }
         }
         return ad;
+    }
+    
+    private static BigDecimal safeNumber(BigDecimal n) {
+        if ( n == null ) {
+            n = BigDecimal.ZERO;
+        }
+        return n;
     }
     
     // getters/setters

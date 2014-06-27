@@ -7,7 +7,6 @@ import com.venefica.dao.BusinessCategoryDao;
 import com.venefica.dao.ImageDao;
 import com.venefica.dao.InvitationDao;
 import com.venefica.dao.ShareDao;
-import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserVerificationDao;
 import com.venefica.model.BusinessCategory;
 import com.venefica.model.BusinessUserData;
@@ -63,8 +62,6 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
     private BusinessCategoryDao businessCategoryDao;
     @Inject
     private AddressWrapperDao addressWrapperDao;
-    @Inject
-    private UserPointDao userPointDao;
     @Inject
     private UserVerificationDao userVerificationDao;
     @Inject
@@ -301,6 +298,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         List<User> users = userDao.getTopUsers(numberUsers);
         
         for (User user : users) {
+            getUserData(user); //this sets the correct user data
             UserDto userDto = new UserDto(user);
             populateRelations(userDto, currentUser, user);
             result.add(userDto);
@@ -316,6 +314,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         user.setLastLoginAt(new Date());
         userDao.update(user);
         
+        getUserData(user); //this sets the correct user data
         return new UserDto(user);
     }
 
@@ -326,6 +325,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         UserStatisticsDto statistics = buildStatistics(user);
         
+        getUserData(user); //this sets the correct user data
         UserDto userDto = new UserDto(user);
         userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
@@ -344,6 +344,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         UserStatisticsDto statistics = buildStatistics(user);
         
+        getUserData(user); //this sets the correct user data
         UserDto userDto = new UserDto(user);
         userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
@@ -362,6 +363,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         UserStatisticsDto statistics = buildStatistics(user);
         
+        getUserData(user); //this sets the correct user data
         UserDto userDto = new UserDto(user);
         userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
@@ -375,6 +377,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         User currentUser = getCurrentUser();
         UserStatisticsDto statistics = buildStatistics(user);
         
+        getUserData(user); //this sets the correct user data
         UserDto userDto = new UserDto(user);
         userDto.setStatistics(statistics);
         populateRelations(userDto, currentUser, user);
@@ -433,6 +436,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         List<User> validFollowers = user.getValidFollowers();
         if ( validFollowers != null ) {
             for ( User follower : validFollowers ) {
+                getUserData(follower); //this sets the correct user data
                 UserDto userDto = new UserDto(follower);
                 populateRelations(userDto, currentUser, follower);
                 
@@ -453,6 +457,7 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         List<User> validFollowings = user.getValidFollowings();
         if ( validFollowings != null ) {
             for ( User following : validFollowings ) {
+                getUserData(following); //this sets the correct user data
                 UserDto userDto = new UserDto(following);
                 populateRelations(userDto, currentUser, following);
                 

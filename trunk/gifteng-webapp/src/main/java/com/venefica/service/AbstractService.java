@@ -13,6 +13,7 @@ import com.venefica.dao.RequestDao;
 import com.venefica.dao.ShippingDao;
 import com.venefica.dao.UserDao;
 import com.venefica.dao.UserDataDao;
+import com.venefica.dao.UserPointDao;
 import com.venefica.dao.UserSettingDao;
 import com.venefica.dao.UserSocialActivityDao;
 import com.venefica.dao.UserSocialPointDao;
@@ -24,6 +25,7 @@ import com.venefica.model.User;
 import com.venefica.model.UserSetting;
 import com.venefica.model.UserSocialActivity;
 import com.venefica.model.SocialActivityType;
+import com.venefica.model.UserData;
 import com.venefica.model.UserSocialPoint;
 import com.venefica.service.fault.AdNotFoundException;
 import com.venefica.service.fault.RequestNotFoundException;
@@ -39,7 +41,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
-import org.hibernate.Hibernate;
 
 /**
  *
@@ -66,6 +67,8 @@ public abstract class AbstractService {
     protected UserSettingDao userSettingDao;
     @Inject
     protected UserSocialPointDao userSocialPointDao;
+    @Inject
+    protected UserPointDao userPointDao;
     @Inject
     protected UserSocialActivityDao userSocialActivityDao;
     @Inject
@@ -188,6 +191,17 @@ public abstract class AbstractService {
         return adData;
     }
     
+    protected UserData getUserData(User user) {
+        UserData userData;
+        if ( user.isBusinessAccount()) {
+            userData = userDataDao.getBusinessUserDataByUser(user.getId());
+        } else {
+            userData = userDataDao.getMemberUserDataByUser(user.getId());
+        }
+        user.setUserData(userData);
+        return userData;
+    }
+    
     protected UserSetting createUserSetting(MemberUserData userData) {
         UserSetting userSetting = new UserSetting();
         userSetting.markDefaultNotifiableTypes();
@@ -238,6 +252,10 @@ public abstract class AbstractService {
             if ( incrementSocialPoint != 0 ) {
                 socialPoint.incrementSocialPoint(incrementSocialPoint);
                 userSocialPointDao.update(socialPoint);
+                
+//                UserPoint userPoint = user.getUserPoint();
+//                userPoint.addGivingNumber(incrementSocialPoint);
+//                userPointDao.update(userPoint);
             }
         }
     }

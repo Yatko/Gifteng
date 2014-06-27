@@ -31,9 +31,11 @@ import org.hibernate.annotations.Type;
  * @author gyuszi
  */
 @Entity
-@Table(name = "userdata")
+@Table(name = UserData.TABLE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UserData {
+    
+    public static final String TABLE_NAME = "userdata";
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

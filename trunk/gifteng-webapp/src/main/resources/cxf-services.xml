@@ -17,6 +17,7 @@
     
     <bean id="abstractLoggingInterceptor" abstract="true">
         <property name="prettyLogging" value="true"/>
+        <!--<property name="showBinaryContent" value="false"/>-->
     </bean>
     <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor"/>
     <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" parent="abstractLoggingInterceptor"/>

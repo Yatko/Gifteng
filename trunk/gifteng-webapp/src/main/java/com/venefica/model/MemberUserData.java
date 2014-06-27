@@ -24,8 +24,11 @@ import org.hibernate.annotations.Index;
  */
 @Entity
 @ForeignKey(name = "memberuserdata_fk")
-@Table(name = "memberuserdata")
+@Table(name = MemberUserData.TABLE_NAME)
 public class MemberUserData extends UserData {
+    
+    @SuppressWarnings("FieldNameHidesFieldInSuperclass")
+    public static final String TABLE_NAME = "memberuserdata";
     
     //personal data
     @Enumerated(EnumType.STRING)
