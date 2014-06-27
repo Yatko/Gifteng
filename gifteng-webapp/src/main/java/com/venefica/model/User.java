@@ -37,13 +37,15 @@ import org.hibernate.annotations.Index;
  * @author Sviatoslav Grebenchukov
  */
 @Entity
-@Table(name = "local_user")
+@Table(name = User.TABLE_NAME)
 @org.hibernate.annotations.Table(appliesTo = "local_user", indexes = {
     @Index(name = "idx_email_pass", columnNames = {"email", "password"}),
     @Index(name = "idx_name_pass", columnNames = {"name", "password"}),
 })
 public class User {
 
+    public static final String TABLE_NAME = "local_user";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.PROPERTY)

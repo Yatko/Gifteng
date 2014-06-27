@@ -23,8 +23,11 @@ import org.hibernate.annotations.Index;
  */
 @Entity
 @ForeignKey(name = "businessuserdata_fk")
-@Table(name = "businessuserdata")
+@Table(name = BusinessUserData.TABLE_NAME)
 public class BusinessUserData  extends UserData {
+    
+    @SuppressWarnings("FieldNameHidesFieldInSuperclass")
+    public static final String TABLE_NAME = "businessuserdata";
     
     @Column(unique = true, nullable = false)
     @Index(name = "idx_businessName")

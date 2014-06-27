@@ -5,10 +5,13 @@ import com.venefica.model.AdData;
 import com.venefica.model.BusinessAdData;
 import com.venefica.model.Comment;
 import com.venefica.model.Image;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.PromoCodeProvider;
 import com.venefica.model.Request;
 import com.venefica.model.SpamMark;
 import com.venefica.model.User;
+import com.venefica.model.UserData;
+import com.venefica.model.UserSocialPoint;
 import com.venefica.service.dto.AdDto;
 import com.venefica.service.dto.AdStatisticsDto;
 import com.venefica.service.dto.AddressDto;
@@ -31,6 +34,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
     private User currentUser;
     private List<Comment> filteredComments;
     private AdData adData;
+    private UserData userData;
     
     private boolean includeCreatorFlag;
     private boolean includeFollowerFlag = true;
@@ -46,9 +50,10 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         super(model);
     }
     
-    public <AD extends AdData> AdDtoBuilder(Ad model, AD adData) {
+    public <AD extends AdData, UD extends UserData> AdDtoBuilder(Ad model, AD adData, UD userData) {
         this(model);
         this.adData = adData;
+        this.userData = userData;
     }
 
     public AdDtoBuilder setCurrentUser(User user) {
@@ -319,7 +324,10 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
                 }
             }
             if ( canRequest ) {
-                if ( !currentUser.getUserPoint().canRequest(model) ) {
+                MemberUserData memberUserData = (MemberUserData) userData;
+                UserSocialPoint socialPoint = memberUserData.getUserSocialPoint();
+                
+                if ( !currentUser.getUserPoint().canRequest(model, socialPoint) ) {
                     //not enough user points
                     canRequest = false;
                 }

@@ -5,6 +5,7 @@
 package com.venefica.dao;
 
 import com.venefica.model.BusinessUserData;
+import com.venefica.model.MemberUserData;
 import com.venefica.model.UserData;
 
 /**
@@ -36,4 +37,20 @@ public interface UserDataDao {
      * @return business user data object
      */
     public BusinessUserData findByBusinessName(String name);
+    
+    /**
+     * Returns the corresponding member user data for the given user.
+     * 
+     * @param userId
+     * @return 
+     */
+    public MemberUserData getMemberUserDataByUser(Long userId);
+    
+    /**
+     * Returns the corresponding business user data for the given user.
+     * 
+     * @param userId
+     * @return 
+     */
+    public BusinessUserData getBusinessUserDataByUser(Long userId);
 }
