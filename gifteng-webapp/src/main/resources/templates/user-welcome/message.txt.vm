@@ -2,7 +2,7 @@ Hi $!{user.userData.getFirstName()},
 
 Thank you for joining Gifteng, a fun and friendly place to declutter your home and request things you need for FREE. We endorse swapping instead of shopping.
 
-Click here to confirm your email address: ${baseUrl}/#/?verify=${code}
+Click here to confirm your email address: ${baseUrl}/#/?confirm=${code}
 
 Not sure where to find something?
 Check out our super helpful FAQ page: http://gifteng.zendesk.com/home
