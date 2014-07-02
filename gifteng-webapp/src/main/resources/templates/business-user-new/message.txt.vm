@@ -1,0 +1,13 @@
+Dear admin,
+
+${userData.businessName} registered a new business user with the following details:
+
+ID: ${user.id}
+Email: ${user.email}
+Business name: ${userData.businessName}
+Contact name: ${userData.contactName}
+Contact number: ${userData.contactNumber}
+Website: ${userData.website}
+
+Access profile with the following link:
+${baseUrl}/#/view/profile/${user.id}

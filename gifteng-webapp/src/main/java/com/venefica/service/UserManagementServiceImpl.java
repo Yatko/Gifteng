@@ -163,6 +163,18 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
         
         user.setUserPoint(userPoint);
         Long userId = userDao.save(user);
+        
+        List<User> admins = userDao.getAdminUsers();
+        if ( admins != null ) {
+            for ( User admin : admins ) {
+                Map<String, Object> vars = new HashMap<String, Object>(0);
+                vars.put("user", user);
+                vars.put("userData", userData);
+
+                emailSender.sendNotification(NotificationType.BUSINESS_USER_NEW, admin, vars);
+            }
+        }
+        
         return userId;
     }
     

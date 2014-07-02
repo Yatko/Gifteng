@@ -1,0 +1,25 @@
+#set($title = "[Gifteng ADMIN] ${userData.businessName} is a new business user!")
+#parse("../header.html.vm")
+
+<div id="mail-body" style="margin:15px;padding:20px;border-radius:4px;background-color:#fff;">
+	<h1 style="font-size:130%;">Dear admin,</h1>
+	<p>
+	    ${userData.businessName} registered a new business user with the following details:<br /><br />
+	</p>
+	<p>
+            ID: ${user.id}<br />
+            Email: ${user.email}<br />
+            Business name: ${userData.businessName}<br />
+            Contact name: ${userData.contactName}<br />
+            Contact number: ${userData.contactNumber}<br />
+            Website: ${userData.website}<br />
+	</p>
+	<p>
+	    <a href="${baseUrl}/#/view/profile/${user.id}" style="background:#00bebe;color:#ffffff;padding:9px 12px 10px;font-size: 0.937em;text-decoration:none;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;border:none;">Access profile</a><br /><br />
+	</p>
+	<p>
+        Gifteng
+	</p>
+</div>
+
+#parse("../footer.html.vm")
