@@ -39,6 +39,7 @@ public enum NotificationType {
     PASSWORD_CHANGED("password-changed", true, false),
     INVITATION_REQUEST("invitation-request", true, false),
     AD_NEW("ad-new", true, true),
+    BUSINESS_USER_NEW("business-user-new", true, true),
     ISSUE_NEW("issue-new", true, true),
     SHIPPING("shipping", true, false),
     EMAIL_NEW("email-new", true, true), //TODO: needs to be renamed
