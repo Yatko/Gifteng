@@ -151,6 +151,10 @@ public class UserManagementServiceImpl extends AbstractService implements UserMa
             throw new UserAlreadyExistsException(UserField.EMAIL, "User with the specified email already exists!");
         }
         
+        if ( password == null || password.trim().isEmpty() ) {
+            password = "Gift2020";
+        }
+        
         User user = userDto.toBusinessUser(imageDao, addressWrapperDao);
         user.setPassword(password);
         
