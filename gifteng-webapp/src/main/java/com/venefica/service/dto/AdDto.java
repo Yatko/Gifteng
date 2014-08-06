@@ -60,6 +60,8 @@ public class AdDto extends DtoBase {
     // out
     private Date createdAt;
     // out
+    private boolean deleted;
+    // out
     private boolean owner;
     // out
     private boolean inBookmarks;
@@ -107,6 +109,8 @@ public class AdDto extends DtoBase {
     private AdStatus status;
     // out
     private boolean hiddenForSearch;
+    // out
+    private boolean staffPick;
     // out
     @XmlElementWrapper(name = "requests")
     @XmlElement(name = "item")
@@ -255,6 +259,14 @@ public class AdDto extends DtoBase {
         this.createdAt = createdAt;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+    
     public boolean isOwner() {
         return owner;
     }
@@ -637,5 +649,13 @@ public class AdDto extends DtoBase {
 
     public void setHiddenForSearch(boolean hiddenForSearch) {
         this.hiddenForSearch = hiddenForSearch;
+    }
+
+    public boolean isStaffPick() {
+        return staffPick;
+    }
+
+    public void setStaffPick(boolean staffPick) {
+        this.staffPick = staffPick;
     }
 }

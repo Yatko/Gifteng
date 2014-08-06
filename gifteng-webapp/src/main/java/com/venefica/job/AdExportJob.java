@@ -14,6 +14,7 @@ import com.venefica.dao.ImageDao;
 //import com.venefica.job.struct.AdExportStructList;
 import com.venefica.model.Ad;
 import com.venefica.model.AdData;
+import com.venefica.service.dto.FilterDto;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class AdExportJob implements Job {
     private final boolean enabled = true;
     private final boolean jsonEnabled = true;
     private final boolean xmlEnabled = true;
+    private final boolean includeStaffPicks = true;
     private final int numberOfAds = 6;
     private final String folderName = "public"; //amazonaws folder
     private final String jsonFileName = "result.json";
@@ -86,8 +88,12 @@ public class AdExportJob implements Job {
     }
     
     private AdExportStructList createStructList(AdDao adDao, AdDataDao adDataDao) {
+        FilterDto filter = new FilterDto();
+        filter.setIncludeHiddenForSearch(false);
+        filter.setIncludeStaffPick(includeStaffPicks);
+        
         AdExportStructList adExportStructs = new AdExportStructList();
-        List<Ad> ads = adDao.get(0, numberOfAds);
+        List<Ad> ads = adDao.get(0, numberOfAds, filter);
         for ( int i = 0; i < ads.size(); i++ ) {
             Ad ad = ads.get(i);
             AdData adData = adDataDao.getAdDataByAd(ad.getId());

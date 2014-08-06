@@ -362,6 +362,25 @@ public interface AdService {
     @WebResult(name = "ad")
     List<AdDto> getHiddenForSearchAds();
     
+    /**
+     * 
+     * @return 
+     */
+    @WebMethod(operationName = "GetStaffPickAds")
+    @WebResult(name = "ad")
+    List<AdDto> getStaffPickAds();
+    
+    /**
+     * 
+     * @param adId
+     * @param staffPick 
+     */
+    @WebMethod(operationName = "SetStaffPick")
+    void setStaffPick(
+            @WebParam(name = "adId") Long adId,
+            @WebParam(name = "isStaffPick") Boolean isStaffPick)
+            throws AdNotFoundException;
+    
     
     
     //*****************
