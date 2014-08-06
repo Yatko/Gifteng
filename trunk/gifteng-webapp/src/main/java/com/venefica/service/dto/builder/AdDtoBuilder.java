@@ -140,6 +140,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         adDto.setType(model.getAdData().getType());
         adDto.setStatus(model.getStatus());
         adDto.setHiddenForSearch(model.isHiddenForSearch());
+        adDto.setStaffPick(model.isStaffPick());
         adDto.setAddress(new AddressDto(model.getAdData().getAddress(), model.getAdData().getLocation()));
 
         if ( model.getAdData().getShippingBox() != null ) {
@@ -197,6 +198,7 @@ public class AdDtoBuilder extends DtoBuilderBase<Ad, AdDto> {
         }
         
         adDto.setCreatedAt(model.getCreatedAt());
+        adDto.setDeleted(model.isDeleted());
         adDto.setOnline(model.isOnline());
         adDto.setApproved(model.isApproved());
         adDto.setExpires(model.isExpires());

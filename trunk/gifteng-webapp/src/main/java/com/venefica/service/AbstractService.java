@@ -162,7 +162,7 @@ public abstract class AbstractService {
         Ad ad = adDao.get(adId);
         if (ad == null) {
             throw new AdNotFoundException(adId);
-        } else if ( ad.isDeleted() ) {
+        } else if ( ad.isMemberAd() && ad.isDeleted() ) {
             throw new AdNotFoundException(adId);
         }
         return ad;

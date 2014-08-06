@@ -131,6 +131,7 @@ public class Ad {
     private AdStatus status;
     
     private boolean hiddenForSearch; //cannot be searched but it's an existing ad and can be referenced
+    private boolean staffPick;
     
     protected Ad() {
     }
@@ -812,5 +813,13 @@ public class Ad {
 
     public void setHiddenForSearch(boolean hiddenForSearch) {
         this.hiddenForSearch = hiddenForSearch;
+    }
+
+    public boolean isStaffPick() {
+        return staffPick;
+    }
+
+    public void setStaffPick(boolean staffPick) {
+        this.staffPick = staffPick;
     }
 }

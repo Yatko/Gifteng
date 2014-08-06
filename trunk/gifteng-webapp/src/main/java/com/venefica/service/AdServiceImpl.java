@@ -659,6 +659,36 @@ public class AdServiceImpl extends AbstractService implements AdService {
         return result;
     }
     
+    @Override
+    @Transactional
+    public List<AdDto> getStaffPickAds() {
+        List<Ad> ads = adDao.getStaffPickAds();
+        List<AdDto> result = new LinkedList<AdDto>();
+        
+        for ( Ad ad : ads ) {
+            AdDto adDto = new AdDtoBuilder(ad, getAdData(ad), null)
+                    .includeCreator(false)
+                    .includeFollower(false)
+                    .includeRelist(false)
+                    .includeRequests(false)
+                    .includeAdStatistics(false)
+                    .build();
+            result.add(adDto);
+        }
+        return result;
+    }
+    
+    @Override
+    @Transactional
+    public void setStaffPick(Long adId, Boolean isStaffPick) throws AdNotFoundException {
+        Ad ad = validateAd(adId);
+        if ( isStaffPick == null ) {
+            isStaffPick = false;
+        }
+        
+        ad.setStaffPick(isStaffPick);
+    }
+    
     
     
     //*****************
@@ -837,6 +867,10 @@ public class AdServiceImpl extends AbstractService implements AdService {
         userTransactionDao.save(requestTransaction);
         
         if ( text != null && !text.trim().isEmpty() ) {
+            text = text.trim();
+        }
+        
+        if ( text != null ) {
             Message message = new Message(text);
             message.setTo(creator);
             message.setFrom(currentUser);
@@ -866,6 +900,7 @@ public class AdServiceImpl extends AbstractService implements AdService {
         vars.put("ad", ad);
         vars.put("creator", ad.getCreator());
         vars.put("request", request);
+        vars.put("text", text);
         
         emailSender.sendNotification(NotificationType.AD_REQUESTED, creator, vars);
         

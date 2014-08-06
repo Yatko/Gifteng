@@ -101,6 +101,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
         Boolean includePickup = filter.getIncludePickUp();
         Boolean includeShipping = filter.getIncludeShipping();
         boolean includeHiddenForSearch = filter.getIncludeHiddenForSearch() != null ? filter.getIncludeHiddenForSearch() : false;
+        boolean includeStaffPick = filter.getIncludeStaffPick() != null ? filter.getIncludeStaffPick() : true;
         String searchString = filter.getSearchString();
         List<Long> categories = filter.getCategories();
         Long distance = filter.getDistance();
@@ -124,6 +125,7 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "from " + getDomainClassName() + " a where "
                 + "a.deleted = false"
                 + (includeHiddenForSearch ? "" : " and a.hiddenForSearch = false")
+                + (includeStaffPick ? "" : " and a.staffPick = false")
                 + " and a.creator.deleted = false"
                 + " and a.approved = true"
                 + " and a.online = true"
@@ -341,6 +343,19 @@ public class AdDaoImpl extends DaoBase<Ad> implements AdDao {
                 + "a.creator.deleted = false and "
                 + "a.online = true and "
                 + "a.approved = true "
+                + "order by a.id desc"
+                + "")
+                .list();
+    }
+    
+    @Override
+    public List<Ad> getStaffPickAds() {
+        return createQuery(""
+                + "from " + getDomainClassName() + " a "
+                + "where "
+                + "a.deleted = false and "
+                + "a.staffPick = true and "
+                + "a.creator.deleted = false "
                 + "order by a.id desc"
                 + "")
                 .list();

@@ -112,4 +112,10 @@ public interface AdDao {
      * @return 
      */
     List<Ad> getHiddenForSearchAds();
+    
+    /**
+     * 
+     * @return 
+     */
+    List<Ad> getStaffPickAds();
 }
