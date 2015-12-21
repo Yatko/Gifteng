@@ -16,7 +16,7 @@ Gifteng ♡ Unique Social Community of Collaborative Consumption http://gifteng.
    Bootstrap 3.
 
 ☛ watching the [Gifteng video](http://www.gifteng.com) (with audio) will give you a better idea
-[![Gifteng](http://apps.yatko.com/gifteng/gifteng.video.png)](https://youtu.be/-d3xtDJq-Xw)
+[![Gifteng](http://apps.yatko.com/gifteng/gifteng.video.png)](https://youtu.be/FlYkHSJxcIA)
 
 **It’s a Social Network**
 
@@ -77,4 +77,4 @@ We have been working on Gifteng for over two years, received tremendous support 
 
 **(In)Press:** [TreeHugger](http://www.treehugger.com/culture/gifteng-pinterest-gift-economy.html), [CrunchBase](https://www.crunchbase.com/organization/gifteng#/entity), [SocialTimes](http://www.adweek.com/socialtimes/gifteng-powers-new-kind-collaborative-consumption/143546), [Broke-Ass Stuart](http://brokeassstuart.com/blog/2013/05/07/gifteng-the-best-new-app-for-broke-asses/), [New Startups](http://www.new-startups.com/combining-gift-engagement-gifteng/), [StartUpBeat](http://startupbeat.com/2014/02/24/featured-startup-pitch-gifteng-id3713/). [Give. Receive. Inspire.](http://www.gifteng.com)
 
-![Gifteng - Screenshot](http://apps.yatko.com/gifteng/gifteng_screenshot.png)
+[![Gifteng - Screenshot](http://apps.yatko.com/gifteng/gifteng_screenshot.png)](http://www.gifteng.com)
