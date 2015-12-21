@@ -32,8 +32,8 @@ public class MailChimpSenderTest {
     @Test
     @Ignore
     public void listSubscribeTest() throws MailException {
-        String emailAddress = "figyuszi@gmail.com";
-        //String emailAddress = "agotaifulop@yahoo.com";
+        String emailAddress = "venefica.labs@yatko.com";
+        //String emailAddress = "venefica.labs@yatko.com";
         Map<String, Object> vars = new HashMap<String, Object>(0);
         vars.put("INVITATION", "1234");
         vars.put("ZIPCODE", "00501");

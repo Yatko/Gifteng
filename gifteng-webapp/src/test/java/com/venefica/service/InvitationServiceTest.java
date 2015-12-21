@@ -38,7 +38,7 @@ public class InvitationServiceTest extends ServiceTestBase<InvitationService> {
     @Test
     public void requestInvitationTest() throws InvitationException {
         InvitationDto invitationDto = new InvitationDto();
-        invitationDto.setEmail("figyuszi@gmail.com");
+        invitationDto.setEmail("venefica.labs@yatko.com");
         invitationDto.setSource("other");
         invitationDto.setUserType(UserType.GIVER);
         invitationDto.setZipCode("00000");

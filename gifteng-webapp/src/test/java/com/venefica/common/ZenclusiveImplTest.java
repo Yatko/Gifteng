@@ -38,7 +38,7 @@ public class ZenclusiveImplTest {
     
     @Test
     public void testSendReward() {
-        boolean success = zenclusiveImpl.sendReward("gyuszi@veneficalabs.com", new ZenclusiveImpl.Incentive("David's Cookies", 10L));
+        boolean success = zenclusiveImpl.sendReward("venefica.labs@yatko.com", new ZenclusiveImpl.Incentive("David's Cookies", 10L));
         System.out.println("send reward success: " + success);
     }
 }
