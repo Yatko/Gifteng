@@ -16,7 +16,7 @@ Gifteng ♡ Unique Social Community of Collaborative Consumption http://gifteng.
    Bootstrap 3.
 
 ☛ watching the [Gifteng video](http://www.gifteng.com) (with audio) will give you a better idea
-[![Gifteng](http://apps.yatko.com/gifteng/gifteng.video.png)](https://youtu.be/FlYkHSJxcIA)
+[![Gifteng](http://apps.yatko.com/gifteng/gifteng.video.png)](https://youtu.be/-d3xtDJq-Xw)
 
 **It’s a Social Network**
 
